@@ -41,6 +41,10 @@ export default function Navbar() {
 
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
 
+	const isUserInstructor = storeData?.isUserInstructor
+	console.log("isUserInstructor : ", storeData);
+
+
 	useEffect(() => {
 		const fetchResults = async () => {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
@@ -52,6 +56,7 @@ export default function Navbar() {
 		fetchResults();
 	}, [setCatagories])
 
+
 	useEffect(() => {
 		const fetchResults = async () => {
 			let data = {
@@ -62,7 +67,10 @@ export default function Navbar() {
 			}).catch(error => {
 				console.log("error : ", error);
 				if (error?.response?.status == 401) {
-					signOutUser()
+					let returnUrl = {
+						url: window.location.href
+					}
+					signOutUser(returnUrl)
 					dispatch({
 						type: 'EMPTY_STORE'
 					});
@@ -111,7 +119,10 @@ export default function Navbar() {
 		dispatch({
 			type: 'EMPTY_STORE'
 		});
-		signOutUser();
+		let returnUrl = {
+			url: '/login'
+		}
+		signOutUser(returnUrl);
 	}
 
 	useEffect(() => {
@@ -227,9 +238,9 @@ export default function Navbar() {
 									{/* <div>
 										<AllIconsComponenet height={30} width={30} iconName={'bell'} color={'#808080'} />
 									</div> */}
-									<div className={styles.instructorBtnBox}>
+									{isUserInstructor && <div className={styles.instructorBtnBox}>
 										<button className={`primaryStrockedBtn`} onClick={() => handleInstructorBtnClick()}>لوحة تحكم المعلم</button>
-									</div>
+									</div>}
 									<div className={styles.navLeftDiv}>
 										<div className={styles.viewProfile}>
 											<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />

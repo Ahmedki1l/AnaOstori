@@ -41,10 +41,10 @@ function MyApp({ Component, pageProps }) {
 		'/instructorPanel',
 	], []);
 
-	const isUserInstructor = false
+	const isUserInstructor = storeData?.isUserInstructor
 
 	useEffect(() => {
-		if (!isUserInstructor && router.pathname == '/instructorPanel') {
+		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
 			router.replace('/');
 		}
 	}, [router.pathname]);
