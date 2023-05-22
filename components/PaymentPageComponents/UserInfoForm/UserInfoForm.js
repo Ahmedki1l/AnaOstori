@@ -1,0 +1,401 @@
+import React, { useEffect, useState } from 'react'
+import styles from './UserInfoForm.module.scss'
+import FirstPaymentPageInfo from '../PaymentPageIndicator/FirstPageIndicator';
+import DatesInfo from './DatesBox/DatesInfo'
+import * as PaymentConst from '../../../constants/PaymentConst';
+import ScrollContainer from 'react-indiana-drag-scroll'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import UserDetailForm1 from '../../CourseDescriptionPageComponents/UserDetailForm1';
+import useWindowSize from '../../../hooks/useWindoSize';
+
+//MI icons
+import PersonIcon from '@mui/icons-material/Person';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
+import { useDispatch, useSelector } from 'react-redux';
+
+
+export default function UserInfoForm(props) {
+	const studentsDataLength = props.studentsData?.length
+	const noOfUsersTag = PaymentConst.noOfUsersTag
+	const courseDetail = props.courseDetails
+	const genders = PaymentConst.genders
+
+	const maleDates = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates;
+	const femaleDates = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates;
+	const mixDates = props.mixDates.length > 0 && props.mixDates.every(obj => obj.numberOfSeats === 0) ? [] : props.mixDates;
+
+	const disabledGender = courseDetail.type == 'physical' ? (maleDates.length == 0 ? "male" : femaleDates.length == 0 ? "female" : null) : null
+	const storeData = useSelector((state) => state?.globalStore);
+	const userPredefineEmail = storeData?.viewProfileData?.email
+	const userPredefinePhone = storeData?.viewProfileData?.phone
+	const userPredefinefullName = storeData?.viewProfileData?.fullName
+	const userPredefineGender = storeData?.viewProfileData?.gender
+
+	const userTemplet = {
+		gender: '',
+		date: '',
+		fullName: '',
+		phoneNumber: '',
+		email: '',
+		availabilityId: ''
+	}
+
+	const preselectedUserTempletFOrOnDemand = {
+		gender: courseDetail.type == 'on-demand' && userPredefineGender ? userPredefineGender : '',
+		date: '',
+		fullName: courseDetail.type == 'on-demand' && userPredefinefullName ? userPredefinefullName : '',
+		phoneNumber: courseDetail.type == 'on-demand' && userPredefinePhone ? userPredefinePhone : '',
+		email: courseDetail.type == 'on-demand' && userPredefineEmail ? userPredefineEmail : '',
+		availabilityId: ''
+	}
+
+	const groupDiscountEligible = courseDetail.groupDiscountEligible
+	const smallScreen = useWindowSize().smallScreen
+
+	const [isDateForAllSelected, setIsDateForAllSelected] = useState(false)
+
+	const noOfUsersLabelData = [
+		{ iconName: 'studentOneIcon', iconWidth: '24', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `وفر ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
+		{ iconName: 'studentTwoIcon', iconWidth: '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${(100 - ((courseDetail.discountForTwo / courseDetail.price) * 100)).toFixed(2)} %`, oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentThreeIcon', iconWidth: '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'مخصص', subLabel2: `وفر ${(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %`, oldPrice: '', singleDiscount: '' },
+	]
+
+	const router = useRouter()
+	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
+	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
+	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: '', phoneNumber: '', email: '', availabilityId: router.query.date }
+	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
+	const [userAgree, setUserAgree] = useState(false)
+	const [enrollForMe, setEnrollForMe] = useState(false)
+	const [studentsData, setStudentsData] = useState(
+		(courseDetail.type == 'on-demand') ? [preselectedUserTempletFOrOnDemand]
+			: studentsDataLength ? (props.studentsData)
+				: (router.query ? [preSelectTemplet]
+					: [userTemplet]))
+
+
+	useEffect(() => {
+		if (studentsDataLength && studentsDataLength > 0) {
+			setStudentsData(props.studentsData)
+			setTotalStudent(studentsDataLength)
+		}
+	}, [props.studentsData, studentsDataLength])
+
+	const handleTotalStudent = (value) => {
+		const newTotalStudent = value
+		setTotalStudent(newTotalStudent)
+
+		if (newTotalStudent > totalStudent) {
+			const students = newTotalStudent - totalStudent
+			for (let i = 0; i < students; i++) {
+				setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(userTemplet))])
+			}
+		}
+		else {
+			const students = totalStudent - newTotalStudent
+			let data = [...studentsData]
+			data.splice(1, students)
+			setStudentsData(data)
+		}
+	}
+
+	const handleAddForm = (isDateForAllSelected) => {
+		if (isDateForAllSelected == true) {
+			setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(
+				{ gender: studentsData[0]['gender'], date: studentsData[0]['date'], fullName: '', phoneNumber: '', email: '', availabilityId: studentsData[0]['availabilityId'] }
+			))])
+		}
+		else {
+			setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(userTemplet))])
+		}
+		setTotalStudent(studentsData.length)
+	}
+
+	const handleRemoveForm = (i) => {
+		let data = [...studentsData]
+		data.splice(i, 1)
+		setStudentsData(data)
+		setTotalStudent(data.length)
+	}
+
+	const handleFormChange = (event, index, availabilityId) => {
+		const data = [...studentsData]
+		if (event.target.title == 'phoneNumber') {
+			if (event.target.value.length > 10) {
+				return
+			}
+		}
+		data[index][event.target.title] = event.target.value
+		setSelectedGender()
+		setSelectedDate()
+		if (event.target.title == 'date') {
+			data[index]['availabilityId'] = availabilityId
+		}
+		if (event.target.title == 'gender') {
+			data[index]['date'] = ''
+			data[index]['availabilityId'] = ''
+		}
+		if (totalStudent > 1 && (event.target.title == 'date' || event.target.title == 'gender')) {
+			for (let i = 0; i < data.length; i++) {
+				if (data[i]['gender'].length > 0 && data[0]['gender'] != data[i]['gender']) {
+					document.getElementById("dateForAll").checked = false;
+					break
+				}
+				else if (data[i]['availabilityId'].length > 0 && data[0]['availabilityId'] != data[i]['availabilityId']) {
+					document.getElementById("dateForAll").checked = false;
+					break
+				}
+			}
+		}
+		setStudentsData(data);
+	}
+
+	const handleDateForAll = (event) => {
+		const data = [...studentsData]
+		setIsDateForAllSelected(event.target.checked)
+		if (event.target.checked == true) {
+			for (let i = 0; i < data.length; i++) {
+				data[i]['availabilityId'] = data[0]['availabilityId']
+				data[i]['date'] = data[0]['date']
+				data[i]['gender'] = data[0]['gender']
+			}
+		}
+		else {
+			for (let i = 0; i < data.length; i++) {
+				if (i != 0) {
+					data[i]['availabilityId'] = ''
+					data[i]['date'] = ''
+					data[i]['gender'] = ''
+				}
+			}
+		}
+		setStudentsData(data);
+	}
+
+	const handleEnrollForMe = (event) => {
+		setEnrollForMe(event.target.checked)
+		let data = [...studentsData]
+		if (event.target.checked == true) {
+			data[0]['email'] = userPredefineEmail
+			data[0]['fullName'] = userPredefinefullName
+			data[0]['phoneNumber'] = userPredefinePhone
+		} else {
+			data[0]['email'] = ''
+			data[0]['fullName'] = ''
+			data[0]['phoneNumber'] = ''
+		}
+		setStudentsData(data);
+	}
+
+
+	return (
+		<>
+			<FirstPaymentPageInfo />
+			<div className='pb-4'>
+				{groupDiscountEligible && courseDetail.type != 'on-demand' &&
+					<div className={styles.borderBottom}>
+						<div className={`maxWidthDefault  ${styles.radioBtnsContainer}`}>
+							<p className={`fontBold ${styles.radioBtnHead}`}>كم شخص؟</p>
+							<div className={styles.noOfUserWrapper}>
+								{/***************************************** FOR loop for radio button to select number of Users ******************************************/}
+								{noOfUsersLabelData.map((data, index) => {
+									return (
+										<div key={`noOfUsersRadoi${index}`}>
+											<input type="radio" id={`user${index + 1}`} name='noOfUser' value={index + 1} className="hidden peer" defaultChecked={totalStudent == 1 ? (index === 0) : (totalStudent == 2 ? (index === 1) : (index === 2))} onChange={() => handleTotalStudent(index + 1)} />
+											<label htmlFor={`user${index + 1}`} className={styles.usersRadioWrapper}>
+												<div className={styles.circle}><div></div></div>
+												<div className={styles.userRadioLabelBox}>
+													<AllIconsComponenet height={24} width={data.iconWidth} iconName={data.iconName} color={totalStudent == index + 1 ? '#ffffff' : '#000000'} strockColor={totalStudent == index + 1 ? '#F26722' : '#ffffff'} />
+													<div className={styles.lable1Box}>
+														<p className={`fontMedium ${styles.lable1}`}>{data.label1} {data.singleDiscount && <span className={styles.singleDiscount}>{data.singleDiscount}</span>} </p>
+														<p className={styles.subLable1}>{data.subLabel1}</p>
+													</div>
+													<div className={styles.lable2Box}>
+														<p className={`${smallScreen ? 'fontMedium' : 'fontBold'} ${styles.lable2}`}>{data.label2 === `null ر.س` ? `${data.oldPrice}` : `${data.label2}`}</p>
+														<p className={`fontMedium ${styles.subLable2}`}>{data.subLabel2}</p>
+														{(data.oldPrice && data.label2 != `null ر.س`) && <p className={styles.oldPrice}>{data.oldPrice}</p>}
+													</div>
+												</div>
+											</label>
+										</div>
+									)
+								})}
+							</div>
+						</div>
+					</div>
+				}
+				{/***************************************** FOR loop for User form ******************************************************/}
+				{studentsData.map((student, i = index) => {
+					const {
+						genderCheck,
+						dateCheck,
+						fullName,
+						nameCheck,
+						nameLengthCheck,
+						validName,
+						phoneNumber,
+						phoneNoCheck,
+						phoneNoLengthCheck,
+						validPhoneNumber,
+						email,
+						emailCheck,
+						emailValidCheck
+					} = student
+					return (
+						<div className={`px-4 ${styles.oneUserInfoForm} ${totalStudent > 1 ? '' : 'pt-4'}`} key={`student${i}`}>
+							<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
+								{totalStudent > 1 &&
+									<div className='flex justify-between'>
+										<p className='fontBold text-white bg-gray-800 rounded-b p-2'>{noOfUsersTag[i]}</p>
+										{i > 2 &&
+											<p className={styles.closeIcon} onClick={() => handleRemoveForm(i)}>
+												<CloseRoundedIcon />	<span className='fontMedium'>حذف</span>
+											</p>
+										}
+									</div>
+								}
+								<p className={`fontBold ${styles.radioBtnHead}`}>جنسك</p>
+								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك الدورات المتوفرة</p>}
+								<div className={styles.genderWrapper}>
+									{/***************************************** FOR loop for radio button to select Gender ****************************************/}
+									{genders.map((gender, j = index) => {
+										return (
+											<div className={styles.radioBtnBox} key={`gender${j}`}>
+												<input id={`gender${i}`} type="radio" name={`gender${i}`} value={gender.value} title="gender"
+													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
+													onChange={event => handleFormChange(event, i, '')}
+													disabled={disabledGender == gender.value} />
+												<label htmlFor='dateForAll' className={`fontBold ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.displayTag}</label>
+											</div>
+										)
+									})}
+								</div>
+								<div style={{ color: 'red' }} className={styles.errorText}>{genderCheck}</div>
+							</div>
+							{student.gender && courseDetail.type != 'on-demand' &&
+								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
+									<p className={`fontBold ${styles.radioBtnHead}`}>اختار الموعد اللي يناسبك</p>
+									<div style={{ color: 'red' }} className={styles.errorText}>{dateCheck}</div>
+									<ScrollContainer className='flex'>
+										<div className={styles.datesMainArea}>
+											{/***************************************** FOR loop for radio button to select date ****************************************/}
+											{(courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).length > 0 ?
+												<>
+													{(courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).map((date, k = index) => {
+														return (
+															<div key={`datecard${k}`} className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : ''}`}>
+																<input type="radio" id={`date1_${k}_${i}`} name={`date${i}`} title="date" value={date.dateFrom}
+																	className="hidden peer" onChange={event => handleFormChange(event, i, date.id)}
+																	checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
+																	disabled={date.numberOfSeats == 0} />
+																<label htmlFor={`date1_${k}_${i}`} className="cursor-pointer">
+																	<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`}>
+																		<div className={styles.dateRadioBtnBox}>
+																			<div className={styles.circle}><div></div></div>
+																			<p className={`fontBold ${styles.dateBoxHeaderText}`}>
+																				{`${new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })} 
+																				${new Date(date.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} 
+																				${new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}`}
+																			</p>
+																		</div>
+																		{date.numberOfSeats < 4 &&
+																			<div className={`absolute ${styles.restSitsBox} ${date.numberOfSeats == 0 ? `${styles.disableRestSitsBox}` : ''}`}>
+																				<PersonIcon className={styles.personIcons} />
+																				<p className='fontMedium'>{date.numberOfSeats == 0 ? 'نفذت المقاعد' : date.numberOfSeats == 1 ? "باقي مقعد" : date.numberOfSeats == 2 ? "باقي مقعدين" : "باقي 3 مقاعد"}</p>
+																			</div>
+																		}
+																	</div>
+																	<DatesInfo date={date} />
+																</label>
+															</div>
+														)
+													})}
+												</>
+
+												:
+												<div>
+													<UserDetailForm1 gender={studentsData[i].gender} />
+												</div>
+											}
+										</div>
+									</ScrollContainer>
+									{i == 0 &&
+										<div className='checkBoxDiv py-4'>
+											<input id='enrollForMe' type='checkbox' name='enrollForMySelf' onChange={(event) => handleEnrollForMe(event)} />
+											<label htmlFor='enrollForMe' className={`fontMedium ${styles.checkboxText}`}>بسجل لنفسي</label>
+										</div>
+									}
+									{(totalStudent > 1 && i == 0 && (courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).length > 0) &&
+										<div className='checkBoxDiv pb-4'>
+											<input id='dateForAll' type='checkbox' name='agree' onChange={(event) => handleDateForAll(event)} />
+											<label htmlFor='dateForAll' className={`fontMedium ${styles.checkboxText}`}>اختيار نفس الموعد لجميع الأشخاص</label>
+										</div>
+									}
+								</div>
+							}
+							{((courseDetail.type != 'on-demand' && student.date) || (courseDetail.type == 'on-demand' && student.gender)) &&
+								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
+									<p className={`fontBold ${styles.radioBtnHead}`}>البيانات الشخصية</p>
+									<p className={`fontRegular ${styles.radioBtnDiscription}`}>فضلا اكتبها بدقة، عشان حنتواصل معك</p>
+									<div className='formInputBox'>
+										<input className='formInput' id="fullName" type="text" name={`name${i}`} title="fullName" placeholder=' '
+											value={fullName}
+											onChange={event => handleFormChange(event, i, '')}
+											disabled={enrollForMe}
+										/>
+										<label className='formLabel' htmlFor="fullName">الاسم الثلاثي</label>
+									</div>
+									<div style={{ color: 'red' }} className={styles.errorText}>{nameCheck} {nameLengthCheck} {validName}</div>
+									<div className='formInputBox'>
+										<input className='formInput' id="phoneNo" type="number" name={`phoneNo${i}`} title="phoneNumber" placeholder=' '
+											value={phoneNumber}
+											onChange={event => handleFormChange(event, i, '')}
+											disabled={enrollForMe}
+										/>
+										<label className='formLabel' htmlFor="phoneNo">رقم الجوال</label>
+									</div>
+									{(!phoneNoCheck && !phoneNoLengthCheck && !validPhoneNumber) &&
+										<p className={styles.hintText}>ادخل الرقم بصيغة 05xxxxxxxx </p>
+									}
+									<div style={{ color: 'red' }} className={styles.errorText}>{phoneNoCheck} {phoneNoLengthCheck} {validPhoneNumber}</div>
+									<div className='formInputBox'>
+										<input className='formInput' id="email" type="email" name={`email${i}`} title="email" placeholder=' '
+											value={email}
+											onChange={event => handleFormChange(event, i, '')}
+											disabled={enrollForMe}
+										/>
+										<label className='formLabel' htmlFor="email">الإيميل</label>
+									</div>
+									<div style={{ color: 'red' }} className={styles.errorText}>{emailCheck}{emailValidCheck}</div>
+								</div>
+							}
+						</div>
+					)
+				})}
+				<div className='border-t border-inherit pt-4'>
+					<div className={`maxWidthDefault pr-4 ${styles.radioBtnsContainer}`}>
+						{(studentsData.length > 2 && studentsData.length <= 9) &&
+							<div>
+								<p className={`fontBold ${styles.addMoreFormText}`} onClick={() => handleAddForm(isDateForAllSelected)} >+ إضافة شخص آخر</p>
+							</div>
+						}
+						<div className='checkBoxDiv pb-4'>
+							<input id='termsCheckBox' type='checkbox' name='agree' onChange={(event) => setUserAgree(event.target.checked)} />
+							<label htmlFor='termsCheckBox' className={`fontMedium ${styles.checkboxText}`}>أقر بموافقتي على <Link href={'/terms'} className='link' >الشروط والأحكام</Link></label>
+						</div>
+						<div className={styles.btnBox}>
+							{userAgree ?
+								<button className='primarySolidBtn' onClick={() => props.isInfoFill(studentsData, courseDetail.type)}>مراجعة الطلب والدفع</button>
+								:
+								<button className='secondrySolidBtn cursor-not-allowed' >مراجعة الطلب والدفع</button>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
+	)
+}

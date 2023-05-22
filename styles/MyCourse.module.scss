@@ -1,0 +1,220 @@
+@import "./styles/variables.module.scss";
+
+.myCourseContentMainWrapper {
+    display: grid;
+    grid-template-columns: auto 40%;
+    grid-template-rows: 180px auto auto;
+    padding-top: 1.5rem;
+    grid-gap: 1rem;
+}
+
+.boxBorder {
+    border: 1px solid #0000001a;
+    border-radius: 4px;
+}
+
+.myCourseDetailsWrapper {
+    display: flex;
+    padding: 1rem;
+}
+
+.courseDetailTextWrapper {
+    padding-right: 1rem;
+}
+
+.courseThumnailDiv {
+    height: 145px;
+    width: 249px;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.myCourseTitle {
+    font-size: 21px;
+}
+
+.watchCourseBtnBox {
+    width: 105px;
+    padding: 1rem 0 0 0;
+
+    button {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
+.myCourseInstructorWrapper {
+    grid-area: 2/1/3/2;
+    padding: 0.75rem 1rem;
+}
+
+.myCourseInstructorSubWrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.myCourseInstructorWrapperHeader {
+    font-size: 18px;
+}
+
+.myCourseSessionFilesWrapper {
+    grid-area: 3/1/4/2;
+}
+
+.myCourseSessionFilesWrapperHeader {
+    background-color: $primary-color;
+}
+
+.myCourseSessionFilesHeaderText {
+    font-size: 21px;
+    color: #ffffff;
+    padding: 1rem;
+}
+
+.fileWrapper {
+    border-top: 1px solid #0000001a;
+    cursor: pointer;
+}
+
+.myCourseStudentProgressWrapper {
+    padding: 1rem;
+    height: 243px;
+    grid-area: 1/2/3/3;
+}
+
+.myCourseStudentProgressWrapperHeader {
+    font-size: 21px;
+}
+
+.myCourseStudentProgressSubWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dataAnalyticHeader {
+    font-size: 18px;
+    line-height: 12px;
+    color: #00000080;
+}
+
+.proggresPercentage {
+    font-size: 20px;
+}
+
+.iconDiv {
+    height: 44px;
+    width: 44px;
+    border-radius: 50%;
+    background-color: #FCD2BD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+@media (max-width: 1350px) {
+    .myCourseTitle {
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 962px) {
+    .myCourseContentMainWrapper {
+        grid-template-rows: 160px auto auto;
+        grid-gap: 0.5rem;
+    }
+
+    .myCourseStudentProgressWrapper {
+        height: 349px;
+        ;
+    }
+
+    .myCourseStudentProgressSubWrapper {
+        flex-direction: column-reverse;
+    }
+
+    .itemProcessWrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .courseThumnailDiv {
+        height: 125px;
+        width: 200px;
+    }
+
+    .proggresPercentage {
+        font-size: 17px;
+    }
+
+    .dataAnalyticHeader {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 786px) {
+    .myCourseContentMainWrapper {
+        display: grid;
+        grid-template-columns: none;
+        grid-template-rows: 160px 240px auto auto;
+        grid-gap: 20px;
+    }
+
+    .myCourseInstructorWrapper {
+        grid-area: 3/1/4/2;
+    }
+
+    .myCourseStudentProgressWrapper {
+        height: 100%;
+        grid-area: 2/1/3/2;
+    }
+
+    .myCourseSessionFilesWrapper {
+        grid-area: 4/1/5/2;
+    }
+
+    .myCourseStudentProgressSubWrapper {
+        flex-direction: row;
+    }
+
+    .itemProcessWrapper {
+        display: block;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .myCourseStudentProgressSubWrapper {
+        flex-direction: row;
+    }
+
+    .itemProcessWrapper {
+        display: block;
+    }
+
+    .myCourseInstructorSubWrapper {
+        display: block;
+    }
+
+    .courseThumnailDiv {
+        height: 100px;
+        width: 160px;
+    }
+}
+
+@media (max-width: 450px) {
+    .myCourseContentMainWrapper {
+        grid-template-rows: 260px 233px auto auto;
+    }
+
+    .myCourseDetailsWrapper {
+        flex-direction: column;
+    }
+
+    .courseDetailTextWrapper {
+        padding: 1rem 0 0 0;
+    }
+}

@@ -1,0 +1,115 @@
+.headerWrapper{
+	background-color: #2D2E2D;
+	color: #ffffff;
+	padding: 2rem 0;
+
+}
+.pathDiv{
+	display: flex;
+	align-items: center;
+	padding:0 1rem;
+	margin-bottom: 2rem;
+	.arrowIcon{
+		margin: 0 0.5rem;
+	}
+}
+.pathText{
+	text-decoration: none;
+	color: #ffffff;
+}
+.courseName{
+	margin: 0 1rem;
+}
+.courseDiscriptionText{
+	font-size: 20px;
+	padding: 1rem;
+	width: 65%;
+}
+.locationDiv{
+	display: flex;
+	align-items: center;
+	margin: 0 1rem;
+}
+.analyticsBarWrapper{
+	font-size: 20px;
+	display: flex;
+	padding-right: 1rem;
+}
+.analyticsCard{
+	padding: 2rem 0 0 2rem;
+	display: flex;
+}
+
+.icon{
+    font-size: 45px;
+}
+
+@media (max-width: 1280px) {
+	.courseDiscriptionText {
+		font-size: 17px;
+		width: 67%;
+	}
+	.analyticsCard{
+		p{
+			font-size: 18px;
+		}
+	}
+	.pathDiv{
+		font-size: 17px;
+		.arrowIcon{
+			font-size: 20px;
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.courseDiscriptionText {
+		font-size: 15px;
+		width: 57%;
+	}
+
+	.pathDiv{
+		font-size: 15px;
+		.arrowIcon{
+			font-size: 18px;
+		}
+	}
+	.analyticsCard{
+		p{
+			font-size: 15px;
+		}
+	}
+	.icon{
+		font-size: 35px;
+	}
+}
+@media (max-width: 860px) {
+	.analyticsBarWrapper{
+		width: 55%;
+		flex-wrap: wrap;
+	}
+}
+
+@media (max-width: 767px) {
+	.courseName{
+		width: 350px;
+		margin: 1rem auto ;
+	}
+	.courseDiscriptionText{
+		font-size: 14px;
+		width: 350px;
+		margin: 0 auto ;
+		padding: 0;
+	}
+	.analyticsBarWrapper{
+		width: 100%;
+		justify-content: center;
+		flex-wrap: wrap;
+		padding: 0 1rem;
+	}
+}
+@media (max-width: 528px) {
+	.analyticsBarWrapper{
+		justify-content: right;
+	}
+}

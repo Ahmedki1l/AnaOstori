@@ -1,0 +1,316 @@
+@import "../../styles/variables.module.scss";
+
+.navbarWrapper {
+	padding: 0.5rem 1rem;
+	position: sticky;
+	top: 0;
+	background-color: #ffffff;
+	z-index: 100;
+	display: flex;
+	border-bottom: 0.3px solid rgba(0, 0, 0, 0.3);
+	transition: all 0.7s;
+}
+
+.navbarInnerWrapper {
+	display: flex;
+}
+
+.navbarSubWrapper {
+	display: flex;
+	align-items: center;
+	font-size: 17px
+}
+
+.logo {
+	margin: 0;
+}
+
+.homeText {
+	font-size: 18px;
+	text-decoration: none;
+	color: #000000;
+}
+
+.navItem {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	list-style: none;
+}
+
+.menuItem {
+	height: 2.5rem;
+	margin: 0 1rem;
+	min-width: 140px;
+}
+
+.submenuBox {
+	width: 200px;
+	position: absolute;
+	background-color: #ffffff;
+	top: 2.2rem;
+	padding: 1rem 1rem 0 1rem;
+	border: 0.3px solid rgba(0, 0, 0, 0.5);
+	border-top: 3px solid $secondary-color;
+	border-radius: 0px 0px 4px 4px;
+	opacity: 0;
+	visibility: hidden;
+	height: 0;
+	transition: all 0.2s;
+}
+
+.subMenuText {
+	padding-bottom: 1rem;
+	text-decoration: none;
+	color: #000000;
+}
+
+.arrowIcon {
+	font-size: 19px;
+}
+
+.navItem {
+	&:hover .submenuBox {
+		opacity: 1;
+		visibility: visible;
+		height: auto;
+		transition: all 0.2s;
+	}
+
+	&:hover p {
+		cursor: pointer;
+		color: $primary-color;
+	}
+
+	&:hover .arrowIcon {
+		color: $primary-color;
+		transform: rotate(180deg);
+		transition: all 0.2s;
+	}
+}
+
+.subMenuText:hover {
+	color: $primary-color;
+}
+
+.navLeftDiv {
+	margin-right: auto;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.viewProfile {
+	width: 219px;
+	height: 46px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 0 0 1rem;
+	margin-right: 28px;
+	cursor: pointer;
+
+	p {
+		padding: 0 0.5rem 0 0;
+		font-size: 17px;
+	}
+}
+
+.loginBtnsBox {
+	display: flex;
+	margin-right: auto;
+}
+
+.loginBtnBox,
+.signupBtnBox {
+	width: 126px;
+	height: 46px;
+}
+
+.loginBtnBox {
+	margin-left: 1rem;
+}
+
+.loginBtn,
+.signupBtn {
+	font-size: 18px;
+	padding: 0;
+}
+
+.inqBtnBox {
+	height: 39px;
+	margin: 0.5rem 0;
+	padding: 0 0.7rem;
+
+	.serchQueryBtn {
+		font-size: 15px;
+		justify-content: flex-start !important;
+	}
+}
+
+.profileMenuWrapper {
+	position: absolute;
+	width: 219px;
+	top: 50px;
+	right: 23px;
+	opacity: 0;
+	visibility: hidden;
+	height: 0;
+	transition: all 0.2s;
+	background-color: transparent;
+	padding-top: 0.5rem;
+}
+
+.profileMenuSubWrapper {
+	padding-bottom: 0.5rem;
+	background-color: #ffffff;
+	border: 1px solid #0000001a;
+	border-radius: 4px;
+}
+
+.borderTop {
+	border-top: 1px solid #0000001a;
+}
+
+.navLeftDiv {
+	&:hover .profileMenuWrapper {
+		opacity: 1;
+		visibility: visible;
+		height: auto;
+	}
+}
+
+.profileMenuItemsWrapper {
+	display: flex;
+	align-items: center;
+	padding: 0.7rem 0.7rem 0 0.7rem;
+	cursor: pointer;
+}
+
+.profileMenuItemsText {
+	font-size: 16px;
+	padding-right: 0.5rem;
+}
+
+.instructorBtnBox {
+	width: 159px;
+	height: 38px;
+
+	button {
+		font-size: 18px;
+		padding: 12px 8px;
+	}
+}
+
+@media (max-width: 1280px) {
+	.navbarSubWrapper {
+		font-size: 15px;
+	}
+
+	.homeText {
+		font-size: 15px;
+	}
+
+	.menuItem {
+		margin: 0 0 0 0.7rem;
+		min-width: 130px;
+	}
+
+	.submenuBox {
+		width: 170px;
+		padding: 0.5rem 0.5rem 0 0.5rem;
+	}
+
+	.subMenuText {
+		padding-bottom: 0.5rem;
+	}
+
+	.inqBtnBox {
+		width: 181px;
+
+		.serchQueryBtn {
+			font-size: 15px;
+		}
+	}
+}
+
+
+@media (max-width: 1024px) {
+	.mobileLogoBar {
+		width: 100vw;
+		height: 3rem;
+		display: flex;
+		justify-content: center;
+		position: sticky;
+		top: 0;
+		background-color: #ffffff;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+		z-index: 100;
+		transition: all 0.7s;
+	}
+
+	.moNavHeader {
+		text-align: center;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid #0000001a;
+	}
+
+	.bellIconDiv {
+		position: absolute;
+		left: 15px;
+		top: 11px;
+	}
+
+	.menuBtn {
+		position: absolute;
+		right: 10px;
+		top: 8px;
+		font-size: 2rem !important;
+		z-index: 100;
+	}
+
+	.slideBarBg {
+		position: absolute;
+		background-color: #0000007a;
+		width: 100vw;
+		height: 100vh;
+		z-index: 99;
+	}
+
+	.sildeBarMenu {
+		background-color: #ffffff;
+		width: 300px;
+		height: 100vh;
+	}
+
+	.inqBtnBox {
+		height: 46px;
+		width: 100%;
+		margin: 0 auto 1rem auto;
+
+		.serchQueryBtn {
+			padding: 0.5rem 0;
+			background-color: #000000;
+		}
+	}
+
+	.mobileNavItemList {
+		font-size: 18px;
+		display: block;
+	}
+
+	.settingDiv {
+		border-width: 1px 0;
+		border-style: solid;
+		border-color: #0000001a;
+	}
+
+	.moLogOutText {
+		color: #ff0000;
+		border-top: 1px solid #0000001a;
+		margin-top: 1rem;
+		padding-top: 1rem;
+	}
+
+}

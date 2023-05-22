@@ -1,0 +1,265 @@
+.verticalTabsContainer {
+	display: grid;
+	grid-template-columns: 318px auto;
+	height: 671px;
+	width: 830px;
+	padding: 5rem 1rem 0 1rem;
+	margin: 0 auto;
+}
+
+.tabsList {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #0000001a;
+	border-radius: 0px 6px 6px 0px;
+	overflow: hidden;
+}
+
+.tab {
+	display: flex;
+	padding: 10px;
+	cursor: pointer;
+	border-bottom: 1px solid #0000001a;
+	border-right: 8px solid transparent;
+	height: 79px;
+	position: relative;
+}
+
+.tab.active {
+	border-right: 8px solid #F26722;
+}
+
+.tabDiv {
+	display: flex;
+	align-items: center;
+}
+
+.tabTitleDiv {
+	padding-right: 0.5rem;
+}
+
+.tabTitle {
+	font-size: 18px;
+	line-height: 22px;
+}
+
+.tab1SubTitle {
+	font-size: 15px;
+	line-height: 18px;
+	opacity: 0.5;
+}
+
+.passwordVisibilityIcon {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.tabContent {
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	width: auto;
+	border-width: 1px 0px 1px 1px;
+	border-style: solid;
+	border-color: #0000001a;
+	border-radius: 6px 0px 0px 6px;
+}
+
+.subContentDiv {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-bottom: 20px;
+	cursor: pointer;
+}
+
+.userDetailTitle {
+	font-size: 16px;
+	line-height: 19px;
+}
+
+.subContentValueDiv {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.userDetailText {
+	margin-left: 5px;
+	font-size: 17px;
+	line-height: 20px;
+	color: #0000008a;
+}
+
+.existingDetailText {
+	font-size: 15px;
+	color: #00000080;
+	margin-bottom: -0.5rem;
+}
+
+.IconDiv {
+	margin: auto 0;
+	position: absolute;
+	top: 0.8rem;
+	right: 0.5rem;
+}
+
+.passwordInputBox label {
+	right: 2.5rem;
+}
+
+
+.passwordInputBox input {
+	padding-right: 2.5rem;
+	font-size: 16px;
+	border: 1px solid #0000001a;
+}
+
+.disable {
+	position: absolute;
+	height: 100%;
+	width: calc(100% + 14px);
+	background-color: #0000004f;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	cursor: not-allowed;
+}
+
+.disableFormInput {
+	background-color: #0000004f !important;
+	cursor: not-allowed;
+}
+
+.submitBtnBox {
+	width: 19.8rem;
+	height: 47px;
+
+	button {
+		font-size: 16px;
+	}
+}
+
+.updateGenderBtnDefault.active {
+	background: #F06A25;
+}
+
+.genderBtnBox {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	width: 19.8rem;
+	height: 47px;
+	margin: 1rem 0;
+	border: 1px solid #0000001a;
+	border-radius: 4px;
+	overflow: hidden;
+
+	button {
+		border: none;
+		background: #FFFFFF;
+		font-size: 16px;
+		line-height: 19px;
+		color: #000000;
+		width: 50%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+
+		span {
+			margin-right: 5px;
+		}
+	}
+
+	.maleBtn {
+		border-left: 1px solid #0000001a;
+	}
+}
+
+
+.genderActiveBtn {
+	background: #F06A25 !important;
+	color: #FFFFFF !important;
+}
+
+
+.phoneTitleDiv {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 15px;
+	cursor: pointer;
+}
+
+.phoneTitleDiv h3 {
+	font-size: 18px;
+	line-height: 22px;
+	text-align: right;
+	margin-right: 10px;
+}
+
+
+.passwordIconDiv {
+	margin: auto 0;
+	position: absolute;
+	top: 0.8rem;
+	right: 17.5rem;
+	cursor: pointer;
+}
+
+.formInputLable {
+	color: #00000080;
+}
+
+.errorText {
+	color: rgb(211, 47, 47);
+	font-size: 0.75rem;
+	line-height: 1.66;
+	letter-spacing: 0.03333em;
+	margin-top: -1rem;
+}
+
+
+@media (max-width: 830px) {
+	.verticalTabsContainer {
+		width: 100%;
+		padding: 2rem 1rem 0 1rem;
+		margin: 0 auto;
+		grid-template-columns: 250px auto;
+	}
+
+	.tabTitle {
+		font-size: 16px;
+		line-height: 18px;
+	}
+}
+
+@media (max-width: 640px) {
+	.verticalTabsContainer {
+		padding: 1rem 0 0 0;
+		display: block;
+	}
+
+	.rightArrowDiv {
+		margin-bottom: 1rem;
+	}
+
+	.tabsList {
+		border: 0;
+		border-radius: 0;
+	}
+
+	.tabContent {
+		border-width: 0;
+	}
+
+	.tab {
+		border-bottom: 0px solid #0000001a;
+		border-right: 0px solid transparent;
+	}
+
+	.tab.active {
+		border-right: 0px solid #F26722;
+	}
+}

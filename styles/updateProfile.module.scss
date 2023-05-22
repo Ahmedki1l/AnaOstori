@@ -1,0 +1,60 @@
+.updateProfileWrapper{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 316px;
+	padding-top: 5rem;
+}
+
+.mainPage{
+	height: calc(100vh - 58px);
+}
+
+.defaultText{
+	cursor: pointer;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin:0 0 1rem 0;
+}
+
+.inputBox{
+	outline: none;
+	border: none;
+	height: 100%;
+	margin-right: 0.5rem;
+	font-size: 16px;
+}
+
+
+.errorText{
+	color: rgb(211, 47, 47);
+	font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.66;
+    letter-spacing: 0.03333em;
+}
+
+.loginPageInputBox{
+	height: 46px;
+	width: 100%;
+	border: 0.5px solid rgba(0, 0, 0, 0.5);
+	border-radius: 4px;
+	margin: 0 auto 1rem auto;
+	display: flex;
+	align-items: center;
+	padding: 12px;
+}
+
+.loginBtnBox{
+	margin: 0 0 1rem 0;
+	width: 100%;
+}
+
+.updateProfileBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

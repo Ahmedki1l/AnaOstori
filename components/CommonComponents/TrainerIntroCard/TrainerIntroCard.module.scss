@@ -1,0 +1,40 @@
+.instructorPicWrapper {
+	height: 53px;
+	width: 53px;
+	border-radius: 50%;
+	overflow: hidden;
+	position: relative;
+}
+
+.instructorNameText {
+	font-size: 15px;
+}
+
+.instructorBioText {
+	font-size: 12px;
+}
+
+.whatsAppLogoWrapper {
+	height: 20px;
+	width: 20px;
+	border-radius: 50%;
+	background-color: #25D366;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 5px;
+}
+
+
+
+@media (max-width: 1350px) {
+	.instructoreContainer {
+		width: 49%;
+	}
+}
+
+@media (max-width: 640px) {
+	.instructoreContainer {
+		width: 100%;
+	}
+}

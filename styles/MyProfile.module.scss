@@ -1,0 +1,65 @@
+@import "./variables.module.scss";
+
+.profileInfoWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.userNameText {
+	font-size: 21px;
+	margin: 1rem 0;
+}
+
+.updateProfileBtnBox {
+	height: 39px;
+	width: 317px;
+
+	button {
+		font-size: 16px;
+	}
+}
+
+.courseHeading {
+	border-bottom: 0.5px solid rgba(0, 0, 0, 0.25);
+	width: 100%;
+	margin: 10px 0 25px 0;
+}
+
+.myCourseHeadingText {
+	display: inline-flex;
+	font-size: 20px;
+	color: $primary-color;
+	border-bottom: 3px solid $primary-color;
+	padding: 3px;
+}
+
+.noCourseWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1rem 1rem 10rem 1rem;
+}
+
+.noCourseText {
+	font-size: 20px;
+	padding: 0.75rem 0;
+}
+
+@media (max-width: 1024px) {
+	.courseCardsWrapper {
+		justify-content: center;
+	}
+}
+
+@media (max-width: 640px) {
+
+	.courseHeading {
+		width: 100%;
+		margin: 10px 0 25px 0;
+	}
+
+	.myCourseHeadingText {
+		padding: 5px 1rem;
+	}
+}

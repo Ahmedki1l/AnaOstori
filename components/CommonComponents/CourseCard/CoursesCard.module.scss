@@ -1,0 +1,50 @@
+.cardMainDiv {
+	min-width: 317px;
+	border: 1px solid #0000002c ;
+	border-radius: 4px;
+	margin: 1.5rem 0 1.5rem 2rem;
+}
+
+.cardContentDiv {
+	padding: 10px;
+}
+
+.courseHeading p {
+	font-size: 20px;
+	line-height: 24px;
+	color: #F26722;
+	text-decoration: underline;
+}
+
+.subscriptionText {
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.followUpBtn {
+	font-size: 16px;
+	width: 100%;
+	height: 40px;
+	margin: 10px 0 8px 0;
+}
+
+.courseTitle {
+	font-size: 18px;
+	line-height: 22px;
+	margin-bottom: 8px;
+}
+
+.progressText {
+	font-size: 12px;
+	line-height: 14px;
+	color: #000000;
+	margin-bottom: 4px;
+}
+
+@media (max-width: 1024px) {
+	.cardMainDiv {
+		margin: 1.5rem 0;
+	}
+}

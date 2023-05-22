@@ -1,0 +1,72 @@
+.dialogWrapper {
+    width: 800px;
+}
+
+.dialogCloseBtn {
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.headerText {
+    font-size: 23px;
+}
+
+.fireOmageDiv {
+    height: 18px;
+    width: 18px;
+    position: relative;
+}
+
+.dialogSubWrapper {
+    position: relative;
+}
+
+.celebration2GIF {
+    width: 300px;
+    height: 269px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.homeBtnBox,
+.reviewBtnBox {
+    width: 166px;
+    margin: 1rem 1rem 0 1rem !important;
+    text-decoration: none !important;
+
+    button {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1280px) {
+    .dialogWrapper {
+        width: 650px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dialogWrapper {
+        width: 450px;
+    }
+}
+
+@media (max-width: 500px) {
+    .dialogWrapper {
+        width: 350px;
+    }
+
+
+
+    .homeBtnBox,
+    .reviewBtnBox {
+        margin: 1rem 0.5rem 0 0.5rem;
+
+        button {
+            font-size: 16px;
+        }
+    }
+}

@@ -1,0 +1,131 @@
+@import "../../../styles/variables.module.scss";
+
+.pageOneMainArea,.pageTwoMainArea{
+    position: relative;
+    width: 61.25rem;
+	height: 9.3rem;
+	overflow: hidden;
+	margin: auto;
+}
+.pageNoOne{
+	top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pageNoTwo{
+	top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.circle{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.middleLine{
+	width: 85%;
+	height: 10px;
+	top:38%;
+    left: 5rem;
+    z-index: -1;
+}
+.pageNoHead{
+	font-size: 20px;
+}
+.pageOneMainArea{
+	.firstPageBox{
+		background-color: $primary-color;
+		p{
+			color: #ffffff;
+			font-size: 28px;
+		}
+	}
+	.middleLine{
+		background-color: #ffc4a6;
+	}
+	.secondPage{
+		border: 6px solid #ffc4a6;
+		background-color: #ffffff;
+		p{
+			color: #ffc4a6;
+			font-size: 28px;
+		}
+	}
+}
+.pageTwoMainArea{
+	.firstPageBox{
+		border: 6px solid #00B564;
+		background-color: #ffffff;
+		.icon{
+			color: #00B564;
+			font-size: 5rem;
+			margin: 0.3rem 0;
+		}
+	}
+	.middleLine{
+		background-color: #00B564;
+	}
+	.secondPage{
+		background-color: #00B564;
+		p{
+			color: #ffffff;
+			font-size: 28px;
+		}
+	}
+	
+	
+}
+@media (max-width:1024px) {
+	.pageOneMainArea,.pageTwoMainArea{
+		width: 35rem;
+		height: 8rem;
+	}
+	.middleLine{
+		width: 25rem;
+		height: 7px;
+	}
+	.pageNoHead{
+		font-size: 17px;
+	}
+	.pageOneMainArea{
+		.secondPage{
+			border-width: 5px;
+		}
+	}
+	.pageTwoMainArea{
+		.firstPageBox{
+			border-width: 5px;
+		}
+	}
+	
+}
+@media (max-width:640px) {
+	.pageOneMainArea,.pageTwoMainArea{
+		width: 20rem;
+		height: 6.25rem;
+		margin-top: 1rem;
+	}
+	.middleLine{
+		width: 11rem;
+		height: 5px;
+		top: 41%;
+	}
+	.pageNoHead{
+		font-size: 15px;
+	}
+	
+	.pageOneMainArea{
+		.secondPage{
+			border-width: 4px;
+		}
+	}
+}

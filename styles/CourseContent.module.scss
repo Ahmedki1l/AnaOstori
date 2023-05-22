@@ -1,0 +1,48 @@
+@import "./variables.module.scss";
+
+.watchCourseTopNavWrapper{
+	position: relative;
+	padding: 0 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #FDFDFD;
+}
+.boderBottom{
+	border-bottom: 0.3px solid #a9a9a9;
+}
+.courseTitleWrapper{
+	position: absolute;
+	right: 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.courseTitle{
+	font-size: 22px;
+	padding: 0 1rem 0 0;
+}
+.navItemText{
+	padding: 1rem;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	font-size: 20px;
+}
+.selectedTab{
+	color: $primary-color;
+	border-bottom-color: $primary-color;
+	font-weight: 600 !important;
+}
+
+@media (max-width: 962px) {
+	.navItemText{
+		padding: 3rem 1rem 0.5rem 1rem;
+		font-size: 16px;
+	}
+	.courseTitleWrapper{
+		top: 0.5rem;
+	}
+	.courseTitle{
+		font-size: 18px;
+	}
+}

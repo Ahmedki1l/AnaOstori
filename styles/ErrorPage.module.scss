@@ -1,0 +1,64 @@
+.errorpageWrapper{
+    width: 50rem;
+    margin: 7rem auto;
+}
+.pageImageDiv{
+    width: 301px;
+    height: 188px;
+    position: relative;
+    margin: 2rem auto 1rem auto;
+}
+.pageHead{
+    font-size: 22px;
+    text-align: center;
+    padding: 0.5rem 0;
+}
+.subTitle{
+    font-size:18px;
+    text-align: center;
+}
+.btnsBox{
+	margin: 1rem 0;
+	display: flex;
+	justify-content: space-between;
+}
+.btnBox{
+	width: 48%;
+	button{
+		font-size: 18px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.errorpageWrapper{
+        width: 40rem;
+		margin: 2rem auto 5rem auto;
+	}
+	.btnsBox{
+		width: 90%;
+		margin: 1rem auto;
+	}
+}
+@media (max-width: 640px) {
+    .errorpageWrapper{
+        width: 90%;
+        margin: 7rem auto;
+    }
+    .pageImageDiv{
+        width: 248px;
+        height: 155px;
+    }
+	.subTitle{
+		font-size:16px;
+	}
+    .btnsBox{
+		width: 100%;	
+	}
+	.btnBox{
+		button{
+			margin: 0.2rem auto;
+			font-size: 15px;
+			padding: 0.5rem 0;
+		}
+	}
+}

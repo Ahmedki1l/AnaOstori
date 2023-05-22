@@ -1,0 +1,464 @@
+@import "../../../styles/variables.module.scss";
+
+.paymentInfoMainArea {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.backBarWrapper {
+	position: relative;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.backArrowIcon {
+	position: absolute;
+	top: 1rem;
+	right: 1.5rem;
+}
+
+.paymentInfoDiv {
+	min-width: 500px;
+	margin: 1rem 0 1rem 0;
+}
+
+.radioBtnBox {
+	display: flex;
+	padding: 1rem;
+	cursor: pointer;
+}
+
+.radioBtnBox1 {
+	border-width: 0.3px 0.3px 0.3px 0.3px;
+	border-color: #a9a9a9;
+	border-style: solid;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 8px 8px 0 0;
+}
+
+.radioBtnBox2 {
+	border-width: 0 0.3px 0.3px 0.3px;
+	border-color: #a9a9a9;
+	border-style: solid;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.disableBox {
+	position: absolute;
+	background-color: #0000007a;
+	width: 100%;
+	height: 100%;
+	border-radius: 8px 8px 0 0;
+	cursor: not-allowed;
+}
+
+.radioBtnBox3 {
+	border-radius: 0 0 8px 8px;
+	border-width: 0 0.3px 0.3px 0.3px;
+	border-style: solid;
+	border-color: #a9a9a9
+}
+
+.labelText {
+	font-size: 20px;
+}
+
+.circle {
+	height: 26px;
+	width: 26px;
+	border-radius: 50%;
+	border: 1px solid #a9a9a9;
+	margin: 0 0.5rem;
+
+	div {
+		background-color: transparent;
+		height: 14px;
+		width: 14px;
+		margin: 5px;
+		border-radius: 50%;
+	}
+}
+
+.creditCardWrapper {
+	display: none;
+	width: 35rem;
+	border-width: 0 0.3px 0.3px 0.3px;
+	border-style: solid;
+	border-color: #a9a9a9;
+}
+
+.bankDetailWrapper {
+	width: auto;
+	padding: 1rem;
+}
+
+.paymentInfoDiv input[type="radio"]:checked+label {
+	.radioBtnBox3 {
+		border-radius: 0;
+	}
+
+	.creditCardWrapper {
+		display: block;
+	}
+
+	.circle {
+		div {
+			background-color: #000000;
+		}
+	}
+}
+
+.inputDiv {
+	width: 100%;
+	height: 3.5rem;
+	margin: 0 0 2rem 0;
+}
+
+.inputDivShort {
+	width: 49%;
+}
+
+.inputBox {
+	height: 100%;
+	width: 100%;
+	border: 1px solid #a9a9a9;
+	outline: none;
+	border-radius: 4px;
+	padding: 1rem;
+}
+
+
+
+.courseInfoBox {
+	margin: 2rem 0;
+	border: 1px solid #a9a9a9;
+	border-radius: 9px;
+	padding: 1rem;
+	height: fit-content;
+	min-width: 29rem;
+}
+
+.courseCover {
+	width: 189px;
+	height: 113px;
+}
+
+.courseTitle {
+	font-size: 20px;
+}
+
+.downloadIcon {
+	font-size: 25px;
+}
+
+.couponCodeInputBox {
+	display: flex;
+	margin: 0.5rem 0;
+	height: 44px !important;
+}
+
+.couponCodeInput {
+	width: 100%;
+	height: 100%;
+	padding: 1rem 1rem 0 0;
+	border: 1px solid #a9a9a9;
+	overflow: hidden;
+}
+
+.couponCodeBtn {
+	background: transparent;
+	color: $primary-color;
+	padding: 0.5rem 1rem;
+	border: 1px solid $primary-color;
+	border-radius: 4px;
+	outline: none;
+	height: 44px;
+	margin-right: 10px;
+	font-size: 16px;
+}
+
+.couponCodeLabel {
+	top: 0.5rem;
+
+}
+
+.DisCouponCodeBtn {
+	border: 1px solid #a9a9a9;
+	color: #0000007a;
+	cursor: not-allowed;
+}
+
+.priceDetailsBox {
+	margin: 1rem 0 0 0;
+	padding: 1rem 0 0 0;
+	border-top: 1px solid #a9a9a9;
+}
+
+.paymentBtnBox {
+	margin: 1rem 0;
+
+	button {
+		font-size: 18px
+	}
+}
+
+.list {
+	list-style: none;
+	width: 755px;
+}
+
+.link {
+	color: #0671E0;
+	text-decoration: underline;
+}
+
+.backBtnBox {
+	margin: 0 0 1rem 0;
+	width: 13rem;
+	height: 3rem;
+
+	button {
+		font-size: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 1rem 0.5rem;
+
+		.arrowIcon {
+			margin: 0 0 0 0.2rem;
+		}
+	}
+}
+
+.errorText {
+	color: #ff0000;
+	font-size: 14px;
+}
+
+.sucessText {
+	font-size: 14px;
+	color: #00bd5d;
+}
+
+.bankDetailSubWrapper {
+	width: 755px;
+}
+
+.bankDetailsBox {
+	width: 48%;
+	margin-left: 10px;
+}
+
+.creditcardWrapperText {
+	font-size: 19px;
+}
+
+@media (max-width: 1350px) {
+
+	.paymentInfoMainArea {
+		justify-content: space-evenly;
+	}
+
+	.paymentInfoContainer {
+		width: 50%;
+	}
+
+	.bankDetailSubWrapper {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.bankDetailsBox {
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.creditCardWrapper {
+		width: auto;
+	}
+
+	.courseTitle {
+		font-size: 18px;
+	}
+
+	.dateAndName {
+		font-size: 15px;
+	}
+
+	.downloadIcon {
+		font-size: 22px;
+	}
+
+	.couponCodeBtn,
+	.couponCodeInputBox {
+		font-size: 15px;
+	}
+
+	.priceDetailsBox {
+		p {
+			font-size: 15px;
+		}
+	}
+
+	.list {
+		width: 100%;
+	}
+}
+
+@media (max-width: 1084px) {
+	.courseCover {
+		width: 134px;
+		height: 81px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.paymentInfoMainArea {
+		flex-direction: column-reverse;
+		align-items: center;
+	}
+
+	.paymentInfoContainer {
+		max-width: 39rem;
+		width: 90%;
+		margin-top: 2rem;
+	}
+
+
+
+	.bankDetailSubWrapper {
+		justify-content: flex-start;
+	}
+
+	.courseInfoBox {
+		width: 39rem;
+		padding: 1rem 0.5rem;
+	}
+
+	.labelText {
+		font-size: 18px;
+	}
+}
+
+@media (max-width: 640px) {
+	.courseInfoBox {
+		width: 100%;
+		max-width: none;
+		border: none;
+		margin: 0;
+		padding: 1rem;
+
+		h1 {
+			padding-bottom: 0.5rem;
+		}
+	}
+
+	.priceDetailsBox {
+		position: fixed;
+		bottom: 0;
+		right: 0;
+		width: 100vw;
+		padding: 1rem 1rem 0 2rem;
+		background-color: #ffffff;
+		border: none;
+		z-index: 10;
+		margin: 0;
+		box-shadow: 0px -3px 7px #00000029;
+	}
+
+	.couponCodeInputDiv {
+		padding-top: 1rem;
+	}
+
+	.paymentInfoContainer {
+		width: 100%;
+		max-width: none;
+		padding: 0;
+		border-top: 10px solid #8080804d;
+		margin: 0;
+
+		h1 {
+			padding: 1rem 1rem 0 1rem;
+		}
+	}
+
+	.radioBtnBox1 {
+		border-width: 1px 0 1px 0;
+		border-radius: 0;
+	}
+
+	.disableBox {
+		border-radius: 0;
+	}
+
+	.radioBtnBox2 {
+		border-width: 0 0 1px 0;
+	}
+
+	.radioBtnBox3 {
+		border-width: 0 0 1px 0;
+		border-radius: 0;
+	}
+
+	.labelText {
+		font-size: 16px;
+	}
+
+	.creditCardWrapper {
+		border-width: 0 0 1px 0;
+	}
+
+	.creditcardWrapperText {
+		font-size: 13px;
+	}
+
+	.backBtnBox {
+		padding-right: 1rem;
+		height: auto;
+		width: 12rem;
+
+		button {
+			.arrowIcon {
+				font-size: 20px;
+			}
+		}
+	}
+
+	.dateAndName {
+		font-size: 14px;
+	}
+
+	.courseTitle {
+		font-size: 12px;
+	}
+
+	.downloadIcon {
+		font-size: 20px;
+	}
+
+	.couponCodeBtn,
+	.couponCodeInputBox {
+		font-size: 13px;
+	}
+
+	.noOfUsersTagText {
+		font-size: 14px;
+	}
+
+	.paymentInfoDiv {
+		margin-bottom: 2rem;
+		min-width: 300px;
+	}
+}
+
+@media (max-width: 476px) {
+	.couponCodeInput {
+		width: calc(100vw - 100px);
+	}
+
+	.paymentInfoMainArea {
+		align-items: flex-start;
+	}
+}

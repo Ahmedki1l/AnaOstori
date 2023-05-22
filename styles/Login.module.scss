@@ -1,0 +1,135 @@
+.mainPage {
+	height: calc(100vh - 65px);
+}
+
+.loginFormDiv {
+	position: absolute;
+	width: 550px;
+	padding: 24px 48px 20px 48px;
+	top: 3.5rem;
+	left: 50%;
+	transform: translate(-50%, 0);
+	border: 1px solid #0000001a;
+	border-radius: 4px;
+}
+
+.loginPageHead,
+.signUpPageHead {
+	font-size: 24px;
+	text-align: center;
+}
+
+.signUpPageSubText {
+	font-size: 18px;
+}
+
+.loginPageSmallInputBox {
+	display: block;
+	width: 98%;
+}
+
+.loginFormInput {
+	width: 100%;
+	padding-right: 2.2rem;
+	border: 1px solid #0000001a;
+}
+
+.loginFormLabel {
+	padding-right: 1.5rem;
+	font-size: 16px;
+	color: #00000080;
+}
+
+.loginPageIconDiv {
+	width: 100%;
+	margin: auto 1rem
+}
+
+.genderText {
+	font-size: 18px;
+}
+
+.radioBtns {
+	width: 22px;
+	height: 22px;
+	accent-color: #000000 !important;
+}
+
+
+.loginBtnBox {
+	margin: 1rem 0;
+	height: 50px;
+
+	button {
+		font-size: 16px;
+	}
+}
+
+.middleLine {
+	height: 1px;
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+	background-color: #0000001a;
+	z-index: -1;
+}
+
+.andText {
+	background-color: #FFFFFF;
+	margin: 0 auto;
+	width: 6rem;
+	text-align: center;
+	color: #00000080;
+}
+
+.googleLoginBtnBox {
+	height: 50px;
+	border: 0.5px solid rgba(0, 0, 0, 0.5);
+	border-radius: 4px;
+	margin: 0.8rem 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+
+	p {
+		font-size: 16px;
+	}
+}
+
+.radioBtnDiv {
+	margin-top: 0 !important;
+}
+
+.gotoPageText {
+	font-size: 16px;
+	text-align: center;
+	margin: 1.5rem 0 0 0;
+}
+
+.passwordHintText {
+	font-size: 12px;
+	color: #00000080;
+	margin-top: -0.7rem;
+}
+
+.errorText {
+	color: rgb(211, 47, 47);
+	font-size: 12px;
+	line-height: 1.66;
+	letter-spacing: 0.03333em;
+	margin-top: -0.7rem;
+}
+
+.passwordIconDiv {
+	position: absolute;
+	left: 0.5rem;
+	top: 1rem;
+	margin: auto 0.5rem;
+}
+
+.visibilityIcon {
+	font-size: 1.3rem !important;
+	color: #00000080;
+}

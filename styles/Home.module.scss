@@ -1,0 +1,376 @@
+@import "./variables.module.scss";
+.container{
+	height: calc(100% - 60px);
+	overflow-y: auto;
+}
+.notificationBarwraper{
+	background-color: $primary-color;
+	padding: 0 1rem;
+}
+.notificationText{
+	text-align: center;
+	color: #ffffff;
+	padding: 0.5rem 0;
+	width: 100%;
+	font-size: 20px;
+}
+.closeIcon{
+	font-size: 25px;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+
+
+
+.mainSection{
+	padding: 2rem 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.textSection{
+	width: 588px;
+	p{
+		font-size: 22px;
+	}
+}
+.animatedTextBox{
+	position: relative;
+	overflow: hidden;
+	height: 30px;
+	width: 165px;
+}
+.animatedText{
+	position: absolute;
+	color: $primary-color;
+	padding-right: 0.3rem;
+	top: 31px;
+	animation-duration: 9s;
+	animation-name: textAnimation;
+	animation-iteration-count: infinite;
+}
+
+@keyframes textAnimation {
+	0%{top:31px}
+	16%{top:0px}
+	24%{top:0px}
+	40%{top:31px}
+	100%{top:31px}
+}
+.animatedText:nth-child(1) { animation-delay: 0s; }
+.animatedText:nth-child(2) { animation-delay: 3s; }
+.animatedText:nth-child(3) { animation-delay: 6s; }
+.btnBox{
+	width: 32rem;
+	display: flex;
+}
+.firstBtnBox, .secondBtnBox{
+	width: 210px;
+	height: 46px;
+	margin: 1rem 0 0 1rem;
+}
+.firstBtn,.secondBtn{
+	padding: 0 1rem;
+}
+.videoSection{
+	height: 300px;
+	width: 500px;
+	background-color: black;
+	position: relative;
+	cursor: pointer;
+}
+
+.videoThumnail{
+	width: 29rem;
+	margin-right: auto;
+}
+
+
+.analyticsBarWrapper{
+	background-color: #2d2e2dcc;
+	padding: 0.5rem;
+	position: relative;
+}
+.analyticsBarSubWrapper{
+	position: relative;
+	padding: 0 1rem;
+}
+.badgeDiv{
+	display: flex;
+	align-items: center;
+	padding-bottom: 3rem;
+}
+.courseTypesWrapper{
+	display: flex;
+	justify-content: center;
+}
+.courseTypeCard{
+	width: 250px;
+	margin: 2rem 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.discriptionText,.userFeedbackDiscription{
+	font-size: 22px;
+}
+.imagesWrapper{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.imagesSubWrapper{
+	position: relative;
+	width: 500px;
+}
+.image1,.image2,.image3{
+	position: absolute;
+}
+.image1{
+	top: 1rem;
+    left: 1rem;
+    height: 103px;
+    width: 167px;
+}
+.image2{
+	top: 5.5rem;	
+	left: 8.5rem;
+	z-index: 1;
+	height: 125px;
+    width: 202px;
+}
+.image3{
+	top: 11rem;	
+	right: 2rem;
+	height: 103px;
+    width: 167px;
+}
+
+
+
+.courseSection{
+	padding: 2rem 1rem;
+}
+.courseCardsWraper{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	padding: 1rem 0 0 0;
+}
+.courseCardWraper{
+	width: 318px;
+    height: 235px;
+	border: 0.5px solid rgba(0, 0, 0, 0.5);
+	border-radius: 4px;
+	cursor: pointer;
+	overflow: hidden;
+	margin-bottom: 1rem;
+}
+.courseImgBox{
+	width: 100%;
+	position: relative;
+}
+.courseDetailsBox{
+	padding: 1rem;
+}
+
+.userFeedbackSec{
+	padding-top:1.5rem ;
+	padding-bottom: 2rem;
+}
+.paddingTop{
+	padding-top: 4rem;
+}
+
+@media (max-width: 1350px) {
+	.courseCardWraper{
+		width: 290px;
+	}
+}
+
+@media (max-width: 1280px) {
+	.textSection{
+		width: 530px;
+		p{
+			font-size: 19px;
+		}
+	}
+	.videoSection{
+		height: 275px;
+		width: 450px;
+	}
+	.courseCardWraper{
+		margin: 0 0 1rem 1rem ;
+		width: 270px;
+		height: 210px;
+	}
+	.discriptionText,.userFeedbackDiscription{
+		font-size: 19px;
+	}
+	.firstBtnBox, .secondBtnBox{
+		height: auto;
+	}
+	.firstBtn,.secondBtn{
+		padding: 0.5rem 1rem;
+	}
+}
+@media (max-width: 1180px) {
+	.courseCardsWraper{
+		justify-content: center;
+	}
+	.courseCardWraper{
+		margin: 0 auto 1rem 1rem;
+	}
+	.discriptionText{
+		width: 470px;
+	}
+}
+@media (max-width: 1024px) {
+	.videoSection{
+		height: 250px;
+		width: 400px;
+	}
+	.notificationText{
+		font-size: 18px;
+	}
+	.closeIcon{
+		font-size: 25px;
+	}
+	.videoThumnail{
+		width: 25rem;
+		margin: 0 auto;
+	}
+	.discriptionText{
+		width: 450px;
+	}
+	.image1,.image3{
+		height: 82px;
+    	width: 151px;
+	}
+	.image2{
+		top: 5rem;
+    	left: 8rem;
+		height: 102px;
+		width: 179px;
+	}
+	.image3{
+		top: 10rem;
+		right: 5rem;
+	}
+}
+@media (max-width: 962px) {
+	.mainSection{
+		display: flex;
+		flex-direction: column-reverse;
+	}
+	.textSection{
+		padding-top: 1rem;
+		width: 530px;
+	}
+	.imagesWrapper{
+		position: static;
+	}
+	.imagesSubWrapper{
+		height: 270px;
+		margin: 0 auto;
+	}
+	.badgeDiv{
+		justify-content: center;
+		padding-bottom: 2rem;
+	}
+	.typeOfCourseHeader{
+		text-align: center;
+	}
+	.courseSection{
+		padding: 3rem 1rem 2rem 1rem;
+	}
+	.courseCardsWraper{
+		justify-content: center;	
+	}
+	.btnBox{
+		justify-content: center;
+	}
+	.discriptionText,.userFeedbackDiscription{
+		font-size: 17px;
+	}
+	
+}
+@media (max-width: 640px) {
+	.textSection{
+		width: 350px;
+	}	
+	.animatedTextBox{
+		position: absolute;
+		top: 30px;
+    	left: 158px;
+	}
+	.videoSection{
+		width: 350px;
+	}
+	.btnBox{
+		width: 100%;
+		padding: 1rem 0;
+	}
+	.analyticsBarSubWrapper{
+		padding: 0;
+	}
+	.badgeDiv{
+		p{
+			width: 250px;
+		}
+	}
+	.imagesSubWrapper{
+		width: 340px;
+		height: 220px;
+	}
+	.image1{
+		top: 0.5rem;
+		left: 0.5rem;	
+	}
+	.image2{
+		top: 4rem;
+    	left: 5.5rem;
+	}
+	.image3{
+		top: 9rem;
+		right: 0.5rem;
+	}
+	.courseCardWraper{
+		height: auto;
+		width: 340px;
+	}
+	.notificationText{
+		font-size: 16px;
+	}
+	.closeIcon{
+		font-size: 20px;
+	}
+	.videoThumnail{
+		width: 22rem;
+	}
+	.firstBtnBox, .secondBtnBox{
+		width: 100%;
+	}
+	.firstBtn, .secondBtn{
+		font-size: 18px !important;
+	}
+}
+
+
+
+
+// @media (max-width: 1350px) {
+// }
+// @media (max-width: 1280px) {
+// }
+// @media (max-width: 1024px) {
+// }
+// @media (max-width: 962px) {
+// }
+// @media (max-width: 768px) {
+// }
+// @media (max-width: 640px) {
+// }
+// @media (max-width: 450px) {
+// }

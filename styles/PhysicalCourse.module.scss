@@ -1,0 +1,274 @@
+@import "./styles/variables.module.scss";
+
+.courseExtraDetailsWrapper {
+	padding: 0 1rem 1rem 1rem;
+}
+
+.courseDetailsNavbarWrapper {
+	border-bottom: 1.5px solid #00000054;
+	background-color: #ffffff;
+	z-index: 20;
+}
+
+.courseDetailsNavbar {
+	padding: 0 1rem;
+	width: calc(100% - 432px);
+	position: relative;
+	background-color: #ffffff;
+	display: flex;
+
+	li {
+		margin: 0 0 0 2rem;
+		font-size: 19px;
+		cursor: pointer;
+		text-align: center;
+		padding: 0.8rem 0;
+		list-style: none;
+	}
+}
+
+.courseDetailsNavbarSticky {
+	position: fixed;
+	top: 63px;
+	width: 100%;
+}
+
+.activeItem {
+	color: $primary-color;
+	font-family: 'Tajawal-Bold';
+}
+
+.discriptionText {
+	width: 65%;
+	font-size: 20px;
+}
+
+.courseULTag {
+	padding: 0 1.8rem;
+	list-style: disc;
+	font-size: 18px;
+}
+
+.maleDateHead {
+	padding: 0 0.5rem;
+	font-size: 20px;
+}
+
+.bookSitBtnBox {
+	width: 13rem;
+	height: 3rem;
+}
+
+.firstBtn {
+	font-size: 18px;
+	padding: 0 1rem;
+}
+
+.paddingTopSection {
+	padding-top: 6.5rem !important;
+}
+
+.courseCurriculumWrapper {
+	width: 60%;
+}
+
+.ccSectionWrapper {
+	margin-bottom: 28px;
+}
+
+.ccSectionHeaders {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 14px 20px 14px 20px;
+	background-color: #2D2E2D;
+	border-radius: 8px;
+}
+
+.borderBottom0 {
+	border-radius: 8px 8px 0 0 !important;
+}
+
+.ccSectionBodyWrapper {
+	border-radius: 0 0 8px 8px;
+	border: 1px solid #0000004d;
+}
+
+.ccSectionName {
+	font-size: 22px;
+	color: #ffffff;
+}
+
+.ccItemWrapper {
+	padding: 14px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.lockItemWrapper {
+	width: 80px;
+	display: flex;
+	justify-content: center;
+}
+
+.previewItemText {
+	font-size: 16px;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #0075FF;
+}
+
+.ccItemName {
+	font-size: 16px;
+	padding: 0 8px;
+}
+
+.ccItemDiscription {
+	font-size: 12px;
+	color: #0000008a;
+	padding: 0 8px;
+}
+
+.courseContentDetailsText {
+	font-size: 18px;
+	padding: 0 0 12px 0;
+}
+
+
+@media (max-width: 1350px) {
+
+	.bookSitBtnBox {
+		margin: 0 0 0 1rem;
+	}
+}
+
+@media (max-width: 1280px) {
+	.courseDetailsNavbar {
+		width: calc(100% - 376px);
+
+		li {
+			margin: 0 0 0 1.5rem;
+			font-size: 17px;
+		}
+	}
+
+	.discriptionText {
+		font-size: 17px;
+	}
+
+	.firstBtn {
+		font-size: 17px;
+	}
+
+	.bookSitBtnBox {
+		width: 12rem;
+	}
+}
+
+@media (max-width: 1150px) {
+	.courseDetailsNavbar {
+		width: calc(100vw - 341px);
+	}
+}
+
+@media (max-width: 1024px) {
+	.courseDetailsNavbar {
+		position: relative;
+
+		li {
+			margin: 0 0 0 1rem;
+			font-size: 15px;
+			width: 100px;
+		}
+
+		&:before {
+			position: absolute;
+			content: "*";
+			color: transparent;
+			left: 0;
+			width: 50px;
+			height: 100%;
+			background-image: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+			z-index: 5;
+		}
+	}
+
+	.courseDetailsNavbarFixed {
+		width: 100% !important;
+	}
+
+	.discriptionText {
+		width: 57%;
+		font-size: 16px;
+	}
+
+	.firstBtn {
+		font-size: 15px;
+	}
+
+	.mobileTabBarFont {
+		font-size: 18px;
+	}
+}
+
+@media (max-width: 850px) {
+	.courseDetailsNavbar {
+		li {
+			margin: 0 0 0 0.7rem;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.courseDetailsNavbarWrapper {
+		padding: 0;
+		border-width: 0px;
+		position: sticky;
+		top: 0;
+		box-shadow: 0px 3px 5px #00000029;
+	}
+
+	.courseDetailsNavbarSticky {
+		top: 3rem;
+	}
+
+	.mobilePriceBox {
+		background-color: #ffffff;
+		padding: 0 1rem;
+		box-shadow: 0px -3px 5px #00000029;
+		position: fixed;
+		bottom: 0;
+		width: 100vw;
+		z-index: 20;
+	}
+
+	.maleDateHead {
+		padding: 0 0.5rem;
+		font-size: 18px;
+	}
+
+	.inputDiv {
+		margin: 0 0.5rem;
+
+		label {
+			font-size: 13px;
+		}
+
+		input {
+			font-size: 14px;
+		}
+	}
+
+	.listText {
+		font-size: 15px;
+	}
+
+	.discriptionText {
+		width: 100%;
+	}
+
+	.courseCurriculumWrapper {
+		width: 100%;
+	}
+}

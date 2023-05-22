@@ -1,0 +1,362 @@
+@import "./variables.module.scss";
+
+.headArea {
+	background-color: $secondary-color;
+	padding: 2rem;
+}
+
+.pageHeadText {
+	font-size: 22px;
+	margin-bottom: 1rem;
+	padding: 0 1rem;
+}
+
+.bodyArea {
+	padding: 0 1rem;
+}
+
+.billSummeryMainBox {
+	border-bottom: 1px solid #000000;
+	margin-bottom: 1rem;
+}
+
+.billSummeryText {
+	font-size: 24px;
+	line-height: 29px;
+	padding: 1rem 0;
+}
+
+.billSummeryInfoBox {
+	margin: 0 1rem 1rem 0;
+}
+
+.courseImageBox {
+	width: 220px;
+	height: fit-content;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.totalStudentsText {
+	font-size: 25px;
+	line-height: 28px;
+	margin: 0 0 0.5rem 0;
+}
+
+.invoicNoText {
+	font-size: 18px;
+	line-height: 19px;
+	color: #0000007a;
+	margin: 0.5rem 0;
+}
+
+.studentInfoText {
+	font-size: 18px;
+	line-height: 19px;
+	margin: 0.5rem;
+}
+
+.icon {
+	width: 18px;
+	height: 18px;
+	background-color: #0000007a;
+}
+
+.paymentInfoBox {
+	margin: 1rem 0;
+}
+
+.paymentInfoText {
+	font-size: 23px;
+	line-height: 29px;
+}
+
+.uploadFileWrapper {
+	width: 100%;
+	border-radius: 3px;
+	border: 1px solid $primary-color;
+	margin: 1rem 0;
+	position: relative;
+}
+
+.uploadBtn {
+	position: relative;
+}
+
+.uploadBtn input[type=file] {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	opacity: 0;
+	z-index: 10;
+	cursor: pointer;
+}
+
+.uploadFileText {
+	color: $primary-color;
+	font-size: 20px;
+	padding: 2rem 0;
+	text-align: center;
+}
+
+.reUploadBtn {
+	width: 100px;
+	margin: 2.5rem auto 2.5rem 1rem;
+}
+
+.reUploadFileText {
+	color: $primary-color;
+	cursor: pointer;
+	border: 1px solid $primary-color;
+	text-align: center;
+	padding: 0.4rem 0.7rem;
+	border-radius: 3px;
+}
+
+.fileDetailsBox {
+	position: absolute;
+	right: 14px;
+	top: 25%;
+}
+
+.checkLogo {
+	color: #00B564;
+	margin-left: 7px;
+}
+
+.fielDetailName {
+	font-size: 18px;
+}
+
+.fileNameText {
+	color: $primary-color;
+}
+
+.submitBtn {
+	background-color: #2D2E2D7a;
+	border: none;
+
+	&:hover {
+		background-color: #2D2E2D7a !important;
+	}
+}
+
+.bankAccMainHeadText1 {
+	font-size: 28px;
+	padding: 2rem;
+}
+
+.bankAccMainHeadText2 {
+	font-size: 26px;
+}
+
+.uploadIcon {
+	font-size: 1.7rem;
+	transform: rotate(270deg);
+	margin-left: 0.5rem;
+}
+
+
+.bankDetailText {
+	color: #0075FF;
+	cursor: pointer;
+	user-select: none;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+}
+
+.rotateArrow {
+	transform: rotate(180deg);
+}
+
+.bankDetailSubWrapper {
+	width: 68rem;
+	margin: 0 auto;
+	justify-content: center;
+}
+
+.bankDetailsBox:nth-child(-n+2) {
+	margin-left: 10px;
+}
+
+.bankDetailsBox {
+	min-width: 355px;
+}
+
+.uploadBtnBox {
+	height: 64px;
+}
+
+
+
+@media (max-width: 1350px) {
+
+	.pageHeadText,
+	.paymentInfoText {
+		font-size: 20px;
+	}
+
+	.billSummeryText {
+		font-size: 22px;
+		line-height: 20px;
+	}
+
+	.totalStudentsText,
+	.uploadIcon,
+	.bankAccMainHeadText1 {
+		font-size: 23px;
+		line-height: 20px;
+	}
+
+	.studentInfoText,
+	.invoicNoText,
+	.bankDetailText {
+		font-size: 16px;
+		line-height: 10px;
+	}
+
+	.fielDetailName {
+		font-size: 16px;
+	}
+
+	.reUploadFileText.fileNameText {
+		font-size: 14px;
+	}
+
+	.uploadFileText {
+		font-size: 18px;
+	}
+
+	.paymentInfoBox {
+		margin: 0.8rem 0;
+	}
+}
+
+@media (max-width: 1280px) {}
+
+@media (max-width: 1150px) {
+	.bankDetailSubWrapper {
+		width: 90%;
+		margin: 1rem auto;
+		justify-content: flex-start;
+	}
+}
+
+@media (max-width: 1024px) {
+
+	.pageHeadText,
+	.paymentInfoText {
+		font-size: 18px;
+	}
+
+	.billSummeryText,
+	.totalStudentsText,
+	.uploadIcon,
+	.bankAccMainHeadText1 {
+		font-size: 20px;
+	}
+
+	.studentInfoText,
+	.invoicNoText,
+	.fielDetailName,
+	.bankDetailText {
+		font-size: 14px;
+	}
+
+	.paymentInfoBox {
+		margin: 0.65rem 0;
+	}
+
+	.uploadFileText {
+		font-size: 16px;
+	}
+
+	.courseImageBox {
+		width: 190px;
+	}
+
+	.checkLogo {
+		font-size: 20px;
+	}
+}
+
+@media (max-width: 962px) {}
+
+@media (max-width: 830px) {
+	.bankDetailsBox {
+		width: 100% !important;
+	}
+
+	.bankDetailsBox:nth-child(-n+2) {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 768px) {
+
+	.pageHeadText,
+	.paymentInfoText {
+		font-size: 16px;
+	}
+
+	.billSummeryText,
+	.totalStudentsText,
+	.bankAccMainHeadText1 {
+		font-size: 18px;
+		line-height: 15px;
+	}
+
+	.studentInfoText.invoicNoText,
+	.reUploadFileText,
+	.bankDetailText {
+		font-size: 12px;
+	}
+
+	.uploadFileText {
+		font-size: 14px;
+	}
+
+	.paymentInfoBox {
+		margin: 0;
+	}
+
+	.bankDetailsBox:nth-child(-n+2) {
+		width: 48%;
+		min-width: 230px;
+	}
+
+	.bankDetailsBox:nth-child(3) {
+		width: 100%;
+	}
+}
+
+@media (max-width: 640px) {
+	.courseImageBox {
+		width: 140px;
+	}
+
+	.bankDetailsBox:nth-child(-n+2) {
+		width: 100%;
+		min-width: none;
+	}
+}
+
+@media (max-width: 450px) {
+
+	.pageHeadText,
+	.paymentInfoText {
+		font-size: 14px;
+	}
+
+	.billSummeryText,
+	.totalStudentsText,
+	.bankAccMainHeadText1 {
+		font-size: 16px;
+		line-height: 15px;
+	}
+
+	.uploadFileText {
+		font-size: 12px;
+	}
+}

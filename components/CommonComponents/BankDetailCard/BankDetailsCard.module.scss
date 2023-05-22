@@ -1,0 +1,80 @@
+.cardWrapper {
+    width: 100%;
+
+    .cardHeaderBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .bankDetailsBox {
+        border: 1px solid #0000001a;
+        padding: 0 0.75rem;
+        border-radius: 0 0 4px 4px;
+    }
+}
+
+.cardWrapper1 {
+    .cardHeaderBox {
+        background-color: #522D24;
+    }
+}
+
+.cardWrapper2 {
+    .cardHeaderBox {
+        background-color: #1B4297;
+    }
+}
+
+.cardWrapper3 {
+    .cardHeaderBox {
+        background-color: #034537;
+    }
+}
+
+.logoWraper {
+    margin: 0.5rem 5rem;
+}
+
+.bankDetailsSubBox {
+    margin: 0.6rem 0;
+    display: flex;
+    border: 1px solid #0000001a;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bankDetailsHeader {
+    font-size: 15px;
+    padding: 8px 11px 8px 0;
+    width: 100%;
+}
+
+.copyIconDiv {
+    position: relative;
+    background-color: #2d2e2d0f;
+    margin-right: 5px;
+    padding: 8px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+@media (max-width: 1350px) {
+    .bankDetailsText {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .bankDetailsText,
+    .bankDetailsHeader {
+        font-size: 13px;
+    }
+
+}

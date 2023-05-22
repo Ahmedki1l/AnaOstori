@@ -1,0 +1,38 @@
+.progressCircle {
+	display: block;
+	margin: 0 auto;
+  }
+  
+  .backgroundCircle {
+	fill: none;
+	stroke: #ddd;
+  }
+  
+  .foregroundCircle {
+	fill: none;
+	// stroke: #25D366;
+	stroke-linecap: round;
+	transform: rotate(-90deg);
+	transform-origin: center;
+	transition: stroke-dashoffset 0.5s;
+  }
+  
+  .progressText,.progressBigText,.progressExtraText {
+	font-size: 12px;
+	font-weight: bold;
+	fill: #222;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	// color: #25D366;
+  }
+
+  .progressBigText{
+	font-size: 22px;
+	top: 48%;
+  }
+  .progressExtraText{
+	color: #12121280;
+	top: 58%;
+  }

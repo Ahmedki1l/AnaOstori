@@ -1,0 +1,53 @@
+@import "../../../../../styles/variables.module.scss";
+
+.ccItemsWrapper {
+	display: flex;
+	align-items: center;
+	padding: 0.7rem 3rem 0.7rem 0.7rem;
+	border-bottom: 1px solid #0000004d;
+	position: relative;
+	border-right: 14px solid transparent;
+	cursor: pointer;
+}
+
+.checkIcon {
+	color: #25D366;
+	font-size: 18px !important;
+	position: absolute;
+	right: 24px;
+}
+
+.itemIcon {
+	height: 28px;
+	width: 28px;
+	border-radius: 50%;
+	background-color: #FCD2BD;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 8px;
+}
+
+.itemName {
+	font-size: 18px;
+}
+
+.itemDiscription {
+	font-size: 14px;
+	color: #00000080;
+}
+
+.activeItem {
+	border-right-color: $primary-color ;
+}
+
+@media (max-width: 1024px) {
+	.ccItemsWrapper {
+		padding: 0.7rem 2.2rem 0.7rem 0.7rem;
+		border-right-width: 10px;
+	}
+
+	.checkIcon {
+		right: 10px;
+	}
+}

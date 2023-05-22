@@ -1,0 +1,70 @@
+.mainArea{
+	margin: 10rem auto;
+}
+.pageHeader{
+	text-align: center;
+	margin: 1rem;
+}
+.checkIcon{
+	font-size: 5rem !important;
+	color: #00B564;
+	display: flex !important;
+	margin: 0 auto;
+}
+.note1{
+	font-size: 20px;
+	margin: 1rem auto;
+	width: 45rem;
+	text-align: right;
+	span{
+		color: #FF0000;
+	}
+}
+.btnsBox{
+	width: 45rem;
+	margin: 1rem auto;
+	display: flex;
+	justify-content: space-between;
+}
+.btnBox{
+	width: 48%;
+}
+.downloadIcon{
+	margin: 0 1rem;
+}
+@media (max-width: 1024px) {
+	.mainArea{
+		margin: 3rem auto;
+	}
+	.checkIcon{
+		font-size: 4rem !important;
+	}
+	.note1{
+		font-size: 18px;
+		width:  35rem;
+	}
+	.btnsBox{
+		width: 35rem;
+	}
+}
+@media (max-width: 640px) {
+	.checkIcon{
+		font-size: 3rem !important;
+	}
+	.note1{
+		font-size: 16px;
+		width:  90%;
+	}
+	.btnsBox{
+		width: 90%;
+	}
+}
+@media (max-width: 530px) {
+	.btnsBox{
+		flex-direction: column;
+	}
+	.btnBox{
+		margin: 0.5rem 0;
+		width: 100%;
+	}
+}

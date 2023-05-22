@@ -1,0 +1,87 @@
+.userFeedbackSec{
+	padding: 5rem 0 2rem 0;
+}
+.userFeedbackSecHeader{
+	padding: 0 1rem;
+}
+.seeAllText{
+	text-decoration: underline ;
+}
+.userFeedbackCardWrapper{
+	width: 418px;
+	border: 0.5px solid rgba(0, 0, 0, 0.5);
+	border-radius: 8px;
+	overflow: hidden;
+	margin: 0 1rem 1rem 1rem;
+	user-select: none;
+}
+.reviewerImageBox{
+	position: relative;
+}
+.pageNODiv{
+	position: absolute;
+	background-color: #0000007a;
+	margin: 0.5rem;
+	padding:0 0.5rem;
+	border-radius: 3px;
+	color: #ffffff;
+	z-index: 10;
+}
+.reviewerName{
+	text-align: center;
+	padding: 1rem;
+	border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+	font-size: 18px;
+}
+.leftArrowBtn,.rightArrowBtn{
+	position: absolute;
+	top: 50%;
+	background-color: #0000007a;
+	padding: 0.5rem;
+	border-radius: 50%;
+	color: #ffffff;
+	z-index: 10;
+	height: 40px;
+    width: 40px;
+	cursor: pointer;
+}
+.leftArrowBtn{
+	left: 0.5rem;
+}
+.rightArrowBtn{
+	right: 0.5rem;
+}
+.leftBlureDiv,.rightBlureDiv{
+	position: absolute;
+	left: -10px;
+	top: -2px;
+	height: 102%;
+	width: 100px;
+	background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,0.5) 42%, rgba(255,255,255,1) 93%);
+	filter: blur(3px);
+	z-index: 11;
+}
+.rightBlureDiv{
+	right: -10px;
+	background-image: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.5) 42%, rgba(255,255,255,1) 93%);
+}
+@media (max-width: 1280px) {
+	.userFeedbackCardWrapper{
+		width: 380px;
+	}
+}
+
+
+@media (max-width: 962px) {
+	.userFeedbackCardWrapper{
+		width: 280px;
+	}
+	.reviewerName{
+		padding: 0.7rem;
+		font-size: 16px;
+	}
+	.leftArrowBtn,.rightArrowBtn{
+		top: 42%;
+		padding: 0.3rem
+	}
+}

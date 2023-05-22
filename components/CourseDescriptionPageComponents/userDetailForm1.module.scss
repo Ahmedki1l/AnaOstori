@@ -1,0 +1,51 @@
+.noDateFormWrapper {
+    border-radius: 6px;
+    max-width: 530px;
+    padding: 1rem 0;
+    border: 1px solid #a9a9a9;
+}
+
+.iconDiv {
+    width: 46px;
+    margin: 0 auto;
+}
+
+.formHead {
+    font-size: 22px;
+    text-align: center;
+}
+
+.formDiscription {
+    padding: 0.5rem 1rem;
+}
+
+.btnBox {
+    padding: 0 1rem;
+}
+
+.btnBox1 {
+    width: 49%;
+    padding: 0 1rem;
+}
+
+.loginDialogWrapper {
+    width: 550px;
+}
+
+@media (max-width: 767px) {
+    .formHead {
+        font-size: 18px;
+    }
+
+    .formDiscription {
+        font-size: 14px;
+    }
+
+    .checkBoxText {
+        font-size: 14px;
+    }
+
+    .btnBox {
+        padding: 0 0.5rem;
+    }
+}

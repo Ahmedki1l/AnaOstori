@@ -1,0 +1,22 @@
+.instructorName {
+    font-size: 24px;
+    padding: 2rem 1rem;
+}
+
+.dashboardItemWrapper {
+    width: 319px;
+    height: 178px;
+    border: 0.5px solid #C8C8C8;
+    border-radius: 4px;
+    margin-left: 33px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dashboardItemName {
+    margin-top: 12px;
+    font-size: 20px;
+}

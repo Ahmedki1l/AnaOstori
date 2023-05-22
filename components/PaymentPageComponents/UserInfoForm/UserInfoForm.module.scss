@@ -1,0 +1,499 @@
+@import "../../../styles/variables.module.scss";
+
+.oneUserInfoForm {
+	border-top: 1px solid #0000007a;
+}
+
+.radioBtnsContainer {
+	margin: 0 auto 2rem auto;
+	padding: 0 1rem;
+}
+
+.radioBtnHead {
+	font-size: 24px;
+	margin-bottom: 1rem;
+}
+
+.noOfUserWrapper,
+.genderWrapper {
+	display: flex;
+	justify-content: space-between;
+	width: 72rem;
+}
+
+.usersRadioWrapper {
+	display: flex;
+	align-items: center;
+	border: 0.3px solid #000000;
+	border-radius: 4px;
+	padding: 1rem;
+	height: 5rem;
+}
+
+.userRadioLabelBox {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	.lable1Box {
+		padding: 0 0.5rem;
+		margin-left: 2rem;
+	}
+
+	.lable1 {
+		font-size: 18px;
+		line-height: 19px;
+	}
+
+	.lable2 {
+		font-size: 20px;
+		line-height: 19px;
+	}
+
+	.subLable1 {
+		font-size: 16px;
+		color: #0000007a;
+	}
+
+	.subLable2 {
+		color: #ff0000;
+		text-align: center;
+	}
+
+	.oldPrice {
+		text-align: center;
+		color: #00000080;
+		text-decoration: line-through;
+	}
+
+	.singleDiscount {
+		padding: 3px 5px;
+		background-color: #ff0000;
+		color: #ffffff;
+		border-radius: 3px;
+	}
+}
+
+.noOfUserWrapper input[type="radio"]:checked+label {
+	background-color: $primary-color;
+	border-color: $primary-color;
+
+	.circle {
+		border-color: #ffffff;
+
+		div {
+			background-color: #ffffff;
+		}
+	}
+
+	.lable1,
+	.lable2,
+	.subLable1,
+	.subLable2 {
+		color: #ffffff
+	}
+
+	.oldPrice {
+		color: #ffffff80;
+	}
+}
+
+.genderWrapper {
+	display: flex;
+	justify-content: space-between;
+	width: 15rem;
+}
+
+.radioBtnBox {
+	display: flex;
+	align-items: center;
+	margin-left: 1rem;
+}
+
+.radioBtn {
+	margin: 0 0 0 0.7rem;
+	height: 23px;
+	width: 23px;
+	accent-color: black;
+	outline: none;
+}
+
+.radioBtn3 {
+	margin: 0 auto;
+}
+
+.lableName1 {
+	font-size: 22px;
+	line-height: 25px;
+}
+
+.lableName2 {
+	font-size: 20px;
+	color: #0000007c;
+	line-height: 25px
+}
+
+.radioBtnDiscription {
+	font-size: 20px;
+	margin: -1rem 0 1rem 0;
+}
+
+.hintText {
+	color: #00000080;
+	margin-top: -0.8rem;
+}
+
+
+
+.datesMainArea {
+	display: flex;
+	justify-content: space-between;
+}
+
+.dateBox {
+	width: 400px !important;
+	border: 0.5px solid rgba(0, 0, 0, 0.5);
+	border-radius: 8px;
+	overflow: hidden;
+	margin: 0 0 0 1rem;
+}
+
+.dateBoxHeader {
+	height: 80px;
+	border-bottom: 1px solid #000000;
+}
+
+.circle {
+	height: 26px;
+	width: 26px;
+	border-radius: 50%;
+	border: 1px solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 5px;
+
+	div {
+		background-color: transparent;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+	}
+}
+
+.dateRadioBtnBox {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem 0;
+}
+
+.personIcons {
+	font-size: 20px;
+}
+
+.datesMainArea input[type="radio"]:checked+label {
+	.label {
+		background-color: $primary-color;
+	}
+
+	.dateBoxHeaderText {
+		color: #ffffff;
+	}
+
+	.circle {
+		border-color: #ffffff;
+
+		div {
+			background-color: #ffffff;
+		}
+	}
+}
+
+.dateBoxHeaderText {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	font-size: 20px;
+}
+
+.list {
+	border-bottom: 1px solid #000000;
+	border-top: 1px solid #000000;
+
+	li {
+		display: flex;
+		align-items: center;
+		margin: 0.7rem;
+	}
+}
+
+.icons {
+	font-size: 26px;
+}
+
+.locationIcons {
+	font-size: 28px;
+}
+
+.listItemText {
+	font-size: 18px;
+	margin: 0 0.7rem 0 0;
+}
+
+.bottomDiv {
+	padding: 1rem;
+}
+
+.coachName {
+	font-size: 20px;
+}
+
+.restSitsBox {
+	background: #ff0000;
+	display: flex;
+	align-items: center;
+	padding: 0.3rem;
+	border-radius: 0px 0px 4px 4px;
+	color: #ffffff;
+	top: 0;
+	right: 0.5rem;
+
+	p {
+		font-size: 16px;
+		padding: 0 0.3rem;
+
+	}
+}
+
+.addMoreFormText {
+	padding: 1rem 0;
+	font-size: 18px;
+	color: #0075FF;
+	cursor: pointer;
+}
+
+.closeIcon {
+	display: flex;
+	color: #ff0000;
+	border-radius: 0 0 0.25rem 0.25rem;
+	padding: 5px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.btnBox {
+	height: 3.2rem;
+	width: 17rem;
+
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.arrowIcon {
+			margin: 0 0.5rem;
+		}
+	}
+}
+
+.disableDateBox {
+	background-color: #DEE1E9 !important;
+}
+
+.disableDateBoxHeader {
+	background-color: transparent !important;
+	border-bottom: 0.5px solid rgba(0, 0, 0, 0.5) !important;
+	cursor: not-allowed !important;
+}
+
+.disableRestSitsBox {
+	background: #000000 !important;
+}
+
+@media (max-width:1350px) {
+	.radioBtnHead {
+		font-size: 22px;
+	}
+
+	.circle {
+		height: 22px;
+		width: 22px;
+
+		div {
+			height: 12px;
+			width: 12px;
+		}
+	}
+
+	.userRadioLabelBox {
+		.lable1Box {
+			margin-left: 1rem;
+		}
+
+		.lable2 {
+			font-size: 19px;
+		}
+	}
+
+	.noOfUserWrapper {
+		width: 65rem;
+	}
+
+	.radioBtn {
+		height: 22px;
+		width: 22px;
+	}
+
+	.lableName1 {
+		font-size: 21px;
+	}
+}
+
+@media (max-width:1280px) {
+	.noOfUserWrapper {
+		width: 60rem;
+	}
+
+	.radioBtnHead {
+		font-size: 20px;
+	}
+
+	.radioBtnDiscription {
+		font-size: 18px;
+	}
+
+	.lableName1 {
+		font-size: 20px;
+	}
+
+	.dateBoxHeaderText {
+		font-size: 18px;
+	}
+
+	.dateRadioBtnBox {
+		padding: 0.7rem 0;
+	}
+
+	.restSitsBox {
+		p {
+			font-size: 14px;
+		}
+	}
+
+	.inputBox {
+		input {
+			width: 19rem;
+			height: 3rem;
+			font-size: 18px;
+		}
+	}
+}
+
+@media (max-width:1024px) {
+	.noOfUserWrapper {
+		width: 100%;
+		flex-direction: column;
+	}
+
+	.usersRadioWrapper {
+		width: 100%;
+		margin: 0.5rem 0;
+	}
+
+	.userRadioLabelBox {
+		width: 100%;
+	}
+
+	.userRadioLabelBox {
+		justify-content: space-between;
+	}
+
+	.listItemText {
+		font-size: 16px;
+	}
+
+}
+
+@media (max-width:640px) {
+	.radioBtnHead {
+		font-size: 18px;
+	}
+
+	.radioBtnDiscription {
+		font-size: 16px;
+	}
+
+	.circle {
+		height: 20px;
+		width: 20px;
+
+		div {
+			height: 9.5px;
+			width: 9.5px;
+		}
+	}
+
+	.userRadioLabelBox {
+		.lable2 {
+			font-size: 18px;
+		}
+
+		.subLable2 {
+			font-size: 13px;
+			padding-top: 0.1rem;
+		}
+	}
+
+	.radioBtn {
+		height: 20px;
+		width: 20px;
+	}
+
+	.lableName1 {
+		font-size: 18px;
+	}
+
+	.listItemText {
+		font-size: 16px;
+	}
+
+	.dateBox {
+		width: 350px !important;
+	}
+
+	.bottomDiv {
+		padding: 0.4rem 1rem;
+	}
+
+	.coachName {
+		font-size: 17px;
+		padding-bottom: 0.2rem;
+	}
+
+	.inputBox {
+		input {
+			width: 17rem;
+			height: 2.5rem;
+			font-size: 16px;
+		}
+	}
+
+	.checkboxText {
+		font-size: 15px;
+	}
+
+	.errorText {
+		font-size: 14px;
+	}
+
+	.icons {
+		font-size: 24px;
+	}
+
+	.locationIcons {
+		font-size: 26px;
+	}
+}

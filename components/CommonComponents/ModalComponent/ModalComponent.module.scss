@@ -1,0 +1,30 @@
+.modalBox {
+    position: 'absolute';
+    top: '50%';
+    left: '50%';
+    transform: translate(-50%, -50%);
+    width: 400px;
+}
+
+.modalTitleText {
+    font-size: 23px;
+    margin-bottom: 15px;
+}
+
+.modalParaText {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.buttonModalDiv {
+    height: 40px;
+}
+
+.accountRecoveryModalBtn {
+    font-size: 16px;
+}
+
+.cancelBtn {
+    font-size: 16px;
+    margin-right: 10px;
+}
