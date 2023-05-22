@@ -75,6 +75,10 @@ export default function Login() {
 				type: 'SET_PROFILE_DATA',
 				viewProfileData: viewProfileData?.data,
 			});
+			dispatch({
+				type: 'IS_USER_INSTRUCTOR',
+				isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
+			});
 			let profileData = viewProfileData?.data
 			if (profileData.firstName == null || profileData.lastName == null || profileData.phone == null || profileData.gender == null) {
 				Router.push('/registerGoogleUser')

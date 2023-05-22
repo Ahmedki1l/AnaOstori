@@ -6,6 +6,8 @@ import { myCoursesAPI, updateProfile, viewProfileAPI } from '../services/apisSer
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
+import * as fbq from '../lib/fpixel'
+
 
 
 export default function RegisterGoogleUser() {
@@ -44,6 +46,10 @@ export default function RegisterGoogleUser() {
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: viewProfileData?.data,
+            });
+            dispatch({
+                type: 'IS_USER_INSTRUCTOR',
+                isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
             });
 
         } catch (error) {
@@ -106,7 +112,7 @@ export default function RegisterGoogleUser() {
                 data: body,
                 accessToken: storeData?.accessToken
             }
-
+            console.log("params : ", params);
             await updateProfile(params).then(res => {
                 handleStoreUpdate(storeData?.accessToken)
                 fbq.event('Sign up', { email: storeData.viewProfileData.email, phone: phoneNumber })
@@ -164,7 +170,7 @@ export default function RegisterGoogleUser() {
                 {isPhoneNumberError ? <p className={styles.errorText}>الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
 
                 <div className={styles.loginBtnBox}>
-                    <button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (emailError || passwordError) ? true : false} onClick={() => handleUpdateProfile()}>انشاء حساب</button>
+                    <button className='primarySolidBtn' type='submit' onClick={() => handleUpdateProfile()}>انشاء حساب</button>
                 </div>
 
                 <p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink"> تسجيل الدخول</Link></p>

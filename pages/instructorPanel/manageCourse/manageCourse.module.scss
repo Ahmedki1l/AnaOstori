@@ -1,0 +1,17 @@
+.courseTypesList {
+    display: flex;
+    justify-content: center;
+}
+
+.courseTypeWrapper {
+    width: 319px;
+    height: 178px;
+    border: 0.5px solid #C8C8C8;
+    border-radius: 4px;
+    margin-right: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+}

@@ -3,7 +3,8 @@ var initialState = {
     userDetails: [],
     myCourses: [],
     accessToken: "",
-    googleLogin: false
+    googleLogin: false,
+    isUserInstructor: false
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -35,6 +36,11 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 googleLogin: action?.googleLogin
+            }
+        case 'IS_USER_INSTRUCTOR':
+            return {
+                ...state,
+                isUserInstructor: action?.isUserInstructor
             }
         default: return state;
     }

@@ -75,10 +75,10 @@ export default function Index(props) {
 	const storeData = useSelector((state) => state?.globalStore);
 	const isUserLogin = storeData?.accessToken ? true : false;
 
-	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
-	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
-	const isSeatFullForFemale = femaleDates.length > 0 ? femaleDates.every(obj => obj.numberOfSeats === 0) : false;
-	const isSeatFullForMix = mixDates.length > 0 ? mixDates.every(obj => obj.numberOfSeats === 0) : false;
+	const isDateAvailable = (courseDetail?.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail?.type == "online" && mixDates.length == 0) ? false : true)
+	const isSeatFullForMale = maleDates?.length > 0 ? maleDates?.every(obj => obj.numberOfSeats === 0) : false;
+	const isSeatFullForFemale = femaleDates?.length > 0 ? femaleDates?.every(obj => obj.numberOfSeats === 0) : false;
+	const isSeatFullForMix = mixDates?.length > 0 ? mixDates?.every(obj => obj.numberOfSeats === 0) : false;
 	const bookSeatButtonText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : 'احجز مقعدك الآن')
 	const screenWidth = useWindowSize().width
 	const offset = useScrollEvent().offset
