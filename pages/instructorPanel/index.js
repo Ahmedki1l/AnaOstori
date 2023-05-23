@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import styles from '../../styles/InstructorPanel.module.scss'
+import styles from '../../styles/InstructorPanelStyleSheets/InstructorPanel.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import Link from 'next/link'
 
