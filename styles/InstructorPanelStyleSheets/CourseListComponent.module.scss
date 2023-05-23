@@ -1,0 +1,63 @@
+.createCourseBtnBox {
+    width: 107px;
+    height: 36px;
+
+    button {
+        padding: 9px 16px !important;
+        font-size: 16px;
+    }
+}
+
+.tableArea {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableHeaderArea {
+    height: 48px;
+    background-color: #F4F5F7;
+    overflow: hidden;
+}
+
+.tableHeadText {
+    padding: 0 10px;
+}
+
+.tableHead1 {
+    width: 43%;
+}
+
+.tableHead2 {
+    width: 10%;
+}
+
+.tableHead3 {
+    width: 12%;
+}
+
+.tableHead4 {
+    width: 10%;
+}
+
+.tableHead5 {
+    width: 15%;
+}
+
+.tableHead6 {
+    width: 10%;
+}
+
+.tableBodyArea {
+    width: 100%;
+    border-width: 0px 0.7px 0.7px 0.7px;
+    border-style: solid;
+    border-color: #C3C3C3;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.noDataManiArea {
+    height: 480px;
+    display: grid;
+    place-content: center;
+
+}

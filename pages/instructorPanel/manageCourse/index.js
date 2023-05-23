@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
-import styles from './manageCourse.module.scss'
+import styles from '../../../styles/InstructorPanelStyleSheets/ManageCourse.module.scss'
 import Link from 'next/link';
 
 function Index() {
@@ -20,12 +20,13 @@ function Index() {
                         <div className='maxWidthDefault'>
                             <h1 className={`head2 py-12`}>اختر نوع الدورة</h1>
                             <div className={styles.courseTypesList}>
-                                <p className={styles.courseTypeWrapper} onClick={() => setSelectCourseType('physical')}>حضورية</p>
-                                <p className={styles.courseTypeWrapper} onClick={() => setSelectCourseType('onDemand')}>مسجلة</p>
-                                <p className={styles.courseTypeWrapper} onClick={() => setSelectCourseType('online')}>مباشرة</p>
+                                <Link href={"/instructorPanel/manageCourse/physicalCourse"} className={`${styles.courseTypeWrapper} normalLinkText`} >حضورية</Link>
+                                <Link href={"/instructorPanel/manageCourse/onDemandCourse"} className={`${styles.courseTypeWrapper} normalLinkText`} >مسجلة</Link>
+                                <Link href={"/instructorPanel/manageCourse/onlineCourse"} className={`${styles.courseTypeWrapper} normalLinkText`} >مباشرة</Link>
                             </div>
                         </div>
                     }
+
                 </>
 
             }
