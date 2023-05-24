@@ -188,7 +188,7 @@ export default function PaymentInfoForm(props) {
 									{bankDetails.map((bank, index) => {
 										return (
 											<div key={`bank${index}`} className={`py-4 ${styles.bankDetailsBox}`}>
-												<BankDetailsCard bank={bank} index={index} />
+												<BankDetailsCard bank={bank} index={index} />``
 											</div>
 										)
 									})}
