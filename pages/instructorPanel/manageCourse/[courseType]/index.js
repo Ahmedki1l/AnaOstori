@@ -54,8 +54,8 @@ export default function Index() {
 
                 {allPhysicalCourses.length == 0 &&
                     <div className={styles.tableBodyArea}>
-                        <div colspan="6" className={styles.noDataManiArea} >
-                            <div colspan="6" className={styles.noDataSubArea} >
+                        <div className={styles.noDataManiArea} >
+                            <div className={styles.noDataSubArea} >
                                 <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
                                 <p className='fontBold py-2'>ما أنشئت اي دورة</p>
                                 <div className={styles.createCourseBtnBox}>

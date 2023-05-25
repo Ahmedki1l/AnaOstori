@@ -7,7 +7,7 @@ import useWindowSize from '../../../hooks/useWindoSize'
 
 export default function TrainerIntroCard(props) {
 	const instructor = props.instructor
-	const mediaBaseUrl = LinkConst.File_Base_Url
+	const mediaBaseUrl = LinkConst.File_Base_Urls
 	const isSmallScreen = useWindowSize().smallScreen
 
 	return (

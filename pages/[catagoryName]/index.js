@@ -49,7 +49,7 @@ export default function Index(props) {
 
 	const mainDescription = catagory.description?.split(':')[0]
 
-	const listDescription = catagory.description?.split(':')[1].split('<list>').splice(1, catagory.description.length)
+	const listDescription = catagory?.description?.split(':')[1]?.split('<list>')?.splice(1, catagory.description.length)
 
 	const storeData = useSelector((state) => state?.globalStore);
 

@@ -20,7 +20,7 @@ export default function ReviewCard(props) {
 	const reviewMedia = review.ReviewMedia
 	const totalPostNumber = reviewMedia.length
 	const [currentPost, setCurrentPost] = useState(1)
-	const mediaBaseUrl = LinkConst.File_Base_Url
+	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const [openVideo, setOpenVideo] = useState(false);
 	const windowScreen = useWindowSize().width
 

@@ -16,25 +16,25 @@ export default function DatesInfo(props) {
 
 	const date = props.date
 
-	const mediaBaseUrl = LinkConst.File_Base_Url
+	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isSmallScreen = useWindowSize().smallScreen
 
-	const startMonth = new Date(date.dateFrom).toLocaleDateString('ar-AE', {timeZone: "UTC", month: 'long'} )
-	const startDate = new Date(date.dateFrom).toLocaleDateString('en-US', {timeZone: "UTC", day: 'numeric'} )
-	const startDay = new Date(date.dateFrom).toLocaleDateString('ar-AE', {timeZone: "UTC", weekday: 'long'} )
+	const startMonth = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
+	const startDate = new Date(date.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
+	const startDay = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
 
-	const endMonth = new Date(date.dateTo).toLocaleDateString('ar-AE', {timeZone: "UTC", month: 'long'})
-	const endDate = new Date(date.dateTo).toLocaleDateString('en-US', {timeZone: "UTC", day: 'numeric'} )
-	const endDay = new Date(date.dateTo).toLocaleDateString('ar-AE', {timeZone: "UTC", weekday: 'long'} )
+	const endMonth = new Date(date.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
+	const endDate = new Date(date.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
+	const endDay = new Date(date.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
 
-	const startTime = new Date('1970-01-01T' + date.timeFrom + 'Z').toLocaleTimeString('ar-AE',{timeZone:'UTC', hour12:true, hour:'numeric', minute:'numeric'})
-	const endTime = new Date('1970-01-01T' + date.timeTo + 'Z').toLocaleTimeString('ar-AE',{timeZone:'UTC', hour12:true, hour:'numeric', minute:'numeric'})
+	const startTime = new Date('1970-01-01T' + date.timeFrom + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
+	const endTime = new Date('1970-01-01T' + date.timeTo + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
 
 	return (
 		<>
 			<ul className={styles.list}>
 				<li>
-					<Icon height={isSmallScreen?19:22} width={isSmallScreen?19:22} iconName={'calendarIcon'} alt={'calendar Icon'}/>
+					<Icon height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calendarIcon'} alt={'calendar Icon'} />
 					<p className={`fontMedium ${styles.listItemText}`}>من {startDay} {startDate} {startMonth} إلى {endDay} {endDate} {endMonth} </p>
 				</li>
 				<li>
@@ -42,9 +42,9 @@ export default function DatesInfo(props) {
 					<p className={`fontMedium ${styles.listItemText}`}>من {startTime} إلى {endTime}</p>
 				</li>
 				<li>
-					{date.gender=='mix' ?
+					{date.gender == 'mix' ?
 						<>
-							<Icon height={isSmallScreen?19:22} width={isSmallScreen?19:22} iconName={'liveCourseBlackIcon'} alt={'live Icon'}/>
+							<Icon height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'liveCourseBlackIcon'} alt={'live Icon'} />
 							<p className={`fontMedium link ${styles.listItemText}`}>قاعة افتراضية</p>
 						</>
 						:
@@ -66,7 +66,7 @@ export default function DatesInfo(props) {
 			<div className={styles.bottomDiv}>
 				<p className={`fontBold ${styles.coachName}`}>المدرب</p>
 				<div className='flex'>
-					<ProfilePicture height={30} width={30} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${date.instructor.avatarKey}`}/>
+					<ProfilePicture height={30} width={30} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${date.instructor.avatarKey}`} />
 					<Link href={`${mediaBaseUrl}/${date.instructor.ProfileFileKey}` ?? ""} target='_blank'>
 						<p className='px-2 link'>{date.instructor.name}</p>
 					</Link>
