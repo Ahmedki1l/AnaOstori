@@ -12,7 +12,6 @@ export default function Index() {
     const catagories = useSelector((state) => state?.globalStore.catagories);
     console.log("catagories", catagories);
 
-
     const catagoriesItem = catagories.map(function (obj) {
         return {
             label: obj.name,
