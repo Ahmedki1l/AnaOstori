@@ -33,7 +33,7 @@ export default function PhysicalCourseCard(props) {
 	const isSmallScreen = useWindowSize().smallScreen
 
 
-	const imageBaseUrl = linkConst.File_Base_Url
+	const imageBaseUrl = linkConst.File_Base_Url2
 
 	const coverImgUrl = courseDetail.pictureKey ? `${imageBaseUrl}/${courseDetail.pictureKey}` : ""
 

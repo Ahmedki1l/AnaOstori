@@ -37,7 +37,7 @@ export default function PaymentInfoForm(props) {
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
 
-	const imageBaseUrl = LinkConst.File_Base_Url
+	const imageBaseUrl = LinkConst.File_Base_Url2
 
 	const coverImgUrl = createdOrder.course?.pictureKey ? `${imageBaseUrl}/${createdOrder.course?.pictureKey}` : ""
 

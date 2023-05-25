@@ -42,7 +42,6 @@ export default function Navbar() {
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
 
 	const isUserInstructor = storeData?.isUserInstructor
-	console.log("isUserInstructor : ", storeData);
 
 
 	useEffect(() => {

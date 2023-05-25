@@ -48,7 +48,7 @@ export default function ApproveTrans(props) {
 
 
 
-    const imageBaseUrl = LinkConst.File_Base_Url
+    const imageBaseUrl = LinkConst.File_Base_Url2
 
     const coverImgUrl = courseDetail?.course.pictureKey ? `${imageBaseUrl}/${courseDetail?.course.pictureKey}` : ""
 

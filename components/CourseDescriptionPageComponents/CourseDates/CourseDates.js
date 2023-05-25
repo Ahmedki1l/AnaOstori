@@ -16,7 +16,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 
 export default function CourseDates(props) {
 	const date = props.date
-	const mediaBaseUrl = LinkConst.File_Base_Url
+	const mediaBaseUrl = LinkConst.File_Base_Url2
 
 	const startMonth = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
 	const startDate = new Date(date.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
