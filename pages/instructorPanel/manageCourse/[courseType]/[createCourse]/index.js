@@ -1,20 +1,33 @@
 import { useRouter } from 'next/router';
 import React from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
+import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet';
+import { useSelector } from 'react-redux';
 import Select from '../../../../../components/antDesignCompo/Select';
 import { Form } from 'antd';
 import { FormItem } from '../../../../../components/antDesignCompo/FormItem';
 import Input from '../../../../../components/antDesignCompo/Input';
 
+const { TextArea } = Input;
 
 export default function Index() {
     const { courseType, createCourse } = useRouter().query
+    const catagories = useSelector((state) => state?.globalStore.catagories);
+    console.log("catagories", catagories);
+
+    const catagoriesItem = catagories.map(function (obj) {
+        return {
+            label: obj.name,
+            value: obj.id
+        };
+    });
     const onFinish = (values) => {
         console.log(values);
     };
 
 
     return (
+
         <>
             <div className={styles.headerWrapper}>
                 <div className='maxWidthDefault px-4'>

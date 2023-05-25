@@ -25,3 +25,25 @@
     border-radius: 4px;
     padding: 24px;
 }
+
+.imageUploadWrapper {
+    border-color: black;
+    width: 549px;
+    height: 238px;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.uploadimagetext {
+    font-size: 18px;
+    color: #808080;
+    margin-top: 8px;
+}
+
+.hyperlink {
+    display: flex;
+}

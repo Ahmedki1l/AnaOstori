@@ -44,6 +44,7 @@ import Arrow from './customeIcons/arrow'
 import Lock2 from './customeIcons/lock2'
 import Plus from './customeIcons/plus'
 import LibraryIcon from './customeIcons/libraryIcon'
+import UploadFile from './customeIcons/uploadFile'
 
 
 
@@ -93,6 +94,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'lock2' && <Lock2 height={height} width={width} color={color} />}
 			{iconName == 'plus' && <Plus height={height} width={width} color={color} />}
 			{iconName == 'libraryIcon' && <LibraryIcon height={height} width={width} color={color} />}
+			{iconName == 'uploadFile' && <UploadFile height={height} width={width} color={color} />}
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
 			{iconName == 'studentTwoIcon' && <StudentTwoIcon height={height} width={width} color={color} strockColor={strockColor} />}

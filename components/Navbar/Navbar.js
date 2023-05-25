@@ -63,6 +63,10 @@ export default function Navbar() {
 			}
 			await gettCatagoriesAPI(data).then(res => {
 				// setCatagories(res?.data)
+				dispatch({
+					type: 'SET_CATAGORIES',
+					catagories: res?.data
+				});
 			}).catch(error => {
 				console.log("error : ", error);
 				if (error?.response?.status == 401) {
