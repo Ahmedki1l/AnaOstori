@@ -4,7 +4,8 @@ var initialState = {
     myCourses: [],
     accessToken: "",
     googleLogin: false,
-    isUserInstructor: false
+    isUserInstructor: false,
+    catagories: []
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -31,6 +32,11 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 myCourses: action?.myCourses
+            }
+        case 'SET_CATAGORIES':
+            return {
+                ...state,
+                catagories: action?.catagories
             }
         case 'IS_USER_FROM_GOOGLE':
             return {

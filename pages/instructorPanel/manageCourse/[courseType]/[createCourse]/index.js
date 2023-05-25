@@ -1,12 +1,28 @@
 import { useRouter } from 'next/router';
 import React from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
+import { Input, Select, Space } from 'antd';
+import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet';
+import { useSelector } from 'react-redux';
 
+const { TextArea } = Input;
 
 export default function Index() {
     const { courseType, createCourse } = useRouter().query
-    console.log(courseType, createCourse);
+    const catagories = useSelector((state) => state?.globalStore.catagories);
+    console.log("catagories", catagories);
+
+
+    const catagoriesItem = catagories.map(function (obj) {
+        return {
+            label: obj.name,
+            value: obj.id
+        };
+    });
+
+
     return (
+
         <>
             <div className={styles.headerWrapper}>
                 <div className='maxWidthDefault px-4'>
@@ -19,14 +35,9 @@ export default function Index() {
             <div className={styles.bodyWrapper}>
                 <div className='maxWidthDefault p-4'>
                     <div className={styles.bodysubWrapper}>
-                        <div className='formInputBox'>
-                            <input className='formInput' id="courseName" type="text" title="courseName" placeholder=' ' />
-                            <label className='formLabel' htmlFor="courseName">عنوان الدورة</label>
-                        </div>
-
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }
