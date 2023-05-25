@@ -112,7 +112,6 @@ export default function RegisterGoogleUser() {
                 data: body,
                 accessToken: storeData?.accessToken
             }
-            console.log("params : ", params);
             await updateProfile(params).then(res => {
                 handleStoreUpdate(storeData?.accessToken)
                 fbq.event('Sign up', { email: storeData.viewProfileData.email, phone: phoneNumber })

@@ -1,9 +1,12 @@
 import { useRouter } from 'next/router';
 import React from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
-import { Input, Select, Space } from 'antd';
 import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet';
 import { useSelector } from 'react-redux';
+import Select from '../../../../../components/antDesignCompo/Select';
+import { Form } from 'antd';
+import { FormItem } from '../../../../../components/antDesignCompo/FormItem';
+import Input from '../../../../../components/antDesignCompo/Input';
 
 const { TextArea } = Input;
 
@@ -18,6 +21,9 @@ export default function Index() {
             value: obj.id
         };
     });
+    const onFinish = (values) => {
+        console.log(values);
+    };
 
 
     return (
@@ -34,6 +40,58 @@ export default function Index() {
             <div className={styles.bodyWrapper}>
                 <div className='maxWidthDefault p-4'>
                     <div className={styles.bodysubWrapper}>
+                        <Form onFinish={onFinish}>
+                            <FormItem
+                                name={'courseName'}
+                                rules={[{ required: true }]}
+                            >
+                                <Input
+                                    placeholder="عنوان الدورة"
+                                />
+                            </FormItem>
+                            <FormItem
+                                name={'catagoriName'}
+                                rules={[{ required: true }]}
+                            >
+                                <Input
+                                    placeholder="عنوان الدورة"
+                                />
+                            </FormItem>
+                            {/* <FormItem
+                                name={['user', 'name', 'firstName']}
+                            // rules={[
+                            //     {
+                            //         required: true,
+                            //     },
+                            // ]}
+                            >
+                                <Select
+                                    placeholder="اختر تصنيف الدورة"
+                                    OptionData={[
+                                        {
+                                            label: 'Chirag',
+                                            value: 'chirag'
+                                        },
+                                        {
+                                            label: 'Hiren',
+                                            value: 'hiren'
+                                        },
+                                        {
+                                            label: 'Mayur',
+                                            value: 'mayur'
+                                        },
+                                        {
+                                            label: 'Anand',
+                                            value: 'anand'
+                                        },
+                                    ]}
+                                    filterOption={false}
+                                />
+                            </FormItem> */}
+                            <FormItem>
+                                <button type="primary" htmltype="submit">Submit</button>
+                            </FormItem>
+                        </Form>
                     </div>
                 </div>
             </div >

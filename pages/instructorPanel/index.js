@@ -7,7 +7,6 @@ import Link from 'next/link'
 export default function Index() {
     const storeData = useSelector(state => state.globalStore)
     const instructorName = storeData?.viewProfileData?.firstName
-    console.log(storeData);
     return (
         <div className='maxWidthDefault'>
             <h1 className={`${styles.instructorName} fontBold`}> <span className='fontMedium'> حياك الله</span> {instructorName}</h1>

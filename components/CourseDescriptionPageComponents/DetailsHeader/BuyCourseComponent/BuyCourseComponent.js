@@ -15,7 +15,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 export default function BuyCourseComponent(props) {
 	const courseDetail = props.courseDetail
 	const handleBookSitButtonClick = props.handleBookSitButtonClick
-	const mediaBaseUrl = LinkConst.File_Base_Url
+	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isMediumScreen = useWindowSize().mediumScreen
 	const [isUserUseApple, setIsUserUseApple] = useState(false)
 
