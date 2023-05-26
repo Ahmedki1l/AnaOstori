@@ -179,8 +179,7 @@ function MyApp({ Component, pageProps }) {
 					src={`https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1`}
 				/></noscript>
 				<ToastContainer />
-				<Provider store={store}>
-					{/* <SnapchatPixel /> */}
+				<Provider store={store} >
 					<PersistGate loading={null} persistor={persistor}>
 						<Navbar />
 						<Component {...pageProps} />

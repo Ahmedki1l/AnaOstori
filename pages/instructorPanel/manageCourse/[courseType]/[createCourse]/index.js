@@ -134,7 +134,7 @@ export default function Index() {
                                 <div className='flex'>
                                     <div className={styles.IconWrapper} >
                                         <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
-                                        <div> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
+                                        <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
                                     </div>
                                     <div className={styles.detailDataWrapper}>
                                         <p>تقدم الدورة في</p>
@@ -164,7 +164,7 @@ export default function Index() {
                                 <div className='flex'>
                                     <div className={styles.IconWrapper} >
                                         <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
-                                        <div> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
+                                        <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                                     </div>
                                     <div className={styles.detailDataWrapper}>
                                         <p>تقييم الدورة</p>
@@ -184,7 +184,7 @@ export default function Index() {
                                 <div className='flex'>
                                     <div className={styles.IconWrapper} >
                                         <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
-                                        <div> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
+                                        <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'graduate'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
                                     </div>
                                     <div className={styles.detailDataWrapper}>
                                         <p>عدد الخريجين</p>
