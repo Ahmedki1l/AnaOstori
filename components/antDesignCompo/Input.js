@@ -43,6 +43,7 @@ const Input = ({
         placeholder={placeholder}
         disabled={disabled}
         height={height}
+        width={width}
         padding={padding}
       />
     </>

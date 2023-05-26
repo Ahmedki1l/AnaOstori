@@ -3,4 +3,5 @@ import styled from 'styled-components'
 
 export const FormItem = styled(AntdForm.Item)`
   margin-bottom: ${props => props.marginbottom ? props.marginbottom : '20px'} !important;
+  margin-left: ${props => props.marginleft ? props.marginleft : '12px'} !important;
 `

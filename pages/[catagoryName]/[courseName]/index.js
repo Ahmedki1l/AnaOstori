@@ -74,7 +74,7 @@ export default function Index(props) {
 	const router = useRouter()
 	const storeData = useSelector((state) => state?.globalStore);
 	const isUserLogin = storeData?.accessToken ? true : false;
-	
+
 
 	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
 	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
