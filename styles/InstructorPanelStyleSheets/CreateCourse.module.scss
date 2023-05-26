@@ -44,6 +44,84 @@
     margin-top: 8px;
 }
 
-.hyperlink {
+.uploadImageHeader {
+    font-size: 22px;
+    color: #000000;
+    margin-bottom: 14px;
+    margin-top: 22px;
+}
+
+.detailDataWrapper {
+    width: 247px;
+    height: 47px;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
     display: flex;
+    align-items: center;
+    padding-right: 16px;
+    margin-left: 12px;
+
+    p {
+        font-size: 20px;
+    }
+}
+
+.IconWrapper {
+    margin-left: 12px;
+    width: 68px;
+    height: 47px;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: flex;
+}
+
+.dropDownArrowWrapper {
+    width: 22px;
+    height: 47px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: #EFEFEF;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px 0px 0px 4px;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+
+.bottomInputText {
+    font-weight: 700;
+    font-size: 24px;
+    color: #000000;
+    font-weight: bold;
+    margin-bottom: 21px;
+}
+
+.checkBox {
+    height: 26px;
+    width: 26px;
+}
+
+.saveCourseBtnBox {
+    width: 138px;
+    height: 38px;
+
+    button {
+        font-size: 20px;
+        padding: 8px 12px;
+    }
+}
+
+.navItems {
+    font-size: 18px;
+    display: flex;
+
+    p {
+        margin-left: 24px;
+        cursor: pointer;
+    }
+}
+
+.activeItem {
+    color: $primary-color;
+    border-bottom: 2px solid $primary-color;
 }

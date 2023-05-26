@@ -37,11 +37,13 @@ const StyledSelect = styled(AntdSelect)`
 const Select = ({
   OptionData,
   placeholder,
+  ...rest
 }) => {
   return (
     <StyledSelect
       options={OptionData}
       placeholder={placeholder}
+      {...rest}
     />
   );
 }
