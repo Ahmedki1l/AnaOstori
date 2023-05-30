@@ -12,98 +12,45 @@ const instance = (accessToken) => {
 	})
 }
 
-
-export const createOrderAPI = (data) => {
-	return instance(data?.accessToken).post(`/createOrder`, data?.orderData)
-}
-
-export const gettCatagoriesAPI = (data) => {
-	return instance(data?.accessToken).get(`/catagories`)
-}
-
-export const getMyOrderAPI = (data) => {
-	return instance(data?.accessToken).get(`/order/query`)
-}
-
-
-export const getPaymentInfoAPI = (data) => {
-	return instance(data?.accessToken).post(`/orders/verifyPayment/${data?.orderID}/${data?.transactionID}`)
-}
-
-
-export const getCourseDetailsAPI = (data) => {
-	return instance(data?.accessToken).get(`/courseByName/${data?.courseName}`)
-}
-
-
-export const getCatagoriesAPI = (data) => {
-	return instance(data?.accessToken).get(`/catagories`)
-}
-
-
-export const courseCurriculumAPI = (data) => {
-	return instance(data?.accessToken).get(`/course/curriculum/${data?.courseID}`)
-}
-
-
-export const getCourseItemAPI = (data) => {
-	return instance(data?.accessToken).get(`/course/${data?.courseID}/item/${data?.itemID}`)
-}
-
-
-export const updateProfile = (data) => {
-	return instance(data?.accessToken).post('/updateProfile', data?.data)
-}
-
-
-export const uploadProfileImage = (data) => {
-	return axios.post(`${baseUrl}/userprofile/upload`, data?.formData, {
+const instance2 = (accessToken) => {
+	console.log('instance2s');
+	return axios.create({
+		baseURL: baseUrl,
 		headers: {
-			'Authorization': `Bearer ${data?.accessToken}`,
+			'Authorization': `Bearer ${accessToken}`,
 			'Content-Type': 'multipart/form-data'
 		}
 	})
 }
 
+// export const uploadProfileImage = (data) => {
+// 	return axios.post(`${baseUrl}/userprofile/upload`, data?.formData, {
+// 		headers: {
+// 			'Authorization': `Bearer ${data?.accessToken}`,
+// 			'Content-Type': 'multipart/form-data'
+// 		}
+// 	})
+// }
 
-export const myCoursesAPI = (accessToken) => {
-	return instance(accessToken).get('/myCourses')
-}
-
-
-export const viewProfileAPI = (accessToken) => {
-	return instance(accessToken).get('/viewProfile')
-}
-
-
-export const deleteAccount = (accessToken) => {
-	return instance(accessToken).post('/deleteProfile')
-}
-
-export const getCourseByNameAPI = (data) => {
-	return instance(data?.accessToken).get(`/courseByName/${data?.name}`)
-}
-
-export const accountRecovery = (accessToken) => {
-	return instance(accessToken).post('/activateProfile')
-}
+export const uploadProfileImage = (data) => { return instance2(data?.accessToken).post('/userprofile/upload', data?.formData) }
+export const uploadCourseFileAPI = (data) => { return instance2(data?.accessToken).post('/file/upload', data?.formData) }
 
 
-export const markItemCompleteAPI = (data) => {
-	return instance(data?.accessToken).get(`course/markItemComplete/${data?.itemID}/${data?.courseID}`)
-}
-
-
-export const getCompleteCourseItemIDAPI = (data) => {
-	return instance(data?.accessToken).get(`course/progress/${data?.courseID}`)
-}
-
-
-export const getCourseProgressAPI = (data) => {
-	return instance(data?.accessToken).get(`course/getUserCourseProgress/${data?.courseID}`)
-}
-
-
-export const subcribeNotificationAPI = (data) => {
-	return instance(data?.accessToken).post(`course/subscribe/${data?.courseId}`, data?.data)
-}
+export const createOrderAPI = (data) => { return instance(data?.accessToken).post(`/createOrder`, data?.orderData) }
+export const getMyOrderAPI = (data) => { return instance(data?.accessToken).get(`/order/query`) }
+export const getPaymentInfoAPI = (data) => { return instance(data?.accessToken).post(`/orders/verifyPayment/${data?.orderID}/${data?.transactionID}`) }
+export const getCourseDetailsAPI = (data) => { return instance(data?.accessToken).get(`/courseByName/${data?.courseName}`) }
+export const getCatagoriesAPI = (data) => { return instance(data?.accessToken).get(`/catagories`) }
+export const courseCurriculumAPI = (data) => { return instance(data?.accessToken).get(`/course/curriculum/${data?.courseID}`) }
+export const getCourseItemAPI = (data) => { return instance(data?.accessToken).get(`/course/${data?.courseID}/item/${data?.itemID}`) }
+export const updateProfile = (data) => { return instance(data?.accessToken).post('/updateProfile', data?.data) }
+export const myCoursesAPI = (accessToken) => { return instance(accessToken).get('/myCourses') }
+export const viewProfileAPI = (accessToken) => { return instance(accessToken).get('/viewProfile') }
+export const deleteAccount = (accessToken) => { return instance(accessToken).post('/deleteProfile') }
+export const getCourseByNameAPI = (data) => { return instance(data?.accessToken).get(`/courseByName/${data?.name}`) }
+export const accountRecovery = (accessToken) => { return instance(accessToken).post('/activateProfile') }
+export const markItemCompleteAPI = (data) => { return instance(data?.accessToken).get(`course/markItemComplete/${data?.itemID}/${data?.courseID}`) }
+export const getCompleteCourseItemIDAPI = (data) => { return instance(data?.accessToken).get(`course/progress/${data?.courseID}`) }
+export const getCourseProgressAPI = (data) => { return instance(data?.accessToken).get(`course/getUserCourseProgress/${data?.courseID}`) }
+export const subcribeNotificationAPI = (data) => { return instance(data?.accessToken).post(`course/subscribe/${data?.courseId}`, data?.data) }
+export const getCurriculumIdsAPI = (data) => { return instance(data?.accessToken).get('/curriculum/list') }

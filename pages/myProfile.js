@@ -15,7 +15,6 @@ export default function MyProfile() {
 	const myCourses = storeData?.myCourses
 	const imageBaseUrl = LinkConst.File_Base_Url2
 	const profileUrl = `${imageBaseUrl}/${userDetails?.avatarKey}`
-	console.log(storeData);
 
 	return (
 		<>
