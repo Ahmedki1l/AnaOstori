@@ -4,6 +4,21 @@
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
 }
 
+.navItems {
+    font-size: 18px;
+    display: flex;
+
+    p {
+        margin-left: 24px;
+        cursor: pointer;
+    }
+}
+
+.activeItem {
+    color: $primary-color;
+    border-bottom: 2px solid $primary-color;
+}
+
 .createCourseHeaderText {
     padding: 28px 0 24px 0;
 }
@@ -23,19 +38,12 @@
 .bodysubWrapper {
     background-color: #ffffff;
     border-radius: 4px;
-    padding: 24px;
+    padding: 24px 0;
 }
 
-.imageUploadWrapper {
-    border-color: black;
-    width: 549px;
-    height: 238px;
-    border: 0.5px solid rgba(0, 0, 0, 0.5);
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.imageUploader {
+    width: 350px;
+    height: 300px;
 }
 
 .uploadimagetext {
@@ -50,6 +58,7 @@
     margin-bottom: 14px;
     margin-top: 22px;
 }
+
 
 .detailDataWrapper {
     width: 247px;
@@ -78,13 +87,11 @@
 }
 
 .dropDownArrowWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     background: #EFEFEF;
     border-left: 0.5px solid rgba(0, 0, 0, 0.5);
 }
-
 
 .bottomInputText {
     font-weight: 700;
@@ -109,17 +116,32 @@
     }
 }
 
-.navItems {
-    font-size: 18px;
-    display: flex;
-
-    p {
-        margin-left: 24px;
-        cursor: pointer;
-    }
+.borderline {
+    border-top: 0.5px solid rgba(0, 0, 0, 0.3);
 }
 
-.activeItem {
-    color: $primary-color;
-    border-bottom: 2px solid $primary-color;
+
+.secDetails {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.addDetails {
+    font-size: 20px;
+    color: #0075FF;
+}
+
+.courseDetails {
+    display: flex;
+    justify-content: space-between;
+}
+
+.DeleteIconWrapper {
+    width: 49px;
+    height: 47px;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
 }
