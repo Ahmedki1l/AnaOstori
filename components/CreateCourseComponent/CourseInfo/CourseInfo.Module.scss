@@ -1,4 +1,4 @@
-@import "../variables.module.scss";
+@import "../../../styles/variables.module.scss";
 
 .headerWrapper {
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
@@ -15,8 +15,8 @@
 }
 
 .activeItem {
-    color: $primary-color;
-    border-bottom: 2px solid $primary-color;
+    // color: $primary-color;
+    border-bottom: 2px solid;
 }
 
 .createCourseHeaderText {
@@ -25,8 +25,8 @@
 
 .courseInfoText {
     font-size: 18px;
-    color: $primary-color;
-    border-bottom: 2px solid $primary-color;
+    // color: $primary-color;
+    border-bottom: 2px solid;
     display: inline-block;
     padding: 5px;
 }

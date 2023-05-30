@@ -131,6 +131,7 @@ export default function Index() {
                     <div className={`px-4 maxWidthDefault ${styles.myCourseContentMainWrapper}`}>
                         <div className={`${styles.myCourseDetailsWrapper} ${styles.boxBorder}`}>
                             <div className={styles.courseThumnailDiv}>
+                                {console.log(`${mediaBaseUrl}/${courseCurriculum?.course?.pictureKey}`)}
                                 <Image src={`${mediaBaseUrl}/${courseCurriculum?.course?.pictureKey}`} alt='My Course Image' layout='fill' objectFit="cover" priority />
                             </div>
                             <div className={styles.courseDetailTextWrapper}>

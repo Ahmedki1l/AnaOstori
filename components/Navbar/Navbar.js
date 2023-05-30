@@ -10,12 +10,12 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { signOutUser } from '../../services/fireBaseAuthService'
+import { getCatagoriesAPI, getCurriculumIdsAPI, } from '../../services/apisService';
 
 //Mi icons
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
-import { gettCatagoriesAPI } from '../../services/apisService';
 
 
 
@@ -36,6 +36,7 @@ export default function Navbar() {
 	const storeData = useSelector((state) => state?.globalStore);
 
 	const [catagories, setCatagories] = useState()
+	const [curriculumIds, setCurriculumIds] = useState();
 
 	const userFullName = storeData?.viewProfileData?.fullName ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : ""
 
@@ -47,13 +48,14 @@ export default function Navbar() {
 	useEffect(() => {
 		const fetchResults = async () => {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-				setCatagories(res?.data)
+				setCatagories(res?.data),
+					setCurriculumIds(res?.data)
 			}).catch(error => {
 				console.log("error : ", error);
 			})
 		};
 		fetchResults();
-	}, [setCatagories])
+	}, [setCatagories, setCurriculumIds])
 
 
 	useEffect(() => {
@@ -61,25 +63,47 @@ export default function Navbar() {
 			let data = {
 				accessToken: storeData?.accessToken
 			}
-			await gettCatagoriesAPI(data).then(res => {
-				// setCatagories(res?.data)
+			try {
+				const getcatagoriReq = getCatagoriesAPI(data)
+				const getCurriculumIdsReq = getCurriculumIdsAPI(data)
+
+				const [catagories, curriculumIds] = await Promise.all([
+					getcatagoriReq, getCurriculumIdsReq
+				])
 				dispatch({
 					type: 'SET_CATAGORIES',
-					catagories: res?.data
+					catagories: catagories?.data
 				});
-			}).catch(error => {
-				console.log("error : ", error);
-				if (error?.response?.status == 401) {
-					let returnUrl = {
-						url: window.location.href
-					}
-					signOutUser(returnUrl)
-					dispatch({
-						type: 'EMPTY_STORE'
-					});
-				}
-			})
-		};
+				dispatch({
+					type: 'SET_CURRICULUMIDS',
+					curriculumIds: curriculumIds?.data,
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		// const fetchResults = async () => {
+		// 	let data = {
+		// 		accessToken: storeData?.accessToken
+		// 	}
+		// 	await gettCatagoriesAPI(data).then(res => {
+		// 		dispatch({
+		// 			type: 'SET_CATAGORIES',
+		// 			catagories: res?.data
+		// 		});
+		// 	}).catch(error => {
+		// 		console.log("error : ", error);
+		// 		if (error?.response?.status == 401) {
+		// 			let returnUrl = {
+		// 				url: window.location.href
+		// 			}
+		// 			signOutUser(returnUrl)
+		// 			dispatch({
+		// 				type: 'EMPTY_STORE'
+		// 			});
+		// 		}
+		// 	})
+		// };
 		fetchResults();
 	}, [storeData?.accessToken])
 

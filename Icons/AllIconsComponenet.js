@@ -48,6 +48,8 @@ import UploadFile from './customeIcons/uploadFile'
 import DropDown from './customeIcons/dropDown'
 import Star from './customeIcons/star'
 import Graduate from './customeIcons/graduate'
+import UpDownArrow from './customeIcons/UpDownArrow'
+import DeleteCourse from './customeIcons/DeleteCourse'
 
 
 
@@ -101,8 +103,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'dropDown' && <DropDown height={height} width={width} color={color} />}
 			{iconName == 'star' && <Star height={height} width={width} color={color} />}
 			{iconName == 'graduate' && <Graduate height={height} width={width} color={color} />}
-
-
+			{iconName == 'updownarrow' && <UpDownArrow height={height} width={width} color={color} />}
+			{iconName == 'deletecourse' && <DeleteCourse height={height} width={width} color={color} />}
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
 			{iconName == 'studentTwoIcon' && <StudentTwoIcon height={height} width={width} color={color} strockColor={strockColor} />}
