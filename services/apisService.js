@@ -54,3 +54,9 @@ export const getCompleteCourseItemIDAPI = (data) => { return instance(data?.acce
 export const getCourseProgressAPI = (data) => { return instance(data?.accessToken).get(`course/getUserCourseProgress/${data?.courseID}`) }
 export const subcribeNotificationAPI = (data) => { return instance(data?.accessToken).post(`course/subscribe/${data?.courseId}`, data?.data) }
 export const getCurriculumIdsAPI = (data) => { return instance(data?.accessToken).get('/curriculum/list') }
+export const createCourseByInstructorAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseByInstructor', data?.data) }
+export const createCourseMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseMetaData ', data?.data) }
+export const createCourseCardMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseCardMetaData ', data?.data) }
+export const createCourseDetailsMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseDetailsMetaData', data?.data) }
+
+

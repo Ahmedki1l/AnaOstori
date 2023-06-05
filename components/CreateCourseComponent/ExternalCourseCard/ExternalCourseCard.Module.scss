@@ -1,0 +1,233 @@
+@import "../../../styles/variables.module.scss";
+
+.IconWrapper {
+    margin-left: 12px;
+    width: 68px;
+    height: 47px;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 22px auto;
+    overflow: hidden;
+}
+
+.dropDownArrowWrapper {
+    display: grid;
+    place-items: center;
+    background: #EFEFEF;
+    border-left: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+
+.secDetails {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.addDetails {
+    font-size: 20px;
+    color: #0075FF;
+}
+
+.courseDetails {
+    display: flex;
+}
+
+.DeleteIconWrapper {
+    width: 49px;
+    height: 47px;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+}
+
+.saveCourseBtnBox {
+    margin-top: 24px;
+    width: 105px;
+    height: 36px;
+
+    button {
+        font-size: 16px;
+        padding: 9px 35px;
+    }
+}
+
+.mainArea {
+    padding: 2rem;
+}
+
+.tagline {
+    font-size: 23px;
+}
+
+.pointList {
+    list-style: disc;
+    padding: 0 1rem;
+    font-size: 20px;
+    margin-bottom: 2rem;
+}
+
+.coursesWrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+}
+
+.coursesWrapper2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+}
+
+.typeOfCourseCardWrapper {
+    width: 406px;
+    height: 100%;
+    border: 0.3px solid rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 223px auto;
+}
+
+.detailsBox {
+    display: table;
+    border-collapse: collapse;
+
+    li {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.7rem;
+    }
+}
+
+.coverImage {
+    width: 100%;
+}
+
+.courseDetailText {
+    font-family: 'Tajawal-Medium';
+    font-size: 18px;
+    padding: 0.7rem;
+}
+
+.descriptionList {
+    font-size: 18px;
+}
+
+.listItemIcon {
+    font-size: 32px;
+}
+
+.listItemText {
+    font-family: 'Tajawal-Medium';
+    font-size: 16px;
+    padding: 0 0 0 0.5rem;
+}
+
+.grayText {
+    font-size: 16px;
+    color: #0000007a;
+}
+
+.priceBoxMainArea {
+    width: 100%;
+}
+
+.priceBoxWrapper {
+    border-top: 0.3px solid rgba(0, 0, 0, 0.5);
+    display: table-row;
+    height: 20px;
+}
+
+.onePersonPriceBox,
+.specialPriceBox,
+.twoPersonPriceBox,
+.threePersonPriceBox {
+    padding: 1rem 0.7rem 0 0.7rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.onePersonPriceBox {
+    .detailText {
+        font-size: 20px;
+    }
+
+    .price {
+        font-size: 22px;
+    }
+}
+
+.twoPersonPriceBox,
+.threePersonPriceBox {
+    .detailText {
+        font-size: 16px;
+    }
+
+    .price {
+        font-size: 18px;
+    }
+}
+
+.specialPriceBox {
+    .detailText {
+        font-size: 16px;
+    }
+
+    .seemoreText {
+        font-size: 14px;
+        color: #00A3FF;
+        text-decoration: underline;
+    }
+
+    .arrowIcon {
+        color: #00A3FF;
+        font-size: 20px;
+    }
+}
+
+.btnBox {
+    margin: 1rem 0.7rem;
+
+    button {
+        font-size: 22px;
+    }
+}
+
+
+.dialogDisText {
+    font-size: 18px;
+}
+
+.submitBtnBox,
+.cancleBtnBox {
+    height: 45px;
+    margin: 0 0 0 15px;
+
+    button {
+        font-size: 16px;
+    }
+}
+
+.percentageBox {
+    background-color: #CD0000;
+    color: #ffffff;
+    padding: 7px;
+    margin-right: 1rem;
+    border-radius: 3px;
+}
+
+.MainDisHead {
+    font-size: 20px;
+}
+
+.oldPrice {
+    font-size: 16px;
+    color: #00000080;
+    text-decoration: line-through;
+}

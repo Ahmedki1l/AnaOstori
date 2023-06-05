@@ -4,8 +4,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useSelector } from 'react-redux'
 import { uploadCourseFileAPI } from '../../../services/apisService'
 
-const UploadFile = ({ label, accept }) => {
-    console.log("accept", accept);
+const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
     const storeData = useSelector((state) => state?.globalStore);
 
@@ -22,6 +21,7 @@ const UploadFile = ({ label, accept }) => {
         console.log("data", data);
         await uploadCourseFileAPI(data).then((res) => {
             console.log(res);
+            setImageUploadResponceData(res.data)
         }).catch((error) => {
             console.log(error);
         })
@@ -30,7 +30,7 @@ const UploadFile = ({ label, accept }) => {
     return (
         <>
             <input type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
-            <label for={`upload${accept}`} className={styles.imageUploadWrapper}>
+            <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
                 <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080'} ></AllIconsComponenet>
                 <p className={styles.uploadimagetext}>{label}</p>
             </label>

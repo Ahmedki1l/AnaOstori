@@ -20,9 +20,9 @@ function Index() {
                         <div className='maxWidthDefault'>
                             <h1 className={`head2 py-12`}>اختر نوع الدورة</h1>
                             <div className={styles.courseTypesList}>
-                                <Link href={"/instructorPanel/manageCourse/physicalCourse"} className={`${styles.courseTypeWrapper} normalLinkText`} >حضورية</Link>
-                                <Link href={"/instructorPanel/manageCourse/onDemandCourse"} className={`${styles.courseTypeWrapper} normalLinkText`} >مسجلة</Link>
-                                <Link href={"/instructorPanel/manageCourse/onlineCourse"} className={`${styles.courseTypeWrapper} normalLinkText`} >مباشرة</Link>
+                                <Link href={"/instructorPanel/manageCourse/physical"} className={`${styles.courseTypeWrapper} normalLinkText`} >حضورية</Link>
+                                <Link href={"/instructorPanel/manageCourse/onDemand"} className={`${styles.courseTypeWrapper} normalLinkText`} >مسجلة</Link>
+                                <Link href={"/instructorPanel/manageCourse/online"} className={`${styles.courseTypeWrapper} normalLinkText`} >مباشرة</Link>
                             </div>
                         </div>
                     }
