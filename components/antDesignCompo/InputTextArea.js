@@ -35,7 +35,6 @@ const InputTextArea = ({
   ...rest
 
 }) => {
-  console.log("hight", height);
   return (
     <>
       <AntdInputTextAreaStyle

@@ -45,11 +45,13 @@ const CheckBoxLabel = styled('p')`
 `
 const CheckBox = ({
     label,
+    onChange,
     ...rest
 }) => {
     return (
         <>
             <AntdCheckboxStyle
+                onChange={onChange}
                 {...rest}
             >
                 <CheckBoxLabel>{label}</CheckBoxLabel>

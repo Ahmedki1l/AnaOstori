@@ -9,7 +9,7 @@ export default function Index() {
     const courseType = router.query.courseType
     const allPhysicalCourses = []
     const handleRoute = () => {
-        router.push('/instructorPanel/manageCourse/physicalCourse/createCourse')
+        router.push('/instructorPanel/manageCourse/physical/createCourse')
     }
 
     return (
@@ -26,7 +26,6 @@ export default function Index() {
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
                         <tr>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>بيانات الدورة</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>حالة النشر</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>

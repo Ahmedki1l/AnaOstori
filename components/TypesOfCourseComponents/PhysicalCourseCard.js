@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../../styles/Courses.module.scss';
 import CoverImg from '../CommonComponents/CoverImg';
@@ -13,22 +13,27 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
 export default function PhysicalCourseCard(props) {
+
 	const courseDetail = props.courseDetails
+	console.log(courseDetail);
+	const isEdit = props.isEdit
+
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible
-	const catagoryName = props.catagoryName
+	const catagoryName = props.catagoryName ? props.catagoryName : ""
 	const [discountShow, setDiscountShow] = useState(false)
 	const router = useRouter();
 
-	const handleNavigation = (catagoryName, courseDetail) => {
+	const handleNavigation = (catagoryName, courseDetail, courseDetailsMetaData) => {
+		if (isEdit == true) return
 		if (courseDetail.isEnrolled) {
-			router.push(`/myCourse/${courseDetail.id}`)
+			router.push(`/myCourse/${courseDetail.id}/`)
 		} else {
 			router.push(`/${courseDetail.name.replace(/ /g, "-")}/${catagoryName.replace(/ /g, "-")}`)
 		}
 	}
 
 
-	const oneUserPrice = courseDetail.price
+	const oneUserPrice = courseDetail?.price
 
 	const isSmallScreen = useWindowSize().smallScreen
 
@@ -41,7 +46,7 @@ export default function PhysicalCourseCard(props) {
 
 	return (
 		<div className={styles.typeOfCourseCardWrapper}>
-			<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail)}>
+			<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail, courseDetailsMetaData)}>
 				<CoverImg height={215} url={coverImgUrl} />
 			</div>
 			<div className={styles.detailsBox}>
@@ -105,7 +110,7 @@ export default function PhysicalCourseCard(props) {
 						</>}
 					</>}
 					<div className={styles.btnBox}>
-						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail)}>قراءة تفاصيل الدورة</button>
+						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail, courseDetailsMetaData)}>قراءة تفاصيل الدورة</button>
 					</div>
 				</div>
 			</div>
