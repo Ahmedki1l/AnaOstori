@@ -12,7 +12,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../components/GlobalStore/store';
 import * as fbq from '../lib/fpixel'
 import Script from 'next/script'
-import Image from 'next/legacy/image';
 
 
 function MyApp({ Component, pageProps }) {
@@ -118,7 +117,6 @@ function MyApp({ Component, pageProps }) {
 	}, []);
 
 	useEffect(() => {
-		// This pageview only triggers the first time (it's important for Pixel to have real information)
 		fbq.pageview()
 
 		const handleRouteChange = () => {
@@ -176,7 +174,7 @@ function MyApp({ Component, pageProps }) {
 						`,
 					}}
 				/>
-				<noscript><Image height="1" width="1" style={{ display: 'none' }}
+				<noscript><img height="1" width="1" style={{ display: 'none' }}
 					src={`https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1`}
 					alt={'fbPixelNoScriptAlt'}
 				/></noscript>

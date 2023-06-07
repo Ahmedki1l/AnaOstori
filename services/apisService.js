@@ -58,5 +58,7 @@ export const createCourseByInstructorAPI = (data) => { return instance(data?.acc
 export const createCourseMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseMetaData ', data?.data) }
 export const createCourseCardMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseCardMetaData ', data?.data) }
 export const createCourseDetailsMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseDetailsMetaData', data?.data) }
+export const generateAttendanceQRAPI = (data) => { return instance(data?.accessToken).post('/attendance/key') }
+
 
 

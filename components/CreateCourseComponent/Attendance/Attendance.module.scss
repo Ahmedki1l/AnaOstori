@@ -1,0 +1,21 @@
+.createQRBtnBox {
+    width: 155px;
+    height: 36px;
+
+    button {
+        font-size: 16px;
+    }
+}
+
+.modalHeader {
+    display: flex;
+    padding: 8px 18px;
+    align-items: center;
+    justify-content: space-between;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.createappointment {
+    width: 92px;
+    font-size: 18px;
+}

@@ -74,7 +74,7 @@ const Appointments = () => {
                                         ]}
                                     >
                                         <div className={styles.modalHeader}>
-                                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'}></AllIconsComponenet>
+                                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} onClick={handleCancel}></AllIconsComponenet>
                                             <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
                                         </div>
                                         <div className={styles.createappointmentfields}>
