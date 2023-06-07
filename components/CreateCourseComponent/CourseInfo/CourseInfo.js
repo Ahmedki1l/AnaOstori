@@ -489,7 +489,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                         placeholder="رابط للنص المنفصل"
                                                         value={field.seprateTextLink} />
                                                 </FormItem>
-                                                <div className={styles.DeleteIconWrapper} >
+                                                <div className={styles.deleteIconWrapper} >
                                                     <div className='flex justify-center items-center h-100' onClick={() => handleRemove('courseDetails', index)}>  <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} ></AllIconsComponenet></div>
                                                 </div>
                                             </div>
@@ -562,7 +562,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     placeholder="رابط للنص المنفصل"
                                                     value={field.linkToSeprateText} />
                                             </FormItem>
-                                            <div className={styles.DeleteIconWrapper} >
+                                            <div className={styles.deleteIconWrapper} >
                                                 <div className='flex justify-center items-center h-100' onClick={() => handleRemove("courseDetailsMetaData", index)}>  <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} ></AllIconsComponenet></div>
                                             </div>
                                         </div>

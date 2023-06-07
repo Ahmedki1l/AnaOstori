@@ -1,6 +1,6 @@
 import React from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
-import styles from './Appointments.module.scss'
+import styles from './Appointment.module.scss'
 import { useState } from 'react';
 import { Modal, Space, Switch } from 'antd';
 import { Form, FormItem } from '../../antDesignCompo/FormItem';

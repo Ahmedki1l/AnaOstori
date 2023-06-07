@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
 import CourseInfo from '../../../../../components/CreateCourseComponent/CourseInfo/CourseInfo';
-import Appointments from '../../../../../components/CreateCourseComponent/Appointments/Appointments';
+import Appointment from '../../../../../components/CreateCourseComponent/Appointments/Appointment';
 import ExternalCourseCard from '../../../../../components/CreateCourseComponent/ExternalCourseCard/ExternalCourseCard';
 import TestsResults from '../../../../../components/CreateCourseComponent/TestsResults/TestResults';
 import TheStudents from '../../../../../components/CreateCourseComponent/TheStudents/TheStudents';
@@ -82,7 +82,7 @@ export default function Index(props, accept) {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} />}
-                        {selectedItem == 3 && <Appointments />}
+                        {selectedItem == 3 && <Appointment />}
                         {selectedItem == 4 && <TestsResults />}
                         {selectedItem == 5 && <TheStudents />}
                     </div>
