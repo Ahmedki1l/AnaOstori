@@ -6,6 +6,7 @@ import Appointment from '../../../../../components/CreateCourseComponent/Appoint
 import ExternalCourseCard from '../../../../../components/CreateCourseComponent/ExternalCourseCard/ExternalCourseCard';
 import TestsResults from '../../../../../components/CreateCourseComponent/TestsResults/TestResults';
 import TheStudents from '../../../../../components/CreateCourseComponent/TheStudents/TheStudents';
+import Attendance from '../../../../../components/CreateCourseComponent/Attendance/Attendance';
 
 const CourseInitial =
 {
@@ -65,6 +66,7 @@ export default function Index(props, accept) {
                                     <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>
                                     <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>
                                     <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>
+                                    <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>
                                 </>
                             }
                         </div>
@@ -85,6 +87,7 @@ export default function Index(props, accept) {
                         {selectedItem == 3 && <Appointment />}
                         {selectedItem == 4 && <TestsResults />}
                         {selectedItem == 5 && <TheStudents />}
+                        {selectedItem == 6 && <Attendance />}
                     </div>
                 </div >
             </div >

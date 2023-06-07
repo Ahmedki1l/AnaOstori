@@ -26,6 +26,7 @@ export default function Index() {
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
                         <tr>
+                            <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>بيانات الدورة</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>حالة النشر</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>
