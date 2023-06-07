@@ -39,7 +39,7 @@ const Appointments = () => {
                             <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
-                    {allPhysicalCourses.length > 0 &&
+                    {allAppointments.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allAppointments?.map((course, index) => {
                                 return (
@@ -56,7 +56,7 @@ const Appointments = () => {
                         </tbody>
                     }
                 </table>
-                {allPhysicalCourses.length == 0 &&
+                {allAppointments.length == 0 &&
                     <div className={styles.tableBodyArea}>
                         <div className={styles.noDataManiArea} >
                             <div className={styles.noDataSubArea} >
