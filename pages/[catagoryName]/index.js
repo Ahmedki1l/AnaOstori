@@ -72,7 +72,7 @@ export default function Index(props) {
 			})
 		}
 		getCourseDetails()
-	}, [storeData?.accessToken])
+	}, [storeData?.accessToken, catagoryName, isUserLogin])
 
 	return (
 		<div className={`maxWidthDefault ${styles.mainArea}`}>

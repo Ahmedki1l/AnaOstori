@@ -40,7 +40,7 @@ export default function Payment(props) {
             }).catch((error) => console.log(error));
         }
         getPaymentData()
-    }, [orderID, transactionID])
+    }, [orderID, transactionID, storeData?.accessToken])
 
 
 

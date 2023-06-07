@@ -12,6 +12,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../components/GlobalStore/store';
 import * as fbq from '../lib/fpixel'
 import Script from 'next/script'
+import Image from 'next/legacy/image';
 
 
 function MyApp({ Component, pageProps }) {
@@ -46,7 +47,7 @@ function MyApp({ Component, pageProps }) {
 		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
 			router.replace('/');
 		}
-	}, [router.pathname]);
+	}, [router, isUserInstructor]);
 
 	useEffect(() => {
 		if (!storeData?.accessToken && protectedRoutes.includes(router.pathname)) {
@@ -175,8 +176,9 @@ function MyApp({ Component, pageProps }) {
 						`,
 					}}
 				/>
-				<noscript><img height="1" width="1" style={{ display: 'none' }}
+				<noscript><Image height="1" width="1" style={{ display: 'none' }}
 					src={`https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1`}
+					alt={'fbPixelNoScriptAlt'}
 				/></noscript>
 				<ToastContainer />
 				<Provider store={store} >
