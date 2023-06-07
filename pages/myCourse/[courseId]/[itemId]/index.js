@@ -99,7 +99,7 @@ export default function Index() {
             }
             getPageProps()
         }
-    }, [courseID, storeData?.accessToken])
+    }, [courseID, storeData?.accessToken, currentItemId])
 
     useEffect(() => {
         if (!smallScreen) setSelectedTab(1)

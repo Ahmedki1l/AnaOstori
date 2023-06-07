@@ -166,7 +166,7 @@ export default function Index(props) {
 			})
 		}
 		getCourseByName()
-	}, [courseDetail?.name])
+	}, [courseDetail, storeData?.accessToken])
 
 	return (
 		<>

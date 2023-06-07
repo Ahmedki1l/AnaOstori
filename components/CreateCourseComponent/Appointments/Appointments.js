@@ -13,7 +13,7 @@ const Appointments = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const allPhysicalCourses = []
+    const allAppointments = []
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -41,7 +41,7 @@ const Appointments = () => {
                     </thead>
                     {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
-                            {allPhysicalCourses.map((course, index) => {
+                            {allAppointments?.map((course, index) => {
                                 return (
                                     <tr key={`tableRow${index}`}>
                                         <td className={`${styles.tableBodyText} ${styles.tableBody1}`}></td>

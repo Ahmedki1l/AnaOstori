@@ -100,7 +100,7 @@ export default function Index(props) {
 			}
 		}
 		createOrder()
-	}, [courseDetails.type])
+	}, [courseDetails, storeData.viewProfileData, storeData.accessToken])
 
 	const validation = (studentsData, courseType) => {
 		const data = [...studentsData]
