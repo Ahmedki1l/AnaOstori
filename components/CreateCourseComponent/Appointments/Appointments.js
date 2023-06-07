@@ -70,7 +70,7 @@ const Appointments = () => {
                                         onCancel={handleCancel}
                                         closeIcon={false}
                                         footer={[
-                                            <button className={styles.construction} height={14} width={14} onClick={handleCancel}>إنشاء</button>
+                                            <button key='modalFooterBtn' className={styles.construction} height={14} width={14} onClick={handleCancel}>إنشاء</button>
                                         ]}
                                     >
                                         <div className={styles.modalHeader}>
