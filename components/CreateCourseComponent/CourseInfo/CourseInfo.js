@@ -12,7 +12,6 @@ import Select from '../../antDesignCompo/Select';
 import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCourseMetaDataAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
-import { useRouter } from 'next/router';
 import ExternalCourseCard from '../ExternalCourseCard/ExternalCourseCard';
 
 const { Option } = Select;
@@ -224,8 +223,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
 
     return (
         <div>
-            <div>
-            </div>
             <Form form={form} onFinish={onFinishCreateCourse}>
                 <div className='px-6'>
                     <FormItem

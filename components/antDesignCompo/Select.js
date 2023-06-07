@@ -5,6 +5,7 @@ import { Select as AntdSelect } from "antd";
 const StyledSelect = styled(AntdSelect)`
   height: ${props => (props.height ? props.height : '52')}px !important;
   width: ${props => (props.width ? props.width : '317')}px !important;
+  fontSize: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
    
   .ant-select-selector{
     height:100% !important;
@@ -30,7 +31,6 @@ const StyledSelect = styled(AntdSelect)`
     display:flex;
     align-items:center;
   }
- 
 
 `;
 
