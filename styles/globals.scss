@@ -585,6 +585,31 @@
 	.ant-modal-footer {
 		margin-top: 2px;
 	}
+
+	.ant-switch {
+		direction: ltr;
+		min-width: 31px;
+		height: 18px;
+		border-radius: 200px;
+	}
+
+	.ant-switch-handle {
+		width: 12px;
+		height: 12px;
+		top: 2.5px;
+	}
+
+	.ant-switch.ant-switch-checked .ant-switch-handle {
+		inset-inline-start: calc(116% - 20px);
+	}
+
+	.ant-switch.ant-switch-checked {
+		background: #00CF0Fff;
+
+		&:hover {
+			background: #00CF0Fff;
+		}
+	}
 }
 
 @media (max-width: 1350px) {

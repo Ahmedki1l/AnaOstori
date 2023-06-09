@@ -5,9 +5,12 @@ import styled from 'styled-components'
 
 
 const AntdInputStyle = styled(AntdInput)`
+font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
+
   ::placeholder {
-    font-size: 20px;
+    font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
     font-family: 'Tajawal-Regular';
+    color:#00000045;
   }
   font-size: 20px;
   font-family: 'Tajawal-Regular';
@@ -33,6 +36,7 @@ const Input = ({
   width,
   height,
   padding,
+  fontSize,
   ...rest
 }) => {
   return (
@@ -45,6 +49,7 @@ const Input = ({
         height={height}
         width={width}
         padding={padding}
+        fontSize={fontSize}
       />
     </>
   )

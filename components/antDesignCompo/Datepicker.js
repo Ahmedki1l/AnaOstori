@@ -18,6 +18,7 @@ const StyledDatePicker = styled(AntdDatePicker)`
     font-size: 16px;
     font-family: 'Tajawal-Regular';
     padding:5px;
+    color:#00000045;
   }
   .ant-picker-suffix{
     position: absolute;

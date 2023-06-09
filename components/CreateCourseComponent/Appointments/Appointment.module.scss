@@ -19,42 +19,84 @@
     height: 48px;
     background-color: #F4F5F7;
     overflow: hidden;
+    font-size: 20px;
+    width: 100%;
+    border-collapse: separate;
 }
 
 .tableHeadText {
     padding: 0 10px;
+    height: 48px;
+    text-align: center;
 }
 
-.appointTableHead1 {
-    width: 13%;
+.tableHead1 {
+    width: 20%;
 }
 
 .tableHead2 {
-    width: 12%;
+    width: 18%;
 }
 
 .tableHead3 {
-    width: 12%;
+    width: 13%;
 }
 
 .tableHead4 {
-    width: 12%;
+    width: 13%;
 }
 
 .tableHead5 {
-    width: 12%;
+    width: 13%;
 }
 
 .tableHead6 {
+    width: 13%;
+}
+
+.tableHead7 {
     width: 8%;
 }
 
 .tableBodyArea {
     width: 100%;
-    border-width: 0px 0.7px 0.7px 0.7px;
-    border-style: solid;
-    border-color: #C3C3C3;
     border-radius: 0px 0px 4px 4px;
+}
+
+.teachersDetails {
+    text-align: right;
+    align-items: center;
+    justify-content: right;
+    padding: 0 12px 0 0;
+
+    p {
+        padding: 4px 0 3px 0;
+    }
+}
+
+.genderDetails {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    border: 0.2px solid rgba(137, 135, 135, 0.2);
+    border-radius: 2px;
+    height: 25px;
+    padding: 0 5px;
+}
+
+.personeDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tableRow {
+    td {
+        height: 169px;
+        text-align: center;
+        border: 0.7px solid #c3c3c3;
+        border-top: none;
+    }
 }
 
 .noDataManiArea {
@@ -63,16 +105,16 @@
     place-content: center;
 }
 
-.borderline {
-    border-top: 0.5px solid rgba(0, 0, 0, 0.3);
-}
-
 .modalHeader {
     display: flex;
     padding: 8px 18px;
     align-items: center;
     justify-content: space-between;
-    border: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.closebutton {
+    background: none;
+    border: none;
 }
 
 .createappointment {
@@ -80,9 +122,16 @@
     font-size: 18px;
 }
 
-.createappointmentfields {
-    padding: 12px 18px;
+.createAppointmentFields {
+    padding: 12px 16px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.borderline {
+    margin-top: 5px;
+    width: 380px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
 }
 
 .construction {
@@ -93,11 +142,14 @@
     background: #F26722;
     border: 1px solid #F26722;
     border-radius: 3px;
-    margin: 8px 18px;
+    margin-top: 8px;
 }
-
 
 .recordedcourse {
     font-size: 16px;
     margin-right: 7px;
+}
+
+.createAppointmentBtnBox {
+    padding: 0 16px 16px 0;
 }

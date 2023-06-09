@@ -51,7 +51,9 @@ import Graduate from './customeIcons/graduate'
 import UpDownArrow from './customeIcons/UpDownArrow'
 import DeleteCourse from './customeIcons/DeleteCourse'
 import CloseIcon from './customeIcons/closeIcon'
-
+import EditIcon from './customeIcons/editIcon'
+import PersoneGroup from './customeIcons/personGroup'
+import ProgressIcon from './customeIcons/progressIcon'
 
 
 
@@ -107,6 +109,9 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'updownarrow' && <UpDownArrow height={height} width={width} color={color} />}
 			{iconName == 'deletecourse' && <DeleteCourse height={height} width={width} color={color} />}
 			{iconName == 'closeicon' && <CloseIcon height={height} width={width} color={color} />}
+			{iconName == 'editicon' && <EditIcon height={height} width={width} color={color} />}
+			{iconName == 'personegroup' && <PersoneGroup height={height} width={width} color={color} />}
+			{iconName == 'progressicon' && <ProgressIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

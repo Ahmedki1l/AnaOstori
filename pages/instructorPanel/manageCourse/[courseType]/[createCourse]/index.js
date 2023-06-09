@@ -44,6 +44,7 @@ export default function Index(props, accept) {
     const [selectedItem, setSelectedItem] = useState(3);
     const [showExtraNavItem, setShowExtraNavItem] = useState(true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
+    const courseId = '65ab9b76-e59f-4a36-a28d-46f18f1383eb'
 
     console.log(courseType);
     const handleItemSelect = (id) => {
@@ -84,10 +85,10 @@ export default function Index(props, accept) {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} />}
-                        {selectedItem == 3 && <Appointment />}
+                        {selectedItem == 3 && <Appointment courseId={createCourseApiRes} />}
                         {selectedItem == 4 && <TestsResults />}
                         {selectedItem == 5 && <TheStudents />}
-                        {selectedItem == 6 && <Attendance />}
+                        {selectedItem == 6 && <Attendance courseId={courseId} />}
                     </div>
                 </div >
             </div >
