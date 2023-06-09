@@ -1,12 +1,12 @@
 var initialState = {
     viewProfileData: {},
-    userDetails: [],
     myCourses: [],
     accessToken: "",
     googleLogin: false,
     isUserInstructor: false,
     catagories: [],
-    curriculumIds: []
+    curriculumIds: [],
+    instructorList: [],
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -21,7 +21,6 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 viewProfileData: {},
-                userDetails: [],
                 accessToken: ""
             }
         case 'ADD_AUTH_TOKEN':
@@ -54,6 +53,12 @@ export const globalStore = (state = initialState, action) => {
                 ...state,
                 isUserInstructor: action?.isUserInstructor
             }
+        case 'SET_INSTRUCTOR':
+            return {
+                ...state,
+                instructorList: action?.instructorList
+            }
+
         default: return state;
     }
 }

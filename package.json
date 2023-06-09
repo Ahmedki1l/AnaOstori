@@ -20,6 +20,7 @@
     "eslint-config-next": "13.0.3",
     "firebase": "^9.17.2",
     "jquery": "^3.6.3",
+    "moment": "^2.29.4",
     "next": "^13.0.3",
     "node-fetch": "^3.3.0",
     "qrcode.react": "^3.1.0",

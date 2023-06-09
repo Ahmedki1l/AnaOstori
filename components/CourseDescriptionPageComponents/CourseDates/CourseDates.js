@@ -49,7 +49,6 @@ export default function CourseDates(props) {
 			<ul className={styles.list}>
 				<li>
 					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calander'} color={'#000000'} />
-					{/* <Icon height={isSmallScreen?19:22} width={isSmallScreen?19:22} iconName={'calendarIcon'} alt={'calendar Icon'}/> */}
 					<p className={`fontMedium ${styles.listItemText}`}>من {startDay} {startDate} {startMonth} إلى {endDay} {endDate} {endMonth} </p>
 				</li>
 				<li>
@@ -60,7 +59,6 @@ export default function CourseDates(props) {
 					{date.gender == 'mix' ?
 						<>
 							<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'live'} color={'#000000'} />
-							{/* <Icon height={isSmallScreen?19:22} width={isSmallScreen?19:22} iconName={'liveCourseBlackIcon'} alt={'live Icon'}/> */}
 							<p className={`fontMedium link ${styles.listItemText}`}>قاعة افتراضية</p>
 						</>
 						:

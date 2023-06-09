@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector, } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form } from 'antd';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
@@ -12,7 +12,6 @@ import Select from '../../antDesignCompo/Select';
 import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCourseMetaDataAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
-import ExternalCourseCard from '../ExternalCourseCard/ExternalCourseCard';
 
 const { Option } = Select;
 
@@ -94,6 +93,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     })
     const onFinishCreateCourse = async (values) => {
+        console.log(values);
         values.pictureKey = imageUploadResponceData?.key,
             values.pictureBucket = imageUploadResponceData?.bucket,
             values.pictureMime = imageUploadResponceData?.mime,
@@ -123,7 +123,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 });
             }
         })
-        console.log(imageUploadResponceData);
     };
 
     const onFinishAddCourseExtraDetails = async (values) => {

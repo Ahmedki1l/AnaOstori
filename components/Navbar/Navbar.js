@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { signOutUser } from '../../services/fireBaseAuthService'
-import { getCatagoriesAPI, getCurriculumIdsAPI, } from '../../services/apisService';
+import { getCatagoriesAPI, getCurriculumIdsAPI, getInstructorListAPI, } from '../../services/apisService';
 
 //Mi icons
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -66,9 +66,10 @@ export default function Navbar() {
 			try {
 				const getcatagoriReq = getCatagoriesAPI(data)
 				const getCurriculumIdsReq = getCurriculumIdsAPI(data)
+				const getInstructorListReq = getInstructorListAPI(data)
 
-				const [catagories, curriculumIds] = await Promise.all([
-					getcatagoriReq, getCurriculumIdsReq
+				const [catagories, curriculumIds, instructorList] = await Promise.all([
+					getcatagoriReq, getCurriculumIdsReq, getInstructorListReq
 				])
 				dispatch({
 					type: 'SET_CATAGORIES',
@@ -78,6 +79,10 @@ export default function Navbar() {
 					type: 'SET_CURRICULUMIDS',
 					curriculumIds: curriculumIds?.data,
 				});
+				dispatch({
+					type: 'SET_INSTRUCTOR',
+					instructorList: instructorList?.data,
+				})
 			} catch (error) {
 				console.log(error);
 			}

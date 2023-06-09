@@ -5,7 +5,7 @@ import { Select as AntdSelect } from "antd";
 const StyledSelect = styled(AntdSelect)`
   height: ${props => (props.height ? props.height : '52')}px !important;
   width: ${props => (props.width ? props.width : '317')}px !important;
-  fontSize: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
+  font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
    
   .ant-select-selector{
     height:100% !important;
@@ -19,8 +19,8 @@ const StyledSelect = styled(AntdSelect)`
   }
 
   .ant-select-selection-placeholder{
-    font-size: 20px;
-    color:#0000008a;
+    font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
+    color:#00000045;
     font-family: 'Tajawal-Regular';
     display:flex;
     align-items:center;
@@ -31,18 +31,21 @@ const StyledSelect = styled(AntdSelect)`
     display:flex;
     align-items:center;
   }
-
+  
 `;
 
 const Select = ({
   OptionData,
   placeholder,
+  fontSize,
   ...rest
 }) => {
   return (
     <StyledSelect
       options={OptionData}
       placeholder={placeholder}
+      fontSize={fontSize}
+      dropdownStyle={{ direction: 'rtl' }}
       {...rest}
     />
   );

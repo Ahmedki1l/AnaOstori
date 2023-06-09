@@ -5,9 +5,10 @@ import { Modal } from 'antd'
 import QRCode from '../../CommonComponents/QrCode/QRCode'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 
-export default function Attendance() {
+export default function Attendance(props) {
     const [openQR, setOpenQR] = useState(false)
-    const [attendanceKey, setAttendanceKey] = useState('Laqfi23iiFiX246')
+    const [attendanceKey, setAttendanceKey] = useState("iDiy0qDOuD16VzJ")
+    const courseId = props.courseId
 
     const generateQR = async () => {
         setOpenQR(true)
@@ -17,6 +18,10 @@ export default function Attendance() {
         //     console.log(error);
         // })
     }
+
+    const startMonth = new Date().toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
+    const startDate = new Date().toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
+    const startDay = new Date().toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
 
     const handleCancel = () => {
         setOpenQR(false);
@@ -33,10 +38,12 @@ export default function Attendance() {
                 onCancel={handleCancel}
             >
                 <div className={styles.modalHeader}>
-                    <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} onClick={handleCancel}></AllIconsComponenet>
-                    <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
+                    <div className={styles.closeIcon}>
+                        <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} onClick={handleCancel}></AllIconsComponenet>
+                    </div>
+                    <p className={`fontBold ${styles.createappointment}`}>{` ${startDay} ${startDate} ${startMonth}`}</p>
                 </div>
-                <QRCode attendanceKey={attendanceKey} />
+                <QRCode attendanceKey={attendanceKey} courseId={courseId} />
             </Modal>
         </div>
     )

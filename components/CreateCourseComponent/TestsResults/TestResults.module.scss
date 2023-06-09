@@ -1,0 +1,54 @@
+@import "../../../styles/variables.module.scss";
+
+.tableArea {
+    width: 75%;
+    border-collapse: collapse;
+}
+
+.tableHeaderArea {
+    height: 48px;
+    background-color: #F4F5F7;
+    overflow: hidden;
+    font-size: 20px;
+    width: 100%;
+    border-collapse: separate;
+}
+
+.tableBodyArea {
+    width: 100%;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.tableRow {
+    td {
+        height: 54px;
+        text-align: center;
+        border: 0.7px solid #c3c3c3;
+        border-top: none;
+    }
+}
+
+.tableHead1 {
+    width: 20%;
+}
+
+.tableHead2 {
+    width: 20%;
+}
+
+.tableHead3 {
+    width: 20%;
+}
+
+.tableHead4 {
+    width: 20%;
+}
+
+.tableHead5 {
+    width: 20%;
+}
+
+.progressbar {
+    width: 187px;
+    margin: 0 auto;
+}

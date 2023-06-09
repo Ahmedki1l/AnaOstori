@@ -58,7 +58,12 @@ export const createCourseByInstructorAPI = (data) => { return instance(data?.acc
 export const createCourseMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseMetaData ', data?.data) }
 export const createCourseCardMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseCardMetaData ', data?.data) }
 export const createCourseDetailsMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseDetailsMetaData', data?.data) }
-export const generateAttendanceQRAPI = (data) => { return instance(data?.accessToken).post('/attendance/key') }
+export const generateAttendanceQRAPI = (data) => { return instance(data?.accessToken).get('/attendance/key') }
+export const getInstructorListAPI = (data) => { return instance(data?.accessToken).get('/instructor/list') }
+export const createCourseAvailabilityAPI = (data) => { return instance(data?.accessToken).post('/course/availability/create', data?.data) }
+export const getAllAvailabilityAPI = (data) => { return instance(data?.accessToken).get(`/availibiltyByCourseId/${data?.courseId}/all `) }
+
+
 
 
 
