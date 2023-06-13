@@ -17,7 +17,7 @@ export const timeDuration = (timeFrom, timeTo) => {
         <>
             {` ${new Date('1970-01-01T' + timeFrom + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}
                                                     إلى
-              ${new Date('1970-01-01T' + timeTo + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
+               ${new Date('1970-01-01T' + timeTo + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} `}
         </>
     )
 }

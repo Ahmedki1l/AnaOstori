@@ -41,7 +41,7 @@ const CourseInitial =
 
 export default function Index(props, accept) {
     const { courseType, createCourse } = useRouter().query
-    const [selectedItem, setSelectedItem] = useState(3);
+    const [selectedItem, setSelectedItem] = useState(6);
     const [showExtraNavItem, setShowExtraNavItem] = useState(true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
     const courseId = '65ab9b76-e59f-4a36-a28d-46f18f1383eb'

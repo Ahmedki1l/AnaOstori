@@ -2,6 +2,7 @@ import React from 'react'
 import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComponent.module.scss'
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
+import { Image } from 'antd'
 
 export default function Index() {
 
@@ -34,7 +35,66 @@ export default function Index() {
                             <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
-                    {allPhysicalCourses.length > 0 &&
+                    <tbody className={styles.tableBodyArea}>
+                        <tr className={styles.tableRow}>
+                            <td>
+                                <div className='flex'>
+                                    <div className={styles.courseInfoImage}>
+                                    </div>
+                                    <div className={styles.skillCourseDetails}>
+                                        <p className={`fontBold`}>دورة القدرات الحضورية</p>
+                                        <p>500 ر.س للشخص</p>
+                                        <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td className={styles.publishedCourseDetails}>
+                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
+                                <p className={styles.publishedName}> منشور</p>
+                            </td>
+                            <td>22 نوفمبر 2023</td>
+                            <td>26 نوفمبر 2023</td>
+                            <td className={styles.personeDetails}>
+                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                <p>30 طالب</p>
+                            </td>
+                            <td>
+                                <div>
+                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr className={styles.tableRow}>
+                            <td>
+                                <div className='flex'>
+                                    <div className={styles.courseInfoImage}>
+                                    </div>
+                                    <div className={styles.skillCourseDetails}>
+                                        <p className={`fontBold`}>دورة القدرات الحضورية</p>
+                                        <p>500 ر.س للشخص</p>
+                                        <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td className={styles.publishedCourseDetails}>
+                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
+                                <p className={styles.publishedName}> منشور</p>
+                            </td>
+                            <td>22 نوفمبر 2023</td>
+                            <td>26 نوفمبر 2023</td>
+                            <td className={styles.personeDetails}>
+                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                <p>30 طالب</p>
+                            </td>
+                            <td>
+                                <div>
+                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                    {/* {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allPhysicalCourses.map((course, index) => {
                                 return (
@@ -49,10 +109,10 @@ export default function Index() {
                                 )
                             })}
                         </tbody>
-                    }
+                    } */}
                 </table>
 
-                {allPhysicalCourses.length == 0 &&
+                {/* {allPhysicalCourses.length == 0 &&
                     <div className={styles.tableBodyArea}>
                         <div className={styles.noDataManiArea} >
                             <div className={styles.noDataSubArea} >
@@ -64,7 +124,7 @@ export default function Index() {
                             </div>
                         </div>
                     </div>
-                }
+                } */}
             </div>
         </div>
     )
