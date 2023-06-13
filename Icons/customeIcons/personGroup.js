@@ -1,6 +1,6 @@
 import React from 'react'
 
-const PersoneGroup = ({ height, width, color }) => {
+const PersoneGroup = ({ height, width }) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9 9C11.4752 9 13.5 6.97495 13.5 4.5C13.5 2.02505 11.4752 0 9 0C6.52477 0 4.5 2.02505 4.5 4.5C4.5 6.97495 6.52477 9 9 9ZM9 11.25C6.01884 11.25 0 12.7688 0 15.75V18H18V15.75C18 12.7688 11.9812 11.25 9 11.25Z" fill="#000000" />

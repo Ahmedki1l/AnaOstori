@@ -7,6 +7,7 @@ var initialState = {
     catagories: [],
     curriculumIds: [],
     instructorList: [],
+    availabilityList: [],
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -57,6 +58,11 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 instructorList: action?.instructorList
+            }
+        case 'SET_AllAVAILABILITY':
+            return {
+                ...state,
+                availabilityList: action?.availabilityList
             }
 
         default: return state;

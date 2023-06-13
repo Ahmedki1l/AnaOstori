@@ -24,11 +24,11 @@
 }
 
 .tableHead1 {
-    width: 43%;
+    width: 41%;
 }
 
 .tableHead2 {
-    width: 10%;
+    width: 12%;
 }
 
 .tableHead3 {
@@ -36,7 +36,7 @@
 }
 
 .tableHead4 {
-    width: 10%;
+    width: 12%;
 }
 
 .tableHead5 {
@@ -44,14 +44,14 @@
 }
 
 .tableHead6 {
-    width: 10%;
+    width: 8%;
 }
 
 .tableBodyArea {
+    font-size: 18px;
     width: 100%;
-    border-width: 0px 0.7px 0.7px 0.7px;
-    border-style: solid;
-    border-color: #C3C3C3;
+    border: 0.7px solid #c3c3c3;
+    border-top: none;
     border-radius: 0px 0px 4px 4px;
 }
 
@@ -60,4 +60,43 @@
     display: grid;
     place-content: center;
 
+}
+
+.tableRow {
+    td {
+        height: 145px;
+        text-align: center;
+        border: 0.7px solid #c3c3c3;
+        border-top: none;
+    }
+}
+
+.courseInfoImage {
+    margin: 18px 14px;
+    border: 0.7px solid #636060;
+    height: 109px;
+    width: 190px;
+    border-radius: 4px;
+}
+
+.skillCourseDetails {
+    text-align: right;
+    padding-top: 20px;
+
+    p {
+        padding: 5px 0 5px 0;
+    }
+}
+
+.personeDetails,
+.publishedCourseDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.publishedName {
+    margin-right: 3px;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProgressBar = ({ percentage, bgColor, height }) => {
+const ProgressBar = ({ percentage, bgColor, height, fontSize }) => {
     const progressBarDiv = {
         width: 'inherit',
         overflow: 'hidden',
@@ -16,7 +16,8 @@ const ProgressBar = ({ percentage, bgColor, height }) => {
     };
     const percentageText = {
         position: 'absolute',
-        top: '0',
+        fontSize: fontSize,
+        top: '15%',
         right: '45%',
         color: '#000000',
         zIndex: 10

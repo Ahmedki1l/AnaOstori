@@ -54,6 +54,11 @@ import CloseIcon from './customeIcons/closeIcon'
 import EditIcon from './customeIcons/editIcon'
 import PersoneGroup from './customeIcons/personGroup'
 import ProgressIcon from './customeIcons/progressIcon'
+import Circle from './customeIcons/circle'
+import PresentAtTime from './customeIcons/presentIcon'
+import LateAtATime from './customeIcons/lateIcon'
+import AbsentAtATime from './customeIcons/absentAtATime'
+import ExcusedIcon from './customeIcons/excusedIcon'
 
 
 
@@ -112,6 +117,12 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'editicon' && <EditIcon height={height} width={width} color={color} />}
 			{iconName == 'personegroup' && <PersoneGroup height={height} width={width} color={color} />}
 			{iconName == 'progressicon' && <ProgressIcon height={height} width={width} color={color} />}
+			{iconName == 'circleicon' && <Circle height={height} width={width} color={color} />}
+			{iconName == 'present' && <PresentAtTime height={height} width={width} color={color} />}
+			{iconName == 'late' && <LateAtATime height={height} width={width} color={color} />}
+			{iconName == 'absent' && <AbsentAtATime height={height} width={width} color={color} />}
+			{iconName == 'excused' && <ExcusedIcon height={height} width={width} color={color} />}
+
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

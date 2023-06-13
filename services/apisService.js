@@ -62,6 +62,9 @@ export const generateAttendanceQRAPI = (data) => { return instance(data?.accessT
 export const getInstructorListAPI = (data) => { return instance(data?.accessToken).get('/instructor/list') }
 export const createCourseAvailabilityAPI = (data) => { return instance(data?.accessToken).post('/course/availability/create', data?.data) }
 export const getAllAvailabilityAPI = (data) => { return instance(data?.accessToken).get(`/availibiltyByCourseId/${data?.courseId}/all `) }
+export const editAvailabilityAPI = (data) => { return instance(data?.accessToken).post(`/course/availability/update/${data?.availabilityId}`, data?.data) }
+
+
 
 
 

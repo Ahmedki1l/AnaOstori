@@ -24,6 +24,7 @@ const CourseInitial =
 const ExternalCourseCard = ({ createCourseApiRes }) => {
 
     const storeData = useSelector((state) => state?.globalStore);
+    console.log(storeData);
 
     const [courseDetail, setCourseDetail] = useState('')
     const [iconValue, setIconValue] = useState('')

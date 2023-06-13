@@ -27,11 +27,10 @@ const StyledSelect = styled(AntdSelect)`
   }
 
   .ant-select-selection-item{
-    font-size: 20px;
+    font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
     display:flex;
     align-items:center;
-  }
-  
+  }  
 `;
 
 const Select = ({

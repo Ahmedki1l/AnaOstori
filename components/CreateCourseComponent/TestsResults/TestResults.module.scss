@@ -22,10 +22,21 @@
 .tableRow {
     td {
         height: 54px;
+        font-size: 18px;
         text-align: center;
         border: 0.7px solid #c3c3c3;
         border-top: none;
     }
+}
+
+.requesterDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.requesterName {
+    margin-right: 3px;
 }
 
 .tableHead1 {
@@ -51,4 +62,65 @@
 .progressbar {
     width: 187px;
     margin: 0 auto;
+}
+
+.studentDetails {
+    font-size: 16px;
+    color: #2D2E2D;
+    margin-left: 10px;
+}
+
+.examResultsForStudents {
+    font-size: 18px;
+    color: #000000;
+}
+
+.studentDetailsTable {
+    display: flex;
+    margin-top: 10px;
+}
+
+.studentTableArea {
+    width: 65%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.studentTableRow {
+    td {
+        height: 70px;
+        font-size: 18px;
+        text-align: center;
+        border: 0.7px solid #c3c3c3;
+        border-top: none;
+    }
+}
+
+.studentTableBodyArea {
+    border-radius: 0px 0px 4px 4px;
+}
+
+.studentTableHead1 {
+    width: 33%;
+}
+
+.studentTableHead2 {
+    width: 27%;
+}
+
+.studentTableHead3 {
+    width: 40%;
+}
+
+.studentDetailsSave {
+    cursor: pointer;
+    width: 105px;
+    height: 36px;
+    font-size: 16px;
+    color: white;
+    background: #F26722;
+    border: 1px solid #F26722;
+    border-radius: 3px;
+    margin-top: 24px;
+    margin-left: 20px;
 }

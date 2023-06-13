@@ -2,26 +2,29 @@ import React, { use, useEffect } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './Appointment.module.scss'
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Modal, Space, Switch } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Modal, Switch } from 'antd';
 import { Form, FormItem } from '../../antDesignCompo/FormItem';
 import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
 import Input from '../../antDesignCompo/Input';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import { createCourseAvailabilityAPI, getAllAvailabilityAPI } from '../../../services/apisService';
+import { createCourseAvailabilityAPI, editAvailabilityAPI, getAllAvailabilityAPI } from '../../../services/apisService';
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const Appointments = ({ courseId }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
+    const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
     const genders = PaymentConst.genders
     const [allAppointments, setAllAppointments] = useState([])
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
 
 
     const instructor = instructorList?.map((obj) => {
@@ -41,25 +44,38 @@ const Appointments = ({ courseId }) => {
     };
 
     const onFinish = async (values) => {
-        console.log(values);
-        values.dateFrom = values?.dateFrom?.$d?.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        values.dateTo = values?.dateTo?.$d?.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        values.timeFrom = values?.timeFrom?.$d?.toLocaleTimeString([], { hour12: false });
-        values.timeTo = values?.timeTo?.$d?.toLocaleTimeString([], { hour12: false });
+
+        console.log(values, 47);
+        values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
+        values.dateTo = dayjs(values?.dateTo?.$d).format('YYYY-MM-DD HH:mm:ss');
+        values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
+        values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = '74e845ef-ef1a-4e05-9f80-1ef682eaa4c3';
         values.numberOfSeats = '0';
+        console.log(values, 54);
 
         let body = {
             data: values,
-            accessToken: storeData?.accessToken
+            accessToken: storeData?.accessToken,
+            availabilityId: editAvailability?.id
         }
-        await createCourseAvailabilityAPI(body).then((res) => {
-            console.log(res);
-            setIsModalOpen(false)
-            getAllAvailability()
-        }).catch((error) => {
-            console.log(error);
-        })
+        if (isAvailabilityEdit) {
+            await editAvailabilityAPI(body).then((res) => {
+                console.log(res);
+                setIsModalOpen(false)
+                getAllAvailability()
+            }).catch((error) => {
+                console.log(error);
+            })
+        } else {
+            await createCourseAvailabilityAPI(body).then((res) => {
+                console.log(res);
+                setIsModalOpen(false)
+                getAllAvailability()
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
         console.log(values);
         form.resetFields()
     }
@@ -73,32 +89,46 @@ const Appointments = ({ courseId }) => {
         await getAllAvailabilityAPI(body).then((res) => {
             console.log(res);
             setAllAppointments(res?.data)
+            dispatch({
+                type: 'SET_AllAVAILABILITY',
+                availabilityList: res?.data,
+            })
         }).catch((error) => {
             console.log(error);
         })
     }
-    const editAppointment = (appointment) => {
-        setIsModalOpen(true)
-        console.log(appointment);
-        console.log(dateFrom);
 
+    const editAppointment = (appointment) => {
+        console.log(appointment);
+        setIsModalOpen(true)
+        setIsAvailabilityEdit(true)
+        setEditAvailability(appointment)
         form.setFieldsValue({
             instructorId: appointment?.instructorId,
             location: appointment?.location,
             locationName: appointment?.locationName,
             gender: appointment?.gender,
             maxNumberOfSeats: appointment?.maxNumberOfSeats,
-            dateFrom: moment(appointment?.dateFrom),
-            dateTo: moment(appointment?.dateTo),
-            timeFrom: moment(appointment?.timeFrom, 'HH:mm:ss'),
-            timeTo: moment(appointment?.timeTo, 'HH:mm:ss'),
+            dateFrom: dayjs(appointment?.dateFrom, 'YYYY-MM-DD'),
+            dateTo: dayjs(appointment?.dateTo, 'YYYY-MM-DD'),
+            timeFrom: dayjs(appointment?.timeFrom, 'HH:mm:ss'),
+            timeTo: dayjs(appointment?.timeTo, 'HH:mm:ss'),
         });
     }
-
-
+    const handleCreateAvailability = () => {
+        setIsModalOpen(true)
+        setIsAvailabilityEdit(false)
+    }
+    const handelModalClose = () => {
+        form.resetFields()
+        setIsModalOpen(false)
+    }
     return (
         <div className='maxWidthDefault px-4'>
             <div>
+                <div dir='ltr'>
+                    <button className={styles.createNewAvailability} onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
+                </div>
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
                         <tr>
@@ -117,7 +147,7 @@ const Appointments = ({ courseId }) => {
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>
-                                            <div className={styles.teachersDetails}>
+                                            <div className={styles.PeriodDataDetails}>
                                                 <p className={`head2`}>{dateRange(appointment.dateFrom, appointment.dateTo)}</p>
                                                 <div className={styles.genderDetails}>
                                                     {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} />}
@@ -137,7 +167,6 @@ const Appointments = ({ courseId }) => {
                                             <p>30 طالب</p>
                                         </td>
                                         <td>5 اختبارات</td>
-
                                         <td>
                                             <div onClick={() => editAppointment(appointment)}>
                                                 <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
@@ -156,7 +185,7 @@ const Appointments = ({ courseId }) => {
                                 <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
                                 <p className='fontBold py-2' style={{ fontSize: '20px' }}>ما أنشئت أي موعد</p>
                                 <div>
-                                    <button className='primarySolidBtn' onClick={() => setIsModalOpen(true)}>إنشاء موعد</button>
+                                    <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
                                 </div>
                             </div>
                         </div>
@@ -165,12 +194,12 @@ const Appointments = ({ courseId }) => {
                 <Modal
                     className='addAppoinmentModal'
                     open={isModalOpen}
-                    onCancel={() => setIsModalOpen(false)}
+                    onCancel={() => handelModalClose()}
                     closeIcon={false}
                     footer={false}
                 >
                     <div className={styles.modalHeader}>
-                        <button onClick={() => setIsModalOpen(false)} className={styles.closebutton}>
+                        <button onClick={() => handelModalClose()} className={styles.closebutton}>
                             <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                         <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
                     </div>
@@ -203,7 +232,7 @@ const Appointments = ({ courseId }) => {
                                     name={'dateFrom'}
                                 >
                                     <DatePicker
-                                        format={'DD/MM/YYYY'}
+                                        format={'YYYY-MM-DD'}
                                         width={172}
                                         height={40}
                                         placeholder="تاريخ النهاية"
@@ -215,7 +244,7 @@ const Appointments = ({ courseId }) => {
                                     name={'dateTo'}
                                 >
                                     <DatePicker
-                                        format={'DD/MM/YYYY'}
+                                        format={'YYYY-MM-DD'}
                                         width={172}
                                         height={40}
                                         placeholder="تاريخ البداية"
@@ -286,7 +315,7 @@ const Appointments = ({ courseId }) => {
                             </div>
                         </div>
                         <div className={styles.createAppointmentBtnBox}>
-                            <button key='modalFooterBtn' className={styles.construction} height={14} width={14} type={'submit'} >إنشاء</button>
+                            <button key='modalFooterBtn' className={styles.construction} type={'submit'} >إنشاء</button>
                         </div>
                     </Form>
                 </Modal>

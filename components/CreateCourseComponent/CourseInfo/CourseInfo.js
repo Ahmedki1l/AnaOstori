@@ -198,7 +198,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             setCourseDetails(courseDetails => [...courseDetails, JSON.parse(JSON.stringify(courseDetailsInitial))])
         } else {
             setCourseDetailsMetaData(courseDetailsMetaData => [...courseDetailsMetaData, JSON.parse(JSON.stringify(courseDetailsMetaDataInitials))])
-
         }
     }
     const handleRemove = (arrayName, id) => {
@@ -401,7 +400,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 </div>}
                         </div>
                     }
-
                     <FormItem>
                         <CheckBox
                             label={'الدورة تحتوي على خصم'}
@@ -519,8 +517,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     setIconValue={setIconValue}
                                                 />
                                             </FormItem>
-
-
                                             <FormItem
                                                 name={[index, 'cdmd_text']}
                                                 marginleft={'0'}
