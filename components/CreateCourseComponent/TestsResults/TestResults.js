@@ -24,7 +24,6 @@ const TestResults = () => {
 
 
     const allavailability = availabilityList?.map((obj) => {
-
         return {
             key: obj.id,
             label: dateRange(obj.dateFrom, obj.dateTo),
@@ -118,8 +117,7 @@ const TestResults = () => {
                         <Form>
                             <tbody className={styles.studentTableBodyArea}>
                                 {allStudentDetails?.map((index) => ([
-
-                                    <tr className={styles.studentTableRow}>
+                                    <tr className={styles.studentTableRow} key={`testResult${index}`}>
                                         <td>اختبار أ</td>
                                         <td>
                                             <Input
