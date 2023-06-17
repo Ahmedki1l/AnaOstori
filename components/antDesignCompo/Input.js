@@ -37,21 +37,23 @@ const Input = ({
   height,
   padding,
   fontSize,
+  value,
+  fieldvalue,
   ...rest
 }) => {
+  console.log(value);
   return (
-    <>
-      <AntdInputStyle
-        {...rest}
-        type={type}
-        placeholder={placeholder}
-        disabled={disabled}
-        height={height}
-        width={width}
-        padding={padding}
-        fontSize={fontSize}
-      />
-    </>
+    <AntdInputStyle
+      {...rest}
+      type={type}
+      placeholder={placeholder}
+      disabled={disabled}
+      height={height}
+      width={width}
+      padding={padding}
+      fontSize={fontSize}
+      value={fieldvalue || value}
+    />
   )
 }
 export default Input

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form } from 'antd';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
@@ -44,39 +44,28 @@ const CourseInitial =
     discountForThreeOrMore: "",
 }
 
-const courseDetailsInitial = {
-    title: '',
-    text: '',
-    link: '',
-    seprateText: '',
-    seprateTextLink: '',
-}
-
-const courseDetailsMetaDataInitials = {
-    link: '',
-    text: '',
-    textSeprate: '',
-    linkToSeprateText: '',
-}
-
-
-
 const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, setSelectedItem }) => {
 
     const storeData = useSelector((state) => state?.globalStore);
+    const isCourseEdit = storeData?.isCourseEdit;
+    const editCourseData = storeData?.editCourseData;
     const catagories = storeData?.catagories;
     const curriculumIds = storeData?.curriculumIds
-    const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(false)
+    const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
     const [courseData, setCourseData] = useState(CourseInitial)
     const [imageUploadResponceData, setImageUploadResponceData] = useState();
     const [discountedPrice, setDiscountedPrice] = useState(false)
     const [groupDiscountEligible, setGroupDiscountEligible] = useState(false)
-    const [courseDetails, setCourseDetails] = useState([courseDetailsInitial])
-    const [courseDetailsMetaData, setCourseDetailsMetaData] = useState([courseDetailsMetaDataInitials])
-    const [iconValue, setIconValue] = useState('')
     const [newcreatedCourse, setNewCreatedCourse] = useState()
-    const [form] = Form.useForm();
+    const [courseForm] = Form.useForm();
     const dispatch = useDispatch();
+
+
+    useEffect(() => {
+        if (isCourseEdit) {
+            courseForm.setFieldsValue(editCourseData)
+        }
+    }, [])
 
     const catagoriesItem = catagories.map((obj) => {
         return {
@@ -85,6 +74,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             value: obj.id
         };
     });
+
     const curriculum = curriculumIds.map((obj) => {
         return {
             key: obj.id,
@@ -92,100 +82,88 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             value: obj.id
         }
     })
+
     const onFinishCreateCourse = async (values) => {
-        console.log(values);
-        values.pictureKey = imageUploadResponceData?.key,
-            values.pictureBucket = imageUploadResponceData?.bucket,
-            values.pictureMime = imageUploadResponceData?.mime,
-            values.groupDiscountEligible = groupDiscountEligible;
-        values.type = courseType
+        if (!showCourseMetaDataFields) {
+            values.pictureKey = imageUploadResponceData?.key,
+                values.pictureBucket = imageUploadResponceData?.bucket,
+                values.pictureMime = imageUploadResponceData?.mime,
+                values.groupDiscountEligible = groupDiscountEligible;
+            values.type = courseType
 
-        delete values.priceForTwo;
-        delete values.PriceForThreeorMore;
+            delete values.priceForTwo;
+            delete values.PriceForThreeorMore;
 
-        console.log(values);
-        let body = {
-            data: values,
-            accessToken: storeData?.accessToken
-        }
-        await createCourseByInstructorAPI(body).then((res) => {
-            setShowExtraNavItem(true)
-            setShowCourseMetaDataFields(true)
-            setCreateCourseApiRes(res.data)
-            setNewCreatedCourse(res.data)
-            console.log(res);
-        }).catch((error) => {
-            console.log(error);
-            if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
-                });
+            let body = {
+                data: values,
+                accessToken: storeData?.accessToken
             }
-        })
-    };
+            await createCourseByInstructorAPI(body).then((res) => {
+                setShowExtraNavItem(true)
+                setShowCourseMetaDataFields(true)
+                setCreateCourseApiRes(res.data)
+                setNewCreatedCourse(res.data)
+                courseForm.setFieldValue('icon', "clockIcon")
+            }).catch((error) => {
+                console.log(error);
+                if (error?.response?.status == 401) {
+                    signOutUser()
+                    dispatch({
+                        type: 'EMPTY_STORE'
+                    });
+                }
+            })
+        } else {
+            let courseMetadata = values.courseMetaData.map((obj, index) => {
+                return {
+                    order: (`${index + 1}`),
+                    title: obj.title,
+                    content: obj.content,
+                    link: obj.link,
+                    tailLinkName: obj.tailLinkName,
+                    tailLink: obj.tailLink,
+                }
+            })
 
-    const onFinishAddCourseExtraDetails = async (values) => {
-        const arrayOfValues = Object.values(values).map(obj => obj);
-        console.log(arrayOfValues);
-        let courseMetadata = arrayOfValues.map((obj, index) => {
-            return {
-                order: (`${index + 1}`),
-                title: obj.cd_title,
-                content: obj.cd_content,
-                link: obj.cd_link,
-                tailLinkName: obj.cd_tailLinkName,
-                tailLink: obj.cd_tailLink,
-            }
-        })
+            let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
+                return {
+                    order: (`${index + 1}`),
+                    icon: obj.icon,
+                    text: obj.text,
+                    link: obj.link,
+                    textSeprate: obj.textSeprate,
+                    linkToSeprateText: obj.linkToSeprateText,
+                }
+            })
 
-        let courseDetailMetadata = arrayOfValues.map((obj, index) => {
-            return {
-                order: (`${index + 1}`),
-                icon: obj.cdmd_icon,
-                text: obj.cdmd_text,
-                link: obj.cdmd_link,
-                tailLinkName: obj.cdmd_textSeprate,
-                tailLink: obj.cdmd_linkToSeprateText,
+            let body1 = {
+                data: {
+                    data: courseDetailMetadata,
+                    courseId: newcreatedCourse.id
+                },
+                accessToken: storeData?.accessToken
             }
-        })
-        console.log(courseMetadata);
-        console.log(courseDetailMetadata);
-        let body1 = {
-            data: {
-                data: courseDetailMetadata,
-                courseId: newcreatedCourse.id
-            },
-            accessToken: storeData?.accessToken
-        }
-        let body2 = {
-            data: {
-                data: courseMetadata,
-                courseId: newcreatedCourse.id
-            },
-            accessToken: storeData?.accessToken
-        }
-        // await createCourseCardMetaDataAPI (body).then((res)=>{
-        //     console.log(res.data);
-        // }).catch((error)=>{
-        //     console.log(error);
-        // })
-        try {
-            const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(body1)
-            const courseMetaDataReq = createCourseMetaDataAPI(body2)
-            const [courseDetailMetaData, courseMetaData] = await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
-            setShowExtraNavItem(true)
-            setSelectedItem(2)
-            form.resetFields()
-            console.log(courseDetailMetaData, courseMetaData);
-        } catch (error) {
-            console.log(error);
+            let body2 = {
+                data: {
+                    data: courseMetadata,
+                    courseId: newcreatedCourse.id
+                },
+                accessToken: storeData?.accessToken
+            }
+            try {
+                const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(body1)
+                const courseMetaDataReq = createCourseMetaDataAPI(body2)
+                const [courseDetailsMetaData, courseMetaData] = await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
+                setShowExtraNavItem(true)
+                setSelectedItem(2)
+                courseForm.resetFields()
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
     const onChangeCheckBox = (e, checkboxName) => {
-        console.log(checkboxName);
-        console.log(e);
         if (checkboxName == 'discount') {
             setDiscountedPrice(e.target.checked)
         }
@@ -193,46 +171,23 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             setGroupDiscountEligible(e.target.checked)
         }
     }
-    const handleAdd = (arrayName) => {
-        if (arrayName == 'courseDetails') {
-            setCourseDetails(courseDetails => [...courseDetails, JSON.parse(JSON.stringify(courseDetailsInitial))])
-        } else {
-            setCourseDetailsMetaData(courseDetailsMetaData => [...courseDetailsMetaData, JSON.parse(JSON.stringify(courseDetailsMetaDataInitials))])
-        }
-    }
-    const handleRemove = (arrayName, id) => {
-        if (id == 0) return
-        if (arrayName == 'courseDetails') {
-            let filteredData = [...courseDetails]
-            console.log(filteredData);
-            filteredData.splice(id, 1)
-            setCourseDetails(filteredData)
-        } else {
-            let filteredData = [...courseDetailsMetaData]
-            filteredData.splice(id, 1)
-            setCourseDetailsMetaData(filteredData)
-        }
-    }
-
-    const handleChange = (value) => {
-        setAddMultipleIcon(`selected ${value}`);
-        console.log(handleChange);
-    };
 
     return (
         <div>
-            <Form form={form} onFinish={onFinishCreateCourse}>
+            <Form form={courseForm} onFinish={onFinishCreateCourse} >
                 <div className='px-6'>
+
                     <FormItem
                         name={'name'}
-                        rules={[{ required: true }]}  >
+                        rules={[{ required: true, message: 'Please Enter Course Name' }]}  >
                         <Input
                             placeholder="عنوان الدورة"
-                            value={courseData.name} />
+                            value={courseData.name}
+                        />
                     </FormItem>
                     <FormItem
                         name={'catagoryId'}
-                        rules={[{ required: true }]} >
+                        rules={[{ required: true, message: 'Please Enter Course CatagoryId' }]} >
                         <Select
                             placeholder="اختر تصنيف الدورة"
                             value={courseData.catagoryId}
@@ -240,7 +195,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     </FormItem>
                     <FormItem
                         name={'curriculumId'}
-                        rules={[{ required: true }]}  >
+                        rules={[{ required: true, message: 'Please Enter CurriculumId' }]}  >
                         <Select
                             placeholder="اختر تصنيف الدورة"
                             value={courseData.curriculumId}
@@ -248,8 +203,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             filterOption={false} />
                     </FormItem>
                     <FormItem
-                        name={'shortDescription'}
-                        rules={[{ required: true }]}>
+                        name={'shortDescription'}>
                         <InputTextArea
                             height={274}
                             width={549}
@@ -275,15 +229,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <div style={{ marginTop: '20px' }}>
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
-                                <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
-                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
+                                <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
+                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
                                 <p>تقدم الدورة في</p>
                             </div>
                             <FormItem
                                 name={'locationName'}
-                                rules={[{ required: true }]} >
+                                rules={[{ required: true, message: 'Please Enter LocationName' }]} >
                                 <Input
                                     height={47}
                                     width={247}
@@ -292,18 +246,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </FormItem>
                             <FormItem
                                 name={'location'}
-                                rules={[{ required: true }]}  >
+                                rules={[{ required: true, message: 'Please Enter Location Link' }]}  >
                                 <Input
                                     height={47}
                                     width={247}
                                     placeholder="hyperlink(optional)"
                                     value={courseData.location} />
                             </FormItem>
-
                         </div>
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
-                                <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
+                                <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
                                 <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
@@ -311,7 +264,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </div>
                             <FormItem
                                 name={'reviewRate'}
-                                rules={[{ required: true }]} >
+                                rules={[{ required: true, message: 'Please Enter Review Rate' }]} >
                                 <Input
                                     height={47}
                                     width={247}
@@ -329,7 +282,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}
-                                rules={[{ required: true }]} >
+                                rules={[{ required: true, message: 'Please Enter NumberOfGrarduates' }]} >
                                 <Input
                                     height={47}
                                     width={247}
@@ -342,7 +295,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <div style={{ display: 'flex' }}>
                         <FormItem
                             name={'price'}
-                            rules={[{ required: true }]}>
+                            rules={[{ required: true, message: 'Please Enter Course Price' }]}>
                             <Input
                                 placeholder="سعر الدورة للشخص"
                                 value={courseData.price}
@@ -351,7 +304,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         {discountedPrice &&
                             <FormItem
                                 name={'discount'}
-                                rules={[{ required: true }]}  >
+                                rules={[{ required: true, message: 'Please Enter Discount' }]}  >
                                 <Input
                                     value={courseData.discount}
                                     placeholder="السعر بعد الخصم للشخص"
@@ -364,7 +317,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             <div>
                                 <FormItem
                                     name={'priceForTwo'}
-                                    rules={[{ required: true }]} >
+                                    rules={[{ required: true, message: 'Please Enter Price For Two' }]} >
                                     <Input
                                         value={courseData.price * 2}
                                         placeholder="سعر الدورة لشخصين"
@@ -372,7 +325,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 </FormItem>
                                 <FormItem
                                     name={'PriceForThreeorMore'}
-                                    rules={[{ required: true }]} >
+                                    rules={[{ required: true, message: 'Please Enter Price For Three' }]} >
                                     <Input
                                         value={courseData.price * 3}
                                         placeholder="سعر الدورة لثلاثة اشخاص واكثر"
@@ -383,7 +336,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 <div>
                                     <FormItem
                                         name={'discountForTwo'}
-                                        rules={[{ required: true }]}  >
+                                        rules={[{ required: true, message: 'Please Enter Discount For Two' }]}  >
                                         <Input
                                             value={courseData.discountForTwo}
                                             placeholder="السعر بعد الخصم لشخصين"
@@ -391,7 +344,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     </FormItem>
                                     <FormItem
                                         name={'discountForThreeOrMore'}
-                                        rules={[{ required: true }]}  >
+                                        rules={[{ required: true, message: 'please Enter discount for three' }]}  >
                                         <Input
                                             value={courseData.discountForThreeOrMore}
                                             placeholder="السعر بعد الخصم لثلاثة اشخاص او اكثر"
@@ -413,159 +366,160 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         />
                     </FormItem>
                     {!showCourseMetaDataFields &&
-                        <FormItem>
-                            <div className={styles.saveCourseBtnBox}>
-                                <button className='primarySolidBtn' htmltype='submit' >حفظ ومتابعة</button>
-                            </div>
-                        </FormItem>
+                        <div className={styles.saveCourseBtnBox}>
+                            <button className='primarySolidBtn' htmltype='submit' >حفظ ومتابعة</button>
+                        </div>
                     }
                 </div>
-            </Form >
-            <Form onFinish={onFinishAddCourseExtraDetails}>
                 {showCourseMetaDataFields &&
                     <>
                         <div className={styles.borderline}>
                             <div className="w-[95%] p-6">
                                 <div>
-                                    <>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                            <p className={styles.secDetails}>تفاصيل الدورة</p>
-                                            <p className={styles.addDetails} onClick={() => handleAdd('courseDetails')}>+ إضافة</p>
-                                        </div>
-                                        {courseDetails?.map((field, index) => ([
-                                            <div className={styles.courseDetails} key={`courseDetails${index}`}>
-                                                <div style={{ margin: '10px' }} >
-                                                    <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} ></AllIconsComponenet></div>
+                                    <Form.List name="courseMetaData" initialValue={[{}]}>
+                                        {(field, { add, remove }) => (
+                                            <>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }} >
+                                                    <p className={styles.secDetails}>تفاصيل الدورة</p>
+                                                    <p className={styles.addDetails} onClick={() => add()}>+ إضافة</p>
                                                 </div>
-                                                <FormItem
-                                                    name={[index, 'cd_title']}
-                                                    marginleft={'0'}
-                                                    rules={[{ required: true }]} >
-                                                    <Input
-                                                        height={47}
-                                                        width={211}
-                                                        placeholder="العنوان"
-                                                        value={field.title} />
-                                                </FormItem>
-                                                <FormItem
-                                                    name={[index, 'cd_content']}
-                                                    marginleft={'0'}
-                                                    rules={[{ required: true }]} >
-                                                    <Input
-                                                        height={47}
-                                                        width={216}
-                                                        placeholder="النص"
-                                                        value={field.content} />
-                                                </FormItem>
-                                                <FormItem
-                                                    name={[index, 'cd_link']}
-                                                    marginleft={'0'}>
-                                                    <Input
-                                                        height={47}
-                                                        width={216}
-                                                        placeholder="النص"
-                                                        value={field.link} />
-                                                </FormItem>
-                                                <FormItem
-                                                    name={[index, 'cd_tailLinkName']}
-                                                    marginleft={'0'}
-                                                >
-                                                    <Input
-                                                        height={47}
-                                                        width={216}
-                                                        placeholder="نص منفصل"
-                                                        value={field.seprateText} />
-                                                </FormItem>
-                                                <FormItem
-                                                    name={[index, 'cd_tailLink']}
-                                                    marginleft={'0'}
-                                                >
-                                                    <Input
-                                                        height={47}
-                                                        width={216}
-                                                        placeholder="رابط للنص المنفصل"
-                                                        value={field.seprateTextLink} />
-                                                </FormItem>
-                                                <div className={styles.deleteIconWrapper} >
-                                                    <div className='flex justify-center items-center h-100' onClick={() => handleRemove('courseDetails', index)}>  <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} ></AllIconsComponenet></div>
-                                                </div>
-                                            </div>
-                                        ]))}
-                                    </>
+                                                {field.map(({ name, key, ...restField }) => (
+                                                    <div className={styles.courseDetails} key={key}>
+                                                        <FormItem>
+                                                            <div style={{ margin: '10px' }} >
+                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} /></div>
+                                                            </div>
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'title']}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: 'Please Enter Title'
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Input placeholder="العنوان" width={216} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'content']}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: 'Please Enter Content'
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Input placeholder="النص" width={216} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'link']}
+                                                        >
+                                                            <Input placeholder="رابط" width={216} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'tailLinkName']}
+                                                        >
+                                                            <Input placeholder="نص منفصل" width={216} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'tailLink']}
+                                                            rules={[
+                                                                {
+                                                                    required: field?.tailLinkName ? true : false,
+                                                                    message: 'Please Enter tailLink'
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Input placeholder="نص منفصل" width={216} height={47} />
+                                                        </FormItem>
+                                                        <div className={styles.deleteIconWrapper} >
+                                                            <div className='flex justify-center items-center h-100' onClick={() => remove(name)}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        )}
+                                    </Form.List>
                                 </div>
                             </div>
                         </div>
-
                         <div className={styles.borderline}>
                             <div className="w-[95%] p-6">
-                                <>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <p className={styles.secDetails}>تفاصيل ثانية</p>
-                                        <p className={styles.addDetails} onClick={() => handleAdd('courseDetailsMetaData')} >+ إضافة</p>
-                                    </div>
-                                    {courseDetailsMetaData?.map((field, index) => (
-                                        <div className={styles.courseDetails} key={`courseDetailsMetaData${index}`}>
-                                            <div style={{ margin: '10px' }} >
-                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'}></AllIconsComponenet></div>
-                                            </div>
-                                            <FormItem
-                                                name={[index, 'cdmd_icon']}
-                                                marginleft={'0'}
-                                                rules={[{ required: true }]} >
-                                                <SelectIcon
-                                                    value={iconValue}
-                                                    setIconValue={setIconValue}
-                                                />
-                                            </FormItem>
-                                            <FormItem
-                                                name={[index, 'cdmd_text']}
-                                                marginleft={'0'}
-                                                rules={[{ required: true }]} >
-                                                <Input
-                                                    height={47}
-                                                    width={295}
-                                                    placeholder="النص"
-                                                    value={field.text} />
-                                            </FormItem>
-                                            <FormItem
-                                                name={[index, 'cdmd_link']}
-                                                marginleft={'0'}
-                                            >
-                                                <Input
-                                                    height={47}
-                                                    width={284}
-                                                    placeholder="النص"
-                                                    value={field.link} />
-                                            </FormItem>
-                                            <FormItem
-                                                name={[index, 'cdmd_textSeprate']}
-                                                marginleft={'0'}
-                                            >
-                                                <Input
-                                                    height={47}
-                                                    width={216}
-                                                    placeholder="نص منفصل"
-                                                    value={field.textSeprate} />
-                                            </FormItem>
-                                            <FormItem
-                                                name={[index, 'cdmd_linkToSeprateText']}
-                                                marginleft={'0'}
-                                            >
-                                                <Input
-                                                    height={47}
-                                                    width={216}
-                                                    placeholder="رابط للنص المنفصل"
-                                                    value={field.linkToSeprateText} />
-                                            </FormItem>
-                                            <div className={styles.deleteIconWrapper} >
-                                                <div className='flex justify-center items-center h-100' onClick={() => handleRemove("courseDetailsMetaData", index)}>  <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} ></AllIconsComponenet></div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </>
+                                <div>
+                                    <Form.List name="courseDetailsMetaData" initialValue={[{}]}>
+                                        {(field, { add, remove }) => (
+                                            <>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }} >
+                                                    <p className={styles.secDetails}> تفاصيل ثانية</p>
+                                                    <p className={styles.addDetails} onClick={() => add()}>+ إضافة</p>
+                                                </div>
+                                                {field.map(({ name, key, ...restField }) => (
+                                                    <div className={styles.courseDetails} key={key}>
+                                                        <FormItem>
+                                                            <div style={{ margin: '10px' }} >
+                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} /></div>
+                                                            </div>
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'icon']}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: 'Please Select Icon'
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <SelectIcon />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'text']}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: 'Please Enter Text'
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Input placeholder="النص" width={295} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'link']}
+                                                        >
+                                                            <Input placeholder="رابط" width={284} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'tailLink']}
+                                                        >
+                                                            <Input placeholder="نص منفصل" width={216} height={47} />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            {...restField}
+                                                            name={[name, 'tailLinkName']}
+                                                        >
+                                                            <Input placeholder="رابط للنص المنفصل" width={216} height={47} />
+                                                        </FormItem>
+                                                        <div className={styles.deleteIconWrapper} >
+                                                            <div className='flex justify-center items-center h-100' onClick={() => remove(name)}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        )}
+                                    </Form.List>
+                                </div>
                             </div>
                         </div>
-                        <div className="w-[95%] p-6">
+                        <div className="w-[95%] p-6" >
                             <div className='flex'>
                                 <div className={styles.saveCourseBtnBox} >
                                     {<button className={`primarySolidBtn `} htmltype='submit'>حفظ</button>}
@@ -574,10 +528,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     <button className={`primaryStrockedBtn`} >نشر الدورة</button>
                                 </div>
                             </div>
-                        </div>
+                        </div >
                     </>
                 }
-            </Form>
+            </Form >
         </div >
     )
 }

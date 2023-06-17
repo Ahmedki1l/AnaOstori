@@ -1,16 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComponent.module.scss'
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { Image } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import * as LinkConst from '../../../../constants/LinkConst';
+import { getAllCourseByInstructor } from '../../../../services/apisService'
+import { fullDate } from '../../../../constants/DateConverter'
+import { signOutUser } from '../../../../services/fireBaseAuthService'
 
 export default function Index() {
 
     const router = useRouter()
     const courseType = router.query.courseType
-    const allPhysicalCourses = []
+    const [allPhysicalCourses, setAllPhysicalCourses] = useState([])
+    const baseUrl = LinkConst.File_Base_Url2
     const handleRoute = () => {
         router.push('/instructorPanel/manageCourse/physical/createCourse')
+        dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: {} })
+        dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: false })
+    }
+    const dispatch = useDispatch();
+    const storeData = useSelector((state) => state?.globalStore);
+
+    useEffect(() => {
+        const getAllCourse = async () => {
+            let body = {
+                accessToken: storeData?.accessToken,
+                courseType: courseType
+            }
+            await getAllCourseByInstructor(body).then(res => {
+                console.log(res);
+                setAllPhysicalCourses(res?.data)
+            }).catch(error => {
+                console.log(error);
+                if (error?.response?.status == 401) {
+                    signOutUser()
+                    dispatch({
+                        type: 'EMPTY_STORE'
+                    });
+                }
+            })
+        }
+        getAllCourse()
+    }, [storeData?.accessToken])
+
+    const handleEditCourse = (course) => {
+        dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
+        dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
+        router.push({
+            pathname: '/instructorPanel/manageCourse/physical/editCourse',
+            query: { courseId: course?.id }
+        })
     }
 
     return (
@@ -35,7 +76,7 @@ export default function Index() {
                             <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
-                    <tbody className={styles.tableBodyArea}>
+                    {/* <tbody className={styles.tableBodyArea}>
                         <tr className={styles.tableRow}>
                             <td>
                                 <div className='flex'>
@@ -93,26 +134,51 @@ export default function Index() {
                             </td>
                         </tr>
 
-                    </tbody>
-                    {/* {allPhysicalCourses.length > 0 &&
+                    </tbody> */}
+                    {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allPhysicalCourses.map((course, index) => {
                                 return (
-                                    <tr key={`tableRow${index}`}>
-                                        <td className={`${styles.tableBodyText} ${styles.tableBody1}`}></td>
-                                        <td className={`${styles.tableBodyText} ${styles.tableBody2}`}></td>
-                                        <td className={`${styles.tableBodyText} ${styles.tableBody3}`}></td>
-                                        <td className={`${styles.tableBodyText} ${styles.tableBody4}`}></td>
-                                        <td className={`${styles.tableBodyText} ${styles.tableBody5}`}></td>
-                                        <td className={`${styles.tableBodyText} ${styles.tableBody6}`}></td>
+                                    <tr key={`tableRow${index}`} className={styles.tableRow}>
+                                        <td>
+                                            <div className='flex'>
+                                                <div className={styles.courseInfoImage}>
+                                                    {/* <Image src={props?.url ? props?.url : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority /> */}
+                                                </div>
+                                                <div className={styles.skillCourseDetails}>
+                                                    <p className={`fontBold`}>{course.name}</p>
+                                                    <p>{course?.price} ر.س للشخص</p>
+                                                    {course?.groupDiscountEligible ?
+                                                        <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
+                                                        :
+                                                        <p>{course.price * 2} ر.س شخصين ، {course.price * 3} ر.س لـ 3 اشخاص او اكثر</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className={styles.publishedCourseDetails}>
+                                            <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
+                                            <p className={styles.publishedName}> منشور</p>
+                                        </td>
+                                        <td>{fullDate(course.createdAt)}</td>
+                                        <td>{fullDate(course.updatedAt)}</td>
+                                        <td className={styles.personeDetails}>
+                                            <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                            <p>30 طالب</p>
+                                        </td>
+                                        <td>
+                                            <div onClick={() => handleEditCourse(course)}>
+                                                <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                            </div>
+                                        </td>
                                     </tr>
                                 )
                             })}
                         </tbody>
-                    } */}
+                    }
                 </table>
 
-                {/* {allPhysicalCourses.length == 0 &&
+                {allPhysicalCourses.length == 0 &&
                     <div className={styles.tableBodyArea}>
                         <div className={styles.noDataManiArea} >
                             <div className={styles.noDataSubArea} >
@@ -124,7 +190,7 @@ export default function Index() {
                             </div>
                         </div>
                     </div>
-                } */}
+                }
             </div>
         </div>
     )

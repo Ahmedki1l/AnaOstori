@@ -8,6 +8,8 @@ var initialState = {
     curriculumIds: [],
     instructorList: [],
     availabilityList: [],
+    editCourseData: {},
+    isCourseEdit: false
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -63,6 +65,16 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 availabilityList: action?.availabilityList
+            }
+        case 'SET_EDIT_COURSE_DATA':
+            return {
+                ...state,
+                editCourseData: action?.editCourseData
+            }
+        case 'SET_IS_COURSE_EDIT':
+            return {
+                ...state,
+                isCourseEdit: action?.isCourseEdit
             }
 
         default: return state;

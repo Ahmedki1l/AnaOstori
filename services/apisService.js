@@ -63,6 +63,7 @@ export const getInstructorListAPI = (data) => { return instance(data?.accessToke
 export const createCourseAvailabilityAPI = (data) => { return instance(data?.accessToken).post('/course/availability/create', data?.data) }
 export const getAllAvailabilityAPI = (data) => { return instance(data?.accessToken).get(`/availibiltyByCourseId/${data?.courseId}/all `) }
 export const editAvailabilityAPI = (data) => { return instance(data?.accessToken).post(`/course/availability/update/${data?.availabilityId}`, data?.data) }
+export const getAllCourseByInstructor = (data) => { return instance(data?.accessToken).get(`/courseByInstructor?type=${data?.courseType}`) }
 
 
 

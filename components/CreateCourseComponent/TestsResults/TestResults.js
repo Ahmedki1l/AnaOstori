@@ -35,8 +35,11 @@ const TestResults = () => {
     const handleStudentDetails = () => {
         setShowStudentDetails(true)
     }
-    const saveStudentDetails = () => {
-        setShowStudentDetails(false)
+    // const saveStudentDetails = () => {
+    //     setShowStudentDetails(false)
+    // }
+    const showSelectedStudentDetails = () => {
+        setShowStudentDetails(true)
     }
 
     return (
@@ -68,7 +71,7 @@ const TestResults = () => {
                 </div>
             </Form>
 
-            {showStudentDetails &&
+            {
                 <div>
                     <table className={styles.tableArea}>
                         <thead className={styles.tableHeaderArea}>
@@ -82,7 +85,7 @@ const TestResults = () => {
                         </thead>
                         <tbody className={styles.tableBodyArea}>
                             <tr className={styles.tableRow}>
-                                <td className={styles.requesterDetails}>
+                                <td className={styles.requesterDetails} onClick={() => showSelectedStudentDetails()}>
                                     <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                     <p className={styles.requesterName}> عبدالإله مدخلي</p>
                                 </td>
@@ -99,54 +102,57 @@ const TestResults = () => {
                     </table>
                 </div>
             }
-            <div>
-                <div className={styles.studentDetailsTable}>
-                    <p className={styles.studentDetails}>الطلاب</p>
-                    <p>{'>'}</p>
-                    <p className={styles.examResultsForStudents}> نتائج درجات</p>
-                </div>
+            {showStudentDetails &&
                 <div>
-                    <table className={styles.studentTableArea}>
-                        <thead className={styles.tableHeaderArea}>
-                            <tr>
-                                <th className={styles.studentTableHead1}>عنوان الاختبار</th>
-                                <th className={styles.studentTableHead2}>الدرجة</th>
-                                <th className={styles.studentTableHead3}>الملاحظات</th>
-                            </tr>
-                        </thead>
-                        <Form>
-                            <tbody className={styles.studentTableBodyArea}>
-                                {allStudentDetails?.map((index) => ([
-                                    <tr className={styles.studentTableRow} key={`testResult${index}`}>
-                                        <td>اختبار أ</td>
-                                        <td>
-                                            <Input
-                                                fontSize={16}
-                                                width={130}
-                                                height={37}
-                                                placeholder="اكتب الدرجة"
-                                            />
-                                        </td>
-                                        <td>
-                                            <Input
-                                                fontSize={16}
-                                                width={324}
-                                                height={37}
-                                                placeholder="إن وجدت"
-                                            />
-                                        </td>
-                                    </tr>
-                                ]))}
-                            </tbody>
-                        </Form>
-                    </table>
+                    <div className={styles.studentDetailsTable}>
+                        <p className={styles.studentDetails}>الطلاب</p>
+                        <p>{'>'}</p>
+                        <p className={styles.examResultsForStudents}> نتائج درجات</p>
+                    </div>
+                    <div>
+                        <table className={styles.studentTableArea}>
+                            <thead className={styles.tableHeaderArea}>
+                                <tr>
+                                    <th className={styles.studentTableHead1}>عنوان الاختبار</th>
+                                    <th className={styles.studentTableHead2}>الدرجة</th>
+                                    <th className={styles.studentTableHead3}>الملاحظات</th>
+                                </tr>
+                            </thead>
+                            <Form>
+                                <tbody className={styles.studentTableBodyArea}>
+                                    {allStudentDetails?.map((index) => ([
+                                        <tr className={styles.studentTableRow} key={`testResult${index}`}>
+                                            <td>اختبار أ</td>
+                                            <td>
+                                                <Input
+                                                    fontSize={16}
+                                                    width={130}
+                                                    height={37}
+                                                    placeholder="اكتب الدرجة"
+                                                />
+                                            </td>
+                                            <td>
+                                                <Input
+                                                    fontSize={16}
+                                                    width={324}
+                                                    height={37}
+                                                    placeholder="إن وجدت"
+                                                />
+                                            </td>
+                                        </tr>
+                                    ]))}
+                                </tbody>
+                            </Form>
+                        </table>
+                    </div>
                 </div>
-            </div>
-
-            <div className='flex'>
-                <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentDetails()} >إنشاء</button>
-                <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => handleStudentDetails()}>الطلاب</button>
-            </div>
+            }
+            {
+                <div className='flex'>
+                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentDetails()} >إنشاء</button>
+                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => handleStudentDetails()}>الطلاب</button>
+                </div>
+            }
         </div>
     )
 }

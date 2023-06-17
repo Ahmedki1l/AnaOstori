@@ -5,8 +5,6 @@ export default function CoverImg(props) {
 
 	const height = props.height;
 
-	console.log(props?.url);
-
 	return (
 		<>
 			<div>
