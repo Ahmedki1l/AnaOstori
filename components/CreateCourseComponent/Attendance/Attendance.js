@@ -6,12 +6,12 @@ import QRCode from '../../CommonComponents/QRCode/QRCode'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
-import AttendanceTableHead from '../Appointments/AttendanceTableComponent/AttendanceTableHead'
-import AttendanceButton from '../Appointments/AttendanceTableComponent/AttendanceButton'
+import AttendanceTable from './AttendanceTableComponent/AttendanceTable'
 
 export default function Attendance(props) {
     const [openQR, setOpenQR] = useState(false)
     const [attendanceKey, setAttendanceKey] = useState("")
+    const [extendedHead, setExtendedHead] = useState(true)
     const courseId = props.courseId
 
     const studentAttendanceList = [
@@ -430,50 +430,9 @@ export default function Attendance(props) {
                     </Modal>
                 </div>
             </div>
-            {studentAttendanceList &&
-                <div className={styles.tableContainer}>
-                    <table className={styles.tableArea} style={{ width: `${(studentAttendanceList[0].attendanceDetails.length * 120) + 433}px` }}>
-                        <thead className={styles.tableHeaderArea}>
-                            <tr>
-                                <th className={styles.tableHead1}>
-                                    <p>الطالب</p>
-                                    <p>نسبة الحضور</p>
-                                </th>
-                                {studentAttendanceList[0]?.attendanceDetails?.map((attendance, index) => {
-                                    return (
-                                        // <div key={`attendanceDate${index}`} >
-                                        //     <AttendanceTableHead attendanceDate={attendance.date} />
-                                        // </div>
-                                        <th key={`attendanceDate${index}`} className={styles.tableHead2}> {attendance.date}</th>
-                                    )
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody className={styles.tableBodyArea}>
-                            {studentAttendanceList.map((attendance, index) => {
-                                return (
-                                    <tr key={`studentsAttendance${index}`} className={styles.tableRow}>
-                                        <td className={styles.StudentDetails}>
-                                            <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                            <p className={styles.StudentName}>{attendance.studentName}</p>
-                                            <div className={styles.StudentPercantageBox}>
-                                                <p className={styles.StudentPercantage}>{attendance.attendancePercentage}%</p>
-                                            </div>
-                                        </td>
-                                        {attendance.attendanceDetails.map((item, j = index) => {
-                                            return (
-                                                <td key={`dayWiseAttendance${j}`} className={styles.studentsAttendance} >
-                                                    <AttendanceButton attendanceType={item.attendanceType} />
-                                                </td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            }
+            <div className={styles.tableContainer}>
+                <AttendanceTable studentAttendanceList={studentAttendanceList} />
+            </div>
         </div>
     )
 }
@@ -485,7 +444,7 @@ export default function Attendance(props) {
                             <th className={styles.tableHead2}>04 May</th>
                             <th className={styles.tableHead2}>05 May</th>
                             <th className={styles.tableHead2}>06 May</th>
-                            <th className={styles.tableHead2}>07 May</th>
+                            <th className={styles.tableHead2}>07 May</th> 
                             <th className={styles.tableHead2}>08 May</th>
                             <th className={styles.tableHead2}>09 May</th>
                             <th className={styles.tableHead2}>10 May</th>

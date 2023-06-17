@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import { Select as AntdSelect } from "antd";
 import Icon from '../CommonComponents/Icon';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 const { Option } = AntdSelect;
-
 
 const StyledSelect = styled(AntdSelect)`
 
@@ -31,7 +30,7 @@ const StyledSelect = styled(AntdSelect)`
 `;
 
 const IconWrapper = styled('div')`
-  width: 68px;
+  width: 70px;
   height: 47px;
   border: 0.5px solid rgba(0, 0, 0, 0.5);
   border-radius: 4px;
@@ -53,15 +52,19 @@ const iconList = [
   { iconName: "giftIcon", height: '25', width: '25' },
   { iconName: "maleFemaleIcon", height: '25', width: '25' },
   { iconName: "shildIcon", height: '28', width: '25' },
+  { iconName: "allDeviceIcon", height: '25', width: '25' },
+  { iconName: "calendarIcon", height: '25', width: '25' },
+  { iconName: "playIcon", height: '25', width: '25' },
+  { iconName: "liveCourseBlackIcon", height: '25', width: '25' },
+  { iconName: "locationIcon", height: '25', width: '25' },
 ]
 
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
+const SelectIcon = ({ value, setIconValue, ...rest }) => {
 
-const SelectIcon = ({
-  ...rest
-}) => {
+  const handleChange = (value) => {
+    setIconValue(value)
+  };
+
   return (
     <IconWrapper>
       <DropDownIconWrapper>
@@ -71,13 +74,18 @@ const SelectIcon = ({
         onChange={handleChange}
         optionLabelProp="label"
         showArrow={false}
-        defaultValue={'clockIcon'}
-        showSearch={false}
+
+        value={value}
         {...rest}
       >
         {iconList.map((icon, index) => {
           return (
-            <Option className='iconSelectDropDownMenuWrapper' key={`icon0${index}`} value={icon.iconName} label={<Icon height={icon.height} width={icon.width} iconName={icon.iconName} alt={icon.iconName} />}>
+            <Option
+              className='iconSelectDropDownMenuWrapper'
+              key={`icon0${index}`}
+              value={icon.iconName}
+              label={<Icon height={icon.height} width={icon.width} iconName={icon.iconName} alt={icon.iconName} />}
+            >
               <Icon height={icon.height} width={icon.width} iconName={icon.iconName} alt={icon.iconName} />
             </Option>
           )

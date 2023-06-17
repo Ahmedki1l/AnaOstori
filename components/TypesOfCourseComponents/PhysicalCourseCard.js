@@ -23,7 +23,7 @@ export default function PhysicalCourseCard(props) {
 	const [discountShow, setDiscountShow] = useState(false)
 	const router = useRouter();
 
-	const handleNavigation = (catagoryName, courseDetail, courseDetailsMetaData) => {
+	const handleNavigation = (catagoryName, courseDetail) => {
 		if (isEdit == true) return
 		if (courseDetail.isEnrolled) {
 			router.push(`/myCourse/${courseDetail.id}/`)
@@ -36,7 +36,6 @@ export default function PhysicalCourseCard(props) {
 	const oneUserPrice = courseDetail?.price
 
 	const isSmallScreen = useWindowSize().smallScreen
-
 
 	const imageBaseUrl = linkConst.File_Base_Url2
 
@@ -63,8 +62,10 @@ export default function PhysicalCourseCard(props) {
 									<p className='pr-2'>
 										{metaData.link ?
 											<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
-											:
-											<span className={styles.listItemText}>{metaData.text}</span>
+											: metaData.tailLinkName ?
+												<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>
+												:
+												<span className={styles.listItemText}>{metaData.text}</span>
 										}
 										<span className={styles.grayText}>{metaData.grayedText ? `(${metaData.grayedText})` : ''}</span>
 									</p>
@@ -110,7 +111,7 @@ export default function PhysicalCourseCard(props) {
 						</>}
 					</>}
 					<div className={styles.btnBox}>
-						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail, courseDetailsMetaData)}>قراءة تفاصيل الدورة</button>
+						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail)}>قراءة تفاصيل الدورة</button>
 					</div>
 				</div>
 			</div>

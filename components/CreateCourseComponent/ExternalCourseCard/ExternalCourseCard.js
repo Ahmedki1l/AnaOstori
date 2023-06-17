@@ -11,101 +11,78 @@ import { useSelector } from 'react-redux';
 import { createCourseCardMetaDataAPI } from '../../../services/apisService'
 
 
-const CourseInitial =
-{
-    courseDetailsMetaData: [{
-        text: '',
-        link: '',
-        textSeprate: '',
-        linkToSeprateText: '',
-    },],
-}
-
-const ExternalCourseCard = ({ createCourseApiRes }) => {
+const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
     const storeData = useSelector((state) => state?.globalStore);
-    console.log(storeData);
-
-    const [courseDetail, setCourseDetail] = useState('')
-    const [iconValue, setIconValue] = useState('')
-    const [createdCourceCard, setCreatedCourceCard] = useState()
+    const isCourseEdit = storeData?.isCourseEdit;
+    const editCourseData = storeData?.editCourseData;
+    const [courseDetail, setCourseDetail] = useState(createCourseApiRes)
+    const [form] = Form.useForm();
 
     useEffect(() => {
-        createCourseApiRes.CourseCardMetaData = []
-        createCourseApiRes.CourseCardMetaData.push(JSON.parse(JSON.stringify({
+        setCourseCardMetaDataObj()
+    }, [])
+
+    const setCourseCardMetaDataObj = () => {
+        let data = { ...courseDetail }
+        if (data.CourseCardMetaData == undefined) {
+            data.CourseCardMetaData = []
+        }
+        data.CourseCardMetaData.push(JSON.parse(JSON.stringify({
             icon: '',
             link: '',
             text: '',
+            tailLinkName: '',
+            tailLink: '',
             grayedText: '',
         })))
-        setCourseDetail(createCourseApiRes)
-    }, [createCourseApiRes])
-
-    const handleAdd = () => {
-        let data = { ...courseDetail }
-        let obj = {
-            icon: '',
-            link: '',
-            text: '',
-            grayedText: '',
-        }
-        data.CourseCardMetaData.push(JSON.parse(JSON.stringify(obj)))
-        console.log(data);
         setCourseDetail(data)
     }
 
-    const handleRemove = (arrayName, id) => {
-        if (id == 0) return
+    const deleteCourseDetails = (index) => {
         let data = { ...courseDetail }
-        data.CourseCardMetaData.splice(id, 1)
+        if (index == 0) return
+        data.CourseCardMetaData.splice(index, 1)
         setCourseDetail(data)
     }
 
     const onFinish = async (values) => {
-        console.log(values);
-        const arrayOfValues = Object.values(values).map(obj => obj);
-        console.log(arrayOfValues);
-        let courseCardMetadata = arrayOfValues.map((obj, index) => {
+        // const cardDescription = values.cardDescription
+        let courseCardMetadata = values.CourseCardMetaData.map((obj, index) => {
             return {
                 order: (`${index + 1}`),
                 icon: obj.icon,
                 link: obj.link,
                 text: obj.text,
-                sepratetext: obj.sepratetext,
-                separatetextlink: obj.separatetextlink,
-                graytext: obj.graytext,
+                tailLinkName: obj.tailLinkName,
+                tailLink: obj.tailLink,
+                grayedText: obj.grayedText,
             }
         })
-        const cardDescription = arrayOfValues[arrayOfValues.length - 1]
-        courseCardMetadata.splice(courseCardMetadata.length - 1, 1)
+
         let body = {
             data: {
                 data: courseCardMetadata,
                 courseId: courseDetail.id,
-                cardDescription: cardDescription
+                // cardDescription: cardDescription
             },
             accessToken: storeData?.accessToken
         }
-        console.log(body);
-        // await createCourseCardMetaDataAPI(body).then((res) => {
-        //     setCreatedCourceCard(res.data)
-        // })
-        // console.log(res);
+        await createCourseCardMetaDataAPI(body).then((res) => {
+            setSelectedItem(3)
+            form.resetFields()
+        }).catch((error) => {
+            console.log(error);
+        })
     };
 
     const handleCourseDetailDiscription = (e, fieldname, arrayName, index) => {
         let data = { ...courseDetail }
-        console.log(e, index);
-        console.log(data);
         if (arrayName == null) {
             data[fieldname] = e
         } else {
-            console.log(e, fieldname);
-            // if (fieldname == 'icon') {
             data.CourseCardMetaData[index][fieldname] = e
-            // }
         }
-        console.log(data);
         setCourseDetail(data)
     }
 
@@ -113,7 +90,7 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
 
         <div style={{ display: 'flex' }}>
             <div className='px-6'>
-                <Form onFinish={onFinish} >
+                <Form form={form} onFinish={onFinish}>
                     <div className={styles.cardmetaDataForm}>
                         <FormItem
                             name="cardDescription"
@@ -125,88 +102,100 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "cardDescription", null, null)}
                             />
                         </FormItem>
-                        <div className='w-[870px]'>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <p className={styles.secDetails}>تفاصيل ثانية</p>
-                                <p className={styles.addDetails} onClick={() => handleAdd('courseDetailsMetaData')} >+ إضافة</p>
+                        <div className='w-[872px]'>
+                            <div>
+                                <Form.List name="CourseCardMetaData" initialValue={[{}]}>
+                                    {(field, { add, remove }) => (
+                                        <>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }} >
+                                                <p className={styles.secDetails}>تفاصيل ثانية</p>
+                                                <p className={styles.addDetails} onClick={() => { add(), setCourseCardMetaDataObj() }} >+ إضافة</p>
+                                            </div>
+                                            {field.map(({ name, key }, index) => (
+                                                <div className={styles.courseDetails} key={key}>
+                                                    <FormItem>
+                                                        <div style={{ margin: '10px' }} >
+                                                            <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} /></div>
+                                                        </div>
+                                                    </FormItem>
+                                                    <div className='flex flex-wrap w-[95%]'>
+                                                        <FormItem
+                                                            name={[name, 'icon']}
+                                                            rules={[{ required: true, message: 'Please Select Icon' }]} >
+                                                            <SelectIcon
+                                                                onChange={(e) => handleCourseDetailDiscription(e, "icon", 'CourseCardMetaData', index)}
+                                                            />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            name={[name, 'text']}
+                                                            rules={[{ required: true, message: 'Please Enter Text' }]} >
+                                                            <Input
+                                                                height={47}
+                                                                width={216}
+                                                                placeholder="النص"
+                                                                value={field.text}
+                                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "text", 'CourseCardMetaData', index)}
+                                                            />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            name={[name, 'link']}>
+                                                            <Input
+                                                                height={47}
+                                                                width={216}
+                                                                placeholder="رابط"
+                                                                value={field.link}
+                                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "link", 'CourseCardMetaData', index)}
+                                                            />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            name={[name, 'tailLinkName']} >
+                                                            <Input
+                                                                height={47}
+                                                                width={216}
+                                                                placeholder="نص منفصل"
+                                                                value={field.tailLinkName}
+                                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "tailLinkName", 'CourseCardMetaData', index)}
+                                                            />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            name={[name, 'tailLink']}
+                                                            rules={[{ required: field?.tailLinkName ? true : false, message: 'Please Enter TailLink' }]} >
+                                                            <Input
+                                                                height={47}
+                                                                width={292}
+                                                                placeholder="رابط للنص المنفصل"
+                                                                value={field.tailLink}
+                                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "tailLink", 'CourseCardMetaData', index)}
+                                                            />
+                                                        </FormItem>
+                                                        <FormItem
+                                                            name={[name, 'grayedText']}>
+                                                            <Input
+                                                                height={47}
+                                                                width={216}
+                                                                placeholder="النص الرمادي"
+                                                                value={field.grayedText}
+                                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "grayedText", 'CourseCardMetaData', index)}
+                                                            />
+                                                        </FormItem>
+                                                    </div>
+                                                    <div className={styles.DeleteIconWrapper}>
+                                                        <div className='flex justify-center items-center h-100'
+                                                            onClick={() => {
+                                                                if (index == 0) return
+                                                                remove(name), deleteCourseDetails(index)
+                                                            }}
+                                                        >
+                                                            <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </>
+                                    )}
+                                </Form.List>
                             </div>
-                            {courseDetail && courseDetail?.CourseCardMetaData?.map((field, index) => (
-                                <div className={styles.courseDetails} key={`courseDetailsMetaData${index}`}>
-                                    <div style={{ margin: '10px' }} >
-                                        <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'}
-                                        ></AllIconsComponenet></div>
-                                    </div>
 
-                                    <div className='flex flex-wrap w-[95%]'>
-                                        <FormItem
-                                            name={[index, 'icon']}
-                                            rules={[{ required: true }]} >
-                                            <SelectIcon
-                                                value={iconValue}
-                                                width={68}
-                                                height={47}
-                                                setIconValue={setIconValue}
-                                                onChange={(e) => handleCourseDetailDiscription(e, "icon", 'CourseCardMetaData', index)}
-                                            />
-                                        </FormItem>
-                                        <FormItem
-                                            name={[index, 'text']}
-                                            rules={[{ required: true }]} >
-                                            <Input
-                                                height={47}
-                                                width={216}
-                                                placeholder="النص"
-                                                value={field.text}
-                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "text", 'CourseCardMetaData', index)}
-                                            />
-                                        </FormItem>
-                                        <FormItem
-                                            name={[index, 'link']}
-                                            rules={[{ required: true }]} >
-                                            <Input
-                                                height={47}
-                                                width={216}
-                                                placeholder="رابط"
-                                                value={field.link}
-                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "link", 'CourseCardMetaData', index)}
-                                            />
-                                        </FormItem>
-                                        <FormItem
-                                            name={[index, 'tailLinkName']}
-                                            rules={[{ required: true }]} >
-                                            <Input
-                                                height={47}
-                                                width={216}
-                                                placeholder="نص منفصل"
-                                                value={field.tailLinkName}
-                                            />
-                                        </FormItem>
-                                        <FormItem
-                                            name={[index, 'tailLink']}
-                                            rules={[{ required: true }]} >
-                                            <Input
-                                                height={47}
-                                                width={292}
-                                                placeholder="رابط للنص المنفصل"
-                                                value={field.tailLink} />
-                                        </FormItem>
-                                        <FormItem
-                                            name={[index, 'grayedText']}
-                                            rules={[{ required: true }]} >
-                                            <Input
-                                                height={47}
-                                                width={216}
-                                                placeholder="النص الرمادي"
-                                                value={field.grayedText}
-                                                onChange={(e) => handleCourseDetailDiscription(e.target.value, "grayedText", 'CourseCardMetaData', index)}
-                                            />
-                                        </FormItem>
-                                    </div>
-                                    <div className={styles.DeleteIconWrapper} >
-                                        <div className='flex justify-center items-center h-100' onClick={() => handleRemove("courseDetailsMetaData", index)}>  <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} ></AllIconsComponenet></div>
-                                    </div>
-                                </div>
-                            ))}
                             <FormItem>
                                 <div className={styles.saveCourseBtnBox}>
                                     <button className='primarySolidBtn' htmltype='submit' >حفظ</button>
@@ -223,3 +212,6 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
     )
 }
 export default ExternalCourseCard;
+
+
+

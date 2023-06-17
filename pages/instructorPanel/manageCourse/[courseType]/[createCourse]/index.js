@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { use, useState } from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
 import CourseInfo from '../../../../../components/CreateCourseComponent/CourseInfo/CourseInfo';
 import Appointment from '../../../../../components/CreateCourseComponent/Appointments/Appointment';
@@ -7,6 +7,7 @@ import ExternalCourseCard from '../../../../../components/CreateCourseComponent/
 import TestsResults from '../../../../../components/CreateCourseComponent/TestsResults/TestResults';
 import TheStudents from '../../../../../components/CreateCourseComponent/TheStudents/TheStudents';
 import Attendance from '../../../../../components/CreateCourseComponent/Attendance/Attendance';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CourseInitial =
 {
@@ -40,13 +41,12 @@ const CourseInitial =
 
 
 export default function Index(props, accept) {
-    const { courseType, createCourse } = useRouter().query
-    const [selectedItem, setSelectedItem] = useState(6);
+    const { courseType } = useRouter().query
+    const [selectedItem, setSelectedItem] = useState(1);
     const [showExtraNavItem, setShowExtraNavItem] = useState(true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
     const courseId = '65ab9b76-e59f-4a36-a28d-46f18f1383eb'
 
-    console.log(courseType);
     const handleItemSelect = (id) => {
         setSelectedItem(id)
     }
@@ -84,10 +84,10 @@ export default function Index(props, accept) {
                                 courseType={courseType}
                                 setSelectedItem={setSelectedItem}
                             />}
-                        {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} />}
+                        {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
                         {selectedItem == 3 && <Appointment courseId={createCourseApiRes} />}
-                        {selectedItem == 4 && <TestsResults />}
-                        {selectedItem == 5 && <TheStudents />}
+                        {selectedItem == 4 && <TheStudents />}
+                        {selectedItem == 5 && <TestsResults />}
                         {selectedItem == 6 && <Attendance courseId={courseId} />}
                     </div>
                 </div >
@@ -95,3 +95,6 @@ export default function Index(props, accept) {
         </>
     )
 }
+
+
+
