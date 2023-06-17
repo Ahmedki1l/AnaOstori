@@ -42,9 +42,9 @@ export default function AttendanceTable({ studentAttendanceList }) {
                     <p>الطالب</p>
                     <p>نسبة الحضور</p>
                 </TableFirstColoumHead>
-                {studentAttendanceList.map((student) => {
+                {studentAttendanceList.map((student, index) => {
                     return (
-                        <TableFirstColoumCell>
+                        <TableFirstColoumCell key={`TableFirstColoumCell${index}`}>
                             <div className='flex'>
                                 <AllIconsComponenet iconName='user' />
                                 <p>{student.studentName}</p>
@@ -60,7 +60,7 @@ export default function AttendanceTable({ studentAttendanceList }) {
                 })} */}
                 {studentAttendanceList[0].attendanceDetails.map((student, index) => {
                     return (
-                        <TableOtherColoumHead>
+                        <TableOtherColoumHead key={`TableOtherColoumHead${index}`}>
                             <p>{student.date}</p>
                             {/* {student.students.map((student) => {
                             return (
