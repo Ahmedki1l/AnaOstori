@@ -9,9 +9,10 @@ import UploadFile from '../../CommonComponents/UploadFile/UploadFile';
 import CheckBox from '../../antDesignCompo/CheckBox';
 import Input from '../../antDesignCompo/Input';
 import Select from '../../antDesignCompo/Select';
-import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCourseMetaDataAPI } from '../../../services/apisService';
+import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCourseMetaDataAPI, deleteCourseTypeAPI, updateCourseDetailsAPI, updateCourseDetailsMetaDataAPI, updateCourseMetaDataAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
+import { toast } from 'react-toastify';
 
 const { Option } = Select;
 
@@ -84,6 +85,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     })
 
     const onFinishCreateCourse = async (values) => {
+        if (isCourseEdit) {
+            editCourse(values)
+        } else {
+            createCourse(values)
+        }
+    }
+
+    const createCourse = async (values) => {
         if (!showCourseMetaDataFields) {
             values.pictureKey = imageUploadResponceData?.key,
                 values.pictureBucket = imageUploadResponceData?.bucket,
@@ -103,7 +112,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
                 setNewCreatedCourse(res.data)
-                courseForm.setFieldValue('icon', "clockIcon")
             }).catch((error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
@@ -114,26 +122,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 }
             })
         } else {
-            let courseMetadata = values.courseMetaData.map((obj, index) => {
-                return {
-                    order: (`${index + 1}`),
-                    title: obj.title,
-                    content: obj.content,
-                    link: obj.link,
-                    tailLinkName: obj.tailLinkName,
-                    tailLink: obj.tailLink,
-                }
-            })
-
             let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
-                return {
-                    order: (`${index + 1}`),
-                    icon: obj.icon,
-                    text: obj.text,
-                    link: obj.link,
-                    textSeprate: obj.textSeprate,
-                    linkToSeprateText: obj.linkToSeprateText,
-                }
+                return { ...obj, order: (`${index + 1}`) }
+
+            })
+            let courseMetadata = values.courseMetaData.map((obj, index) => {
+                return { ...obj, order: (`${index + 1}`) }
             })
 
             let body1 = {
@@ -150,6 +144,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 },
                 accessToken: storeData?.accessToken
             }
+            console.log(body1, body2);
             try {
                 const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(body1)
                 const courseMetaDataReq = createCourseMetaDataAPI(body2)
@@ -159,8 +154,113 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 courseForm.resetFields()
             } catch (error) {
                 console.log(error);
+                if (error?.response?.status == 401) {
+                    signOutUser()
+                    dispatch({
+                        type: 'EMPTY_STORE'
+                    });
+                }
             }
         }
+    }
+
+    const editCourse = async (values) => {
+        console.log(values);
+        console.log(editCourseData.courseDetailsMetaData);
+
+        let courseMetaData = values.courseMetaData.map((obj, index) => {
+            delete obj.createdAt
+            delete obj.updatedAt
+            obj.order = `${index + 1}`
+            obj.courseId = editCourseData.id
+            return obj
+        })
+        let body2 = {
+            data: {
+                data: courseMetaData
+            },
+            accessToken: storeData?.accessToken
+        }
+
+        let courseDetailsMetaData = values.courseDetailsMetaData.map((obj, index) => {
+            delete obj.createdAt
+            delete obj.updatedAt
+            delete obj.grayedText
+            obj.order = `${index + 1}`
+            obj.courseId = editCourseData.id
+            return obj
+        })
+        let body3 = {
+            data: {
+                data: courseDetailsMetaData,
+            },
+            accessToken: storeData?.accessToken
+        }
+
+        console.log("body2", body2);
+        console.log("body3", body3);
+
+        delete values.courseMetaData;
+        delete values.courseDetailsMetaData;
+
+        values.pictureKey = imageUploadResponceData?.key,
+            values.pictureBucket = imageUploadResponceData?.bucket,
+            values.pictureMime = imageUploadResponceData?.mime,
+            values.groupDiscountEligible = groupDiscountEligible;
+        values.type = courseType
+
+        let body1 = {
+            data: values,
+            courseId: editCourseData.id,
+            accessToken: storeData?.accessToken
+        }
+        console.log("body1", body1);
+        try {
+            const editCourseReq = updateCourseDetailsAPI(body1)
+            const editCourseMetadataReq = updateCourseMetaDataAPI(body2)
+            const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(body3)
+
+            const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
+            console.log(editCourse, editCourseMetaData, editCourseDetailsMetadata);
+            toast.success("تم تحديث تفاصيل الدورة بنجاح")
+        }
+        catch (error) {
+            console.log(error);
+            if (error?.response?.status == 401) {
+                signOutUser()
+                dispatch({
+                    type: 'EMPTY_STORE'
+                });
+            } else {
+                toast.error("حصلت مشكلة ما، أعد المحاولة لاحقًا");
+            }
+        }
+    }
+
+    const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
+        let data = { ...editCourseData }
+        console.log(data);
+        console.log(data.courseMetaData[index]);
+        console.log(data.courseDetailsMetaData[index]);
+        let body = {
+            data: {
+                type: deleteFieldName,
+                courseId: editCourseData.id,
+                id: deleteFieldName == 'courseDetails' ? data.courseDetailsMetaData[index].id : data.courseMetaData[index].id
+            },
+            accessToken: storeData?.accessToken
+        }
+        console.log(body);
+        await deleteCourseTypeAPI(body).then((res) => {
+            data.courseMetaData.splice(index, 1)
+            remove(name)
+            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+            console.log(storeData);
+            console.log(isCourseEdit);
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+        })
     }
 
     const onChangeCheckBox = (e, checkboxName) => {
@@ -176,10 +276,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         <div>
             <Form form={courseForm} onFinish={onFinishCreateCourse} >
                 <div className='px-6'>
-
                     <FormItem
                         name={'name'}
-                        rules={[{ required: true, message: 'Please Enter Course Name' }]}  >
+                        rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}  >
                         <Input
                             placeholder="عنوان الدورة"
                             value={courseData.name}
@@ -187,7 +286,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     </FormItem>
                     <FormItem
                         name={'catagoryId'}
-                        rules={[{ required: true, message: 'Please Enter Course CatagoryId' }]} >
+                        rules={[{ required: true, message: 'اختر تصنيف الدورة' }]} >
                         <Select
                             placeholder="اختر تصنيف الدورة"
                             value={courseData.catagoryId}
@@ -195,7 +294,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     </FormItem>
                     <FormItem
                         name={'curriculumId'}
-                        rules={[{ required: true, message: 'Please Enter CurriculumId' }]}  >
+                        rules={[{ required: true, message: 'اختر مقرر الدورة' }]}  >
                         <Select
                             placeholder="اختر تصنيف الدورة"
                             value={courseData.curriculumId}
@@ -237,7 +336,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </div>
                             <FormItem
                                 name={'locationName'}
-                                rules={[{ required: true, message: 'Please Enter LocationName' }]} >
+                                rules={[{ required: true, message: '	حدد الموقع' }]} >
                                 <Input
                                     height={47}
                                     width={247}
@@ -246,7 +345,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </FormItem>
                             <FormItem
                                 name={'location'}
-                                rules={[{ required: true, message: 'Please Enter Location Link' }]}  >
+                                rules={[{ required: true, message: 'ضع رابط الموقع' }]}  >
                                 <Input
                                     height={47}
                                     width={247}
@@ -264,7 +363,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </div>
                             <FormItem
                                 name={'reviewRate'}
-                                rules={[{ required: true, message: 'Please Enter Review Rate' }]} >
+                                rules={[{ required: true, message: 'ادخل تقييم الدورة' }]} >
                                 <Input
                                     height={47}
                                     width={247}
@@ -282,7 +381,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}
-                                rules={[{ required: true, message: 'Please Enter NumberOfGrarduates' }]} >
+                                rules={[{ required: true, message: 'ادخل رقم الخريجين' }]} >
                                 <Input
                                     height={47}
                                     width={247}
@@ -295,7 +394,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <div style={{ display: 'flex' }}>
                         <FormItem
                             name={'price'}
-                            rules={[{ required: true, message: 'Please Enter Course Price' }]}>
+                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
                             <Input
                                 placeholder="سعر الدورة للشخص"
                                 value={courseData.price}
@@ -304,7 +403,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         {discountedPrice &&
                             <FormItem
                                 name={'discount'}
-                                rules={[{ required: true, message: 'Please Enter Discount' }]}  >
+                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
                                 <Input
                                     value={courseData.discount}
                                     placeholder="السعر بعد الخصم للشخص"
@@ -317,7 +416,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             <div>
                                 <FormItem
                                     name={'priceForTwo'}
-                                    rules={[{ required: true, message: 'Please Enter Price For Two' }]} >
+                                    rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
                                     <Input
                                         value={courseData.price * 2}
                                         placeholder="سعر الدورة لشخصين"
@@ -325,7 +424,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 </FormItem>
                                 <FormItem
                                     name={'PriceForThreeorMore'}
-                                    rules={[{ required: true, message: 'Please Enter Price For Three' }]} >
+                                    rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
                                     <Input
                                         value={courseData.price * 3}
                                         placeholder="سعر الدورة لثلاثة اشخاص واكثر"
@@ -336,7 +435,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 <div>
                                     <FormItem
                                         name={'discountForTwo'}
-                                        rules={[{ required: true, message: 'Please Enter Discount For Two' }]}  >
+                                        rules={[{ required: true, message: 'ادخل سعر   الدورة لشخصين بعد الخصم' }]}  >
                                         <Input
                                             value={courseData.discountForTwo}
                                             placeholder="السعر بعد الخصم لشخصين"
@@ -344,7 +443,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     </FormItem>
                                     <FormItem
                                         name={'discountForThreeOrMore'}
-                                        rules={[{ required: true, message: 'please Enter discount for three' }]}  >
+                                        rules={[{ required: true, message: 'ادخل سعر   الدورة لـ3 اشخاص بعد الخصم' }]}  >
                                         <Input
                                             value={courseData.discountForThreeOrMore}
                                             placeholder="السعر بعد الخصم لثلاثة اشخاص او اكثر"
@@ -383,7 +482,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     <p className={styles.secDetails}>تفاصيل الدورة</p>
                                                     <p className={styles.addDetails} onClick={() => add()}>+ إضافة</p>
                                                 </div>
-                                                {field.map(({ name, key, ...restField }) => (
+                                                {field.map(({ name, key, ...restField }, index) => (
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
                                                             <div style={{ margin: '10px' }} >
@@ -396,7 +495,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: 'Please Enter Title'
+                                                                    message: 'ادخل العنوان'
                                                                 },
                                                             ]}
                                                         >
@@ -408,7 +507,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: 'Please Enter Content'
+                                                                    message: 'ادخل الوصف'
                                                                 },
                                                             ]}
                                                         >
@@ -432,14 +531,20 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             rules={[
                                                                 {
                                                                     required: field?.tailLinkName ? true : false,
-                                                                    message: 'Please Enter tailLink'
+                                                                    message: 'ادخل الرابط المنصل'
                                                                 },
                                                             ]}
                                                         >
                                                             <Input placeholder="نص منفصل" width={216} height={47} />
                                                         </FormItem>
                                                         <div className={styles.deleteIconWrapper} >
-                                                            <div className='flex justify-center items-center h-100' onClick={() => remove(name)}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
+                                                            <div className='flex justify-center items-center h-100'
+                                                                onClick={() => {
+                                                                    if (editCourseData.courseMetaData.length - 1 == 0) return
+                                                                    deleteCourseDetails(index, remove, name, "courseMeta")
+                                                                }}>
+                                                                <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -459,7 +564,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     <p className={styles.secDetails}> تفاصيل ثانية</p>
                                                     <p className={styles.addDetails} onClick={() => add()}>+ إضافة</p>
                                                 </div>
-                                                {field.map(({ name, key, ...restField }) => (
+                                                {field.map(({ name, key, ...restField }, index) => (
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
                                                             <div style={{ margin: '10px' }} >
@@ -472,7 +577,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: 'Please Select Icon'
+                                                                    message: 'اختر الأيقونة'
                                                                 },
                                                             ]}
                                                         >
@@ -484,7 +589,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: 'Please Enter Text'
+                                                                    message: 'ادخل النص'
                                                                 },
                                                             ]}
                                                         >
@@ -509,7 +614,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             <Input placeholder="رابط للنص المنفصل" width={216} height={47} />
                                                         </FormItem>
                                                         <div className={styles.deleteIconWrapper} >
-                                                            <div className='flex justify-center items-center h-100' onClick={() => remove(name)}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
+                                                            <div className='flex justify-center items-center h-100' onClick={() => {
+                                                                if (editCourseData.courseDetailsMetaData.length - 1 == 0) return
+                                                                deleteCourseDetails(index, remove, name, "courseDetails")
+                                                            }}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -531,7 +639,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         </div >
                     </>
                 }
-            </Form >
+            </Form>
         </div >
     )
 }

@@ -41,7 +41,6 @@ const Input = ({
   fieldvalue,
   ...rest
 }) => {
-  console.log(value);
   return (
     <AntdInputStyle
       {...rest}
