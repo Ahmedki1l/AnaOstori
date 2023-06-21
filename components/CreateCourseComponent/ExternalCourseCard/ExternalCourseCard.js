@@ -7,8 +7,9 @@ import { Form } from 'antd';
 import Input from '../../antDesignCompo/Input';
 import PhysicalCourseCard from '../../TypesOfCourseComponents/PhysicalCourseCard';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
-import { useSelector } from 'react-redux';
-import { createCourseCardMetaDataAPI } from '../../../services/apisService'
+import { useDispatch, useSelector } from 'react-redux';
+import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaDataAPI } from '../../../services/apisService'
+import { updateCourseDetailsAPI } from '../../../services/apisService';
 
 
 const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
@@ -16,15 +17,23 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
-    const [courseDetail, setCourseDetail] = useState(createCourseApiRes)
+    const [courseDetail, setCourseDetail] = useState(isCourseEdit ? editCourseData : createCourseApiRes)
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
+
+    console.log(isCourseEdit);
 
     useEffect(() => {
-        setCourseCardMetaDataObj()
+        if (!isCourseEdit) {
+            setCourseCardMetaDataObj()
+        } else {
+            form.setFieldsValue(editCourseData)
+        }
     }, [])
 
     const setCourseCardMetaDataObj = () => {
         let data = { ...courseDetail }
+
         if (data.CourseCardMetaData == undefined) {
             data.CourseCardMetaData = []
         }
@@ -39,15 +48,17 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         setCourseDetail(data)
     }
 
-    const deleteCourseDetails = (index) => {
-        let data = { ...courseDetail }
-        if (index == 0) return
-        data.CourseCardMetaData.splice(index, 1)
-        setCourseDetail(data)
-    }
+    const onFinish = (values) => {
+        if (isCourseEdit) {
+            editCourse(values)
+        } else {
+            createCourse(values)
+        }
+    };
 
-    const onFinish = async (values) => {
-        // const cardDescription = values.cardDescription
+    const createCourse = async (values) => {
+        console.log(values);
+        const cardDescription = values.cardDescription
         let courseCardMetadata = values.CourseCardMetaData.map((obj, index) => {
             return {
                 order: (`${index + 1}`),
@@ -59,22 +70,108 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                 grayedText: obj.grayedText,
             }
         })
-
         let body = {
             data: {
                 data: courseCardMetadata,
                 courseId: courseDetail.id,
-                // cardDescription: cardDescription
             },
             accessToken: storeData?.accessToken
         }
-        await createCourseCardMetaDataAPI(body).then((res) => {
+        let body2 = {
+            data: {
+                cardDescription: cardDescription,
+                type: courseDetail.type
+            },
+            accessToken: storeData?.accessToken,
+            courseId: courseDetail.id
+        }
+        console.log(body);
+        try {
+            const createCourseCardMetaDataReq = createCourseCardMetaDataAPI(body)
+            const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
+
+            const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
+
             setSelectedItem(3)
             form.resetFields()
+        } catch (error) {
+            console.log(error);
+            if (error?.response?.status == 401) {
+                signOutUser()
+                dispatch({
+                    type: 'EMPTY_STORE'
+                });
+            }
+        }
+    }
+
+    const editCourse = async (values) => {
+        console.log(values);
+        const cardDescription = values.cardDescription
+
+        let CourseCardMetaData = values.CourseCardMetaData.map((obj, index) => {
+            delete obj.createdAt
+            delete obj.updatedAt
+            for (const key in obj)
+                if (obj[key] == null || obj[key] == undefined || obj[key] == "") {
+                    delete obj[key]
+                }
+            obj.order = `${index + 1}`
+            obj.courseId = editCourseData.id
+            return obj
+        })
+        let body = {
+            data: {
+                data: CourseCardMetaData,
+            },
+            accessToken: storeData?.accessToken
+        }
+        let body2 = {
+            data: {
+                cardDescription: cardDescription,
+                type: courseDetail.type
+            },
+            accessToken: storeData?.accessToken,
+            courseId: courseDetail.id
+        }
+
+        try {
+            const updateCourseCardMetaDataReq = updateCourseCardMetaDataAPI(body)
+            const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
+
+            const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all[updateCourseCardMetaDataReq, updateCardDiscriptionReq]
+            console.log("updateCourseCardMetaDataAPI", updateCourseCardMetaData);
+        } catch (error) {
+            console.log(error);
+            if (error?.response?.status == 401) {
+                signOutUser()
+                dispatch({
+                    type: 'EMPTY_STORE'
+                });
+            }
+        }
+    }
+
+    const deleteCourseDetails = async (index, remove, name) => {
+        let data = { ...courseDetail }
+        console.log(data.CourseCardMetaData[index]);
+        let body = {
+            data: {
+                // courseId: editCourseData.id,
+                id: data.CourseCardMetaData[index].id
+            },
+            accessToken: storeData?.accessToken
+        }
+
+        await deleteCourseTypeAPI(body).then((res) => {
+            data.CourseCardMetaData.splice(index, 1)
+            setCourseDetail(data)
+            remove(name)
+            console.log(res);
         }).catch((error) => {
             console.log(error);
         })
-    };
+    }
 
     const handleCourseDetailDiscription = (e, fieldname, arrayName, index) => {
         let data = { ...courseDetail }
@@ -182,8 +279,8 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                     <div className={styles.DeleteIconWrapper}>
                                                         <div className='flex justify-center items-center h-100'
                                                             onClick={() => {
-                                                                if (index == 0) return
-                                                                remove(name), deleteCourseDetails(index)
+                                                                if (courseDetail.CourseCardMetaData.length - 1 == 0) return
+                                                                deleteCourseDetails(index, remove, name)
                                                             }}
                                                         >
                                                             <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} />

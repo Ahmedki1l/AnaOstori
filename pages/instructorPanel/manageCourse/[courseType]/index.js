@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComponent.module.scss'
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
-import { Image } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import * as LinkConst from '../../../../constants/LinkConst';
 import { getAllCourseByInstructor } from '../../../../services/apisService'
@@ -15,6 +14,7 @@ export default function Index() {
     const courseType = router.query.courseType
     const [allPhysicalCourses, setAllPhysicalCourses] = useState([])
     const baseUrl = LinkConst.File_Base_Url2
+
     const handleRoute = () => {
         router.push('/instructorPanel/manageCourse/physical/createCourse')
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: {} })
@@ -46,6 +46,7 @@ export default function Index() {
     }, [storeData?.accessToken])
 
     const handleEditCourse = (course) => {
+
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
         router.push({
@@ -76,65 +77,7 @@ export default function Index() {
                             <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
-                    {/* <tbody className={styles.tableBodyArea}>
-                        <tr className={styles.tableRow}>
-                            <td>
-                                <div className='flex'>
-                                    <div className={styles.courseInfoImage}>
-                                    </div>
-                                    <div className={styles.skillCourseDetails}>
-                                        <p className={`fontBold`}>دورة القدرات الحضورية</p>
-                                        <p>500 ر.س للشخص</p>
-                                        <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className={styles.publishedCourseDetails}>
-                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
-                                <p className={styles.publishedName}> منشور</p>
-                            </td>
-                            <td>22 نوفمبر 2023</td>
-                            <td>26 نوفمبر 2023</td>
-                            <td className={styles.personeDetails}>
-                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
-                                <p>30 طالب</p>
-                            </td>
-                            <td>
-                                <div>
-                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className={styles.tableRow}>
-                            <td>
-                                <div className='flex'>
-                                    <div className={styles.courseInfoImage}>
-                                    </div>
-                                    <div className={styles.skillCourseDetails}>
-                                        <p className={`fontBold`}>دورة القدرات الحضورية</p>
-                                        <p>500 ر.س للشخص</p>
-                                        <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className={styles.publishedCourseDetails}>
-                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
-                                <p className={styles.publishedName}> منشور</p>
-                            </td>
-                            <td>22 نوفمبر 2023</td>
-                            <td>26 نوفمبر 2023</td>
-                            <td className={styles.personeDetails}>
-                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
-                                <p>30 طالب</p>
-                            </td>
-                            <td>
-                                <div>
-                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
-                                </div>
-                            </td>
-                        </tr>
 
-                    </tbody> */}
                     {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allPhysicalCourses.map((course, index) => {
