@@ -242,25 +242,29 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         console.log(data);
         console.log(data.courseMetaData[index]);
         console.log(data.courseDetailsMetaData[index]);
-        let body = {
-            data: {
-                type: deleteFieldName,
-                courseId: editCourseData.id,
-                id: deleteFieldName == 'courseDetails' ? data.courseDetailsMetaData[index].id : data.courseMetaData[index].id
-            },
-            accessToken: storeData?.accessToken
-        }
-        console.log(body);
-        await deleteCourseTypeAPI(body).then((res) => {
-            data.courseMetaData.splice(index, 1)
+        if (data.courseMetaData[index]?.id == undefined || data.courseDetailsMetaData[index]?.id == undefined) {
             remove(name)
-            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
-            console.log(storeData);
-            console.log(isCourseEdit);
-            console.log(res);
-        }).catch((error) => {
-            console.log(error);
-        })
+        } else {
+            let body = {
+                data: {
+                    type: deleteFieldName,
+                    courseId: editCourseData.id,
+                    id: deleteFieldName == 'courseDetails' ? data.courseDetailsMetaData[index]?.id : data.courseMetaData[index]?.id
+                },
+                accessToken: storeData?.accessToken
+            }
+            console.log(body);
+            await deleteCourseTypeAPI(body).then((res) => {
+                data.courseMetaData.splice(index, 1)
+                remove(name)
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                console.log(storeData);
+                console.log(isCourseEdit);
+                console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
     }
 
     const onChangeCheckBox = (e, checkboxName) => {
@@ -540,7 +544,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                         <div className={styles.deleteIconWrapper} >
                                                             <div className='flex justify-center items-center h-100'
                                                                 onClick={() => {
-                                                                    if (editCourseData.courseMetaData.length - 1 == 0) return
                                                                     deleteCourseDetails(index, remove, name, "courseMeta")
                                                                 }}>
                                                                 <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} />
@@ -615,7 +618,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                         </FormItem>
                                                         <div className={styles.deleteIconWrapper} >
                                                             <div className='flex justify-center items-center h-100' onClick={() => {
-                                                                if (editCourseData.courseDetailsMetaData.length - 1 == 0) return
                                                                 deleteCourseDetails(index, remove, name, "courseDetails")
                                                             }}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
                                                         </div>
