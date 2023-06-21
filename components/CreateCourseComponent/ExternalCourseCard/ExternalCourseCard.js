@@ -55,13 +55,13 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const onFinish = (values) => {
         setShowLoader(true)
         if (isCourseEdit) {
-            editCourse(values)
+            editCourseCardMetaData(values)
         } else {
-            createCourse(values)
+            createCourseCardMetaData(values)
         }
     };
 
-    const createCourse = async (values) => {
+    const createCourseCardMetaData = async (values) => {
         console.log(values);
         const cardDescription = values.cardDescription
         let courseCardMetadata = values.CourseCardMetaData.map((obj, index) => {
@@ -111,7 +111,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         }
     }
 
-    const editCourse = async (values) => {
+    const editCourseCardMetaData = async (values) => {
         console.log(values);
         const cardDescription = values.cardDescription
 
@@ -140,14 +140,13 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             accessToken: storeData?.accessToken,
             courseId: courseDetail.id
         }
-
         try {
             const updateCourseCardMetaDataReq = updateCourseCardMetaDataAPI(body)
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
+            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
             setShowLoader(false)
-            console.log(updateCardDiscription, updateCourseCardMetaData);
         } catch (error) {
             setShowLoader(false)
             console.log(error);
@@ -162,26 +161,31 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
     const deleteCourseDetails = async (index, remove, name) => {
         let data = { ...courseDetail }
-        console.log(data.CourseCardMetaData[index]);
-        let body = {
-            data: {
-                type: "courseCard",
-                courseId: editCourseData.id,
-                id: data.CourseCardMetaData[index].id
-            },
-            accessToken: storeData?.accessToken
-        }
-
-        await deleteCourseTypeAPI(body).then((res) => {
-            data.CourseCardMetaData.splice(index, 1)
-            setCourseDetail(data)
+        console.log(data.CourseCardMetaData[index].id);
+        if (data.CourseCardMetaData[index].id == undefined) {
             remove(name)
-            setShowLoader(false)
-            console.log(res);
-        }).catch((error) => {
-            setShowLoader(false)
-            console.log(error);
-        })
+        } else {
+            let body = {
+                data: {
+                    type: 'courseCard',
+                    courseId: editCourseData.id,
+                    id: data.CourseCardMetaData[index].id
+                },
+                accessToken: storeData?.accessToken
+            }
+
+            await deleteCourseTypeAPI(body).then((res) => {
+                data.CourseCardMetaData.splice(index, 1)
+                setCourseDetail(data)
+                remove(name)
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                setShowLoader(false)
+                console.log(res);
+            }).catch((error) => {
+                setShowLoader(false)
+                console.log(error);
+            })
+        }
     }
 
     const handleCourseDetailDiscription = (e, fieldname, arrayName, index) => {
