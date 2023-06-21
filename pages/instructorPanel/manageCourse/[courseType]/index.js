@@ -14,14 +14,17 @@ export default function Index() {
     const courseType = router.query.courseType
     const [allPhysicalCourses, setAllPhysicalCourses] = useState([])
     const baseUrl = LinkConst.File_Base_Url2
+    const dispatch = useDispatch();
+    const storeData = useSelector((state) => state?.globalStore);
+
+
 
     const handleRoute = () => {
-        router.push('/instructorPanel/manageCourse/physical/createCourse')
+        router.push(`/instructorPanel/manageCourse/${courseType}/createCourse`)
+
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: {} })
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: false })
     }
-    const dispatch = useDispatch();
-    const storeData = useSelector((state) => state?.globalStore);
 
     useEffect(() => {
         const getAllCourse = async () => {
@@ -50,7 +53,7 @@ export default function Index() {
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
         router.push({
-            pathname: '/instructorPanel/manageCourse/physical/editCourse',
+            pathname: (`/instructorPanel/manageCourse/${courseType}/editCourse`),
             query: { courseId: course?.id }
         })
     }

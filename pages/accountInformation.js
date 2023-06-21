@@ -69,9 +69,6 @@ export default function AccountInformation() {
         }
     }, [email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
 
-
-
-
     const subContentData = [
         {
             subTitle: 'رقم الجوال',
@@ -169,7 +166,6 @@ export default function AccountInformation() {
                 }).catch(error => {
                     setShowLoader(false)
                     console.log("error :", error);
-
                 })
             }
             else {
