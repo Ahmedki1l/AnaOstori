@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
 
-const Appointments = ({ courseId }) => {
+const Appointments = ({ courseId, courseType }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
@@ -25,7 +25,7 @@ const Appointments = ({ courseId }) => {
     const [allAppointments, setAllAppointments] = useState([])
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-
+    console.log(courseId);
 
     const instructor = instructorList?.map((obj) => {
         return {
@@ -44,22 +44,22 @@ const Appointments = ({ courseId }) => {
     };
 
     const onFinish = async (values) => {
-
-        console.log(values, 47);
+        console.log(values);
         values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
-        values.courseId = '74e845ef-ef1a-4e05-9f80-1ef682eaa4c3';
-        values.numberOfSeats = '0';
-        console.log(values, 54);
+        values.courseId = courseId
+        values.numberOfSeats = '0'
+        if (!values.gender) values.gender = 'mix'
+        console.log(values, 54)
 
-        let body = {
-            data: values,
-            accessToken: storeData?.accessToken,
-            availabilityId: editAvailability?.id
-        }
         if (isAvailabilityEdit) {
+            let body = {
+                data: values,
+                accessToken: storeData?.accessToken,
+                availabilityId: editAvailability?.id
+            }
             await editAvailabilityAPI(body).then((res) => {
                 console.log(res);
                 setIsModalOpen(false)
@@ -68,6 +68,10 @@ const Appointments = ({ courseId }) => {
                 console.log(error);
             })
         } else {
+            let body = {
+                data: values,
+                accessToken: storeData?.accessToken,
+            }
             await createCourseAvailabilityAPI(body).then((res) => {
                 console.log(res);
                 setIsModalOpen(false)
@@ -82,10 +86,11 @@ const Appointments = ({ courseId }) => {
 
     const getAllAvailability = async () => {
         let body = {
+            courseId: courseId,
             accessToken: storeData?.accessToken,
-            // courseId: courseId
-            courseId: "74e845ef-ef1a-4e05-9f80-1ef682eaa4c3"
+            // courseId: "74e845ef-ef1a-4e05-9f80-1ef682eaa4c3"
         }
+        console.log(body);
         await getAllAvailabilityAPI(body).then((res) => {
             console.log(res);
             setAllAppointments(res?.data)
@@ -152,6 +157,8 @@ const Appointments = ({ courseId }) => {
                                                 <div className={styles.genderDetails}>
                                                     {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} />}
                                                     {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} />}
+                                                    {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
+
                                                     <span className='pr-1'>{appointment.gender == "male" ? "ولد" : "بنت"}</span>
                                                 </div><br />
                                                 <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
@@ -207,6 +214,7 @@ const Appointments = ({ courseId }) => {
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'instructorId'}
+                                rules={[{ required: true, message: "اختر المدرب" }]}
                             >
                                 <Select
                                     fontSize={16}
@@ -216,20 +224,24 @@ const Appointments = ({ courseId }) => {
                                     OptionData={instructor}
                                 />
                             </FormItem>
-                            <FormItem
-                                name={'gender'}
-                            >
-                                <Select
-                                    fontSize={16}
-                                    width={352}
-                                    height={40}
-                                    placeholder="اختر الجنس"
-                                    OptionData={genders}
-                                />
-                            </FormItem>
+                            {courseType == 'physical' &&
+                                <FormItem
+                                    name={'gender'}
+                                    rules={[{ required: true, message: "" }]}
+                                >
+                                    <Select
+                                        fontSize={16}
+                                        width={352}
+                                        height={40}
+                                        placeholder="اختر الجنس"
+                                        OptionData={genders}
+                                    />
+                                </FormItem>
+                            }
                             <div className='flex'>
                                 <FormItem
                                     name={'dateFrom'}
+                                    rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
                                 >
                                     <DatePicker
                                         format={'YYYY-MM-DD'}
@@ -242,6 +254,7 @@ const Appointments = ({ courseId }) => {
                                 </FormItem>
                                 <FormItem
                                     name={'dateTo'}
+                                    rules={[{ required: true, message: "ادخل تاريخ النهاية" }]}
                                 >
                                     <DatePicker
                                         format={'YYYY-MM-DD'}
@@ -256,6 +269,7 @@ const Appointments = ({ courseId }) => {
                             <div className='flex'>
                                 <FormItem
                                     name={'timeFrom'}
+                                    rules={[{ required: true, message: "ادخل ساعة البداية " }]}
                                 >
                                     <DatePicker
                                         width={172}
@@ -267,6 +281,7 @@ const Appointments = ({ courseId }) => {
                                 </FormItem>
                                 <FormItem
                                     name={'timeTo'}
+                                    rules={[{ required: true, message: "ادخل ساعة النهاية" }]}
                                 >
                                     <DatePicker
                                         width={172}
@@ -280,6 +295,7 @@ const Appointments = ({ courseId }) => {
                             <div className='flex'>
                                 <FormItem
                                     name={'locationName'}
+                                    rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                 >
                                     <Input
                                         fontSize={16}
@@ -290,6 +306,7 @@ const Appointments = ({ courseId }) => {
                                 </FormItem>
                                 <FormItem
                                     name={'location'}
+                                    rules={[{ required: true, message: "ادخل المكان (نص)" }]}
                                 >
                                     <Input
                                         fontSize={16}
@@ -301,6 +318,7 @@ const Appointments = ({ courseId }) => {
                             </div>
                             <FormItem
                                 name={'maxNumberOfSeats'}
+                                rules={[{ required: true, message: "ادخل عدد المقاعد" }]}
                             >
                                 <Input
                                     fontSize={16}

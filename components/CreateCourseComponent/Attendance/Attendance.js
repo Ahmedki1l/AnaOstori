@@ -13,6 +13,7 @@ export default function Attendance(props) {
     const [attendanceKey, setAttendanceKey] = useState("")
     const [extendedHead, setExtendedHead] = useState(true)
     const courseId = props.courseId
+    const courseType = props.courseType
 
 
 

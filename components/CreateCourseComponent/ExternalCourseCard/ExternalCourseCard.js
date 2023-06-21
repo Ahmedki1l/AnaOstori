@@ -10,6 +10,9 @@ import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaDataAPI } from '../../../services/apisService'
 import { updateCourseDetailsAPI } from '../../../services/apisService';
+import Image from 'next/image';
+import loader from '../../../public/icons/loader.svg'
+
 
 
 const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
@@ -18,6 +21,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
     const [courseDetail, setCourseDetail] = useState(isCourseEdit ? editCourseData : createCourseApiRes)
+    const [showLoader, setShowLoader] = useState(false);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
@@ -49,6 +53,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     }
 
     const onFinish = (values) => {
+        setShowLoader(true)
         if (isCourseEdit) {
             editCourseCardMetaData(values)
         } else {
@@ -91,10 +96,11 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
             const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
-
+            setShowLoader(false)
             setSelectedItem(3)
             form.resetFields()
         } catch (error) {
+            setShowLoader(false)
             console.log(error);
             if (error?.response?.status == 401) {
                 signOutUser()
@@ -140,8 +146,9 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
-
+            setShowLoader(false)
         } catch (error) {
+            setShowLoader(false)
             console.log(error);
             if (error?.response?.status == 401) {
                 signOutUser()
@@ -172,8 +179,10 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                 setCourseDetail(data)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                setShowLoader(false)
                 console.log(res);
             }).catch((error) => {
+                setShowLoader(false)
                 console.log(error);
             })
         }
@@ -301,7 +310,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
                             <FormItem>
                                 <div className={styles.saveCourseBtnBox}>
-                                    <button className='primarySolidBtn' htmltype='submit' >حفظ</button>
+                                    <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
                                 </div>
                             </FormItem>
                         </div>

@@ -13,6 +13,9 @@ import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCour
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
+import Image from 'next/image'
+import loader from '../../../public/icons/loader.svg'
+
 
 const { Option } = Select;
 
@@ -58,9 +61,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [discountedPrice, setDiscountedPrice] = useState(false)
     const [groupDiscountEligible, setGroupDiscountEligible] = useState(false)
     const [newcreatedCourse, setNewCreatedCourse] = useState()
+    const [showLoader, setShowLoader] = useState(false);
     const [courseForm] = Form.useForm();
     const dispatch = useDispatch();
 
+    console.log(isCourseEdit);
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -85,6 +90,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     })
 
     const onFinishCreateCourse = async (values) => {
+        setShowLoader(true)
         if (isCourseEdit) {
             editCourse(values)
         } else {
@@ -92,7 +98,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
+
     const createCourse = async (values) => {
+        setShowExtraNavItem(false)
         if (!showCourseMetaDataFields) {
             values.pictureKey = imageUploadResponceData?.key,
                 values.pictureBucket = imageUploadResponceData?.bucket,
@@ -108,12 +116,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 accessToken: storeData?.accessToken
             }
             await createCourseByInstructorAPI(body).then((res) => {
-                setShowExtraNavItem(true)
+                setShowExtraNavItem(false)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
                 setNewCreatedCourse(res.data)
+                setShowLoader(false)
             }).catch((error) => {
                 console.log(error);
+                setShowLoader(false)
                 if (error?.response?.status == 401) {
                     signOutUser()
                     dispatch({
@@ -151,8 +161,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 const [courseDetailsMetaData, courseMetaData] = await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
+                setShowLoader(false)
                 courseForm.resetFields()
             } catch (error) {
+                setShowLoader(false)
                 console.log(error);
                 if (error?.response?.status == 401) {
                     signOutUser()
@@ -221,10 +233,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(body3)
 
             const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
-            console.log(editCourse, editCourseMetaData, editCourseDetailsMetadata);
+
+            console.log(editCourseMetaData);
             toast.success("تم تحديث تفاصيل الدورة بنجاح")
+            setShowLoader(false)
         }
         catch (error) {
+            setShowLoader(false)
             console.log(error);
             if (error?.response?.status == 401) {
                 signOutUser()
@@ -238,6 +253,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     }
 
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
+        setShowLoader(true)
         let data = { ...editCourseData }
         console.log(data);
         console.log(data.courseMetaData[index]);
@@ -258,10 +274,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data.courseMetaData.splice(index, 1)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                setShowLoader(false)
                 console.log(storeData);
                 console.log(isCourseEdit);
                 console.log(res);
             }).catch((error) => {
+                setShowLoader(false)
                 console.log(error);
             })
         }
@@ -275,6 +293,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             setGroupDiscountEligible(e.target.checked)
         }
     }
+    // const handleCourseDetails = () => {
+    //     setShowLoader(true)
+    // }
 
     return (
         <div>
@@ -632,7 +653,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         <div className="w-[95%] p-6" >
                             <div className='flex'>
                                 <div className={styles.saveCourseBtnBox} >
-                                    {<button className={`primarySolidBtn `} htmltype='submit'>حفظ</button>}
+                                    <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
                                 </div>
                                 <div className={`${styles.saveCourseBtnBox} mr-2`}>
                                     <button className={`primaryStrockedBtn`} >نشر الدورة</button>
@@ -645,5 +666,4 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         </div >
     )
 }
-
 export default CourseInfo
