@@ -25,7 +25,6 @@ const Appointments = ({ courseId, courseType }) => {
     const [allAppointments, setAllAppointments] = useState([])
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    console.log(courseId);
 
     const instructor = instructorList?.map((obj) => {
         return {
@@ -44,7 +43,6 @@ const Appointments = ({ courseId, courseType }) => {
     };
 
     const onFinish = async (values) => {
-        console.log(values);
         values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
@@ -52,7 +50,6 @@ const Appointments = ({ courseId, courseType }) => {
         values.courseId = courseId
         values.numberOfSeats = '0'
         if (!values.gender) values.gender = 'mix'
-        console.log(values, 54)
 
         if (isAvailabilityEdit) {
             let body = {
@@ -61,7 +58,6 @@ const Appointments = ({ courseId, courseType }) => {
                 availabilityId: editAvailability?.id
             }
             await editAvailabilityAPI(body).then((res) => {
-                console.log(res);
                 setIsModalOpen(false)
                 getAllAvailability()
             }).catch((error) => {
@@ -73,14 +69,12 @@ const Appointments = ({ courseId, courseType }) => {
                 accessToken: storeData?.accessToken,
             }
             await createCourseAvailabilityAPI(body).then((res) => {
-                console.log(res);
                 setIsModalOpen(false)
                 getAllAvailability()
             }).catch((error) => {
                 console.log(error);
             })
         }
-        console.log(values);
         form.resetFields()
     }
 
@@ -90,9 +84,7 @@ const Appointments = ({ courseId, courseType }) => {
             accessToken: storeData?.accessToken,
             // courseId: "74e845ef-ef1a-4e05-9f80-1ef682eaa4c3"
         }
-        console.log(body);
         await getAllAvailabilityAPI(body).then((res) => {
-            console.log(res);
             setAllAppointments(res?.data)
             dispatch({
                 type: 'SET_AllAVAILABILITY',
