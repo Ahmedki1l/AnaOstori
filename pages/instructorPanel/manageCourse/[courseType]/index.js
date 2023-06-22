@@ -33,7 +33,6 @@ export default function Index() {
                 courseType: courseType
             }
             await getAllCourseByInstructor(body).then(res => {
-                console.log(res);
                 setAllPhysicalCourses(res?.data)
             }).catch(error => {
                 console.log(error);
