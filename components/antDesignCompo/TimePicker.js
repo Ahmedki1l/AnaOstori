@@ -26,15 +26,7 @@ const StyledDatePicker = styled(AntdDatePicker)`
     right:-6px;
   }
 `;
-const onChange = (date, dateString) => {
-  console.log(date, dateString);
-};
-const disabledDate = (current) => {
-  return current < dayjs().endOf('day');
-};
-
-const DatePicker = ({
-  OptionData,
+const TimePicker = ({
   placeholder,
   picker,
   suFFixIconName,
@@ -42,15 +34,13 @@ const DatePicker = ({
 }) => {
   return (
     <StyledDatePicker
-      onChange={onChange}
       placeholder={placeholder}
-      picker={picker}
-      disabledDate={disabledDate}
+      picker={"time"}
       suffixIcon={<AllIconsComponenet height={16} width={16} iconName={suFFixIconName} color={'#00000080'} />}
       {...rest}
     />
   );
 }
 
-export default DatePicker;
+export default TimePicker;
 

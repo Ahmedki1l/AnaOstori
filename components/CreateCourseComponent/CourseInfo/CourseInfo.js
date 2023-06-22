@@ -15,6 +15,7 @@ import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
 import Image from 'next/image'
 import loader from '../../../public/icons/loader.svg'
+import { deleteNullFromObj } from '../../../constants/DataManupulation';
 
 
 const { Option } = Select;
@@ -185,6 +186,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             delete obj.updatedAt
             obj.order = `${index + 1}`
             obj.courseId = editCourseData.id
+            deleteNullFromObj(obj)
             return obj
         })
         let body2 = {
@@ -200,6 +202,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             delete obj.grayedText
             obj.order = `${index + 1}`
             obj.courseId = editCourseData.id
+            deleteNullFromObj(obj)
             return obj
         })
         let body3 = {
@@ -221,6 +224,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.groupDiscountEligible = groupDiscountEligible;
         values.type = courseType
 
+
         let body1 = {
             data: values,
             courseId: editCourseData.id,
@@ -235,6 +239,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
 
             console.log(editCourseMetaData);
+            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
+
             toast.success("تم تحديث تفاصيل الدورة بنجاح")
             setShowLoader(false)
         }
@@ -258,8 +264,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         console.log(data);
         console.log(data.courseMetaData[index]);
         console.log(data.courseDetailsMetaData[index]);
-        if (data.courseMetaData[index]?.id == undefined || data.courseDetailsMetaData[index]?.id == undefined) {
+
+        if ((deleteFieldName == 'courseMeta' && data.courseMetaData[index]?.id == undefined) || (deleteFieldName == 'courseDetails' && data.courseDetailsMetaData[index]?.id == undefined)) {
             remove(name)
+            setShowLoader(false)
         } else {
             let body = {
                 data: {
@@ -293,9 +301,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             setGroupDiscountEligible(e.target.checked)
         }
     }
-    // const handleCourseDetails = () => {
-    //     setShowLoader(true)
-    // }
 
     return (
         <div>

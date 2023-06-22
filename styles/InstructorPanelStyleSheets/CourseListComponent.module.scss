@@ -50,7 +50,6 @@
 .tableBodyArea {
     font-size: 18px;
     width: 100%;
-    border: 0.7px solid #c3c3c3;
     border-top: none;
     border-radius: 0px 0px 4px 4px;
 }
@@ -88,14 +87,19 @@
     }
 }
 
-.personeDetails,
+.courseNameHeader {
+    font-size: 20px;
+}
+
+.coursePrice {
+    font-size: 12px;
+}
+
 .publishedCourseDetails {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
-
 
 .publishedName {
     margin-right: 3px;

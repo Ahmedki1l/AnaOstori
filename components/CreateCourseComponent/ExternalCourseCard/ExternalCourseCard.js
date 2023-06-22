@@ -12,6 +12,7 @@ import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaD
 import { updateCourseDetailsAPI } from '../../../services/apisService';
 import Image from 'next/image';
 import loader from '../../../public/icons/loader.svg'
+import { deleteNullFromObj } from '../../../constants/DataManupulation';
 
 
 
@@ -94,7 +95,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         try {
             const createCourseCardMetaDataReq = createCourseCardMetaDataAPI(body)
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
-
             const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
             setShowLoader(false)
             setSelectedItem(3)
@@ -118,12 +118,9 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         let CourseCardMetaData = values.CourseCardMetaData.map((obj, index) => {
             delete obj.createdAt
             delete obj.updatedAt
-            for (const key in obj)
-                if (obj[key] == null || obj[key] == undefined || obj[key] == "") {
-                    delete obj[key]
-                }
             obj.order = `${index + 1}`
             obj.courseId = editCourseData.id
+            deleteNullFromObj(obj)
             return obj
         })
         let body = {

@@ -42,10 +42,10 @@ const CourseInitial =
 
 export default function Index(props, accept) {
     const { courseType, courseId } = useRouter().query
-    const [selectedItem, setSelectedItem] = useState(6);
-    const [showExtraNavItem, setShowExtraNavItem] = useState(true)
+    const [selectedItem, setSelectedItem] = useState(1);
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
+    const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
     // const courseId = '65ab9b76-e59f-4a36-a28d-46f18f1383eb'
 
@@ -66,7 +66,7 @@ export default function Index(props, accept) {
                             {showExtraNavItem &&
                                 <>
                                     <p onClick={() => handleItemSelect(2)} className={selectedItem == 2 ? styles.activeItem : ""}>بطاقة الدورة الخارجية</p>
-                                    <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>
+                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
                                     <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>
                                     <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>
                                     <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>
@@ -87,7 +87,7 @@ export default function Index(props, accept) {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
-                        {selectedItem == 3 && <Appointment courseId={courseId} courseType={courseType} />}
+                        {selectedItem == 3 && courseType != "onDemand" && <Appointment courseId={courseId} courseType={courseType} />}
                         {selectedItem == 4 && <TheStudents />}
                         {selectedItem == 5 && <TestsResults />}
                         {selectedItem == 6 && <Attendance courseId={courseId} courseType={courseType} />}
@@ -97,6 +97,5 @@ export default function Index(props, accept) {
         </>
     )
 }
-
 
 
