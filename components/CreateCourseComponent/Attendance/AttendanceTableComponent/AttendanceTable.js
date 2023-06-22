@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
-import styles from './AttendanceTable123.module.scss'
+import styles from './AttendanceTable.module.scss'
 
 
 const typeOfAttendance = ['present', 'absent', 'late', 'excused', 'blank']
