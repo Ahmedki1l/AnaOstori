@@ -13,18 +13,21 @@ import { createCourseAvailabilityAPI, editAvailabilityAPI, getAllAvailabilityAPI
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
+import TimePicker from '../../antDesignCompo/TimePicker';
 
 const Appointments = ({ courseId, courseType }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
+    const [allAppointments, setAllAppointments] = useState([])
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
     const genders = PaymentConst.genders
-    const [allAppointments, setAllAppointments] = useState([])
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const [showSwitchBtn, setShowSwitchBtn] = useState(false)
+
 
     const instructor = instructorList?.map((obj) => {
         return {
@@ -68,6 +71,7 @@ const Appointments = ({ courseId, courseType }) => {
                 data: values,
                 accessToken: storeData?.accessToken,
             }
+            console.log(body);
             await createCourseAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
                 getAllAvailability()
@@ -82,8 +86,8 @@ const Appointments = ({ courseId, courseType }) => {
         let body = {
             courseId: courseId,
             accessToken: storeData?.accessToken,
-            // courseId: "74e845ef-ef1a-4e05-9f80-1ef682eaa4c3"
         }
+        console.log(body, 87);
         await getAllAvailabilityAPI(body).then((res) => {
             setAllAppointments(res?.data)
             dispatch({
@@ -98,6 +102,7 @@ const Appointments = ({ courseId, courseType }) => {
     const editAppointment = (appointment) => {
         console.log(appointment);
         setIsModalOpen(true)
+        setShowSwitchBtn(true)
         setIsAvailabilityEdit(true)
         setEditAvailability(appointment)
         form.setFieldsValue({
@@ -112,14 +117,18 @@ const Appointments = ({ courseId, courseType }) => {
             timeTo: dayjs(appointment?.timeTo, 'HH:mm:ss'),
         });
     }
+
     const handleCreateAvailability = () => {
         setIsModalOpen(true)
+        setShowSwitchBtn(false)
         setIsAvailabilityEdit(false)
     }
+
     const handelModalClose = () => {
         form.resetFields()
         setIsModalOpen(false)
     }
+
     return (
         <div className='maxWidthDefault px-4'>
             <div>
@@ -161,9 +170,11 @@ const Appointments = ({ courseId, courseType }) => {
                                         <td>{appointment.instructor.name}</td>
                                         <td>{fullDate(appointment?.createdAt)}</td>
                                         <td>{fullDate(appointment?.updatedAt)}</td>
-                                        <td className={styles.personeDetails}>
-                                            <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
-                                            <p>30 طالب</p>
+                                        <td>
+                                            <div className={styles.personeDetails}>
+                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                                <p>30 طالب</p>
+                                            </div>
                                         </td>
                                         <td>5 اختبارات</td>
                                         <td>
@@ -219,7 +230,7 @@ const Appointments = ({ courseId, courseType }) => {
                             {courseType == 'physical' &&
                                 <FormItem
                                     name={'gender'}
-                                    rules={[{ required: true, message: "" }]}
+                                    rules={[{ required: true, message: "حدد الجنس" }]}
                                 >
                                     <Select
                                         fontSize={16}
@@ -240,7 +251,6 @@ const Appointments = ({ courseId, courseType }) => {
                                         width={172}
                                         height={40}
                                         placeholder="تاريخ النهاية"
-                                        picker=""
                                         suFFixIconName="calander"
                                     />
                                 </FormItem>
@@ -253,7 +263,6 @@ const Appointments = ({ courseId, courseType }) => {
                                         width={172}
                                         height={40}
                                         placeholder="تاريخ البداية"
-                                        picker=""
                                         suFFixIconName="calander"
                                     />
                                 </FormItem>
@@ -263,7 +272,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     name={'timeFrom'}
                                     rules={[{ required: true, message: "ادخل ساعة البداية " }]}
                                 >
-                                    <DatePicker
+                                    <TimePicker
                                         width={172}
                                         height={40}
                                         placeholder="إلى الساعة"
@@ -275,7 +284,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     name={'timeTo'}
                                     rules={[{ required: true, message: "ادخل ساعة النهاية" }]}
                                 >
-                                    <DatePicker
+                                    <TimePicker
                                         width={172}
                                         height={40}
                                         placeholder="من الساعة"
@@ -319,10 +328,10 @@ const Appointments = ({ courseId, courseType }) => {
                                     placeholder="عدد المقاعد"
                                 />
                             </FormItem>
-                            <div className='flex items-center'>
+                            {showSwitchBtn && <div className='flex items-center'>
                                 <Switch defaultChecked onChange={onChange}></Switch>
                                 <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
-                            </div>
+                            </div>}
                         </div>
                         <div className={styles.createAppointmentBtnBox}>
                             <button key='modalFooterBtn' className={styles.construction} type={'submit'} >إنشاء</button>

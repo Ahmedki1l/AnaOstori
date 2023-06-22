@@ -18,7 +18,6 @@ export default function Index() {
     const storeData = useSelector((state) => state?.globalStore);
 
 
-
     const handleRoute = () => {
         router.push(`/instructorPanel/manageCourse/${courseType}/createCourse`)
 
@@ -91,25 +90,30 @@ export default function Index() {
                                                     {/* <Image src={props?.url ? props?.url : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority /> */}
                                                 </div>
                                                 <div className={styles.skillCourseDetails}>
-                                                    <p className={`fontBold`}>{course.name}</p>
-                                                    <p>{course?.price} ر.س للشخص</p>
-                                                    {course?.groupDiscountEligible ?
-                                                        <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
-                                                        :
-                                                        <p>{course.price * 2} ر.س شخصين ، {course.price * 3} ر.س لـ 3 اشخاص او اكثر</p>
-                                                    }
+                                                    <p className={`fontBold ${styles.courseNameHeader}`}>{course.name}</p>
+                                                    <div className={styles.coursePrice}>   <p>{course?.price} ر.س للشخص</p>
+                                                        {course?.groupDiscountEligible ?
+                                                            <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
+                                                            :
+                                                            <p>{course.price * 2} ر.س شخصين ، {course.price * 3} ر.س لـ 3 اشخاص او اكثر</p>
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className={styles.publishedCourseDetails}>
-                                            <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
-                                            <p className={styles.publishedName}> منشور</p>
+                                        <td>
+                                            <div className={styles.publishedCourseDetails}>
+                                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
+                                                <p className={styles.publishedName}> منشور</p>
+                                            </div>
                                         </td>
                                         <td>{fullDate(course.createdAt)}</td>
                                         <td>{fullDate(course.updatedAt)}</td>
-                                        <td className={styles.personeDetails}>
-                                            <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
-                                            <p>30 طالب</p>
+                                        <td>
+                                            <div className={styles.publishedCourseDetails} >
+                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                                <p>30 طالب</p>
+                                            </div>
                                         </td>
                                         <td>
                                             <div onClick={() => handleEditCourse(course)}>

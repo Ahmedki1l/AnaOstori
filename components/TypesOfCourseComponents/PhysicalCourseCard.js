@@ -41,7 +41,7 @@ export default function PhysicalCourseCard(props) {
 
 	const coverImgUrl = courseDetail.pictureKey ? `${imageBaseUrl}/${courseDetail.pictureKey}` : ""
 
-
+	console.log(courseDetail.pictureKey);
 
 	return (
 		<div className={styles.typeOfCourseCardWrapper}>
