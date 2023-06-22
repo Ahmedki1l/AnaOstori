@@ -4,6 +4,13 @@ import styles from './AttendanceTable.module.scss'
 
 
 const typeOfAttendance = ['present', 'absent', 'late', 'excused', 'blank']
+const extendedAttendanceDetailsObject = {
+    date: '01 May',
+    present: false,
+    absent: false,
+    late: false,
+    excused: false,
+}
 
 export default function AttendanceTable() {
 
@@ -375,19 +382,87 @@ export default function AttendanceTable() {
     ]
 
     const [studentAttendanceList, setStudentAttendanceList] = useState(InitialStudentAttendanceList)
-    const [selectedDay, setSelectedDay] = useState('')
+    const [selectedDay, setSelectedDay] = useState(undefined)
 
-    const handelDaySelection = (index) => {
-        console.log(index);
+    const [presentIcon, setPresentIcon] = useState(false)
+    const [absentIcon, setAbsentIcon] = useState(false)
+    const [lateIcon, setLateIcon] = useState(false)
+    const [excusedIcon, setExcusedIcon] = useState(false)
+
+
+
+    const handelDaySelection = (index, date) => {
+        console.log(index, date);
         if (selectedDay == index) {
-            setSelectedDay('')
+            setSelectedDay(undefined)
         } else {
             setSelectedDay(index)
+            let data = [...studentAttendanceList]
+            for (let i = 0; i < data.length; i++) {
+                const student = data[i];
+                for (let j = 0; j < student.attendanceDetails.length; j++) {
+                    if (j == index) {
+                        const extendedObj = {
+                            date: date,
+                            present: student.attendanceDetails[j].attendanceType == 'present' ? true : false,
+                            absent: student.attendanceDetails[j].attendanceType == 'absent' ? true : false,
+                            late: student.attendanceDetails[j].attendanceType == 'late' ? true : false,
+                            excused: student.attendanceDetails[j].attendanceType == 'excused' ? true : false,
+                        }
+                        data[i].attendanceDetails[j] = { ...extendedObj }
+                    }
+                }
+            }
+            console.log(data);
+            setStudentAttendanceList(data)
         }
     }
 
-    const changeStatusForIndividualType = (type) => {
-
+    const changeStatusForIndividualType = (type, studentIndex, dayIndex) => {
+        console.log(type, studentIndex, dayIndex);
+        let tempStudentAttendanceList = [...studentAttendanceList]
+        if (type == 'present') {
+            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false) {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == true
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
+            } else {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
+            }
+        }
+        if (type == 'absent') {
+            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false) {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == true
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
+            } else {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
+            }
+        }
+        if (type == 'late') {
+            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false) {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == true
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
+            } else {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
+            }
+        }
+        if (type == 'excused') {
+            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false) {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == true
+            } else {
+                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
+            }
+        }
+        console.log(tempStudentAttendanceList);
+        setStudentAttendanceList(tempStudentAttendanceList)
     }
 
     const handelAttendanceTypeChange = (studentIndex, attendanceTypeIndex, attendanceType) => {
@@ -411,7 +486,7 @@ export default function AttendanceTable() {
                             return (
                                 <>
                                     {selectedDay == index ?
-                                        <div className={styles.selectedDateHeadWrapper}>
+                                        <div className={styles.selectedDateHeadWrapper} onClick={() => handelDaySelection(index, student.date)}>
                                             <div className={styles.selectedDateHeadDateSection}>{student.date}</div>
                                             <div className={styles.selectedDateAttendanceTypeSection}>
                                                 <p>حاضر</p>
@@ -421,7 +496,7 @@ export default function AttendanceTable() {
                                             </div>
                                         </div>
                                         :
-                                        <div className={styles.tableOtherColoumHead} key={`TableOtherColoumHead${index}`} onClick={() => handelDaySelection(index)}>
+                                        <div className={styles.tableOtherColoumHead} key={`TableOtherColoumHead${index}`} onClick={() => handelDaySelection(index, student.date)}>
                                             <p>{student.date}</p>
                                         </div>
                                     }
@@ -431,7 +506,7 @@ export default function AttendanceTable() {
                     </div>
                 </div>
                 <div id={'tableBody'}>
-                    {studentAttendanceList.map((student, studentIndex = index) => {
+                    {studentAttendanceList.map((student, studentIndex) => {
                         return (
                             <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
                                 <div className={styles.tableFirstColoumCell} >
@@ -444,26 +519,26 @@ export default function AttendanceTable() {
                                     </div>
                                 </div>
                                 <div className='flex'>
-                                    {student.attendanceDetails.map((item, attendanceTypeIndex = index) => {
+                                    {student.attendanceDetails.map((item, dayIndex) => {
                                         return (
                                             <>
-                                                {selectedDay == attendanceTypeIndex ?
+                                                {selectedDay == dayIndex ?
                                                     <div className={styles.selectedDateAttendanceTypeBodySection}>
-                                                        <div onClick={() => changeStatusForIndividualType('present')}>
-                                                            <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
+                                                            <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                         </div>
-                                                        <div>
-                                                            <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
+                                                            <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                         </div>
-                                                        <div>
-                                                            <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
+                                                            <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                         </div>
-                                                        <div>
-                                                            <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
+                                                            <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                         </div>
                                                     </div>
                                                     :
-                                                    <div className={styles.tableOtherColoumCell} key={`TableOtherColoumCell${attendanceTypeIndex}`} onClick={() => { handelAttendanceTypeChange(studentIndex, attendanceTypeIndex, item.attendanceType) }}>
+                                                    <div className={styles.tableOtherColoumCell} key={`TableOtherColoumCell${dayIndex}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType) }}>
                                                         <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
                                                     </div>
                                                 }
