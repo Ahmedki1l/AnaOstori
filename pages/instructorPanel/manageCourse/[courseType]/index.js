@@ -7,6 +7,7 @@ import * as LinkConst from '../../../../constants/LinkConst';
 import { getAllCourseByInstructor } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
 import { signOutUser } from '../../../../services/fireBaseAuthService'
+import Image from 'next/legacy/image'
 
 export default function Index() {
 
@@ -87,7 +88,7 @@ export default function Index() {
                                         <td>
                                             <div className='flex'>
                                                 <div className={styles.courseInfoImage}>
-                                                    {/* <Image src={props?.url ? props?.url : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority /> */}
+                                                    <Image src={course.pictureKey ? `${baseUrl}/${course.pictureKey}` : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
                                                 </div>
                                                 <div className={styles.skillCourseDetails}>
                                                     <p className={`fontBold ${styles.courseNameHeader}`}>{course.name}</p>

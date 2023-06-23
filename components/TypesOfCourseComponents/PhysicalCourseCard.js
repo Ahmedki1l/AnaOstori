@@ -11,7 +11,6 @@ import useWindowSize from '../../hooks/useWindoSize';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
-
 export default function PhysicalCourseCard(props) {
 
 	const courseDetail = props.courseDetails
@@ -31,7 +30,6 @@ export default function PhysicalCourseCard(props) {
 			router.push(`/${courseDetail.name.replace(/ /g, "-")}/${catagoryName.replace(/ /g, "-")}`)
 		}
 	}
-
 
 	const oneUserPrice = courseDetail?.price
 

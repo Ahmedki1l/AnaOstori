@@ -59,14 +59,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
     const [courseData, setCourseData] = useState(CourseInitial)
     const [imageUploadResponceData, setImageUploadResponceData] = useState();
-    const [discountedPrice, setDiscountedPrice] = useState(false)
-    const [groupDiscountEligible, setGroupDiscountEligible] = useState(false)
+    const [discountedPrice, setDiscountedPrice] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
+    const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.discount != null ? true : false : false)
     const [newcreatedCourse, setNewCreatedCourse] = useState()
     const [showLoader, setShowLoader] = useState(false);
     const [courseForm] = Form.useForm();
     const dispatch = useDispatch();
 
-    console.log(isCourseEdit);
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -445,23 +444,23 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         <div className='flex'>
                             <div>
                                 <FormItem
-                                    name={'priceForTwo'}
+                                    name={'discountForTwo'}
                                     rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
                                     <Input
-                                        value={courseData.price * 2}
+                                        value={courseData.discountForTwo}
                                         placeholder="سعر الدورة لشخصين"
                                     />
                                 </FormItem>
                                 <FormItem
-                                    name={'PriceForThreeorMore'}
+                                    name={'discountForThreeOrMore'}
                                     rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
                                     <Input
-                                        value={courseData.price * 3}
+                                        value={courseData.discountForThreeOrMore}
                                         placeholder="سعر الدورة لثلاثة اشخاص واكثر"
                                     />
                                 </FormItem>
                             </div>
-                            {discountedPrice &&
+                            {/* {discountedPrice &&
                                 <div>
                                     <FormItem
                                         name={'discountForTwo'}
@@ -479,18 +478,20 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                             placeholder="السعر بعد الخصم لثلاثة اشخاص او اكثر"
                                         />
                                     </FormItem>
-                                </div>}
+                                </div>} */}
                         </div>
                     }
                     <FormItem>
                         <CheckBox
                             label={'الدورة تحتوي على خصم'}
+                            defaultChecked={discountedPrice}
                             onChange={(e) => onChangeCheckBox(e, 'discount')}
                         />
                     </FormItem>
                     <FormItem>
                         <CheckBox
                             label={'امكانية التسجيل كمجموعات'}
+                            defaultChecked={groupDiscountEligible}
                             onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
                         />
                     </FormItem>

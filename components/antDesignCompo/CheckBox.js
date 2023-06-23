@@ -12,7 +12,6 @@ const AntdCheckboxStyle = styled(AntdCheckbox)`
     .ant-checkbox-inner{
         width: 26px;
         height: 26px;
-        border:0.5px solid #0000008a;
     }
     .ant-checkbox-inner:after {
         width: 7px;
@@ -20,23 +19,15 @@ const AntdCheckboxStyle = styled(AntdCheckbox)`
         top: 47%;
     }
     .ant-checkbox-wrapper:hover .ant-checkbox-inner {
-        border-color: #0000008a !important;
+        border-color:  #F26722 !important;
     }
     .ant-checkbox:hover .ant-checkbox-inner {
-        border-color: #0000008a !important;
+        border-color:  #F26722 !important;
     }
     .ant-checkbox-checked .ant-checkbox-inner {
-        background-color: #F26722;
-        border-color: #F26722;
+        background-color: #F26722 !important;
+        border-color: #F26722 !important;
     }   
-    .ant-checkbox-wrapper:hover .ant-checkbox-checked .ant-checkbox-inner {
-        border-color: #F26722 !important;
-        background-color: #F26722 !important;
-    }
-    .ant-checkbox:hover .ant-checkbox-checked > .ant-checkbox-inner {
-        border-color: #F26722 !important;
-        background-color: #F26722 !important;
-    }
    
 `
 const CheckBoxLabel = styled('p')`
@@ -46,12 +37,14 @@ const CheckBoxLabel = styled('p')`
 const CheckBox = ({
     label,
     onChange,
+    defaultChecked,
     ...rest
 }) => {
     return (
         <>
             <AntdCheckboxStyle
                 onChange={onChange}
+                defaultChecked={defaultChecked}
                 {...rest}
             >
                 <CheckBoxLabel>{label}</CheckBoxLabel>
