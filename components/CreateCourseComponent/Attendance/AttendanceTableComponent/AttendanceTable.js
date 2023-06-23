@@ -384,16 +384,30 @@ export default function AttendanceTable() {
     const [studentAttendanceList, setStudentAttendanceList] = useState(InitialStudentAttendanceList)
     const [selectedDay, setSelectedDay] = useState(undefined)
 
-    const [presentIcon, setPresentIcon] = useState(false)
-    const [absentIcon, setAbsentIcon] = useState(false)
-    const [lateIcon, setLateIcon] = useState(false)
-    const [excusedIcon, setExcusedIcon] = useState(false)
-
-
-
     const handelDaySelection = (index, date) => {
         console.log(index, date);
         if (selectedDay == index) {
+            let data = [...studentAttendanceList]
+            for (let i = 0; i < data.length; i++) {
+                const student = data[i];
+                for (let j = 0; j < student.attendanceDetails.length; j++) {
+                    if (j == index) {
+                        const extendedObj = student.attendanceDetails[j];
+                        const trueVariables = [];
+                        for (const key in extendedObj) {
+                            if (extendedObj[key] === true) {
+                                trueVariables.push(key);
+                            }
+                        }
+                        const shrinkObj = {
+                            date: date,
+                            attendanceType: trueVariables[0]
+                        }
+                        data[i].attendanceDetails[j] = { ...shrinkObj }
+                    }
+                }
+            }
+            console.log(data);
             setSelectedDay(undefined)
         } else {
             setSelectedDay(index)
@@ -421,47 +435,31 @@ export default function AttendanceTable() {
     const changeStatusForIndividualType = (type, studentIndex, dayIndex) => {
         console.log(type, studentIndex, dayIndex);
         let tempStudentAttendanceList = [...studentAttendanceList]
+        let { present, absent, late, excused } = tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex]
         if (type == 'present') {
-            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false) {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == true
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
-            } else {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
-            }
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present = true
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused = false
         }
         if (type == 'absent') {
-            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false) {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == true
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
-            } else {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
-            }
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent = true
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused = false
         }
         if (type == 'late') {
-            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false) {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == true
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
-            } else {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
-            }
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late = true
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused = false
         }
         if (type == 'excused') {
-            if (tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false) {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late == false
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == true
-            } else {
-                tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused == false
-            }
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].late = false
+            tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused = true
         }
-        console.log(tempStudentAttendanceList);
         setStudentAttendanceList(tempStudentAttendanceList)
     }
 
