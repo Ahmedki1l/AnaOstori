@@ -1,34 +1,33 @@
-.datesWrapper{
+.datesWrapper {
     padding: 2rem;
 }
-.datesText{
-    padding: 1rem 0 ;
+
+.datesText {
+    padding: 1rem 0;
 }
-.datesMainArea{
+
+.datesMainArea {
     display: flex;
     justify-content: space-between;
 }
-.dateBox{
-	width: 410px;
+
+.dateBox {
+    position: relative;
+    width: 410px;
     border: 0.5px solid rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     overflow: hidden;
     margin: 0 1rem 0 0;
 }
-.disableDateBox{
-	background-color: #DEE1E9;
-}
-.dateBoxHeader{
+
+
+.dateBoxHeader {
     height: 80px;
     background-color: #000000;
-	cursor: pointer;
+    cursor: pointer;
 }
-.disableDateBoxHeader{
-	background-color: transparent;
-	border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
-	cursor: not-allowed;
-}
-.dateBoxHeaderText{
+
+.dateBoxHeaderText {
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -36,35 +35,40 @@
     height: 100%;
     font-size: 20px;
 }
-.disableDateBoxHeaderText{
-	color: #000000;
-}
-.list{
+
+
+.list {
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
-    li{
+
+    li {
         display: flex;
         align-items: center;
         margin: 0.7rem;
     }
 }
-.icons{
+
+.icons {
     font-size: 26px;
 }
-.locationIcons{
+
+.locationIcons {
     font-size: 28px;
 }
 
-.listItemText{
+.listItemText {
     font-size: 17px;
     margin: 0 0.7rem 0 0;
 }
-.bottomDiv{
+
+.bottomDiv {
     padding: 0.7rem 1rem;
 }
-.coachName{
+
+.coachName {
     font-size: 20px;
 }
-.restSitsBox{
+
+.restSitsBox {
     background: #ff0000;
     display: flex;
     align-items: center;
@@ -73,44 +77,63 @@
     color: #ffffff;
     top: 0;
     right: 0.5rem;
-    p{
+
+    p {
         font-size: 16px;
         padding: 0 0.3rem;
 
     }
 }
-.disableRestSitsBox{
-	background: #000000;
+
+
+.personIcons {
+    font-size: 1.2rem;
 }
-.personIcons{
-	font-size: 1.2rem;
+
+.fullSeatsIconWrapper {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #ffffff7e;
+    z-index: 10;
+    cursor: not-allowed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (max-width: 640px) {
-	.dateBox{
-		width: 350px;
-	}
-	.dateBoxHeaderText {
-		font-size: 18px;
-	}
-	.listItemText{
-		font-size: 16px;
-	}
-	.icons{
-		font-size: 24px;
-	}
-	.locationIcons{
-		font-size: 26px;
-	}
-	.bottomDiv{
-		padding: 0.4rem 1rem;
-	}
-	.coachName{
-		font-size: 18px;
-	}
-	.restSitsBox{
-		p{
-			font-size: 13px;
-		}
-	}
+    .dateBox {
+        width: 350px;
+    }
+
+    .dateBoxHeaderText {
+        font-size: 18px;
+    }
+
+    .listItemText {
+        font-size: 16px;
+    }
+
+    .icons {
+        font-size: 24px;
+    }
+
+    .locationIcons {
+        font-size: 26px;
+    }
+
+    .bottomDiv {
+        padding: 0.4rem 1rem;
+    }
+
+    .coachName {
+        font-size: 18px;
+    }
+
+    .restSitsBox {
+        p {
+            font-size: 13px;
+        }
+    }
 }

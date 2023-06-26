@@ -34,8 +34,6 @@ export default function VideoThumnail(props) {
 		event.stopPropagation();
 	};
 
-	console.log(`${mediaBaseUrl}/${videoKey}`);
-
 	return (
 		<div className='relative overflow-hidden rounded'>
 			<div className='playIconDiv' onClick={handleClickOpen}>
