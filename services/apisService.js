@@ -79,5 +79,5 @@ export const updateCourseCardMetaDataAPI = (data) => { return instance(data?.acc
 
 export const deleteCourseTypeAPI = (data) => { return instance(data?.accessToken).post(`/course/courseType/delete`, data?.data) }
 
-
+export const getStudentListAPI = (data) => { return instance(data?.accessToken).get(`/attendance/list/${data?.availabilityId}`) }
 

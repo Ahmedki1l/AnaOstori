@@ -65,7 +65,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [showLoader, setShowLoader] = useState(false);
     const [courseForm] = Form.useForm();
     const dispatch = useDispatch();
-
+    const [discountValue, setDiscountValue] = useState()
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -214,14 +214,25 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         console.log("body2", body2);
         console.log("body3", body3);
 
-        delete values.courseMetaData;
-        delete values.courseDetailsMetaData;
+
+        if (groupDiscountEligible == false) {
+            values.discountForThreeOrMore = 0
+            values.discountForTwo = 0
+        }
+
+        if (discountedPrice == false) {
+            values.discount = 0
+        }
 
         values.pictureKey = imageUploadResponceData?.key,
             values.pictureBucket = imageUploadResponceData?.bucket,
             values.pictureMime = imageUploadResponceData?.mime,
-            values.groupDiscountEligible = groupDiscountEligible;
+            values.groupDiscountEligible = groupDiscountEligible
         values.type = courseType
+
+        delete values.discountedPrice
+        delete values.courseMetaData;
+        delete values.courseDetailsMetaData;
 
 
         let body1 = {
@@ -293,13 +304,18 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     }
 
     const onChangeCheckBox = (e, checkboxName) => {
-        if (checkboxName == 'discount') {
-            setDiscountedPrice(e.target.checked)
+        if (checkboxName === 'discount') {
+            setDiscountedPrice(e.target.checked);
+            if (!e.target.checked) {
+                setDiscountValue('');
+            }
+        } else {
+            setGroupDiscountEligible(e.target.checked);
+            if (!e.target.checked) {
+                setDiscountValue('');
+            }
         }
-        else {
-            setGroupDiscountEligible(e.target.checked)
-        }
-    }
+    };
 
     return (
         <div>
@@ -307,7 +323,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 <div className='px-6'>
                     <FormItem
                         name={'name'}
-                        rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}  >
+                        rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}>
                         <Input
                             placeholder="عنوان الدورة"
                             value={courseData.name}
@@ -434,7 +450,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 name={'discount'}
                                 rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
                                 <Input
-                                    value={courseData.discount}
+                                    // value={courseData.discount}
                                     placeholder="السعر بعد الخصم للشخص"
                                 />
                             </FormItem>
@@ -447,7 +463,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     name={'discountForTwo'}
                                     rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
                                     <Input
-                                        value={courseData.discountForTwo}
+                                        // value={courseData.discountForTwo}
                                         placeholder="سعر الدورة لشخصين"
                                     />
                                 </FormItem>
@@ -455,7 +471,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     name={'discountForThreeOrMore'}
                                     rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
                                     <Input
-                                        value={courseData.discountForThreeOrMore}
+                                        // value={courseData.discountForThreeOrMore}
                                         placeholder="سعر الدورة لثلاثة اشخاص واكثر"
                                     />
                                 </FormItem>
@@ -481,14 +497,18 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 </div>} */}
                         </div>
                     }
-                    <FormItem>
+                    <FormItem
+                        name={'discountedPrice'}
+                    >
                         <CheckBox
                             label={'الدورة تحتوي على خصم'}
                             defaultChecked={discountedPrice}
                             onChange={(e) => onChangeCheckBox(e, 'discount')}
                         />
                     </FormItem>
-                    <FormItem>
+                    <FormItem
+                        name={'discountedPrice'}
+                    >
                         <CheckBox
                             label={'امكانية التسجيل كمجموعات'}
                             defaultChecked={groupDiscountEligible}
