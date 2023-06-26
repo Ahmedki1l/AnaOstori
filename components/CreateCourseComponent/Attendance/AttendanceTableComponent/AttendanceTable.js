@@ -500,13 +500,9 @@ export default function AttendanceTable(props) {
                         {studentAttendanceList[0].attendanceDetails.map((student, index) => {
                             return (
                                 <>
-                                    {selectedDay == index ?
-                                        <div className={styles.selectedDateHeadWrapper} >
-                                            <div className={styles.selectedDateHeadDateSection} >
-                                                <div class="cursor-pointer" onClick={() => handelDaySelection(index, student.date)}>
-                                                    {student.date}
-                                                </div>
-                                            </div>
+                                    {selectedDayIndex == index ?
+                                        <div className={styles.selectedDateHeadWrapper} onClick={() => handelDaySelection(index, student.date)}>
+                                            <div className={styles.selectedDateHeadDateSection}>{student.date}</div>
                                             <div className={styles.selectedDateAttendanceTypeSection}>
                                                 <p>حاضر</p>
                                                 <p>متأخر</p>
