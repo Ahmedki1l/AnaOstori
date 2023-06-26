@@ -14,7 +14,6 @@ const extendedAttendanceDetailsObject = {
 
 export default function AttendanceTable(props) {
     const dateArray = props.dateArray
-    console.log(dateArray);
 
     const InitialStudentAttendanceList = [
         {
