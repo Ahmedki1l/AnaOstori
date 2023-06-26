@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import styles from './AttendanceTable.module.scss'
 
@@ -383,11 +383,12 @@ export default function AttendanceTable(props) {
     ]
 
     const [studentAttendanceList, setStudentAttendanceList] = useState(InitialStudentAttendanceList)
-    const [selectedDay, setSelectedDay] = useState(undefined)
+    const [selectedDayIndex, setSelectedDayIndex] = useState(undefined)
+    const [selectedDay, setSelectedDay] = useState('')
 
     const handelDaySelection = (index, date) => {
         console.log(index, date);
-        if (selectedDay == index) {
+        if (selectedDayIndex == index) {
             let data = [...studentAttendanceList]
             for (let i = 0; i < data.length; i++) {
                 const student = data[i];
@@ -409,9 +410,12 @@ export default function AttendanceTable(props) {
                 }
             }
             console.log(data);
-            setSelectedDay(undefined)
+            setSelectedDayIndex(undefined)
+            setSelectedDay(date)
         } else {
-            setSelectedDay(index)
+            setSelectedDayIndex(index)
+            setSelectedDay(date)
+            console.log(index, selectedDay);
             let data = [...studentAttendanceList]
             for (let i = 0; i < data.length; i++) {
                 const student = data[i];
@@ -425,6 +429,19 @@ export default function AttendanceTable(props) {
                             excused: student.attendanceDetails[j].attendanceType == 'excused' ? true : false,
                         }
                         data[i].attendanceDetails[j] = { ...extendedObj }
+                    } else if (j == selectedDayIndex) {
+                        const extendedObj = student.attendanceDetails[j];
+                        const trueVariables = [];
+                        for (const key in extendedObj) {
+                            if (extendedObj[key] === true) {
+                                trueVariables.push(key);
+                            }
+                        }
+                        const shrinkObj = {
+                            date: selectedDay,
+                            attendanceType: trueVariables[0]
+                        }
+                        data[i].attendanceDetails[j] = { ...shrinkObj }
                     }
                 }
             }
@@ -464,7 +481,6 @@ export default function AttendanceTable(props) {
     }
 
     const handelAttendanceTypeChange = (studentIndex, attendanceTypeIndex, attendanceType) => {
-        console.log(studentIndex, attendanceTypeIndex, attendanceType);
         let tempStudentAttendanceList = [...studentAttendanceList]
         let indexOfAttendanceType = typeOfAttendance.indexOf(attendanceType) == typeOfAttendance.length - 1 ? -1 : typeOfAttendance.indexOf(attendanceType)
         tempStudentAttendanceList[studentIndex].attendanceDetails[attendanceTypeIndex].attendanceType = typeOfAttendance[indexOfAttendanceType + 1]
@@ -483,13 +499,9 @@ export default function AttendanceTable(props) {
                         {studentAttendanceList[0].attendanceDetails.map((student, index) => {
                             return (
                                 <>
-                                    {selectedDay == index ?
-                                        <div className={styles.selectedDateHeadWrapper} >
-                                            <div className={styles.selectedDateHeadDateSection} >
-                                                <div class="cursor-pointer" onClick={() => handelDaySelection(index, student.date)}>
-                                                    {student.date}
-                                                </div>
-                                            </div>
+                                    {selectedDayIndex == index ?
+                                        <div className={styles.selectedDateHeadWrapper} onClick={() => handelDaySelection(index, student.date)}>
+                                            <div className={styles.selectedDateHeadDateSection}>{student.date}</div>
                                             <div className={styles.selectedDateAttendanceTypeSection}>
                                                 <p>حاضر</p>
                                                 <p>متأخر</p>
@@ -524,7 +536,7 @@ export default function AttendanceTable(props) {
                                     {student.attendanceDetails.map((item, dayIndex) => {
                                         return (
                                             <>
-                                                {selectedDay == dayIndex ?
+                                                {selectedDayIndex == dayIndex ?
                                                     <div className={styles.selectedDateAttendanceTypeBodySection}>
                                                         <div className={styles.tableOtherColoumCell} >
                                                             <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
