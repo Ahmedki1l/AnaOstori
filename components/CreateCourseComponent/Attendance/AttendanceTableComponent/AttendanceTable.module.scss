@@ -111,7 +111,7 @@
     border-left: 0.3px solid #CACACA;
     border-bottom: 0.3px solid #CACACA;
 
-    div {
+    .attendanceTypeIconWrapper {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -119,7 +119,7 @@
         border-left: 0.3px solid #CACACA;
     }
 
-    div:last-child {
+    .attendanceTypeIconWrapper:last-child {
         border-left: none;
     }
 }

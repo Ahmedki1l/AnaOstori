@@ -59,6 +59,7 @@ import PresentAtTime from './customeIcons/presentIcon'
 import LateAtATime from './customeIcons/lateIcon'
 import AbsentAtATime from './customeIcons/absentAtATime'
 import ExcusedIcon from './customeIcons/excusedIcon'
+import FullSeatsIcon from './customeIcons/fullSeatsIcon'
 
 
 
@@ -122,6 +123,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'late' && <LateAtATime height={height} width={width} color={color} />}
 			{iconName == 'absent' && <AbsentAtATime height={height} width={width} color={color} />}
 			{iconName == 'excused' && <ExcusedIcon height={height} width={width} color={color} />}
+			{iconName == 'fullSeatsIcon' && <FullSeatsIcon height={height} width={width} color={color} />}
+
 
 
 

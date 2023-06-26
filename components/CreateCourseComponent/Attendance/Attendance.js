@@ -21,28 +21,29 @@ export default function Attendance(props) {
     const storeData = useSelector((state) => state?.globalStore);
     const availabilityList = storeData?.availabilityList;
 
-    const getDates = (DateFrom, DateTo) => {
-        var datesArray = [];
-        var currentDate = new Date(DateFrom);
 
-        while (currentDate <= DateTo) {
-            datesArray.push(new Date(currentDate));
+    const getAvailabilityDates = (id) => {
+        const selectedAvailability = availabilityList.find((element) => {
+            return element.id === id;
+        });
+
+        var datesArray = [];
+        let currentDate = new Date(selectedAvailability.dateFrom)
+        let dateTo = new Date(selectedAvailability.dateTo)
+        while (currentDate <= dateTo) {
+            datesArray.push({ date: dayjs(currentDate).format('DD MMMM') });
             currentDate.setDate(currentDate.getDate() + 1);
         }
-        return datesArray;
+        setDateArray(datesArray)
     }
-    var DateFrom = new Date('2023-06-15');
-    var DateTo = new Date('2023-06-20');
-
-    var datesBetween = getDates(DateFrom, DateTo);
-    console.log("datesBetween", datesBetween);
-
 
     const allavailability = availabilityList?.map((obj) => {
         return {
             key: obj.id,
             label: dateRange(obj.dateFrom, obj.dateTo),
             value: obj.id,
+            DateFrom: obj.dateFrom,
+            DateTo: obj.dateTo,
         }
     });
     console.log("allavailability", allavailability);
@@ -60,14 +61,12 @@ export default function Attendance(props) {
         setOpenQR(false);
     }
     const handlSelectAvailability = async (e) => {
-        console.log(e);
         let body = {
             accessToken: storeData?.accessToken,
             availabilityId: "3804ead1-01b5-40b2-a460-b494923260d4"
         }
-        console.log(body, 87);
         await getStudentListAPI(body).then((res) => {
-            console.log(res);
+            getAvailabilityDates(e)
         }).catch((error) => {
             console.log(error);
         })
@@ -108,7 +107,7 @@ export default function Attendance(props) {
                     </Modal>
                 </div>
             </div>
-            <AttendanceTable />
+            <AttendanceTable dateArray={dateArray} />
         </div>
     )
 }

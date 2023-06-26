@@ -12,7 +12,9 @@ const extendedAttendanceDetailsObject = {
     excused: false,
 }
 
-export default function AttendanceTable() {
+export default function AttendanceTable(props) {
+    const dateArray = props.dateArray
+    console.log(dateArray);
 
     const InitialStudentAttendanceList = [
         {
@@ -452,7 +454,6 @@ export default function AttendanceTable() {
     const changeStatusForIndividualType = (type, studentIndex, dayIndex) => {
         console.log(type, studentIndex, dayIndex);
         let tempStudentAttendanceList = [...studentAttendanceList]
-        let { present, absent, late, excused } = tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex]
         if (type == 'present') {
             tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present = true
             tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].absent = false
@@ -510,8 +511,8 @@ export default function AttendanceTable() {
                                             </div>
                                         </div>
                                         :
-                                        <div className={styles.tableOtherColoumHead} key={`TableOtherColoumHead${index}`} onClick={() => handelDaySelection(index, student.date)}>
-                                            <p>{student.date}</p>
+                                        <div className={styles.tableOtherColoumHead} key={`TableOtherColoumHead${index}`}>
+                                            <p class="cursor-pointer" onClick={() => handelDaySelection(index, student.date)}>{student.date}</p>
                                         </div>
                                     }
                                 </>
@@ -538,22 +539,32 @@ export default function AttendanceTable() {
                                             <>
                                                 {selectedDayIndex == dayIndex ?
                                                     <div className={styles.selectedDateAttendanceTypeBodySection}>
-                                                        <div onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
-                                                            <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
                                                         </div>
-                                                        <div onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
-                                                            <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
                                                         </div>
-                                                        <div onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
-                                                            <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
                                                         </div>
-                                                        <div onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
-                                                            <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     :
-                                                    <div className={styles.tableOtherColoumCell} key={`TableOtherColoumCell${dayIndex}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType) }}>
-                                                        <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
+                                                    <div className={styles.tableOtherColoumCell} key={`TableOtherColoumCell${dayIndex}`} >
+                                                        <div class="cursor-pointer" onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType) }}  >
+                                                            <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
+                                                        </div>
                                                     </div>
                                                 }
                                             </>

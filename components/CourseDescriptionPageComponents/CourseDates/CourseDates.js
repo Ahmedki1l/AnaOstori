@@ -36,11 +36,16 @@ export default function CourseDates(props) {
 
 
 	return (
-		<div className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : ''}`}>
-			<div className={`fontBold relative ${styles.dateBoxHeader} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
-				<p className={`${styles.dateBoxHeaderText} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeaderText}` : ''}`}>{startDay} {startDate} {startMonth}</p>
-				{date.numberOfSeats < 4 &&
-					<div className={`absolute ${styles.restSitsBox} ${date.numberOfSeats == 0 ? `${styles.disableRestSitsBox}` : ''}`}>
+		<div className={`${styles.dateBox} `}>
+			{date.numberOfSeats == 0 &&
+				<div className={styles.fullSeatsIconWrapper}>
+					<AllIconsComponenet height={193} width={193} iconName={'fullSeatsIcon'} color={'#000000'} />
+				</div>
+			}
+			<div className={`fontBold relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
+				<p className={`${styles.dateBoxHeaderText} `}>{startDay} {startDate} {startMonth}</p>
+				{(date.numberOfSeats < 4 && date.numberOfSeats > 0) &&
+					<div className={`absolute ${styles.restSitsBox} `}>
 						<PersonIcon className={styles.personIcons} />
 						<p className='fontMedium'>{date.numberOfSeats == 0 ? 'نفذت المقاعد' : date.numberOfSeats == 1 ? "باقي مقعد" : date.numberOfSeats == 2 ? "باقي مقعدين" : "باقي 3 مقاعد"}</p>
 					</div>
