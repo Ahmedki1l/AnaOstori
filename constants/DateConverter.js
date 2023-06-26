@@ -12,6 +12,14 @@ export const dateRange = (dateFrom, dateTo) => {
     )
 }
 
+export const dateWithDay = (date) => {
+    const month = new Date(date).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
+    const dateNumber = new Date(date).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
+    const day = new Date(date).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
+
+    return `${day} ${dateNumber} ${month}`
+}
+
 export const timeDuration = (timeFrom, timeTo) => {
     return (
         <>

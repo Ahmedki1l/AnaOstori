@@ -15,11 +15,8 @@ const AntdCheckboxStyle = styled(AntdCheckbox)`
     }
     .ant-checkbox-inner:after {
         width: 7px;
-        height: 13px;
-        top: 47%;
-    }
-    .ant-checkbox-wrapper:hover .ant-checkbox-inner {
-        border-color:  #F26722 !important;
+        height: 15px;
+        top: 43%;
     }
     .ant-checkbox:hover .ant-checkbox-inner {
         border-color:  #F26722 !important;
@@ -28,7 +25,9 @@ const AntdCheckboxStyle = styled(AntdCheckbox)`
         background-color: #F26722 !important;
         border-color: #F26722 !important;
     }   
-   
+    .ant-checkbox-checked:after{
+        border: #F26722 !important;
+    }
 `
 const CheckBoxLabel = styled('p')`
     font-size: 20px;
