@@ -356,7 +356,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         </InputTextArea>
                     </FormItem>
                     <p className={styles.uploadImageHeader}>صورة الدورة</p>
-                    <div className={styles.imageUploadWrapper}>
+                    <div>
                         <UploadFile
                             setImageUploadResponceData={setImageUploadResponceData}
                             accept={"image"}
@@ -364,7 +364,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         />
                     </div>
                     <p className={styles.uploadImageHeader}>فيديو الدورة</p>
-                    <div className={styles.imageUploadWrapper}>
+                    <div>
                         <UploadFile
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}

@@ -21,7 +21,6 @@
 
 .tableRow {
     td {
-        height: 54px;
         font-size: 18px;
         text-align: center;
         border: 0.7px solid #c3c3c3;
@@ -30,6 +29,7 @@
 }
 
 .requesterDetails {
+    height: 54px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -64,6 +64,10 @@
     margin: 0 auto;
 }
 
+.StudentListImage {
+    margin: 18px 14px;
+}
+
 .studentDetails {
     font-size: 16px;
     color: #2D2E2D;
@@ -88,7 +92,7 @@
 
 .studentTableRow {
     td {
-        height: 70px;
+        height: 61px;
         font-size: 18px;
         text-align: center;
         border: 0.7px solid #c3c3c3;
@@ -97,6 +101,7 @@
 }
 
 .studentTableBodyArea {
+    width: 100%;
     border-radius: 0px 0px 4px 4px;
 }
 

@@ -1,0 +1,50 @@
+@import "../variables.module.scss";
+
+.headerWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.borderBottomNavbar {
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
+}
+
+.createCourseHeaderText {
+    padding: 28px 0 24px 0;
+}
+
+.createCourseBtnBox {
+    width: 105px;
+    height: 36px;
+    margin-left: auto;
+
+    button {
+        padding: 9px 10px !important;
+        font-size: 16px;
+    }
+}
+
+.navItems {
+    font-size: 18px;
+    display: flex;
+
+    p {
+        margin-left: 24px;
+        cursor: pointer;
+    }
+}
+
+.activeItem {
+    color: $primary-color;
+    border-bottom: 2px solid $primary-color;
+}
+
+.bodyWrapper {
+    background: #E5EAFC;
+}
+
+.bodysubWrapper {
+    background-color: #ffffff;
+    border-radius: 4px;
+    padding: 24px 0;
+}

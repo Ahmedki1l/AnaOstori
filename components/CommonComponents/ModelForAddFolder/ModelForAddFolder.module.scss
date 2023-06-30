@@ -1,0 +1,47 @@
+@import "../../../styles/variables.module.scss";
+
+.modalHeader {
+    display: flex;
+    padding: 8px 18px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closebutton {
+    background: none;
+    border: none;
+}
+
+.createappointment {
+    font-size: 18px;
+}
+
+.createAppointmentFields {
+    padding: 14px 18px 0px 0px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.AppointmentFieldBorderBottom {
+    display: flex;
+    padding: 3px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+    padding: 4px 9px 7px 0;
+}
+
+
+.AddFolderBtn {
+    width: 78px;
+    height: 37px;
+    font-size: 16px;
+    color: white;
+    background: #F26722;
+    border: 1px solid #F26722;
+    border-radius: 3px;
+    margin: 7px;
+}
+
+.deleteVideoBtn {
+    margin: 7px;
+    width: 110px;
+    height: 37px;
+}

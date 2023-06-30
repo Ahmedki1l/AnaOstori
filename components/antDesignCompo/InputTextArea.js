@@ -7,10 +7,10 @@ const { TextArea } = AntdInput;
 
 const AntdInputTextAreaStyle = styled(TextArea)`
   ::placeholder {
-    font-size: 20px;
+    font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
     font-family: 'Tajawal-Regular';
   }
-  font-size: 20px;
+  font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
   font-family: 'Tajawal-Regular';
   width:${props => (props.width ? props.width : '317')}px;
   border-radius: 4px;
@@ -31,6 +31,7 @@ const InputTextArea = ({
   disabled,
   width,
   height,
+  fontSize,
   padding,
   ...rest
 
@@ -43,6 +44,7 @@ const InputTextArea = ({
         disabled={disabled}
         height={height}
         width={width}
+        fontSize={fontSize}
         padding={padding}
         {...rest}
       />
