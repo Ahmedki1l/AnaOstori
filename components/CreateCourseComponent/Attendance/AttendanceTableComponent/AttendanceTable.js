@@ -1,394 +1,23 @@
-import React, { useRef, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import styles from './AttendanceTable.module.scss'
+import dayjs from 'dayjs'
 
 
 const typeOfAttendance = ['present', 'absent', 'late', 'excused', 'blank']
-const extendedAttendanceDetailsObject = {
-    date: '01 May',
-    present: false,
-    absent: false,
-    late: false,
-    excused: false,
-}
 
 export default function AttendanceTable(props) {
     const dateArray = props.dateArray
-    console.log(dateArray);
-
-    const InitialStudentAttendanceList = [
-        {
-            studentName: 'Chirag',
-            attendancePercentage: '10',
-            attendanceDetails: [
-                {
-                    date: '01 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '02 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '03 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '04 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '05 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '06 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '07 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'absent'
-                },
-
-            ]
-        },
-        {
-            studentName: 'Hiren',
-            attendancePercentage: '30',
-            attendanceDetails: [
-                {
-                    date: '01 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '02 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '03 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '04 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '05 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '06 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '07 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'blank'
-                },
-
-            ]
-        },
-        {
-            studentName: 'Hitarth',
-            attendancePercentage: '50',
-            attendanceDetails: [
-                {
-                    date: '01 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '02 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '03 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '04 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '05 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '06 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '07 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'late'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'blank'
-                },
-
-            ]
-        },
-        {
-            studentName: 'Anand',
-            attendancePercentage: '5',
-            attendanceDetails: [
-                {
-                    date: '01 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '02 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '03 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '04 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '05 May',
-                    attendanceType: 'present'
-                },
-                {
-                    date: '06 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '07 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '08 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '09 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '10 May',
-                    attendanceType: 'blank'
-                },
-                {
-                    date: '11 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '12 May',
-                    attendanceType: 'absent'
-                },
-                {
-                    date: '13 May',
-                    attendanceType: 'excused'
-                },
-                {
-                    date: '14 May',
-                    attendanceType: 'blank'
-                },
-
-            ]
-        },
-    ]
-
-    const [studentAttendanceList, setStudentAttendanceList] = useState(InitialStudentAttendanceList)
+    const attendanceData = props.attendanceData
+    const [studentAttendanceList, setStudentAttendanceList] = useState(attendanceData)
     const [selectedDayIndex, setSelectedDayIndex] = useState(undefined)
     const [selectedDay, setSelectedDay] = useState('')
+    console.log(studentAttendanceList);
 
     const handelDaySelection = (index, date) => {
-        console.log(index, date);
+        if (dayjs(date).startOf('day') > dayjs(new Date())) {
+            return
+        }
         if (selectedDayIndex == index) {
             let data = [...studentAttendanceList]
             for (let i = 0; i < data.length; i++) {
@@ -404,7 +33,7 @@ export default function AttendanceTable(props) {
                         }
                         const shrinkObj = {
                             date: date,
-                            attendanceType: trueVariables[0]
+                            attendanceType: trueVariables[0] ? trueVariables[0] : 'blank'
                         }
                         data[i].attendanceDetails[j] = { ...shrinkObj }
                     }
@@ -433,21 +62,27 @@ export default function AttendanceTable(props) {
                     } else if (j == selectedDayIndex) {
                         const extendedObj = student.attendanceDetails[j];
                         const trueVariables = [];
+                        let noSelect = 0
                         for (const key in extendedObj) {
                             if (extendedObj[key] === true) {
                                 trueVariables.push(key);
+                            }
+                            if (++noSelect > 4) {
+                                trueVariables.push('blank');
                             }
                         }
                         const shrinkObj = {
                             date: selectedDay,
                             attendanceType: trueVariables[0]
                         }
+                        console.log(shrinkObj);
                         data[i].attendanceDetails[j] = { ...shrinkObj }
                     }
                 }
             }
             console.log(data);
             setStudentAttendanceList(data)
+            props.setUpdatedAttendanceData(data)
         }
     }
 
@@ -479,13 +114,20 @@ export default function AttendanceTable(props) {
             tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].excused = true
         }
         setStudentAttendanceList(tempStudentAttendanceList)
+        props.setUpdatedAttendanceData(tempStudentAttendanceList)
+
     }
 
-    const handelAttendanceTypeChange = (studentIndex, attendanceTypeIndex, attendanceType) => {
+    const handelAttendanceTypeChange = (studentIndex, attendanceTypeIndex, attendanceType, date) => {
+        console.log(date);
+        if (dayjs(date).startOf('day') > dayjs(new Date())) {
+            return
+        }
         let tempStudentAttendanceList = [...studentAttendanceList]
         let indexOfAttendanceType = typeOfAttendance.indexOf(attendanceType) == typeOfAttendance.length - 1 ? -1 : typeOfAttendance.indexOf(attendanceType)
         tempStudentAttendanceList[studentIndex].attendanceDetails[attendanceTypeIndex].attendanceType = typeOfAttendance[indexOfAttendanceType + 1]
         setStudentAttendanceList(tempStudentAttendanceList)
+        props.setUpdatedAttendanceData(tempStudentAttendanceList)
     }
 
     return (
@@ -493,16 +135,18 @@ export default function AttendanceTable(props) {
             <div className={styles.tableSubContainer}>
                 <div className={styles.tableHeadWrraper}>
                     <div className={styles.tableFirstColoumHead}>
-                        <p>الطالب</p>
-                        <p>نسبة الحضور</p>
+                        <div className={styles.tableFirstColoumHeadSubWrapper}>
+                            <p>الطالب</p>
+                            <p>نسبة الحضور</p>
+                        </div>
                     </div>
                     <div className='flex'>
-                        {studentAttendanceList[0].attendanceDetails.map((student, index) => {
+                        {dateArray.map((student, index) => {
                             return (
-                                <>
+                                <Fragment key={`TableOtherColoumHead${index}`}>
                                     {selectedDayIndex == index ?
                                         <div className={styles.selectedDateHeadWrapper} onClick={() => handelDaySelection(index, student.date)}>
-                                            <div className={styles.selectedDateHeadDateSection}>{student.date}</div>
+                                            <div className={styles.selectedDateHeadDateSection}>{dayjs(student.date).format('DD MMMM')}</div>
                                             <div className={styles.selectedDateAttendanceTypeSection}>
                                                 <p>حاضر</p>
                                                 <p>متأخر</p>
@@ -511,11 +155,11 @@ export default function AttendanceTable(props) {
                                             </div>
                                         </div>
                                         :
-                                        <div className={styles.tableOtherColoumHead} key={`TableOtherColoumHead${index}`}>
-                                            <p class="cursor-pointer" onClick={() => handelDaySelection(index, student.date)}>{student.date}</p>
+                                        <div className={`${styles.tableOtherColoumHead} ${dayjs(student.date).startOf('day') > dayjs(new Date()) ? `cursor-not-allowed` : `cursor-pointer`}`}>
+                                            <p onClick={() => handelDaySelection(index, student.date)}>{dayjs(student.date).format('DD MMMM')}</p>
                                         </div>
                                     }
-                                </>
+                                </Fragment>
                             )
                         })}
                     </div>
@@ -536,38 +180,148 @@ export default function AttendanceTable(props) {
                                 <div className='flex'>
                                     {student.attendanceDetails.map((item, dayIndex) => {
                                         return (
-                                            <>
+                                            <Fragment key={`TableOtherColoumCell${dayIndex}`}>
                                                 {selectedDayIndex == dayIndex ?
-                                                    <div className={styles.selectedDateAttendanceTypeBodySection}>
+                                                    <div className={styles.selectedDateAttendanceTypeBodySection} >
                                                         <div className={styles.tableOtherColoumCell} >
-                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
                                                                 <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                             </div>
                                                         </div>
                                                         <div className={styles.tableOtherColoumCell} >
-                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
                                                                 <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                             </div>
                                                         </div>
                                                         <div className={styles.tableOtherColoumCell} >
-                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
                                                                 <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                             </div>
                                                         </div>
                                                         <div className={styles.tableOtherColoumCell} >
-                                                            <div class="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
                                                                 <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                             </div>
                                                         </div>
                                                     </div>
                                                     :
-                                                    <div className={styles.tableOtherColoumCell} key={`TableOtherColoumCell${dayIndex}`} >
-                                                        <div class="cursor-pointer" onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType) }}  >
+                                                    <div className={styles.tableOtherColoumCell}  >
+                                                        <div className={`${dayjs(item.date).startOf('day') > dayjs(new Date()) ? `cursor-not-allowed` : `cursor-pointer`}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType, item.date) }}  >
                                                             <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
                                                         </div>
                                                     </div>
                                                 }
-                                            </>
+                                            </Fragment>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div id={'tableBody'}>
+                    {studentAttendanceList.map((student, studentIndex) => {
+                        return (
+                            <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
+                                <div className={styles.tableFirstColoumCell} >
+                                    <div className='flex items-center px-3'>
+                                        <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                        <div className='pr-3'><p>{student.studentName}</p></div>
+                                    </div>
+                                    <div className={styles.studentPercantageBox}>
+                                        <p>{student.attendancePercentage}%</p>
+                                    </div>
+                                </div>
+                                <div className='flex'>
+                                    {student.attendanceDetails.map((item, dayIndex) => {
+                                        return (
+                                            <Fragment key={`TableOtherColoumCell${dayIndex}`}>
+                                                {selectedDayIndex == dayIndex ?
+                                                    <div className={styles.selectedDateAttendanceTypeBodySection} >
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className={styles.tableOtherColoumCell}  >
+                                                        <div className={`${dayjs(item.date).startOf('day') > dayjs(new Date()) ? `cursor-not-allowed` : `cursor-pointer`}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType, item.date) }}  >
+                                                            <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </Fragment>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div id={'tableBody'}>
+                    {studentAttendanceList.map((student, studentIndex) => {
+                        return (
+                            <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
+                                <div className={styles.tableFirstColoumCell} >
+                                    <div className='flex items-center px-3'>
+                                        <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                        <div className='pr-3'><p>{student.studentName}</p></div>
+                                    </div>
+                                    <div className={styles.studentPercantageBox}>
+                                        <p>{student.attendancePercentage}%</p>
+                                    </div>
+                                </div>
+                                <div className='flex'>
+                                    {student.attendanceDetails.map((item, dayIndex) => {
+                                        return (
+                                            <Fragment key={`TableOtherColoumCell${dayIndex}`}>
+                                                {selectedDayIndex == dayIndex ?
+                                                    <div className={styles.selectedDateAttendanceTypeBodySection} >
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.tableOtherColoumCell} >
+                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
+                                                                <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className={styles.tableOtherColoumCell}  >
+                                                        <div className={`${dayjs(item.date).startOf('day') > dayjs(new Date()) ? `cursor-not-allowed` : `cursor-pointer`}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType, item.date) }}  >
+                                                            <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </Fragment>
                                         )
                                     })}
                                 </div>

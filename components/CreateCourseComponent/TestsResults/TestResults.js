@@ -3,7 +3,7 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { Input } from 'antd'
 
-const TheStudents = () => {
+const TestResults = () => {
 
     const { Search } = Input;
     const onSearch = (value) => console.log(value);
@@ -44,4 +44,4 @@ const TheStudents = () => {
     )
 }
 
-export default TheStudents
+export default TestResults

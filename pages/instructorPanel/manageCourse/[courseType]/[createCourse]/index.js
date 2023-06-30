@@ -40,9 +40,9 @@ const CourseInitial =
 
 
 
-export default function Index(props, accept) {
+export default function Index() {
     const { courseType, courseId } = useRouter().query
-    const [selectedItem, setSelectedItem] = useState(1);
+    const [selectedItem, setSelectedItem] = useState(6);
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)
@@ -88,8 +88,8 @@ export default function Index(props, accept) {
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
                         {selectedItem == 3 && courseType != "onDemand" && <Appointment courseId={courseId} courseType={courseType} />}
-                        {selectedItem == 4 && <TheStudents />}
-                        {selectedItem == 5 && <TestsResults />}
+                        {selectedItem == 4 && <TheStudents courseId={courseId} />}
+                        {selectedItem == 5 && <TestsResults courseId={courseId} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} courseType={courseType} />}
                     </div>
                 </div >

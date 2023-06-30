@@ -69,15 +69,15 @@ export const createCourseCardMetaDataAPI = (data) => { return instance(data?.acc
 export const createCourseDetailsMetaDataAPI = (data) => { return instance(data?.accessToken).post('/course/createCourseDetailsMetaData', data?.data) }
 
 // ********* update Course details APIs ***********//
-
 export const updateCourseDetailsAPI = (data) => { return instance(data?.accessToken).post(`/course/update/${data?.courseId}`, data?.data) }
 export const updateCourseMetaDataAPI = (data) => { return instance(data?.accessToken).post(`/course/courseMetaData/update`, data?.data) }
 export const updateCourseDetailsMetaDataAPI = (data) => { return instance(data?.accessToken).post(`/course/courseDetailsMetaData/update`, data?.data) }
 export const updateCourseCardMetaDataAPI = (data) => { return instance(data?.accessToken).post(`/course/courseCardMetaData/update`, data?.data) }
 
 // ********* delete Course metadata APIs ***********//
-
 export const deleteCourseTypeAPI = (data) => { return instance(data?.accessToken).post(`/course/courseType/delete`, data?.data) }
 
-export const getStudentListAPI = (data) => { return instance(data?.accessToken).get(`/attendance/list/${data?.availabilityId}`) }
-
+// ********* Attendance APIs ***********//
+export const getAttendanceListAPI = (data) => { return instance(data?.accessToken).get(`/attendance/list/${data?.availabilityId}`) }
+export const updateAttendanceDataAPI = (data) => { return instance(data?.accessToken).post(`/attendance/update`, data?.data) }
+export const getStudentListAPI = (data) => { return instance(data?.accessToken).get(`/students/course/${data?.courseId}/availability/${data?.availabilityId} `) }

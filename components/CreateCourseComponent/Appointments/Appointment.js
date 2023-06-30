@@ -1,4 +1,4 @@
-import React, { use, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './Appointment.module.scss'
 import { useState } from 'react';
@@ -89,6 +89,7 @@ const Appointments = ({ courseId, courseType }) => {
         }
         console.log(body, 87);
         await getAllAvailabilityAPI(body).then((res) => {
+            console.log(res);
             setAllAppointments(res?.data)
             dispatch({
                 type: 'SET_AllAVAILABILITY',

@@ -1,0 +1,143 @@
+.tableArea {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableContainer {
+    position: relative;
+    width: 100%;
+    height: calc(109vh - 305px);
+    overflow-x: auto;
+}
+
+
+.tableHeaderArea {
+    top: 0px;
+    position: sticky;
+    height: 48px;
+    background-color: #F4F5F7;
+    overflow: hidden;
+    font-size: 20px;
+}
+
+
+.tableHead1 {
+    width: 35%;
+}
+
+.tableHead2 {
+    width: 25%;
+}
+
+.tableHead3 {
+    width: 20%;
+}
+
+.tableHead4 {
+    width: 20%;
+}
+
+.tableBodyArea {
+    width: 100%;
+    border: 1px solid #00000015;
+    border-radius: 0px 0px 3px 3px;
+    border-top: none;
+}
+
+.noDataManiArea {
+    height: 480px;
+    display: grid;
+    place-content: center;
+}
+
+.raisedcontent {
+    font-size: 20px;
+}
+
+.createCourseBtnBox {
+    width: 107px;
+    height: 36px;
+
+    button {
+        padding: 9px 10px !important;
+        font-size: 16px;
+    }
+}
+
+.tableRow {
+    border: 0.7px solid #c3c3c3;
+    border-top: none;
+
+    td {
+        font-size: 20px;
+        height: 52px;
+        text-align: center;
+    }
+}
+
+.videoFolderList {
+    display: flex;
+    padding-right: 15px;
+    align-items: center;
+}
+
+.numberOfAddedVideoNames {
+    padding: 0px 8px 0px 4px;
+    font-size: 16px;
+}
+
+.numberOfAddedVideo {
+    // padding: 5px 0px;
+    font-size: 12px;
+    color: #2D2E2D;
+}
+
+.videoeventButtons {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    padding: 5px 100px 0px 100px;
+}
+
+.deleteItemsModalHeader {
+    padding: 8px 18px;
+    align-items: center;
+}
+
+.deleteItemsText {
+    font-size: 23px;
+}
+
+.deleteVideoText {
+    padding: 8px 15px;
+    font-size: 16px;
+}
+
+.AppointmentFieldBorderBottom {
+    display: flex;
+    padding: 3px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+    padding: 4px 9px 7px 0;
+}
+
+.AddFolderBtn {
+    width: 170px;
+    height: 40px;
+    font-size: 16px;
+    color: #FF0000;
+    background: #FEE8EA;
+    border: 1px solid #FEE8EA;
+    border-radius: 3px;
+    margin: 7px;
+}
+
+.deleteVideoBtn {
+    margin: 7px;
+    width: 170px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    border: 0.7px solid;
+    border-radius: 3px;
+    background-color: #ffffff;
+}

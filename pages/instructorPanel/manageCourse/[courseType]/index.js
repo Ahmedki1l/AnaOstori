@@ -68,6 +68,9 @@ export default function Index() {
                 </div>
             </div>
             <div>
+                <h1>الفيديوهات</h1>
+            </div>
+            <div>
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
                         <tr>
