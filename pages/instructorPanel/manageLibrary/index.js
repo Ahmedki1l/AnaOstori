@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
+import ModelForAddFolder from '../../../components/CommonComponents/ModelForAddFolder/ModelForAddFolder';
+import ModelForAddItems from '../../../components/CommonComponents/ModelForAddItems/ModelForAddItems';
 import VideosLibrary from '../../../components/ManageLibraryComponent/videosLibrary/videosLibrary';
 import FilesLibrary from '../../../components/ManageLibraryComponent/filesLibrary/filesLibrary';
 import ExamsLibrary from '../../../components/ManageLibraryComponent/examsLibrary/examsLibrary';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/coursePathLibrary/coursePathLibrary';
-import ModelForAddFolder from '../../../components/CommonComponents/ModelForAddFolder/ModelForAddFolder';
-import ModelForAddItems from '../../../components/CommonComponents/ModelForAddItems/ModelForAddItems';
 
 
 function Index() {
