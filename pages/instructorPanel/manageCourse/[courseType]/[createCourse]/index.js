@@ -42,7 +42,7 @@ const CourseInitial =
 
 export default function Index() {
     const { courseType, courseId } = useRouter().query
-    const [selectedItem, setSelectedItem] = useState(6);
+    const [selectedItem, setSelectedItem] = useState(1);
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)

@@ -3,7 +3,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './Appointment.module.scss'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Switch } from 'antd';
+import { Modal } from 'antd';
 import { Form, FormItem } from '../../antDesignCompo/FormItem';
 import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
 import TimePicker from '../../antDesignCompo/TimePicker';
+import Switch from '../../antDesignCompo/Switch';
 
 const Appointments = ({ courseId, courseType }) => {
 
@@ -330,7 +331,7 @@ const Appointments = ({ courseId, courseType }) => {
                                 />
                             </FormItem>
                             {showSwitchBtn && <div className='flex items-center'>
-                                <Switch defaultChecked onChange={onChange}></Switch>
+                                <Switch defaultChecked onChange={onChange} size={'small'}></Switch>
                                 <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
                             </div>}
                         </div>

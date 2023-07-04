@@ -48,6 +48,7 @@ export default function Navbar() {
 	useEffect(() => {
 		const fetchResults = async () => {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
+				console.log(res?.data);
 				setCatagories(res?.data),
 					setCurriculumIds(res?.data)
 			}).catch(error => {
