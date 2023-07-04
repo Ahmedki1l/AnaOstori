@@ -14,7 +14,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 export default function PhysicalCourseCard(props) {
 
 	const courseDetail = props.courseDetails
-	console.log(courseDetail);
 	const isEdit = props.isEdit
 
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible

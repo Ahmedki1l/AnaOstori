@@ -54,6 +54,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
+    console.log(editCourseData);
     const catagories = storeData?.catagories;
     const curriculumIds = storeData?.curriculumIds
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
@@ -66,6 +67,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [courseForm] = Form.useForm();
     const dispatch = useDispatch();
     const [discountValue, setDiscountValue] = useState()
+    const [englishCourse, setEnglishCourse] = useState(false)
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -98,7 +100,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
-
     const createCourse = async (values) => {
         setShowExtraNavItem(false)
         if (!showCourseMetaDataFields) {
@@ -107,6 +108,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 values.pictureMime = imageUploadResponceData?.mime,
                 values.groupDiscountEligible = groupDiscountEligible;
             values.type = courseType
+            values.language = englishCourse ? "en" : "ar"
+            values.published = false
 
             delete values.priceForTwo;
             delete values.PriceForThreeorMore;
@@ -154,7 +157,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 },
                 accessToken: storeData?.accessToken
             }
-            console.log(body1, body2);
             try {
                 const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(body1)
                 const courseMetaDataReq = createCourseMetaDataAPI(body2)
@@ -267,6 +269,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             }
         }
     }
+    const handlepublishedCourse = async () => {
+        let body = {
+            data: { published: true },
+            courseId: editCourseData.id,
+            accessToken: storeData?.accessToken
+        }
+        console.log(body);
+        await updateCourseDetailsAPI(body).then((res) => {
+            console.log(res);
+        })
+    }
 
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
         setShowLoader(true)
@@ -317,6 +330,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     };
 
+    const onChangeCourseChkBox = (e) => {
+        console.log(e.target.checked);
+        setEnglishCourse(e.target.checked)
+    }
+
+
     return (
         <div>
             <Form form={courseForm} onFinish={onFinishCreateCourse} >
@@ -346,6 +365,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             OptionData={curriculum}
                             filterOption={false} />
                     </FormItem>
+                    <FormItem
+                        name={'englishCourse'}
+                    >
+                        <CheckBox
+                            label={' الدورة انجليزية'}
+                            defaultChecked={englishCourse}
+                            onChange={(e) => onChangeCourseChkBox(e)}
+                        />
+                    </FormItem>
+
                     <FormItem
                         name={'shortDescription'}>
                         <InputTextArea
@@ -682,7 +711,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
                                 </div>
                                 <div className={`${styles.saveCourseBtnBox} mr-2`}>
-                                    <button className={`primaryStrockedBtn`} >نشر الدورة</button>
+                                    <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }}>نشر الدورة</button>
                                 </div>
                             </div>
                         </div >

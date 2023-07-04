@@ -4,10 +4,11 @@ import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { useDispatch, useSelector } from 'react-redux'
 import * as LinkConst from '../../../../constants/LinkConst';
-import { getAllCourseByInstructor } from '../../../../services/apisService'
+import { getAllCourseByInstructor, updateCourseDetailsAPI } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
 import { signOutUser } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
+import Switch from '../../../../components/antDesignCompo/Switch'
 
 export default function Index() {
 
@@ -17,7 +18,7 @@ export default function Index() {
     const baseUrl = LinkConst.File_Base_Url2
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
-
+    const [PublishedCourse, setPublishedCourse] = useState(false)
 
     const handleRoute = () => {
         router.push(`/instructorPanel/manageCourse/${courseType}/createCourse`)
@@ -48,7 +49,6 @@ export default function Index() {
     }, [storeData?.accessToken])
 
     const handleEditCourse = (course) => {
-
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
         router.push({
@@ -56,6 +56,17 @@ export default function Index() {
             query: { courseId: course?.id }
         })
     }
+    const onChange = async (checked) => {
+        console.log(`switch to ${checked}`);
+        let body = {
+            data: { published: checked },
+            accessToken: storeData?.accessToken
+        }
+        console.log(body);
+        await updateCourseDetailsAPI(body).then((res) => {
+            console.log(res);
+        })
+    };
 
     return (
         <div className='maxWidthDefault px-4'>
@@ -107,8 +118,8 @@ export default function Index() {
                                         </td>
                                         <td>
                                             <div className={styles.publishedCourseDetails}>
-                                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
-                                                <p className={styles.publishedName}> منشور</p>
+                                                <Switch defaultChecked={course.published} onChange={onChange} size={'small'}></Switch>
+                                                <p style={{ marginRight: '3px' }}> نشر</p>
                                             </div>
                                         </td>
                                         <td>{fullDate(course.createdAt)}</td>

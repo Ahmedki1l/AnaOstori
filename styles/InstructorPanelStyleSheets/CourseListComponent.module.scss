@@ -1,3 +1,5 @@
+@import '../../styles/variables.module.scss';
+
 .createCourseBtnBox {
     width: 107px;
     height: 36px;
@@ -100,6 +102,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .ant-switch.ant-switch-checked {
+        background: #00cf0f;
+    }
 }
 
 .publishedName {
