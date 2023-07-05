@@ -56,15 +56,17 @@ export default function Index() {
             query: { courseId: course?.id }
         })
     }
-    const onChange = async (checked) => {
-        console.log(`switch to ${checked}`);
+    const onChange = async (checked, courseId) => {
         let body = {
             data: { published: checked },
+            courseId: courseId,
             accessToken: storeData?.accessToken
         }
         console.log(body);
         await updateCourseDetailsAPI(body).then((res) => {
             console.log(res);
+        }).catch((error) => {
+            console.log(error)
         })
     };
 
@@ -118,7 +120,7 @@ export default function Index() {
                                         </td>
                                         <td>
                                             <div className={styles.publishedCourseDetails}>
-                                                <Switch defaultChecked={course.published} onChange={onChange} size={'small'}></Switch>
+                                                <Switch defaultChecked={course.published} onChange={(e) => onChange(e, course.id)} size={'small'}></Switch>
                                                 <p style={{ marginRight: '3px' }}> نشر</p>
                                             </div>
                                         </td>
