@@ -227,6 +227,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     height={40}
                                     placeholder="اختر المدرب"
                                     OptionData={instructor}
+                                    mode="multiple"
                                 />
                             </FormItem>
                             {courseType == 'physical' &&
@@ -252,7 +253,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         format={'YYYY-MM-DD'}
                                         width={172}
                                         height={40}
-                                        placeholder="تاريخ النهاية"
+                                        placeholder="تاريخ البداية"
                                         suFFixIconName="calander"
                                     />
                                 </FormItem>
@@ -264,7 +265,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         format={'YYYY-MM-DD'}
                                         width={172}
                                         height={40}
-                                        placeholder="تاريخ البداية"
+                                        placeholder="تاريخ النهاية"
                                         suFFixIconName="calander"
                                     />
                                 </FormItem>
@@ -277,7 +278,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     <TimePicker
                                         width={172}
                                         height={40}
-                                        placeholder="إلى الساعة"
+                                        placeholder="من الساعة"
                                         picker="time"
                                         suFFixIconName="clock"
                                     />
@@ -289,7 +290,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     <TimePicker
                                         width={172}
                                         height={40}
-                                        placeholder="من الساعة"
+                                        placeholder="إلى الساعة"
                                         picker="time"
                                         suFFixIconName="clock"
                                     />
@@ -304,7 +305,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         fontSize={16}
                                         width={172}
                                         height={40}
-                                        placeholder="الرابط"
+                                        placeholder="الموقع"
                                     />
                                 </FormItem>
                                 <FormItem
@@ -315,7 +316,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         fontSize={16}
                                         width={172}
                                         height={40}
-                                        placeholder="الموقع"
+                                        placeholder="الرابط"
                                     />
                                 </FormItem>
                             </div>

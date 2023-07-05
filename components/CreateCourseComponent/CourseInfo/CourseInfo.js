@@ -60,8 +60,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
     const [courseData, setCourseData] = useState(CourseInitial)
     const [imageUploadResponceData, setImageUploadResponceData] = useState();
-    const [discountedPrice, setDiscountedPrice] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
-    const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.discount != null ? true : false : false)
+    const [discountForOne, setDiscountForOne] = useState(isCourseEdit ? editCourseData.discount == editCourseData.price ? false : true : false)
+    const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
     const [newcreatedCourse, setNewCreatedCourse] = useState()
     const [showLoader, setShowLoader] = useState(false);
     const [courseForm] = Form.useForm();
@@ -119,6 +119,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 accessToken: storeData?.accessToken
             }
             await createCourseByInstructorAPI(body).then((res) => {
+                console.log(res.data);
                 setShowExtraNavItem(false)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
@@ -143,14 +144,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 return { ...obj, order: (`${index + 1}`) }
             })
 
-            let body1 = {
+            let courseDetailMetadataBody = {
                 data: {
                     data: courseDetailMetadata,
                     courseId: newcreatedCourse.id
                 },
                 accessToken: storeData?.accessToken
             }
-            let body2 = {
+            let courseMetadataBody = {
                 data: {
                     data: courseMetadata,
                     courseId: newcreatedCourse.id
@@ -158,9 +159,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 accessToken: storeData?.accessToken
             }
             try {
-                const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(body1)
-                const courseMetaDataReq = createCourseMetaDataAPI(body2)
-                const [courseDetailsMetaData, courseMetaData] = await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
+                const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(courseDetailMetadataBody)
+                const courseMetaDataReq = createCourseMetaDataAPI(courseMetadataBody)
+
+                if (courseDetailMetadataBody.data.courseDetailMetadata.length == 0) {
+                    await Promise.all([courseMetaDataReq])
+                } else if (courseMetadataBody.data.courseMetadata.length == 0) {
+                    await Promise.all([courseDetailMetaDataReq])
+                } else {
+                    await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
+                }
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
                 setShowLoader(false)
@@ -190,7 +198,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             deleteNullFromObj(obj)
             return obj
         })
-        let body2 = {
+        const courseMetaDataBody = {
             data: {
                 data: courseMetaData
             },
@@ -206,15 +214,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             deleteNullFromObj(obj)
             return obj
         })
-        let body3 = {
+        const courseDetailsMetaDataBody = {
             data: {
                 data: courseDetailsMetaData,
             },
             accessToken: storeData?.accessToken
         }
-
-        console.log("body2", body2);
-        console.log("body3", body3);
 
 
         if (groupDiscountEligible == false) {
@@ -222,8 +227,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.discountForTwo = 0
         }
 
-        if (discountedPrice == false) {
-            values.discount = 0
+        if (discountForOne == false) {
+            values.discount = editCourseData.price
         }
 
         values.pictureKey = imageUploadResponceData?.key,
@@ -232,27 +237,43 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.groupDiscountEligible = groupDiscountEligible
         values.type = courseType
 
-        delete values.discountedPrice
+        delete values.discountForOne
         delete values.courseMetaData;
         delete values.courseDetailsMetaData;
 
-
-        let body1 = {
+        const courseBody = {
             data: values,
             courseId: editCourseData.id,
             accessToken: storeData?.accessToken
         }
-        console.log("body1", body1);
+        console.log(courseBody);
         try {
-            const editCourseReq = updateCourseDetailsAPI(body1)
-            const editCourseMetadataReq = updateCourseMetaDataAPI(body2)
-            const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(body3)
 
-            const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
+            if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
+                const editCourseReq = updateCourseDetailsAPI(courseBody)
+                const editCourseMetadataReq = updateCourseMetaDataAPI(courseMetaDataBody)
+                const [editCourse, editCourseMetaData] = await Promise.all([editCourseMetadataReq, editCourseReq])
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
 
-            console.log(editCourseMetaData);
-            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
+            } else if (courseMetaDataBody.data.data.length == 0 && courseDetailsMetaDataBody.data.data.length > 0) {
+                const editCourseReq = updateCourseDetailsAPI(courseBody)
+                const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody)
+                const [editCourse, editCourseDetailsMetadata] = await Promise.all([editCourseDetailsMetaDataReq, editCourseReq])
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseDetailsMetadata.data })
 
+            } else if (courseMetaDataBody.data.data.length == 0 && courseDetailsMetaDataBody.data.data.length == 0) {
+                const editCourseReq = updateCourseDetailsAPI(courseBody)
+                const [editCourse] = await Promise.all([editCourseReq])
+
+            } else {
+                const editCourseReq = updateCourseDetailsAPI(courseBody)
+                const editCourseMetadataReq = updateCourseMetaDataAPI(courseMetaDataBody)
+                const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody)
+                const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
+            }
+
+            console.log(editCourseData);
             toast.success("تم تحديث تفاصيل الدورة بنجاح")
             setShowLoader(false)
         }
@@ -285,8 +306,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         setShowLoader(true)
         let data = { ...editCourseData }
         console.log(data);
-        console.log(data.courseMetaData[index]);
-        console.log(data.courseDetailsMetaData[index]);
 
         if ((deleteFieldName == 'courseMeta' && data.courseMetaData[index]?.id == undefined) || (deleteFieldName == 'courseDetails' && data.courseDetailsMetaData[index]?.id == undefined)) {
             remove(name)
@@ -318,11 +337,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
 
     const onChangeCheckBox = (e, checkboxName) => {
         if (checkboxName === 'discount') {
-            setDiscountedPrice(e.target.checked);
+            console.log(checkboxName, e.target.checked);
+            setDiscountForOne(e.target.checked);
             if (!e.target.checked) {
                 setDiscountValue('');
             }
         } else {
+            console.log(checkboxName, e.target.checked);
             setGroupDiscountEligible(e.target.checked);
             if (!e.target.checked) {
                 setDiscountValue('');
@@ -474,7 +495,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 value={courseData.price}
                             />
                         </FormItem>
-                        {discountedPrice &&
+                        {discountForOne &&
                             <FormItem
                                 name={'discount'}
                                 rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
@@ -505,7 +526,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     />
                                 </FormItem>
                             </div>
-                            {/* {discountedPrice &&
+                            {/* {discountForOne &&
                                 <div>
                                     <FormItem
                                         name={'discountForTwo'}
@@ -527,16 +548,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         </div>
                     }
                     <FormItem
-                        name={'discountedPrice'}
+                        name={'discount'}
                     >
                         <CheckBox
                             label={'الدورة تحتوي على خصم'}
-                            defaultChecked={discountedPrice}
+                            defaultChecked={discountForOne}
                             onChange={(e) => onChangeCheckBox(e, 'discount')}
                         />
                     </FormItem>
                     <FormItem
-                        name={'discountedPrice'}
+                        name={'groupDiscountEligible'}
                     >
                         <CheckBox
                             label={'امكانية التسجيل كمجموعات'}
