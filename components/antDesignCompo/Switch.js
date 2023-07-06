@@ -19,9 +19,6 @@ const StyledSwitch = styled(AntdSwitch)`
             background:#00CF0F !important;
         }
     }
-  
-}
-
 `
 const Switch = ({
     size,
