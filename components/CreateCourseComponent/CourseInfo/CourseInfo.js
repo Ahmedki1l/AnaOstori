@@ -17,7 +17,6 @@ import Image from 'next/image'
 import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 
-
 const { Option } = Select;
 
 const CourseInitial =
@@ -54,7 +53,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
-    console.log(editCourseData);
     const catagories = storeData?.catagories;
     const curriculumIds = storeData?.curriculumIds
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
@@ -119,8 +117,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 accessToken: storeData?.accessToken
             }
             await createCourseByInstructorAPI(body).then((res) => {
-                console.log(res.data);
-                setShowExtraNavItem(false)
+                setShowExtraNavItem(true)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
                 setNewCreatedCourse(res.data)
@@ -166,7 +163,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 } else {
                     await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
                 }
-                console.log(courseMetaDataReq, courseDetailMetaDataReq);
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
                 setShowLoader(false)
@@ -185,8 +181,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     }
 
     const editCourse = async (values) => {
-        console.log(values);
-        console.log(editCourseData.courseDetailsMetaData);
 
         let courseMetaData = values.courseMetaData.map((obj, index) => {
             delete obj.createdAt
@@ -244,7 +238,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             courseId: editCourseData.id,
             accessToken: storeData?.accessToken
         }
-        console.log(courseBody);
         try {
 
             if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
@@ -271,7 +264,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
             }
 
-            console.log(editCourseData);
             toast.success("تم تحديث تفاصيل الدورة بنجاح")
             setShowLoader(false)
         }
@@ -294,7 +286,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             courseId: editCourseData.id,
             accessToken: storeData?.accessToken
         }
-        console.log(body);
         await updateCourseDetailsAPI(body).then((res) => {
             console.log(res);
         })
@@ -303,8 +294,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
         setShowLoader(true)
         let data = { ...editCourseData }
-        console.log(data);
-
         if ((deleteFieldName == 'courseMeta' && data.courseMetaData[index]?.id == undefined) || (deleteFieldName == 'courseDetails' && data.courseDetailsMetaData[index]?.id == undefined)) {
             remove(name)
             setShowLoader(false)
@@ -317,15 +306,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 },
                 accessToken: storeData?.accessToken
             }
-            console.log(body);
             await deleteCourseTypeAPI(body).then((res) => {
                 data.courseMetaData.splice(index, 1)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
                 setShowLoader(false)
-                console.log(storeData);
-                console.log(isCourseEdit);
-                console.log(res);
             }).catch((error) => {
                 setShowLoader(false)
                 console.log(error);
@@ -335,13 +320,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
 
     const onChangeCheckBox = (e, checkboxName) => {
         if (checkboxName === 'discount') {
-            console.log(checkboxName, e.target.checked);
             setDiscountForOne(e.target.checked);
             if (!e.target.checked) {
                 setDiscountValue('');
             }
         } else {
-            console.log(checkboxName, e.target.checked);
             setGroupDiscountEligible(e.target.checked);
             if (!e.target.checked) {
                 setDiscountValue('');
@@ -353,7 +336,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         console.log(e.target.checked);
         setEnglishCourse(e.target.checked)
     }
-
 
     return (
         <div>

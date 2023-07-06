@@ -45,10 +45,10 @@ export default function Index() {
     const [selectedItem, setSelectedItem] = useState(1);
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
+    const editCourseData = storeData?.editCourseData;
     const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
-    // const courseId = '65ab9b76-e59f-4a36-a28d-46f18f1383eb'
-
+    const courseName = isCourseEdit ? editCourseData?.name : createCourseApiRes?.name ? createCourseApiRes?.name : undefined
     const handleItemSelect = (id) => {
         setSelectedItem(id)
     }
@@ -58,7 +58,7 @@ export default function Index() {
             <div className={styles.headerWrapper}>
                 <div className='maxWidthDefault px-4'>
                     <h1 className={`head2 ${styles.createCourseHeaderText}`}>
-                        {courseType == "physical" ? "إنشاء دورة حضورية" : courseType == "online" ? "إنشاء دورة مباشرة" : courseType == "onDemand" ? "إنشاء دورة مسجلة" : ""}
+                        {courseName ? courseName : courseType == "physical" ? "إنشاء دورة حضورية" : courseType == "online" ? "إنشاء دورة مباشرة" : "إنشاء دورة مسجلة"}
                     </h1>
                     <div>
                         <div className={styles.navItems}>

@@ -63,7 +63,10 @@ export default function CourseDates(props) {
 				<li>
 					<>
 						{date.numberOfSeats > 5 ?
-							<div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
+							(date.numberOfSeats > 5 && date.numberOfSeats > 0) ?
+								<div className={`${styles.outerCircle} ${styles.greenFlash}`}><div className={styles.innerCircle}></div></div>
+								:
+								<div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
 							: (date.numberOfSeats <= 5 && date.numberOfSeats > 0) ?
 								<div className={`${styles.outerCircle} ${styles.redFlash}`}><div className={styles.innerCircle}></div></div>
 								:

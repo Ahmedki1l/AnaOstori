@@ -2,6 +2,8 @@ import React, { Fragment, useRef, useState } from 'react'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import styles from './AttendanceTable.module.scss'
 import dayjs from 'dayjs'
+import ProfilePicture from '../../../CommonComponents/ProfilePicture'
+import * as LinkConst from '../../../../constants/LinkConst';
 
 
 const typeOfAttendance = ['present', 'absent', 'late', 'excused', 'blank']
@@ -12,7 +14,9 @@ export default function AttendanceTable(props) {
     const [studentAttendanceList, setStudentAttendanceList] = useState(attendanceData)
     const [selectedDayIndex, setSelectedDayIndex] = useState(undefined)
     const [selectedDay, setSelectedDay] = useState('')
-    console.log(studentAttendanceList);
+    const baseUrl = LinkConst.File_Base_Url2
+
+    console.log(attendanceData);
 
     const handelDaySelection = (index, date) => {
         if (dayjs(date).startOf('day') > dayjs(new Date())) {
@@ -166,121 +170,14 @@ export default function AttendanceTable(props) {
                 </div>
                 <div id={'tableBody'}>
                     {studentAttendanceList.map((student, studentIndex) => {
+                        console.log(student);
                         return (
                             <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
                                 <div className={styles.tableFirstColoumCell} >
                                     <div className='flex items-center px-3'>
-                                        <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                        <div className='pr-3'><p>{student.studentName}</p></div>
-                                    </div>
-                                    <div className={styles.studentPercantageBox}>
-                                        <p>{student.attendancePercentage}%</p>
-                                    </div>
-                                </div>
-                                <div className='flex'>
-                                    {student.attendanceDetails.map((item, dayIndex) => {
-                                        return (
-                                            <Fragment key={`TableOtherColoumCell${dayIndex}`}>
-                                                {selectedDayIndex == dayIndex ?
-                                                    <div className={styles.selectedDateAttendanceTypeBodySection} >
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    :
-                                                    <div className={styles.tableOtherColoumCell}  >
-                                                        <div className={`${dayjs(item.date).startOf('day') > dayjs(new Date()) ? `cursor-not-allowed` : `cursor-pointer`}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType, item.date) }}  >
-                                                            <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </Fragment>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-                <div id={'tableBody'}>
-                    {studentAttendanceList.map((student, studentIndex) => {
-                        return (
-                            <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
-                                <div className={styles.tableFirstColoumCell} >
-                                    <div className='flex items-center px-3'>
-                                        <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                        <div className='pr-3'><p>{student.studentName}</p></div>
-                                    </div>
-                                    <div className={styles.studentPercantageBox}>
-                                        <p>{student.attendancePercentage}%</p>
-                                    </div>
-                                </div>
-                                <div className='flex'>
-                                    {student.attendanceDetails.map((item, dayIndex) => {
-                                        return (
-                                            <Fragment key={`TableOtherColoumCell${dayIndex}`}>
-                                                {selectedDayIndex == dayIndex ?
-                                                    <div className={styles.selectedDateAttendanceTypeBodySection} >
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('late', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.late == true ? 'late' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.tableOtherColoumCell} >
-                                                            <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('excused', studentIndex, dayIndex)}>
-                                                                <AllIconsComponenet iconName={item.excused == true ? 'excused' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    :
-                                                    <div className={styles.tableOtherColoumCell}  >
-                                                        <div className={`${dayjs(item.date).startOf('day') > dayjs(new Date()) ? `cursor-not-allowed` : `cursor-pointer`}`} onClick={() => { handelAttendanceTypeChange(studentIndex, dayIndex, item.attendanceType, item.date) }}  >
-                                                            <AllIconsComponenet iconName={item.attendanceType == 'blank' ? 'circleicon' : item.attendanceType} height={34} width={34} color={item.attendanceType == 'blank' ? '#D9D9D9' : ''} />
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </Fragment>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-                <div id={'tableBody'}>
-                    {studentAttendanceList.map((student, studentIndex) => {
-                        return (
-                            <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
-                                <div className={styles.tableFirstColoumCell} >
-                                    <div className='flex items-center px-3'>
-                                        <AllIconsComponenet iconName={'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                        <div>
+                                            <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student.studentAvatarKey == null ? student.studentAvatar : `${baseUrl}/${student.studentAvatarKey}`} />
+                                        </div>
                                         <div className='pr-3'><p>{student.studentName}</p></div>
                                     </div>
                                     <div className={styles.studentPercantageBox}>
