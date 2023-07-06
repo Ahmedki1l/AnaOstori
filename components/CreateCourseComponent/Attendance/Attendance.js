@@ -80,7 +80,7 @@ export default function Attendance(props) {
                 attendancePercentage: '10',
                 attendanceDetails: []
             }
-
+            console.log(studentData);
             console.log(student.attendances);
             const existingDates = student.attendances.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
             for (let i = 0; i < datesArray.length; i++) {
@@ -123,12 +123,12 @@ export default function Attendance(props) {
         let body = {
             accessToken: storeData?.accessToken,
             availabilityId: e,
-            // availabilityId: "3804ead1-01b5-40b2-a460-b494923260d4"
         }
         await getAttendanceListAPI(body).then((res) => {
             console.log(res);
             createAttendanceTableData(e, res.data)
-            setShowAttendanceTable(true)
+            // setShowAttendanceTable(true)
+            setShowAttendanceTable(res.data.length > 0 ? true : false)
         }).catch((error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -212,7 +212,20 @@ export default function Attendance(props) {
                     </div>
                 </div>
             </div>
-            {showAttendanceTable && <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />}
+            {/* {showAttendanceTable && <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />} */}
+            {!showAttendanceTable &&
+                <div className={styles.tableBodyArea}>
+                    <div className={styles.noDataManiArea}>
+                        <div>
+                            <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+                            <p className='fontBold py-2' style={{ fontSize: '20px' }}>مافي طلاب لهذه الفترة</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            {showAttendanceTable &&
+                <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />
+            }
         </div>
     )
 }

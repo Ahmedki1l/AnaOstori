@@ -64,9 +64,12 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	const courseDetail = props.courseDetails ? props.courseDetails : null
+	console.log(courseDetail);
 	const maleDates = props.maleDates
 	const femaleDates = props.femaleDates
 	const mixDates = props.mixDates
+
+	console.log(maleDates, femaleDates, mixDates);
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
@@ -209,7 +212,7 @@ export default function Index(props) {
 					{(screenWidth <= 767) &&
 						<ul id={'header'} className="pr-4" style={{ paddingTop: selectedNavItem == 0 ? `${paddingTop}rem` : '2rem' }}>
 							<h3 className='fontBold pb-4'>تفاصيل ثانية</h3>
-							{courseDetail.courseDetailsMetaData.map((item, index) => {
+							{courseDetail.courseDetailsMetaData && courseDetail.courseDetailsMetaData?.map((item, index) => {
 								return (
 									<li key={`courseDetailsMetaData${index}`} className='flex items-center pb-4 '>
 										<div>
@@ -370,9 +373,7 @@ export default function Index(props) {
 														)
 													})}
 												</ScrollContainer>
-
 												:
-
 												<div>
 													<UserDetailForm1 gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} />
 												</div>

@@ -60,7 +60,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
     const [courseData, setCourseData] = useState(CourseInitial)
     const [imageUploadResponceData, setImageUploadResponceData] = useState();
-    const [discountForOne, setDiscountForOne] = useState(isCourseEdit ? editCourseData.discount == editCourseData.price ? false : true : false)
+    const [discountForOne, setDiscountForOne] = useState(isCourseEdit ? (editCourseData.discount == null || editCourseData.discount == editCourseData.price) ? false : true : false)
     const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
     const [newcreatedCourse, setNewCreatedCourse] = useState()
     const [showLoader, setShowLoader] = useState(false);
@@ -138,12 +138,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         } else {
             let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
                 return { ...obj, order: (`${index + 1}`) }
-
             })
             let courseMetadata = values.courseMetaData.map((obj, index) => {
                 return { ...obj, order: (`${index + 1}`) }
             })
-
             let courseDetailMetadataBody = {
                 data: {
                     data: courseDetailMetadata,
@@ -161,14 +159,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             try {
                 const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(courseDetailMetadataBody)
                 const courseMetaDataReq = createCourseMetaDataAPI(courseMetadataBody)
-
-                if (courseDetailMetadataBody.data.courseDetailMetadata.length == 0) {
+                if (courseDetailMetadataBody.data.data.length == 0) {
                     await Promise.all([courseMetaDataReq])
-                } else if (courseMetadataBody.data.courseMetadata.length == 0) {
+                } else if (courseMetadataBody.data.data.length == 0) {
                     await Promise.all([courseDetailMetaDataReq])
                 } else {
                     await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
                 }
+                console.log(courseMetaDataReq, courseDetailMetaDataReq);
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
                 setShowLoader(false)

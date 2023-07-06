@@ -42,7 +42,7 @@ export default function PhysicalCourseCard(props) {
 
 	return (
 		<div className={styles.typeOfCourseCardWrapper}>
-			<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail, courseDetailsMetaData)}>
+			<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail)}>
 				<CoverImg height={215} url={coverImgUrl} />
 			</div>
 			<div className={styles.detailsBox}>

@@ -77,7 +77,7 @@
 
 .tableBodyArea {
     width: 100%;
-    height: 70px;
+    // height: 70px;
     border-radius: 0px 0px 4px 4px;
 }
 
@@ -119,4 +119,10 @@
     width: 120px;
     align-items: center;
     justify-content: center;
+}
+
+.noDataManiArea {
+    height: 480px;
+    display: grid;
+    place-content: center;
 }
