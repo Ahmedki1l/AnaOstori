@@ -45,7 +45,7 @@ export default function Index() {
             })
         }
         getAllCourse()
-    }, [storeData?.accessToken])
+    }, [storeData?.accessToken, courseType])
 
     const handleEditCourse = (course) => {
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
