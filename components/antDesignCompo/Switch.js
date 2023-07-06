@@ -5,15 +5,7 @@ import { Switch as AntdSwitch } from "antd";
 const StyledSwitch = styled(AntdSwitch)`
     direction: ltr;
 
-    .ant-switch .ant-switch-checked {
-        background: #00CF0F !important;
-
-        &:hover {
-            background: #00CF0F !important;
-        }
-    }
-
-    :where(.css-dev-only-do-not-override-w8mnev).ant-switch .ant-switch-checked {
+    :where(.css-dev-only-do-not-override-w8mnev).ant-switch.ant-switch-checked {
         background:#00CF0F !important;
         &:hover {
             background:#00CF0F !important;
@@ -21,11 +13,13 @@ const StyledSwitch = styled(AntdSwitch)`
     }
 `
 const Switch = ({
+
     size,
     ...rest
 }) => {
     return (
         <StyledSwitch
+            // style={{ backgroundColor: 'orange' }}
             size={size}
             {...rest}
         />
