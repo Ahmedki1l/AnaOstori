@@ -61,6 +61,9 @@ import AbsentAtATime from './customeIcons/absentAtATime'
 import ExcusedIcon from './customeIcons/excusedIcon'
 import FullSeatsIcon from './customeIcons/fullSeatsIcon'
 import FolderIcon from './customeIcons/folderIcon'
+import CalenderStroked from './customeIcons/calenderStrocked'
+import ClockStroked from './customeIcons/clockStroked'
+import LocationStroked from './customeIcons/locationStroked'
 
 
 
@@ -73,7 +76,9 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'whatsapp' && <WhatsApp height={height} width={width} color={color} />}
 			{iconName == 'whatsappFill' && <WhatsAppFill height={height} width={width} color={color} />}
 			{iconName == 'calander' && <Calender height={height} width={width} color={color} />}
+			{iconName == 'calenderStroked' && <CalenderStroked height={height} width={width} color={color} />}
 			{iconName == 'clock' && <Clock height={height} width={width} color={color} />}
+			{iconName == 'clockStroked' && <ClockStroked height={height} width={width} color={color} />}
 			{iconName == 'persone1' && <Persone1 height={height} width={width} color={color} />}
 			{iconName == 'persone2' && <Persone2 height={height} width={width} color={color} />}
 			{iconName == 'mobile' && <Mobile height={height} width={width} color={color} />}
@@ -95,6 +100,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'noData' && <NoData height={height} width={width} color={color} />}
 			{iconName == 'copy' && <Copy height={height} width={width} color={color} />}
 			{iconName == 'location' && <Location height={height} width={width} color={color} />}
+			{iconName == 'locationStroked' && <LocationStroked height={height} width={width} color={color} />}
 			{iconName == 'live' && <Live height={height} width={width} color={color} />}
 			{iconName == 'youtubeIcon' && <YoutubeIcon height={height} width={width} color={color} />}
 			{iconName == 'instaIcon' && <InstaIcon height={height} width={width} color={color} />}
@@ -126,7 +132,6 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'excused' && <ExcusedIcon height={height} width={width} color={color} />}
 			{iconName == 'fullSeatsIcon' && <FullSeatsIcon height={height} width={width} color={color} />}
 			{iconName == 'folderIcon' && <FolderIcon height={height} width={width} color={color} />}
-
 
 
 

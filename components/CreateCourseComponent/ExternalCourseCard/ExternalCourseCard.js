@@ -13,6 +13,7 @@ import { updateCourseDetailsAPI } from '../../../services/apisService';
 import Image from 'next/image';
 import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
+import { signOutUser } from '../../../services/fireBaseAuthService';
 
 
 

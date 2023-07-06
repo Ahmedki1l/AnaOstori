@@ -2,22 +2,13 @@ import styles from './CourseDates.module.scss'
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import * as LinkConst from '../../../constants/LinkConst'
 import Link from 'next/link';
-import Icon from '../../CommonComponents/Icon';
 import useWindowSize from '../../../hooks/useWindoSize';
-
-
-//MI icons
-import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PersonIcon from '@mui/icons-material/Person';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 
 
 export default function CourseDates(props) {
 	const date = props.date
 	const mediaBaseUrl = LinkConst.File_Base_Url2
-
 	const startMonth = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
 	const startDate = new Date(date.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
 	const startDay = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
@@ -44,20 +35,14 @@ export default function CourseDates(props) {
 			}
 			<div className={`fontBold relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
 				<p className={`${styles.dateBoxHeaderText} `}>{startDay} {startDate} {startMonth}</p>
-				{(date.numberOfSeats < 4 && date.numberOfSeats > 0) &&
-					<div className={`absolute ${styles.restSitsBox} `}>
-						<PersonIcon className={styles.personIcons} />
-						<p className='fontMedium'>{date.numberOfSeats == 0 ? 'نفذت المقاعد' : date.numberOfSeats == 1 ? "باقي مقعد" : date.numberOfSeats == 2 ? "باقي مقعدين" : "باقي 3 مقاعد"}</p>
-					</div>
-				}
 			</div>
 			<ul className={styles.list}>
 				<li>
-					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calander'} color={'#000000'} />
+					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderStroked'} color={'#000000'} />
 					<p className={`fontMedium ${styles.listItemText}`}>من {startDay} {startDate} {startMonth} إلى {endDay} {endDate} {endMonth} </p>
 				</li>
 				<li>
-					<WatchLaterIcon className={styles.icons} />
+					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockStroked'} color={'#000000'} />
 					<p className={`fontMedium ${styles.listItemText}`}>من {startTime} إلى {endTime}</p>
 				</li>
 				<li>
@@ -68,19 +53,25 @@ export default function CourseDates(props) {
 						</>
 						:
 						<>
-							<LocationOnIcon className={`${styles.icons} ${styles.locationIcons}`} />
+							<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'locationStroked'} color={'#000000'} />
 							<Link href={date.location ?? ''} target='_blank' className='noUnderlineLink'>
 								<p className={`fontMedium ${styles.listItemText}`}>{date.locationName}</p>
 							</Link>
 						</>
 					}
 				</li>
-				<Link href={coursePlanUrl ?? ""} target='_blank' className='noUnderlineLink'>
-					<li>
-						<SaveAltIcon className={`text-blue-500 ${styles.icons}`} />
-						<p className={`fontMedium ${styles.listItemText}`}>تحميل جدول الدورة</p>
-					</li>
-				</Link>
+				<li>
+					<>
+						{date.numberOfSeats > 5 ?
+							<div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
+							: (date.numberOfSeats <= 5 && date.numberOfSeats > 0) ?
+								<div className={`${styles.outerCircle} ${styles.redFlash}`}><div className={styles.innerCircle}></div></div>
+								:
+								<div className={`${styles.outerCircle} ${styles.red}`}><div className={styles.innerCircle}></div></div>
+						}
+						<p className={`fontMedium ${styles.listItemText}`}>{date.numberOfSeats} مقاعد متبقية</p>
+					</>
+				</li>
 			</ul>
 			<div className={styles.bottomDiv}>
 				<p className={`fontBold ${styles.coachName}`}>المدرب</p>

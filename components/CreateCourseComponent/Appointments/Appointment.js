@@ -52,7 +52,7 @@ const Appointments = ({ courseId, courseType }) => {
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = courseId
-        values.numberOfSeats = '0'
+        values.numberOfSeats = values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
 
         if (isAvailabilityEdit) {
@@ -193,7 +193,7 @@ const Appointments = ({ courseId, courseType }) => {
                 {allAppointments?.length == 0 &&
                     <div className={styles.tableBodyArea}>
                         <div className={styles.noDataManiArea} >
-                            <div className={styles.noDataSubArea} >
+                            <div>
                                 <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
                                 <p className='fontBold py-2' style={{ fontSize: '20px' }}>ما أنشئت أي موعد</p>
                                 <div>
@@ -201,7 +201,7 @@ const Appointments = ({ courseId, courseType }) => {
                                 </div>
                             </div>
                         </div>
-                    </div >
+                    </div>
                 }
                 <Modal
                     className='addAppoinmentModal'
@@ -227,7 +227,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     height={40}
                                     placeholder="اختر المدرب"
                                     OptionData={instructor}
-                                    mode="multiple"
+                                // mode="multiple"
                                 />
                             </FormItem>
                             {courseType == 'physical' &&
