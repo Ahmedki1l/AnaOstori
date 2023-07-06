@@ -13,8 +13,6 @@ import { getStudentListAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { signOutUser } from '../../../services/fireBaseAuthService'
-import Image from 'next/legacy/image'
-import dayjs from 'dayjs';
 import { fullDate } from '../../../constants/DateConverter';
 import * as LinkConst from '../../../constants/LinkConst';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
@@ -60,8 +58,6 @@ const TheStudenet = (props) => {
             accessToken: storeData?.accessToken,
             availabilityId: e,
             courseId: courseId,
-            // availabilityId: "0914b5e6-0976-4ff0-9512-72af7526592b",
-            //  courseId: "65ab9b76-e59f-4a36-a28d-46f18f1383eb",
         }
         console.log(data);
         await getStudentListAPI(data).then((res) => {

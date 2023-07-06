@@ -88,7 +88,6 @@ const Appointments = ({ courseId, courseType }) => {
             courseId: courseId,
             accessToken: storeData?.accessToken,
         }
-        console.log(body, 87);
         await getAllAvailabilityAPI(body).then((res) => {
             console.log(res);
             setAllAppointments(res?.data)
@@ -145,7 +144,6 @@ const Appointments = ({ courseId, courseType }) => {
                             <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead5}`}> الطلاب المسجلين</th>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الاختبارات</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead7}`}>الإجراءات</th>
                         </tr>
                     </thead>
@@ -175,10 +173,9 @@ const Appointments = ({ courseId, courseType }) => {
                                         <td>
                                             <div className={styles.personeDetails}>
                                                 <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
-                                                <p>30 طالب</p>
+                                                <p>{appointment.maxNumberOfSeats - appointment.numberOfSeats} طالب</p>
                                             </div>
                                         </td>
-                                        <td>5 اختبارات</td>
                                         <td>
                                             <div onClick={() => editAppointment(appointment)}>
                                                 <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />

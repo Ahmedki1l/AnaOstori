@@ -18,7 +18,6 @@ export default function Index() {
     const baseUrl = LinkConst.File_Base_Url2
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
-    const [PublishedCourse, setPublishedCourse] = useState(false)
 
     const handleRoute = () => {
         router.push(`/instructorPanel/manageCourse/${courseType}/createCourse`)
@@ -79,9 +78,6 @@ export default function Index() {
                 <div className={styles.createCourseBtnBox}>
                     <button className='primarySolidBtn' onClick={() => handleRoute()}>إنشاء دورة</button>
                 </div>
-            </div>
-            <div>
-                <h1>الفيديوهات</h1>
             </div>
             <div>
                 <table className={styles.tableArea}>

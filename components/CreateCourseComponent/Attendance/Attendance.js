@@ -56,7 +56,6 @@ export default function Attendance(props) {
         setOpenQR(false);
     }
     const createAttendanceTableData = (id, data) => {
-        console.log(data);
         const selectedAvailability = availabilityList.find((element) => {
             return element.id === id;
         });
@@ -74,14 +73,15 @@ export default function Attendance(props) {
 
 
         const attendanceDetailsData = data.map((student, index) => {
+            console.log(student);
             const studentData = {
                 key: `studentAttendance${index}`,
                 studentName: student.firstName,
+                studentAvatar: student.avatar,
+                studentAvatarKey: student.avatarKey,
                 attendancePercentage: '10',
                 attendanceDetails: []
             }
-            console.log(studentData);
-            console.log(student.attendances);
             const existingDates = student.attendances.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
             for (let i = 0; i < datesArray.length; i++) {
                 const date = datesArray[i].date;
@@ -141,7 +141,6 @@ export default function Attendance(props) {
     }
 
     const handleAttendanceSave = async () => {
-        console.log(updatedAttendanceData);
         let body = {
             accessToken: storeData?.accessToken,
             data: { data: [] }
@@ -159,9 +158,7 @@ export default function Attendance(props) {
                 })
             )
         })
-        console.log(body);
         await updateAttendanceDataAPI(body).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
             if (error?.response?.status == 401) {
