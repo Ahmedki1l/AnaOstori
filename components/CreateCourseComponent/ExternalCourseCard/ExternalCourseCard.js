@@ -35,7 +35,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         } else {
             form.setFieldsValue(editCourseData)
         }
-    }, [])
+    }, [isCourseEdit, form, editCourseData])
 
     const setCourseCardMetaDataObj = () => {
         let data = { ...courseDetail }

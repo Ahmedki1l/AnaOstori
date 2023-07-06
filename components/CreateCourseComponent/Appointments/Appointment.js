@@ -144,7 +144,7 @@ const Appointments = ({ courseId, courseType }) => {
                             <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead5}`}> الطلاب المسجلين</th>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead7}`}>الإجراءات</th>
+                            <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
                     {allAppointments?.length > 0 &&

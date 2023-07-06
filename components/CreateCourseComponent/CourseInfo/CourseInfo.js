@@ -71,7 +71,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         if (isCourseEdit) {
             courseForm.setFieldsValue(editCourseData)
         }
-    }, [])
+    }, [courseForm, isCourseEdit, editCourseData])
 
     const catagoriesItem = catagories.map((obj) => {
         return {
