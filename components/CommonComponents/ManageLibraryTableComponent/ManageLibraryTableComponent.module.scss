@@ -44,7 +44,7 @@
     border-top: none;
 }
 
-.noDataManiArea {
+.noDataMainArea {
     height: 480px;
     display: grid;
     place-content: center;
@@ -140,4 +140,21 @@
     border: 0.7px solid;
     border-radius: 3px;
     background-color: #ffffff;
+}
+
+.folderDetailsTable {
+    display: flex;
+    margin: 5px 0px 15px;
+}
+
+.folderDetailsVideo {
+    font-size: 16px;
+    color: #2D2E2D;
+    margin-left: 10px;
+}
+
+.folderDetailsName {
+    font-size: 18px;
+    margin-right: 5px;
+    color: #000000;
 }

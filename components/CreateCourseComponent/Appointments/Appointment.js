@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
 import TimePicker from '../../antDesignCompo/TimePicker';
-import Switch from '../../antDesignCompo/Switch';
+import Switch from '../../../components/antDesignCompo/Switch';
 
 const Appointments = ({ courseId, courseType }) => {
 
@@ -54,7 +54,7 @@ const Appointments = ({ courseId, courseType }) => {
         values.courseId = courseId
         values.numberOfSeats = values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
-
+        console.log(values);
         if (isAvailabilityEdit) {
             let body = {
                 data: values,
@@ -167,7 +167,7 @@ const Appointments = ({ courseId, courseType }) => {
                                                 <p>{appointment.numberOfSeats} الرياض</p>
                                             </div>
                                         </td>
-                                        <td>{appointment.instructor.name}</td>
+                                        <td>{appointment.instructor}</td>
                                         <td>{fullDate(appointment?.createdAt)}</td>
                                         <td>{fullDate(appointment?.updatedAt)}</td>
                                         <td>
@@ -215,7 +215,7 @@ const Appointments = ({ courseId, courseType }) => {
                     <Form form={form} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
-                                name={'instructorId'}
+                                name={'instructors'}
                                 rules={[{ required: true, message: "اختر المدرب" }]}
                             >
                                 <Select
@@ -224,7 +224,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     height={40}
                                     placeholder="اختر المدرب"
                                     OptionData={instructor}
-                                // mode="multiple"
+                                    mode="multiple"
                                 />
                             </FormItem>
                             {courseType == 'physical' &&
@@ -329,7 +329,7 @@ const Appointments = ({ courseId, courseType }) => {
                                 />
                             </FormItem>
                             {showSwitchBtn && <div className='flex items-center'>
-                                <Switch defaultChecked onChange={onChange} size={'small'}></Switch>
+                                <Switch defaultChecked onChange={onChange} ></Switch>
                                 <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
                             </div>}
                         </div>

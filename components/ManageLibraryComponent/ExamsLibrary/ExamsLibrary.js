@@ -1,10 +1,10 @@
 import React from 'react'
 import ManageLibraryTableComponent from '../../CommonComponents/ManageLibraryTableComponent/ManageLibraryTableComponent'
 
-const ExamsLibrary = () => {
+const ExamsLibrary = ({ onclose, folderTableData }) => {
     return (
         <div>
-            <ManageLibraryTableComponent />
+            <ManageLibraryTableComponent onclose={onclose} folderTableData={folderTableData} />
         </div>
     )
 }
