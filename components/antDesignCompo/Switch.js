@@ -1,29 +1,82 @@
-import React from 'react'
+import { Label } from '@mui/icons-material';
+import React, { useState } from 'react';
+import is from 'sharp/lib/is';
 import styled from 'styled-components';
-import { Switch as AntdSwitch } from "antd";
 
-const StyledSwitch = styled(AntdSwitch)`
-    direction: ltr;
+const StyledLabel = styled(`label`)`
+    height: 17px;
+    width: 31px;
+	position: relative;
+	display: inline-block;
 
-    :where(.css-dev-only-do-not-override-w8mnev).ant-switch.ant-switch-checked {
-        background:#00CF0F !important;
-        &:hover {
-            background:#00CF0F !important;
-        }
+    .input {
+        opacity: 0;
+        width: 0;
+        height: 0;
     }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 12.5px;
+        width: 12.5px;
+        left: 2.5px;
+        bottom: 2.5px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    
+    input:checked+.slider {
+        background-color:#00CF0F;
+    }
+    
+    input:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+    
+    input:checked+.slider:before {
+        -webkit-transform: translateX(13.5  px);
+        -ms-transform: translateX(13.5px);
+        transform: translateX(13.5px);
+    }
+    
 `
-const Switch = ({
-    size,
-    ...rest
 
-}) => {
+const Switch = ({ onChange, params, defaultChecked }) => {
+    const [isChecked, setIsChecked] = useState(defaultChecked ? defaultChecked : false)
+
+    const handleChange = () => {
+        onChange(!isChecked, params)
+        setIsChecked(!isChecked);
+    };
+
 
     return (
-        <StyledSwitch
-            size={size}
-            {...rest}
-        />
+        <StyledLabel>
+            <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleChange}
+            />
+            <span className="slider"></span>
+        </StyledLabel>
     );
-}
+};
 
-export default Switch
+export default Switch;
+
+

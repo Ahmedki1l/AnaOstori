@@ -55,7 +55,8 @@ export default function Index() {
             query: { courseId: course?.id }
         })
     }
-    const onChange = async (checked, courseId) => {
+
+    const handleCoursePublished = async (checked, courseId) => {
         let body = {
             data: { published: checked },
             courseId: courseId,
@@ -95,6 +96,7 @@ export default function Index() {
                     {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allPhysicalCourses.map((course, index) => {
+                                console.log(course);
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>
@@ -104,7 +106,8 @@ export default function Index() {
                                                 </div>
                                                 <div className={styles.skillCourseDetails}>
                                                     <p className={`fontBold ${styles.courseNameHeader}`}>{course.name}</p>
-                                                    <div className={styles.coursePrice}>   <p>{course?.price} ر.س للشخص</p>
+                                                    <div className={styles.coursePrice}>
+                                                        <p>{course?.price} ر.س للشخص</p>
                                                         {course?.groupDiscountEligible ?
                                                             <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
                                                             :
@@ -116,7 +119,8 @@ export default function Index() {
                                         </td>
                                         <td>
                                             <div className={styles.publishedCourseDetails}>
-                                                <Switch defaultChecked={course.published} onChange={(e) => onChange(e, course.id)} size={'small'}></Switch>
+                                                <Switch defaultChecked={course.published} onChange={handleCoursePublished} params={course.id}
+                                                />
                                                 <p style={{ marginRight: '3px' }}> نشر</p>
                                             </div>
                                         </td>

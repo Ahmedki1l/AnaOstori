@@ -1,10 +1,10 @@
 import React from 'react'
 import ManageLibraryTableComponent from '../../CommonComponents/ManageLibraryTableComponent/ManageLibraryTableComponent'
 
-const VideosLibrary = ({ setIsModalForAddItem }) => {
+const VideosLibrary = ({ onclose, folderTableData }) => {
     return (
         <div>
-            <ManageLibraryTableComponent setIsModalForAddItem={setIsModalForAddItem} />
+            <ManageLibraryTableComponent onclose={onclose} folderTableData={folderTableData} />
         </div>
     )
 }

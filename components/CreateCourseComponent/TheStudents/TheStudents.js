@@ -156,9 +156,9 @@ const TheStudenet = (props) => {
             {showStudentDetails &&
                 <div>
                     <div className={styles.studentDetailsTable}>
-                        <p className={styles.studentDetails}>الطلاب</p>
+                        <p className={styles.studentDetails}>الفيديوهات</p>
                         <p>{'>'}</p>
-                        <p className={styles.examResultsForStudents}> نتائج درجات</p>
+                        <p className={styles.examResultsForStudents}> تجميعات سنة 23ب </p>
                     </div>
                     <div>
                         <table className={styles.studentTableArea}>

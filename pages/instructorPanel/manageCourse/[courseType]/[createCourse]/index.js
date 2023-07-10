@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
 import CourseInfo from '../../../../../components/CreateCourseComponent/CourseInfo/CourseInfo';
 import Appointment from '../../../../../components/CreateCourseComponent/Appointments/Appointment';

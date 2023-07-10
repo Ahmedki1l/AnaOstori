@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
 import ModelForAddFolder from '../../../components/CommonComponents/ModelForAddFolder/ModelForAddFolder';
@@ -8,27 +8,57 @@ import VideosLibrary from '../../../components/ManageLibraryComponent/VideosLibr
 import FilesLibrary from '../../../components/ManageLibraryComponent/FilesLibrary/FilesLibrary';
 import ExamsLibrary from '../../../components/ManageLibraryComponent/ExamsLibrary/ExamsLibrary';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary';
+import { getFolderListAPI } from '../../../services/apisService';
+import { signOutUser } from '../../../services/fireBaseAuthService';
 
 
 function Index() {
     const storeData = useSelector((state) => state?.globalStore);
+    const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
     const [selectedItem, setSelectedItem] = useState(1);
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
-    const [isModelForAddItemsOpen, setIsModelForAddItemsOpen] = useState(false)
-    const [isModalForAddItem, setIsModalForAddItem] = useState(false)
-    const [isModalForAddFolder, setIsModalForAddFolder] = useState(false)
+    const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
+    const [folderType, setFolderType] = useState("video")
+    const [folderList, setFolderList] = useState([])
 
+    useEffect(() => {
+        getfolderList(folderType)
+    }, [folderType])
 
-    const handleItemSelect = (id) => {
-        setSelectedItem(id)
+    const onModelClose = () => {
+        getfolderList(folderType)
     }
-    const handleAddFolder = (type) => {
-        if (type == 'addFolder') setIsModalForAddFolder(true)
+
+    const handleItemSelect = async (id) => {
+        setSelectedItem(id)
+        setFolderType(id == 1 ? "video" : id == 2 ? "file" : "quiz")
+    }
+
+    const getfolderList = async (folderType) => {
+        let data = {
+            folderType: folderType,
+            accessToken: storeData?.accessToken
+        }
+        await getFolderListAPI(data).then((res) => {
+            console.log(res);
+            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+        }).catch((error) => {
+            console.log(error);
+            if (error?.response?.status == 401) {
+                signOutUser()
+                dispatch({
+                    type: 'EMPTY_STORE'
+                });
+            }
+        })
+    }
+
+    const handleAddFolder = () => {
         setIsModelForAddFolderOpen(true);
     };
     const handleAddItems = () => {
-        setIsModelForAddItemsOpen(true);
+        setIsModelForAddItemOpen(true);
     };
 
     return (
@@ -47,7 +77,7 @@ function Index() {
                                 </div>
                                 <div className={`flex ${styles.createCourseHeaderText}`}>
                                     <div className={`${styles.createCourseBtnBox}`}>
-                                        <button className={`primaryStrockedBtn`} onClick={() => handleAddItems()}> إضافة فيديو</button>
+                                        {selectedItem !== 4 && <button className={`primaryStrockedBtn`} onClick={() => handleAddItems()}>{selectedItem == 1 ? "إضافة فيديو" : selectedItem == 2 ? "إضافة ملف" : "إضافة اختبار"}</button>}
                                     </div>
                                     <div className={`${styles.createCourseBtnBox}  mr-2`}>
                                         <button className='primarySolidBtn' onClick={() => handleAddFolder('addFolder')}> إضافة مجلد</button>
@@ -65,9 +95,9 @@ function Index() {
 
                     <div>
                         <div className='maxWidthDefault p-4'>
-                            {selectedItem == 1 && <VideosLibrary setIsModalForAddItem={setIsModalForAddItem} />}
-                            {selectedItem == 2 && <FilesLibrary />}
-                            {selectedItem == 3 && <ExamsLibrary />}
+                            {selectedItem == 1 && <VideosLibrary folderTableData={folderList} onclose={onModelClose} />}
+                            {selectedItem == 2 && <FilesLibrary folderTableData={folderList} onclose={onModelClose} />}
+                            {selectedItem == 3 && <ExamsLibrary folderTableData={folderList} onclose={onModelClose} />}
                             {selectedItem == 4 && <CoursePathLibrary />}
                         </div>
                     </div>
@@ -76,11 +106,12 @@ function Index() {
             <ModelForAddFolder
                 isModelForAddFolderOpen={isModelForAddFolderOpen}
                 setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
-                isModalForAddFolder={isModalForAddFolder}
+                folderType={folderType}
+                onclose={onModelClose}
             />
             <ModelForAddItems
-                isModelForAddItemsOpen={isModelForAddItemsOpen}
-                setIsModelForAddItemsOpen={setIsModelForAddItemsOpen}
+                isModelForAddItemOpen={isModelForAddItemOpen}
+                setIsModelForAddItemOpen={setIsModelForAddItemOpen}
             />
         </>
     )

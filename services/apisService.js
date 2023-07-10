@@ -81,3 +81,12 @@ export const deleteCourseTypeAPI = (data) => { return instance(data?.accessToken
 export const getAttendanceListAPI = (data) => { return instance(data?.accessToken).get(`/attendance/list/${data?.availabilityId}`) }
 export const updateAttendanceDataAPI = (data) => { return instance(data?.accessToken).post(`/attendance/update`, data?.data) }
 export const getStudentListAPI = (data) => { return instance(data?.accessToken).get(`/students/course/${data?.courseId}/availability/${data?.availabilityId} `) }
+
+// ********* Manage Library APIs ***********//
+
+export const getFolderListAPI = (data) => { return instance(data?.accessToken).post(`folder/list/${data.folderType}`) }
+
+export const createFolderAPI = (data) => { return instance(data?.accessToken).post(`/folder/create`, data?.data) }
+export const updateFolderAPI = (data) => { return instance(data?.accessToken).post(`/folder/update`, data?.data) }
+
+
