@@ -28,8 +28,9 @@ const Appointments = ({ courseId, courseType }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
+    const [isFieldDisable, setIsFieldDisable] = useState(false)
 
-    console.log(instructorList);
+    console.log(allAppointments);
 
     const instructor = instructorList?.map((obj) => {
         return {
@@ -101,13 +102,20 @@ const Appointments = ({ courseId, courseType }) => {
     }
 
     const editAppointment = (appointment) => {
-        console.log(appointment);
         setIsModalOpen(true)
         setShowSwitchBtn(true)
         setIsAvailabilityEdit(true)
         setEditAvailability(appointment)
+        setIsFieldDisable(((dayjs(appointment.dateFrom).startOf('day') < dayjs(new Date())) || (appointment.maxNumberOfSeats > appointment.numberOfSeats)) ? true : false)
+        const instructorsList = appointment?.instructors?.map((obj) => {
+            return {
+                key: obj.id,
+                label: obj.name,
+                value: obj.id,
+            }
+        });
         form.setFieldsValue({
-            instructors: appointment?.instructors,
+            instructors: instructorsList,
             location: appointment?.location,
             locationName: appointment?.locationName,
             gender: appointment?.gender,
@@ -123,6 +131,7 @@ const Appointments = ({ courseId, courseType }) => {
         setIsModalOpen(true)
         setShowSwitchBtn(false)
         setIsAvailabilityEdit(false)
+        setIsFieldDisable(false)
     }
 
     const handelModalClose = () => {
@@ -233,6 +242,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     OptionData={instructor}
                                     mode="multiple"
                                     maxTagCount='responsive'
+                                    disabled={isFieldDisable}
                                 />
                             </FormItem>
                             {courseType == 'physical' &&
@@ -246,6 +256,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         height={40}
                                         placeholder="اختر الجنس"
                                         OptionData={genders}
+                                        disabled={isFieldDisable}
                                     />
                                 </FormItem>
                             }
@@ -258,6 +269,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         format={'YYYY-MM-DD'}
                                         width={172}
                                         height={40}
+                                        disabled={isFieldDisable}
                                         placeholder="تاريخ البداية"
                                         suFFixIconName="calander"
                                     />
@@ -272,6 +284,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         height={40}
                                         placeholder="تاريخ النهاية"
                                         suFFixIconName="calander"
+                                        disabled={isFieldDisable}
                                     />
                                 </FormItem>
                             </div>
@@ -286,6 +299,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         placeholder="من الساعة"
                                         picker="time"
                                         suFFixIconName="clock"
+                                        disabled={isFieldDisable}
                                     />
                                 </FormItem>
                                 <FormItem
@@ -298,6 +312,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         placeholder="إلى الساعة"
                                         picker="time"
                                         suFFixIconName="clock"
+                                        disabled={isFieldDisable}
                                     />
                                 </FormItem>
                             </div>
@@ -311,6 +326,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         width={172}
                                         height={40}
                                         placeholder="الموقع"
+                                        disabled={isFieldDisable}
                                     />
                                 </FormItem>
                                 <FormItem
@@ -322,6 +338,7 @@ const Appointments = ({ courseId, courseType }) => {
                                         width={172}
                                         height={40}
                                         placeholder="الرابط"
+                                        disabled={isFieldDisable}
                                     />
                                 </FormItem>
                             </div>
@@ -334,6 +351,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     width={172}
                                     height={40}
                                     placeholder="عدد المقاعد"
+                                    disabled={isFieldDisable}
                                 />
                             </FormItem>
                             {showSwitchBtn && <div className='flex items-center'>
