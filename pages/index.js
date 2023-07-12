@@ -13,6 +13,7 @@ import VideoThumnail from '../components/CourseDescriptionPageComponents/Details
 // MI icons
 import CloseIcon from '@mui/icons-material/Close';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
+import { mediaUrl } from '../constants/DataManupulation';
 
 
 export async function getServerSideProps(context) {
@@ -58,8 +59,10 @@ export default function Home(props) {
 	const [hideNotificationBar, setHideNotificationBar] = useState(true)
 	const news = props.news ? props.news : []
 	const catagories = props?.catagories ? props?.catagories : []
+	console.log(catagories);
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
-	const homeVideoKey = props.homeMetaData[0]?.fileKey
+	const homeVideoUrl = mediaUrl(props.homeMetaData[0].fileBucket, props.homeMetaData[0].fileKey)
+	console.log(props.homeMetaData[0]);
 	const [scrollSectionName, setScrollSectionName] = useState()
 
 	const handleScrollToSection = (sectionName) => {
@@ -130,7 +133,7 @@ export default function Home(props) {
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
-					<VideoThumnail pictureKey={''} videoKey={homeVideoKey} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
+					<VideoThumnail pictureKey={''} videoUrl={homeVideoUrl} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
 				</div>
 			</div>
 			<div className={styles.analyticsBarWrapper}>
@@ -183,7 +186,7 @@ export default function Home(props) {
 					{catagories.length > 0 && catagories.map((catagory, index) => {
 						return (
 							<div key={`catagory${index}`} onClick={() => handleNavigation(catagory.name)}>
-								<CourseCard coursePictureKey={catagory.pictureKey} courseType={catagory.name} imgHeight={windowScreen > 1280 ? 164 : 145} />
+								<CourseCard pictureUrl={mediaUrl(catagory.pictureBucket, catagory.pictureKey)} courseType={catagory.name} imgHeight={windowScreen > 1280 ? 164 : 145} />
 							</div>
 						)
 					})

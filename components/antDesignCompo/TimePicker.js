@@ -30,6 +30,7 @@ const TimePicker = ({
   placeholder,
   picker,
   suFFixIconName,
+  disabled,
   ...rest
 }) => {
   return (
@@ -37,6 +38,7 @@ const TimePicker = ({
       placeholder={placeholder}
       picker={"time"}
       suffixIcon={<AllIconsComponenet height={16} width={16} iconName={suFFixIconName} color={'#00000080'} />}
+      disabled={disabled}
       {...rest}
     />
   );

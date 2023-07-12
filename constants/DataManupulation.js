@@ -6,3 +6,7 @@ export const deleteNullFromObj = (obj) => {
     }
     return obj
 }
+
+export const mediaUrl = (bucketName, mediaKey) => {
+    return `https://${bucketName}.s3.eu-central-1.amazonaws.com/${mediaKey}`
+}

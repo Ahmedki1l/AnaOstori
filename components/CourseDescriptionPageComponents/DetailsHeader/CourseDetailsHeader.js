@@ -11,6 +11,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { mediaUrl } from '../../../constants/DataManupulation';
 
 
 export default function CourseDetailsHeader(props) {
@@ -34,7 +35,7 @@ export default function CourseDetailsHeader(props) {
 					}
 					{!(screenWidth > 767) &&
 						<div className='w-80 mx-auto'>
-							<VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={courseDetail.videoKey} thumnailHeight={190} />
+							<VideoThumnail pictureKey={courseDetail.pictureKey} videoUrl={mediaUrl(courseDetail.videoBucket, courseDetail.videoKey)} thumnailHeight={190} />
 						</div>
 					}
 					<h1 className={`head1 ${styles.courseName}`}>{courseDetail.name}</h1>

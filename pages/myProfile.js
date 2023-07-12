@@ -12,6 +12,7 @@ export default function MyProfile() {
 
 	const storeData = useSelector((state) => state?.globalStore);
 	const userDetails = storeData?.viewProfileData;
+	console.log(userDetails);
 	const myCourses = storeData?.myCourses
 	const imageBaseUrl = LinkConst.File_Base_Url2
 	const profileUrl = `${imageBaseUrl}/${userDetails?.avatarKey}`
