@@ -14,6 +14,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { useDispatch, useSelector } from 'react-redux';
+import { dateWithDay } from '../../../constants/DateConverter';
 
 
 export default function UserInfoForm(props) {
@@ -286,30 +287,27 @@ export default function UserInfoForm(props) {
 												<>
 													{(courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).map((date, k = index) => {
 														return (
-															<div key={`datecard${k}`} className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : ''}`}>
-																<input type="radio" id={`date1_${k}_${i}`} name={`date${i}`} title="date" value={date.dateFrom}
-																	className="hidden peer" onChange={event => handleFormChange(event, i, date.id)}
-																	checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
-																	disabled={date.numberOfSeats == 0} />
-																<label htmlFor={`date1_${k}_${i}`} className="cursor-pointer">
-																	<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`}>
-																		<div className={styles.dateRadioBtnBox}>
-																			<div className={styles.circle}><div></div></div>
-																			<p className={`fontBold ${styles.dateBoxHeaderText}`}>
-																				{`${new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })} 
-																				${new Date(date.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} 
-																				${new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}`}
-																			</p>
-																		</div>
-																		{date.numberOfSeats < 4 &&
-																			<div className={`absolute ${styles.restSitsBox} ${date.numberOfSeats == 0 ? `${styles.disableRestSitsBox}` : ''}`}>
-																				<PersonIcon className={styles.personIcons} />
-																				<p className='fontMedium'>{date.numberOfSeats == 0 ? 'نفذت المقاعد' : date.numberOfSeats == 1 ? "باقي مقعد" : date.numberOfSeats == 2 ? "باقي مقعدين" : "باقي 3 مقاعد"}</p>
+															<div key={`datecard${k}`}>
+																{date.numberOfSeats !== 0 &&
+																	<div className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : ''}`}>
+																		<input type="radio" id={`date1_${k}_${i}`} name={`date${i}`} title="date" value={date.dateFrom}
+																			className="hidden peer" onChange={event => handleFormChange(event, i, date.id)}
+																			checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
+																			disabled={date.numberOfSeats == 0}
+																		/>
+																		<label htmlFor={`date1_${k}_${i}`} className="cursor-pointer">
+																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`}>
+																				<div className={styles.dateRadioBtnBox}>
+																					<div className={styles.circle}><div></div></div>
+																					<p className={`fontBold ${styles.dateBoxHeaderText}`}>
+																						{dateWithDay(date.dateFrom)}
+																					</p>
+																				</div>
 																			</div>
-																		}
+																			<DatesInfo date={date} />
+																		</label>
 																	</div>
-																	<DatesInfo date={date} />
-																</label>
+																}
 															</div>
 														)
 													})}

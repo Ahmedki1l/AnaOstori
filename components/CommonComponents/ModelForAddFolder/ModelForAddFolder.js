@@ -11,18 +11,18 @@ const ModelForAddFolder = ({
     isModelForAddFolderOpen,
     setIsModelForAddFolderOpen,
     folderType,
-    selectedFolder,
+    selectedItem,
     onclose
 }) => {
 
     const [form] = Form.useForm();
     const storeData = useSelector((state) => state?.globalStore);
-    const isEdit = selectedFolder != undefined ? true : false
+    const isEdit = selectedItem != undefined ? true : false
 
     useEffect(() => {
         console.log(isEdit);
-        form.setFieldValue('folderTitle', selectedFolder?.name)
-    }, [selectedFolder?.name])
+        form.setFieldValue('folderTitle', selectedItem?.name)
+    }, [selectedItem?.name])
 
     const handleCreateFolder = async (values) => {
         if (!isEdit) {
@@ -41,9 +41,9 @@ const ModelForAddFolder = ({
             form.resetFields()
         } else {
             let editFolderBody = {
-                id: selectedFolder?.id,
+                id: selectedItem?.id,
                 name: values.folderTitle,
-                type: selectedFolder?.type,
+                type: selectedItem?.type,
             }
             let data = {
                 accessToken: storeData?.accessToken,
@@ -55,7 +55,6 @@ const ModelForAddFolder = ({
                 console.log(error);
             })
         }
-
     }
 
 
@@ -92,10 +91,10 @@ const ModelForAddFolder = ({
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >إنشاء</button>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>
                             </div>
                             {isEdit && <div className={styles.deleteVideoBtn}>
-                                <button className='deleteBtn' type={'submit'} >حذف الفيديو</button>
+                                <button className='deleteBtn' type={'submit'} >حذف المجلد </button>
                             </div>}
                         </div>
                     </Form>

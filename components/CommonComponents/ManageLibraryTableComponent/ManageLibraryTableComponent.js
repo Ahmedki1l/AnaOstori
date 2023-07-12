@@ -1,45 +1,54 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './ManageLibraryTableComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddFolder from '../ModelForAddFolder/ModelForAddFolder'
 import ModelForAddItems from '../ModelForAddItems/ModelForAddItems'
+import Icon from '../Icon'
 
 
 
-const ManageLibraryTableComponent = ({ folderTableData, onclose }) => {
-
+const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) => {
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
-    const [showVideoList, setShowVideoList] = useState(false)
-    const [selectedFolder, setSelectedFolder] = useState()
+    const [selectedItem, setSelectedItem] = useState()
+    const [tableDataType, setTableDataType] = useState("folder")
+    const [tableItemIcon, setTableItemIcon] = useState("folder")
 
-    const handleEditFolderItems = async (item) => {
-        setIsModelForAddFolderOpen(true);
-        setSelectedFolder(item)
+    const onEdit = async (item) => {
+        if (tableDataType == "folder") {
+            setIsModelForAddFolderOpen(true);
+        } else {
+            setIsModelForAddItemOpen(true)
+        }
+        setSelectedItem(item)
     };
 
     const handleDeleteFolderItems = () => {
         setIsmodelForDeleteItems(true)
     }
 
-
-    const showSelectedVideoList = () => {
-        setShowVideoList(true)
+    const showItemListOfSelectedFolder = (item) => {
+        setTableDataType("item")
+        setSelectedItem(item)
     }
+    const showFolderList = () => {
+        setTableDataType("folder")
+    }
+
 
     return (
         <>
             <div className={styles.tableContainer}>
                 <div>
-                    {showVideoList &&
+                    {tableDataType == "item" &&
                         <div>
                             <div className={styles.folderDetailsTable}>
-                                <p className={styles.folderDetailsVideo}>الفيديوهات</p>
+                                <p className={`cursor-pointer ${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>الفيديوهات</p>
                                 <p>{'>'}</p>
-                                <p className={styles.folderDetailsName}> تجميعات سنة 23ب </p>
+                                <p className={styles.folderDetailsName}> {selectedItem.type ? selectedItem.type : "الفيديوهات"}</p>
                             </div>
                         </div>
                     }
@@ -59,9 +68,17 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose }) => {
                                         <>
                                             <tr className={styles.tableRow} key={item.id}>
                                                 <td>
-                                                    <div className={styles.videoFolderList} onClick={showSelectedVideoList}>
-                                                        <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
-                                                        <p className={styles.numberOfAddedVideoNames}>{item?.name}</p>
+                                                    <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
+                                                        {tableDataType == "folder" ?
+                                                            <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
+                                                            :
+                                                            <Icon
+                                                                height={24}
+                                                                width={24}
+                                                                iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'videoIcon'}
+                                                                alt={'Quiz Logo'} />
+                                                        }
+                                                        <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
                                                         <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}  عنصر / عناصر  )`}</p>
                                                     </div>
                                                 </td>
@@ -69,10 +86,10 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose }) => {
                                                 <td>{fullDate(item?.updatedAt)}</td>
                                                 <td>
                                                     <div className={styles.videoeventButtons}>
-                                                        <div onClick={() => handleEditFolderItems(item)}>
+                                                        <div className='cursor-pointer' onClick={() => onEdit(item)}>
                                                             <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                         </div>
-                                                        <div onClick={() => handleDeleteFolderItems()}>
+                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
                                                             <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
                                                         </div>
                                                     </div>
@@ -102,16 +119,20 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose }) => {
             <ModelForAddFolder
                 isModelForAddFolderOpen={isModelForAddFolderOpen}
                 setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
-                selectedFolder={selectedFolder}
+                selectedItem={selectedItem}
                 onclose={onclose}
             />
             <ModelForAddItems
                 isModelForAddItemOpen={isModelForAddItemOpen}
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}
+                selectedItem={selectedItem}
+                folderType={folderType}
             ></ModelForAddItems>
             <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 setIsmodelForDeleteItems={setIsmodelForDeleteItems}
+                tableDataType={tableDataType}
+                folderType={folderType}
             ></ModelForDeleteItems>
         </>
     )

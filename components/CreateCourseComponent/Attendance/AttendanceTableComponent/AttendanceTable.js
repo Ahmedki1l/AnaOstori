@@ -123,7 +123,6 @@ export default function AttendanceTable(props) {
     }
 
     const handelAttendanceTypeChange = (studentIndex, attendanceTypeIndex, attendanceType, date) => {
-        console.log(date);
         if (dayjs(date).startOf('day') > dayjs(new Date())) {
             return
         }

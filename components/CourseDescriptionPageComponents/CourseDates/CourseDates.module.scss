@@ -124,15 +124,6 @@
     }
 }
 
-.greenFlash {
-    background-color: #2F9B5B4D;
-
-    .innerCircle {
-        background-color: #007D33;
-        animation: flash 1s infinite;
-    }
-}
-
 .redFlash {
     background-color: #FF00001A;
 
@@ -166,6 +157,12 @@
         height: 8px;
         width: 8px;
     }
+}
+
+.instructorWrapper {
+    width: 188px;
+    display: flex;
+    align-items: center;
 }
 
 @media (max-width: 640px) {
