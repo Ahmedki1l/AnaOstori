@@ -29,12 +29,13 @@ const Appointments = ({ courseId, courseType }) => {
     const dispatch = useDispatch();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
 
+    console.log(instructorList);
 
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
             label: obj.name,
-            value: obj.id
+            value: obj.id,
         }
     });
 
@@ -89,7 +90,6 @@ const Appointments = ({ courseId, courseType }) => {
             accessToken: storeData?.accessToken,
         }
         await getAllAvailabilityAPI(body).then((res) => {
-            console.log(res);
             setAllAppointments(res?.data)
             dispatch({
                 type: 'SET_AllAVAILABILITY',
@@ -107,7 +107,7 @@ const Appointments = ({ courseId, courseType }) => {
         setIsAvailabilityEdit(true)
         setEditAvailability(appointment)
         form.setFieldsValue({
-            instructorId: appointment?.instructorId,
+            instructors: appointment?.instructors,
             location: appointment?.location,
             locationName: appointment?.locationName,
             gender: appointment?.gender,
@@ -129,6 +129,7 @@ const Appointments = ({ courseId, courseType }) => {
         form.resetFields()
         setIsModalOpen(false)
     }
+
 
     return (
         <div className='maxWidthDefault px-4'>
@@ -167,7 +168,13 @@ const Appointments = ({ courseId, courseType }) => {
                                                 <p>{appointment.numberOfSeats} الرياض</p>
                                             </div>
                                         </td>
-                                        <td>{appointment.instructor}</td>
+                                        <td className='py-2'>{appointment.instructors.map((instructor, index) => {
+                                            return (
+                                                <p key={`instructor${index}`} className='pb-3 text-right pr-20 '>
+                                                    {instructor.name}
+                                                </p>
+                                            )
+                                        })}</td>
                                         <td>{fullDate(appointment?.createdAt)}</td>
                                         <td>{fullDate(appointment?.updatedAt)}</td>
                                         <td>
@@ -225,6 +232,7 @@ const Appointments = ({ courseId, courseType }) => {
                                     placeholder="اختر المدرب"
                                     OptionData={instructor}
                                     mode="multiple"
+                                    maxTagCount='responsive'
                                 />
                             </FormItem>
                             {courseType == 'physical' &&

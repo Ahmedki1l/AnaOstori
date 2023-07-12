@@ -313,6 +313,80 @@
 	background: #000000 !important;
 }
 
+.instructorWrapper {
+	width: 183px;
+	display: flex;
+	align-items: center;
+}
+
+.fullSeatsIconWrapper {
+	position: absolute;
+	height: 36%;
+	width: 30%;
+	background: #ffffff7e;
+	z-index: 10;
+	cursor: not-allowed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.outerCircle {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	display: grid;
+	place-content: center;
+}
+
+.innerCircle {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+}
+
+.green {
+	background-color: #2F9B5B4D;
+
+	.innerCircle {
+		background-color: #007D33;
+	}
+}
+
+.redFlash {
+	background-color: #FF00001A;
+
+	.innerCircle {
+		background-color: #FF0000;
+		animation: flash 1s infinite;
+	}
+}
+
+.red {
+	background-color: #FF00001A;
+
+	.innerCircle {
+		background-color: #FF0000;
+	}
+}
+
+@keyframes flash {
+	0% {
+		height: 8px;
+		width: 8px;
+	}
+
+	50% {
+		height: 12px;
+		width: 12px;
+	}
+
+	100% {
+		height: 8px;
+		width: 8px;
+	}
+}
+
 @media (max-width:1350px) {
 	.radioBtnHead {
 		font-size: 22px;
@@ -470,7 +544,6 @@
 
 	.coachName {
 		font-size: 17px;
-		padding-bottom: 0.2rem;
 	}
 
 	.inputBox {

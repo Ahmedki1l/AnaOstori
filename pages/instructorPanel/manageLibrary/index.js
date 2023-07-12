@@ -10,17 +10,21 @@ import ExamsLibrary from '../../../components/ManageLibraryComponent/ExamsLibrar
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary';
 import { getFolderListAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
+import ManageLibraryTableComponent from '../../../components/CommonComponents/ManageLibraryTableComponent/ManageLibraryTableComponent';
+import { useRouter } from 'next/router';
 
 
 function Index() {
     const storeData = useSelector((state) => state?.globalStore);
+    const router = useRouter()
     const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
-    const [selectedItem, setSelectedItem] = useState(1);
+    const [selectedItem, setSelectedItem] = useState(4);
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [folderType, setFolderType] = useState("video")
     const [folderList, setFolderList] = useState([])
+    const [showExtraNavItem, setShowExtraNavItem] = useState()
 
     useEffect(() => {
         getfolderList(folderType)
@@ -60,6 +64,9 @@ function Index() {
     const handleAddItems = () => {
         setIsModelForAddItemOpen(true);
     };
+    const handleRoute = () => {
+        router.push(`/instructorPanel/manageLibrary/createCoursePath`)
+    }
 
     return (
         <>
@@ -80,7 +87,8 @@ function Index() {
                                         {selectedItem !== 4 && <button className={`primaryStrockedBtn`} onClick={() => handleAddItems()}>{selectedItem == 1 ? "إضافة فيديو" : selectedItem == 2 ? "إضافة ملف" : "إضافة اختبار"}</button>}
                                     </div>
                                     <div className={`${styles.createCourseBtnBox}  mr-2`}>
-                                        <button className='primarySolidBtn' onClick={() => handleAddFolder('addFolder')}> إضافة مجلد</button>
+                                        {selectedItem !== 4 && <button className='primarySolidBtn' onClick={() => handleAddFolder('addFolder')}> إضافة مجلد</button>}
+                                        {selectedItem == 4 && <button className='primarySolidBtn' onClick={() => handleRoute()}>إنشاء مقرر</button>}
                                     </div>
                                 </div>
                             </div>
@@ -95,10 +103,12 @@ function Index() {
 
                     <div>
                         <div className='maxWidthDefault p-4'>
-                            {selectedItem == 1 && <VideosLibrary folderTableData={folderList} onclose={onModelClose} />}
-                            {selectedItem == 2 && <FilesLibrary folderTableData={folderList} onclose={onModelClose} />}
-                            {selectedItem == 3 && <ExamsLibrary folderTableData={folderList} onclose={onModelClose} />}
-                            {selectedItem == 4 && <CoursePathLibrary />}
+                            {(selectedItem == 1 || selectedItem == 2 || selectedItem == 3) && <ManageLibraryTableComponent onclose={onclose} folderTableData={folderList} folderType={folderType} />}
+                            {/* {selectedItem == 1 && <VideosLibrary folderTableData={folderList} folderType={folderType} onclose={onModelClose} />}
+                            {selectedItem == 2 && <FilesLibrary folderTableData={folderList} folderType={folderType} onclose={onModelClose} />}
+                            {selectedItem == 3 && <ExamsLibrary folderTableData={folderList} folderType={folderType} onclose={onModelClose} />} */}
+                            {selectedItem == 4 && <CoursePathLibrary folderTableData={folderList} folderType={folderType} />}
+                            {/* {selectedItem == 4 && <CreateCoursePath showExtraNavItem={showExtraNavItem} />} */}
                         </div>
                     </div>
                 </div>
@@ -111,6 +121,7 @@ function Index() {
             />
             <ModelForAddItems
                 isModelForAddItemOpen={isModelForAddItemOpen}
+                folderType={folderType}
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}
             />
         </>

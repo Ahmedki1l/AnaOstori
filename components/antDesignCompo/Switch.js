@@ -69,6 +69,7 @@ const Switch = ({ onChange, params, defaultChecked }) => {
         <StyledLabel>
             <input
                 type="checkbox"
+                className='hidden'
                 checked={isChecked}
                 onChange={handleChange}
             />

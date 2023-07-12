@@ -4,12 +4,13 @@ import Icon from '../../../CommonComponents/Icon';
 import Link from 'next/link';
 import * as LinkConst from '../../../../constants/LinkConst'
 import useWindowSize from '../../../../hooks/useWindoSize';
+import { dateWithDay, timeDuration } from '../../../../constants/DateConverter';
+import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 
 
 // MI icons
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 
 export default function DatesInfo(props) {
@@ -19,27 +20,16 @@ export default function DatesInfo(props) {
 	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isSmallScreen = useWindowSize().smallScreen
 
-	const startMonth = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
-	const startDate = new Date(date.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
-	const startDay = new Date(date.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
-
-	const endMonth = new Date(date.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })
-	const endDate = new Date(date.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })
-	const endDay = new Date(date.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", weekday: 'long' })
-
-	const startTime = new Date('1970-01-01T' + date.timeFrom + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
-	const endTime = new Date('1970-01-01T' + date.timeTo + 'Z').toLocaleTimeString('ar-AE', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
-
 	return (
 		<>
 			<ul className={styles.list}>
 				<li>
 					<Icon height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calendarIcon'} alt={'calendar Icon'} />
-					<p className={`fontMedium ${styles.listItemText}`}>من {startDay} {startDate} {startMonth} إلى {endDay} {endDate} {endMonth} </p>
+					<p className={`fontMedium ${styles.listItemText}`}>من {dateWithDay(date.dateFrom)} إلى {dateWithDay(date.dateTo)} </p>
 				</li>
 				<li>
 					<WatchLaterIcon className={styles.icons} />
-					<p className={`fontMedium ${styles.listItemText}`}>من {startTime} إلى {endTime}</p>
+					<p className={`fontMedium ${styles.listItemText}`}>{timeDuration(date.timeFrom, date.timeTo)}</p>
 				</li>
 				<li>
 					{date.gender == 'mix' ?
@@ -56,20 +46,33 @@ export default function DatesInfo(props) {
 						</>
 					}
 				</li>
-				<Link href={`${mediaBaseUrl}/${date.coursePlanKey}` ?? ""} target='_blank'>
-					<li>
-						<SaveAltIcon className={`text-blue-500 ${styles.icons} ${styles.locationIcons}`} />
-						<p className={`fontMedium link ${styles.listItemText}`}>تحميل جدول الدورة</p>
-					</li>
-				</Link>
+				<li>
+					<>
+						{date.numberOfSeats > 5 ?
+							<div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
+							: (date.numberOfSeats <= 5 && date.numberOfSeats > 0) ?
+								<div className={`${styles.outerCircle} ${styles.redFlash}`}><div className={styles.innerCircle}></div></div>
+								:
+								<div className={`${styles.outerCircle} ${styles.red}`}><div className={styles.innerCircle}></div></div>
+						}
+						<p className={`fontMedium ${styles.listItemText}`}>{date.numberOfSeats} مقاعد متبقية</p>
+					</>
+				</li>
 			</ul>
 			<div className={styles.bottomDiv}>
-				<p className={`fontBold ${styles.coachName}`}>المدرب</p>
-				<div className='flex'>
-					<ProfilePicture height={30} width={30} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${date.instructor.avatarKey}`} />
-					<Link href={`${mediaBaseUrl}/${date.instructor.ProfileFileKey}` ?? ""} target='_blank'>
-						<p className='px-2 link'>{date.instructor.name}</p>
-					</Link>
+				<p className={`fontBold ${styles.coachName}`}>المدربين</p>
+				<div className='flex flex-wrap items-center'>
+					{date.instructors.map((instructor, index) => {
+						return (
+							<div className={styles.instructorWrapper} key={`instructor${index}`}>
+								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${instructor.avatarKey}`} />
+								<div>
+									<p className='px-2 fontMedium'>{instructor.name}</p>
+									<p className='px-2 fontMedium'>Role</p>
+								</div>
+							</div>
+						)
+					})}
 				</div>
 			</div>
 		</>

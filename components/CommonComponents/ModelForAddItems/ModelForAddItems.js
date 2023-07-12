@@ -10,12 +10,15 @@ import { useSelector } from 'react-redux';
 const ModelForAddItems = ({
     isModelForAddItemOpen,
     setIsModelForAddItemOpen,
-    selectedFolder,
+    selectedItem,
+    folderType,
 }) => {
 
     const [form] = Form.useForm();
     const storeData = useSelector((state) => state?.globalStore);
-    const isEdit = selectedFolder != undefined ? true : false
+    const isEdit = selectedItem != undefined ? true : false
+
+    console.log(isEdit);
 
     const handleCreateItemsFolder = (values) => {
         console.log(values);
@@ -60,19 +63,63 @@ const ModelForAddItems = ({
                                     placeholder="وصف الفيديو"
                                 />
                             </FormItem>
-                            <FormItem>
-                                <div className={styles.uploadVideoWrapper}>
-                                    <div className={styles.IconWrapper} >
-                                        <div className={styles.uploadFileWrapper}><AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#000000'} /></div>
-                                        <p>ارفق الملف</p>
+                            {folderType !== "quiz" &&
+                                <FormItem>
+                                    <div className={styles.uploadVideoWrapper}>
+                                        <div className={styles.IconWrapper} >
+                                            <div className={styles.uploadFileWrapper}><AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#000000'} /></div>
+                                            <p>ارفق الملف</p>
+                                        </div>
+                                        {isEdit && <div className={styles.videoFolderName}>video name</div>}
                                     </div>
-                                    {isEdit && <div className={styles.videoFolderName}>video name</div>}
-                                </div>
-                            </FormItem>
+                                </FormItem>}
+                            {folderType == "quiz" &&
+                                <>
+                                    <div className="flex">
+                                        <div>
+                                            <FormItem
+                                                name={'questions'}
+                                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                            >
+                                                <Input
+                                                    fontSize={16}
+                                                    width={170}
+                                                    height={40}
+                                                    placeholder="عدد الأسئلة"
+                                                />
+                                            </FormItem>
+                                        </div>
+                                        <div>
+                                            <FormItem
+                                                name={'passed'}
+                                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                            >
+                                                <Input
+                                                    fontSize={16}
+                                                    width={170}
+                                                    height={40}
+                                                    placeholder="عدد الأسئلة"
+                                                />
+                                            </FormItem>
+                                        </div>
+                                    </div>
+                                    <FormItem
+                                        name={'exam link'}
+                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                    >
+                                        <Input
+                                            fontSize={16}
+                                            width={352}
+                                            height={40}
+                                            placeholder="رابط الاختبار"
+                                        />
+                                    </FormItem>
+                                </>
+                            }
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >إنشاء</button>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>
                             </div>
                             {isEdit &&
                                 <div className={styles.deleteVideoBtn}>

@@ -5,12 +5,42 @@ import styles from './ModelForDeleteItems.module.scss'
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
     setIsmodelForDeleteItems,
+    tableDataType,
+    folderType,
 }
 ) => {
+    console.log(tableDataType, folderType);
+    const deleteModalProps = {
+        folder: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا المجلد؟",
+            btnText: "تأكيد حذف المجلد",
+            title: "حذف مجلد"
+        },
+        video: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا الفيديو؟",
+            btnText: "تأكيد حذف الفيديو",
+            title: "حذف فيديو"
+        },
+        file: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا الملف؟",
+            btnText: "تأكيد حذف الملف",
+            title: "حذف ملف"
+        },
+        quiz: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا الاختبار؟",
+            btnText: "تأكيد حذف الاختبار",
+            title: "حذف اختبار"
+        }
+    }
 
     const handleDeleteItems = () => {
         setIsmodelForDeleteItems(false);
     };
+
+    const modelHeading = tableDataType == "folder" ? deleteModalProps.folder.title : deleteModalProps[folderType].title
+    const deleteMsg = tableDataType == "folder" ? deleteModalProps.folder.messageText : deleteModalProps[folderType].messageText
+    const deleteBtnText = tableDataType == "folder" ? deleteModalProps.folder.btnText : deleteModalProps[folderType].btnText
+
 
     return (
         <>
@@ -22,12 +52,12 @@ const ModelForDeleteItems = ({
             >
                 <div dir='rtl'>
                     <div className={styles.deleteItemsModalHeader}>
-                        <p className={`fontBold ${styles.deleteItemsText}`}>إضافة فيديو</p>
+                        <p className={`fontBold ${styles.deleteItemsText}`}>{modelHeading}</p>
                     </div>
-                    <p className={styles.deleteVideoText}>هل انت متأكد من انك تريد حذف هذا الفيديو؟</p>
+                    <p className={styles.deleteVideoText}>{deleteMsg}</p>
                     <div className={styles.AppointmentFieldBorderBottom}>
                         <div className={styles.confirmVideoBtn}>
-                            <button className='deleteBtn' type={'submit'} onClick={handleDeleteItems}>تأكيد حذف الفيديو</button>
+                            <button className='deleteBtn' type={'submit'} onClick={handleDeleteItems}>{deleteBtnText}</button>
                         </div>
                         <div>
                             <button className={styles.ignoreVideoBtn} type={'submit'}>تراجع</button>
