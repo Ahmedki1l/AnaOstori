@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Form, Modal } from 'antd';
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './ModelForAddFolder.module.scss'
+import { useSelector } from 'react-redux';
+import { createFolderAPI, updateFolderAPI } from '../../../services/apisService';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
-import { createFolderAPI, updateFolderAPI } from '../../../services/apisService';
-import { useSelector } from 'react-redux';
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 
 const ModelForAddFolder = ({
     isModelForAddFolderOpen,

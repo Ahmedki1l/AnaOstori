@@ -2,20 +2,24 @@ import React, { useEffect, useState } from 'react'
 import styles from './ManageLibraryTableComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
-import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
+import Icon from '../../CommonComponents/Icon'
 import ModelForAddFolder from '../ModelForAddFolder/ModelForAddFolder'
 import ModelForAddItems from '../ModelForAddItems/ModelForAddItems'
-import Icon from '../Icon'
+import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 
 
 
 const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) => {
+    console.log(folderTableData);
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [selectedItem, setSelectedItem] = useState()
     const [tableDataType, setTableDataType] = useState("folder")
-    const [tableItemIcon, setTableItemIcon] = useState("folder")
+
+    useEffect(() => {
+    }, [tableDataType, folderType]);
+
 
     const onEdit = async (item) => {
         if (tableDataType == "folder") {
@@ -28,6 +32,10 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
 
     const handleDeleteFolderItems = () => {
         setIsmodelForDeleteItems(true)
+    }
+
+    const onCloseModal = () => {
+        setIsmodelForDeleteItems(false)
     }
 
     const showItemListOfSelectedFolder = (item) => {
@@ -127,13 +135,13 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}
                 selectedItem={selectedItem}
                 folderType={folderType}
-            ></ModelForAddItems>
+            />
             <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
-                setIsmodelForDeleteItems={setIsmodelForDeleteItems}
+                onCloseModal={onCloseModal}
                 tableDataType={tableDataType}
                 folderType={folderType}
-            ></ModelForDeleteItems>
+            />
         </>
     )
 }

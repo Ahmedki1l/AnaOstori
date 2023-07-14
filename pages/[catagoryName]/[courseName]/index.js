@@ -300,7 +300,7 @@ export default function Index(props) {
 																			</div>
 																		</div>
 																		<div className={styles.lockItemWrapper}>
-																			{item?.previewAvailable != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#000000'} />}
+																			{item?.previewAvailable != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
 																			{item?.previewAvailable == true && <p onClick={() => handleCourseItemClick(item?.id)} className={styles.previewItemText}>شاهد مجانًا</p>}
 																		</div>
 																	</div>

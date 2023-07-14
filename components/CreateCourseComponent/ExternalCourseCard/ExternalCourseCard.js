@@ -225,7 +225,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                 <div className={styles.courseDetails} key={key}>
                                                     <FormItem>
                                                         <div style={{ margin: '10px' }} >
-                                                            <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} /></div>
+                                                            <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} /></div>
                                                         </div>
                                                     </FormItem>
                                                     <div className='flex flex-wrap w-[95%]'>
@@ -296,7 +296,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                                 deleteCourseDetails(index, remove, name)
                                                             }}
                                                         >
-                                                            <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} />
+                                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                         </div>
                                                     </div>
                                                 </div>

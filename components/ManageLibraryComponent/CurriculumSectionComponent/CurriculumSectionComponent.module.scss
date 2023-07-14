@@ -1,0 +1,104 @@
+.addSectionArea {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.curriculimSectionHead {
+    width: 60%;
+    height: 60px;
+    background-color: #2D2E2D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 3px 3px 0px 0px;
+}
+
+.curriculimHeadText {
+    display: flex;
+    color: #FFFFFF;
+    padding-top: 10px;
+}
+
+.sectionTitle {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.numberOfItems {
+    font-size: 14px;
+    padding: 5px;
+}
+
+.sectionName {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.addSections {
+    font-size: 20px;
+    color: #F26722
+}
+
+.arrowIcon {
+    cursor: pointer;
+    height: 22px;
+    transition: 0.5s all;
+}
+
+.headerActionWrapper {
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.curriculumSectionBody {
+    width: 60%;
+    margin-bottom: 30px;
+    border: 1px solid #B8B8B8;
+    border-top: none;
+    border-radius: 0px 0px 3px 3px;
+}
+
+.curriculumData {
+    padding: 20px;
+}
+
+
+.addItemsArea {
+    border: 1px solid #B8B8B8;
+    border-top: none;
+    border-radius: 0px 0px 3px 3px;
+}
+
+.addItems {
+    font-size: 20px;
+    color: #F26722;
+    display: grid;
+    place-content: center;
+    padding: 15px;
+    border: 2px dashed #F26722;
+}
+
+
+.curriculumDataArea {
+    display: flex;
+    padding: 20px;
+    justify-content: space-between;
+    border-bottom: 1px solid #B8B8B8;
+}
+
+.curriculimDetailsData {
+    width: 22;
+    display: flex;
+    justify-content: space-around;
+}
+
+.curriculimDetailsActions {
+    width: 12%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}

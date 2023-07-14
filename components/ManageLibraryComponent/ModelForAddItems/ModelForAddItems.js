@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Modal } from 'antd';
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './ModelForAddItems.module.scss'
+import { useSelector } from 'react-redux';
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
-import { useSelector } from 'react-redux';
 
 const ModelForAddItems = ({
     isModelForAddItemOpen,

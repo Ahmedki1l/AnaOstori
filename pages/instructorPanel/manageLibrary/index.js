@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
-import ModelForAddFolder from '../../../components/CommonComponents/ModelForAddFolder/ModelForAddFolder';
-import ModelForAddItems from '../../../components/CommonComponents/ModelForAddItems/ModelForAddItems';
-import VideosLibrary from '../../../components/ManageLibraryComponent/VideosLibrary/VideosLibrary';
-import FilesLibrary from '../../../components/ManageLibraryComponent/FilesLibrary/FilesLibrary';
-import ExamsLibrary from '../../../components/ManageLibraryComponent/ExamsLibrary/ExamsLibrary';
-import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary';
 import { getFolderListAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
-import ManageLibraryTableComponent from '../../../components/CommonComponents/ManageLibraryTableComponent/ManageLibraryTableComponent';
 import { useRouter } from 'next/router';
+import ModelForAddFolder from '../../../components/ManageLibraryComponent/ModelForAddFolder/ModelForAddFolder';
+import ModelForAddItems from '../../../components/ManageLibraryComponent/ModelForAddItems/ModelForAddItems';
+import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
+import ManageLibraryTableComponent from '../../../components/ManageLibraryComponent/ManageLibraryTableComponent/ManageLibraryTableComponent';
+
 
 
 function Index() {
@@ -24,7 +22,6 @@ function Index() {
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [folderType, setFolderType] = useState("video")
     const [folderList, setFolderList] = useState([])
-    const [showExtraNavItem, setShowExtraNavItem] = useState()
 
     useEffect(() => {
         getfolderList(folderType)
@@ -36,7 +33,7 @@ function Index() {
 
     const handleItemSelect = async (id) => {
         setSelectedItem(id)
-        setFolderType(id == 1 ? "video" : id == 2 ? "file" : "quiz")
+        setFolderType(id == 1 ? "video" : id == 2 ? "file" : "quiz" ? "quiz" : 'curriculumItem')
     }
 
     const getfolderList = async (folderType) => {
@@ -104,11 +101,7 @@ function Index() {
                     <div>
                         <div className='maxWidthDefault p-4'>
                             {(selectedItem == 1 || selectedItem == 2 || selectedItem == 3) && <ManageLibraryTableComponent onclose={onclose} folderTableData={folderList} folderType={folderType} />}
-                            {/* {selectedItem == 1 && <VideosLibrary folderTableData={folderList} folderType={folderType} onclose={onModelClose} />}
-                            {selectedItem == 2 && <FilesLibrary folderTableData={folderList} folderType={folderType} onclose={onModelClose} />}
-                            {selectedItem == 3 && <ExamsLibrary folderTableData={folderList} folderType={folderType} onclose={onModelClose} />} */}
-                            {selectedItem == 4 && <CoursePathLibrary folderTableData={folderList} folderType={folderType} />}
-                            {/* {selectedItem == 4 && <CreateCoursePath showExtraNavItem={showExtraNavItem} />} */}
+                            {selectedItem == 4 && <CoursePathLibrary folderTableData={folderList} onclose={onclose} folderType={folderType} />}
                         </div>
                     </div>
                 </div>

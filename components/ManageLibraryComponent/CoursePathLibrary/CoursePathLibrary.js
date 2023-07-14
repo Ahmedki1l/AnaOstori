@@ -5,6 +5,11 @@ import Icon from '../../CommonComponents/Icon'
 import { fullDate } from '../../../constants/DateConverter'
 
 const CoursePathLibrary = ({ folderTableData, tableDataType, folderType }) => {
+
+
+    const handleDeleteFolderItems = () => {
+        // setIsmodelForDeleteItems(true)
+    }
     return (
         <div>
             <div className={styles.tableContainer}>
