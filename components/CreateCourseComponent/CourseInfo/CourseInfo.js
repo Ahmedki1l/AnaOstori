@@ -567,7 +567,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
                                                             <div style={{ margin: '10px' }} >
-                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} /></div>
+                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} /></div>
                                                             </div>
                                                         </FormItem>
                                                         <FormItem
@@ -623,7 +623,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                                 onClick={() => {
                                                                     deleteCourseDetails(index, remove, name, "courseMeta")
                                                                 }}>
-                                                                <AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} />
+                                                                <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -648,7 +648,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
                                                             <div style={{ margin: '10px' }} >
-                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFCD3C'} /></div>
+                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} /></div>
                                                             </div>
                                                         </FormItem>
                                                         <FormItem
@@ -696,7 +696,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                         <div className={styles.deleteIconWrapper} >
                                                             <div className='flex justify-center items-center h-100' onClick={() => {
                                                                 deleteCourseDetails(index, remove, name, "courseDetails")
-                                                            }}><AllIconsComponenet iconName={'deletecourse'} height={700} width={700} color={'#FFCD3C'} /></div>
+                                                            }}><AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} /></div>
                                                         </div>
                                                     </div>
                                                 ))}

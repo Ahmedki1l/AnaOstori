@@ -1,9 +1,9 @@
 import { Box, Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { accountRecovery, viewProfileAPI } from '../../../services/apisService';
 import styles from './ModalComponent.module.scss'
 import { toast } from "react-toastify";
 import { useEffect } from 'react';
+import { accountRecovery, viewProfileAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 
 

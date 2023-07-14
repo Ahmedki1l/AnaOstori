@@ -30,8 +30,6 @@ const Appointments = ({ courseId, courseType }) => {
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
 
-    console.log(allAppointments);
-
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -56,7 +54,6 @@ const Appointments = ({ courseId, courseType }) => {
         values.courseId = courseId
         values.numberOfSeats = values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
-        console.log(values);
         if (isAvailabilityEdit) {
             let body = {
                 data: values,
@@ -74,7 +71,6 @@ const Appointments = ({ courseId, courseType }) => {
                 data: values,
                 accessToken: storeData?.accessToken,
             }
-            console.log(body);
             await createCourseAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
                 getAllAvailability()
@@ -169,7 +165,6 @@ const Appointments = ({ courseId, courseType }) => {
                                                     {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} />}
                                                     {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} />}
                                                     {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
-
                                                     <span className='pr-1'>{appointment.gender == "male" ? "ولد" : "بنت"}</span>
                                                 </div><br />
                                                 <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>

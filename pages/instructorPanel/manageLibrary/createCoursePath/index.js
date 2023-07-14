@@ -4,16 +4,25 @@ import { FormItem } from '../../../../components/antDesignCompo/FormItem'
 import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
+import ModelForAddFolder from '../../../../components/ManageLibraryComponent/ModelForAddFolder/ModelForAddFolder'
+import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 
 
 const CreateCoursePath = () => {
 
     const [courseForm] = Form.useForm();
     const [curriculmName, setCurriculumName] = useState()
+    const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
+    const [folderType, setFolderType] = useState("curriculum")
 
     const onFinishCreateCoursepath = (item) => {
         setCurriculumName(item)
+        courseForm.resetFields()
     }
+    const handleAddFolder = (values) => {
+        console.log(values);
+        setIsModelForAddFolderOpen(true);
+    };
 
     return (
         <div>
@@ -46,7 +55,7 @@ const CreateCoursePath = () => {
                                             <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
                                             <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
                                             <div className={styles.createCourseBtnBox}>
-                                                <button className='primarySolidBtn'>إضافة قسم</button>
+                                                <button className='primarySolidBtn' onClick={() => handleAddFolder('addSection')}>إضافة قسم</button>
                                             </div>
                                         </div>
                                     </div>
@@ -54,14 +63,20 @@ const CreateCoursePath = () => {
                             </div>
                             }
 
+                            <CurriculumSectionComponent onclose={onclose} folderType={folderType} />
+
                             <div className={`${styles.savePathTitle}`}>
                                 {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `}>حفظ ومتابعة</button>}
-                                {curriculmName && <button className={`primarySolidBtn ${styles.btnText} `}>حفظ</button>}
+                                {curriculmName && <button className={`primarySolidBtn ${styles.btnText}`}>حفظ</button>}
                             </div>
                         </div>
                     </div>
                 </div>
             </Form>
+            <ModelForAddFolder
+                isModelForAddFolderOpen={isModelForAddFolderOpen}
+                setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
+            />
         </div>
     )
 }

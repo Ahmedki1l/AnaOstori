@@ -40,9 +40,7 @@ const DatePicker = ({
   suFFixIconName,
   disabled = false,
   ...rest
-
 }) => {
-  console.log(disabled);
   return (
     <StyledDatePicker
       onChange={onChange}

@@ -4,7 +4,7 @@ import styles from './ModelForDeleteItems.module.scss'
 
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
-    setIsmodelForDeleteItems,
+    onCloseModal,
     tableDataType,
     folderType,
 }
@@ -30,11 +30,16 @@ const ModelForDeleteItems = ({
             messageText: "هل انت متأكد من انك تريد حذف هذا الاختبار؟",
             btnText: "تأكيد حذف الاختبار",
             title: "حذف اختبار"
+        },
+        items: {
+            messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
+            btnText: "تأكيد إزالة العنصر",
+            title: "إزالة عنصر"
         }
     }
 
     const handleDeleteItems = () => {
-        setIsmodelForDeleteItems(false);
+        onCloseModal()
     };
 
     const modelHeading = tableDataType == "folder" ? deleteModalProps.folder.title : deleteModalProps[folderType].title
@@ -48,7 +53,7 @@ const ModelForDeleteItems = ({
                 closeIcon={false}
                 footer={false}
                 open={ismodelForDeleteItems}
-                onCancel={() => setIsmodelForDeleteItems(false)}
+                onCancel={() => onCloseModal()}
             >
                 <div dir='rtl'>
                     <div className={styles.deleteItemsModalHeader}>
@@ -57,10 +62,10 @@ const ModelForDeleteItems = ({
                     <p className={styles.deleteVideoText}>{deleteMsg}</p>
                     <div className={styles.AppointmentFieldBorderBottom}>
                         <div className={styles.confirmVideoBtn}>
-                            <button className='deleteBtn' type={'submit'} onClick={handleDeleteItems}>{deleteBtnText}</button>
+                            <button className='deleteBtn' onClick={() => handleDeleteItems()}>{deleteBtnText}</button>
                         </div>
                         <div>
-                            <button className={styles.ignoreVideoBtn} type={'submit'}>تراجع</button>
+                            <button className={styles.ignoreVideoBtn} onClick={() => onCloseModal()}>تراجع</button>
                         </div>
                     </div>
                 </div>
