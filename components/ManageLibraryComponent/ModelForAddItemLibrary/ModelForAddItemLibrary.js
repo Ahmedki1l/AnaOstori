@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Form, Modal } from 'antd';
-import styles from './ModelForAddItems.module.scss'
+import styles from './ModelForAddItemLibrary.module.scss'
 import { useSelector } from 'react-redux';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
 
-const ModelForAddItems = ({
+const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
     setIsModelForAddItemOpen,
     selectedItem,
@@ -134,4 +134,4 @@ const ModelForAddItems = ({
     );
 }
 
-export default ModelForAddItems;
+export default ModelForAddItemLibrary;
