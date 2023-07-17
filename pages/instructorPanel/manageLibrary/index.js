@@ -6,9 +6,9 @@ import { getFolderListAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import ModelForAddFolder from '../../../components/ManageLibraryComponent/ModelForAddFolder/ModelForAddFolder';
-import ModelForAddItems from '../../../components/ManageLibraryComponent/ModelForAddItems/ModelForAddItems';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
 import ManageLibraryTableComponent from '../../../components/ManageLibraryComponent/ManageLibraryTableComponent/ManageLibraryTableComponent';
+import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/ModelForAddItemLibrary/ModelForAddItemLibrary';
 
 
 
@@ -33,7 +33,7 @@ function Index() {
 
     const handleItemSelect = async (id) => {
         setSelectedItem(id)
-        setFolderType(id == 1 ? "video" : id == 2 ? "file" : "quiz" ? "quiz" : 'curriculumItem')
+        setFolderType(id == 1 ? "video" : id == 2 ? "file" : id == 2 ? "quiz" : 'curriculumItem')
     }
 
     const getfolderList = async (folderType) => {
@@ -112,7 +112,7 @@ function Index() {
                 folderType={folderType}
                 onclose={onModelClose}
             />
-            <ModelForAddItems
+            <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}
                 folderType={folderType}
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}

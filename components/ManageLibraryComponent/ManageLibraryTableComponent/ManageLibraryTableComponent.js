@@ -4,8 +4,8 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import Icon from '../../CommonComponents/Icon'
 import ModelForAddFolder from '../ModelForAddFolder/ModelForAddFolder'
-import ModelForAddItems from '../ModelForAddItems/ModelForAddItems'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
+import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLibrary'
 
 
 
@@ -16,6 +16,7 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [selectedItem, setSelectedItem] = useState()
     const [tableDataType, setTableDataType] = useState("folder")
+    const [deleteItemType, setDeleteItemType] = useState('folder')
 
     useEffect(() => {
     }, [tableDataType, folderType]);
@@ -31,6 +32,7 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
     };
 
     const handleDeleteFolderItems = () => {
+        setDeleteItemType(tableDataType == 'folder' ? 'folder' : folderType == 'quiz' ? 'quiz' : folderType == 'file' ? 'file' : 'video')
         setIsmodelForDeleteItems(true)
     }
 
@@ -130,7 +132,7 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
                 selectedItem={selectedItem}
                 onclose={onclose}
             />
-            <ModelForAddItems
+            <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}
                 selectedItem={selectedItem}
@@ -139,8 +141,7 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
             <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 onCloseModal={onCloseModal}
-                tableDataType={tableDataType}
-                folderType={folderType}
+                deleteItemType={deleteItemType}
             />
         </>
     )

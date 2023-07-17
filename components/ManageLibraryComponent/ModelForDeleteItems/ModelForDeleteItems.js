@@ -5,11 +5,10 @@ import styles from './ModelForDeleteItems.module.scss'
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
     onCloseModal,
-    tableDataType,
-    folderType,
+    deleteItemType
 }
 ) => {
-    console.log(tableDataType, folderType);
+    console.log(deleteItemType);
     const deleteModalProps = {
         folder: {
             messageText: "هل انت متأكد من انك تريد حذف هذا المجلد؟",
@@ -31,7 +30,12 @@ const ModelForDeleteItems = ({
             btnText: "تأكيد حذف الاختبار",
             title: "حذف اختبار"
         },
-        items: {
+        section: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا القسم؟",
+            btnText: "تأكيد حذف القسم",
+            title: "حذف قسم"
+        },
+        sectionItem: {
             messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
             btnText: "تأكيد إزالة العنصر",
             title: "إزالة عنصر"
@@ -42,9 +46,9 @@ const ModelForDeleteItems = ({
         onCloseModal()
     };
 
-    const modelHeading = tableDataType == "folder" ? deleteModalProps.folder.title : deleteModalProps[folderType].title
-    const deleteMsg = tableDataType == "folder" ? deleteModalProps.folder.messageText : deleteModalProps[folderType].messageText
-    const deleteBtnText = tableDataType == "folder" ? deleteModalProps.folder.btnText : deleteModalProps[folderType].btnText
+    const modelHeading = deleteModalProps[deleteItemType].title
+    const deleteMsg = deleteModalProps[deleteItemType].messageText
+    const deleteBtnText = deleteModalProps[deleteItemType].btnText
 
 
     return (

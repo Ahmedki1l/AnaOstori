@@ -12,7 +12,6 @@ font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
     font-family: 'Tajawal-Regular';
     color:#00000045;
   }
-  font-size: 20px;
   font-family: 'Tajawal-Regular';
   height: ${props => (props.height ? props.height : '52')}px;
   width:${props => (props.width ? props.width : '317')}px;

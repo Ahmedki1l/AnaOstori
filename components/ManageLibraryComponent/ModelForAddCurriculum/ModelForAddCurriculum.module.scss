@@ -1,0 +1,43 @@
+@import "../../../styles/variables.module.scss";
+
+.addCurriculumModel {
+    width: 766px;
+}
+
+.curriculumHead {
+    padding: 20px 24px 0px;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closebutton {
+    background: none;
+    border: none;
+}
+
+.createappointment {
+    font-size: 18px;
+}
+
+.navItems {
+    font-size: 18px;
+    display: flex;
+
+    p {
+        margin-left: 24px;
+        cursor: pointer;
+    }
+}
+
+.activeItem {
+    color: $primary-color;
+    border-bottom: 2px solid $primary-color;
+}
+
+.curriculumBody {
+    border-top: 1px solid #00000064;
+}
