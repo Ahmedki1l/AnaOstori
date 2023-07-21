@@ -13,13 +13,13 @@ export default function WhatsAppLinkComponent(props) {
 		<div className={`whatsAppLogoWrapper ${isBookSeatPageOpen ? `whatsAppLogoWrapperUp` : ``}`}>
 			<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 				<div className='whatsAppLogo' >
-					<div className='whatsAppMessageWrapper'>
-						<p>محتاج مساعدة؟</p>
-						<p>تفضل تواصل معنا</p>
-					</div>
 					<div className='whatsAppLogoRoundWrapper'>
 						<AllIconsComponenet height={screenWidth < 769 ? 35 : 50} width={screenWidth < 769 ? 35 : 50} iconName={'whatsapp'} color={'#ffffff'} />
 					</div>
+				</div>
+				<div className='whatsAppMessageWrapper'>
+					<p>محتاج مساعدة؟</p>
+					<p>تفضل تواصل معنا</p>
 				</div>
 			</Link>
 		</div>

@@ -60,7 +60,7 @@ export default function Home(props) {
 	const news = props.news ? props.news : []
 	const catagories = props?.catagories ? props?.catagories : []
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
-	const homeVideoUrl = mediaUrl(props.homeMetaData[0].fileBucket, props.homeMetaData[0].fileKey)
+	const homeVideoUrl = mediaUrl(props.homeMetaData[0]?.fileBucket, props.homeMetaData[0]?.fileKey)
 	const [scrollSectionName, setScrollSectionName] = useState()
 
 	const handleScrollToSection = (sectionName) => {
@@ -137,17 +137,17 @@ export default function Home(props) {
 			<div className={styles.analyticsBarWrapper}>
 				<div className={`maxWidthDefault text-white ${styles.analyticsBarSubWrapper}`}>
 					<div className={`${styles.badgeDiv} pt-4`}>
-						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
+						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
 						<div className='px-4'>
-							<p className='head2'>نضمن لك الفائدة</p>
-							<p className={styles.discriptionText}>اذا اشتركت وما استفدت، بنرجع لك فلوسك لأن يهمنا إنك تستفيد</p>
+							<p className='head2'>وش يميزنا</p>
+							<p className={styles.discriptionText}>شاملين كل شيء تحتاجه من تأسيس وتجميعات، ونرد على أسئلتك، ونتابع معك أدائك، ونضمن لك الفائدة.</p>
 						</div>
 					</div>
 					<div className={styles.badgeDiv}>
-						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
+						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
 						<div className='px-4'>
 							<p className='head2'>نضمن لك الفائدة</p>
-							<p className={styles.discriptionText}>شاملين كل شيء تحتاجه، نرد على اسئلتك ونتابع معك ونضمن لك الفائدة</p>
+							<p className={styles.discriptionText}>إذا التزمت معنا خطوة خطوة بنضمن لك ارتفاع بدرجتك حسب  <Link className='link' href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>سياسة الضمان</Link></p>
 						</div>
 					</div>
 					<div className={styles.imagesWrapper}>

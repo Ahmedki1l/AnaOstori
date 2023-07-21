@@ -33,7 +33,7 @@ const instance2 = (accessToken) => {
 // }
 
 export const uploadProfileImage = (data) => { return instance2(data?.accessToken).post('/userprofile/upload', data?.formData) }
-export const uploadCourseFileAPI = (data) => { return instance2(data?.accessToken).post('/file/upload', data?.formData) }
+export const uploadFileAPI = (data) => { return instance2(data?.accessToken).post('/file/upload', data?.formData) }
 
 
 export const createOrderAPI = (data) => { return instance(data?.accessToken).post(`/createOrder`, data?.orderData) }
@@ -88,5 +88,10 @@ export const getFolderListAPI = (data) => { return instance(data?.accessToken).p
 
 export const createFolderAPI = (data) => { return instance(data?.accessToken).post(`/folder/create`, data?.data) }
 export const updateFolderAPI = (data) => { return instance(data?.accessToken).post(`/folder/update`, data?.data) }
+
+export const addItemToFolderAPI = (data) => { return instance(data?.accessToken).post(`item/create/${data?.folderId}`, data?.data) }
+
+
+
 
 

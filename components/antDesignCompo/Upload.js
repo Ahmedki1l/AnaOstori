@@ -4,7 +4,7 @@ import { Modal, Upload as AntdUpload } from 'antd';
 import styled from 'styled-components'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { useSelector } from 'react-redux';
-import { uploadCourseFileAPI, uploadProfileImage } from '../../services/apisService';
+import { uploadFileAPI, uploadProfileImage } from '../../services/apisService';
 
 
 const AntdUploadStyle = styled(AntdUpload)`
@@ -35,7 +35,7 @@ const Upload = ({
             accessToken: storeData?.accessToken
         }
         console.log("data", data);
-        await uploadCourseFileAPI(data).then((res) => {
+        await uploadFileAPI(data).then((res) => {
             console.log(res);
         }).catch((error) => {
             console.log(error);

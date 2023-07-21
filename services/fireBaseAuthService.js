@@ -12,13 +12,13 @@ import * as fbq from '../lib/fpixel'
 
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyAkp8IkX3K0KZv4-59pjPSIGkBOHpw6ybY',
-	authDomain: 'anaostori.firebaseapp.com',
-	projectId: 'anaostori',
-	storageBucket: 'anaostori.appspot.com',
-	messagingSenderId: '143813978773',
-	appId: '1:143813978773:web:ddf3c0718b88ad85f4099c',
-	measurementId: 'G-MM29291KH1'
+	apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
+	authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN,
+	projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID,
+	storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+	appId: process.env.NEXT_PUBLIC_FIREBASE_APPID,
+	measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID
 };
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

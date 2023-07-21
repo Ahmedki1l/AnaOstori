@@ -18,9 +18,10 @@ import { getCourseByNameAPI } from '../../../services/apisService'
 
 
 export async function getServerSideProps(ctx) {
+	const lang = ctx?.resolvedUrl.split('/')[2].split('=')[1] == 'en' ? 'en' : 'ar'
+	const courseName = lang == 'en' ? ctx?.resolvedUrl.split('/')[2].split('?')[0].replace(/-/g, ' ') : ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ')
 
-	const newResolvedUrl = ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ') //used .split() and .replace() to get course name from URl
-	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/courseByNameWithoutAuth/${newResolvedUrl}`)
+	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/courseByNameWithoutAuth/${courseName}`)
 	const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 
 	const [courseDetails, homeReviews] = await Promise.all([
@@ -64,12 +65,10 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	const courseDetail = props.courseDetails ? props.courseDetails : null
-	console.log(courseDetail);
 	const maleDates = props.maleDates
 	const femaleDates = props.femaleDates
 	const mixDates = props.mixDates
 
-	console.log(maleDates, femaleDates, mixDates);
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
@@ -77,13 +76,18 @@ export default function Index(props) {
 	const router = useRouter()
 	const storeData = useSelector((state) => state?.globalStore);
 	const isUserLogin = storeData?.accessToken ? true : false;
+	const lang = courseDetail.language
 
 
 	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
 	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
 	const isSeatFullForFemale = femaleDates.length > 0 ? femaleDates.every(obj => obj.numberOfSeats === 0) : false;
 	const isSeatFullForMix = mixDates.length > 0 ? mixDates.every(obj => obj.numberOfSeats === 0) : false;
-	const bookSeatButtonText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : 'احجز مقعدك الآن')
+
+	const bookSeatButtonENText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'Notify me' : (isSeatFullForMix ? 'Notify me' : 'Reserve your seat now')
+	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : 'احجز مقعدك الآن')
+	const bookSeatButtonText = (lang == 'en' ? bookSeatButtonENText : bookSeatButtonARText)
+
 	const screenWidth = useWindowSize().width
 	const offset = useScrollEvent().offset
 
@@ -174,14 +178,14 @@ export default function Index(props) {
 	return (
 		<>
 			{(courseDetail) &&
-				<div onWheel={handleWheelEvent}>
-					<CourseDetailsHeader courseDetail={courseDetail} bookSeatButtonText={bookSeatButtonText} handleBookSitButtonClick={handleBookSitButtonClick} />
+				<div onWheel={handleWheelEvent} dir={lang == "en" ? 'ltr' : 'rtl'}>
+					<CourseDetailsHeader courseDetail={courseDetail} bookSeatButtonText={bookSeatButtonText} handleBookSitButtonClick={handleBookSitButtonClick} lang={lang} />
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
 							{(screenWidth <= 767) ?
 								<ul className={`flex justify-center py-2 border-b border-inherit bg-white z-10 list-none`}>
-									<li onClick={() => handleSlectedItem(0, `header`)} className={`mx-auto fontBold ${styles.mobileTabBarFont}`}>مميزات الدورة</li>
-									<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto fontBold ${styles.mobileTabBarFont}`}>المواعيد القادمة</li>
+									<li onClick={() => handleSlectedItem(0, `header`)} className={`mx-auto fontBold ${styles.mobileTabBarFont}`}>{lang == 'en' ? 'Course features' : `مميزات الدورة`}</li>
+									<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto fontBold ${styles.mobileTabBarFont}`}>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 								</ul>
 								:
 								<ul className={`${styles.courseDetailsNavbar} ${offset > 313 ? `${styles.courseDetailsNavbarFixed}` : ''}`}>
@@ -189,15 +193,15 @@ export default function Index(props) {
 										{courseDetail?.courseMetaData?.map((metaData, index) => {
 											return (
 												<div key={`datatitle${index}`}>
-													<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`)} className={selectedNavItem == (index + 1) ? styles.activeItem : ''}>{metaData.title}</li>
+													<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`)} className={`${selectedNavItem == (index + 1) ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>{metaData.title}</li>
 												</div>
 											)
 										})}
 										<div>
-											<li onClick={() => handleSlectedItem(4, 'dates')} className={selectedNavItem == 4 ? styles.activeItem : ''}>المواعيد&nbsp;القادمة</li>
+											<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 										</div>
 										<div>
-											<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={selectedNavItem == 5 ? styles.activeItem : ''}>تجارب&nbsp;الأساطير</li>
+											<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`} </li>
 										</div>
 									</ScrollContainer>
 								</ul>
@@ -211,7 +215,7 @@ export default function Index(props) {
 					</div>
 					{(screenWidth <= 767) &&
 						<ul id={'header'} className="pr-4" style={{ paddingTop: selectedNavItem == 0 ? `${paddingTop}rem` : '2rem' }}>
-							<h3 className='fontBold pb-4'>تفاصيل ثانية</h3>
+							<h3 className='fontBold pb-4'>{lang == 'en' ? `Subscription Info` : `تفاصيل الاشتراك`}</h3>
 							{courseDetail.courseDetailsMetaData && courseDetail.courseDetailsMetaData?.map((item, index) => {
 								return (
 									<li key={`courseDetailsMetaData${index}`} className='flex items-center pb-4 '>
@@ -312,10 +316,10 @@ export default function Index(props) {
 											)
 										})}
 									</div>
-								</div> :
-
+								</div>
+								:
 								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }}>
-									<h1 className='head2'>المواعيد القادمة</h1>
+									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
 									{courseDetail?.type == 'physical' ?
 										<>
 											<div>
@@ -328,14 +332,14 @@ export default function Index(props) {
 														{maleDates?.map((maleDate, index) => {
 															return (
 																<div key={`maleDate${index}`}>
-																	<CourseDates date={maleDate} handleBookSit={handleBookSit} />
+																	<CourseDates date={maleDate} handleBookSit={handleBookSit} lang={lang} />
 																</div>
 															)
 														})}
 													</ScrollContainer>
 													:
 													<div>
-														<UserDetailForm1 gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} />
+														<UserDetailForm1 gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} lang={lang} />
 													</div>
 												}
 											</div>
@@ -349,14 +353,14 @@ export default function Index(props) {
 														{femaleDates?.map((femaleDate, index) => {
 															return (
 																<div key={`femaleDate${index}`}>
-																	<CourseDates date={femaleDate} handleBookSit={handleBookSit} />
+																	<CourseDates date={femaleDate} handleBookSit={handleBookSit} lang={lang} />
 																</div>
 															)
 														})}
 													</ScrollContainer>
 													:
 													<div>
-														<UserDetailForm1 gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} />
+														<UserDetailForm1 gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} lang={lang} />
 													</div>
 												}
 											</div>
@@ -368,14 +372,14 @@ export default function Index(props) {
 													{mixDates?.map((mixDate, index) => {
 														return (
 															<div key={`mixDate${index}`}>
-																<CourseDates date={mixDate} handleBookSit={handleBookSit} />
+																<CourseDates date={mixDate} handleBookSit={handleBookSit} lang={lang} />
 															</div>
 														)
 													})}
 												</ScrollContainer>
 												:
 												<div>
-													<UserDetailForm1 gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} />
+													<UserDetailForm1 gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} lang={lang} />
 												</div>
 											}
 										</>
@@ -383,7 +387,7 @@ export default function Index(props) {
 								</div>
 							}
 							<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
-								<h1 className='head2 pb-4'>تجارب الأساطير</h1>
+								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
 								<ReviewComponent homeReviews={homeReviews} />
 							</div>
 						</div>

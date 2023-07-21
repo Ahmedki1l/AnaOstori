@@ -6,25 +6,75 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
+import { addItemToFolderAPI, uploadFileAPI } from '../../../services/apisService';
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
     setIsModelForAddItemOpen,
-    selectedItem,
+    selectedFolder,
     folderType,
+    selectedFolderId,
 }) => {
 
+    console.log(selectedFolder);
     const [form] = Form.useForm();
     const storeData = useSelector((state) => state?.globalStore);
-    const isEdit = selectedItem != undefined ? true : false
+    const isEdit = selectedFolder != undefined ? true : false
+    const [uploadLoader, setUploadLoader] = useState(false)
+    const [fileName, setFileName] = useState()
+    const [fileUploadResponceData, setFileUploadResponceData] = useState()
 
-    console.log(isEdit);
 
-    const handleCreateItemsFolder = (values) => {
-        console.log(values);
+    const getFileKey = async (e) => {
+        setUploadLoader(true)
+        setFileName(e.target.files[0].name)
+
+        let formData = new FormData();
+        formData.append("file", e.target.files[0]);
+
+        const data = {
+            formData,
+            accessToken: storeData?.accessToken
+        }
+
+        await uploadFileAPI(data).then((res) => {
+            console.log(res);
+            setFileUploadResponceData(res.data)
+            setUploadLoader(false)
+        }).catch((error) => {
+            console.log(error);
+            setUploadLoader(false)
+        })
+    }
+
+    const addItemToFolder = async (e) => {
+        const { key, bucket, mime } = fileUploadResponceData
+
+        const body = {
+            name: e.fileTitle,
+            description: e.fileDescription,
+            type: "file",
+            linkKey: key,
+            linkBucket: bucket,
+            linkMime: mime,
+            previewAvailable: true,
+        }
+        const data = {
+            accessToken: storeData?.accessToken,
+            folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
+            data: body
+        }
+
+        await addItemToFolderAPI(data).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+        })
+
         form.resetFields()
         setIsModelForAddItemOpen(false);
-    };
+
+    }
 
     return (
         <>
@@ -41,10 +91,10 @@ const ModelForAddItemLibrary = ({
                     <p className={`fontBold ${styles.createappointment}`}>إضافة فيديو</p>
                 </div>
                 <div dir='rtl'>
-                    <Form form={form} onFinish={handleCreateItemsFolder}>
+                    <Form form={form} onFinish={addItemToFolder}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
-                                name={'videoTitle'}
+                                name={'fileTitle'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
@@ -55,7 +105,7 @@ const ModelForAddItemLibrary = ({
                                 />
                             </FormItem>
                             <FormItem
-                                name={'videoDescription'}>
+                                name={'fileDescription'}>
                                 <InputTextArea
                                     fontSize={16}
                                     height={76}
@@ -64,15 +114,17 @@ const ModelForAddItemLibrary = ({
                                 />
                             </FormItem>
                             {folderType !== "quiz" &&
-                                <FormItem>
-                                    <div className={styles.uploadVideoWrapper}>
+                                <>
+                                    <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
+                                    <label className={styles.uploadVideoWrapper} htmlFor='uploadFileInput'>
                                         <div className={styles.IconWrapper} >
                                             <div className={styles.uploadFileWrapper}><AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#000000'} /></div>
                                             <p>ارفق الملف</p>
                                         </div>
-                                        {isEdit && <div className={styles.videoFolderName}>video name</div>}
-                                    </div>
-                                </FormItem>}
+                                        {isEdit && <div className={styles.videoFolderName}>{fileName}</div>}
+                                    </label>
+                                </>
+                            }
                             {folderType == "quiz" &&
                                 <>
                                     <div className="flex">

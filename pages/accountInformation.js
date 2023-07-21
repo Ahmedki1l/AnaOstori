@@ -259,7 +259,7 @@ export default function AccountInformation() {
                                                     <AllIconsComponenet height={17} width={10} iconName={'arrowRight'} color={'#000000'} />
                                                     <h3 className='fontBold'>تحديث رقم الجوال</h3>
                                                 </div>
-                                                <p className={`font-medium ${styles.existingDetailText}`}>رقم الجوال الحالي : {userProfileData?.phone.replace("966", "0")}</p>
+                                                <p className={`font-medium ${styles.existingDetailText}`}>رقم الجوال الحالي : {userProfileData?.phone?.replace("966", "0")}</p>
                                                 <div className={`formInputBox ${styles.passwordInputBox}`}>
                                                     <div className={styles.IconDiv}>
                                                         <AllIconsComponenet height={20} width={20} iconName={'phone'} color={'#00000080'} />

@@ -3,14 +3,12 @@ import Link from 'next/link';
 import Icon from '../../../CommonComponents/Icon'
 import Logo from '../../../CommonComponents/Logo';
 import * as LinkConst from '../../../../constants/LinkConst'
-import VideoThumnail from '../Common/VideoThumnail';
 import CoursePriceBox from '../Common/CoursePriceBox';
 import useWindowSize from '../../../../hooks/useWindoSize';
 import { useEffect, useState } from 'react';
+import CoverImg from '../../../CommonComponents/CoverImg';
 
 
-// MI icons
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 export default function BuyCourseComponent(props) {
 	const courseDetail = props.courseDetail
@@ -18,6 +16,7 @@ export default function BuyCourseComponent(props) {
 	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isMediumScreen = useWindowSize().mediumScreen
 	const [isUserUseApple, setIsUserUseApple] = useState(false)
+	const lang = props.lang
 
 	useEffect(() => {
 		if (window.ApplePaySession) {
@@ -28,11 +27,13 @@ export default function BuyCourseComponent(props) {
 	const coursePlanUrl = `${mediaBaseUrl}/${courseDetail.coursePlanKey}`
 
 	return (
-		<div className={styles.BuyCourseMainArea}>
+		<div className={`${styles.BuyCourseMainArea} ${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
 			<div className={styles.BuyCourseWrapper}>
-				<VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={courseDetail.videoKey} thumnailHeight={190} />
+				<CoverImg height={190} url={`${mediaBaseUrl}/${courseDetail.pictureKey}`} />
 
-				<CoursePriceBox courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={props.bookSeatButtonText} />
+				{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={courseDetail.videoKey} thumnailHeight={190} /> */}
+
+				<CoursePriceBox courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={props.bookSeatButtonText} lang={lang} />
 				<div className='flex justify-center py-3.5'>
 					{isUserUseApple ?
 						<Logo height={isMediumScreen ? 30 : 40} width={isMediumScreen ? 290 : 322} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
@@ -40,7 +41,7 @@ export default function BuyCourseComponent(props) {
 						<Logo height={isMediumScreen ? 38 : 42} width={isMediumScreen ? 272 : 257} logoName={'paymentMethodLogo'} alt={'Payment Methode Logo'} />
 					}
 				</div>
-				<p className={`fontBold ${styles.featureHead}`}>تفاصيل ثانية</p>
+				<p className={`fontBold ${styles.featureHead}`}>{lang == 'en' ? `Subscription Info` : `تفاصيل الاشتراك`}  </p>
 				<ul className={styles.feturesList}>
 					{courseDetail.courseDetailsMetaData.map((item, index) => {
 						return (
@@ -67,10 +68,10 @@ export default function BuyCourseComponent(props) {
 					})}
 				</ul>
 			</div>
-			<Link href={coursePlanUrl ?? ""} target='_blank' className={`flex items-center justify-center normalLinkText ${styles.downloadPlanBox}`} >
+			{/* <Link href={coursePlanUrl ?? ""} target='_blank' className={`flex items-center justify-center normalLinkText ${styles.downloadPlanBox}`} >
 				<SaveAltIcon className={`text-blue-500`} />
 				<p className={`fontMedium ${styles.downloadPlanText}`}>تنزيل خطة الدورة</p>
-			</Link>
+			</Link> */}
 		</div>
 	)
 }
