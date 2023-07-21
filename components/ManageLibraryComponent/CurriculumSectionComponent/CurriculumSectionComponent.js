@@ -4,7 +4,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useState } from 'react'
 import Icon from '../../CommonComponents/Icon'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
-import ModelForAddCurriculum from '../ModelForAddCurriculum/ModelForAddCurriculum'
+import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
 
 const dummyData = [
     {
@@ -92,7 +92,7 @@ const CurriculumSectionComponent = ({ folderType, onclose }) => {
                                 <div><AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} /></div>
                                 <div onClick={() => handleDeleteFolderItems('section')}><AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} /></div>
                                 <div className={`${styles.arrowIcon} ${showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
-                                    <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="19" height="15" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M18.4819 11.386C17.7674 12.1735 16.7732 12.2352 15.9 11.386L9.49827 4.77389L3.0967 11.386C2.22335 12.2352 1.22733 12.1735 0.518761 11.386C0.185286 10.9984 0 10.4894 0 9.96095C0 9.43246 0.185286 8.92348 0.518761 8.53589C1.18416 7.79801 8.20939 0.591263 8.20939 0.591263C8.37654 0.404284 8.57698 0.255548 8.79872 0.153955C9.02045 0.0523634 9.25894 0 9.49989 0C9.74085 0 9.97933 0.0523634 10.2011 0.153955C10.4228 0.255548 10.6232 0.404284 10.7904 0.591263C10.7904 0.591263 17.8124 7.79801 18.4808 8.53589C18.8146 8.92335 19 9.43239 19 9.96095C19 10.4895 18.8146 10.9985 18.4808 11.386H18.4819Z" fill="white" />
                                     </svg>
                                 </div>
@@ -142,11 +142,11 @@ const CurriculumSectionComponent = ({ folderType, onclose }) => {
                 onCloseModal={onCloseModal}
                 deleteItemType={deleteItemType}
             />
-            <ModelForAddCurriculum
+            {isModelForAddCurriculum && <ModelForAddItemCurriculum
                 isModelForAddCurriculum={isModelForAddCurriculum}
                 setIsModelForAddCurriculum={setIsModelForAddCurriculum}
                 onclose={onclose}
-            />
+            />}
         </div>
     )
 }

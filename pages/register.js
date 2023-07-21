@@ -10,6 +10,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet'
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Spinner from '../components/CommonComponents/spinner'
 
 
 
@@ -35,6 +36,7 @@ export default function Register() {
 	const [passwordError, setPasswordError] = useState(false);
 
 	const [user, setUser] = useState();
+	const [loading, setLoading] = useState(false)
 
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -82,6 +84,7 @@ export default function Register() {
 	}
 
 	const hendelGoogleLogin = async () => {
+		setLoading(true)
 		await GoogleLogin().then(async (result) => {
 			const user = result?.user;
 			dispatch({
@@ -142,7 +145,7 @@ export default function Register() {
 
 
 	const handleSignup = async () => {
-
+		setLoading(true)
 		if (!firstName) {
 			setFirstNameError("فضلا ادخل اسمك الاول")
 		}
@@ -178,88 +181,96 @@ export default function Register() {
 
 
 	return (
-		<div className={`relative ${styles.mainPage}`}>
-			<div className={styles.loginFormDiv}>
-				<h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
-				<p className={`pb-2 ${styles.signUpPageSubText}`}>فضلا اكتب بياناتك بدقة، حيث ستٌعتمد وقت تسجيلك بالدورات</p>
-				<div className='flex justify-between'>
-					<div>
-						<div className={`formInputBox ${styles.loginPageSmallInputBox}`}>
-							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+		<>
+			{loading ?
+				<div className={`relative ${styles.mainLoadingPage}`}>
+					<Spinner borderwidth={7} width={6} height={6} />
+				</div>
+				:
+				<div className={`relative ${styles.mainPage}`}>
+					<div className={styles.loginFormDiv}>
+						<h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
+						<p className={`pb-2 ${styles.signUpPageSubText}`}>فضلا اكتب بياناتك بدقة، حيث ستٌعتمد وقت تسجيلك بالدورات</p>
+						<div className='flex justify-between'>
+							<div>
+								<div className={`formInputBox ${styles.loginPageSmallInputBox}`}>
+									<div className='formInputIconDiv'>
+										<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+									</div>
+									<input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={user?._tokenResponse?.firstName ? user?._tokenResponse?.firstName : firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
+									<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الاول</label>
+								</div>
+								{firstNameError ? <p className={styles.errorText}>{firstNameError}</p> : ""}
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={user?._tokenResponse?.firstName ? user?._tokenResponse?.firstName : firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الاول</label>
+							<div>
+								<div className={`formInputBox ${styles.loginPageSmallInputBox}`}>
+									<div className='formInputIconDiv'>
+										<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+									</div>
+									<input className={`formInput ${styles.loginFormInput}`} type="text" name='lastName' id='lastName' value={user?._tokenResponse?.lastName ? user?._tokenResponse?.lastName : lastName} onChange={(e) => setLastName(e.target.value)} placeholder=' ' />
+									<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="lastName">اسم العائلة</label>
+								</div>
+								{lastNameError ? <p className={styles.errorText}>{lastNameError}</p> : ""}
+							</div>
 						</div>
-						{firstNameError ? <p className={styles.errorText}>{firstNameError}</p> : ""}
-					</div>
-					<div>
-						<div className={`formInputBox ${styles.loginPageSmallInputBox}`}>
-							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
-							</div>
-							<input className={`formInput ${styles.loginFormInput}`} type="text" name='lastName' id='lastName' value={user?._tokenResponse?.lastName ? user?._tokenResponse?.lastName : lastName} onChange={(e) => setLastName(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="lastName">اسم العائلة</label>
+						<div className={`formInputBox ${styles.radioBtnDiv}`}>
+							<p className={`pl-4 ${styles.genderText}`}>الجنس</p>
+							<input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
+							<label className='pr-1 pl-4' htmlFor='maleGender'>ذكر</label>
+							<input type="radio" name="gender" className={styles.radioBtns} id="femaleGender" value="female" onChange={(e) => setGender(e.target.value)} />
+							<label className='pr-1' htmlFor="femaleGender">أنثى</label>
 						</div>
-						{lastNameError ? <p className={styles.errorText}>{lastNameError}</p> : ""}
-					</div>
-				</div>
-				<div className={`formInputBox ${styles.radioBtnDiv}`}>
-					<p className={`pl-4 ${styles.genderText}`}>الجنس</p>
-					<input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
-					<label className='pr-1 pl-4' htmlFor='maleGender'>ذكر</label>
-					<input type="radio" name="gender" className={styles.radioBtns} id="femaleGender" value="female" onChange={(e) => setGender(e.target.value)} />
-					<label className='pr-1' htmlFor="femaleGender">أنثى</label>
-				</div>
-				<div className='formInputBox'>
-					<div className='formInputIconDiv'>
-						<AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
-					</div>
-					<input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={user?.user?.phoneNumber ? user?.user?.phoneNumber : phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-					<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال</label>
-				</div>
-				{isPhoneNumberError ? <p className={styles.errorText}>الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
-				<div className='formInputBox'>
-					<div className='formInputIconDiv'>
-						<AllIconsComponenet height={16} width={16} iconName={'email'} color={'#00000080'} />
-					</div>
-					<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={user?._tokenResponse?.email ? user?._tokenResponse?.email : email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-					<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
-				</div>
-				{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
-				<div className='formInputBox'>
-					<div className='formInputIconDiv'>
-						<AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
-					</div>
-					<input className={`formInput ${styles.loginFormInput}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
-					<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="password">كلمة السر</label>
-					<div className={styles.passwordIconDiv}>
-						{!showPassword ?
-							<div onClick={() => setShowPassword(true)}>
-								<VisibilityIcon className={styles.visibilityIcon} />
+						<div className='formInputBox'>
+							<div className='formInputIconDiv'>
+								<AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
 							</div>
-							:
-							<div onClick={() => setShowPassword(false)}>
-								<VisibilityOffIcon className={styles.visibilityIcon} />
+							<input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={user?.user?.phoneNumber ? user?.user?.phoneNumber : phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال</label>
+						</div>
+						{isPhoneNumberError ? <p className={styles.errorText}>الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
+						<div className='formInputBox'>
+							<div className='formInputIconDiv'>
+								<AllIconsComponenet height={16} width={16} iconName={'email'} color={'#00000080'} />
 							</div>
-						}
+							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={user?._tokenResponse?.email ? user?._tokenResponse?.email : email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
+						</div>
+						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
+						<div className='formInputBox'>
+							<div className='formInputIconDiv'>
+								<AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+							</div>
+							<input className={`formInput ${styles.loginFormInput}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="password">كلمة السر</label>
+							<div className={styles.passwordIconDiv}>
+								{!showPassword ?
+									<div onClick={() => setShowPassword(true)}>
+										<VisibilityIcon className={styles.visibilityIcon} />
+									</div>
+									:
+									<div onClick={() => setShowPassword(false)}>
+										<VisibilityOffIcon className={styles.visibilityIcon} />
+									</div>
+								}
+							</div>
+						</div>
+						{!isPasswordError && <p className={styles.passwordHintText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p>}
+						{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						<div className={styles.loginBtnBox}>
+							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (emailError || passwordError || isEmailError || isPasswordError || !email || !password) ? true : false} onClick={handleSignup}>انشاء حساب</button>
+						</div>
+						<div className='relative'>
+							<div className={styles.middleLine}></div>
+							<p className={`fontBold ${styles.andText}`}>او</p>
+						</div>
+						<div className={styles.googleLoginBtnBox} onClick={() => hendelGoogleLogin()}>
+							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
+							<p className='mx-2'>تسجيل الدخول عبر قوقل</p>
+						</div>
+						<p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink">سجل دخولك</Link></p>
 					</div>
 				</div>
-				{!isPasswordError && <p className={styles.passwordHintText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p>}
-				{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
-				<div className={styles.loginBtnBox}>
-					<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (emailError || passwordError || isEmailError || isPasswordError || !email || !password) ? true : false} onClick={handleSignup}>انشاء حساب</button>
-				</div>
-				<div className='relative'>
-					<div className={styles.middleLine}></div>
-					<p className={`fontBold ${styles.andText}`}>او</p>
-				</div>
-				<div className={styles.googleLoginBtnBox} onClick={() => hendelGoogleLogin()}>
-					<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
-					<p className='mx-2'>تسجيل الدخول عبر قوقل</p>
-				</div>
-				<p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink">سجل دخولك</Link></p>
-			</div>
-		</div>
+			}
+		</>
 	)
 }

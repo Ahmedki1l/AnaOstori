@@ -29,3 +29,13 @@ export const timeDuration = (timeFrom, timeTo) => {
         </>
     )
 }
+
+export const enDateWithDay = (date) => {
+    return new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric', weekday: 'long' })
+}
+
+export const enTimeDuration = (timeFrom, timeTo) => {
+    const enStartTime = new Date('1970-01-01T' + date.timeFrom + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
+    const enEndTime = new Date('1970-01-01T' + date.timeTo + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
+    return `${enStartTime} - ${enEndTime}`
+}

@@ -9,17 +9,21 @@ import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLib
 
 
 
-const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) => {
+const ManageLibraryTableComponent = ({
+    folderTableData,
+    onclose,
+    folderType,
+    setTypeOfListData,
+    setSelectedFolderId
+}) => {
     console.log(folderTableData);
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [selectedItem, setSelectedItem] = useState()
+    const [selectedFolder, setSelectedFolder] = useState()
     const [tableDataType, setTableDataType] = useState("folder")
     const [deleteItemType, setDeleteItemType] = useState('folder')
-
-    useEffect(() => {
-    }, [tableDataType, folderType]);
 
 
     const onEdit = async (item) => {
@@ -41,11 +45,16 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
     }
 
     const showItemListOfSelectedFolder = (item) => {
+        if (tableDataType == "item") return
         setTableDataType("item")
-        setSelectedItem(item)
+        setTypeOfListData("item")
+        setSelectedFolder(item)
+        setSelectedFolderId(item.id)
+        console.log(item);
     }
     const showFolderList = () => {
         setTableDataType("folder")
+        setTypeOfListData("folder")
     }
 
 
@@ -58,7 +67,7 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
                             <div className={styles.folderDetailsTable}>
                                 <p className={`cursor-pointer ${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>الفيديوهات</p>
                                 <p>{'>'}</p>
-                                <p className={styles.folderDetailsName}> {selectedItem.type ? selectedItem.type : "الفيديوهات"}</p>
+                                <p className={styles.folderDetailsName}> {selectedFolder.name ? selectedFolder.name : "الفيديوهات"}</p>
                             </div>
                         </div>
                     }
@@ -126,23 +135,25 @@ const ManageLibraryTableComponent = ({ folderTableData, onclose, folderType }) =
                     }
                 </div>
             </div>
-            <ModelForAddFolder
+            {isModelForAddFolderOpen && <ModelForAddFolder
                 isModelForAddFolderOpen={isModelForAddFolderOpen}
                 setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
                 selectedItem={selectedItem}
                 onclose={onclose}
-            />
-            <ModelForAddItemLibrary
+            />}
+            {console.log(selectedFolder, isModelForAddItemOpen)}
+            {isModelForAddItemOpen && <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}
                 selectedItem={selectedItem}
+                selectedFolder={selectedFolder}
                 folderType={folderType}
-            />
-            <ModelForDeleteItems
+            />}
+            {ismodelForDeleteItems && <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 onCloseModal={onCloseModal}
                 deleteItemType={deleteItemType}
-            />
+            />}
         </>
     )
 }

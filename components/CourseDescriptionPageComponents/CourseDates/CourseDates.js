@@ -4,12 +4,13 @@ import * as LinkConst from '../../../constants/LinkConst'
 import Link from 'next/link';
 import useWindowSize from '../../../hooks/useWindoSize';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
-import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
+import { dateWithDay, enDateWithDay, enTimeDuration, timeDuration } from '../../../constants/DateConverter';
 
 
 export default function CourseDates(props) {
 	const date = props.date
 	const mediaBaseUrl = LinkConst.File_Base_Url2
+	const lang = props.lang
 
 	const isSmallScreen = useWindowSize().smallScreen
 
@@ -24,22 +25,35 @@ export default function CourseDates(props) {
 				</div>
 			}
 			<div className={`fontBold relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
-				<p className={`${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
+
+				{lang == 'en' ?
+					<p className={`fontBold ${styles.dateBoxHeaderText}`}>{enDateWithDay(date?.dateFrom)}</p>
+					:
+					<p className={`fontBold ${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
+				}
 			</div>
 			<ul className={styles.list}>
 				<li>
 					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderStroked'} color={'#000000'} />
-					<p className={`fontMedium ${styles.listItemText}`}> {dateWithDay(date?.dateFrom)} - {dateWithDay(date?.dateTo)} </p>
+					{lang == 'en' ?
+						<p className={`fontMedium ${styles.listItemText}`}>{enDateWithDay(date?.dateFrom)} - {enDateWithDay(date?.dateTo)} </p>
+						:
+						<p className={`fontMedium ${styles.listItemText}`}> {dateWithDay(date?.dateFrom)} - {dateWithDay(date?.dateTo)} </p>
+					}
 				</li>
 				<li>
 					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockStroked'} color={'#000000'} />
-					<p className={`fontMedium ${styles.listItemText}`}> {timeDuration(date.timeFrom, date.timeTo)}</p>
+					{lang == 'en' ?
+						<p className={`fontMedium ${styles.listItemText}`}>{enTimeDuration(date.timeFrom, date.timeTo)}</p>
+						:
+						<p className={`fontMedium ${styles.listItemText}`}> {timeDuration(date.timeFrom, date.timeTo)}</p>
+					}
 				</li>
 				<li>
 					{date.gender == 'mix' ?
 						<>
 							<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'live'} color={'#000000'} />
-							<p className={`fontMedium link ${styles.listItemText}`}>قاعة افتراضية</p>
+							<p className={`fontMedium link ${styles.listItemText}`}>{lang == 'en' ? 'virtual hall' : `قاعة افتراضية`}</p>
 						</>
 						:
 						<>

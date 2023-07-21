@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './UploadFile.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useSelector } from 'react-redux'
-import { uploadCourseFileAPI } from '../../../services/apisService'
+import { uploadFileAPI } from '../../../services/apisService'
 
 const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
@@ -19,7 +19,7 @@ const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
             accessToken: storeData?.accessToken
         }
         console.log("data", data);
-        await uploadCourseFileAPI(data).then((res) => {
+        await uploadFileAPI(data).then((res) => {
             console.log(res);
             setImageUploadResponceData(res.data)
         }).catch((error) => {

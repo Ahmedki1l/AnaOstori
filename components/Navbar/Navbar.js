@@ -34,6 +34,7 @@ export default function Navbar() {
 	const dispatch = useDispatch();
 
 	const storeData = useSelector((state) => state?.globalStore);
+	console.log(storeData);
 
 	const [catagories, setCatagories] = useState()
 	const [curriculumIds, setCurriculumIds] = useState();
@@ -43,7 +44,6 @@ export default function Navbar() {
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
 
 	const isUserInstructor = storeData?.isUserInstructor
-
 
 	useEffect(() => {
 		const fetchResults = async () => {
