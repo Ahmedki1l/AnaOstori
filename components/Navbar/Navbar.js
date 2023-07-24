@@ -39,7 +39,7 @@ export default function Navbar() {
 	const [catagories, setCatagories] = useState()
 	const [curriculumIds, setCurriculumIds] = useState();
 
-	const userFullName = storeData?.viewProfileData?.fullName ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : ""
+	const userFullName = (storeData?.viewProfileData?.firstName && storeData?.viewProfileData?.lastName) ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : storeData?.viewProfileData?.fullName
 
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
 

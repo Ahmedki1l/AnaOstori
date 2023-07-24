@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { GoogleLogin, startEmailPasswordLogin } from '../services/fireBaseAuthService'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { myCoursesAPI, viewProfileAPI } from '../services/apisService';
 import { toast } from "react-toastify";
 import Router from "next/router";
@@ -33,6 +33,9 @@ export default function Login() {
 	const regexPassword = useMemo(() => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, [])
 
 	const [loading, setLoading] = useState(false)
+
+	const storeData = useSelector((state) => state?.globalStore);
+
 
 
 	useEffect(() => {
@@ -86,7 +89,12 @@ export default function Login() {
 			if (profileData.firstName == null || profileData.lastName == null || profileData.gender == null) {
 				Router.push('/registerGoogleUser')
 			} else {
-				Router.push('/')
+				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
+					Router.push('/')
+				}
+				else {
+					Router.push(storeData?.returnUrl)
+				}
 			}
 		} catch (error) {
 			console.log(error);

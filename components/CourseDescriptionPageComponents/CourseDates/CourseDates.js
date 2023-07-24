@@ -11,7 +11,7 @@ export default function CourseDates(props) {
 	const date = props.date
 	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const lang = props.lang
-
+	console.log(lang);
 	const isSmallScreen = useWindowSize().smallScreen
 
 	const coursePlanUrl = `${mediaBaseUrl}/${date.coursePlanKey}`
@@ -53,7 +53,7 @@ export default function CourseDates(props) {
 					{date.gender == 'mix' ?
 						<>
 							<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'live'} color={'#000000'} />
-							<p className={`fontMedium link ${styles.listItemText}`}>{lang == 'en' ? 'virtual hall' : `قاعة افتراضية`}</p>
+							<p className={`fontMedium link ${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
 						</>
 						:
 						<>
@@ -85,7 +85,11 @@ export default function CourseDates(props) {
 							<div className={styles.instructorWrapper} key={`instructor${index}`}>
 								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${instructor.avatarKey}`} />
 								<div>
-									<p className='px-2 fontMedium'>{instructor.name}</p>
+									{instructor?.ProfileFileKey == null ?
+										<p className='px-2 fontMedium'>{instructor.name}</p>
+										:
+										<Link href={`${mediaBaseUrl}/${instructor?.ProfileFileKey}`} className='px-2 fontMedium link'>{instructor.name}</Link>
+									}
 									<p className='px-2 fontMedium'>Role</p>
 								</div>
 							</div>

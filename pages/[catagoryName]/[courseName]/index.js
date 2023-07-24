@@ -14,7 +14,8 @@ import useScrollEvent from '../../../hooks/useScrollEvent'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getCourseByNameAPI } from '../../../services/apisService'
+import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
+import { signOutUser } from '../../../services/fireBaseAuthService'
 
 
 export async function getServerSideProps(ctx) {
@@ -103,6 +104,7 @@ export default function Index(props) {
 	const [isMixSubscribed, setIsMixSubscribed] = useState(false)
 
 	const bookSit = 'احجز جلوسك'
+	const dispatch = useDispatch();
 
 
 	const secondsToMinutes = (seconds) => {
@@ -120,22 +122,55 @@ export default function Index(props) {
 		}, 0);
 	}
 
-	const handleBookSit = (date, gender, noOfSit) => {
+	const handleUserLogin = async (query) => {
+		if (storeData?.accessToken == "") {
+			dispatch({
+				type: 'SET_RETURN_URL',
+				returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
+			});
+			router.push({
+				pathname: "/login",
+			})
+		} else {
+			let body = {
+				accessToken: storeData?.accessToken
+			}
+			await getCatagoriesAPI(body).then((res) => {
+				router.push({
+					pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
+					query: query ? query : "",
+				})
+			}).catch(error => {
+				console.log(error);
+				if (error?.response?.status == 401) {
+					signOutUser()
+					dispatch({
+						type: 'EMPTY_STORE'
+					});
+					dispatch({
+						type: 'SET_RETURN_URL',
+						returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
+					})
+				}
+			})
+		}
+	}
+
+	const handleBookSit = async (date, gender, noOfSit) => {
 		if (noOfSit == 0) {
 			return
+		} else {
+			let query = { date: date, gender: gender }
+			handleUserLogin(query)
 		}
-		router.push({
-			pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
-			query: { date: date, gender: gender },
-		})
 	}
 
 	const handleBookSitButtonClick = () => {
 		if (isDateAvailable == true && bookSeatButtonText == "احجز مقعدك الآن") {
-			router.push(`/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`)
+			handleUserLogin()
 		}
 		else {
-			const scrollToDate = handleSlectedItem(4, 'dates')
+			handleSlectedItem(4, 'dates')
 		}
 	}
 
@@ -325,7 +360,7 @@ export default function Index(props) {
 											<div>
 												<div className='flex items-center py-4'>
 													<AllIconsComponenet height={36} width={18} iconName={'male'} color={'#0C5D96'} />
-													<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#0C5D96' }}>مواعيد الشباب</p>
+													<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#0C5D96' }}>{lang == "en" ? "Male Appointments" : "مواعيد الشباب"}</p>
 												</div>
 												{maleDates?.length > 0 && !isSeatFullForMale ?
 													<ScrollContainer className='flex'>
@@ -346,7 +381,7 @@ export default function Index(props) {
 											<div>
 												<div className='flex items-center pb-4 pt-6'>
 													<AllIconsComponenet height={36} width={18} iconName={'female'} color={'#E10768'} />
-													<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#E10768' }}>مواعيد البنات</p>
+													<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#E10768' }}>{lang == 'en' ? 'Female Appointments' : 'مواعيد البنات'}</p>
 												</div>
 												{femaleDates?.length > 0 && !isSeatFullForFemale ?
 													<ScrollContainer className='flex'>

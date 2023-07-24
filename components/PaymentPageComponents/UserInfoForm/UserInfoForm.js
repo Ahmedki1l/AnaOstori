@@ -30,8 +30,8 @@ export default function UserInfoForm(props) {
 	const disabledGender = courseDetail.type == 'physical' ? (maleDates.length == 0 ? "male" : femaleDates.length == 0 ? "female" : null) : null
 	const storeData = useSelector((state) => state?.globalStore);
 	const userPredefineEmail = storeData?.viewProfileData?.email
-	const userPredefinePhone = storeData?.viewProfileData?.phone.replace("966", "0")
-	const userPredefinefullName = storeData?.viewProfileData?.fullName
+	const userPredefinePhone = storeData?.viewProfileData?.phone?.replace("966", "0")
+	const userPredefinefullName = (storeData?.viewProfileData?.firstName && storeData?.viewProfileData?.lastName) ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : storeData?.viewProfileData?.fullName
 	const userPredefineGender = storeData?.viewProfileData?.gender
 
 	const userTemplet = {

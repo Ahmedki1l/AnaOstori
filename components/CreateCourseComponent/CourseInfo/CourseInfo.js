@@ -131,6 +131,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         type: 'EMPTY_STORE'
                     });
                 }
+                if (error.response.data.errors) {
+                    toast.error("name must be unique");
+                }
             })
         } else {
             let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
