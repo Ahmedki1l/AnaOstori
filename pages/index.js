@@ -14,6 +14,7 @@ import VideoThumnail from '../components/CourseDescriptionPageComponents/Details
 import CloseIcon from '@mui/icons-material/Close';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
+import Link from 'next/link';
 
 
 export async function getServerSideProps(context) {

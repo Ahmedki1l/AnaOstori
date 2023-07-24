@@ -27,6 +27,8 @@ export default function CourseDetailsHeader(props) {
 
 	const courseCatagoriUrl = `${(courseDetail.catagory.name).replace(/ /g, "-")}`
 
+	console.log(lang);
+
 	return (
 		<div className={styles.headerWrapper}>
 			{courseDetail &&

@@ -1,107 +1,125 @@
-.BuyCourseMainArea{
+.BuyCourseMainArea {
 	position: absolute;
 	background-color: #ffffff;
-	color:#000000;
-	left: 0rem;
+	color: #000000;
 	top: 0rem;
 	border: 1px solid #00000054;
-	border-radius: 4px ;
+	border-radius: 4px;
 	z-index: 50;
 }
 
-.BuyCourseWrapper{
+.rightSide {
+	right: 0rem;
+}
+
+.leftSide {
+	left: 0rem;
+}
+
+.BuyCourseWrapper {
 	padding: 1rem;
 	width: 349px;
 }
-.videoPlayerDiv{
+
+.videoPlayerDiv {
 	border-radius: 5px;
 	overflow: hidden;
 	position: relative;
 }
 
-.btnBox{
+.btnBox {
 	margin: 0 0 1rem 0;
 }
 
-.feturesList{
-	li{
+.feturesList {
+	li {
 		display: flex;
 		align-items: center;
 		margin: 0.5rem 0;
 	}
 }
 
-.listText{
+.listText {
 	font-size: 16px;
 }
 
-.icon{
+.icon {
 	font-size: 30px;
 }
 
-.whatsAppIconWrapper{
+.whatsAppIconWrapper {
 	height: 30px;
-    width: 30px;
-    background-color: #000000;
-	.whatsAppIcon{
+	width: 30px;
+	background-color: #000000;
+
+	.whatsAppIcon {
 		font-size: 21px;
 		color: #ffffff;
 		margin: 4px;
 	}
 }
-.downloadPlanBox{
+
+.downloadPlanBox {
 	border-top: 1px solid #00000054;
 	padding: 1rem 0;
 }
 
-.downloadPlanText{
+.downloadPlanText {
 	font-size: 20px;
 	padding: 0 10px;
 }
-.grayText{
+
+.grayText {
 	font-size: 16px;
 	color: #0000007a;
 }
-.featureHead{
+
+.featureHead {
 	font-size: 18px;
 }
 
 @media (max-width: 1350px) {
-	.BuyCourseMainArea{
+	.BuyCourseMainArea {
 		margin-left: 1rem;
 	}
 }
 
 @media (max-width: 1280px) {
-	.downloadPlanText{
+	.downloadPlanText {
 		font-size: 18px;
 	}
 }
+
 @media (max-width: 1150px) {
-	.BuyCourseWrapper{
+	.BuyCourseWrapper {
 		width: 325px;
 		padding: 0.7rem;
 	}
-	.subText{
+
+	.subText {
 		font-size: 15px;
 	}
-	
-	.listText{
+
+	.listText {
 		font-size: 15px;
 	}
-	.grayText{
+
+	.grayText {
 		font-size: 15px;
 	}
-	.downloadPlanText{
+
+	.downloadPlanText {
 		font-size: 15px;
 	}
-	.downloadPlanBox{
+
+	.downloadPlanBox {
 		padding: 0.5rem 0;
 	}
 }
+
 @media (max-width: 1024px) {
-	.BuyCourseWrapper{
+	.BuyCourseWrapper {
 		position: static;
 	}
-	
+
 }

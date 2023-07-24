@@ -101,3 +101,31 @@ export const changeEmail = async (newEmail) => {
 export const handleUpdatePassword = async (newPassword) => {
 	return await updatePassword(auth.currentUser, newPassword);
 }
+let tokenRefreshTimer;
+
+const scheduleTokenRefresh = async (user) => {
+	if (!user) return;
+
+	tokenRefreshTimer = setTimeout(async () => {
+		try {
+			const idToken = await user.getIdToken();
+			scheduleTokenRefresh(user);
+		} catch (error) {
+			console.error("Error refreshing token:", error);
+		}
+	}, 300000);
+};
+
+const clearTokenRefreshTimer = () => {
+	if (tokenRefreshTimer) {
+		clearTimeout(tokenRefreshTimer);
+	}
+};
+
+auth.onAuthStateChanged((user) => {
+	if (user) {
+		scheduleTokenRefresh(user);
+	} else {
+		clearTokenRefreshTimer();
+	}
+});

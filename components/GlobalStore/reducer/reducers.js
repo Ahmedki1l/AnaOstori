@@ -9,7 +9,8 @@ var initialState = {
     instructorList: [],
     availabilityList: [],
     editCourseData: {},
-    isCourseEdit: false
+    isCourseEdit: false,
+    returnUrl: "",
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -75,6 +76,11 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 isCourseEdit: action?.isCourseEdit
+            }
+        case 'SET_RETURN_URL':
+            return {
+                ...state,
+                returnUrl: action?.returnUrl
             }
 
         default: return state;

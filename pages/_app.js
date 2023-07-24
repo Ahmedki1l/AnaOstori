@@ -56,8 +56,10 @@ function MyApp({ Component, pageProps }) {
 
 
 	useEffect(() => {
-		if (pathName == "/[catagoryName]/[courseName]/[bookSit]") {
+		if (pathName == "/[catagoryName]/[courseName]" || pathName == "/[catagoryName]/[courseName]/[booksit]") {
 			setIsBookSeatPageOpen(true)
+		} else {
+			setIsBookSeatPageOpen(false)
 		}
 	}, [router.asPath, pathName])
 

@@ -14,7 +14,11 @@ export default function CoursePriceBox(props) {
 		<div className='pt-2'>
 			{courseDetail.discount == null ?
 				<div className={`py-4 ${styles.basePriceBox}`}>
-					<p className={`fontMedium ${styles.basePriceHead}`}>سعر الدورة</p>
+					{lang == 'en' ?
+						<p className={`fontMedium ${styles.basePriceHead}`}>Course Price</p>
+						:
+						<p className={`fontMedium ${styles.basePriceHead}`}>سعر الدورة</p>
+					}
 					<p className={`head2 ${styles.basePrice}`}>{courseDetail.price} ر.س</p>
 				</div>
 				:

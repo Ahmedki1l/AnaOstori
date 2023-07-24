@@ -76,7 +76,12 @@ export default function Register() {
 			if (profileData.firstName == null || profileData.lastName == null || profileData.phone == null || profileData.gender == null) {
 				router.push('/registerGoogleUser')
 			} else {
-				router.push('/')
+				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
+					router.push('/')
+				}
+				else {
+					router.push(storeData?.returnUrl)
+				}
 			}
 		} catch (error) {
 			console.log(error);
