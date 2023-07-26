@@ -45,14 +45,16 @@ const Appointments = ({ courseId, courseType }) => {
     const onChange = (checked) => {
         console.log(`switch to ${checked}`);
     };
-
+    const calculateNumberOfSeats = (newMaxSeats) => {
+        return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
+    }
     const onFinish = async (values) => {
         values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = courseId
-        values.numberOfSeats = values.maxNumberOfSeats
+        values.numberOfSeats = isAvailabilityEdit ? calculateNumberOfSeats(values.maxNumberOfSeats) : values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
         if (isAvailabilityEdit) {
             let body = {
@@ -102,7 +104,7 @@ const Appointments = ({ courseId, courseType }) => {
         setShowSwitchBtn(true)
         setIsAvailabilityEdit(true)
         setEditAvailability(appointment)
-        setIsFieldDisable(((dayjs(appointment.dateFrom).startOf('day') < dayjs(new Date())) || (appointment.maxNumberOfSeats > appointment.numberOfSeats)) ? true : false)
+        // setIsFieldDisable(((dayjs(appointment.dateFrom).startOf('day') < dayjs(new Date())) || (appointment.maxNumberOfSeats > appointment.numberOfSeats)) ? true : false)
         const instructorsList = appointment?.instructors?.map((obj) => {
             return {
                 key: obj.id,
@@ -168,8 +170,8 @@ const Appointments = ({ courseId, courseType }) => {
                                                     <span className='pr-1'>{appointment.gender == "male" ? "ولد" : "بنت"}</span>
                                                 </div><br />
                                                 <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
-                                                <Link href={'appointment.location'}>{appointment.locationName}</Link>
-                                                <p>{appointment.numberOfSeats} الرياض</p>
+                                                <Link target='_blank' href={appointment.location}>{appointment.locationName}</Link>
+                                                <p>{appointment.maxNumberOfSeats} مقعد مخصص</p>
                                             </div>
                                         </td>
                                         <td className='py-2'>{appointment.instructors.map((instructor, index) => {
