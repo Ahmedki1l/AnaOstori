@@ -6,9 +6,9 @@ const TikTok_Link = "https://www.tiktok.com/@ana.ostori"
 const GoogleMap_Link = "https://goo.gl/maps/JSrjHKFZUVfmkFku5"
 const VAT_Link = "https://drive.google.com/file/d/1KeCNhmndFi3Gwr_Zszzioge4zbfcB15A/view?usp=share_link"
 const File_Base_Url = "https://anaostori-dev.s3.amazonaws.com"
-const Ios_APP_URL = "https://apps.apple.com/us/app/itunes-connect/id376771144"
+const Ios_APP_URL = "https://apps.apple.com/us/app/أنا-أسطوري/id1662064989"
 const Android_APP_URL = "https://play.google.com/store/apps/details?id=com.anaostori"
-const File_Base_Url2  = "https://phase2anaostori.s3.eu-central-1.amazonaws.com"
+const File_Base_Url2 = "https://phase2anaostori.s3.eu-central-1.amazonaws.com"
 
 
 

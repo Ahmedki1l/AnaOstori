@@ -11,6 +11,7 @@ import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 // MI icons
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Image from 'next/legacy/image';
 
 
 export default function DatesInfo(props) {
@@ -19,6 +20,12 @@ export default function DatesInfo(props) {
 
 	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isSmallScreen = useWindowSize().smallScreen
+
+	const noOfSeatRemainingText = date.numberOfSeats == 0 ? "جميع المقاعد محجوزة"
+		: date.numberOfSeats == 1 ? "مقعد واحد متبقي"
+			: date.numberOfSeats == 2 ? "مقعدين متبقيين"
+				: date.numberOfSeats > 3 && date.numberOfSeats < 10 ? `${date.numberOfSeats} مقاعد متبقية`
+					: `${date.numberOfSeats} مقعد متبقي`
 
 	return (
 		<>
@@ -50,12 +57,12 @@ export default function DatesInfo(props) {
 					<>
 						{date.numberOfSeats > 5 ?
 							<div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
-							: (date.numberOfSeats <= 5 && date.numberOfSeats > 0) ?
-								<div className={`${styles.outerCircle} ${styles.redFlash}`}><div className={styles.innerCircle}></div></div>
-								:
-								<div className={`${styles.outerCircle} ${styles.red}`}><div className={styles.innerCircle}></div></div>
+							:
+							<div className={styles.alretWrapper}>
+								<Image src={`/images/alert-blink.gif`} alt={'alert gif'} layout="fill" objectFit="cover" />
+							</div>
 						}
-						<p className={`fontMedium ${styles.listItemText}`}>{date.numberOfSeats} مقاعد متبقية</p>
+						<p className={`fontMedium ${styles.listItemText}`}>{noOfSeatRemainingText}</p>
 					</>
 				</li>
 			</ul>

@@ -113,7 +113,7 @@ const scheduleTokenRefresh = async (user) => {
 		} catch (error) {
 			console.error("Error refreshing token:", error);
 		}
-	}, 300000);
+	}, 200000);
 };
 
 const clearTokenRefreshTimer = () => {

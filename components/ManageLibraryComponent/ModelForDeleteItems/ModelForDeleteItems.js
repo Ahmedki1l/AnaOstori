@@ -8,7 +8,6 @@ const ModelForDeleteItems = ({
     deleteItemType
 }
 ) => {
-    console.log(deleteItemType);
     const deleteModalProps = {
         folder: {
             messageText: "هل انت متأكد من انك تريد حذف هذا المجلد؟",

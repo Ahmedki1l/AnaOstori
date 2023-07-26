@@ -21,9 +21,7 @@ const Table = ({
     tableColumns,
     rowSelection,
     tableData,
-    selectedItem
 }) => {
-    console.log(selectedItem);
     return (
         <div>
             <StyledTable

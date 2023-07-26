@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Modal } from 'antd';
 import styles from './ModelForAddItemLibrary.module.scss'
 import { useSelector } from 'react-redux';
@@ -14,9 +14,9 @@ const ModelForAddItemLibrary = ({
     selectedFolder,
     folderType,
     selectedFolderId,
+    selectedItem,
 }) => {
 
-    console.log(selectedFolder);
     const [form] = Form.useForm();
     const storeData = useSelector((state) => state?.globalStore);
     const isEdit = selectedFolder != undefined ? true : false
@@ -24,21 +24,22 @@ const ModelForAddItemLibrary = ({
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
 
+    useEffect(() => {
+        form.setFieldValue('fileTitle', selectedItem?.name)
+        form.setFieldValue('fileDescription', selectedItem?.description)
+        setFileName(selectedItem?.linkKey)
+    }, [selectedItem])
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
         setFileName(e.target.files[0].name)
-
         let formData = new FormData();
         formData.append("file", e.target.files[0]);
-
         const data = {
             formData,
             accessToken: storeData?.accessToken
         }
-
         await uploadFileAPI(data).then((res) => {
-            console.log(res);
             setFileUploadResponceData(res.data)
             setUploadLoader(false)
         }).catch((error) => {
@@ -49,7 +50,6 @@ const ModelForAddItemLibrary = ({
 
     const addItemToFolder = async (e) => {
         const { key, bucket, mime } = fileUploadResponceData
-
         const body = {
             name: e.fileTitle,
             description: e.fileDescription,
@@ -59,21 +59,19 @@ const ModelForAddItemLibrary = ({
             linkMime: mime,
             previewAvailable: true,
         }
+        console.log(body);
         const data = {
             accessToken: storeData?.accessToken,
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
             data: body
         }
-
         await addItemToFolderAPI(data).then((res) => {
             console.log(res);
         }).catch((error) => {
             console.log(error);
         })
-
         form.resetFields()
         setIsModelForAddItemOpen(false);
-
     }
 
     return (
@@ -118,10 +116,15 @@ const ModelForAddItemLibrary = ({
                                     <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
                                     <label className={styles.uploadVideoWrapper} htmlFor='uploadFileInput'>
                                         <div className={styles.IconWrapper} >
-                                            <div className={styles.uploadFileWrapper}><AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#000000'} /></div>
+                                            <div className={styles.uploadFileWrapper}>
+                                                <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#000000'} />
+                                            </div>
                                             <p>ارفق الملف</p>
                                         </div>
-                                        {isEdit && <div className={styles.videoFolderName}>{fileName}</div>}
+                                        {isEdit && <div className={styles.uploadFileNameWrapper}>
+                                            <div className={styles.closeIconWrapper}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>
+                                            {fileName}
+                                        </div>}
                                     </label>
                                 </>
                             }
@@ -156,7 +159,7 @@ const ModelForAddItemLibrary = ({
                                         </div>
                                     </div>
                                     <FormItem
-                                        name={'exam link'}
+                                        name={'examLink'}
                                         rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                     >
                                         <Input
