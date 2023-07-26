@@ -20,7 +20,6 @@ const ModelForAddFolder = ({
     const isEdit = selectedItem != undefined ? true : false
 
     useEffect(() => {
-        console.log(isEdit);
         form.setFieldValue('folderTitle', selectedItem?.name)
     }, [selectedItem?.name])
 
@@ -35,7 +34,6 @@ const ModelForAddFolder = ({
                 data: addFolderbody
             }
             await createFolderAPI(data).then((res) => {
-                console.log(res);
                 setIsModelForAddFolderOpen(false)
             })
             form.resetFields()

@@ -93,7 +93,7 @@ export default function RegisterGoogleUser() {
             const body = {
                 firstName: firstName,
                 lastName: lastName,
-                phoneNumber: phoneNumber,
+                phone: phoneNumber.replace(/[0-9]/, "+966"),
                 gender: gender
             }
 

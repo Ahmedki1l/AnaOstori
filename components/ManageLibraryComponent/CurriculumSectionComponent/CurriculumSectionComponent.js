@@ -45,7 +45,6 @@ const dummyData = [
     }
 ]
 const CurriculumSectionComponent = ({ folderType, onclose }) => {
-    console.log(folderType);
 
     const [sectionDetails, setSectionDetails] = useState(dummyData)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -53,7 +52,6 @@ const CurriculumSectionComponent = ({ folderType, onclose }) => {
     const [isModelForAddCurriculum, setIsModelForAddCurriculum] = useState(false)
 
     const showSectionItem = (index) => {
-        console.log(index);
         const data = [...sectionDetails]
         data[index].showSectionList = !data[index].showSectionList
         setSectionDetails(data)

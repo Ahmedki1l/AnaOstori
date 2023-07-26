@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
-import { getFolderListAPI } from '../../../services/apisService';
+import { getFolderListAPI, getItemListAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import ModelForAddFolder from '../../../components/ManageLibraryComponent/ModelForAddFolder/ModelForAddFolder';
@@ -17,12 +17,13 @@ function Index() {
     const router = useRouter()
     const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
-    const [selectedItem, setSelectedItem] = useState('video');
+    const [selectedItem, setSelectedItem] = useState('file');
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
-    const [typeOfListdata, setTypeOfListData] = useState('folder')
+    const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
     const [folderList, setFolderList] = useState([])
     const [selectedFolderId, setSelectedFolderId] = useState()
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         getfolderList(selectedItem)
@@ -33,8 +34,10 @@ function Index() {
     }
 
     const handleItemSelect = async (selcetedItem) => {
-        setSelectedItem(selcetedItem)
         getfolderList(selcetedItem)
+        setSelectedItem(selcetedItem)
+        setTypeOfListData("folder")
+        setLoading(true)
     }
 
     const getfolderList = async (selectedItem) => {
@@ -45,6 +48,7 @@ function Index() {
         await getFolderListAPI(data).then((res) => {
             console.log(res);
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            setLoading(false)
         }).catch((error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -53,6 +57,18 @@ function Index() {
                     type: 'EMPTY_STORE'
                 });
             }
+        })
+    }
+    const getItemList = async (folderId) => {
+        let body = {
+            accessToken: storeData?.accessToken,
+            folderId: folderId
+        }
+        await getItemListAPI(body).then((res) => {
+            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            setLoading(false)
+        }).catch((error) => {
+            console.log(error);
         })
     }
 
@@ -105,12 +121,21 @@ function Index() {
                                 <ManageLibraryTableComponent
                                     onclose={onclose}
                                     folderTableData={folderList}
+                                    getItemList={getItemList}
                                     folderType={selectedItem}
-                                    setTypeOfListData={setTypeOfListData}
                                     setSelectedFolderId={setSelectedFolderId}
+                                    typeOfListdata={typeOfListdata}
+                                    setTypeOfListData={setTypeOfListData}
+                                    loading={loading}
+                                    setLoading={setLoading}
                                 />
                             }
-                            {selectedItem == 'curriculum' && <CoursePathLibrary folderTableData={folderList} onclose={onclose} folderType={selectedItem} />}
+                            {selectedItem == 'curriculum' &&
+                                <CoursePathLibrary
+                                    folderTableData={folderList}
+                                    folderType={selectedItem}
+                                />
+                            }
                         </div>
                     </div>
                 </div>

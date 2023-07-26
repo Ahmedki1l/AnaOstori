@@ -21,6 +21,8 @@ export default function CoursesCard(props) {
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
 
 	const coverImgUrl = courseDetails.pictureKey ? `${baseUrl}/${courseDetails.pictureKey}` : ""
+	// const coverImgUrl = courseDetails.course.pictureKey ? `${baseUrl}/${courseDetails.course.pictureKey}` : ""
+
 
 	const date = props?.data?.availability
 

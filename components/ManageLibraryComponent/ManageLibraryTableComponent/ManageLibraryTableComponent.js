@@ -6,23 +6,25 @@ import Icon from '../../CommonComponents/Icon'
 import ModelForAddFolder from '../ModelForAddFolder/ModelForAddFolder'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLibrary'
-
+import Spinner from '../../CommonComponents/spinner'
 
 
 const ManageLibraryTableComponent = ({
     folderTableData,
     onclose,
     folderType,
+    typeOfListdata,
     setTypeOfListData,
-    setSelectedFolderId
+    setSelectedFolderId,
+    getItemList,
+    loading,
 }) => {
-    console.log(folderTableData);
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [selectedItem, setSelectedItem] = useState()
     const [selectedFolder, setSelectedFolder] = useState()
-    const [tableDataType, setTableDataType] = useState("folder")
+    const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
 
 
@@ -30,6 +32,7 @@ const ManageLibraryTableComponent = ({
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
         } else {
+            setSelectedItem(item)
             setIsModelForAddItemOpen(true)
         }
         setSelectedItem(item)
@@ -44,19 +47,18 @@ const ManageLibraryTableComponent = ({
         setIsmodelForDeleteItems(false)
     }
 
-    const showItemListOfSelectedFolder = (item) => {
+    const showItemListOfSelectedFolder = async (item) => {
+        console.log(item);
         if (tableDataType == "item") return
-        setTableDataType("item")
         setTypeOfListData("item")
         setSelectedFolder(item)
         setSelectedFolderId(item.id)
-        console.log(item);
-    }
-    const showFolderList = () => {
-        setTableDataType("folder")
-        setTypeOfListData("folder")
+        getItemList(item.id)
     }
 
+    const showFolderList = () => {
+        setTypeOfListData("folder")
+    }
 
     return (
         <>
@@ -80,47 +82,45 @@ const ManageLibraryTableComponent = ({
                                 <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
                             </tr>
                         </thead>
-                        {folderTableData.length > 0 &&
+                        {(folderTableData.length > 0 && !loading) &&
                             <tbody className={styles.tableBodyArea}>
                                 {folderTableData.map((item, index) => {
                                     return (
-                                        <>
-                                            <tr className={styles.tableRow} key={item.id}>
-                                                <td>
-                                                    <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
-                                                        {tableDataType == "folder" ?
-                                                            <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
-                                                            :
-                                                            <Icon
-                                                                height={24}
-                                                                width={24}
-                                                                iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'videoIcon'}
-                                                                alt={'Quiz Logo'} />
-                                                        }
-                                                        <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                        <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}  عنصر / عناصر  )`}</p>
+                                        <tr className={styles.tableRow} key={item.id}>
+                                            <td>
+                                                <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
+                                                    {tableDataType == "folder" ?
+                                                        <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
+                                                        :
+                                                        <Icon
+                                                            height={24}
+                                                            width={24}
+                                                            iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'videoIcon'}
+                                                            alt={'Quiz Logo'} />
+                                                    }
+                                                    <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
+                                                    <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}  عنصر / عناصر  )`}</p>
+                                                </div>
+                                            </td>
+                                            <td>{fullDate(item?.createdAt)}</td>
+                                            <td>{fullDate(item?.updatedAt)}</td>
+                                            <td>
+                                                <div className={styles.videoeventButtons}>
+                                                    <div className='cursor-pointer' onClick={() => onEdit(item)}>
+                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                     </div>
-                                                </td>
-                                                <td>{fullDate(item?.createdAt)}</td>
-                                                <td>{fullDate(item?.updatedAt)}</td>
-                                                <td>
-                                                    <div className={styles.videoeventButtons}>
-                                                        <div className='cursor-pointer' onClick={() => onEdit(item)}>
-                                                            <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
-                                                        </div>
-                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
-                                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                                        </div>
+                                                    <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
+                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        </>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     )
                                 })}
                             </tbody >
                         }
                     </table>
-                    {folderTableData.length == 0 &&
+                    {(folderTableData.length == 0 && !loading) &&
                         <div className={styles.tableBodyArea}>
                             <div className={styles.noDataMainArea}>
                                 <div>
@@ -133,6 +133,15 @@ const ManageLibraryTableComponent = ({
                             </div>
                         </div>
                     }
+                    {loading &&
+                        <div className={styles.tableBodyArea}>
+                            <div className={styles.noDataMainArea}>
+                                <div className={`relative ${styles.loadingWrapper}`}>
+                                    <Spinner borderwidth={7} width={6} height={6} />
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
             {isModelForAddFolderOpen && <ModelForAddFolder
@@ -141,7 +150,6 @@ const ManageLibraryTableComponent = ({
                 selectedItem={selectedItem}
                 onclose={onclose}
             />}
-            {console.log(selectedFolder, isModelForAddItemOpen)}
             {isModelForAddItemOpen && <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}
                 setIsModelForAddItemOpen={setIsModelForAddItemOpen}

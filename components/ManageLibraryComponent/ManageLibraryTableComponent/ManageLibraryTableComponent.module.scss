@@ -10,7 +10,6 @@
     overflow-x: auto;
 }
 
-
 .tableHeaderArea {
     top: 0px;
     position: sticky;
@@ -20,6 +19,9 @@
     font-size: 20px;
 }
 
+.loadingWrapper {
+    height: calc(100vh - 500px);
+}
 
 .tableHead1 {
     width: 35%;

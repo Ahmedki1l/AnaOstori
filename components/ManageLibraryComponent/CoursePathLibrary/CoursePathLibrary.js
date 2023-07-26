@@ -4,7 +4,11 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import Icon from '../../CommonComponents/Icon'
 import { fullDate } from '../../../constants/DateConverter'
 
-const CoursePathLibrary = ({ folderTableData, tableDataType, folderType }) => {
+const CoursePathLibrary = ({
+    folderTableData,
+    tableDataType,
+    folderType,
+}) => {
 
 
     const handleDeleteFolderItems = () => {
@@ -15,12 +19,10 @@ const CoursePathLibrary = ({ folderTableData, tableDataType, folderType }) => {
             <div className={styles.tableContainer}>
                 <div>
                     {tableDataType == "item" &&
-                        <div>
-                            <div className={styles.folderDetailsTable}>
-                                <p className={`cursor-pointer ${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>الفيديوهات</p>
-                                <p>{'>'}</p>
-                                <p className={styles.folderDetailsName}> {selectedItem.name ? selectedItem.name : "الفيديوهات"}</p>
-                            </div>
+                        <div className={styles.folderDetailsTable}>
+                            <p className={`cursor-pointer ${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>الفيديوهات</p>
+                            <p>{'>'}</p>
+                            <p className={styles.folderDetailsName}> {selectedItem.name ? selectedItem.name : "الفيديوهات"}</p>
                         </div>
                     }
                     <table className={styles.tableArea}>
@@ -37,38 +39,36 @@ const CoursePathLibrary = ({ folderTableData, tableDataType, folderType }) => {
                             <tbody className={styles.tableBodyArea}>
                                 {folderTableData.map((item, index) => {
                                     return (
-                                        <>
-                                            <tr className={styles.tableRow} key={item.id}>
-                                                <td>
-                                                    <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
-                                                        {tableDataType == "folder" ?
-                                                            <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
-                                                            :
-                                                            <Icon
-                                                                height={24}
-                                                                width={24}
-                                                                iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'videoIcon'}
-                                                                alt={'Quiz Logo'} />
-                                                        }
-                                                        <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                        <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}  عنصر / عناصر  )`}</p>
+                                        <tr className={styles.tableRow} key={item.id}>
+                                            <td>
+                                                <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
+                                                    {tableDataType == "folder" ?
+                                                        <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
+                                                        :
+                                                        <Icon
+                                                            height={24}
+                                                            width={24}
+                                                            iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'videoIcon'}
+                                                            alt={'Quiz Logo'} />
+                                                    }
+                                                    <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
+                                                    <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}  عنصر / عناصر  )`}</p>
+                                                </div>
+                                            </td>
+                                            <td>{fullDate(item?.createdAt)}</td>
+                                            <td>{fullDate(item?.updatedAt)}</td>
+                                            <td>دورة القدرات الحضورية</td>
+                                            <td>
+                                                <div className={styles.videoeventButtons}>
+                                                    <div className='cursor-pointer' onClick={() => onEdit(item)}>
+                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                     </div>
-                                                </td>
-                                                <td>{fullDate(item?.createdAt)}</td>
-                                                <td>{fullDate(item?.updatedAt)}</td>
-                                                <td>دورة القدرات الحضورية</td>
-                                                <td>
-                                                    <div className={styles.videoeventButtons}>
-                                                        <div className='cursor-pointer' onClick={() => onEdit(item)}>
-                                                            <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
-                                                        </div>
-                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
-                                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                                        </div>
+                                                    <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
+                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        </>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     )
                                 })}
                             </tbody >

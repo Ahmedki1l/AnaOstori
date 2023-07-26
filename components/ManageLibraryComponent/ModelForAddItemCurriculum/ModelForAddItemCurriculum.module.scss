@@ -55,7 +55,6 @@
 }
 
 
-
 .noDataManiArea {
     height: 300px;
     display: grid;
@@ -76,4 +75,22 @@
     border-radius: 3px;
     background-color: #F26722;
     color: #ffffff;
+}
+
+.folderDetailsTable {
+    display: flex;
+    margin: 5px 0px 15px;
+    align-items: center;
+}
+
+.folderDetailsVideo {
+    font-size: 16px;
+    color: #2d2e2d80;
+    margin-right: 10px;
+}
+
+.folderDetailsName {
+    font-size: 18px;
+    margin-right: 5px;
+    color: #000000;
 }

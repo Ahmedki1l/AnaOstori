@@ -5,6 +5,7 @@ import Link from 'next/link';
 import useWindowSize from '../../../hooks/useWindoSize';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { dateWithDay, enDateWithDay, enTimeDuration, timeDuration } from '../../../constants/DateConverter';
+import Image from 'next/legacy/image';
 
 
 export default function CourseDates(props) {
@@ -15,6 +16,13 @@ export default function CourseDates(props) {
 	const isSmallScreen = useWindowSize().smallScreen
 
 	const coursePlanUrl = `${mediaBaseUrl}/${date.coursePlanKey}`
+
+	const noOfSeatRemainingText = date.numberOfSeats == 0 ? "جميع المقاعد محجوزة"
+		: date.numberOfSeats == 1 ? "مقعد واحد متبقي"
+			: date.numberOfSeats == 2 ? "مقعدين متبقيين"
+				: date.numberOfSeats > 3 && date.numberOfSeats < 10 ? `${date.numberOfSeats} مقاعد متبقية`
+					: `${date.numberOfSeats} مقعد متبقي`
+
 
 
 	return (
@@ -68,12 +76,12 @@ export default function CourseDates(props) {
 					<>
 						{date.numberOfSeats > 5 ?
 							<div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
-							: (date.numberOfSeats <= 5 && date.numberOfSeats > 0) ?
-								<div className={`${styles.outerCircle} ${styles.redFlash}`}><div className={styles.innerCircle}></div></div>
-								:
-								<div className={`${styles.outerCircle} ${styles.red}`}><div className={styles.innerCircle}></div></div>
+							:
+							<div className={styles.alretWrapper}>
+								<Image src={`/images/alert-blink.gif`} alt={'alert gif'} layout="fill" objectFit="cover" />
+							</div>
 						}
-						<p className={`fontMedium ${styles.listItemText}`}>{date.numberOfSeats} مقاعد متبقية</p>
+						<p className={`fontMedium ${styles.listItemText}`}>{noOfSeatRemainingText}</p>
 					</>
 				</li>
 			</ul>
