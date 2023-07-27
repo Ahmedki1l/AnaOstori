@@ -14,6 +14,7 @@ import useWindowSize from '../../../../hooks/useWindoSize';
 
 import { Modal } from 'antd';
 import styled from 'styled-components';
+import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
