@@ -64,6 +64,8 @@ import FolderIcon from './customeIcons/folderIcon'
 import CalenderStroked from './customeIcons/calenderStrocked'
 import ClockStroked from './customeIcons/clockStroked'
 import LocationStroked from './customeIcons/locationStroked'
+import VisibilityIcon from './customeIcons/visibilityIcon'
+import VisibilityOffIcon from './customeIcons/visibilityOffIcon'
 
 
 
@@ -132,6 +134,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'excused' && <ExcusedIcon height={height} width={width} color={color} />}
 			{iconName == 'fullSeatsIcon' && <FullSeatsIcon height={height} width={width} color={color} />}
 			{iconName == 'folderIcon' && <FolderIcon height={height} width={width} color={color} />}
+			{iconName == 'visibilityIcon' && <VisibilityIcon height={height} width={width} color={color} />}
+			{iconName == 'visibilityOffIcon' && <VisibilityOffIcon height={height} width={width} color={color} />}
 
 
 

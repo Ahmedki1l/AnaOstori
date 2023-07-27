@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
 import CoverImg from '../../../CommonComponents/CoverImg'
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import * as LinkConst from '../../../../constants/LinkConst'
+import { Modal } from 'antd';
+import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
+import styled from 'styled-components';
 
 
-// MiIcon
-import CloseIcon from '@mui/icons-material/Close';
+const StylesModal = styled(Modal)`
+    .ant-modal-close{
+        display:none;
+    }
+   .ant-modal-content{
+        border-radius: 5px;
+        padding: 0px;
+		overflow:hidden;
+    }
+`
 
-export default function VideoThumnail(props) {
+const VideoThumnail = (props) => {
 	const pictureKey = props.pictureKey
 	const videoUrl = props.videoUrl
 	const thumnailHeight = props.thumnailHeight
@@ -28,25 +36,32 @@ export default function VideoThumnail(props) {
 		setOpenVideo(false);
 	};
 
-	const handleVideoClick = (event) => {
-		event.stopPropagation();
-	};
-
 	return (
 		<div className='relative overflow-hidden rounded'>
 			<div className='playIconDiv' onClick={handleClickOpen}>
-				<PlayArrowIcon className='playIcon' />
+				<div className='playIcon' >
+					<svg width="55" height="35" viewBox="0 0 63 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M63 37.5L0.75 74.3061L0.75 0.69392L63 37.5Z" fill="white" />
+					</svg>
+				</div>
 			</div>
 			<div className='blurBgForVideo'></div>
 			<CoverImg height={thumnailHeight} url={coverImgUrl} />
-			<Dialog open={openVideo} maxWidth="lg" onClick={handleClose}>
-				<DialogContent className='padding0-important' onClick={handleVideoClick}>
-					<CloseIcon className='videoCloseIcon' onClick={handleClose} />
-					<video controls width="100%" height="100%">
-						<source src={videoUrl} type="video/mp4" />
-					</video>
-				</DialogContent>
-			</Dialog>
+			<StylesModal
+				footer={false}
+				closeIcon={false}
+				open={openVideo}
+				width={1200}
+				afterClose={onclose}
+			>
+				<div className='videoCloseIcon' onClick={handleClose}>
+					<AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />
+				</div>
+				<video controls width="100%" height="100%">
+					<source src={videoUrl} type="video/mp4" />
+				</video>
+			</StylesModal>
 		</div>
 	)
 }
+export default VideoThumnail

@@ -10,8 +10,6 @@ import ChangePassword from '../components/AccountInformation/ChangePassword/Chan
 import DeleteAccount from '../components/AccountInformation/DeleteAccount/DeleteAccount';
 import { useDispatch, useSelector } from 'react-redux';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import useWindowSize from '../hooks/useWindoSize';
 
 
@@ -337,11 +335,11 @@ export default function AccountInformation() {
                                                                 <div className={styles.passwordIconDiv}>
                                                                     {!showPassword ?
                                                                         <div onClick={() => setShowPassword(true)}>
-                                                                            <VisibilityIcon className={styles.passwordVisibilityIcon} />
+                                                                            <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
                                                                         </div>
                                                                         :
                                                                         <div onClick={() => setShowPassword(false)}>
-                                                                            <VisibilityOffIcon className={styles.passwordVisibilityIcon} />
+                                                                            <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
                                                                         </div>
                                                                     }
                                                                 </div>
@@ -362,7 +360,6 @@ export default function AccountInformation() {
                                     <>
                                         <DeleteAccount data={userProfileData} setActiveTab={setActiveTab} />
                                     </>
-
                             }
                         </>
                     }

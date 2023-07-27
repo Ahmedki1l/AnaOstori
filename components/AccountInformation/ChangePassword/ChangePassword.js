@@ -4,8 +4,6 @@ import loader from '../../../public/icons/loader.svg'
 import { toast } from "react-toastify";
 import Image from 'next/image'
 import { handleUpdatePassword, verifyPassword } from '../../../services/fireBaseAuthService';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 
 
@@ -99,11 +97,11 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showOldPassword ?
                             <div onClick={() => setShowOldPassword(true)}>
-                                <VisibilityIcon className={styles.passwordVisibilityIcon} />
+                                <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
                             </div>
                             :
                             <div onClick={() => setShowOldPassword(false)}>
-                                <VisibilityOffIcon className={styles.passwordVisibilityIcon} />
+                                <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
                             </div>
                         }
                     </div>
@@ -126,11 +124,11 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showNewPassword ?
                             <div onClick={() => setShowNewPassword(true)}>
-                                <VisibilityIcon className={styles.passwordVisibilityIcon} />
+                                <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
                             </div>
                             :
                             <div onClick={() => setShowNewPassword(false)}>
-                                <VisibilityOffIcon className={styles.passwordVisibilityIcon} />
+                                <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
                             </div>
                         }
 
@@ -154,11 +152,11 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showConfirmPassword ?
                             <div onClick={() => setShowConfirmPassword(true)}>
-                                <VisibilityIcon className={styles.passwordVisibilityIcon} />
+                                <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
                             </div>
                             :
                             <div onClick={() => setShowConfirmPassword(false)}>
-                                <VisibilityOffIcon className={styles.passwordVisibilityIcon} />
+                                <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
                             </div>
                         }
                     </div>
