@@ -44,12 +44,13 @@ const dummyData = [
         itemList: []
     }
 ]
-const CurriculumSectionComponent = ({ folderType, onclose }) => {
+const CurriculumSectionComponent = ({ folderType, onclose, sectionList }) => {
 
-    const [sectionDetails, setSectionDetails] = useState(dummyData)
+    const [sectionDetails, setSectionDetails] = useState(sectionList)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [deleteItemType, setDeleteItemType] = useState('section')
     const [isModelForAddCurriculum, setIsModelForAddCurriculum] = useState(false)
+    const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
 
     const showSectionItem = (index) => {
         const data = [...sectionDetails]
@@ -67,13 +68,18 @@ const CurriculumSectionComponent = ({ folderType, onclose }) => {
     const handleAddCurriculum = () => {
         setIsModelForAddCurriculum(true)
     }
+    const handleAddSection = () => {
+        setIsModelForAddFolderOpen(true)
+    }
 
     return (
         <div>
-            <div className={styles.addSectionArea}>
-                <p className={styles.sectionName}>الأقسام</p>
-                <p className={styles.addSections} onClick={() => add()}>+ إضافة قسم</p>
-            </div>
+            {sectionDetails.length > 0 &&
+                <div className={styles.addSectionArea}>
+                    <p className={styles.sectionName}>الأقسام</p>
+                    <p className={styles.addSections} onClick={() => handleAddSection()}>+ إضافة قسم</p>
+                </div>
+            }
             {sectionDetails.map((section, index) => {
                 const { showSectionList } = section
                 return (

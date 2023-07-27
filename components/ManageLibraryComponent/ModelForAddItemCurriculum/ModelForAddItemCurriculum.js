@@ -75,7 +75,7 @@ const ModelForAddItemCurriculum = ({
                     <Icon
                         height={24}
                         width={24}
-                        iconName={item?.type == 'video' ? "" : item?.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
+                        iconName={item?.type == 'video' ? "videoIcon" : item?.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
                         alt={'Quiz Logo'} />}
                 <p className='pr-2'>{item?.name}</p>
             </div>

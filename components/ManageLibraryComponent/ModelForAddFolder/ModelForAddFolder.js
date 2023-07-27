@@ -14,7 +14,6 @@ const ModelForAddFolder = ({
     selectedItem,
     onclose
 }) => {
-
     const [form] = Form.useForm();
     const storeData = useSelector((state) => state?.globalStore);
     const isEdit = selectedItem != undefined ? true : false
@@ -29,11 +28,14 @@ const ModelForAddFolder = ({
                 name: values.folderTitle,
                 type: folderType,
             }
+            console.log(addFolderbody);
             let data = {
                 accessToken: storeData?.accessToken,
                 data: addFolderbody
             }
+            console.log(data);
             await createFolderAPI(data).then((res) => {
+                console.log(res);
                 setIsModelForAddFolderOpen(false)
             })
             form.resetFields()

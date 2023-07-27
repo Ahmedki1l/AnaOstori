@@ -46,7 +46,6 @@ function Index() {
             accessToken: storeData?.accessToken
         }
         await getFolderListAPI(data).then((res) => {
-            console.log(res);
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch((error) => {
@@ -102,7 +101,7 @@ function Index() {
                                     </div>
                                     <div className={`${styles.createCourseBtnBox}  mr-2`}>
                                         {selectedItem !== 'curriculum' && <button className='primarySolidBtn' onClick={() => handleAddFolder('addFolder')}> إضافة مجلد</button>}
-                                        {selectedItem == 'curriculum' && <button className='primarySolidBtn' onClick={() => handleRoute()}>إنشاء مقرر</button>}
+                                        {selectedItem == 'curriculum' && <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة قسم</button>}
                                     </div>
                                 </div>
                             </div>
