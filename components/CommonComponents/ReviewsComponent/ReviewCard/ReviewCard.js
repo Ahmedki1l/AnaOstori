@@ -12,7 +12,23 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CloseIcon from '@mui/icons-material/Close';
 import useWindowSize from '../../../../hooks/useWindoSize';
 
+import { Modal } from 'antd';
+import styled from 'styled-components';
 
+const StylesModal = styled(Modal)`
+    .ant-modal-close{
+        display:none;
+    }
+    .ant-modal-body {
+        direction:rtl
+    }
+    .ant-modal-content{
+        width:360px;
+        border-radius: 5px;
+        padding: 1.5rem;
+		overflow:hidden;
+    }
+`
 
 export default function ReviewCard(props) {
 
@@ -46,14 +62,28 @@ export default function ReviewCard(props) {
 												<PlayArrowIcon className='playIcon' />
 											</div>
 											<Image src='/images/anaOstori2.png' alt={'User Feedback'} width={433} height={436} />
-											<Dialog open={openVideo} maxWidth="md">
+											{/* <Dialog open={openVideo} maxWidth="md">
 												<DialogContent className='p-0' onClick={handleVideoClick}>
 													<CloseIcon className='videoCloseIcon' onClick={() => { setOpenVideo(false) }} />
 													<video controls width="100%" height="100%">
 														<source src={`${mediaBaseUrl}/${media.contentFileKey}`} type="video/mp4" />
 													</video>
 												</DialogContent>
-											</Dialog>
+											</Dialog> */}
+											<StylesModal
+												closeIcon={false}
+												footer={false}
+												open={open}
+												onClose={handleClose}
+												centered
+											>
+												<div className='videoCloseIcon' onClick={handleClose}>
+													<AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />
+												</div>
+												<video controls width="100%" height="100%">
+													<source src={`${mediaBaseUrl}/${media.contentFileKey}`} type="video/mp4" />
+												</video>
+											</StylesModal>
 										</>
 										:
 										<Image src={`${mediaBaseUrl}/${media.contentFileKey}`} alt={'User Feedback'} width={433} height={436} />

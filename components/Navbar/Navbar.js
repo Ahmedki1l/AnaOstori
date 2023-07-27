@@ -310,7 +310,6 @@ export default function Navbar() {
 					</div>
 				</div>
 			}
-
 			<ModalComponent open={open} handleClose={handleClose} dispatch={dispatch} toast={toast} />
 		</>
 	)

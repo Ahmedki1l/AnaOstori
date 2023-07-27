@@ -8,8 +8,6 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Spinner from '../components/CommonComponents/spinner'
 
 
@@ -250,11 +248,11 @@ export default function Register() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<VisibilityIcon className={styles.visibilityIcon} />
+										<AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<VisibilityOffIcon className={styles.visibilityIcon} />
+										<AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
 									</div>
 								}
 							</div>
