@@ -89,6 +89,7 @@ const Appointments = ({ courseId, courseType }) => {
             accessToken: storeData?.accessToken,
         }
         await getAllAvailabilityAPI(body).then((res) => {
+            console.log(res);
             setAllAppointments(res?.data)
             dispatch({
                 type: 'SET_AllAVAILABILITY',

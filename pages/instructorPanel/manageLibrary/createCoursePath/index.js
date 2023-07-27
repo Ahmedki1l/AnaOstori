@@ -14,15 +14,17 @@ const CreateCoursePath = () => {
     const [curriculmName, setCurriculumName] = useState()
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [folderType, setFolderType] = useState("curriculum")
+    const [sectionDetails, setSectionDetails] = useState([])
 
     const onFinishCreateCoursepath = (item) => {
         setCurriculumName(item)
         courseForm.resetFields()
     }
     const handleAddFolder = (values) => {
-        console.log(values);
         setIsModelForAddFolderOpen(true);
     };
+
+
 
     return (
         <div>
@@ -45,25 +47,26 @@ const CreateCoursePath = () => {
                                 />
                             </FormItem>
 
-                            {curriculmName && <div>
-                                <div className={`head2 py-2`}>
-                                    <p>الأقسام</p>
-                                </div>
-                                <div className={styles.addSectionWrapper}>
-                                    <div className={styles.tableBodyArea}>
-                                        <div className={styles.noDataMainArea}>
-                                            <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
-                                            <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
-                                            <div className={styles.createCourseBtnBox}>
-                                                <button className='primarySolidBtn' onClick={() => handleAddFolder('addSection')}>إضافة قسم</button>
+                            {(curriculmName && sectionDetails.length == 0) &&
+                                <div>
+                                    <div className={`head2 py-2`}>
+                                        <p>الأقسام</p>
+                                    </div>
+                                    <div className={styles.addSectionWrapper}>
+                                        <div className={styles.tableBodyArea}>
+                                            <div className={styles.noDataMainArea}>
+                                                <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
+                                                <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
+                                                <div className={styles.createCourseBtnBox}>
+                                                    <button className='primarySolidBtn' onClick={() => handleAddFolder('addSection')}>إضافة قسم</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             }
 
-                            <CurriculumSectionComponent onclose={onclose} folderType={folderType} />
+                            <CurriculumSectionComponent onclose={onclose} folderType={folderType} sectionList={sectionDetails} />
 
                             <div className={`${styles.savePathTitle}`}>
                                 {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `}>حفظ ومتابعة</button>}
@@ -76,6 +79,7 @@ const CreateCoursePath = () => {
             <ModelForAddFolder
                 isModelForAddFolderOpen={isModelForAddFolderOpen}
                 setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
+                folderType={'section'}
             />
         </div>
     )
