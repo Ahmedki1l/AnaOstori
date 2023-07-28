@@ -28,7 +28,6 @@ const ModelForAddFolder = ({
                 name: values.folderTitle,
                 type: folderType,
             }
-            console.log(addFolderbody);
             let data = {
                 accessToken: storeData?.accessToken,
                 data: addFolderbody

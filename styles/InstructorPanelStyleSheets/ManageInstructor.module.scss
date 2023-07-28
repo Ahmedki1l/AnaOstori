@@ -1,0 +1,65 @@
+@import "../variables.module.scss";
+
+.createNewAvailability {
+    width: 105px;
+    height: 36px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #F26722;
+    background-color: #F26722;
+    color: #FFFFFF;
+    border-radius: 3px;
+    margin: 20px 0px;
+}
+
+.tableArea {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableHeaderArea {
+    height: 48px;
+    background-color: #F4F5F7;
+    overflow: hidden;
+    font-size: 20px;
+    width: 100%;
+    border-collapse: separate;
+}
+
+.tableHead1 {
+    width: 40%;
+}
+
+.tableHead2 {
+    width: 25%;
+}
+
+.tableHead3 {
+    width: 25%;
+}
+
+.tableHead4 {
+    width: 10%;
+}
+
+.tableBodyArea {
+    width: 100%;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.tableRow {
+    border: 0.7px solid #c3c3c3;
+    border-top: none;
+
+    td {
+        height: 52px;
+        font-size: 18px;
+        text-align: center;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 30px;
+}
