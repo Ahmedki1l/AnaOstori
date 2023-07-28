@@ -46,6 +46,8 @@ const dummyData = [
 ]
 const CurriculumSectionComponent = ({ folderType, onclose, sectionList }) => {
 
+    console.log(sectionList);
+
     const [sectionDetails, setSectionDetails] = useState(sectionList)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [deleteItemType, setDeleteItemType] = useState('section')
