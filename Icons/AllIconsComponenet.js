@@ -66,6 +66,8 @@ import ClockStroked from './customeIcons/clockStroked'
 import LocationStroked from './customeIcons/locationStroked'
 import VisibilityIcon from './customeIcons/visibilityIcon'
 import VisibilityOffIcon from './customeIcons/visibilityOffIcon'
+import KeyBoardDownIcon from './customeIcons/keyBoardDownIcon'
+import MenuIcon from './customeIcons/menuIcon'
 
 
 
@@ -136,6 +138,9 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'folderIcon' && <FolderIcon height={height} width={width} color={color} />}
 			{iconName == 'visibilityIcon' && <VisibilityIcon height={height} width={width} color={color} />}
 			{iconName == 'visibilityOffIcon' && <VisibilityOffIcon height={height} width={width} color={color} />}
+
+			{iconName == 'keyBoardDownIcon' && <KeyBoardDownIcon height={height} width={width} color={color} />}
+			{iconName == 'menuIcon' && <MenuIcon height={height} width={width} color={color} />}
 
 
 

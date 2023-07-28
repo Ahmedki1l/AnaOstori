@@ -27,15 +27,15 @@ export default function CourseDetailsHeader(props) {
 
 	const courseCatagoriUrl = `${(courseDetail.catagory.name).replace(/ /g, "-")}`
 
-	console.log(lang);
-
 	return (
 		<div className={styles.headerWrapper}>
 			{courseDetail &&
 				<div className='maxWidthDefault relative'>
 					{(screenWidth > 767) &&
 						<div className={styles.pathDiv}>
-							<Link href={'/'} className={styles.pathText}>{lang == 'en' ? `Home` : `الرئيسية`}</Link> <ChevronLeftIcon className={styles.arrowIcon} /> <Link href={`/${courseCatagoriUrl}`} className={styles.pathText}>{courseDetail.catagory.name}</Link> <ChevronLeftIcon className={styles.arrowIcon} /> <p>{courseDetail.name}</p>
+							<Link href={'/'} className={styles.pathText}>{lang == 'en' ? `Home` : `الرئيسية`}</Link>
+							<ChevronLeftIcon className={styles.arrowIcon} /> <Link href={`/${courseCatagoriUrl}`} className={styles.pathText}>{courseDetail.catagory.name}</Link>
+							<ChevronLeftIcon className={styles.arrowIcon} /> <p>{courseDetail.name}</p>
 						</div>
 					}
 					{!(screenWidth > 767) &&

@@ -11,11 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { signOutUser } from '../../services/fireBaseAuthService'
 import { getCatagoriesAPI, getCurriculumIdsAPI, getInstructorListAPI, } from '../../services/apisService';
+import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 //Mi icons
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
-import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 
 
@@ -182,7 +182,10 @@ export default function Navbar() {
 					<Link href={'/'} className='pt-1'>
 						<Logo height={40} width={74} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
 					</Link>
-					<MenuIcon className={styles.menuBtn} onClick={() => setIsMenuShow(!isMenuShow)} />
+					{/* <MenuIcon className={styles.menuBtn} onClick={() => setIsMenuShow(!isMenuShow)} /><br /> */}
+					<div className={`p-1 ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
+						<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />
+					</div>
 					{isMenuShow &&
 						<div className={styles.slideBarBg}>
 							<div className={styles.sildeBarMenu}>
@@ -215,7 +218,7 @@ export default function Navbar() {
 					{/* <div className={styles.bellIconDiv}>
 						<AllIconsComponenet height={25} width={25} iconName={'bell'} color={'#808080'} />
 					</div> */}
-				</div>
+				</div >
 				:
 				<div className={styles.navbarWrapper} id="navBar" >
 					<div className='maxWidthDefault'>
@@ -233,7 +236,10 @@ export default function Navbar() {
 											return (
 												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
 													<p className={`${styles.mainMenuText} ${catagoryName == menu.name ? `fontBold` : `fontRegular`}`}>{menu.name}</p>
-													<KeyboardArrowDownIcon className={styles.arrowIcon} />
+													{/* <KeyboardArrowDownIcon  */}
+													<div className={styles.arrowIcon}>
+														<AllIconsComponenet height={20} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
+													</div>
 													<div className={styles.submenuBox}>
 														{menu.courses?.map((subMenu, j = index) => {
 															return (
@@ -276,7 +282,10 @@ export default function Navbar() {
 										<div className={styles.viewProfile}>
 											<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
 											<p>{userFullName ? userFullName : ""}</p>
-											<KeyboardArrowDownIcon className={styles.arrowIcon} />
+											{/* <KeyboardArrowDownIcon className={styles.arrowIcon} /> */}
+											<div className={styles.arrowIcon}>
+												<AllIconsComponenet height={20} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
+											</div>
 										</div>
 
 										<div className={styles.profileMenuWrapper}>
