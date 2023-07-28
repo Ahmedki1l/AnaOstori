@@ -12,9 +12,10 @@ import CourseCompleteDialog from '../../../../components/WatchCourseComponents/W
 import styles from '../../../../styles/MyCourseWatch.module.scss'
 import Spinner from '../../../../components/CommonComponents/spinner';
 import MyCourseDetails from '../../../../components/WatchCourseComponents/MyCourseContent/MyCourseContent';
+import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
+
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 
 
 export default function Index() {
@@ -34,6 +35,8 @@ export default function Index() {
     const [completedCourseItem, setCompletedCourseItem] = useState([])
     const [loading, setLoading] = useState(false)
     const [isUserEnrolled, setIsUserEnrolled] = useState(false)
+
+    console.log(ccSections);
 
     const chagenCourseItemHendler = (itemId) => {
         getCourseItemHendler(itemId)
@@ -188,7 +191,6 @@ export default function Index() {
                     <Spinner />
                 </div>
                 : isUserEnrolled ?
-
                     <>
                         <div className={styles.courseCurriculumMainArea}>
                             {selectedTab == 1 && <div className={styles.ccSectionsMainArea}>

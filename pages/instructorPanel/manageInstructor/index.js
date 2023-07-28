@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageInstructor.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import ModelForAddInstructor from '../../../components/ManageInstructor/ModelForAddInstructor'
+import { useState } from 'react'
 
 const dummyData = [
     {
@@ -26,7 +27,7 @@ const dummyData = [
     }
 ]
 
-const index = () => {
+const Index = () => {
 
     const [instructorDetails, setInstructorDetails] = useState(dummyData)
     const [isModelForAddInstructor, setIsModelForAddInstructor] = useState(false)
@@ -89,4 +90,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Index

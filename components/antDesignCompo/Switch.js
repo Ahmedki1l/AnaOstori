@@ -1,6 +1,4 @@
-import { Label } from '@mui/icons-material';
 import React, { useState } from 'react';
-import is from 'sharp/lib/is';
 import styled from 'styled-components';
 
 const StyledLabel = styled(`label`)`
