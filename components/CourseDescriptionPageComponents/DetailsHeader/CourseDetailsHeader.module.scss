@@ -1,47 +1,56 @@
-.headerWrapper{
+.headerWrapper {
 	background-color: #2D2E2D;
 	color: #ffffff;
 	padding: 2rem 0;
 
 }
-.pathDiv{
+
+.pathDiv {
 	display: flex;
 	align-items: center;
-	padding:0 1rem;
+	padding: 0 1rem;
 	margin-bottom: 2rem;
-	.arrowIcon{
+
+	.arrowIcon {
 		margin: 0 0.5rem;
+		height: 12px;
 	}
 }
-.pathText{
+
+.pathText {
 	text-decoration: none;
 	color: #ffffff;
 }
-.courseName{
+
+.courseName {
 	margin: 0 1rem;
 }
-.courseDiscriptionText{
+
+.courseDiscriptionText {
 	font-size: 20px;
 	padding: 1rem;
 	width: 65%;
 }
-.locationDiv{
+
+.locationDiv {
 	display: flex;
 	align-items: center;
 	margin: 0 1rem;
 }
-.analyticsBarWrapper{
+
+.analyticsBarWrapper {
 	font-size: 20px;
 	display: flex;
 	padding-right: 1rem;
 }
-.analyticsCard{
+
+.analyticsCard {
 	padding: 2rem 0 0 2rem;
 	display: flex;
 }
 
-.icon{
-    font-size: 45px;
+.icon {
+	font-size: 45px;
 }
 
 @media (max-width: 1280px) {
@@ -49,14 +58,17 @@
 		font-size: 17px;
 		width: 67%;
 	}
-	.analyticsCard{
-		p{
+
+	.analyticsCard {
+		p {
 			font-size: 18px;
 		}
 	}
-	.pathDiv{
+
+	.pathDiv {
 		font-size: 17px;
-		.arrowIcon{
+
+		.arrowIcon {
 			font-size: 20px;
 		}
 	}
@@ -68,48 +80,55 @@
 		width: 57%;
 	}
 
-	.pathDiv{
+	.pathDiv {
 		font-size: 15px;
-		.arrowIcon{
+
+		.arrowIcon {
 			font-size: 18px;
 		}
 	}
-	.analyticsCard{
-		p{
+
+	.analyticsCard {
+		p {
 			font-size: 15px;
 		}
 	}
-	.icon{
+
+	.icon {
 		font-size: 35px;
 	}
 }
+
 @media (max-width: 860px) {
-	.analyticsBarWrapper{
+	.analyticsBarWrapper {
 		width: 55%;
 		flex-wrap: wrap;
 	}
 }
 
 @media (max-width: 767px) {
-	.courseName{
+	.courseName {
 		width: 350px;
-		margin: 1rem auto ;
+		margin: 1rem auto;
 	}
-	.courseDiscriptionText{
+
+	.courseDiscriptionText {
 		font-size: 14px;
 		width: 350px;
-		margin: 0 auto ;
+		margin: 0 auto;
 		padding: 0;
 	}
-	.analyticsBarWrapper{
+
+	.analyticsBarWrapper {
 		width: 100%;
 		justify-content: center;
 		flex-wrap: wrap;
 		padding: 0 1rem;
 	}
 }
+
 @media (max-width: 528px) {
-	.analyticsBarWrapper{
+	.analyticsBarWrapper {
 		justify-content: right;
 	}
 }

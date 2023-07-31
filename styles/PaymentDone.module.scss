@@ -1,44 +1,65 @@
-.mainArea{
+.mainArea {
 	margin: 10rem auto;
 }
-.pageHeader{
+
+.pageHeader {
 	text-align: center;
 	margin: 1rem 0 1rem 0;
 }
-.checkIcon{
-	font-size: 5rem !important;
-	color: #00B564;
+
+// .checkIcon{
+// 	font-size: 5rem !important;
+// 	color: #00B564;
+// 	display: flex !important;
+// 	margin: 0 auto;
+// }
+
+.circle {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
 	display: flex !important;
-	margin: 0 auto;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B564;
+	margin: auto;
 }
-.note1,.note2{
+
+.note1,
+.note2 {
 	font-size: 20px;
 	margin: 1rem auto;
 	width: 45rem;
 	text-align: right;
 }
-.note3{
+
+.note3 {
 	font-size: 20px;
 	margin: 1rem auto;
 	padding: 0 1rem;
 	text-align: center;
 }
-.btnsBox{
+
+.btnsBox {
 	width: 45rem;
 	margin: 1rem auto;
 	display: flex;
 	justify-content: space-between;
 }
-.btnBox{
+
+.btnBox {
 	width: 48%;
 }
-.downloadIcon{
+
+.downloadIcon {
 	margin: 0 1rem;
 }
-.dataSubmitBtnBox{
+
+.dataSubmitBtnBox {
 	width: 20rem;
 	margin: 0 auto;
-	button{
+
+	button {
 		font-size: 18px;
 	}
 }

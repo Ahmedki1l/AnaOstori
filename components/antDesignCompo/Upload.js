@@ -72,7 +72,7 @@ const Upload = ({
             >
                 {fileList.length >= 1 ? null :
                     <div>
-                        <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080'} ></AllIconsComponenet>
+                        <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080a6'} ></AllIconsComponenet>
                         <p>{label}</p>
                     </div>
                 }

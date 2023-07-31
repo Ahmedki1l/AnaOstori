@@ -1,22 +1,20 @@
 import React from 'react'
 import styles from '../styles/InvoiceUploaded.module.scss'
-
-// MI icons
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Link from 'next/link';
+import AllIconsComponenet from '../Icons/AllIconsComponenet';
 
-export async function getServerSideProps({ req, res, resolvedUrl }){
+export async function getServerSideProps({ req, res, resolvedUrl }) {
 
-	if(!resolvedUrl?.includes('=')){
+	if (!resolvedUrl?.includes('=')) {
 		return {
 			notFound: true,
 		};
 	}
 
 	const Inquiry = resolvedUrl.split('=')[1].slice(3)
-	
+
 	return {
-		props:{
+		props: {
 			Inquiry
 		}
 	}
@@ -24,10 +22,14 @@ export async function getServerSideProps({ req, res, resolvedUrl }){
 
 
 export default function InvoiceUploaded(props) {
-	const Inquiry=props.Inquiry
+	const Inquiry = props.Inquiry
 	return (
 		<div className={`maxWidthDefault ${styles.mainArea}`}>
-			<CheckCircleIcon className={styles.checkIcon} />
+			<div className='m-5'>
+				<div className={styles.circle}>
+					<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={40} width={35} color={'#FFFFFF'} />
+				</div>
+			</div>
 			<h1 className={`head1 ${styles.pageHeader}`}>استلمنا إيصالك</h1>
 			<p className={`fontMedium ${styles.note1}`}>راح نراجع إيصال الحوالة، وبيتواصل معك فريق الدعم على الواتساب لتأكيد الحجز وتحديث حالة الطلب بمدة أقصاها <span className='fontBold'>24</span>  <span className='fontBold'>ساعة</span> ،</p>
 			<p className={`fontMedium ${styles.note1}`}>إذا احتجت مساعدة تواصل معنا على الواتساب وتقدر تشوف حالة طلبك من صفحة استعلام وتأكيد الحجوزات</p>
@@ -44,4 +46,3 @@ export default function InvoiceUploaded(props) {
 		</div>
 	)
 }
-    

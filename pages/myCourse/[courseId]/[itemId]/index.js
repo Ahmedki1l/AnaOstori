@@ -15,8 +15,6 @@ import MyCourseDetails from '../../../../components/WatchCourseComponents/MyCour
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
 
 export default function Index() {
     const storeData = useSelector((state) => state?.globalStore);
@@ -199,7 +197,12 @@ export default function Index() {
                                         <div key={`ccSection${i}`}>
                                             <div className={styles.ccSectionHeaders} onClick={() => setExpandedSection(expandedSection === i ? null : i)}>
                                                 <p className={`font-bold ${styles.ccSectionName}`}>{section.name}</p>
-                                                <KeyboardArrowDownIcon className={`${styles.arrowIcon} ${expandedSection === i ? 'rotate-180' : ''}`} />
+                                                {/* <KeyboardArrowDownIcon className={`${styles.arrowIcon} ${expandedSection === i ? 'rotate-180' : ''}`} /> */}
+                                                <div style={{ height: '18px' }}>
+                                                    <div className={expandedSection === i ? `${styles.rotateArrow}` : ''}>
+                                                        <AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
+                                                    </div>
+                                                </div>
                                             </div>
                                             {expandedSection === i &&
                                                 <div>

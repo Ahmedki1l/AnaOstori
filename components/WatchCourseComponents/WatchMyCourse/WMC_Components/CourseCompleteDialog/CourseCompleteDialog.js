@@ -1,10 +1,10 @@
-import { Dialog, DialogContent, Link } from '@mui/material'
 import React, { useState } from 'react'
 import styles from './CourseCompleteDialog.module.scss'
 import Image from 'next/legacy/image';
 import { useSelector } from 'react-redux';
 
 // MiIcon
+import { Dialog, DialogContent, Link } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 
 function CourseCompleteDialog() {

@@ -7,9 +7,6 @@ import Link from 'next/link';
 import * as linkConst from '../../constants/LinkConst';
 import useWindowSize from '../../hooks/useWindoSize';
 
-// MI Icons
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
 
 export default function PhysicalCourseCard(props) {
 
@@ -37,8 +34,6 @@ export default function PhysicalCourseCard(props) {
 	const imageBaseUrl = linkConst.File_Base_Url2
 
 	const coverImgUrl = courseDetail.pictureKey ? `${imageBaseUrl}/${courseDetail.pictureKey}` : ""
-
-	console.log(courseDetail.pictureKey);
 
 	return (
 		<div className={styles.typeOfCourseCardWrapper}>
@@ -92,7 +87,11 @@ export default function PhysicalCourseCard(props) {
 						<div className={styles.specialPriceBox}>
 							<p className={styles.detailText}>*سعر خاص للمجموعات</p>
 							<div className='flex items-center cursor-pointer select-none' onClick={() => { setDiscountShow(!discountShow) }}>
-								<KeyboardArrowDownIcon className={`${styles.arrowIcon} ${discountShow == true ? 'rotate-180' : ''}`} />
+								<div style={{ height: '18px' }}>
+									<div className={discountShow == true ? `${styles.rotateArrow}` : ''}>
+										<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
+									</div>
+								</div>
 								<p className={styles.seemoreText}>{discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
 							</div>
 						</div>

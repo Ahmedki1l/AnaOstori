@@ -2,9 +2,7 @@ import styles from '../styles/StudentFeedback.module.scss'
 import axios from 'axios';
 import ReviewCard from '../components/CommonComponents/ReviewsComponent/ReviewCard/ReviewCard'
 import { useState } from 'react';
-
-// MI icon
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import AllIconsComponenet from '../Icons/AllIconsComponenet';
 
 
 export async function getServerSideProps() {
@@ -64,6 +62,7 @@ export default function StudentFeedback(props) {
 	}
 	const categoriWiseArray = categorizeArray();
 
+	console.log(categoriWiseArray);
 
 	return (
 		<div>
@@ -81,7 +80,11 @@ export default function StudentFeedback(props) {
 							<div className={`${styles.drapdownWrapper} ${styles.courseDrapdownWrapper}`} onClick={() => { setShowCourseDropDown(!showCourseDropDown), setShowDateDropDown(false) }}>
 								<div className={styles.dropDownDiv} >
 									<p>اختر الدورة</p>
-									<p className='fontBold flex'>{courseFilterType} <KeyboardArrowDownRoundedIcon /></p>
+									<p className='fontBold flex'>{courseFilterType}
+										<div className='p-1'>
+											<AllIconsComponenet height={15} width={15} iconName={'keyBoardDownIcon'} color={'#000000'} />
+										</div>
+									</p>
 								</div>
 								{showCourseDropDown && <div className={styles.courseDropBox}>
 									<p onClick={() => handelCourseFilter('جميع الدورات')}>جميع الدورات</p>
@@ -97,7 +100,11 @@ export default function StudentFeedback(props) {
 							<div className={`${styles.drapdownWrapper} ${styles.dateDrapdownWrapper}`} onClick={() => { setShowDateDropDown(!showDateDropDown), setShowCourseDropDown(false) }}>
 								<div className={styles.dropDownDiv}>
 									<p>تاريخ التجربة</p>
-									<p className='fontBold flex'>{dateFilterType} <KeyboardArrowDownRoundedIcon /></p>
+									<p className='fontBold flex'>{dateFilterType}
+										<div className='p-1'>
+											<AllIconsComponenet height={15} width={15} iconName={'keyBoardDownIcon'} color={'#000000'} />
+										</div>
+									</p>
 								</div>
 								{showDateDropDown && <div className={styles.dateDropBox}>
 									<p onClick={() => handelDateFilter('الأحدث')}>الأحدث</p>

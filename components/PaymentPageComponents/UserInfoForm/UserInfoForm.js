@@ -8,13 +8,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import UserDetailForm1 from '../../CourseDescriptionPageComponents/UserDetailForm1';
 import useWindowSize from '../../../hooks/useWindoSize';
-
-//MI icons
-import PersonIcon from '@mui/icons-material/Person';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
+
 
 
 export default function UserInfoForm(props) {
@@ -75,7 +72,6 @@ export default function UserInfoForm(props) {
 			: studentsDataLength ? (props.studentsData)
 				: (router.query ? [preSelectTemplet]
 					: [userTemplet]))
-
 
 	useEffect(() => {
 		if (studentsDataLength && studentsDataLength > 0) {
@@ -190,7 +186,6 @@ export default function UserInfoForm(props) {
 		setStudentsData(data);
 	}
 
-
 	return (
 		<>
 			<FirstPaymentPageInfo />
@@ -252,7 +247,11 @@ export default function UserInfoForm(props) {
 										<p className='fontBold text-white bg-gray-800 rounded-b p-2'>{noOfUsersTag[i]}</p>
 										{i > 2 &&
 											<p className={styles.closeIcon} onClick={() => handleRemoveForm(i)}>
-												<CloseRoundedIcon />	<span className='fontMedium'>حذف</span>
+												{/* <CloseRoundedIcon />	 */}
+												<div className='pl-2'>
+													<AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
+												</div>
+												<span className='fontMedium'>حذف</span>
 											</p>
 										}
 									</div>

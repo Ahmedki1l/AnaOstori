@@ -4,17 +4,15 @@ import axios from "axios";
 import * as linkConst from '../constants/LinkConst';
 import Link from "next/link";
 import useWindowSize from "../hooks/useWindoSize";
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import SearchIcon from '@mui/icons-material/Search';
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { getMyOrderAPI } from "../services/apisService";
 import { signOutUser } from "../services/fireBaseAuthService";
+import AllIconsComponenet from "../Icons/AllIconsComponenet";
 
 
 
 export default function Search(props) {
-
 	const whatsAppLink = linkConst.WhatsApp_Link
 	const [queryData, setQueryData] = useState('')
 	const [searchData, setSearchData] = useState([])
@@ -34,6 +32,7 @@ export default function Search(props) {
 				accessToken: storeData?.accessToken
 			}
 			await getMyOrderAPI(params).then((res) => {
+				console.log(res);
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch((error) => {
 				console.log(error)
@@ -56,7 +55,7 @@ export default function Search(props) {
 			</div>
 			<div className={`maxWidthDefault ${styles.searchBody}`}>
 				{searchData.length > 0 && !isMediumScreen ?
-					<table className={styles.tableArea} >
+					<table className={styles.tableArea}>
 						<thead className={styles.thead}>
 							<tr>
 								<th className={styles.theadOrder}>رقم الفاتورة</th>
@@ -68,6 +67,7 @@ export default function Search(props) {
 						</thead>
 						<tbody className={styles.body}>
 							{searchData.map((data, i = index) => {
+								console.log(data);
 								return (
 									<tr key={`order${i}`}>
 										<td className={styles.tbodyOrder}>{data.id}</td>
@@ -115,7 +115,9 @@ export default function Search(props) {
 										<td className={styles.tbodyInvoice}>
 											{data?.status == "accepted" ?
 												<div className="flex items-center justify-center">
-													<SaveAltIcon className={styles.downloadIcon} />
+													<div>
+														<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
+													</div>
 													<p className={styles.downloadSearchText}>تحميل الفاتورة</p>
 												</div>
 												:
@@ -186,7 +188,9 @@ export default function Search(props) {
 											<td className={styles.tbodyInvoice}>
 												{data?.status == "accepted" ?
 													<div className="flex items-center justify-center">
-														<SaveAltIcon className={styles.downloadIcon} />
+														<div>
+															<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
+														</div>
 														<p className={styles.downloadSearchText}>تحميل الفاتورة</p>
 													</div>
 													:
@@ -200,7 +204,6 @@ export default function Search(props) {
 						</tbody>
 					</table>
 				}
-
 				{isOrderFound == 'show' &&
 					<div className={`pt-8 ${styles.noSearchdataContainer}`}>
 						<p className="text-center">ما عندك طلب بهذا الرقم</p>

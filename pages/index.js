@@ -8,13 +8,11 @@ import Image from 'next/legacy/image';
 import axios from 'axios';
 import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewComponent';
 import VideoThumnail from '../components/CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail';
-
-
-// MI icons
-import CloseIcon from '@mui/icons-material/Close';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
+
+
 
 
 export async function getServerSideProps(context) {
@@ -99,7 +97,9 @@ export default function Home(props) {
 			{hideNotificationBar
 				? (<div className={styles.notificationBarwraper}>
 					<div className='maxWidthDefault flex items-center'>
-						<CloseIcon className={styles.closeIcon} onClick={() => { setHideNotificationBar(false) }} />
+						<div className={styles.closeIcon} onClick={() => { setHideNotificationBar(false) }}>
+							<AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FFFFFF'} />
+						</div>
 						{news.length > 0 && news.map((newNews, i = index) => {
 							return (
 								<p className={styles.notificationText} key={`news${i}`}>{newNews.content}</p>

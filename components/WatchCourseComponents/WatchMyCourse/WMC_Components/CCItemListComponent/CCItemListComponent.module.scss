@@ -10,11 +10,22 @@
 	cursor: pointer;
 }
 
-.checkIcon {
-	color: #25D366;
-	font-size: 18px !important;
-	position: absolute;
-	right: 24px;
+// .checkIcon {
+// 	color: #25D366;
+// 	font-size: 18px !important;
+// 	position: absolute;
+// 	right: 24px;
+// }
+
+.circle {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B564;
+	margin: auto;
 }
 
 .itemIcon {
