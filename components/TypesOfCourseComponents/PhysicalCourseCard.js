@@ -6,6 +6,7 @@ import Icon from '../CommonComponents/Icon';
 import Link from 'next/link';
 import * as linkConst from '../../constants/LinkConst';
 import useWindowSize from '../../hooks/useWindoSize';
+import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 
 export default function PhysicalCourseCard(props) {
