@@ -8,13 +8,6 @@ import CoverImg from '../../CommonComponents/CoverImg';
 import * as LinkConst from '../../../constants/LinkConst'
 
 
-//MI icons
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import StarRoundedIcon from '@mui/icons-material/StarRounded';
-import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-
-
 export default function CourseDetailsHeader(props) {
 
 	const courseDetail = props.courseDetail
@@ -34,14 +27,27 @@ export default function CourseDetailsHeader(props) {
 					{(screenWidth > 767) &&
 						<div className={styles.pathDiv}>
 							<Link href={'/'} className={styles.pathText}>{lang == 'en' ? `Home` : `الرئيسية`}</Link>
-							<ChevronLeftIcon className={styles.arrowIcon} /> <Link href={`/${courseCatagoriUrl}`} className={styles.pathText}>{courseDetail.catagory.name}</Link>
-							<ChevronLeftIcon className={styles.arrowIcon} /> <p>{courseDetail.name}</p>
+							<div className={styles.arrowIcon}>
+								{lang == 'en' ?
+									<AllIconsComponenet iconName={'arrowRight'} height={12} width={12} color={'#FFFFFF'} />
+									:
+									<AllIconsComponenet iconName={'arrowLeft'} height={12} width={12} color={'#FFFFFF'} />
+								}
+							</div>
+							<Link href={`/${courseCatagoriUrl}`} className={styles.pathText}>{courseDetail.catagory.name}</Link>
+							<div className={styles.arrowIcon}>
+								{lang == 'en' ?
+									<AllIconsComponenet iconName={'arrowRight'} height={12} width={12} color={'#FFFFFF'} />
+									:
+									<AllIconsComponenet iconName={'arrowLeft'} height={12} width={12} color={'#FFFFFF'} />
+								}
+							</div>
+							<p>{courseDetail.name}</p>
 						</div>
 					}
 					{!(screenWidth > 767) &&
 						<div className='w-80 mx-auto'>
 							<CoverImg height={190} url={`${mediaBaseUrl}/${courseDetail.pictureKey}`} />
-
 							{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={''} thumnailHeight={190} /> */}
 						</div>
 					}
@@ -50,7 +56,9 @@ export default function CourseDetailsHeader(props) {
 					<div className={styles.analyticsBarWrapper}>
 						{courseDetail.type == "physical" ?
 							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
-								<LocationOnIcon className={`mt-1 ${styles.icon}`} style={{ color: '#ffffff' }} />
+								<div className='m-1'>
+									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'location'} color={'#FFFFFF'} />
+								</div>
 								<div className='px-1'>
 									<p> {lang == 'en' ? `Location` : `تقدم الدورة في`}</p>
 									<p className='fontBold'>{courseDetail.locationName}</p>
@@ -78,14 +86,18 @@ export default function CourseDetailsHeader(props) {
 								</div>
 						}
 						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
-							<StarRoundedIcon className={`mt-1 ${styles.icon}`} style={{ color: '#FFCD3C' }} />
+							<div className='m-1'>
+								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'star'} color={'#FFCD3C'} />
+							</div>
 							<div className='px-1'>
 								<p> {lang == 'en' ? `Course Review` : `تقييم الدورة`} </p>
 								<p className='fontBold'>{courseDetail.reviewRate}</p>
 							</div>
 						</div>
 						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
-							<SchoolRoundedIcon className={`mt-1 ${styles.icon}`} />
+							<div className='m-1'>
+								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'graduate'} color={'#FFFFFF'} />
+							</div>
 							<div className='px-1'>
 								<p> {lang == 'en' ? `Number of graduates` : `عدد الخريجين`} </p>
 								<p className='fontBold'>{courseDetail.numberOfGrarduates}</p>

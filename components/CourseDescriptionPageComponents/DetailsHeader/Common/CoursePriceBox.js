@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styles from './CoursePriceBox.module.scss'
-
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 
 
 export default function CoursePriceBox(props) {
@@ -48,7 +47,11 @@ export default function CoursePriceBox(props) {
 				<div className='flex justify-between pb-4'>
 					<p className={`fontMedium ${styles.subText}`}>{lang == 'en' ? "SPECIAL PRICE FOR GROUPS" : `*نوفر سعر خاص للمجموعات`}</p>
 					<div className='flex items-center cursor-pointer select-none' onClick={() => { setDiscountShow(!discountShow) }}>
-						<KeyboardArrowDownIcon className={`${styles.arrowIcon} ${discountShow == true ? 'rotate-180' : ''}`} />
+						<div style={{ height: '18px' }}>
+							<div className={discountShow == true ? `${styles.rotateArrow}` : ''}>
+								<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
+							</div>
+						</div>
 						{lang == 'en' ?
 							<p className={styles.seemoreText}>{discountShow == true ? 'Hide prices' : 'Show prices'}</p>
 							:

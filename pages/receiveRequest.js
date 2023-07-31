@@ -4,10 +4,8 @@ import * as LinkConst from '../constants/LinkConst'
 import BankDetailsCard from '../components/CommonComponents/BankDetailCard/BankDetailsCard';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import AllIconsComponenet from '../Icons/AllIconsComponenet';
 
-
-// MI icons
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 
 
@@ -20,7 +18,11 @@ export default function ReceiverReq() {
 
 	return (
 		<div className={`maxWidthDefault ${styles.mainArea}`}>
-			<CheckCircleRoundedIcon className={styles.checkIcon} />
+			<div className='m-5'>
+				<div className={styles.circle}>
+					<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={40} width={35} color={'#FFFFFF'} />
+				</div>
+			</div>
 			<p className="head2 text-center">شكرا لك، استلمنا طلبك</p>
 			<p className={` ${styles.note1}`}>لضمان حجز مقعدك، نرجو إتمام عملية التحويل خلال <span className='text-red-500 underline fontMedium'>24 ساعة كحد أقصى</span>، وهي مدة حجز مقعدك في النظام </p>
 			<div className={`flex flex-wrap ${styles.bankDetailSubWrapper}`}>

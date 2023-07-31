@@ -6,12 +6,8 @@ import * as LinkConst from '../../../../constants/LinkConst'
 import useWindowSize from '../../../../hooks/useWindoSize';
 import { dateWithDay, timeDuration } from '../../../../constants/DateConverter';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
-
-
-// MI icons
-import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Image from 'next/legacy/image';
+
 
 
 export default function DatesInfo(props) {
@@ -35,7 +31,7 @@ export default function DatesInfo(props) {
 					<p className={`fontMedium ${styles.listItemText}`}>من {dateWithDay(date.dateFrom)} إلى {dateWithDay(date.dateTo)} </p>
 				</li>
 				<li>
-					<WatchLaterIcon className={styles.icons} />
+					<AllIconsComponenet height={24} width={28} iconName={'clock'} color={'#000000'} />
 					<p className={`fontMedium ${styles.listItemText}`}>{timeDuration(date.timeFrom, date.timeTo)}</p>
 				</li>
 				<li>
@@ -46,7 +42,7 @@ export default function DatesInfo(props) {
 						</>
 						:
 						<>
-							<LocationOnIcon className={`${styles.icons} ${styles.locationIcons}`} />
+							<AllIconsComponenet height={24} width={28} iconName={'location'} color={'#000000'} />
 							<Link href={date.location ?? ""} target='_blank'>
 								<p className={`fontMedium link ${styles.listItemText}`}>{date.locationName}</p>
 							</Link>

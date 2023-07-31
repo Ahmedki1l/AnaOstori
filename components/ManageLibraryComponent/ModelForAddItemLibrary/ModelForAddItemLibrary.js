@@ -117,7 +117,7 @@ const ModelForAddItemLibrary = ({
                                     <label className={styles.uploadVideoWrapper} htmlFor='uploadFileInput'>
                                         <div className={styles.IconWrapper} >
                                             <div className={styles.uploadFileWrapper}>
-                                                <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#000000'} />
+                                                <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
                                             </div>
                                             <p>ارفق الملف</p>
                                         </div>

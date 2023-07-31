@@ -68,6 +68,9 @@ import VisibilityIcon from './customeIcons/visibilityIcon'
 import VisibilityOffIcon from './customeIcons/visibilityOffIcon'
 import KeyBoardDownIcon from './customeIcons/keyBoardDownIcon'
 import MenuIcon from './customeIcons/menuIcon'
+import RightArrowIcon from './customeIcons/rightArrowIcon'
+import CheckCircleRoundIcon from './customeIcons/checkCircleRoundIcon'
+import DownloadIcon from './customeIcons/downloadIcon'
 
 
 
@@ -139,10 +142,12 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'visibilityIcon' && <VisibilityIcon height={height} width={width} color={color} />}
 			{iconName == 'visibilityOffIcon' && <VisibilityOffIcon height={height} width={width} color={color} />}
 
+
 			{iconName == 'keyBoardDownIcon' && <KeyBoardDownIcon height={height} width={width} color={color} />}
 			{iconName == 'menuIcon' && <MenuIcon height={height} width={width} color={color} />}
-
-
+			{iconName == 'rightArrowIcon' && <RightArrowIcon height={height} width={width} color={color} />}
+			{iconName == 'checkCircleRoundIcon' && <CheckCircleRoundIcon height={height} width={width} color={color} />}
+			{iconName == 'downloadIcon' && <DownloadIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

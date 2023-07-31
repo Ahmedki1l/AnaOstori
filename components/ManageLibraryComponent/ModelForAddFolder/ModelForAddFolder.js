@@ -70,7 +70,8 @@ const ModelForAddFolder = ({
 
                 <div className={styles.modalHeader}>
                     <button onClick={() => setIsModelForAddFolderOpen(false)} className={styles.closebutton}>
-                        <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
+                        <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
+                    </button>
                     <p className={`fontBold ${styles.createappointment}`}> إضافة مجلد</p>
                 </div>
                 <div dir='rtl'>

@@ -7,12 +7,8 @@ import CoverImg from '../components/CommonComponents/CoverImg';
 import { useRouter } from 'next/router';
 import useWindowSize from '../hooks/useWindoSize';
 import * as LinkConst from '../constants/LinkConst'
+import AllIconsComponenet from '../Icons/AllIconsComponenet';
 
-
-//Mi  icon
-import LogoutIcon from '@mui/icons-material/Logout';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
     const orderId = resolvedUrl.split('=')[1]
@@ -146,7 +142,14 @@ export default function ApproveTrans(props) {
                         {!isFileUpload ?
                             <div className={styles.uploadBtn}>
                                 <input type='file' accept=".png,.pdf,.jpeg" onChange={(e) => uploadFile(e)} />
-                                <p className={`fontMedium ${styles.uploadFileText}`}> <LogoutIcon className={`btnIcon ${styles.uploadIcon}`} />رفع الإيصال (تقدر ترفع صورة او ملف) </p>
+                                <div className={`flex ${styles.uploadFileareaWrapper}`}>
+                                    <div className={styles.uploadFileIcon}>
+                                        <AllIconsComponenet iconName={'uploadFile'} height={20} width={30} color={'#F26722'} />
+                                    </div>
+                                    <div className={`fontMedium ${styles.uploadFileText}`}>
+                                        <p> رفع الإيصال (تقدر ترفع صورة او ملف)</p>
+                                    </div>
+                                </div>
                             </div>
                             :
                             <>
@@ -156,7 +159,12 @@ export default function ApproveTrans(props) {
                                 </div>
                                 <div className={styles.fileDetailsBox}>
                                     <p className={`fontMedium ${styles.fielDetailName}`}>عنوان الملف المرفوع:</p>
-                                    <p className={styles.fileNameText}><CheckCircleRoundedIcon className={styles.checkLogo} />{uplodedFileName}</p>
+                                    <div className='flex pt-2' >
+                                        <div className={styles.circle}>
+                                            <AllIconsComponenet iconName={'checkCircleRoundIcon'} height={12} width={12} color={'#FFFFFF'} />
+                                        </div>
+                                        <p className={styles.fileNameText}>{uplodedFileName}</p>
+                                    </div>
                                 </div>
                             </>
                         }
@@ -172,9 +180,14 @@ export default function ApproveTrans(props) {
                         <button className={`primarySolidBtn cursor-not-allowed ${styles.submitBtn}`}>إرسال</button>
                     }
                 </div>
-                <div className='pt-4 pb-8'>
+                <div className='pt-4 pb-4'>
                     <p className={`fontMedium ${styles.bankDetailText}`} onClick={() => setShowBankDetails(!showBankDetails)}>
-                        <KeyboardArrowDownIcon className={showBankDetails ? `${styles.rotateArrow}` : ''} /> عرض حساباتنا البنكية
+                        <div style={{ height: '20px' }}>
+                            <div className={showBankDetails ? `${styles.rotateArrow}` : ''}>
+                                <AllIconsComponenet iconName={'keyBoardDownIcon'} height={20} width={30} color={'#0075FF'} />
+                            </div>
+                        </div>
+                        عرض حساباتنا البنكية
                     </p>
                     {showBankDetails &&
                         <>

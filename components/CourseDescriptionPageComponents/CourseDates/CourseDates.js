@@ -12,7 +12,6 @@ export default function CourseDates(props) {
 	const date = props.date
 	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const lang = props.lang
-	console.log(lang);
 	const isSmallScreen = useWindowSize().smallScreen
 
 	const coursePlanUrl = `${mediaBaseUrl}/${date.coursePlanKey}`

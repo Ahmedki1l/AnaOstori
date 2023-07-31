@@ -31,7 +31,7 @@ const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
         <>
             <input type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
             <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
-                <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080'} ></AllIconsComponenet>
+                <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080a6'}></AllIconsComponenet>
                 <p className={styles.uploadimagetext}>{label}</p>
             </label>
         </>

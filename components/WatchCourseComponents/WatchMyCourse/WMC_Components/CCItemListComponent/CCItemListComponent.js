@@ -4,8 +4,6 @@ import useWindowSize from '../../../../../hooks/useWindoSize';
 import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet';
 
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
 
 export default function CCItemListComponent(props) {
 
@@ -36,7 +34,11 @@ export default function CCItemListComponent(props) {
 			{item &&
 				<div className={`${styles.ccItemsWrapper} ${props.currentItem == true ? `${styles.activeItem}` : ``}`} onClick={() => selectNewItemHendler(itemId)}>
 					{isItemComplete &&
-						<CheckCircleIcon className={styles.checkIcon} />
+						<div className='m-5'>
+							<div className={styles.circle}>
+								<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={40} width={35} color={'#FFFFFF'} />
+							</div>
+						</div>
 					}
 					<div className={styles.itemIcon}>
 						<AllIconsComponenet height={isSmallScreen ? 20 : 14} width={isSmallScreen ? 20 : 14} iconName={`${item?.type == "video" ? 'playButton' : item?.type == "file" ? 'file' : 'quiz'}`} color={'#F26722'} />

@@ -4,17 +4,12 @@ import Image from 'next/legacy/image';
 import * as LinkConst from '../../../../constants/LinkConst'
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-
-//Mi icon
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import CloseIcon from '@mui/icons-material/Close';
-import useWindowSize from '../../../../hooks/useWindoSize';
-
 import { Modal } from 'antd';
 import styled from 'styled-components';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
+import useWindowSize from '../../../../hooks/useWindoSize';
+
+
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -41,8 +36,9 @@ export default function ReviewCard(props) {
 	const [openVideo, setOpenVideo] = useState(false);
 	const windowScreen = useWindowSize().width
 
-	const handleVideoClick = (event) => {
-		event.stopPropagation();
+
+	const handleClose = (event) => {
+		// event.stopPropagation();
 	};
 
 	return (
@@ -50,7 +46,11 @@ export default function ReviewCard(props) {
 			<div className={styles.reviewerImageBox}>
 				<div className={styles.pageNODiv}>{currentPost}/{totalPostNumber}</div>
 				{currentPost != totalPostNumber &&
-					<div className={styles.leftArrowBtn} onClick={() => setCurrentPost(currentPost + 1)}><KeyboardArrowLeftIcon /></div>
+					<div className={styles.leftArrowBtn} onClick={() => setCurrentPost(currentPost + 1)}>
+						<div className='m-1.5'>
+							<AllIconsComponenet iconName={'arrowLeft'} height={12} width={12} color={'#FFFFFF'} />
+						</div>
+					</div>
 				}
 				{reviewMedia?.map((media, index) => {
 					return (
@@ -60,7 +60,7 @@ export default function ReviewCard(props) {
 									{media.contentFileMime == "video/mp4" ?
 										<>
 											<div className='playIconDiv' onClick={() => { setOpenVideo(true) }}>
-												<PlayArrowIcon className='playIcon' />
+												{/* <PlayArrowIcon className='playIcon' /> */}
 											</div>
 											<Image src='/images/anaOstori2.png' alt={'User Feedback'} width={433} height={436} />
 											{/* <Dialog open={openVideo} maxWidth="md">
@@ -95,7 +95,11 @@ export default function ReviewCard(props) {
 					)
 				})}
 				{currentPost != 1 &&
-					<div className={styles.rightArrowBtn} onClick={() => setCurrentPost(currentPost - 1)}><KeyboardArrowRightIcon /></div>
+					<div className={styles.rightArrowBtn} onClick={() => setCurrentPost(currentPost - 1)}>
+						<div className='m-1.5'>
+							<AllIconsComponenet iconName={'arrowRight'} height={12} width={12} color={'#FFFFFF'} />
+						</div>
+					</div>
 				}
 			</div>
 			<p className={`fontBold ${styles.reviewerName}`}>{review.fullName}</p>

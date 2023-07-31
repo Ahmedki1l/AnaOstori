@@ -135,6 +135,11 @@
 	}
 }
 
+.rotateArrow {
+	height: 16px;
+	transform: rotate(180deg);
+}
+
 .btnBox {
 	margin: 1rem 0.7rem;
 

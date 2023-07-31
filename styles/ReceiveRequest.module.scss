@@ -9,6 +9,17 @@
 	margin: 0 auto;
 }
 
+.circle {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B564;
+	margin: auto;
+}
+
 .note1 {
 	font-size: 18px;
 	margin: 1rem 0;

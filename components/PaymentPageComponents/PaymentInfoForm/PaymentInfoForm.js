@@ -14,11 +14,8 @@ import MadaCardDetailForm from './MadaCardDetailForm'
 import ApplePayForm from './ApplePayForm'
 import useWindowSize from '../../../hooks/useWindoSize'
 import * as fbq from '../../../lib/fpixel'
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 
-// MI icon
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import EastRoundedIcon from '@mui/icons-material/EastRounded';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -113,7 +110,9 @@ export default function PaymentInfoForm(props) {
 		<div className='maxWidthDefault'>
 			{isSmallScreen &&
 				<div className={styles.backBarWrapper}>
-					<ArrowForwardIosIcon className={styles.backArrowIcon} onClick={() => props.backToUserForm(studentsData, false)} />
+					<div className={styles.backArrowIcon} onClick={() => props.backToUserForm(studentsData, false)}>
+						<AllIconsComponenet height={20} width={24} iconName={'arrowRight'} color={'#000000'} />
+					</div>
 					<p className='py-4 text-center w-100'>مراجعة الطلب والدفع</p>
 				</div>
 			}
@@ -204,7 +203,12 @@ export default function PaymentInfoForm(props) {
 					</div>
 					{!isSmallScreen && createdOrder.course.type != "on-demand" &&
 						<div className={styles.backBtnBox}>
-							<button className='fontBold primaryStrockedBtn' onClick={() => props.backToUserForm(studentsData, false)}><EastRoundedIcon className={styles.arrowIcon} /> الصفحة السابقة </button>
+							<button className='fontBold primaryStrockedBtn'>
+								<div className={styles.arrowIcon}>
+									<AllIconsComponenet height={20} width={20} iconName={'rightArrowIcon'} color={'#F26722'} />
+								</div>
+								{/* <EastRoundedIcon className={styles.arrowIcon} /> */}
+								الصفحة السابقة </button>
 						</div>
 					}
 				</div>
