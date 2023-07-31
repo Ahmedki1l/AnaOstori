@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { getPaymentInfoAPI } from '../services/apisService';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
+import Spinner from '../components/CommonComponents/spinner';
 
 
 
