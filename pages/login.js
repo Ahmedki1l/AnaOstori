@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import Router from "next/router";
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
+import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar'
 
 
 
@@ -123,17 +124,15 @@ export default function Login() {
 	}
 
 	const handleSignIn = async (e) => {
-		setLoading(true)
 		e.preventDefault();
-
 		if (!email) {
-			setEmailError("فضلا ادخل الايميل")
+			setEmailError(inputErrorMessages.noEmailErrorMsg)
 		}
 		if (!password) {
-			setPasswordError("فضلا ادخل كلمة السر")
+			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
-
-		else if (email && password && !isEmailError && !isPasswordError) {
+		if (email && password && !isEmailError && !isPasswordError) {
+			setLoading(true)
 			await startEmailPasswordLogin(email, password).then((userCredential) => {
 				dispatch({
 					type: 'ADD_AUTH_TOKEN',
@@ -145,10 +144,10 @@ export default function Login() {
 				});
 
 				handleStoreUpdate(userCredential?.user?.accessToken)
-				toast.success("تم تسجيل الدخول بنجاح")
+				toast.success(toastSuccessMessage.successLoginMsg)
 				Router.push('/')
 			}).catch((error) => {
-				toast.error('يوجد خطأ بالايميل او كلمة السر ');
+				toast.error(toastErrorMessage.emailPasswordErrorMsg);
 			});
 		}
 	}

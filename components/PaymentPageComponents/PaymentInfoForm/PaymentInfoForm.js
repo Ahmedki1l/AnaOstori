@@ -15,6 +15,7 @@ import ApplePayForm from './ApplePayForm'
 import useWindowSize from '../../../hooks/useWindoSize'
 import * as fbq from '../../../lib/fpixel'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
 
 
 export default function PaymentInfoForm(props) {
@@ -235,10 +236,10 @@ export default function PaymentInfoForm(props) {
 						</div>
 					</div>
 					{couponError &&
-						<p className={styles.errorText}>الكود غير صحيح</p>
+						<p className={styles.errorText}>{inputErrorMessages.incorrectCodeErrorMsg}</p>
 					}
 					{couponAppliedData &&
-						<p className={styles.sucessText}>تم تطبيق الخصم بنجاح</p>
+						<p className={styles.sucessText}>{inputSuccessMessages.discountAppliedMsg}</p>
 					}
 
 					<div className={styles.priceDetailsBox}>

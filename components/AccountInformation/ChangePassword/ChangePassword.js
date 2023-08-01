@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Image from 'next/image'
 import { handleUpdatePassword, verifyPassword } from '../../../services/fireBaseAuthService';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
+import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 
 
 
@@ -56,7 +57,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
         await verifyPassword(data?.email, oldPassword).then(async (res) => {
             await handleUpdatePassword(newPassword).then(res => {
                 setActiveTab(0)
-                toast.success("تم تحديث كلمة السر بنجاح")
+                toast.success(toastSuccessMessage.passwordUpdateMsg)
                 setOldPassword('')
                 setNewPassword('')
                 setConfirmPassword('')
@@ -67,7 +68,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
             setShowLoader(false)
         }).catch(error => {
             if (error.code == 'auth/wrong-password') {
-                toast.error('كلمة السر غير صحيحة')
+                toast.error(toastErrorMessage.passWordIncorrectErrorMsg)
             }
             setShowLoader(false)
         })

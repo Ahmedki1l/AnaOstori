@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import useWindowSize from '../hooks/useWindoSize';
 import * as LinkConst from '../constants/LinkConst'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
+import { inputErrorMessages } from '../constants/ar';
 
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
@@ -71,14 +72,14 @@ export default function ApproveTrans(props) {
         if (isValidFileUploaded(e.target.files[0])) {
             setError()
         } else {
-            setError('الملفات المسموحة هي pdf, png ,jpg')
+            setError(inputErrorMessages.allowedFilesTypeMsg)
             return
         }
 
         if (e.target.files[0]?.size < 6291456) {
             setError()
         } else {
-            setError('حجم الملف يجب ان يكون اقل من 6 ميجا')
+            setError(inputErrorMessages.fileSizeMsg)
             return
         }
     }

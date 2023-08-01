@@ -2,6 +2,7 @@ import styles from './BankDetailsCard.module.scss'
 import Logo from '../Logo'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { toast } from 'react-toastify'
+import { toastSuccessMessage } from '../../../constants/ar'
 
 
 export default function BankDetailsCard(props) {
@@ -12,7 +13,7 @@ export default function BankDetailsCard(props) {
     function handleCopyText(text) {
         navigator.clipboard.writeText(text)
             .then(() => {
-                toast.success("تم النسخ");
+                toast.success(toastSuccessMessage.copiedMsg);
             })
             .catch((error) => {
                 console.error(`Failed to copy ${text} to clipboard: ${error}`);

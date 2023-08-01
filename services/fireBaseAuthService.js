@@ -8,6 +8,7 @@ import Router from "next/router";
 import { toast } from "react-toastify";
 import { updateProfile } from "./apisService";
 import * as fbq from '../lib/fpixel'
+import { toastErrorMessage, toastSuccessMessage } from "../constants/ar";
 
 
 
@@ -32,7 +33,7 @@ export const GoogleLogin = async () => {
 
 export const forgotPassword = async (email) => {
 	await sendPasswordResetEmail(auth, email).then((res) => {
-		toast.success(" تم ارسال رابط الى ايميلك لتغيير كلمة السر")
+		toast.success(toastSuccessMessage.forgotPasswordLinkSend)
 		Router.push('/login')
 	}).catch((error) => {
 		const errorCode = error.code;
@@ -65,7 +66,7 @@ export const signupWithEmailAndPassword = async (email, password, firstName, las
 	}).catch((error) => {
 		console.log(error);
 		if (error.code == 'auth/email-already-in-use') {
-			toast.error('الايميل مستخدم مسبقًا')
+			toast.error(toastErrorMessage.emailUsedErrorMsg)
 		}
 	});
 }
