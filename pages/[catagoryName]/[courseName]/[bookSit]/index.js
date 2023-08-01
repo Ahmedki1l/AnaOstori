@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signOutUser } from '../../../../services/fireBaseAuthService';
 import Spinner from '../../../../components/CommonComponents/spinner';
 import * as fbq from '../../../../lib/fpixel'
+import { inputErrorMessages } from '../../../../constants/ar';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 	const courseName = resolvedUrl.split('/')[2].replace(/-/g, ' ')
@@ -109,7 +110,7 @@ export default function Index(props) {
 
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].gender == "") {
-				data[i].genderCheck = "فضلا اختار الجنس"
+				data[i].genderCheck = inputErrorMessages.genderErrorMsg
 				isError = true
 			}
 			else {
@@ -117,7 +118,7 @@ export default function Index(props) {
 			}
 
 			if (data[i].date == "" && courseType != "on-demand") {
-				data[i].dateCheck = "فضلا اختار الموعد المناسب"
+				data[i].dateCheck = inputErrorMessages.appropriateDateErrorMsg
 				isError = true
 			}
 			else {
@@ -125,20 +126,20 @@ export default function Index(props) {
 			}
 
 			if (data[i].fullName == "") {
-				data[i].nameCheck = "فضلا ادخل الاسم الثلاثي"
+				data[i].nameCheck = inputErrorMessages.fullNameErrorMsg
 				data[i].validName = ""
 				isError = true
 			}
 			else if (data[i].fullName.length < 3) {
 				data[i].nameCheck = ""
-				data[i].nameLengthCheck = "يجب أن يتكون الاسم من ثلاث حروف او اكثر"
+				data[i].nameLengthCheck = inputErrorMessages.nameFormatErrorMsg
 				data[i].validName = ""
 				isError = true
 			}
 			else if ((data[i].fullName.split(" ").length - 1) < 1) {
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = ""
-				data[i].validName = "يجب ان يكون الاسم ثلاثي مثال : عبدالإله مدخلي"
+				data[i].validName = inputErrorMessages.nameThreeFoldErrorMsg
 				isError = true
 			}
 			else {
@@ -148,21 +149,21 @@ export default function Index(props) {
 			}
 
 			if (data[i].phoneNumber == "") {
-				data[i].phoneNoCheck = "فضلا ادخل رقم الجوال"
+				data[i].phoneNoCheck = inputErrorMessages.mobileNumberErrorMsg
 				data[i].phoneNoLengthCheck = ""
 				data[i].validPhoneNumber = ""
 				isError = true
 			}
 			else if (data[i].phoneNumber.length < 10) {
 				data[i].phoneNoCheck = ""
-				data[i].phoneNoLengthCheck = "يجب ان يتكون الجوال من ١٠ ارقام"
+				data[i].phoneNoLengthCheck = inputErrorMessages.mobileNumberLengthErrorMsg
 				data[i].validPhoneNumber = ""
 				isError = true
 			}
 			else if (!data[i].phoneNumber.startsWith("05") && !data[i].phoneNumber.startsWith("00")) {
 				data[i].phoneNoCheck = ""
 				data[i].phoneNoLengthCheck = ""
-				data[i].validPhoneNumber = "الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05"
+				data[i].validPhoneNumber = inputErrorMessages.mobileNumberFormatErrorMsg
 				isError = true
 			}
 			else {
@@ -172,13 +173,12 @@ export default function Index(props) {
 			}
 
 			if (data[i].email == "") {
-				data[i].emailCheck = "فضلا ادخل الايميل"
+				data[i].emailCheck = inputErrorMessages.noEmailErrorMsg
 				isError = true
 			}
 			else if (!(regexEmail.test(data[i].email))) {
 				data[i].emailCheck = ""
-				data[i].emailValidCheck = "فضلا عيد كتابة ايميلك بالطريقة الصحيحة"
-				isError = true
+				data[i].emailValidCheck = inputErrorMessages.emailFormatMsg
 			}
 			else {
 				data[i].emailCheck = ""

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 
 import Spinner from '../components/CommonComponents/spinner'
+import { inputErrorMessages } from '../constants/ar'
 
 
 
@@ -150,27 +151,26 @@ export default function Register() {
 	const handleSignup = async () => {
 		setLoading(true)
 		if (!firstName) {
-			setFirstNameError("فضلا ادخل اسمك الاول")
+			setFirstNameError(inputErrorMessages.firstNameErrorMsg)
 		}
 		if (!lastName) {
-			setLastNameError("فضلا ادخل اسم العائلة")
+			setLastNameError(inputErrorMessages.lastNameErrorMsg)
 		}
 		if (!gender) {
-			setIsGenderError("فضلا اختر الجنس")
+			setIsGenderError(inputErrorMessages.genderErrorMsg)
 		}
 		if (!phoneNumber) {
-			setPhoneNumberError("رقم الجوال مطلوب")
+			setPhoneNumberError(inputErrorMessages.mobileNumberRequiredErrorMsg)
 		}
 		if (!email) {
-			setEmailError("فضلا ادخل الايميل")
+			setEmailError(inputErrorMessages.noEmailErrorMsg)
 		}
 		if (!password) {
-			setPasswordError("فضلا ادخل كلمة السر")
+			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
 		else if (firstName && lastName && phoneNumber && email && password && gender) {
 			await signupWithEmailAndPassword(email, password, firstName, lastName, phoneNumber, gender)
 		}
-
 	}
 
 	useEffect(() => {

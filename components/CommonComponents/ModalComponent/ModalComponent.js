@@ -6,6 +6,7 @@ import { accountRecovery, viewProfileAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import { Modal } from 'antd';
 import styled from 'styled-components';
+import { toastSuccessMessage } from '../../../constants/ar';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -42,7 +43,7 @@ const ModalComponent = (props) => {
                 console.log(error);
             })
             handleClose();
-            toast.success('تم استعادة الحساب بنجاح')
+            toast.success(toastSuccessMessage.accountRestoredMsg)
         }).catch(error => {
             console.log(error);
             toast.error(error)

@@ -11,6 +11,7 @@ import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import * as LinkConst from '../constants/LinkConst'
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
+import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 
 
 const UpdateProfile = () => {
@@ -52,11 +53,11 @@ const UpdateProfile = () => {
         await uploadProfileImage(data).then((response) => {
             setProfileUrl(`${imageBaseUrl}/${response?.data?.avatarKey}`)
             setUploadLoader(false)
-            toast.success("تم تحديث صورة الملف الشخصي بنجاح")
+            toast.success(toastSuccessMessage.profilePictureUpdateMsg)
         }).catch((error) => {
             console.error("Error:", error)
             setUploadLoader(false)
-            toast.success(" فشلت عملية رفع الصورة")
+            toast.success(toastErrorMessage.imageUploadFailedMsg)
             if (error?.response?.status == 401) {
                 signOutUser()
                 dispatch({
@@ -84,7 +85,7 @@ const UpdateProfile = () => {
         }
 
         await updateProfile(params).then(async (res) => {
-            toast.success("تم تحديث الملف الشخصي بنجاح")
+            toast.success(toastSuccessMessage.profileUpdateMsg)
             setShowLoader(false)
             await viewProfileAPI(storeData?.accessToken).then(res => {
                 dispatch({

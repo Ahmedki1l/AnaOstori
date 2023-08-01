@@ -5,6 +5,7 @@ import Icon from '../CommonComponents/Icon'
 import { useDispatch, useSelector } from 'react-redux';
 import { subcribeNotificationAPI } from '../../services/apisService';
 import { signOutUser } from '../../services/fireBaseAuthService';
+import { toastErrorMessage } from '../../constants/ar';
 
 
 
@@ -32,6 +33,7 @@ export default function UserDetailForm1(props) {
 			}
 		}
 		await subcribeNotificationAPI(params).then((res) => {
+			toast.success(toastErrorMessage.seatsAvailableMsg)
 			setNotificationScreen(true)
 		}).catch((error) => {
 			console.log(error);

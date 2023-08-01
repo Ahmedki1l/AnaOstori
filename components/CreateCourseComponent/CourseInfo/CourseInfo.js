@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import Image from 'next/image'
 import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
+import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 
 const { Option } = Select;
 
@@ -132,7 +133,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     });
                 }
                 if (error.response.data.errors) {
-                    toast.error("name must be unique");
+                    toast.error(toastErrorMessage.uniqueNameError);
                 }
             })
         } else {
@@ -267,7 +268,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
             }
 
-            toast.success("تم تحديث تفاصيل الدورة بنجاح")
+            toast.success(toastSuccessMessage.courseDetailUpdateMsg)
             setShowLoader(false)
         }
         catch (error) {
@@ -279,7 +280,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     type: 'EMPTY_STORE'
                 });
             } else {
-                toast.error("حصلت مشكلة ما، أعد المحاولة لاحقًا");
+                toast.error(inputErrorMessages.tryAgainErrorMsg);
             }
         }
     }

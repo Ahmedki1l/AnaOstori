@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { toastSuccessMessage } from '../../../constants/ar';
 
 
 
@@ -38,7 +39,7 @@ const DeleteAccount = ({ data }) => {
                 viewProfileData: res?.data,
             });
             setAccountsSectionType('default')
-            toast.success('تم استعادة الحساب بنجاح')
+            toast.success(toastSuccessMessage.accountRestoredMsg)
         }).catch(error => {
             console.log(error);
             toast.error(error)

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import * as fbq from '../lib/fpixel'
+import { inputErrorMessages } from '../constants/ar'
 
 
 
@@ -59,17 +60,18 @@ export default function RegisterGoogleUser() {
     }
 
     useEffect(() => {
+
         if (firstName) {
             setFirstNameError('')
         } else {
-            setFirstNameError("فضلا ادخل اسمك الاول")
+            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
         }
 
         if (lastName) {
             setLastNameError('')
         }
         else {
-            setLastNameError("فضلا ادخل اسم العائلة")
+            setLastNameError(inputErrorMessages.lastNameErrorMsg)
         }
 
         if (phoneNumber && (phoneNumber.startsWith("05"))) {
@@ -77,14 +79,14 @@ export default function RegisterGoogleUser() {
             setPhoneNumberError('')
         } else if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setShowPhoneError(true)
-            setPhoneNumberValidError('الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05')
+            setPhoneNumberValidError(inputErrorMessages.mobileNumberFormatErrorMsg)
         } else {
             setShowPhoneError(true)
-            setPhoneNumberError("رقم الجوال مطلوب")
+            setPhoneNumberError(inputErrorMessages.mobileNumberRequiredErrorMsg)
         }
 
-
     }, [firstName, lastName, phoneNumber])
+
 
 
     const handleUpdateProfile = async () => {

@@ -11,6 +11,7 @@ import DeleteAccount from '../components/AccountInformation/DeleteAccount/Delete
 import { useDispatch, useSelector } from 'react-redux';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import useWindowSize from '../hooks/useWindoSize';
+import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 
 
 export default function AccountInformation() {
@@ -109,7 +110,7 @@ export default function AccountInformation() {
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
             });
-            toast.success(type == 'phone' ? "تم تحديث رقم الجوال بنجاح" : type == 'email' ? "تم تحديث الايميل بنجاح" : "تم تحديث الجنس بنجاح")
+            toast.success(type == 'phone' ? toastSuccessMessage.mobileNoUpdateMsg : type == 'email' ? toastSuccessMessage.emailUpdateMsg : toastSuccessMessage.genderUpdateMsg)
             setSectionType('default')
         }).catch(error => {
             console.log(error);
@@ -173,7 +174,7 @@ export default function AccountInformation() {
         }).catch(error => {
             setShowLoader(false)
             if (error.code == 'auth/wrong-password') {
-                toast.error('كلمة السر غير صحيحة')
+                toast.error(toastErrorMessage.passWordIncorrectErrorMsg)
             }
             console.log(error);
         })
