@@ -8,7 +8,7 @@ export default function ProfilePicture(props) {
 	const alt = props.alt
 	return (
 		<div className='drop-shadow'>
-			<Image className='rounded-full' src={props.pictureKey && !props.pictureKey.includes("null") ? `${props.pictureKey}` : defaultProfile} alt={alt} height={height} width={width} />
+			<Image className='rounded-full' src={props.pictureKey ? `${props.pictureKey}` : defaultProfile} alt={alt} height={height} width={width} />
 		</div>
 	)
 }

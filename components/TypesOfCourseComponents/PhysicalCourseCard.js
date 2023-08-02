@@ -4,9 +4,9 @@ import styles from '../../styles/Courses.module.scss';
 import CoverImg from '../CommonComponents/CoverImg';
 import Icon from '../CommonComponents/Icon';
 import Link from 'next/link';
-import * as linkConst from '../../constants/LinkConst';
 import useWindowSize from '../../hooks/useWindoSize';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
+import { mediaUrl } from '../../constants/DataManupulation';
 
 
 export default function PhysicalCourseCard(props) {
@@ -27,19 +27,16 @@ export default function PhysicalCourseCard(props) {
 			router.push(`/${courseDetail.name.replace(/ /g, "-")}/${catagoryName.replace(/ /g, "-")}`)
 		}
 	}
-
 	const oneUserPrice = courseDetail?.price
 
 	const isSmallScreen = useWindowSize().smallScreen
 
-	const imageBaseUrl = linkConst.File_Base_Url2
 
-	const coverImgUrl = courseDetail.pictureKey ? `${imageBaseUrl}/${courseDetail.pictureKey}` : ""
 
 	return (
 		<div className={styles.typeOfCourseCardWrapper}>
 			<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail)}>
-				<CoverImg height={215} url={coverImgUrl} />
+				<CoverImg height={215} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 			</div>
 			<div className={styles.detailsBox}>
 				<h1 className='head2 text-center'>{courseDetail.name}</h1>

@@ -3,6 +3,8 @@ import styles from '../../../styles/InstructorPanelStyleSheets/ManageInstructor.
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import ModelForAddInstructor from '../../../components/ManageInstructor/ModelForAddInstructor'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { fullDate } from '../../../constants/DateConverter'
 
 const dummyData = [
     {
@@ -28,10 +30,14 @@ const dummyData = [
 ]
 
 const Index = () => {
-
-    const [instructorDetails, setInstructorDetails] = useState(dummyData)
+    const storeData = useSelector((state) => state?.globalStore);
+    console.log(storeData);
+    // const [instructorDetails, setInstructorDetails] = useState(dummyData)
     const [isModelForAddInstructor, setIsModelForAddInstructor] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
+
+    const instructorDetails = storeData?.instructorList
+    console.log(instructorDetails);
 
     const handleAddInstructor = () => {
         setIsModelForAddInstructor(true)
@@ -61,9 +67,9 @@ const Index = () => {
                             {instructorDetails.map((instructor, index) => {
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
-                                        <td>{instructor.instructorName}</td>
+                                        <td>{instructor.name}</td>
                                         <td>{instructor.email}</td>
-                                        <td>{instructor.createdAt}</td>
+                                        <td>{fullDate(instructor.createdAt)}</td>
                                         <td>
                                             <div className={styles.actions}>
                                                 <div className='cursor-pointer' onClick={() => handleEditInstructor()}>

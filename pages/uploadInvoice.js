@@ -6,9 +6,9 @@ import axios from 'axios';
 import CoverImg from '../components/CommonComponents/CoverImg';
 import { useRouter } from 'next/router';
 import useWindowSize from '../hooks/useWindoSize';
-import * as LinkConst from '../constants/LinkConst'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { inputErrorMessages } from '../constants/ar';
+import { mediaUrl } from '../constants/DataManupulation';
 
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
@@ -42,13 +42,6 @@ export default function ApproveTrans(props) {
     const isSmallScreen = useWindowSize().smallScreen
 
     const [isFileUpload, setIsFileUpload] = useState(false)
-
-
-
-    const imageBaseUrl = LinkConst.File_Base_Url2
-
-    const coverImgUrl = courseDetail?.course.pictureKey ? `${imageBaseUrl}/${courseDetail?.course.pictureKey}` : ""
-
 
     const totalDiscount = courseDetail?.orderItems.length == 1 ?
         ((courseDetail?.couponDiscount * courseDetail?.basePrice) / 100).toFixed(2)
@@ -98,7 +91,7 @@ export default function ApproveTrans(props) {
         });
     }
 
-
+    console.log(courseDetail);
 
     return (
         <>
@@ -112,7 +105,7 @@ export default function ApproveTrans(props) {
                     <h3 className={`fontBold ${styles.billSummeryText}`}>ملخص الطلب</h3>
                     <div className='flex pb-4'>
                         <div className={styles.courseImageBox}>
-                            <CoverImg height={isSmallScreen ? 80 : isMediumScreen ? 100 : 120} url={coverImgUrl} />
+                            <CoverImg height={isSmallScreen ? 80 : isMediumScreen ? 100 : 120} url={courseDetail?.course.pictureKey ? mediaUrl(courseDetail?.course.pictureBucket, courseDetail?.course.pictureKey) : '/images/anaOstori.png'} />
                         </div>
                         <div className={styles.billSummeryInfoBox}>
                             <p className={`fontBold ${styles.totalStudentsText}`}>{courseDetail?.courseName} - {noOfUser[courseDetail.orderItems.length - 1]} </p>

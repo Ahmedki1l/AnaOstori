@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styles from '../USerFeedbackCard.module.scss'
 import Image from 'next/legacy/image';
-import * as LinkConst from '../../../../constants/LinkConst'
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { Modal } from 'antd';
 import styled from 'styled-components';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 import useWindowSize from '../../../../hooks/useWindoSize';
+import { mediaUrl } from '../../../../constants/DataManupulation';
 
 
 
@@ -32,10 +32,8 @@ export default function ReviewCard(props) {
 	const reviewMedia = review.ReviewMedia
 	const totalPostNumber = reviewMedia.length
 	const [currentPost, setCurrentPost] = useState(1)
-	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const [openVideo, setOpenVideo] = useState(false);
 	const windowScreen = useWindowSize().width
-
 
 	const handleClose = (event) => {
 		// event.stopPropagation();
@@ -82,12 +80,12 @@ export default function ReviewCard(props) {
 													<AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />
 												</div>
 												<video controls width="100%" height="100%">
-													<source src={`${mediaBaseUrl}/${media.contentFileKey}`} type="video/mp4" />
+													<source src={mediaUrl(media.contentFileBucket, media.contentFileKey)} type="video/mp4" />
 												</video>
 											</StylesModal>
 										</>
 										:
-										<Image src={`${mediaBaseUrl}/${media.contentFileKey}`} alt={'User Feedback'} width={433} height={436} />
+										<Image src={mediaUrl(media.contentFileBucket, media.contentFileKey)} alt={'User Feedback'} width={433} height={436} />
 									}
 								</div>
 							}

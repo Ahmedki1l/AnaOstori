@@ -27,7 +27,7 @@ export default function StudentFeedback(props) {
 	const [catagoryReviews, setCatagoryReviews] = useState()
 	const [showDateDropDown, setShowDateDropDown] = useState(false)
 	const [showCourseDropDown, setShowCourseDropDown] = useState(false)
-
+	console.log(allReviews);
 	const handelDateFilter = (data) => {
 		setDateFilterType(data)
 		const newArray = [...allReviews]

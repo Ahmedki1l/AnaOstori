@@ -2,11 +2,11 @@ import styles from '../UserInfoForm.module.scss'
 import ProfilePicture from '../../../CommonComponents/ProfilePicture';
 import Icon from '../../../CommonComponents/Icon';
 import Link from 'next/link';
-import * as LinkConst from '../../../../constants/LinkConst'
 import useWindowSize from '../../../../hooks/useWindoSize';
 import { dateWithDay, timeDuration } from '../../../../constants/DateConverter';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 import Image from 'next/legacy/image';
+import { mediaUrl } from '../../../../constants/DataManupulation';
 
 
 
@@ -14,7 +14,6 @@ export default function DatesInfo(props) {
 
 	const date = props.date
 
-	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isSmallScreen = useWindowSize().smallScreen
 
 	const noOfSeatRemainingText = date.numberOfSeats == 0 ? "جميع المقاعد محجوزة"
@@ -22,7 +21,6 @@ export default function DatesInfo(props) {
 			: date.numberOfSeats == 2 ? "مقعدين متبقيين"
 				: date.numberOfSeats > 3 && date.numberOfSeats < 10 ? `${date.numberOfSeats} مقاعد متبقية`
 					: `${date.numberOfSeats} مقعد متبقي`
-
 	return (
 		<>
 			<ul className={styles.list}>
@@ -68,12 +66,12 @@ export default function DatesInfo(props) {
 					{date.instructors.map((instructor, index) => {
 						return (
 							<div className={styles.instructorWrapper} key={`instructor${index}`}>
-								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${instructor.avatarKey}`} />
+								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={mediaUrl(instructor.avatarBucket, instructor.avatarKey)} />
 								<div>
 									{instructor?.ProfileFileKey == null ?
 										<p className='px-2 fontMedium'>{instructor.name}</p>
 										:
-										<Link href={`${mediaBaseUrl}/${instructor?.ProfileFileKey}`} className='px-2 fontMedium link'>{instructor.name}</Link>
+										<Link href={mediaUrl(instructor.avatarBucket, instructor.avatarKey)} className='px-2 fontMedium link'>{instructor.name}</Link>
 									}
 									<p className='px-2 fontMedium'>Role</p>
 								</div>

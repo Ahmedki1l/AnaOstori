@@ -7,7 +7,8 @@ const nextConfig = {
       'images.unsplash.com',
       'anaostori-dev.s3.amazonaws.com',
       'lh3.googleusercontent.com',
-      'phase2anaostori.s3.eu-central-1.amazonaws.com'
+      'phase2anaostori.s3.eu-central-1.amazonaws.com',
+      'anaostori-dev.s3.eu-central-1.amazonaws.com'
     ],
   },
   env: {

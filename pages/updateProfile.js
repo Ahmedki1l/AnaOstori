@@ -3,15 +3,15 @@ import loader from '../public/icons/loader.svg'
 import loaderColor from '../public/icons/loaderColor.svg'
 import styles from '../styles/updateProfile.module.scss'
 import { toast } from "react-toastify";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../components/CommonComponents/Icon';
 import { updateProfile, uploadProfileImage, viewProfileAPI } from '../services/apisService';
 import Router from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
-import * as LinkConst from '../constants/LinkConst'
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
 import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
+import { mediaUrl } from '../constants/DataManupulation';
 
 
 const UpdateProfile = () => {
@@ -24,9 +24,7 @@ const UpdateProfile = () => {
 
     const [showLoader, setShowLoader] = useState(false);
 
-    const imageBaseUrl = useMemo(() => LinkConst.File_Base_Url2, [])
-
-    const [profileUrl, setProfileUrl] = useState(`${imageBaseUrl}/${storeData?.viewProfileData?.avatarKey}`);
+    const [profileUrl, setProfileUrl] = useState(mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
 
     const [uploadLoader, setUploadLoader] = useState(false)
 
@@ -36,8 +34,8 @@ const UpdateProfile = () => {
     useEffect(() => {
         setFirstName(storeData?.viewProfileData?.firstName);
         setLastName(storeData?.viewProfileData?.lastName)
-        setProfileUrl(`${imageBaseUrl}/${storeData?.viewProfileData?.avatarKey}`)
-    }, [storeData?.viewProfileData, imageBaseUrl])
+        setProfileUrl(mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
+    }, [storeData?.viewProfileData])
 
     const uploadPhoto = async (e) => {
         setUploadLoader(true)
@@ -51,7 +49,7 @@ const UpdateProfile = () => {
         }
 
         await uploadProfileImage(data).then((response) => {
-            setProfileUrl(`${imageBaseUrl}/${response?.data?.avatarKey}`)
+            setProfileUrl(mediaUrl(response?.data?.avatarBucket, response?.data?.avatarKey))
             setUploadLoader(false)
             toast.success(toastSuccessMessage.profilePictureUpdateMsg)
         }).catch((error) => {
@@ -101,7 +99,6 @@ const UpdateProfile = () => {
             setShowLoader(false)
         });
     }
-
 
 
 

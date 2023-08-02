@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import SecondPageIndicator from '../PaymentPageIndicator/SecondPageIndicator'
 import styles from './PaymentInfoFrom.module.scss'
-import Link from 'next/link'
 import Logo from '../../CommonComponents/Logo'
 import BankDetailsCard from '../../CommonComponents/BankDetailCard/BankDetailsCard'
 import * as PaymentConst from '../../../constants/PaymentConst'
-import * as LinkConst from '../../../constants/LinkConst'
 import CoverImg from '../../CommonComponents/CoverImg'
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -16,6 +14,7 @@ import useWindowSize from '../../../hooks/useWindoSize'
 import * as fbq from '../../../lib/fpixel'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 
 export default function PaymentInfoForm(props) {
@@ -34,11 +33,7 @@ export default function PaymentInfoForm(props) {
 	const [paymentType, setPaymentType] = useState('mada')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
-
-
-	const imageBaseUrl = LinkConst.File_Base_Url2
-
-	const coverImgUrl = createdOrder.course?.pictureKey ? `${imageBaseUrl}/${createdOrder.course?.pictureKey}` : ""
+	console.log(createdOrder);
 
 
 	const generateCheckoutId = async (type) => {
@@ -217,7 +212,7 @@ export default function PaymentInfoForm(props) {
 					<h1 className='head2 pb-2'>ملخص الطلب</h1>
 					<div className='flex'>
 						<div className={styles.courseCover}>
-							<CoverImg height={screenWidth > 1085 ? 113 : 81} url={coverImgUrl} />
+							<CoverImg height={screenWidth > 1085 ? 113 : 81} url={createdOrder.course?.pictureKey ? mediaUrl(createdOrder.course?.pictureBucket, createdOrder.course?.pictureKey) : '/images/anaOstori.png'} />
 						</div>
 						<div>
 							<p className={`fontBold pr-3 ${styles.courseTitle}`}>{createdOrder.courseName}</p>

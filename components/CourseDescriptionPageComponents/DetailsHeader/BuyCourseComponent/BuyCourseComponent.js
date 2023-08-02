@@ -2,34 +2,31 @@ import styles from './BuyCourseComponent.module.scss'
 import Link from 'next/link';
 import Icon from '../../../CommonComponents/Icon'
 import Logo from '../../../CommonComponents/Logo';
-import * as LinkConst from '../../../../constants/LinkConst'
 import CoursePriceBox from '../Common/CoursePriceBox';
 import useWindowSize from '../../../../hooks/useWindoSize';
 import { useEffect, useState } from 'react';
 import CoverImg from '../../../CommonComponents/CoverImg';
+import { mediaUrl } from '../../../../constants/DataManupulation';
 
 
 
 export default function BuyCourseComponent(props) {
 	const courseDetail = props.courseDetail
 	const handleBookSitButtonClick = props.handleBookSitButtonClick
-	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const isMediumScreen = useWindowSize().mediumScreen
 	const [isUserUseApple, setIsUserUseApple] = useState(false)
 	const lang = props.lang
-
 	useEffect(() => {
 		if (window.ApplePaySession) {
 			setIsUserUseApple(true)
 		}
 	}, [setIsUserUseApple])
 
-	const coursePlanUrl = `${mediaBaseUrl}/${courseDetail.coursePlanKey}`
 
 	return (
 		<div className={`${styles.BuyCourseMainArea} ${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
 			<div className={styles.BuyCourseWrapper}>
-				<CoverImg height={190} url={`${mediaBaseUrl}/${courseDetail.pictureKey}`} />
+				<CoverImg height={190} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 
 				{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={courseDetail.videoKey} thumnailHeight={190} /> */}
 

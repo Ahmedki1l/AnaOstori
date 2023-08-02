@@ -38,7 +38,6 @@ export default function Index(props) {
 	const catagoryName = (router.query.catagoryName).replace(/-/g, ' ')
 
 	const courseDetails = props.courseDetails ? props.courseDetails : null
-	console.log(courseDetails);
 
 	const [loggedUserCourseDetails, setLoggedUserCourseDetails] = useState([])
 

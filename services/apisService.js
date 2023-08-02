@@ -92,7 +92,9 @@ export const updateFolderAPI = (data) => { return instance(data?.accessToken).po
 export const addItemToFolderAPI = (data) => { return instance(data?.accessToken).post(`item/create/${data?.folderId}`, data?.data) }
 export const getItemListAPI = (data) => { return instance(data?.accessToken).get(`item/list?folderId=${data?.folderId}`) }
 
+// ********* Manage Curriculum APIs ***********//
 
+export const createCurriculumAPI = (data) => { return instance(data?.accessToken).post(`/curriculum/create`, data?.data) }
 
 
 
