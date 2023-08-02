@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import CoverImg from '../../../CommonComponents/CoverImg'
-import * as LinkConst from '../../../../constants/LinkConst'
 import { Modal } from 'antd';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import styled from 'styled-components';
@@ -18,15 +17,10 @@ const StylesModal = styled(Modal)`
 `
 
 const VideoThumnail = (props) => {
-	const pictureKey = props.pictureKey
 	const videoUrl = props.videoUrl
 	const thumnailHeight = props.thumnailHeight
-	const mediaBaseUrl = LinkConst.File_Base_Url2
 
 	const [openVideo, setOpenVideo] = useState(false);
-
-	const coverImgUrl = pictureKey ? `${mediaBaseUrl}/${pictureKey}` : ""
-
 
 	const handleClickOpen = () => {
 		setOpenVideo(true);
@@ -46,7 +40,7 @@ const VideoThumnail = (props) => {
 				</div>
 			</div>
 			<div className='blurBgForVideo'></div>
-			<CoverImg height={thumnailHeight} url={coverImgUrl} />
+			<CoverImg height={thumnailHeight} url={'/images/anaOstori.png'} />
 			<StylesModal
 				footer={false}
 				closeIcon={false}

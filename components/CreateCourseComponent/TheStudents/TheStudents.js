@@ -16,6 +16,7 @@ import { signOutUser } from '../../../services/fireBaseAuthService'
 import { fullDate } from '../../../constants/DateConverter';
 import * as LinkConst from '../../../constants/LinkConst';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 
 
@@ -126,7 +127,8 @@ const TheStudenet = (props) => {
                                                     <div className='flex'>
                                                         <div className={styles.requesterDetails} onClick={() => showSelectedStudentDetails()}>
                                                             <div className={styles.StudentListImage}>
-                                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={studentList.avatarKey == null ? studentList.avatar : `${baseUrl}/${studentList.avatarKey}`} />
+                                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={studentList.avatarKey == null ? studentList.avatar : `${mediaUrl(studentList.avatarBucket, studentList.avatarKey)}`} />
+                                                                {/* <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={studentList.avatarKey == null ? studentList.avatar : `${baseUrl}/${studentList.avatarKey}`} /> */}
                                                             </div>
                                                             <p className={styles.requesterName}>{studentList.fullName == "" ? studentList.fullName : `${studentList.firstName} ${studentList.lastName}`}</p>
                                                         </div>

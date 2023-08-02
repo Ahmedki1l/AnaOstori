@@ -5,12 +5,12 @@ import useWindowSize from '../../../hooks/useWindoSize';
 import { useRouter } from 'next/router';
 import { courseCurriculumAPI, getCompleteCourseItemIDAPI, getCourseItemAPI, getCourseProgressAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
-import * as LinkConst from '../../../constants/LinkConst';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import Image from 'next/legacy/image';
 import TrainerIntroCard from '../../../components/CommonComponents/TrainerIntroCard/TrainerIntroCard';
 import CompleteCourseIndicator from '../../../components/CommonComponents/CompleteCourseIndicatior/CompleteCourseIndicator';
 import Spinner from '../../../components/CommonComponents/spinner';
+import { mediaUrl } from '../../../constants/DataManupulation';
 
 
 export default function Index() {
@@ -23,7 +23,6 @@ export default function Index() {
     const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
     const router = useRouter()
     const courseID = router?.query?.courseId
-    const mediaBaseUrl = LinkConst.File_Base_Url2
     const [currentItemId, setCurrentItemId] = useState()
     const [isUserEnrolled, setIsUserEnrolled] = useState(false)
 
@@ -120,7 +119,6 @@ export default function Index() {
         }
         return null;
     }
-
     return (
         <>
             {!courseCurriculum ?
@@ -131,8 +129,7 @@ export default function Index() {
                     <div className={`px-4 maxWidthDefault ${styles.myCourseContentMainWrapper}`}>
                         <div className={`${styles.myCourseDetailsWrapper} ${styles.boxBorder}`}>
                             <div className={styles.courseThumnailDiv}>
-                                {console.log(`${mediaBaseUrl}/${courseCurriculum?.course?.pictureKey}`)}
-                                <Image src={`${mediaBaseUrl}/${courseCurriculum?.course?.pictureKey}`} alt='My Course Image' layout='fill' objectFit="cover" priority />
+                                <Image src={mediaUrl(courseCurriculum?.course?.pictureBucket, courseCurriculum?.course?.pictureKey)} alt='My Course Image' layout='fill' objectFit="cover" priority />
                             </div>
                             <div className={styles.courseDetailTextWrapper}>
                                 <h1 className={`fontBold ${styles.myCourseTitle}`}>{courseCurriculum?.course?.name}</h1>

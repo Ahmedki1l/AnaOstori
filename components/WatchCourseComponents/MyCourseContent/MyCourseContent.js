@@ -8,7 +8,7 @@ import { getCourseItemAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
-import * as LinkConst from '../../../constants/LinkConst'
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 export default function MyCourseContent(props) {
 	const smallScreen = useWindowSize().smallScreen
@@ -18,7 +18,6 @@ export default function MyCourseContent(props) {
 	const courseID = props?.courseID
 	const filesInCourse = courseCurriculumSections?.flatMap((section) => section?.items?.filter((item) => item.type === 'file'))
 	const router = useRouter()
-	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
 
 
@@ -47,7 +46,6 @@ export default function MyCourseContent(props) {
 		}
 	}
 
-
 	return (
 		<>
 			{courseCurriculum &&
@@ -55,7 +53,7 @@ export default function MyCourseContent(props) {
 					{!smallScreen &&
 						<div className={`${styles.myCourseDetailsWrapper} ${styles.boxBorder}`}>
 							<div className={styles.courseThumnailDiv}>
-								<Image src={`${mediaBaseUrl}/${courseCurriculum?.course?.pictureKey}`} alt='My Course Image' layout='fill' objectFit="cover" priority />
+								<Image src={mediaUrl(courseCurriculum?.course?.pictureBucket, courseCurriculum?.course?.pictureKey)} alt='My Course Image' layout='fill' objectFit="cover" priority />
 							</div>
 							<div className='pr-4'>
 								<h1 className={`fontBold ${styles.myCourseTitle}`}>{courseCurriculum?.course?.name}</h1>

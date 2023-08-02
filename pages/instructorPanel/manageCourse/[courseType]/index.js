@@ -3,19 +3,18 @@ import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComp
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { useDispatch, useSelector } from 'react-redux'
-import * as LinkConst from '../../../../constants/LinkConst';
 import { getAllCourseByInstructor, updateCourseDetailsAPI } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
 import { signOutUser } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
 import Switch from '../../../../components/antDesignCompo/Switch'
+import { mediaUrl } from '../../../../constants/DataManupulation'
 
 export default function Index() {
 
     const router = useRouter()
     const courseType = router.query.courseType
     const [allPhysicalCourses, setAllPhysicalCourses] = useState([])
-    const baseUrl = LinkConst.File_Base_Url2
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
 
@@ -69,7 +68,6 @@ export default function Index() {
             console.log(error)
         })
     };
-
     return (
         <div className='maxWidthDefault px-4'>
             <div className='flex justify-between items-center'>
@@ -96,13 +94,12 @@ export default function Index() {
                     {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allPhysicalCourses.map((course, index) => {
-                                console.log(course);
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>
                                             <div className='flex'>
                                                 <div className={styles.courseInfoImage}>
-                                                    <Image src={course.pictureKey ? `${baseUrl}/${course.pictureKey}` : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
+                                                    <Image src={course.pictureKey ? mediaUrl(course.pictureBucket, course.pictureKey) : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
                                                 </div>
                                                 <div className={styles.skillCourseDetails}>
                                                     <p className={`fontBold ${styles.courseNameHeader}`}>{course.name}</p>

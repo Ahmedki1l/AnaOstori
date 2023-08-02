@@ -17,7 +17,7 @@ function Index() {
     const router = useRouter()
     const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
-    const [selectedItem, setSelectedItem] = useState('file');
+    const [selectedItem, setSelectedItem] = useState('curriculum');
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
@@ -131,7 +131,7 @@ function Index() {
                             }
                             {selectedItem == 'curriculum' &&
                                 <CoursePathLibrary
-                                    folderTableData={folderList}
+                                    folderTableData={storeData.curriculumIds}
                                     folderType={selectedItem}
                                 />
                             }

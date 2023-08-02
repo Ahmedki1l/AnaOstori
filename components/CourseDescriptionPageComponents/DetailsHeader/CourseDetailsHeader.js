@@ -5,7 +5,7 @@ import Link from 'next/link';
 import useScrollEvent from '../../../hooks/useScrollEvent';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import CoverImg from '../../CommonComponents/CoverImg';
-import * as LinkConst from '../../../constants/LinkConst'
+import { mediaUrl } from '../../../constants/DataManupulation';
 
 
 export default function CourseDetailsHeader(props) {
@@ -16,8 +16,6 @@ export default function CourseDetailsHeader(props) {
 	const screenWidth = useWindowSize().width
 	const offset = useScrollEvent().offset
 	const lang = props.lang
-	const mediaBaseUrl = LinkConst.File_Base_Url2
-
 	const courseCatagoriUrl = `${(courseDetail.catagory.name).replace(/ /g, "-")}`
 
 	return (
@@ -47,7 +45,7 @@ export default function CourseDetailsHeader(props) {
 					}
 					{!(screenWidth > 767) &&
 						<div className='w-80 mx-auto'>
-							<CoverImg height={190} url={`${mediaBaseUrl}/${courseDetail.pictureKey}`} />
+							<CoverImg height={190} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 							{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={''} thumnailHeight={190} /> */}
 						</div>
 					}

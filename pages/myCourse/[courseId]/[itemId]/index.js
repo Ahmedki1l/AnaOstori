@@ -197,7 +197,6 @@ export default function Index() {
                                         <div key={`ccSection${i}`}>
                                             <div className={styles.ccSectionHeaders} onClick={() => setExpandedSection(expandedSection === i ? null : i)}>
                                                 <p className={`font-bold ${styles.ccSectionName}`}>{section.name}</p>
-                                                {/* <KeyboardArrowDownIcon className={`${styles.arrowIcon} ${expandedSection === i ? 'rotate-180' : ''}`} /> */}
                                                 <div style={{ height: '18px' }}>
                                                     <div className={expandedSection === i ? `${styles.rotateArrow}` : ''}>
                                                         <AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />

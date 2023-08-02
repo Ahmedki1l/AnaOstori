@@ -1,27 +1,24 @@
 import styles from './CourseDates.module.scss'
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
-import * as LinkConst from '../../../constants/LinkConst'
 import Link from 'next/link';
 import useWindowSize from '../../../hooks/useWindoSize';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { dateWithDay, enDateWithDay, enTimeDuration, timeDuration } from '../../../constants/DateConverter';
 import Image from 'next/legacy/image';
+import { mediaUrl } from '../../../constants/DataManupulation';
 
 
 export default function CourseDates(props) {
 	const date = props.date
-	const mediaBaseUrl = LinkConst.File_Base_Url2
 	const lang = props.lang
 	const isSmallScreen = useWindowSize().smallScreen
 
-	const coursePlanUrl = `${mediaBaseUrl}/${date.coursePlanKey}`
 
 	const noOfSeatRemainingText = date.numberOfSeats == 0 ? "جميع المقاعد محجوزة"
 		: date.numberOfSeats == 1 ? "مقعد واحد متبقي"
 			: date.numberOfSeats == 2 ? "مقعدين متبقيين"
 				: date.numberOfSeats > 3 && date.numberOfSeats < 10 ? `${date.numberOfSeats} مقاعد متبقية`
 					: `${date.numberOfSeats} مقعد متبقي`
-
 
 
 	return (
@@ -90,12 +87,12 @@ export default function CourseDates(props) {
 					{date.instructors.map((instructor, index) => {
 						return (
 							<div className={styles.instructorWrapper} key={`instructor${index}`}>
-								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={`${mediaBaseUrl}/${instructor.avatarKey}`} />
+								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={mediaUrl(instructor.avatarBucket, instructor.avatarKey)} />
 								<div>
 									{instructor?.ProfileFileKey == null ?
 										<p className='px-2 fontMedium'>{instructor.name}</p>
 										:
-										<Link href={`${mediaBaseUrl}/${instructor?.ProfileFileKey}`} className='px-2 fontMedium link'>{instructor.name}</Link>
+										<Link href={mediaUrl(instructor?.ProfileFileBucket, instructor?.ProfileFileKey)} className='px-2 fontMedium link'>{instructor.name}</Link>
 									}
 									<p className='px-2 fontMedium'>Role</p>
 								</div>
