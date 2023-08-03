@@ -2,7 +2,8 @@ import { initializeApp } from "firebase/app";
 import {
 	getAuth, signInWithPopup, GoogleAuthProvider,
 	signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateEmail,
-	updatePassword
+	updatePassword,
+	OAuthProvider
 } from "firebase/auth";
 import Router from "next/router";
 import { toast } from "react-toastify";
@@ -23,12 +24,16 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
+const oAuthProvider = new OAuthProvider('apple.com');
 
 
 export const GoogleLogin = async () => {
-	return await signInWithPopup(auth, provider);
+	return await signInWithPopup(auth, googleProvider);
 };
+export const signInWithApple = async () => {
+	return await signInWithPopup(auth, oAuthProvider)
+}
 
 
 export const forgotPassword = async (email) => {
@@ -77,10 +82,10 @@ export const startEmailPasswordLogin = async (email, password) => {
 }
 
 
-export const signOutUser = async (returnUrl) => {
+export const signOutUser = async () => {
 	signOut(auth).then(() => {
 		localStorage.clear();
-		Router.push(returnUrl?.url ? returnUrl?.url : '/login')
+		Router.push('/login')
 	}).catch((error) => {
 		console.log(error);
 	});

@@ -73,6 +73,7 @@ import CheckCircleRoundIcon from './customeIcons/checkCircleRoundIcon'
 import DownloadIcon from './customeIcons/downloadIcon'
 import RedBook from './customeIcons/redBook'
 import GreenBook from './customeIcons/greenBook'
+import AppleStore from './customeIcons/appleStore'
 
 
 
@@ -150,6 +151,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'downloadIcon' && <DownloadIcon height={height} width={width} color={color} />}
 			{iconName == 'redBook' && <RedBook height={height} width={width} color={color} />}
 			{iconName == 'greenBook' && <GreenBook height={height} width={width} color={color} />}
+			{iconName == 'appleStore' && <AppleStore height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

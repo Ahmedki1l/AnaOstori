@@ -95,6 +95,10 @@ export const getItemListAPI = (data) => { return instance(data?.accessToken).get
 // ********* Manage Curriculum APIs ***********//
 
 export const createCurriculumAPI = (data) => { return instance(data?.accessToken).post(`/curriculum/create`, data?.data) }
+export const updateCurriculumAPI = (data) => { return instance(data?.accessToken).post(`/curriculum/update`, data?.data) }
+export const getCurriculumDetailsAPI = (data) => { return instance(data?.accessToken).get(`/curriculum/${data?.curriculumId}`, data?.data) }
+
+
 
 
 

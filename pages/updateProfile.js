@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from 'react';
 import Icon from '../components/CommonComponents/Icon';
 import { updateProfile, uploadProfileImage, viewProfileAPI } from '../services/apisService';
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
@@ -17,7 +17,6 @@ import { mediaUrl } from '../constants/DataManupulation';
 const UpdateProfile = () => {
 
     const storeData = useSelector((state) => state?.globalStore);
-
     const [firstName, setFirstName] = useState(storeData?.viewProfileData?.firstName)
 
     const [lastName, setLastName] = useState(storeData?.viewProfileData?.lastName)
@@ -29,7 +28,7 @@ const UpdateProfile = () => {
     const [uploadLoader, setUploadLoader] = useState(false)
 
     const dispatch = useDispatch();
-
+    const router = useRouter()
 
     useEffect(() => {
         setFirstName(storeData?.viewProfileData?.firstName);
@@ -61,6 +60,10 @@ const UpdateProfile = () => {
                 dispatch({
                     type: 'EMPTY_STORE'
                 });
+                dispatch({
+                    type: 'SET_RETURN_URL',
+                    returnUrl: router.pathname
+                })
             }
         })
     };

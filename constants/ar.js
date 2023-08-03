@@ -25,9 +25,10 @@ export const toastErrorMessage = {
     emailPasswordErrorMsg: "يوجد خطأ بالايميل او كلمة السر ", //"There is an error with the email or password"
     imageUploadFailedMsg: " فشلت عملية رفع الصورة", //"image upload failed"
     passWordIncorrectErrorMsg: 'كلمة السر غير صحيحة', //'password is incorrect'
-    seatsAvailableMsg: "you will get notified once seats are available",
+    seatsAvailableMsg: "رح نعلمك اول ما نضيف او نوسع المقاعد", //you will get notified once seats are available
     emailUsedErrorMsg: 'الايميل مستخدم مسبقًا', //'Email already used'
-    uniqueNameError: "name must be unique"
+    uniqueNameError: "name must be unique",
+    curriculumNameError: 'Curriculum name already in use'
 }
 
 export const toastSuccessMessage = {

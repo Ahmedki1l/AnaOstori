@@ -2,11 +2,11 @@ import Image from 'next/legacy/image'
 import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
-import { GoogleLogin, startEmailPasswordLogin } from '../services/fireBaseAuthService'
+import { GoogleLogin, signInWithApple, startEmailPasswordLogin } from '../services/fireBaseAuthService'
 import { useDispatch, useSelector } from 'react-redux';
 import { myCoursesAPI, viewProfileAPI } from '../services/apisService';
 import { toast } from "react-toastify";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar'
@@ -34,7 +34,7 @@ export default function Login() {
 	const [loading, setLoading] = useState(false)
 
 	const storeData = useSelector((state) => state?.globalStore);
-
+	const router = useRouter()
 
 
 	useEffect(() => {
@@ -68,7 +68,6 @@ export default function Login() {
 		try {
 			const viewProfileReq = viewProfileAPI(accessToken)
 			const getMyCourseReq = myCoursesAPI(accessToken)
-
 			const [viewProfileData, myCourseData] = await Promise.all([
 				viewProfileReq, getMyCourseReq
 			])
@@ -86,13 +85,13 @@ export default function Login() {
 			});
 			let profileData = viewProfileData?.data
 			if (profileData.firstName == null || profileData.lastName == null || profileData.gender == null) {
-				Router.push('/registerGoogleUser')
+				router.push('/registerGoogleUser')
 			} else {
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
-					Router.push('/')
+					router.push('/')
 				}
 				else {
-					Router.push(storeData?.returnUrl)
+					router.push(storeData?.returnUrl)
 				}
 			}
 		} catch (error) {
@@ -101,7 +100,7 @@ export default function Login() {
 		}
 	}
 
-	const hendelGoogleLogin = async () => {
+	const hendelloginWithoutPassword = async () => {
 		setLoading(true)
 		await GoogleLogin().then((result) => {
 			const user = result?.user;
@@ -112,12 +111,9 @@ export default function Login() {
 			});
 			dispatch({
 				type: 'IS_USER_FROM_GOOGLE',
-				googleLogin: true,
+				loginWithoutPassword: true,
 			});
-
 			handleStoreUpdate(user?.accessToken)
-
-
 		}).catch((error) => {
 			console.log(error);
 		});
@@ -140,19 +136,38 @@ export default function Login() {
 				});
 				dispatch({
 					type: 'IS_USER_FROM_GOOGLE',
-					googleLogin: false,
+					loginWithoutPassword: false,
 				});
 
 				handleStoreUpdate(userCredential?.user?.accessToken)
 				toast.success(toastSuccessMessage.successLoginMsg)
-				Router.push('/')
+				router.push('/')
 			}).catch((error) => {
 				toast.error(toastErrorMessage.emailPasswordErrorMsg);
 			});
 		}
 	}
-
-
+	const handleAppleLogin = async () => {
+		setLoading(true)
+		await signInWithApple().then((result) => {
+			const user = result.user;
+			handleStoreUpdate(user?.accessToken)
+			console.log(user);
+			dispatch({
+				type: 'ADD_AUTH_TOKEN',
+				accessToken: user?.accessToken,
+			});
+			dispatch({
+				type: 'LOGIN_WITHOUT_PASSWORD',
+				loginWithoutPassword: true,
+			});
+		}).catch((error) => {
+			console.log(error);
+			if (error.code == 'auth/popup-closed-by-user') {
+				setLoading(false)
+			}
+		});
+	}
 
 	return (
 		<>
@@ -199,9 +214,13 @@ export default function Login() {
 							<div className={styles.middleLine}></div>
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
-						<div className={styles.googleLoginBtnBox} onClick={() => hendelGoogleLogin()}>
+						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelloginWithoutPassword()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
-							<p className='mx-2'>تسجيل الدخول عبر قوقل</p>
+							<p className='mx-2'>تسجيل الدخول بإستخدام قوقل</p>
+						</div>
+						<div className={`${styles.loginWithoutPasswordBtnBox} ${styles.appleLoginBtn}`} onClick={() => handleAppleLogin()}>
+							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
+							<p className='mx-2'>تسجيل الدخول بإستخدام Apple</p>
 						</div>
 						<p className={`fontMedium ${styles.gotoPageText}`} > مستخدم جديد؟ <Link href={'/register'} className="primarylink">إنشاء حساب</Link></p>
 					</div>
