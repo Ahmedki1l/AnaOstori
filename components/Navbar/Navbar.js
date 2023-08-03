@@ -146,10 +146,11 @@ export default function Navbar() {
 		dispatch({
 			type: 'EMPTY_STORE'
 		});
-		let returnUrl = {
-			url: '/login'
-		}
-		signOutUser(returnUrl);
+		signOutUser();
+		dispatch({
+			type: 'SET_RETURN_URL',
+			returnUrl: ""
+		})
 	}
 
 	useEffect(() => {

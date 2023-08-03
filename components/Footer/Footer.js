@@ -114,7 +114,7 @@ export default function Footer() {
 						<div className='flex pt-4'>
 							<Link href={`${linkConst.Ios_APP_URL}`} target='_blank' className='normalLinkText'>
 								<li className={styles.appLogoWrapper}>
-									<Logo height={26} width={22} logoName={'appStoreLogo'} alt={'App Store Logo'} />
+									<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#000000'} />
 									<div className='pr-2'>
 										<p className={styles.subHeadding}>تنزيل من</p>
 										<p className={`font-bold ${styles.storeNameText}`}>App Store</p>

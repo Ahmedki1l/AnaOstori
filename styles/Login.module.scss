@@ -87,7 +87,7 @@
 	color: #00000080;
 }
 
-.googleLoginBtnBox {
+.loginWithoutPasswordBtnBox {
 	height: 50px;
 	border: 0.5px solid rgba(0, 0, 0, 0.5);
 	border-radius: 4px;
@@ -98,6 +98,16 @@
 	cursor: pointer;
 
 	p {
+		font-size: 16px;
+	}
+}
+
+.appleLoginBtn {
+	border: 0.5px solid #000000;
+	background-color: #000000;
+
+	p {
+		color: #FFFFFF;
 		font-size: 16px;
 	}
 }

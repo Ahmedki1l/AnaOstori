@@ -1,5 +1,9 @@
 @import "./styles/variables.module.scss";
 
+.mainLoadingPage {
+	height: calc(100vh - 90px);
+}
+
 .courseExtraDetailsWrapper {
 	padding: 0 1rem 1rem 1rem;
 }

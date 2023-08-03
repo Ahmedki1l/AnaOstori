@@ -95,7 +95,7 @@ export default function AccountInformation() {
         }
     }, [isSmallScreen])
     const handleTabClick = (tabData) => {
-        if (tabData == 1 && storeData.googleLogin == true) return
+        if (tabData == 1 && storeData.loginWithoutPassword == true) return
         setActiveTab(tabData);
         setSectionType("default")
         if (isSmallScreen) {
@@ -209,7 +209,7 @@ export default function AccountInformation() {
                             </div>
                         </div>
                         <div className={`${styles.tab} ${activeTab == 1 && `${styles.active}`}`} onClick={() => handleTabClick(1)}>
-                            {storeData.googleLogin == true && <div className={styles.disable}></div>}
+                            {storeData.loginWithoutPassword == true && <div className={styles.disable}></div>}
                             <div className={styles.tabDiv}>
                                 <AllIconsComponenet height={25} width={25} iconName={'key'} color={'#000000'} />
                                 <div className={styles.tabTitleDiv}>
@@ -308,16 +308,16 @@ export default function AccountInformation() {
                                                             <div className={styles.IconDiv}>
                                                                 <AllIconsComponenet height={20} width={20} iconName={'email'} color={'#00000080'} />
                                                             </div>
-                                                            <input className={`formInput ${storeData.googleLogin == true && `${styles.disableFormInput}`}`} id="email" type="email" name="email" title="Email" placeholder=' '
+                                                            <input className={`formInput ${storeData.loginWithoutPassword == true && `${styles.disableFormInput}`}`} id="email" type="email" name="email" title="Email" placeholder=' '
                                                                 value={email}
                                                                 onChange={(e) => setEmail(e.target.value)}
-                                                                disabled={storeData.googleLogin == true}
+                                                                disabled={storeData.loginWithoutPassword == true}
                                                             />
                                                             <label className='formLabel' htmlFor="Phone">الايميل الجديد</label>
                                                         </div>
                                                         {isEmailError && <p className={styles.errorText}>Email is not valid</p>}
                                                         <div className={styles.submitBtnBox}>
-                                                            <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} disabled={isEmailError || storeData.googleLogin == true}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ</button>
+                                                            <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} disabled={isEmailError || storeData.loginWithoutPassword == true}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ</button>
                                                         </div>
                                                     </div>
                                                     : sectionType == 'password' ?

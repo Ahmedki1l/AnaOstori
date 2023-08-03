@@ -89,7 +89,7 @@ export default function RegisterGoogleUser() {
 
 
 
-    const handleUpdateProfile = async () => {
+    const handleUpdateProfile = async (e) => {
         e.preventDefault()
         if (firstName && lastName && phoneNumber && gender) {
             const body = {

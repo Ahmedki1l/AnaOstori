@@ -2,7 +2,7 @@ var initialState = {
     viewProfileData: {},
     myCourses: [],
     accessToken: "",
-    googleLogin: false,
+    loginWithoutPassword: false,
     isUserInstructor: false,
     catagories: [],
     curriculumIds: [],
@@ -11,6 +11,7 @@ var initialState = {
     editCourseData: {},
     isCourseEdit: false,
     returnUrl: "",
+    loginWithoutPassword: false,
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -50,7 +51,7 @@ export const globalStore = (state = initialState, action) => {
         case 'IS_USER_FROM_GOOGLE':
             return {
                 ...state,
-                googleLogin: action?.googleLogin
+                loginWithoutPassword: action?.loginWithoutPassword
             }
         case 'IS_USER_INSTRUCTOR':
             return {
@@ -82,7 +83,11 @@ export const globalStore = (state = initialState, action) => {
                 ...state,
                 returnUrl: action?.returnUrl
             }
-
+        case 'LOGIN_WITHOUT_PASSWORD':
+            return {
+                ...state,
+                loginWithoutPassword: action?.loginWithoutPassword
+            }
         default: return state;
     }
 }
