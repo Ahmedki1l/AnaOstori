@@ -23,6 +23,7 @@ const ModelForAddItemLibrary = ({
     const [uploadLoader, setUploadLoader] = useState(false)
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
+    const [closebutton, setCloseButton] = useState(true)
 
     useEffect(() => {
         form.setFieldValue('fileTitle', selectedItem?.name)
@@ -73,7 +74,11 @@ const ModelForAddItemLibrary = ({
         form.resetFields()
         setIsModelForAddItemOpen(false);
     }
-
+    const handleRemoveFile = () => {
+        setFileName([])
+        setFileUploadResponceData([])
+        setCloseButton(false)
+    }
     return (
         <>
             <Modal
@@ -112,21 +117,22 @@ const ModelForAddItemLibrary = ({
                                 />
                             </FormItem>
                             {folderType !== "quiz" &&
-                                <>
+                                <div className={styles.uploadVideoWrapper}>
                                     <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
-                                    <label className={styles.uploadVideoWrapper} htmlFor='uploadFileInput'>
+                                    <label htmlFor='uploadFileInput' className='cursor-pointer'>
                                         <div className={styles.IconWrapper} >
                                             <div className={styles.uploadFileWrapper}>
                                                 <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
                                             </div>
                                             <p>ارفق الملف</p>
                                         </div>
-                                        {isEdit && <div className={styles.uploadFileNameWrapper}>
-                                            <div className={styles.closeIconWrapper}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>
-                                            {fileName}
-                                        </div>}
                                     </label>
-                                </>
+                                    {console.log(fileName)}
+                                    {fileName && <div className={styles.uploadFileNameWrapper}>
+                                        {closebutton && <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>}
+                                        {fileName}
+                                    </div>}
+                                </div>
                             }
                             {folderType == "quiz" &&
                                 <>
@@ -172,9 +178,10 @@ const ModelForAddItemLibrary = ({
                                 </>
                             }
                         </div>
+                        {console.log(fileUploadResponceData)}
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>
+                                <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} disabled={fileUploadResponceData?.key == undefined ? true : false} >{isEdit ? "حفظ" : "إنشاء"}</button>
                             </div>
                             {isEdit &&
                                 <div className={styles.deleteVideoBtn}>

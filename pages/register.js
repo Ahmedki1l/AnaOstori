@@ -87,7 +87,7 @@ export default function Register() {
 		}
 	}
 
-	const hendelloginWithoutPassword = async () => {
+	const hendelGoogleLogin = async () => {
 		setLoading(true)
 		await GoogleLogin().then(async (result) => {
 			const user = result?.user;
@@ -288,7 +288,7 @@ export default function Register() {
 							<div className={styles.middleLine}></div>
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
-						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelloginWithoutPassword()}>
+						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
 							<p className='mx-2'>تسجيل الدخول بإستخدام قوقل</p>
 						</div>

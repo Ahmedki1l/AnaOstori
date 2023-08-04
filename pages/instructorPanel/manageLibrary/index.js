@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
-import { getFolderListAPI, getItemListAPI } from '../../../services/apisService';
+import { createFolderAPI, getFolderListAPI, getItemListAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
-import ModelForAddFolder from '../../../components/ManageLibraryComponent/ModelForAddFolder/ModelForAddFolder';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
 import ManageLibraryTableComponent from '../../../components/ManageLibraryComponent/ManageLibraryTableComponent/ManageLibraryTableComponent';
 import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/ModelForAddItemLibrary/ModelForAddItemLibrary';
+import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput';
 
 
 
@@ -29,10 +29,6 @@ function Index() {
         getfolderList(selectedItem)
     }, [selectedItem])
 
-    const onModelClose = () => {
-        getfolderList(selectedItem)
-    }
-
     const handleItemSelect = async (selcetedItem) => {
         getfolderList(selcetedItem)
         setSelectedItem(selcetedItem)
@@ -41,6 +37,8 @@ function Index() {
     }
 
     const getfolderList = async (selectedItem) => {
+        setFolderList([])
+        setLoading(true)
         let data = {
             folderType: selectedItem,
             accessToken: storeData?.accessToken
@@ -50,6 +48,7 @@ function Index() {
             setLoading(false)
         }).catch((error) => {
             console.log(error);
+            setLoading(false)
             if (error?.response?.status == 401) {
                 signOutUser()
                 dispatch({
@@ -58,7 +57,10 @@ function Index() {
             }
         })
     }
+
     const getItemList = async (folderId) => {
+        setFolderList([])
+        setLoading(true)
         let body = {
             accessToken: storeData?.accessToken,
             folderId: folderId
@@ -67,6 +69,7 @@ function Index() {
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch((error) => {
+            setLoading(false)
             console.log(error);
         })
     }
@@ -80,6 +83,27 @@ function Index() {
     const handleRoute = () => {
         router.push(`/instructorPanel/manageLibrary/createCoursePath`)
     }
+
+    const handleCreateFolder = async ({ name }) => {
+        let data = {
+            accessToken: storeData?.accessToken,
+            data: {
+                name: name,
+                type: selectedItem,
+            }
+        }
+        console.log(data);
+        await createFolderAPI(data).then((res) => {
+            console.log(res);
+            setIsModelForAddFolderOpen(false)
+            getfolderList(selectedItem)
+        })
+    }
+
+    const handleDeleteSection = () => {
+        // don't delete 
+    }
+
 
     return (
         <>
@@ -113,7 +137,6 @@ function Index() {
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <div className='maxWidthDefault p-4'>
                             {(selectedItem == 'video' || selectedItem == 'file' || selectedItem == 'quiz') &&
@@ -121,6 +144,7 @@ function Index() {
                                     onclose={onclose}
                                     folderTableData={folderList}
                                     getItemList={getItemList}
+                                    getFolderList={getfolderList}
                                     folderType={selectedItem}
                                     setSelectedFolderId={setSelectedFolderId}
                                     typeOfListdata={typeOfListdata}
@@ -139,11 +163,12 @@ function Index() {
                     </div>
                 </div>
             }
-            <ModelForAddFolder
-                isModelForAddFolderOpen={isModelForAddFolderOpen}
-                setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
-                folderType={selectedItem}
-                onclose={onModelClose}
+            <ModelWithOneInput
+                open={isModelForAddFolderOpen}
+                setOpen={setIsModelForAddFolderOpen}
+                onSave={handleCreateFolder}
+                onDelete={handleDeleteSection}
+                isEdit={false}
             />
             <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}

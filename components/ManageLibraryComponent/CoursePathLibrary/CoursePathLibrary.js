@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 const CoursePathLibrary = ({
     folderTableData,
 }) => {
-    console.log(folderTableData);
 
     const handleDeleteFolderItems = () => {
         // setIsmodelForDeleteItems(true)
@@ -43,7 +42,7 @@ const CoursePathLibrary = ({
                                     return (
                                         <tr className={styles.tableRow} key={item.id}>
                                             <td>
-                                                <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
+                                                <div className={styles.videoFolderList}>
                                                     <AllIconsComponenet iconName={'redBook'} height={24} width={24} />
                                                     {/* <AllIconsComponenet iconName={'greenBook'} height={24} width={24} /> */}
                                                     <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
