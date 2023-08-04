@@ -65,6 +65,7 @@ export default function Login() {
 
 
 	const handleStoreUpdate = async (accessToken) => {
+		console.log(accessToken);
 		try {
 			const viewProfileReq = viewProfileAPI(accessToken)
 			const getMyCourseReq = myCoursesAPI(accessToken)
@@ -84,9 +85,11 @@ export default function Login() {
 				isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 			});
 			let profileData = viewProfileData?.data
+			console.log(profileData);
 			if (profileData.firstName == null || profileData.lastName == null || profileData.gender == null) {
 				router.push('/registerGoogleUser')
 			} else {
+				console.log(storeData?.returnUrl);
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
 				}
@@ -100,10 +103,11 @@ export default function Login() {
 		}
 	}
 
-	const hendelloginWithoutPassword = async () => {
+	const hendelGoogleLogin = async () => {
 		setLoading(true)
 		await GoogleLogin().then((result) => {
 			const user = result?.user;
+			console.log(user);
 			localStorage.setItem("accessToken", user?.accessToken);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
@@ -214,7 +218,7 @@ export default function Login() {
 							<div className={styles.middleLine}></div>
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
-						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelloginWithoutPassword()}>
+						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
 							<p className='mx-2'>تسجيل الدخول بإستخدام قوقل</p>
 						</div>

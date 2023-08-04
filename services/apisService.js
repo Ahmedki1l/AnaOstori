@@ -99,6 +99,14 @@ export const updateCurriculumAPI = (data) => { return instance(data?.accessToken
 export const getCurriculumDetailsAPI = (data) => { return instance(data?.accessToken).get(`/curriculum/${data?.curriculumId}`, data?.data) }
 
 
+// ********* Manage Curriculum Section APIs ***********//
+export const getSectionListAPI = (data) => { return instance(data?.accessToken).get(`/section?curriculumId=${data.curriculumId}`) }
+export const createCurriculumSectionAPI = (data) => { return instance(data?.accessToken).post(`/section/create`, data?.data) }
+export const updateCurriculumSectionAPI = (data) => { return instance(data?.accessToken).post(`/section/update`, data?.data) }
+export const addItemIntoSectionAPI = (data) => { return instance(data?.accessToken).post(`/section/item`, data?.data) }
+
+
+
 
 
 

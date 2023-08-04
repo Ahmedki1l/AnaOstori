@@ -1,49 +1,15 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment } from 'react'
 import styles from './CurriculumSectionComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useState } from 'react'
 import Icon from '../../CommonComponents/Icon'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
+import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
+import { useSelector } from 'react-redux'
+import { createCurriculumSectionAPI, updateCurriculumSectionAPI } from '../../../services/apisService'
+import { useRouter } from 'next/router'
 
-const dummyData = [
-    {
-        sectionName: 'section1',
-        showSectionList: false,
-        itemList: []
-    },
-    {
-        sectionName: 'section2',
-        showSectionList: false,
-        itemList: []
-    },
-    {
-        sectionName: 'section3',
-        showSectionList: false,
-        itemList: [
-            {
-                itemName: 'video1',
-                itemType: 'video',
-                discription: "20 دقيقة"
-            },
-            {
-                itemName: 'file1',
-                itemType: 'file',
-                discription: "20 دقيقة"
-            },
-            {
-                itemName: 'folder1',
-                itemType: 'folder',
-                discription: "20 دقيقة"
-            }
-        ]
-    },
-    {
-        sectionName: 'section4',
-        showSectionList: false,
-        itemList: []
-    }
-]
 const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     const [sectionDetails, setSectionDetails] = useState(sectionList)
@@ -51,7 +17,12 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const [deleteItemType, setDeleteItemType] = useState('section')
     const [isModelForAddCurriculum, setIsModelForAddCurriculum] = useState(false)
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
+    const [selectedSection, setSelectedSection] = useState()
+    const [editSectionName, setEditSectionName] = useState(false)
 
+    console.log(selectedSection);
+    const storeData = useSelector((state) => state?.globalStore);
+    const router = useRouter()
     const showSectionItem = (index) => {
         const data = [...sectionDetails]
         data[index].showSectionList = !data[index].showSectionList
@@ -69,7 +40,60 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         setIsModelForAddCurriculum(true)
     }
     const handleAddSection = () => {
+        setEditSectionName(false)
         setIsModelForAddFolderOpen(true)
+    }
+    const handleAddItemInSection = (section) => {
+        setIsModelForAddCurriculum(true)
+        setSelectedSection(section)
+    }
+    const handleCreateSection = async ({ name }) => {
+        let data = {
+            accessToken: storeData.accessToken,
+            data: {
+                name: name,
+                curriculumId: router.query.coursePathId,
+                order: 4
+            }
+        }
+        console.log(data);
+        await createCurriculumSectionAPI(data).then((res) => {
+            console.log(res);
+            setIsModelForAddFolderOpen(false)
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleEditSectionName = async (section) => {
+        let editSectionName = {
+            name: section.name,
+            id: selectedSection?.id,
+        }
+        let body = {
+            accessToken: storeData.accessToken,
+            data: editSectionName
+        }
+        console.log(body);
+        await updateCurriculumSectionAPI(body).then((res) => {
+            courseForm.setFieldValue(item.pathTitle)
+            setCurriculumName(res.data.data.name)
+        }).catch((error) => {
+            console.log(error);
+            if (error.response.data.message == "Curriculum name already in use") {
+                toast.error(toastErrorMessage.curriculumNameError)
+            }
+        })
+    }
+
+    const openSectionNameModel = (section) => {
+        setIsModelForAddFolderOpen(true)
+        setSelectedSection(section)
+        setEditSectionName(true)
+    }
+    const handleAddItemtoSection = (itemList) => {
+        console.log(itemList);
+        console.log(selectedSection.id);
     }
 
     return (
@@ -88,12 +112,12 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                         <label htmlFor={`tab$[index]`} className={`${styles.curriculimSectionHead} ${section.showSectionList ? `${styles.showCurriculumSectionHead}` : ""}`}>
                             <div className={styles.curriculimHeadText}>
                                 <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFFFFF'} />
-                                <p className={styles.sectionTitle}>{section.sectionName}</p>
-                                <p className={styles.numberOfItems}>(0 عنصر)</p>
+                                <p className={styles.sectionTitle}>{section.name}</p>
+                                <p className={styles.numberOfItems}>({section.items.length} عنصر) </p>
                             </div>
                             <div className={styles.headerActionWrapper} >
-                                <div><AllIconsComponenet iconName={'plus'} height={24} width={24} alt={'key'} color={'#FFFFFF'} /></div>
-                                <div><AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} /></div>
+                                <div onClick={() => handleAddItemInSection(section)}><AllIconsComponenet iconName={'plus'} height={24} width={24} alt={'key'} color={'#FFFFFF'} /></div>
+                                <div onClick={() => openSectionNameModel(section)}><AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} /></div>
                                 <div onClick={() => handleDeleteFolderItems('section')}><AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} /></div>
                                 <div className={`${styles.arrowIcon} ${showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
                                     <svg width="19" height="15" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,24 +127,25 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                             </div>
                         </label>
                         <div className={`${styles.curriculumSectionBody} ${section.showSectionList ? `${styles.showCurriculumSectionBody}` : ""}`}>
-                            {section.itemList == 0 &&
+                            {section.items == 0 &&
                                 <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddCurriculum()}>+  إضافة عنصر</p></div>
                             }
-                            {section.itemList?.map((data, index) => {
+                            {section.items?.map((data, index) => {
                                 return (
                                     <Fragment key={`data${index}`}>
                                         <div className={styles.curriculumDataArea}>
                                             <div className={styles.curriculimDetailsData}>
                                                 <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#BFBFBF'} />
                                                 <Icon
-                                                    height={24}
-                                                    width={24}
-                                                    iconName={data.itemType == 'video' ? 'videoIcon' : data.itemType == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
+                                                    height={data.type == 'video' ? 24 : data.type == 'file' ? 24 : 26}
+                                                    width={data.type == 'video' ? 24 : data.type == 'file' ? 24 : 28}
+                                                    iconName={data.type == 'video' ? 'videoIcon' : data.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
                                                     alt={'Quiz Logo'}
                                                 />
-                                                <p className={styles.sectionTitle}>
-                                                    <p>{data.itemName}</p>
-                                                </p>
+                                                <div className={styles.sectionTitle}>
+                                                    <p>{data.name}</p>
+                                                    <p className={styles.duration}>(efreg)</p>
+                                                </div>
                                             </div>
                                             <div className={styles.curriculimDetailsActions}>
                                                 <svg width="24" height="28" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,6 +166,14 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                     </div>
                 )
             })}
+            <ModelWithOneInput
+                open={isModelForAddFolderOpen}
+                setOpen={setIsModelForAddFolderOpen}
+                isEdit={editSectionName}
+                onSave={editSectionName ? handleEditSectionName : handleCreateSection}
+
+                itemName={selectedSection?.name}
+            />
             <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 onCloseModal={onCloseModal}
@@ -148,6 +181,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             />
             {isModelForAddCurriculum && <ModelForAddItemCurriculum
                 isModelForAddCurriculum={isModelForAddCurriculum}
+                handleAddItemtoSection={handleAddItemtoSection}
                 setIsModelForAddCurriculum={setIsModelForAddCurriculum}
                 onclose={onclose}
             />}

@@ -4,13 +4,13 @@ import { FormItem } from '../../../../components/antDesignCompo/FormItem'
 import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
-import ModelForAddFolder from '../../../../components/ManageLibraryComponent/ModelForAddFolder/ModelForAddFolder'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 import { useDispatch, useSelector } from 'react-redux'
-import { createCurriculumAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, updateCurriculumAPI } from '../../../../services/apisService'
+import { createCurriculumAPI, createCurriculumSectionAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, updateCurriculumAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../../constants/ar'
 import { toast } from 'react-toastify'
+import ModelWithOneInput from '../../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput'
 
 export async function getServerSideProps(context) {
     const params = context.query
@@ -34,11 +34,14 @@ const CreateCoursePath = (props) => {
     const [sectionDetails, setSectionDetails] = useState([])
     const storeData = useSelector((state) => state?.globalStore);
     const router = useRouter()
-
     const dispatch = useDispatch()
+
+    console.log(sectionDetails);
+
     useEffect(() => {
         courseForm.setFieldValue('pathTitle', curriculmName)
         getCurriculumDetails()
+        getSectionList()
     }, [curriculmName])
 
     const getCurriculumDetails = async () => {
@@ -54,6 +57,21 @@ const CreateCoursePath = (props) => {
             console.log(error);
         })
     }
+
+    const getSectionList = async () => {
+        let body = {
+            accessToken: storeData?.accessToken,
+            curriculumId: routeParams.coursePathId,
+        }
+        console.log(body);
+        await getSectionListAPI(body).then((res) => {
+            setSectionDetails(res.data)
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+
     const updateCurriculumList = async () => {
         let data = {
             accessToken: storeData?.accessToken,
@@ -110,10 +128,35 @@ const CreateCoursePath = (props) => {
             })
         }
     }
-
-    const handleAddFolder = (values) => {
+    const handleAddSectionModal = () => {
+        // let addSection = {
+        //     name: values.name,
+        // }
+        // console.log(addSection);
         setIsModelForAddFolderOpen(true);
     };
+
+    const handleSection = async ({ name }) => {
+        let data = {
+            accessToken: storeData.accessToken,
+            data: {
+                name: name,
+                curriculumId: routeParams.coursePathId,
+                order: 4
+            }
+        }
+        console.log(data);
+        await createCurriculumSectionAPI(data).then((res) => {
+            console.log(res);
+            setIsModelForAddFolderOpen(false)
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleDeleteSection = () => {
+        // don't delete 
+    }
 
 
     return (
@@ -148,7 +191,7 @@ const CreateCoursePath = (props) => {
                                                 <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
                                                 <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
                                                 <div className={styles.createCourseBtnBox}>
-                                                    <button className='primarySolidBtn' onClick={() => handleAddFolder('addSection')}>إضافة قسم</button>
+                                                    <button className='primarySolidBtn' onClick={() => handleAddSectionModal()}>إضافة قسم</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -156,7 +199,12 @@ const CreateCoursePath = (props) => {
                                 </div>
                             }
 
-                            <CurriculumSectionComponent onclose={onclose} sectionList={sectionDetails} />
+                            {sectionDetails.length > 0 &&
+                                <CurriculumSectionComponent
+                                    onclose={onclose}
+                                    sectionList={sectionDetails}
+                                />
+                            }
 
                             <div className={`${styles.savePathTitle}`}>
                                 {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `} type='submit'>حفظ ومتابعة</button>}
@@ -166,10 +214,12 @@ const CreateCoursePath = (props) => {
                     </div>
                 </div>
             </Form>
-            <ModelForAddFolder
-                isModelForAddFolderOpen={isModelForAddFolderOpen}
-                setIsModelForAddFolderOpen={setIsModelForAddFolderOpen}
-                folderType={'section'}
+            <ModelWithOneInput
+                open={isModelForAddFolderOpen}
+                setOpen={setIsModelForAddFolderOpen}
+                onSave={handleSection}
+                onDelete={handleDeleteSection}
+                isEdit={true}
             />
         </div>
     )

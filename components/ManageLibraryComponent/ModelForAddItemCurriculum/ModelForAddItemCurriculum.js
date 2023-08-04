@@ -10,6 +10,7 @@ import { signOutUser } from '../../../services/fireBaseAuthService';
 import Table from '../../antDesignCompo/Table';
 import { fullDate } from '../../../constants/DateConverter';
 import Icon from '../../CommonComponents/Icon';
+import Spinner from '../../CommonComponents/spinner';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -17,7 +18,7 @@ const StylesModal = styled(Modal)`
     }
    .ant-modal-content{
         border-radius: 3px;
-        padding: 0px
+        padding: 0px;
     }
 `
 const tableColumns = [
@@ -40,6 +41,7 @@ const ModelForAddItemCurriculum = ({
     isModelForAddCurriculum,
     setIsModelForAddCurriculum,
     onclose,
+    handleAddItemtoSection,
 }) => {
 
     const storeData = useSelector((state) => state?.globalStore);
@@ -50,7 +52,7 @@ const ModelForAddItemCurriculum = ({
     const [videoFolder, setVideoFolder] = useState(false)
     const [selectedRow, setSelectedRow] = useState(null)
     const [typeOfListdata, setTypeOfListData] = useState('folder')//folder or item
-
+    const [selectedItems, setSelectedItems] = useState([]);
     const handleClickOnIconCell = async (folderId, index) => {
         let body = {
             accessToken: storeData?.accessToken,
@@ -87,7 +89,7 @@ const ModelForAddItemCurriculum = ({
             itemName: <IconCell item={item} />,
             createAt: fullDate(item?.createdAt),
             updateAt: fullDate(item?.updatedAt),
-            selected: selectedRow === index
+            key: item.id
         }
     })
 
@@ -127,12 +129,18 @@ const ModelForAddItemCurriculum = ({
                 <button className={styles.libraryBtn}  >الإنتقال إلى إدارة المكتبة</button>
             </div>
         </div >
-    );
+    )
+
     const showFolderList = () => {
         setVideoFolder(false)
         setTypeOfListData("folder")
         setRowSelection(false)
     }
+
+    const handleAddIteminSection = () => {
+        handleAddItemtoSection(selectedItems)
+    }
+
 
     return (
         <div>
@@ -170,8 +178,22 @@ const ModelForAddItemCurriculum = ({
                             </div>
                         }
                         <ConfigProvider renderEmpty={customizeRenderEmpty}>
-                            <Table typeOfListdata={typeOfListdata} setTypeOfListData={setTypeOfListData} rowSelection={rowSelection} selectedItem={selectedItem} tableColumns={tableColumns} tableData={data} />
+                            <Table
+                                typeOfListdata={typeOfListdata}
+                                minheight={typeOfListdata == "item" ? 250 : 400}
+                                setTypeOfListData={setTypeOfListData}
+                                rowSelection={rowSelection}
+                                selectedItem={selectedItem}
+                                tableColumns={tableColumns}
+                                tableData={data}
+                                setSelectedItems={setSelectedItems}
+                            />
                         </ConfigProvider>
+                        {typeOfListdata == "item" &&
+                            <div className={styles.createSectionBtnBox}>
+                                <button className='primarySolidBtn' onClick={() => handleAddIteminSection()}>إضافة x عنصر</button>
+                            </div>
+                        }
                     </div>
                 </div>
             </StylesModal>
