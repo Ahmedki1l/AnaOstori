@@ -1,12 +1,10 @@
 import React from 'react'
 import styles from './UploadFile.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
-import { useSelector } from 'react-redux'
 import { uploadFileAPI } from '../../../services/apisService'
 
 const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
-    const storeData = useSelector((state) => state?.globalStore);
 
 
     const handleUploadFile = async (e) => {
@@ -16,7 +14,6 @@ const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
         const data = {
             formData,
-            accessToken: storeData?.accessToken
         }
         console.log("data", data);
         await uploadFileAPI(data).then((res) => {

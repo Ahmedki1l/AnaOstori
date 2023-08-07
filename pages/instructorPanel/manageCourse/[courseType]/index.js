@@ -25,10 +25,11 @@ export default function Index() {
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: false })
     }
 
+    console.log(allPhysicalCourses);
+
     useEffect(() => {
         const getAllCourse = async () => {
             let body = {
-                accessToken: storeData?.accessToken,
                 courseType: courseType
             }
             await getAllCourseByInstructor(body).then(res => {
@@ -44,7 +45,7 @@ export default function Index() {
             })
         }
         getAllCourse()
-    }, [storeData?.accessToken, courseType])
+    }, [courseType])
 
     const handleEditCourse = (course) => {
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
@@ -59,7 +60,6 @@ export default function Index() {
         let body = {
             data: { published: checked },
             courseId: courseId,
-            accessToken: storeData?.accessToken
         }
         console.log(body);
         await updateCourseDetailsAPI(body).then((res) => {

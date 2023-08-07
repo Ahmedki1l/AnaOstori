@@ -105,7 +105,7 @@ export default function AccountInformation() {
     };
 
     const getProfileData = async (type) => {
-        await viewProfileAPI(storeData?.accessToken).then(res => {
+        await viewProfileAPI().then(res => {
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
@@ -137,7 +137,6 @@ export default function AccountInformation() {
         }
         const params = {
             data: body,
-            accessToken: storeData?.accessToken
         }
 
         await updateProfile(params).then(async (res) => {

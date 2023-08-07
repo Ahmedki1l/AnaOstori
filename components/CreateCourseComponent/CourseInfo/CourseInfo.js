@@ -115,7 +115,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
 
             let body = {
                 data: values,
-                accessToken: storeData?.accessToken
             }
             await createCourseByInstructorAPI(body).then((res) => {
                 setShowExtraNavItem(true)
@@ -148,14 +147,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     data: courseDetailMetadata,
                     courseId: newcreatedCourse.id
                 },
-                accessToken: storeData?.accessToken
             }
             let courseMetadataBody = {
                 data: {
                     data: courseMetadata,
                     courseId: newcreatedCourse.id
                 },
-                accessToken: storeData?.accessToken
             }
             try {
                 const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(courseDetailMetadataBody)
@@ -198,7 +195,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             data: {
                 data: courseMetaData
             },
-            accessToken: storeData?.accessToken
         }
 
         let courseDetailsMetaData = values.courseDetailsMetaData.map((obj, index) => {
@@ -214,7 +210,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             data: {
                 data: courseDetailsMetaData,
             },
-            accessToken: storeData?.accessToken
         }
 
 
@@ -240,7 +235,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         const courseBody = {
             data: values,
             courseId: editCourseData.id,
-            accessToken: storeData?.accessToken
         }
         try {
 
@@ -288,7 +282,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         let body = {
             data: { published: true },
             courseId: editCourseData.id,
-            accessToken: storeData?.accessToken
         }
         await updateCourseDetailsAPI(body).then((res) => {
             console.log(res);
@@ -308,7 +301,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     courseId: editCourseData.id,
                     id: deleteFieldName == 'courseDetails' ? data.courseDetailsMetaData[index]?.id : data.courseMetaData[index]?.id
                 },
-                accessToken: storeData?.accessToken
             }
             await deleteCourseTypeAPI(body).then((res) => {
                 data.courseMetaData.splice(index, 1)

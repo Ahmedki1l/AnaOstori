@@ -12,12 +12,11 @@ import { toastSuccessMessage } from '../../../constants/ar';
 const DeleteAccount = ({ data }) => {
     const [accountsSectionType, setAccountsSectionType] = useState(data?.inActiveAt ? 'accountRecovery' : 'default');
     const dispatch = useDispatch();
-    const storeData = useSelector((state) => state?.globalStore);
     const router = useRouter()
 
     const handleDeleteAccount = async () => {
-        await deleteAccount(storeData?.accessToken).then(async (res) => {
-            await viewProfileAPI(storeData?.accessToken).then(res => {
+        await deleteAccount().then(async (res) => {
+            await viewProfileAPI().then(res => {
                 dispatch({
                     type: 'SET_PROFILE_DATA',
                     viewProfileData: res?.data,
@@ -33,7 +32,7 @@ const DeleteAccount = ({ data }) => {
     }
 
     const handleAccountRecovery = async () => {
-        await accountRecovery(storeData?.accessToken).then(res => {
+        await accountRecovery().then(res => {
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,

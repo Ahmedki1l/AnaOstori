@@ -44,7 +44,6 @@ const UpdateProfile = () => {
 
         const data = {
             formData,
-            accessToken: storeData?.accessToken
         }
 
         await uploadProfileImage(data).then((response) => {
@@ -82,13 +81,12 @@ const UpdateProfile = () => {
 
         const params = {
             data,
-            accessToken: storeData?.accessToken
         }
 
         await updateProfile(params).then(async (res) => {
             toast.success(toastSuccessMessage.profileUpdateMsg)
             setShowLoader(false)
-            await viewProfileAPI(storeData?.accessToken).then(res => {
+            await viewProfileAPI().then(res => {
                 dispatch({
                     type: 'SET_PROFILE_DATA',
                     viewProfileData: res?.data,

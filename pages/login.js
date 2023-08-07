@@ -64,11 +64,10 @@ export default function Login() {
 	}, [email, password, regexEmail, regexPassword])
 
 
-	const handleStoreUpdate = async (accessToken) => {
-		console.log(accessToken);
+	const handleStoreUpdate = async () => {
 		try {
-			const viewProfileReq = viewProfileAPI(accessToken)
-			const getMyCourseReq = myCoursesAPI(accessToken)
+			const viewProfileReq = viewProfileAPI()
+			const getMyCourseReq = myCoursesAPI()
 			const [viewProfileData, myCourseData] = await Promise.all([
 				viewProfileReq, getMyCourseReq
 			])
@@ -107,7 +106,6 @@ export default function Login() {
 		setLoading(true)
 		await GoogleLogin().then((result) => {
 			const user = result?.user;
-			console.log(user);
 			localStorage.setItem("accessToken", user?.accessToken);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
@@ -133,7 +131,9 @@ export default function Login() {
 		}
 		if (email && password && !isEmailError && !isPasswordError) {
 			setLoading(true)
-			await startEmailPasswordLogin(email, password).then((userCredential) => {
+			await startEmailPasswordLogin(email, password).then((result) => {
+				const user = result.user;
+				localStorage.setItem("accessToken", user?.accessToken);
 				dispatch({
 					type: 'ADD_AUTH_TOKEN',
 					accessToken: userCredential?.user?.accessToken,
@@ -155,7 +155,8 @@ export default function Login() {
 		setLoading(true)
 		await signInWithApple().then((result) => {
 			const user = result.user;
-			handleStoreUpdate(user?.accessToken)
+			localStorage.setItem("accessToken", user?.accessToken);
+			handleStoreUpdate()
 			console.log(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',

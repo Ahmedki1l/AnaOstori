@@ -59,10 +59,8 @@ export default function Index(props) {
 	useEffect(() => {
 		if (!isUserLogin) return
 		const getCourseDetails = async () => {
-			let data = {
-				accessToken: storeData?.accessToken,
-			}
-			await getCatagoriesAPI(data).then((res) => {
+
+			await getCatagoriesAPI().then((res) => {
 				res.data?.find((catagory) => {
 					if (catagory.name == catagoryName) {
 						setLoggedUserCourseDetails(catagory.courses)
@@ -80,7 +78,7 @@ export default function Index(props) {
 			})
 		}
 		getCourseDetails()
-	}, [storeData?.accessToken, catagoryName, isUserLogin])
+	}, [catagoryName, isUserLogin])
 
 	function shortCourseOnType(courses) {
 		const typeOrder = ['physical', 'online', 'on-demand'];

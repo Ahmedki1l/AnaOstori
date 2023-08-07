@@ -33,10 +33,10 @@ export default function RegisterGoogleUser() {
     const dispatch = useDispatch();
 
     const storeData = useSelector((state) => state?.globalStore);
-    const handleStoreUpdate = async (accessToken) => {
+    const handleStoreUpdate = async () => {
         try {
-            const viewProfileReq = viewProfileAPI(accessToken)
-            const getMyCourseReq = myCoursesAPI(accessToken)
+            const viewProfileReq = viewProfileAPI()
+            const getMyCourseReq = myCoursesAPI()
 
             const [viewProfileData, myCourseData] = await Promise.all([
                 viewProfileReq, getMyCourseReq
@@ -101,10 +101,9 @@ export default function RegisterGoogleUser() {
 
             const params = {
                 data: body,
-                accessToken: storeData?.accessToken
             }
             await updateProfile(params).then(res => {
-                handleStoreUpdate(storeData?.accessToken)
+                handleStoreUpdate()
                 fbq.event('Sign up', { email: storeData.viewProfileData.email, phone: phoneNumber })
                 router.push('/')
             }).catch(error => {

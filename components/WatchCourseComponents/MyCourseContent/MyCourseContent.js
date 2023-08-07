@@ -6,7 +6,6 @@ import styles from './MyCourseContent.module.scss'
 import CompleteCourseIndicator from '../../CommonComponents/CompleteCourseIndicatior/CompleteCourseIndicator'
 import { getCourseItemAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { mediaUrl } from '../../../constants/DataManupulation'
 
@@ -31,14 +30,12 @@ export default function MyCourseContent(props) {
 		setSubscriptionDaysLeft(remainingDays)
 	}, [courseCurriculum])
 
-	const storeData = useSelector((state) => state?.globalStore);
 
 	const downloadFileHandler = async (itemID) => {
 		if (courseID) {
 			const params = {
 				courseID,
 				itemID,
-				accessToken: storeData?.accessToken
 			}
 			await getCourseItemAPI(params).then(async (item) => {
 				router.push(`${item.data.url}`)

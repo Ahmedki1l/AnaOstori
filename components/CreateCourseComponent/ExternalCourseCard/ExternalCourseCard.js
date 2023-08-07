@@ -82,14 +82,12 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                 data: courseCardMetadata,
                 courseId: courseDetail.id,
             },
-            accessToken: storeData?.accessToken
         }
         let body2 = {
             data: {
                 cardDescription: cardDescription,
                 type: courseDetail.type
             },
-            accessToken: storeData?.accessToken,
             courseId: courseDetail.id
         }
         console.log(body);
@@ -128,14 +126,12 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             data: {
                 data: CourseCardMetaData,
             },
-            accessToken: storeData?.accessToken
         }
         let body2 = {
             data: {
                 cardDescription: cardDescription,
                 type: courseDetail.type
             },
-            accessToken: storeData?.accessToken,
             courseId: courseDetail.id
         }
         try {
@@ -169,7 +165,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                     courseId: editCourseData.id,
                     id: data.CourseCardMetaData[index].id
                 },
-                accessToken: storeData?.accessToken
             }
 
             await deleteCourseTypeAPI(body).then((res) => {

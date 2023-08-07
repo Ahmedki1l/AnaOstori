@@ -3,8 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import { getPaymentInfoAPI } from '../services/apisService';
+import { getPaymentInfoAPI, myCoursesAPI } from '../services/apisService';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
@@ -13,7 +12,6 @@ import { mediaUrl } from '../constants/DataManupulation';
 
 
 export default function Payment(props) {
-    const storeData = useSelector((state) => state?.globalStore);
     const whatsAppLink = LinkConst.WhatsApp_Link
     const [transactionDetails, setTransactionDetails] = useState([])
     const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
@@ -27,14 +25,18 @@ export default function Payment(props) {
             let data = {
                 orderID: orderID,
                 transactionID: transactionID,
-                accessToken: storeData?.accessToken
             }
-            await getPaymentInfoAPI(data).then((response) => {
-                console.log(response);
-                setTransactionDetails(response.data),
-                    setIsPaymentSuccess(response.data[0].result.code == "000.000.000" ? true : false),
-                    response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
+            await getPaymentInfoAPI(data).then(async (response) => {
+                setTransactionDetails(response.data)
+                setIsPaymentSuccess(response.data[0].result.code == "000.000.000" ? true : false)
+                response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
                 setLoading(false)
+                const getMyCourseReq = myCoursesAPI()
+                const [myCourseData] = await Promise.all([getMyCourseReq])
+                dispatch({
+                    type: 'SET_ALL_MYCOURSE',
+                    myCourses: myCourseData?.data,
+                });
             }).catch((error) => {
                 console.log(error)
                 setLoading(false)

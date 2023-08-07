@@ -28,10 +28,8 @@ export default function Search(props) {
 
 	useEffect(() => {
 		const getMyOrder = async () => {
-			const params = {
-				accessToken: storeData?.accessToken
-			}
-			await getMyOrderAPI(params).then((res) => {
+
+			await getMyOrderAPI().then((res) => {
 				console.log(res);
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch((error) => {
@@ -45,7 +43,7 @@ export default function Search(props) {
 			})
 		}
 		getMyOrder()
-	}, [storeData?.accessToken])
+	}, [])
 
 
 	return (

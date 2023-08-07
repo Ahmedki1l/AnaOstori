@@ -5,7 +5,6 @@ import Router from 'next/router';
 import ProgressBar from '../progressBar';
 import { useEffect, useState } from 'react';
 import { getCourseProgressAPI } from '../../../services/apisService';
-import { useSelector } from 'react-redux';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { mediaUrl } from '../../../constants/DataManupulation';
 import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
@@ -13,7 +12,6 @@ import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
 
 
 export default function CoursesCard(props) {
-	const storeData = useSelector((state) => state?.globalStore);
 	const courseDetails = props?.data?.course
 	const [courseProgress, setCourseProgress] = useState(0)
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
@@ -28,7 +26,6 @@ export default function CoursesCard(props) {
 			const getCourseProgress = async () => {
 				const params = {
 					courseID: courseDetails.id,
-					accessToken: storeData?.accessToken
 				}
 				await getCourseProgressAPI(params).then((res) => {
 					setCourseProgress(Math.floor(res?.data?.overallProgress))
@@ -38,7 +35,7 @@ export default function CoursesCard(props) {
 			}
 			getCourseProgress()
 		}
-	}, [courseDetails, storeData?.accessToken])
+	}, [courseDetails])
 
 	useEffect(() => {
 		const date = new Date(props?.data?.createdAt);

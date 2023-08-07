@@ -6,7 +6,7 @@ const SpinnerContainer = styled('div')`
 	justify-content: center;
 	align-items: center;
 	height: 100%;
-	margin: 1rem;
+	margin: ${props => (props.margin ? props.margin : '1')}rem;
 `
 
 const SpinnerInner = styled('div')`
@@ -30,10 +30,11 @@ const SpinnerInner = styled('div')`
 function Spinner({
     borderwidth,
     width,
-    height
+    height,
+    margin
 }) {
     return (
-        <SpinnerContainer>
+        <SpinnerContainer margin={margin}>
             <SpinnerInner
                 borderwidth={borderwidth}
                 width={width}

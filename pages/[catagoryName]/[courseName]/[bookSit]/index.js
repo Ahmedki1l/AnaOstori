@@ -83,7 +83,6 @@ export default function Index(props) {
 				}
 				const params = {
 					orderData,
-					accessToken: storeData?.accessToken
 				}
 				await createOrderAPI(params).then(res => {
 					setCreatedOrder(res.data)
@@ -101,7 +100,7 @@ export default function Index(props) {
 			}
 		}
 		createOrder()
-	}, [courseDetails, storeData.viewProfileData, storeData.accessToken])
+	}, [courseDetails, storeData.viewProfileData])
 
 	const validation = (studentsData, courseType) => {
 		const data = [...studentsData]
@@ -234,7 +233,6 @@ export default function Index(props) {
 
 			const params = {
 				orderData,
-				accessToken: storeData?.accessToken
 			}
 
 			await createOrderAPI(params).then(res => {

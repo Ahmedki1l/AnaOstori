@@ -27,7 +27,6 @@ export default function UserDetailForm1(props) {
 	const submitUserData = async (gender) => {
 		const params = {
 			courseId: courseDetailId,
-			accessToken: storeData?.accessToken,
 			data: {
 				type: gender
 			}

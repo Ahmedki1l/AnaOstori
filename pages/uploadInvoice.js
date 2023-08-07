@@ -91,8 +91,6 @@ export default function ApproveTrans(props) {
         });
     }
 
-    console.log(courseDetail);
-
     return (
         <>
             <div className={styles.headArea}>
@@ -175,14 +173,14 @@ export default function ApproveTrans(props) {
                     }
                 </div>
                 <div className='pt-4 pb-4'>
-                    <p className={`fontMedium ${styles.bankDetailText}`} onClick={() => setShowBankDetails(!showBankDetails)}>
+                    <div className={`fontMedium ${styles.bankDetailText}`} onClick={() => setShowBankDetails(!showBankDetails)}>
                         <div style={{ height: '20px' }}>
                             <div className={showBankDetails ? `${styles.rotateArrow}` : ''}>
                                 <AllIconsComponenet iconName={'keyBoardDownIcon'} height={20} width={30} color={'#0075FF'} />
                             </div>
                         </div>
                         عرض حساباتنا البنكية
-                    </p>
+                    </div>
                     {showBankDetails &&
                         <>
                             <p className={`fontMedium text-center ${styles.bankAccMainHeadText1}`}>المستفيد: شركة سنام لخدمات الأعمال</p>
