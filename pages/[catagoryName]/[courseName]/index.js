@@ -132,10 +132,7 @@ export default function Index(props) {
 				pathname: "/login",
 			})
 		} else {
-			let body = {
-				accessToken: storeData?.accessToken
-			}
-			await getCatagoriesAPI(body).then((res) => {
+			await getCatagoriesAPI().then((res) => {
 				router.push({
 					pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 					query: query ? query : "",
@@ -191,7 +188,6 @@ export default function Index(props) {
 		const getCourseByName = async () => {
 			let data = {
 				name: courseDetail?.name,
-				accessToken: storeData?.accessToken
 			}
 			await getCourseByNameAPI(data).then((res) => {
 				res.data?.subscriptions?.forEach((item) => {
@@ -208,7 +204,7 @@ export default function Index(props) {
 			})
 		}
 		getCourseByName()
-	}, [courseDetail, storeData?.accessToken])
+	}, [courseDetail])
 
 	return (
 		<>

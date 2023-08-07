@@ -51,10 +51,10 @@ export default function Register() {
 		});
 	}
 
-	const handleStoreUpdate = async (accessToken) => {
+	const handleStoreUpdate = async () => {
 		try {
-			const viewProfileReq = viewProfileAPI(accessToken)
-			const getMyCourseReq = myCoursesAPI(accessToken)
+			const viewProfileReq = viewProfileAPI()
+			const getMyCourseReq = myCoursesAPI()
 
 			const [viewProfileData, myCourseData] = await Promise.all([
 				viewProfileReq, getMyCourseReq
@@ -91,6 +91,7 @@ export default function Register() {
 		setLoading(true)
 		await GoogleLogin().then(async (result) => {
 			const user = result?.user;
+			localStorage.setItem("accessToken", user?.accessToken);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -99,7 +100,7 @@ export default function Register() {
 				type: 'IS_USER_FROM_GOOGLE',
 				loginWithoutPassword: true,
 			});
-			handleStoreUpdate(user?.accessToken)
+			handleStoreUpdate()
 
 		}).catch((error) => {
 			console.log(error);
@@ -109,8 +110,9 @@ export default function Register() {
 	const handleAppleLogin = async () => {
 		setLoading(true)
 		await signInWithApple().then((result) => {
-			const user = result.user;
-			handleStoreUpdate(user?.accessToken)
+			const user = result?.user;
+			localStorage.setItem("accessToken", user?.accessToken);
+			handleStoreUpdate()
 			console.log(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',

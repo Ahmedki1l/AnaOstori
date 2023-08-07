@@ -56,7 +56,6 @@ export default function Navbar() {
 	useEffect(() => {
 		const fetchResults = async () => {
 			let data = {
-				accessToken: storeData?.accessToken
 			}
 			try {
 				const getcatagoriReq = getCatagoriesAPI(data)
@@ -82,30 +81,9 @@ export default function Navbar() {
 				console.log(error);
 			}
 		}
-		// const fetchResults = async () => {
-		// 	let data = {
-		// 		accessToken: storeData?.accessToken
-		// 	}
-		// 	await gettCatagoriesAPI(data).then(res => {
-		// 		dispatch({
-		// 			type: 'SET_CATAGORIES',
-		// 			catagories: res?.data
-		// 		});
-		// 	}).catch(error => {
-		// 		console.log("error : ", error);
-		// 		if (error?.response?.status == 401) {
-		// 			let returnUrl = {
-		// 				url: window.location.href
-		// 			}
-		// 			signOutUser(returnUrl)
-		// 			dispatch({
-		// 				type: 'EMPTY_STORE'
-		// 			});
-		// 		}
-		// 	})
-		// };
+
 		fetchResults();
-	}, [storeData?.accessToken])
+	}, [])
 
 	const [showSubMenu, setShowSubMenuShown] = useState()
 	const prevSubMenu = useRef();

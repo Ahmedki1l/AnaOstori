@@ -33,8 +33,6 @@ export default function PaymentInfoForm(props) {
 	const [paymentType, setPaymentType] = useState('mada')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
-	console.log(createdOrder);
-
 
 	const generateCheckoutId = async (type) => {
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type })
@@ -129,7 +127,9 @@ export default function PaymentInfoForm(props) {
 										<Logo height={27} width={53} logoName={'applePayLogo'} alt={'Payment Methode Logo'} />
 									</div>
 									<div className={styles.creditCardWrapper}>
-										<ApplePayForm checkoutID={checkoutID} orderID={createdOrder.id} />
+										{checkoutID && paymentType == 'applepay' &&
+											<ApplePayForm checkoutID={checkoutID} orderID={createdOrder.id} />
+										}
 									</div>
 								</label>
 							</>

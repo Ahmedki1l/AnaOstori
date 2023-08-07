@@ -5,7 +5,7 @@ import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { createCurriculumAPI, createCurriculumSectionAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, updateCurriculumAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../../constants/ar'
@@ -32,11 +32,9 @@ const CreateCoursePath = (props) => {
     const [curriculmName, setCurriculumName] = useState()
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [sectionDetails, setSectionDetails] = useState([])
-    const storeData = useSelector((state) => state?.globalStore);
     const router = useRouter()
     const dispatch = useDispatch()
 
-    console.log(sectionDetails);
 
     useEffect(() => {
         courseForm.setFieldValue('pathTitle', curriculmName)
@@ -46,7 +44,6 @@ const CreateCoursePath = (props) => {
 
     const getCurriculumDetails = async () => {
         let body = {
-            accessToken: storeData?.accessToken,
             curriculumId: routeParams.coursePathId,
         }
         await getCurriculumDetailsAPI(body).then((res) => {
@@ -60,10 +57,8 @@ const CreateCoursePath = (props) => {
 
     const getSectionList = async () => {
         let body = {
-            accessToken: storeData?.accessToken,
             curriculumId: routeParams.coursePathId,
         }
-        console.log(body);
         await getSectionListAPI(body).then((res) => {
             setSectionDetails(res.data)
         }).catch((error) => {
@@ -74,7 +69,6 @@ const CreateCoursePath = (props) => {
 
     const updateCurriculumList = async () => {
         let data = {
-            accessToken: storeData?.accessToken,
         }
         await getCurriculumIdsAPI(data).then((res) => {
             dispatch({
@@ -91,7 +85,6 @@ const CreateCoursePath = (props) => {
                 name: item.pathTitle,
             }
             let data = {
-                accessToken: storeData?.accessToken,
                 data: addCurriculum
             }
             await createCurriculumAPI(data).then((res) => {
@@ -113,7 +106,6 @@ const CreateCoursePath = (props) => {
                 id: routeParams.coursePathId,
             }
             let body = {
-                accessToken: storeData.accessToken,
                 data: editCurriclum
             }
             await updateCurriculumAPI(body).then((res) => {
@@ -129,16 +121,11 @@ const CreateCoursePath = (props) => {
         }
     }
     const handleAddSectionModal = () => {
-        // let addSection = {
-        //     name: values.name,
-        // }
-        // console.log(addSection);
         setIsModelForAddFolderOpen(true);
     };
 
     const handleSection = async ({ name }) => {
         let data = {
-            accessToken: storeData.accessToken,
             data: {
                 name: name,
                 curriculumId: routeParams.coursePathId,

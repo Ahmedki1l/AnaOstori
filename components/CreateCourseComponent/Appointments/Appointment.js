@@ -59,7 +59,6 @@ const Appointments = ({ courseId, courseType }) => {
         if (isAvailabilityEdit) {
             let body = {
                 data: values,
-                accessToken: storeData?.accessToken,
                 availabilityId: editAvailability?.id
             }
             await editAvailabilityAPI(body).then((res) => {
@@ -71,7 +70,6 @@ const Appointments = ({ courseId, courseType }) => {
         } else {
             let body = {
                 data: values,
-                accessToken: storeData?.accessToken,
             }
             await createCourseAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
@@ -86,7 +84,6 @@ const Appointments = ({ courseId, courseType }) => {
     const getAllAvailability = async () => {
         let body = {
             courseId: courseId,
-            accessToken: storeData?.accessToken,
         }
         await getAllAvailabilityAPI(body).then((res) => {
             console.log(res);

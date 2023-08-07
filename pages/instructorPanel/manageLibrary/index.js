@@ -41,7 +41,6 @@ function Index() {
         setLoading(true)
         let data = {
             folderType: selectedItem,
-            accessToken: storeData?.accessToken
         }
         await getFolderListAPI(data).then((res) => {
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
@@ -62,7 +61,6 @@ function Index() {
         setFolderList([])
         setLoading(true)
         let body = {
-            accessToken: storeData?.accessToken,
             folderId: folderId
         }
         await getItemListAPI(body).then((res) => {
@@ -86,7 +84,6 @@ function Index() {
 
     const handleCreateFolder = async ({ name }) => {
         let data = {
-            accessToken: storeData?.accessToken,
             data: {
                 name: name,
                 type: selectedItem,

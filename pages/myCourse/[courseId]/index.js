@@ -32,7 +32,6 @@ export default function Index() {
                 try {
                     const params = {
                         courseID,
-                        accessToken: storeData?.accessToken
                     }
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const courseProgressReq = getCourseProgressAPI(params)
@@ -59,7 +58,7 @@ export default function Index() {
             }
             getPageProps()
         }
-    }, [courseID, storeData?.accessToken])
+    }, [courseID])
 
     useEffect(() => {
         const date = new Date(courseCurriculum?.enrollment?.createdAt);
@@ -76,7 +75,6 @@ export default function Index() {
             const params = {
                 courseID,
                 itemID,
-                accessToken: storeData?.accessToken
             }
             await getCourseItemAPI(params).then((item) => {
                 router.push(`${item?.data?.url}`)

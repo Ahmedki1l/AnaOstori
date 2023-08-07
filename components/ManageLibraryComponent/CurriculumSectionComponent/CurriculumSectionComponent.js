@@ -6,8 +6,7 @@ import Icon from '../../CommonComponents/Icon'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { useSelector } from 'react-redux'
-import { createCurriculumSectionAPI, updateCurriculumSectionAPI } from '../../../services/apisService'
+import { addItemIntoSectionAPI, createCurriculumSectionAPI, updateCurriculumSectionAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 
 const CurriculumSectionComponent = ({ onclose, sectionList }) => {
@@ -20,8 +19,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const [selectedSection, setSelectedSection] = useState()
     const [editSectionName, setEditSectionName] = useState(false)
 
-    console.log(selectedSection);
-    const storeData = useSelector((state) => state?.globalStore);
+
     const router = useRouter()
     const showSectionItem = (index) => {
         const data = [...sectionDetails]
@@ -49,16 +47,13 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     }
     const handleCreateSection = async ({ name }) => {
         let data = {
-            accessToken: storeData.accessToken,
             data: {
                 name: name,
                 curriculumId: router.query.coursePathId,
                 order: 4
             }
         }
-        console.log(data);
         await createCurriculumSectionAPI(data).then((res) => {
-            console.log(res);
             setIsModelForAddFolderOpen(false)
         }).catch((error) => {
             console.log(error);
@@ -71,10 +66,8 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             id: selectedSection?.id,
         }
         let body = {
-            accessToken: storeData.accessToken,
             data: editSectionName
         }
-        console.log(body);
         await updateCurriculumSectionAPI(body).then((res) => {
             courseForm.setFieldValue(item.pathTitle)
             setCurriculumName(res.data.data.name)
@@ -91,9 +84,19 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         setSelectedSection(section)
         setEditSectionName(true)
     }
-    const handleAddItemtoSection = (itemList) => {
-        console.log(itemList);
-        console.log(selectedSection.id);
+    const handleAddItemtoSection = async (itemList) => {
+        let body = {
+            data: {
+                sectionId: selectedSection?.id,
+                items: itemList
+            }
+        }
+        console.log(body);
+        await addItemIntoSectionAPI(body).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+        })
     }
 
     return (

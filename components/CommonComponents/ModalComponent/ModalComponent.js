@@ -32,8 +32,8 @@ const ModalComponent = (props) => {
     const dispatch = useDispatch();
 
     const handleAccountRecovery = async () => {
-        await accountRecovery(storeData?.accessToken).then(async (res) => {
-            await viewProfileAPI(storeData?.accessToken).then(res => {
+        await accountRecovery().then(async (res) => {
+            await viewProfileAPI().then(res => {
                 dispatch({
                     type: 'SET_PROFILE_DATA',
                     viewProfileData: res?.data,

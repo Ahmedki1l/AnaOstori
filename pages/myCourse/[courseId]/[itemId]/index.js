@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useWindowSize from '../../../../hooks/useWindoSize'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { courseCurriculumAPI, getCompleteCourseItemIDAPI, getCourseItemAPI, getCourseProgressAPI, markItemCompleteAPI } from '../../../../services/apisService';
 import { signOutUser } from '../../../../services/fireBaseAuthService';
 import CCItemListComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemListComponent/CCItemListComponent'
@@ -17,7 +17,6 @@ import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 
 
 export default function Index() {
-    const storeData = useSelector((state) => state?.globalStore);
     const dispatch = useDispatch();
     const smallScreen = useWindowSize().smallScreen
     const [selectedTab, setSelectedTab] = useState(1)
@@ -45,7 +44,6 @@ export default function Index() {
             const params = {
                 courseID,
                 itemID,
-                accessToken: storeData?.accessToken
             }
             await getCourseItemAPI(params).then((res) => {
                 setNewSelectedCourseItem(res.data)
@@ -62,7 +60,6 @@ export default function Index() {
                     const params = {
                         courseID,
                         itemID: currentItemId,
-                        accessToken: storeData?.accessToken
                     }
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
@@ -100,7 +97,7 @@ export default function Index() {
             }
             getPageProps()
         }
-    }, [courseID, storeData?.accessToken, currentItemId])
+    }, [courseID, currentItemId])
 
     useEffect(() => {
         if (!smallScreen) setSelectedTab(1)
@@ -141,7 +138,6 @@ export default function Index() {
             const params = {
                 courseID,
                 itemID,
-                accessToken: storeData?.accessToken
             }
             await markItemCompleteAPI(params).then((res) => {
                 let data = { itemId: itemID }

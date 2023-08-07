@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Modal } from 'antd';
 import styles from './ModelForAddItemLibrary.module.scss'
-import { useSelector } from 'react-redux';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
 import { addItemToFolderAPI, uploadFileAPI } from '../../../services/apisService';
+import Spinner from '../../CommonComponents/spinner';
+
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
@@ -16,32 +17,32 @@ const ModelForAddItemLibrary = ({
     selectedFolderId,
     selectedItem,
 }) => {
-
+    console.log(folderType);
     const [form] = Form.useForm();
-    const storeData = useSelector((state) => state?.globalStore);
     const isEdit = selectedFolder != undefined ? true : false
     const [uploadLoader, setUploadLoader] = useState(false)
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
-    const [closebutton, setCloseButton] = useState(true)
 
     useEffect(() => {
         form.setFieldValue('fileTitle', selectedItem?.name)
         form.setFieldValue('fileDescription', selectedItem?.description)
+        form.setFieldValue('numberOfQuestions', selectedItem?.numberOfQuestions)
+        form.setFieldValue('numberOfQuestionsToPass', selectedItem?.numberOfQuestionsToPass)
+        form.setFieldValue('examLink', selectedItem?.linkKey)
         setFileName(selectedItem?.linkKey)
     }, [selectedItem])
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
-        setFileName(e.target.files[0].name)
         let formData = new FormData();
         formData.append("file", e.target.files[0]);
         const data = {
             formData,
-            accessToken: storeData?.accessToken
         }
         await uploadFileAPI(data).then((res) => {
             setFileUploadResponceData(res.data)
+            setFileName(e.target.files[0].name)
             setUploadLoader(false)
         }).catch((error) => {
             console.log(error);
@@ -50,24 +51,30 @@ const ModelForAddItemLibrary = ({
     }
 
     const addItemToFolder = async (e) => {
-        const { key, bucket, mime } = fileUploadResponceData
-        const body = {
-            name: e.fileTitle,
-            description: e.fileDescription,
-            type: "file",
-            linkKey: key,
-            linkBucket: bucket,
-            linkMime: mime,
-            previewAvailable: true,
+        let body = {}
+        if (folderType !== "quiz") {
+            body.name = e.fileTitle
+            body.description = e.fileDescription
+            body.type = folderType
+            body.linkKey = fileUploadResponceData?.key
+            body.linkBucket = fileUploadResponceData?.bucket
+            body.linkMime = fileUploadResponceData?.mime
+            body.previewAvailable = true
         }
-        console.log(body);
+        else {
+            body.name = e.fileTitle
+            body.description = e.fileDescription
+            body.type = folderType
+            body.previewAvailable = true
+            body.numberOfQuestions = e.numberOfQuestions
+            body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
+            body.linkKey = e.examLink
+        }
         const data = {
-            accessToken: storeData?.accessToken,
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
         })
@@ -75,9 +82,8 @@ const ModelForAddItemLibrary = ({
         setIsModelForAddItemOpen(false);
     }
     const handleRemoveFile = () => {
-        setFileName([])
-        setFileUploadResponceData([])
-        setCloseButton(false)
+        setFileName()
+        setFileUploadResponceData()
     }
     return (
         <>
@@ -127,11 +133,15 @@ const ModelForAddItemLibrary = ({
                                             <p>ارفق الملف</p>
                                         </div>
                                     </label>
-                                    {console.log(fileName)}
-                                    {fileName && <div className={styles.uploadFileNameWrapper}>
-                                        {closebutton && <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>}
-                                        {fileName}
-                                    </div>}
+                                    {fileName &&
+                                        <div className={styles.uploadFileNameWrapper}>
+                                            <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>
+                                            {fileName}
+                                        </div>
+                                    }
+                                    {uploadLoader &&
+                                        <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
+                                    }
                                 </div>
                             }
                             {folderType == "quiz" &&
@@ -139,7 +149,7 @@ const ModelForAddItemLibrary = ({
                                     <div className="flex">
                                         <div>
                                             <FormItem
-                                                name={'questions'}
+                                                name={'numberOfQuestions'}
                                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                             >
                                                 <Input
@@ -152,7 +162,7 @@ const ModelForAddItemLibrary = ({
                                         </div>
                                         <div>
                                             <FormItem
-                                                name={'passed'}
+                                                name={'numberOfQuestionsToPass'}
                                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                             >
                                                 <Input
@@ -181,7 +191,8 @@ const ModelForAddItemLibrary = ({
                         {console.log(fileUploadResponceData)}
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} disabled={fileUploadResponceData?.key == undefined ? true : false} >{isEdit ? "حفظ" : "إنشاء"}</button>
+                                {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileUploadResponceData?.key == undefined ? true : false} >{isEdit ? "حفظ" : "إنشاء"}</button>}
+                                {folderType == "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>}
                             </div>
                             {isEdit &&
                                 <div className={styles.deleteVideoBtn}>

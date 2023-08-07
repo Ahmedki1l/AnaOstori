@@ -121,7 +121,6 @@ export default function Attendance(props) {
     }
     const handlSelectAvailability = async (e) => {
         let body = {
-            accessToken: storeData?.accessToken,
             availabilityId: e,
         }
         await getAttendanceListAPI(body).then((res) => {
@@ -142,7 +141,6 @@ export default function Attendance(props) {
 
     const handleAttendanceSave = async () => {
         let body = {
-            accessToken: storeData?.accessToken,
             data: { data: [] }
 
         };

@@ -7,8 +7,7 @@ import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLibrary'
 import Spinner from '../../CommonComponents/spinner'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { getFolderListAPI, updateFolderAPI } from '../../../services/apisService'
-import { useSelector } from 'react-redux'
+import { updateFolderAPI } from '../../../services/apisService'
 
 
 const ManageLibraryTableComponent = ({
@@ -28,11 +27,9 @@ const ManageLibraryTableComponent = ({
     const [selectedFolder, setSelectedFolder] = useState()
     const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
-    const storeData = useSelector((state) => state?.globalStore);
 
 
     const handleEditIconClick = async (item) => {
-        console.log(item);
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
             setSelectedFolder(item)
@@ -44,18 +41,15 @@ const ManageLibraryTableComponent = ({
     };
 
     const handleEditFolder = async ({ name }) => {
-        console.log(name);
         let editFolderBody = {
             id: selectedItem?.id,
             name: name,
             type: selectedItem?.type,
         }
         let data = {
-            accessToken: storeData?.accessToken,
             data: editFolderBody
         }
         await updateFolderAPI(data).then((res) => {
-            console.log(res);
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch((error) => {
@@ -73,7 +67,6 @@ const ManageLibraryTableComponent = ({
     }
 
     const showItemListOfSelectedFolder = async (item) => {
-        console.log(item);
         if (tableDataType == "item") return
         setTypeOfListData("item")
         setSelectedFolder(item)
@@ -174,7 +167,6 @@ const ManageLibraryTableComponent = ({
                 open={isModelForAddFolderOpen}
                 setOpen={setIsModelForAddFolderOpen}
                 onSave={handleEditFolder}
-                // onDelete={handleDeleteSection}
                 isEdit={true}
                 itemName={selectedFolder?.name}
             />}

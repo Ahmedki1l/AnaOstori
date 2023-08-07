@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Modal, Upload as AntdUpload } from 'antd';
 import styled from 'styled-components'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
-import { useSelector } from 'react-redux';
 import { uploadFileAPI, uploadProfileImage } from '../../services/apisService';
 
 
@@ -19,7 +18,6 @@ const Upload = ({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [fileList, setFileList] = useState([]);
-    const storeData = useSelector((state) => state?.globalStore);
 
     const handleCancel = () => setPreviewOpen(false);
 
@@ -32,7 +30,6 @@ const Upload = ({
 
         const data = {
             formData,
-            accessToken: storeData?.accessToken
         }
         console.log("data", data);
         await uploadFileAPI(data).then((res) => {

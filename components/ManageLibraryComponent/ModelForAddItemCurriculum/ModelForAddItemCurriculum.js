@@ -5,12 +5,11 @@ import styles from './ModelForAddItemCurriculum.module.scss'
 import styled from 'styled-components';
 import SearchInput from '../../antDesignCompo/SearchInput';
 import { getFolderListAPI, getItemListAPI } from '../../../services/apisService';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import Table from '../../antDesignCompo/Table';
 import { fullDate } from '../../../constants/DateConverter';
 import Icon from '../../CommonComponents/Icon';
-import Spinner from '../../CommonComponents/spinner';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -44,7 +43,6 @@ const ModelForAddItemCurriculum = ({
     handleAddItemtoSection,
 }) => {
 
-    const storeData = useSelector((state) => state?.globalStore);
     const dispatch = useDispatch()
     const [selectedItem, setSelectedItem] = useState('video');
     const [folderList, setFolderList] = useState([])
@@ -53,23 +51,9 @@ const ModelForAddItemCurriculum = ({
     const [selectedRow, setSelectedRow] = useState(null)
     const [typeOfListdata, setTypeOfListData] = useState('folder')//folder or item
     const [selectedItems, setSelectedItems] = useState([]);
-    const handleClickOnIconCell = async (folderId, index) => {
-        let body = {
-            accessToken: storeData?.accessToken,
-            folderId: folderId.id
-        }
-        await getItemListAPI(body).then((res) => {
-            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
-        }).catch((error) => {
-            console.log(error);
-        })
-        setRowSelection(true)
-        setSelectedRow(index)
-        setTypeOfListData("item")
-    }
 
     const IconCell = ({ item, index }) => {
-        console.log(item.type);
+        console.log(item);
         return (
             <div className='flex items-center' onClick={() => handleClickOnIconCell(item, index)}>
                 {typeOfListdata == "folder" && <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />}
@@ -83,15 +67,29 @@ const ModelForAddItemCurriculum = ({
             </div>
         )
     }
-
-    const data = folderList.map((item, index) => {
-        return {
-            itemName: <IconCell item={item} />,
-            createAt: fullDate(item?.createdAt),
-            updateAt: fullDate(item?.updatedAt),
-            key: item.id
+    const handleClickOnIconCell = async (folderId, index) => {
+        let body = {
+            folderId: folderId.id
         }
-    })
+        await getItemListAPI(body).then((res) => {
+            setTypeOfListData("item")
+            let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
+                return {
+                    itemName: <IconCell item={item} />,
+                    createAt: fullDate(item?.createdAt),
+                    updateAt: fullDate(item?.updatedAt),
+                    key: item.id
+                }
+            })
+            setFolderList(data)
+        }).catch((error) => {
+            setFolderList([])
+            console.log(error);
+        })
+        setRowSelection(true)
+        setSelectedRow(index)
+    }
+
 
     useEffect(() => {
         getfolderList(selectedItem)
@@ -100,12 +98,21 @@ const ModelForAddItemCurriculum = ({
     const getfolderList = async (folderType) => {
         let data = {
             folderType: folderType,
-            accessToken: storeData?.accessToken
         }
         await getFolderListAPI(data).then((res) => {
-            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            setTypeOfListData("folder")
+            let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
+                return {
+                    itemName: <IconCell item={item} />,
+                    createAt: fullDate(item?.createdAt),
+                    updateAt: fullDate(item?.updatedAt),
+                    key: item.id
+                }
+            })
+            setFolderList(data)
         }).catch((error) => {
             console.log(error);
+            setFolderList([])
             if (error?.response?.status == 401) {
                 signOutUser()
                 dispatch({
@@ -117,29 +124,42 @@ const ModelForAddItemCurriculum = ({
 
     const handleItemSelect = async (id) => {
         setSelectedItem(id)
-        setTypeOfListData("folder")
         setRowSelection(false)
     }
 
-    const customizeRenderEmpty = () => (
-        <div className={styles.tableBodyArea}>
-            <div className={styles.noDataManiArea}>
-                <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                <p className={styles.noElements}>لا توجد عناصر بهذا المجلد</p>
-                <button className={styles.libraryBtn}  >الإنتقال إلى إدارة المكتبة</button>
+    // const customizeRenderEmpty = () => (
+    //     <div className={styles.tableBodyArea}>
+    //         <div className={styles.noDataManiArea}>
+    //             <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+    //             <p className={styles.noElements}>لا توجد عناصر بهذا المجلد</p>
+    //             <button className={styles.libraryBtn}  >الإنتقال إلى إدارة المكتبة</button>
+    //         </div>
+    //     </div>
+    // )
+
+    const customizeRenderEmpty = () => {
+        if (typeOfListdata == "item" && folderList.length < 0) {
+            <div className={styles.tableBodyArea}>
+                <div className={styles.noDataManiArea}>
+                    <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+                    <p className={styles.noElements}>لا توجد عناصر بهذا المجلد</p>
+                    <button className={styles.libraryBtn}  >الإنتقال إلى إدارة المكتبة</button>
+                </div>
             </div>
-        </div >
-    )
+        }
+    };
+
 
     const showFolderList = () => {
         setVideoFolder(false)
-        setTypeOfListData("folder")
         setRowSelection(false)
+        getfolderList(selectedItem)
     }
 
-    const handleAddIteminSection = () => {
+    const handleAddItemInSection = async () => {
         handleAddItemtoSection(selectedItems)
     }
+
 
 
     return (
@@ -177,21 +197,20 @@ const ModelForAddItemCurriculum = ({
                                 <p className={styles.folderDetailsName}> {videoFolder ? videoFolder : "الفيديوهات"}</p>
                             </div>
                         }
-                        <ConfigProvider renderEmpty={customizeRenderEmpty}>
+                        {folderList.length > 0 && <ConfigProvider renderEmpty={customizeRenderEmpty}>
                             <Table
                                 typeOfListdata={typeOfListdata}
                                 minheight={typeOfListdata == "item" ? 250 : 400}
-                                setTypeOfListData={setTypeOfListData}
                                 rowSelection={rowSelection}
                                 selectedItem={selectedItem}
                                 tableColumns={tableColumns}
-                                tableData={data}
+                                tableData={folderList.length > 0 ? folderList : []}
                                 setSelectedItems={setSelectedItems}
                             />
-                        </ConfigProvider>
+                        </ConfigProvider>}
                         {typeOfListdata == "item" &&
                             <div className={styles.createSectionBtnBox}>
-                                <button className='primarySolidBtn' onClick={() => handleAddIteminSection()}>إضافة x عنصر</button>
+                                <button className='primarySolidBtn' onClick={() => handleAddItemInSection()}>إضافة x عنصر</button>
                             </div>
                         }
                     </div>

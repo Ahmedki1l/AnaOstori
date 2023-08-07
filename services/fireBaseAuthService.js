@@ -50,6 +50,7 @@ export const forgotPassword = async (email) => {
 
 export const signupWithEmailAndPassword = async (email, password, firstName, lastName, phoneNumber, gender) => {
 	await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
+		localStorage.setItem("accessToken", userCredential?.user?.accessToken);
 		const body = {
 			firstName: firstName,
 			lastName: lastName,
@@ -59,7 +60,6 @@ export const signupWithEmailAndPassword = async (email, password, firstName, las
 		}
 		const params = {
 			data: body,
-			accessToken: userCredential?.user?.accessToken
 		}
 		await updateProfile(params).then(res => {
 			Router.push('/login')

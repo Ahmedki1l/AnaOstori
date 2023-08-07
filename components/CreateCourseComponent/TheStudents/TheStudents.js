@@ -31,7 +31,6 @@ const TheStudenet = (props) => {
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
     const availabilityList = storeData?.availabilityList;
-    console.log("allavailability", storeData);
 
     const baseUrl = LinkConst.File_Base_Url2
 
@@ -56,7 +55,6 @@ const TheStudenet = (props) => {
     const getAllStudentList = async (e) => {
         console.log(availabilityList);
         let data = {
-            accessToken: storeData?.accessToken,
             availabilityId: e,
             courseId: courseId,
         }
