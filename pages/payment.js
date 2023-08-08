@@ -55,7 +55,7 @@ export default function Payment(props) {
                 </div>
                 :
                 <>
-                    {transactionDetails && isPaymentSuccess ?
+                    {(transactionDetails && isPaymentSuccess) ?
                         <div className={`maxWidthDefault ${styles.mainArea}`}>
                             <div className='m-5'>
                                 <div className={styles.circle}>

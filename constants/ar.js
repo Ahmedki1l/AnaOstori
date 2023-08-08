@@ -28,7 +28,8 @@ export const toastErrorMessage = {
     seatsAvailableMsg: "رح نعلمك اول ما نضيف او نوسع المقاعد", //you will get notified once seats are available
     emailUsedErrorMsg: 'الايميل مستخدم مسبقًا', //'Email already used'
     uniqueNameError: "name must be unique",
-    curriculumNameError: 'Curriculum name already in use'
+    curriculumNameError: 'Curriculum name already in use',
+    sameFileError: "this item already exist in this section",
 }
 
 export const toastSuccessMessage = {

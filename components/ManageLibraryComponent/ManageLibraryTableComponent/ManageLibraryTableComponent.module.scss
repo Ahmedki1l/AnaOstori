@@ -147,12 +147,20 @@
 .folderDetailsTable {
     display: flex;
     margin: 5px 0px 15px;
+    align-items: center;
 }
 
 .folderDetailsVideo {
-    font-size: 16px;
+    font-size: 18px;
     color: #2d2e2d80;
-    margin-left: 10px;
+    padding: 3px 5px;
+
+    &:hover {
+        cursor: pointer;
+        color: #000000;
+        background-color: #7c7c7c18;
+        border-radius: 3px;
+    }
 }
 
 .folderDetailsName {

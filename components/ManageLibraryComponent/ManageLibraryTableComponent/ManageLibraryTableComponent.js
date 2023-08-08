@@ -8,6 +8,7 @@ import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLib
 import Spinner from '../../CommonComponents/spinner'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
 import { updateFolderAPI } from '../../../services/apisService'
+import Empty from '../../CommonComponents/Empty'
 
 
 const ManageLibraryTableComponent = ({
@@ -87,7 +88,7 @@ const ManageLibraryTableComponent = ({
                         <div>
                             <div className={styles.folderDetailsTable}>
                                 <p className={`cursor-pointer ${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>الفيديوهات</p>
-                                <p>{'>'}</p>
+                                <p className={styles.folderDetailsName}>{'>'}</p>
                                 <p className={styles.folderDetailsName}> {selectedFolder.name ? selectedFolder.name : "الفيديوهات"}</p>
                             </div>
                         </div>
@@ -140,17 +141,7 @@ const ManageLibraryTableComponent = ({
                         }
                     </table>
                     {(folderTableData.length == 0 && !loading) &&
-                        <div className={styles.tableBodyArea}>
-                            <div className={styles.noDataMainArea}>
-                                <div>
-                                    <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                                    <p className={`fontBold py-2 ${styles.raisedcontent}`}>ما رفعت أي محتوى</p>
-                                    <div className={styles.createCourseBtnBox}>
-                                        <button className='primarySolidBtn'>إضافة مجلد</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <Empty buttonText={'إضافة مجلد'} emptyText={'ما رفعت أي محتوى'} containerhight={450} />
                     }
                     {loading &&
                         <div className={styles.tableBodyArea}>

@@ -127,7 +127,7 @@ export default function PaymentInfoForm(props) {
 										<Logo height={27} width={53} logoName={'applePayLogo'} alt={'Payment Methode Logo'} />
 									</div>
 									<div className={styles.creditCardWrapper}>
-										{checkoutID && paymentType == 'applepay' &&
+										{(checkoutID && paymentType == 'applepay') &&
 											<ApplePayForm checkoutID={checkoutID} orderID={createdOrder.id} />
 										}
 									</div>
@@ -144,7 +144,7 @@ export default function PaymentInfoForm(props) {
 								<Logo height={27} width={53} logoName={'madaPaymentLogo'} alt={'Payment Methode Logo'} />
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{checkoutID && paymentType == 'mada' &&
+								{(checkoutID && paymentType == 'mada') &&
 									<MadaCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
 								}
 							</div>
@@ -159,7 +159,7 @@ export default function PaymentInfoForm(props) {
 								<Logo height={27} width={120} logoName={'creditCardPaymentLogo'} alt={'Payment Methode Logo'} />
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{checkoutID && paymentType == 'credit' &&
+								{(checkoutID && paymentType == 'credit') &&
 									<CreditCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
 								}
 							</div>
@@ -197,13 +197,12 @@ export default function PaymentInfoForm(props) {
 							</div>
 						</label>
 					</div>
-					{!isSmallScreen && createdOrder.course.type != "on-demand" &&
+					{(!isSmallScreen && createdOrder.course.type != "on-demand") &&
 						<div className={styles.backBtnBox}>
 							<button className='fontBold primaryStrockedBtn'>
 								<div className={styles.arrowIcon}>
 									<AllIconsComponenet height={20} width={20} iconName={'rightArrowIcon'} color={'#F26722'} />
 								</div>
-								{/* <EastRoundedIcon className={styles.arrowIcon} /> */}
 								الصفحة السابقة </button>
 						</div>
 					}

@@ -36,15 +36,16 @@ export async function getServerSideProps(ctx) {
 
 	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/mix`)
 
-	const courseCurriculumReq = axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
+	// const courseCurriculumReq = axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
 
 
 	const [maleDates, femaleDates, mixDates, courseCurriculum] = await Promise.all([
 		maleDatesReq,
 		femaleDatesReq,
 		mixDatesReq,
-		courseCurriculumReq
+		// courseCurriculumReq
 	])
+	console.log(maleDatesReq, 48);
 
 	if (courseDetails.data == null) {
 		return {
@@ -59,7 +60,7 @@ export async function getServerSideProps(ctx) {
 			maleDates: maleDates.data,
 			femaleDates: femaleDates.data,
 			mixDates: mixDates.data,
-			courseCurriculum: courseCurriculum.data
+			// courseCurriculum: courseCurriculum?.data
 		}
 	}
 }
