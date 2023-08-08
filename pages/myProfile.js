@@ -14,13 +14,12 @@ export default function MyProfile() {
 	const userDetails = storeData?.viewProfileData;
 	const myCourses = storeData?.myCourses
 
-
 	return (
 		<>
 			{userDetails &&
 				<div className="maxWidthDefault sm:p-4 p-0">
 					<div className={`pt-8 ${styles.profileInfoWrapper}`}>
-						<ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={mediaUrl(userDetails?.avatarBucket, userDetails?.avatarKey)} />
+						<ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={userDetails?.avatarKey == null ? userDetails?.avatar : mediaUrl(userDetails?.avatarBucket, userDetails?.avatarKey)} />
 						<p className={`font-bold ${styles.userNameText}`}>{userDetails?.firstName + ' ' + userDetails?.lastName}</p>
 						<div className={styles.updateProfileBtnBox}>
 							<button className='primaryStrockedBtn' onClick={() => Router.push('/updateProfile')}>تعديل الملف الشخصي</button>

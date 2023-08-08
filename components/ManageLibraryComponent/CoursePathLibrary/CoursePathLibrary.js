@@ -15,7 +15,6 @@ const CoursePathLibrary = ({
     const router = useRouter()
 
     const onEdit = (item) => {
-        console.log(item);
         router.push({
             pathname: `/instructorPanel/manageLibrary/editCoursePath`,
             query: { coursePathId: item.id },

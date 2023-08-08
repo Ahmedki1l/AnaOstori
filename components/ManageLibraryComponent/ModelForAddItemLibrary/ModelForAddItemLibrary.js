@@ -17,7 +17,6 @@ const ModelForAddItemLibrary = ({
     selectedFolderId,
     selectedItem,
 }) => {
-    console.log(folderType);
     const [form] = Form.useForm();
     const isEdit = selectedFolder != undefined ? true : false
     const [uploadLoader, setUploadLoader] = useState(false)

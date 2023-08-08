@@ -25,6 +25,7 @@
     "node-fetch": "^3.3.0",
     "qrcode.react": "^3.1.0",
     "react": "18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-file-utils": "^1.2.0",
     "react-indiana-drag-scroll": "^2.2.0",

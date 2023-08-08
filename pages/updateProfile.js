@@ -15,7 +15,6 @@ import { mediaUrl } from '../constants/DataManupulation';
 
 
 const UpdateProfile = () => {
-
     const storeData = useSelector((state) => state?.globalStore);
     const [firstName, setFirstName] = useState(storeData?.viewProfileData?.firstName)
 
@@ -23,7 +22,7 @@ const UpdateProfile = () => {
 
     const [showLoader, setShowLoader] = useState(false);
 
-    const [profileUrl, setProfileUrl] = useState(mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
+    const [profileUrl, setProfileUrl] = useState(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
 
     const [uploadLoader, setUploadLoader] = useState(false)
 
@@ -33,7 +32,7 @@ const UpdateProfile = () => {
     useEffect(() => {
         setFirstName(storeData?.viewProfileData?.firstName);
         setLastName(storeData?.viewProfileData?.lastName)
-        setProfileUrl(mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
+        setProfileUrl(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
     }, [storeData?.viewProfileData])
 
     const uploadPhoto = async (e) => {

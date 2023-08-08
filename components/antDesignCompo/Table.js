@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Table as AntdTable } from 'antd';
 import styled from 'styled-components';
+import Spinner from '../CommonComponents/spinner';
+import Empty from '../CommonComponents/Empty';
 
 const StyledTable = styled(AntdTable)`
     padding: 0;
@@ -12,18 +14,32 @@ const Table = ({
     rowSelection,
     tableData,
     minheight,
-    setSelectedItems,
+    onItemSelection,
+    tableLoading,
+    onEmptyBtnClick,
+    selectedItems,
 }) => {
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const onSelectChange = (newSelectedRowKeys) => {
-        setSelectedItems(newSelectedRowKeys)
-        setSelectedRowKeys(newSelectedRowKeys);
+        onItemSelection(newSelectedRowKeys)
     };
+
     const rowSelectionForItem = {
-        selectedRowKeys,
+        selectedItems,
         onChange: onSelectChange,
     };
+
+    const CustomLoadingIndicator = (
+        <Spinner borderwidth={5} width={3} height={3} />
+    );
+
+    const handleCreateFolder = () => {
+        onEmptyBtnClick()
+    }
+
+    const customEmptyComponent = (
+        <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={'لم تقم بإضافة اي مجلد'} containerhight={300} onClick={() => handleCreateFolder()} />
+    )
 
     return (
         <div>
@@ -35,6 +51,8 @@ const Table = ({
                 scroll={{
                     y: minheight,
                 }}
+                loading={{ indicator: CustomLoadingIndicator, spinning: tableLoading }}
+                locale={{ emptyText: customEmptyComponent }}
             />
         </div>
     );

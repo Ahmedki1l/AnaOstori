@@ -17,7 +17,7 @@ function Index() {
     const router = useRouter()
     const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
-    const [selectedItem, setSelectedItem] = useState('curriculum');
+    const [selectedItem, setSelectedItem] = useState(router.query.folderType ? router.query.folderType : 'video');
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
@@ -32,6 +32,10 @@ function Index() {
     const handleItemSelect = async (selcetedItem) => {
         getfolderList(selcetedItem)
         setSelectedItem(selcetedItem)
+        router.push({
+            pathname: '/instructorPanel/manageLibrary',
+            query: { folderType: selcetedItem }
+        })
         setTypeOfListData("folder")
         setLoading(true)
     }

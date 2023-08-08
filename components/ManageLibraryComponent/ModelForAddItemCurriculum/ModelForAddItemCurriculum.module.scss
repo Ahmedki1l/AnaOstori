@@ -87,6 +87,14 @@
     font-size: 16px;
     color: #2d2e2d80;
     margin-right: 10px;
+    padding: 3px 5px;
+
+    &:hover {
+        cursor: pointer;
+        color: #000000;
+        background-color: #7c7c7c18;
+        border-radius: 3px;
+    }
 }
 
 .folderDetailsName {

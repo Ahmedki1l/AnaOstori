@@ -115,6 +115,7 @@ const scheduleTokenRefresh = async (user) => {
 	tokenRefreshTimer = setTimeout(async () => {
 		try {
 			const idToken = await user.getIdToken();
+			localStorage.setItem("accessToken", idToken);
 			scheduleTokenRefresh(user);
 		} catch (error) {
 			console.error("Error refreshing token:", error);

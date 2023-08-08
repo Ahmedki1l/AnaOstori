@@ -19,39 +19,22 @@ instance.interceptors.request.use(
 	}
 );
 
-// import axios from 'axios';
-
-// const baseUrl = process.env.API_BASE_URL;
-
-// const instance = (accessToken) => {
-// 	return axios.create({
-// 		baseURL: baseUrl,
-// 		headers: {
-// 			'Authorization': `Bearer ${accessToken}`,
-// 			'Content-Type': 'application/json'
-// 		}
-// 	})
-// }
-
-// const instance2 = (accessToken) => {
-// 	console.log('instance2s');
-// 	return axios.create({
-// 		baseURL: baseUrl,
-// 		headers: {
-// 			'Authorization': `Bearer ${accessToken}`,
-// 			'Content-Type': 'multipart/form-data'
-// 		}
-// 	})
-// }
-
-// // export const uploadProfileImage = (data) => {
-// // 	return axios.post(`${baseUrl}/userprofile/upload`, data?.formData, {
-// // 		headers: {
-// // 			'Authorization': `Bearer ${data?.accessToken}`,
-// // 			'Content-Type': 'multipart/form-data'
-// // 		}
-// // 	})
-// // }
+const instance2 = axios.create({
+	baseURL: baseUrl,
+	headers: () => ({
+		Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+		'Content-Type': 'multipart/form-data',
+	}),
+})
+instance2.interceptors.request.use(
+	(config) => {
+		config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
 
 export const uploadProfileImage = (data) => { return instance2.post('/userprofile/upload', data?.formData) }
 export const uploadFileAPI = (data) => { return instance2.post('/file/upload', data?.formData) }
