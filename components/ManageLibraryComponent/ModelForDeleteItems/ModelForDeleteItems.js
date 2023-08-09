@@ -5,7 +5,8 @@ import styles from './ModelForDeleteItems.module.scss'
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
     onCloseModal,
-    deleteItemType
+    deleteItemType,
+    onDelete,
 }
 ) => {
     const deleteModalProps = {
@@ -42,6 +43,7 @@ const ModelForDeleteItems = ({
     }
 
     const handleDeleteItems = () => {
+        onDelete()
         onCloseModal()
     };
 

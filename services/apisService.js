@@ -107,7 +107,10 @@ export const getCurriculumDetailsAPI = (data) => { return instance.get(`/curricu
 export const getSectionListAPI = (data) => { return instance.get(`/section?curriculumId=${data.curriculumId}`) }
 export const createCurriculumSectionAPI = (data) => { return instance.post(`/section/create`, data?.data) }
 export const updateCurriculumSectionAPI = (data) => { return instance.post(`/section/update`, data?.data) }
+export const updateMultipleSectionOrderAPI = (data) => { return instance.post(`/section/update?type=multipleOrder`, data) }
 export const addItemIntoSectionAPI = (data) => { return instance.post(`/section/item`, data?.data) }
+export const removeItemFromSectionAPI = (data) => { return instance.post(`/section/item/delete`, data) }
+
 
 
 

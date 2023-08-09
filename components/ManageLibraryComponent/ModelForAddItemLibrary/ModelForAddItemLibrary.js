@@ -187,7 +187,6 @@ const ModelForAddItemLibrary = ({
                                 </>
                             }
                         </div>
-                        {console.log(fileUploadResponceData)}
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
                                 {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileUploadResponceData?.key == undefined ? true : false} >{isEdit ? "حفظ" : "إنشاء"}</button>}

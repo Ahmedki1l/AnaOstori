@@ -38,7 +38,7 @@ const Table = ({
     }
 
     const customEmptyComponent = (
-        <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={'لم تقم بإضافة اي مجلد'} containerhight={300} onClick={() => handleCreateFolder()} />
+        <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={'لم تقم بإضافة اي مجلد'} containerhight={200} onClick={() => handleCreateFolder()} />
     )
 
     return (
