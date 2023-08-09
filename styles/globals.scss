@@ -353,6 +353,15 @@
 	cursor: pointer;
 }
 
+.pdfCloseIcon {
+	position: relative;
+	top: 5px;
+	color: #ffffff;
+	padding: 10px;
+	z-index: 100;
+	cursor: pointer;
+}
+
 .blurBgForVideo {
 	position: absolute;
 	height: 100%;

@@ -12,6 +12,7 @@ const IconContainer = styled('div')`
 
 const EmptyText = styled('p')`
     font-size: ${props => (props.fontSize ? props.fontSize : '3')}px !important; 
+    color: #000000;
     margin:10px 0;
 `
 

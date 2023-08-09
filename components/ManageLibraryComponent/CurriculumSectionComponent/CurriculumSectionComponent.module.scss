@@ -14,7 +14,8 @@
     align-items: center;
     padding: 15px;
     border-radius: 3px;
-    margin-top: 20px;
+    margin: 20px 0 0 0;
+    transition: all 0.5s;
 }
 
 .showCurriculumSectionHead {
@@ -68,17 +69,17 @@
 
 .curriculumSectionBody {
     width: 60%;
-    margin-bottom: 40px;
     max-height: 0;
     overflow: hidden;
     transition: all 0.5s;
+    border: 1px solid #B8B8B8;
+    border-top: none;
+    border-radius: 0px 0px 3px 3px;
+    margin-bottom: 20px;
+    transition: all 0.5s
 }
 
 .tab:checked {
-    .curriculumSectionBody {
-        max-height: 100vh;
-    }
-
     .curriculimSectionHead {
         border-radius: 3px 3px 0px 0px;
     }
@@ -86,9 +87,6 @@
 
 .showCurriculumSectionBody {
     max-height: 100vh;
-    border: 1px solid #B8B8B8;
-    border-top: none;
-    border-radius: 0px 0px 3px 3px;
 }
 
 .curriculumData {
@@ -114,9 +112,14 @@
 
 .curriculumDataArea {
     display: flex;
-    padding: 20px;
+    padding: 13px;
     justify-content: space-between;
     border-bottom: 1px solid #B8B8B8;
+    background-color: #FFFFFF;
+}
+
+.curriculumDataArea:last-child {
+    border-bottom: none;
 }
 
 .curriculimDetailsData {
@@ -126,6 +129,7 @@
 }
 
 .curriculimDetailsActions {
+    align-items: center;
     width: 18%;
     display: flex;
     justify-content: space-around;
