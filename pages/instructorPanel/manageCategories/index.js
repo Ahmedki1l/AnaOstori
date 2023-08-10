@@ -8,7 +8,7 @@ import { fullDate } from '../../../constants/DateConverter'
 import { mediaUrl } from '../../../constants/DataManupulation';
 
 
-const index = () => {
+const Index = () => {
 
     const [isEdit, setIsEdit] = useState(false)
     const [isModelForAddCategory, setIsModelForAddCategory] = useState(false)
@@ -94,4 +94,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Index
