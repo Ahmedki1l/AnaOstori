@@ -155,10 +155,7 @@ function Index() {
                                 />
                             }
                             {selectedItem == 'curriculum' &&
-                                <CoursePathLibrary
-                                    folderTableData={storeData.curriculumIds}
-                                    folderType={selectedItem}
-                                />
+                                <CoursePathLibrary />
                             }
                         </div>
                     </div>

@@ -47,7 +47,6 @@ const CreateCoursePath = (props) => {
         await getCurriculumDetailsAPI(body).then((res) => {
             courseForm.setFieldValue('pathTitle', res.data.name)
             setCurriculumName(res.data.name)
-            updateCurriculumList()
         }).catch((error) => {
             console.log(error);
         })
@@ -58,7 +57,6 @@ const CreateCoursePath = (props) => {
             curriculumId: routeParams.coursePathId,
         }
         await getSectionListAPI(body).then((res) => {
-            console.log(res);
             setSectionDetails(res.data)
         }).catch((error) => {
             console.log(error);
@@ -67,9 +65,7 @@ const CreateCoursePath = (props) => {
 
 
     const updateCurriculumList = async () => {
-        let data = {
-        }
-        await getCurriculumIdsAPI(data).then((res) => {
+        await getCurriculumIdsAPI().then((res) => {
             dispatch({
                 type: 'SET_CURRICULUMIDS',
                 curriculumIds: res.data,
@@ -80,18 +76,18 @@ const CreateCoursePath = (props) => {
 
     const onFinishCreateCoursepath = async (item) => {
         if (routeParams.createCoursePath == 'createCoursePath') {
-            let addCurriculum = {
-                name: item.pathTitle,
+            let createBody = {
+                data: {
+                    name: item.pathTitle,
+                }
             }
-            let data = {
-                data: addCurriculum
-            }
-            await createCurriculumAPI(data).then((res) => {
+            await createCurriculumAPI(createBody).then(async (res) => {
                 setCurriculumName(res.data.name)
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
                     query: { coursePathId: res.data.id },
                 });
+                updateCurriculumList()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
@@ -100,17 +96,16 @@ const CreateCoursePath = (props) => {
             })
         }
         else {
-            let editCurriclum = {
-                name: item.pathTitle,
-                id: routeParams.coursePathId,
+            let editBody = {
+                data: {
+                    name: item.pathTitle,
+                    id: routeParams.coursePathId,
+                }
             }
-            let body = {
-                data: editCurriclum
-            }
-            await updateCurriculumAPI(body).then((res) => {
-                console.log(res);
+            await updateCurriculumAPI(editBody).then((res) => {
                 courseForm.setFieldValue(item.pathTitle)
                 setCurriculumName(res.data.data.name)
+                updateCurriculumList()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {

@@ -57,7 +57,7 @@ export const markItemCompleteAPI = (data) => { return instance.get(`course/markI
 export const getCompleteCourseItemIDAPI = (data) => { return instance.get(`course/progress/${data?.courseID}`) }
 export const getCourseProgressAPI = (data) => { return instance.get(`course/getUserCourseProgress/${data?.courseID}`) }
 export const subcribeNotificationAPI = (data) => { return instance.post(`course/subscribe/${data?.courseId}`, data?.data) }
-export const getCurriculumIdsAPI = (data) => { return instance.get('/curriculum/list') }
+export const getCurriculumIdsAPI = () => { return instance.get('/curriculum/list') }
 export const generateAttendanceQRAPI = (data) => { return instance.get('/attendance/key') }
 export const getInstructorListAPI = (data) => { return instance.get('/instructor/list') }
 
