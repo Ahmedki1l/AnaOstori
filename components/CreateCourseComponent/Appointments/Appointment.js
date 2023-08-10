@@ -71,6 +71,7 @@ const Appointments = ({ courseId, courseType }) => {
             let body = {
                 data: values,
             }
+            console.log(body);
             await createCourseAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
                 getAllAvailability()
@@ -86,7 +87,6 @@ const Appointments = ({ courseId, courseType }) => {
             courseId: courseId,
         }
         await getAllAvailabilityAPI(body).then((res) => {
-            console.log(res);
             setAllAppointments(res?.data)
             dispatch({
                 type: 'SET_AllAVAILABILITY',

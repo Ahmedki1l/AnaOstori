@@ -1,11 +1,21 @@
-@import '../../styles/variables.module.scss';
+@import "../variables.module.scss";
+
+.headerWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.createCourseHeaderText {
+    padding: 28px 0 24px 0;
+}
 
 .createCourseBtnBox {
-    width: 107px;
+    width: 105px;
     height: 36px;
+    margin-left: auto;
 
     button {
-        padding: 9px 16px !important;
+        padding: 9px 10px !important;
         font-size: 16px;
     }
 }
@@ -19,10 +29,13 @@
     height: 48px;
     background-color: #F4F5F7;
     overflow: hidden;
+    font-size: 20px;
+    width: 100%;
 }
 
 .tableHeadText {
     padding: 0 10px;
+    border: 0.7px solid #c3c3c3;
 }
 
 .tableHead1 {
@@ -30,42 +43,29 @@
 }
 
 .tableHead2 {
-    width: 12%;
+    width: 13%;
 }
 
 .tableHead3 {
-    width: 12%;
+    width: 13%;
 }
 
 .tableHead4 {
-    width: 12%;
+    width: 13%;
 }
 
 .tableHead5 {
-    width: 15%;
-}
-
-.tableHead6 {
-    width: 8%;
+    width: 10%;
 }
 
 .tableBodyArea {
-    font-size: 18px;
     width: 100%;
-    border-top: none;
     border-radius: 0px 0px 4px 4px;
-}
-
-.noDataManiArea {
-    height: 480px;
-    display: grid;
-    place-content: center;
-
 }
 
 .tableRow {
     td {
-        height: 145px;
+        height: 141px;
         text-align: center;
         border: 0.7px solid #c3c3c3;
         border-top: none;
@@ -84,10 +84,11 @@
 
 .skillCourseDetails {
     text-align: right;
-    padding-top: 20px;
+    display: grid;
+    place-content: center;
 
     p {
-        padding: 5px 0 5px 0;
+        font-size: 20px;
     }
 }
 
@@ -95,16 +96,13 @@
     font-size: 20px;
 }
 
-.coursePrice {
-    font-size: 12px;
-}
-
-.publishedCourseDetails {
+.actions {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 0px 38px;
 }
 
-.publishedName {
-    margin-right: 3px;
+.publishState {
+    display: flex;
+    justify-content: center;
 }

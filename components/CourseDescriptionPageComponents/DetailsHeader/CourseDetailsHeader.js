@@ -9,7 +9,7 @@ import { mediaUrl } from '../../../constants/DataManupulation';
 
 
 export default function CourseDetailsHeader(props) {
-
+	console.log(props.courseDetail);
 	const courseDetail = props.courseDetail
 	const handleBookSitButtonClick = props.handleBookSitButtonClick
 	const isMediumScreen = useWindowSize().mediumScreen

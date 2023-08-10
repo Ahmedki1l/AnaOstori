@@ -3,14 +3,12 @@ import styles from '../../../../styles/InstructorPanelStyleSheets/ManageLibrary.
 import { FormItem } from '../../../../components/antDesignCompo/FormItem'
 import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
-import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 import { useDispatch } from 'react-redux'
 import { createCurriculumAPI, createCurriculumSectionAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, updateCurriculumAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../../constants/ar'
 import { toast } from 'react-toastify'
-import ModelWithOneInput from '../../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput'
 
 export async function getServerSideProps(context) {
     const params = context.query
@@ -29,8 +27,7 @@ export async function getServerSideProps(context) {
 const CreateCoursePath = (props) => {
     const routeParams = props.params
     const [courseForm] = Form.useForm();
-    const [curriculmName, setCurriculumName] = useState()
-    const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
+    const [curriculmName, setCurriculumName] = useState(routeParams?.coursePathId ? routeParams?.coursePathId : "")
     const [sectionDetails, setSectionDetails] = useState([])
     const router = useRouter()
     const dispatch = useDispatch()
@@ -46,6 +43,7 @@ const CreateCoursePath = (props) => {
         let body = {
             curriculumId: routeParams.coursePathId,
         }
+        console.log(body);
         await getCurriculumDetailsAPI(body).then((res) => {
             courseForm.setFieldValue('pathTitle', res.data.name)
             setCurriculumName(res.data.name)
@@ -60,6 +58,7 @@ const CreateCoursePath = (props) => {
             curriculumId: routeParams.coursePathId,
         }
         await getSectionListAPI(body).then((res) => {
+            console.log(res);
             setSectionDetails(res.data)
         }).catch((error) => {
             console.log(error);
@@ -109,9 +108,9 @@ const CreateCoursePath = (props) => {
                 data: editCurriclum
             }
             await updateCurriculumAPI(body).then((res) => {
+                console.log(res);
                 courseForm.setFieldValue(item.pathTitle)
                 setCurriculumName(res.data.data.name)
-                courseForm.resetFields()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
@@ -120,31 +119,6 @@ const CreateCoursePath = (props) => {
             })
         }
     }
-    const handleAddSectionModal = () => {
-        setIsModelForAddFolderOpen(true);
-    };
-
-    const handleSection = async ({ name }) => {
-        let data = {
-            data: {
-                name: name,
-                curriculumId: routeParams.coursePathId,
-                order: 4
-            }
-        }
-        console.log(data);
-        await createCurriculumSectionAPI(data).then((res) => {
-            console.log(res);
-            setIsModelForAddFolderOpen(false)
-        }).catch((error) => {
-            console.log(error);
-        })
-    }
-
-    const handleDeleteSection = () => {
-        // don't delete 
-    }
-
 
     return (
         <div>
@@ -164,35 +138,15 @@ const CreateCoursePath = (props) => {
                                 rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}>
                                 <Input
                                     placeholder="عنوان المقرر"
+                                    value={curriculmName}
                                 />
                             </FormItem>
-
-                            {(curriculmName && sectionDetails.length == 0) &&
-                                <div>
-                                    <div className={`head2 py-2`}>
-                                        <p>الأقسام</p>
-                                    </div>
-                                    <div className={styles.addSectionWrapper}>
-                                        <div className={styles.tableBodyArea}>
-                                            <div className={styles.noDataMainArea}>
-                                                <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
-                                                <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
-                                                <div className={styles.createCourseBtnBox}>
-                                                    <button className='primarySolidBtn' onClick={() => handleAddSectionModal()}>إضافة قسم</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            {console.log(sectionDetails)}
+                            {(curriculmName && sectionDetails) && <CurriculumSectionComponent
+                                onclose={onclose}
+                                sectionList={sectionDetails}
+                            />
                             }
-
-                            {sectionDetails.length > 0 &&
-                                <CurriculumSectionComponent
-                                    onclose={onclose}
-                                    sectionList={sectionDetails}
-                                />
-                            }
-
                             <div className={`${styles.savePathTitle}`}>
                                 {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `} type='submit'>حفظ ومتابعة</button>}
                                 {curriculmName && <button className={`primarySolidBtn ${styles.btnText}`} type='submit'>حفظ</button>}
@@ -201,13 +155,6 @@ const CreateCoursePath = (props) => {
                     </div>
                 </div>
             </Form>
-            <ModelWithOneInput
-                open={isModelForAddFolderOpen}
-                setOpen={setIsModelForAddFolderOpen}
-                onSave={handleSection}
-                onDelete={handleDeleteSection}
-                isEdit={true}
-            />
         </div>
     )
 }

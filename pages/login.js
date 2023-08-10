@@ -136,17 +136,17 @@ export default function Login() {
 				localStorage.setItem("accessToken", user?.accessToken);
 				dispatch({
 					type: 'ADD_AUTH_TOKEN',
-					accessToken: userCredential?.user?.accessToken,
+					accessToken: user?.accessToken,
 				});
 				dispatch({
 					type: 'IS_USER_FROM_GOOGLE',
 					loginWithoutPassword: false,
 				});
-
-				handleStoreUpdate(userCredential?.user?.accessToken)
+				handleStoreUpdate(user?.accessToken)
 				toast.success(toastSuccessMessage.successLoginMsg)
 				router.push('/')
 			}).catch((error) => {
+				console.log(error);
 				toast.error(toastErrorMessage.emailPasswordErrorMsg);
 			});
 		}

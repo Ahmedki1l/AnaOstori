@@ -44,7 +44,7 @@ export const createOrderAPI = (data) => { return instance.post(`/createOrder`, d
 export const getMyOrderAPI = (data) => { return instance.get(`/order/query`) }
 export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment/${data?.orderID}/${data?.transactionID}`) }
 export const getCourseDetailsAPI = (data) => { return instance.get(`/courseByName/${data?.courseName}`) }
-export const getCatagoriesAPI = (data) => { return instance.get(`/catagories`) }
+export const getCatagoriesAPI = () => { return instance.get(`/catagories`) }
 export const courseCurriculumAPI = (data) => { return instance.get(`/course/curriculum/${data?.courseID}`) }
 export const getCourseItemAPI = (data) => { return instance.get(`/course/${data?.courseID}/item/${data?.itemID}`) }
 export const updateProfile = (data) => { return instance.post('/updateProfile', data?.data) }
@@ -106,7 +106,7 @@ export const getCurriculumDetailsAPI = (data) => { return instance.get(`/curricu
 // ********* Manage Curriculum Section APIs ***********//
 export const getSectionListAPI = (data) => { return instance.get(`/section?curriculumId=${data.curriculumId}`) }
 export const createCurriculumSectionAPI = (data) => { return instance.post(`/section/create`, data?.data) }
-export const updateCurriculumSectionAPI = (data) => { return instance.post(`/section/update`, data?.data) }
+export const updateCurriculumSectionAPI = (data) => { return instance.post(`/section/update?type=single`, data?.data) }
 export const updateMultipleSectionOrderAPI = (data) => { return instance.post(`/section/update?type=multipleOrder`, data) }
 export const addItemIntoSectionAPI = (data) => { return instance.post(`/section/item`, data?.data) }
 export const removeItemFromSectionAPI = (data) => { return instance.post(`/section/item/delete`, data) }

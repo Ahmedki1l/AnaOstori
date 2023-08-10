@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import styles from './CurriculumSectionComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useState } from 'react'
@@ -33,10 +33,8 @@ const StylesModal = styled(Modal)`
 `
 
 const CurriculumSectionComponent = ({ onclose, sectionList }) => {
-
-    // const [sectionDetails, setSectionDetails] = useState(sectionList.sort((a, b) => a.order - b.order))
+    const [sectionDetails, setSectionDetails] = useState()
     const router = useRouter()
-    const [sectionDetails, setSectionDetails] = useState(sectionList)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [deleteItemType, setDeleteItemType] = useState('section')
     const [isModelForAddCurriculum, setIsModelForAddCurriculum] = useState(false)
@@ -47,6 +45,10 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const [deleteItemSectionId, setDeleteItemSectionId] = useState()
     const [fileSrc, setFileSrc] = useState()
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        setSectionDetails(sectionList?.sort((a, b) => a.order - b.order))
+    }, [sectionList])
 
     const showSectionItem = (index) => {
         const data = [...sectionDetails]
@@ -73,7 +75,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             data: {
                 name: name,
                 curriculumId: router.query.coursePathId,
-                order: sectionDetails.length
+                order: sectionDetails?.length + 1
             }
         }
         await createCurriculumSectionAPI(data).then((res) => {
@@ -86,7 +88,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         })
     }
 
-    const handleEditSectionName = async (section) => {
+    const handleEditSection = async (section) => {
         let editSectionName = {
             name: section.name,
             id: selectedSection?.id,
@@ -95,11 +97,18 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             data: editSectionName
         }
         await updateCurriculumSectionAPI(body).then((res) => {
-            courseForm.setFieldValue(item.pathTitle)
+            setIsModelForAddFolderOpen(false)
+            const newSections = sectionDetails?.map((item, index) => {
+                if (item.id == selectedSection.id) {
+                    item.name = res.data.data.name
+                }
+                return item
+            })
+            setSectionDetails(newSections)
             setCurriculumName(res.data.data.name)
         }).catch((error) => {
             console.log(error);
-            if (error.response.data.message == "Curriculum name already in use") {
+            if (error?.response?.data?.message == "Curriculum name already in use") {
                 toast.error(toastErrorMessage.curriculumNameError)
             }
         })
@@ -159,6 +168,29 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         })
     }
 
+    const handleDeleteSection = async () => {
+        let body = {
+            data: {
+                name: selectedSection?.name,
+                isDeleted: true,
+                id: selectedSection?.id,
+            }
+        }
+        await updateCurriculumSectionAPI(body).then((res) => {
+            setIsModelForAddFolderOpen(false)
+            console.log(res);
+            const newSections = sectionDetails?.filter((item, index) => {
+                return item.id != selectedSection?.id
+            })
+            setSectionDetails(newSections)
+        }).catch((error) => {
+            console.log(error);
+            if (error?.response?.data?.message == "Curriculum name already in use") {
+                toast.error(toastErrorMessage.curriculumNameError)
+            }
+        })
+    }
+
     const handleDragEnd = async (result) => {
         if (!result.destination) {
             return;
@@ -168,12 +200,16 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         newSectionOrder.splice(result.destination.index, 0, reorderedSection);
         setSectionDetails(newSectionOrder)
 
-        const body = newSectionOrder.map((e, index) => {
+        const data = newSectionOrder.map((e, index) => {
             return {
                 sectionId: e.id,
-                order: `${index + 1}`
+                order: index + 1
             }
         })
+
+        let body = {
+            data: data
+        }
         await updateMultipleSectionOrderAPI(body).then((res) => {
             console.log(res);
         }).catch((error) => {
@@ -181,8 +217,10 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         })
     };
 
-    const handleDeleteFolderItems = () => {
+    const handleDeleteFolderItems = (type, section) => {
+        setDeleteItemType(type)
         setIsmodelForDeleteItems(true)
+        setSelectedSection(section)
     }
 
     const handleOpenPdfModel = (item) => {
@@ -201,17 +239,35 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     return (
         <div>
-            {sectionDetails.length > 0 &&
+            {sectionDetails?.length > 0 &&
                 <div className={styles.addSectionArea}>
                     <p className={styles.sectionName}>الأقسام</p>
                     <p className={styles.addSections} onClick={() => handleAddSection()}>+ إضافة قسم</p>
                 </div>
             }
-            <DragDropContext onDragEnd={handleDragEnd}>
+            {(sectionDetails?.length == 0) &&
+                <div>
+                    <div className={`head2 py-2`}>
+                        <p>الأقسام</p>
+                    </div>
+                    <div>
+                        <div className={styles.tableBodyArea}>
+                            <div className={styles.noDataMainArea}>
+                                <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
+                                <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
+                                <div className={styles.createCourseBtnBox}>
+                                    <button className='primarySolidBtn' onClick={() => handleAddSection()}>إضافة قسم</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            {sectionDetails?.length > 0 && <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="sections" direction="vertical" >
                     {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {sectionDetails.map((section, index) => (
+                            {sectionDetails?.map((section, index) => (
                                 <Draggable key={`section ${index}`} draggableId={`section-${index}`} index={index}>
                                     {(provided) => (
                                         <div
@@ -230,7 +286,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                 <div className={styles.headerActionWrapper} >
                                                     <div style={{ height: '25px' }} onClick={() => handleAddItemInSection(section)}><AllIconsComponenet iconName={'plus'} height={24} width={24} alt={'key'} color={'#FFFFFF'} /></div>
                                                     <div style={{ height: '17px' }} onClick={() => openSectionNameModel(section)}><AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} /></div>
-                                                    <div style={{ height: '19px' }} onClick={() => handleDeleteFolderItems('section')} ><AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} /></div>
+                                                    <div style={{ height: '19px' }} onClick={() => handleDeleteFolderItems('section', section)} ><AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} /></div>
                                                     <div className={`${styles.arrowIcon} ${section.showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
                                                         <AllIconsComponenet iconName={'keyBoardDownIcon'} height={24} width={24} color={'#FFFFFF'} />
                                                     </div>
@@ -276,19 +332,19 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                         </div>
                     )}
                 </Droppable>
-            </DragDropContext>
+            </DragDropContext>}
             <ModelWithOneInput
                 open={isModelForAddFolderOpen}
                 setOpen={setIsModelForAddFolderOpen}
                 isEdit={editSectionName}
-                onSave={editSectionName ? handleEditSectionName : handleCreateSection}
+                onSave={editSectionName ? handleEditSection : handleCreateSection}
                 itemName={selectedSection?.name}
             />
             <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 onCloseModal={onCloseModal}
                 deleteItemType={deleteItemType}
-                onDelete={handleDeleteSectionItem}
+                onDelete={deleteItemType == "section" ? handleDeleteSection : handleDeleteSectionItem}
             />
             {isModelForAddCurriculum && <ModelForAddItemCurriculum
                 isModelForAddCurriculum={isModelForAddCurriculum}
