@@ -134,3 +134,27 @@
     display: flex;
     justify-content: space-around;
 }
+
+.tableBodyArea {
+    height: 235px;
+    width: 641px;
+    border: 1px solid #00000015;
+    border-radius: 0px 0px 3px 3px;
+    margin-bottom: 30px;
+}
+
+.noDataMainArea {
+    padding-top: 25px;
+    display: grid;
+    place-content: center;
+}
+
+.createCourseBtnBox {
+    width: 107px;
+    height: 36px;
+
+    button {
+        padding: 9px 10px !important;
+        font-size: 16px;
+    }
+}

@@ -27,8 +27,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
-    console.log(isCourseEdit);
-
     useEffect(() => {
         if (!isCourseEdit) {
             setCourseCardMetaDataObj()
@@ -64,7 +62,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     };
 
     const createCourseCardMetaData = async (values) => {
-        console.log(values);
         const cardDescription = values.cardDescription
         let courseCardMetadata = values.CourseCardMetaData.map((obj, index) => {
             return {

@@ -55,16 +55,15 @@ export default function Navbar() {
 
 	useEffect(() => {
 		const fetchResults = async () => {
-			let data = {
-			}
 			try {
-				const getcatagoriReq = getCatagoriesAPI(data)
-				const getCurriculumIdsReq = getCurriculumIdsAPI(data)
-				const getInstructorListReq = getInstructorListAPI(data)
+				const getcatagoriReq = getCatagoriesAPI()
+				const getCurriculumIdsReq = getCurriculumIdsAPI()
+				const getInstructorListReq = getInstructorListAPI()
 
 				const [catagories, curriculumIds, instructorList] = await Promise.all([
 					getcatagoriReq, getCurriculumIdsReq, getInstructorListReq
 				])
+				console.log(catagories.data);
 				dispatch({
 					type: 'SET_CATAGORIES',
 					catagories: catagories?.data

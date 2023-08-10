@@ -102,10 +102,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const createCourse = async (values) => {
         setShowExtraNavItem(false)
         if (!showCourseMetaDataFields) {
-            values.pictureKey = imageUploadResponceData?.key,
-                values.pictureBucket = imageUploadResponceData?.bucket,
-                values.pictureMime = imageUploadResponceData?.mime,
-                values.groupDiscountEligible = groupDiscountEligible;
+            values.pictureKey = imageUploadResponceData?.key
+            values.pictureBucket = imageUploadResponceData?.bucket
+            values.pictureMime = imageUploadResponceData?.mime
+            values.groupDiscountEligible = groupDiscountEligible
             values.type = courseType
             values.language = englishCourse ? "en" : "ar"
             values.published = false

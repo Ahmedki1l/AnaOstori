@@ -30,7 +30,6 @@ export default function Search(props) {
 		const getMyOrder = async () => {
 
 			await getMyOrderAPI().then((res) => {
-				console.log(res);
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch((error) => {
 				console.log(error)
@@ -65,7 +64,6 @@ export default function Search(props) {
 						</thead>
 						<tbody className={styles.body}>
 							{searchData.map((data, i = index) => {
-								console.log(data);
 								return (
 									<tr key={`order${i}`}>
 										<td className={styles.tbodyOrder}>{data.id}</td>

@@ -25,8 +25,6 @@ export default function Index() {
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: false })
     }
 
-    console.log(allPhysicalCourses);
-
     useEffect(() => {
         const getAllCourse = async () => {
             let body = {
@@ -148,7 +146,7 @@ export default function Index() {
                                 <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
                                 <p className='fontBold py-2'>ما أنشئت اي دورة</p>
                                 <div className={styles.createCourseBtnBox}>
-                                    <button className='primarySolidBtn'>إنشاء دورة</button>
+                                    <button className='primarySolidBtn' onClick={() => handleRoute()}>إنشاء دورة</button>
                                 </div>
                             </div>
                         </div>

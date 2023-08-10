@@ -6,38 +6,12 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fullDate } from '../../../constants/DateConverter'
 
-const dummyData = [
-    {
-        instructorName: 'instructor1',
-        email: 'instructor1@gmail.com',
-        createdAt: '2023-07-20'
-    },
-    {
-        instructorName: 'instructor2',
-        email: 'instructor2@gmail.com',
-        createdAt: '2023-07-21'
-    },
-    {
-        instructorName: 'instructor3',
-        email: 'instructor3@gmail.com',
-        createdAt: '2023-07-22'
-    },
-    {
-        instructorName: 'instructor4',
-        email: 'instructor4@gmail.com',
-        createdAt: '2023-07-23'
-    }
-]
 
 const Index = () => {
     const storeData = useSelector((state) => state?.globalStore);
-    console.log(storeData);
-    // const [instructorDetails, setInstructorDetails] = useState(dummyData)
     const [isModelForAddInstructor, setIsModelForAddInstructor] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
-
     const instructorDetails = storeData?.instructorList
-    console.log(instructorDetails);
 
     const handleAddInstructor = () => {
         setIsModelForAddInstructor(true)
@@ -47,6 +21,7 @@ const Index = () => {
         setIsModelForAddInstructor(true)
         setIsEdit(true)
     }
+
     return (
         <div>
             <div className='maxWidthDefault px-4'>

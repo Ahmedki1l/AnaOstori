@@ -26,11 +26,17 @@ const StyledDatePicker = styled(AntdDatePicker)`
     right:-6px;
   }
 `;
+
 const onChange = (date, dateString) => {
   console.log(date, dateString);
 };
+
+// const disabledDate = (current) => {
+//   return current < dayjs().endOf('day');
+// };
+
 const disabledDate = (current) => {
-  return current < dayjs().endOf('day');
+  return current < dayjs().startOf('day');
 };
 
 const DatePicker = ({
@@ -41,7 +47,9 @@ const DatePicker = ({
   disabled = false,
   ...rest
 }) => {
+
   return (
+
     <StyledDatePicker
       onChange={onChange}
       placeholder={placeholder}

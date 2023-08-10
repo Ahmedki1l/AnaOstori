@@ -39,31 +39,33 @@ export default function PhysicalCourseCard(props) {
 				<CoverImg height={215} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 			</div>
 			<div className={styles.detailsBox}>
-				<h1 className='head2 text-center'>{courseDetail.name}</h1>
-				<p className={styles.courseDetailText}>{courseDetail.cardDescription}</p>
-				<ul className={styles.descriptionList}>
-					{courseDetail.CourseCardMetaData?.map((metaData, index) => {
-						return (
-							<li key={`courseCare${index}`}>
-								<div>
-									<Icon height={isSmallScreen ? 18 : 21} width={isSmallScreen ? 18 : 21} iconName={metaData.icon} alt={'Card Meta Data Icon'} />
-								</div>
-								<div className='flex'>
-									<p className='pr-2'>
-										{metaData.link ?
-											<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
-											: metaData.tailLinkName ?
-												<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>
-												:
-												<span className={styles.listItemText}>{metaData.text}</span>
-										}
-										<span className={styles.grayText}>{metaData.grayedText ? `(${metaData.grayedText})` : ''}</span>
-									</p>
-								</div>
-							</li>
-						)
-					})}
-				</ul>
+				<div style={{ maxHeight: '205px', overflow: 'auto' }}>
+					<h1 className='head2 text-center'>{courseDetail.name}</h1>
+					<p className={styles.courseDetailText}>{courseDetail.cardDescription}</p>
+					<ul className={styles.descriptionList}>
+						{courseDetail.CourseCardMetaData?.map((metaData, index) => {
+							return (
+								<li key={`courseCare${index}`}>
+									<div>
+										<Icon height={isSmallScreen ? 18 : 21} width={isSmallScreen ? 18 : 21} iconName={metaData.icon} alt={'Card Meta Data Icon'} />
+									</div>
+									<div className='flex'>
+										<p className='pr-2'>
+											{metaData.link ?
+												<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
+												: metaData.tailLinkName ?
+													<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>
+													:
+													<span className={styles.listItemText}>{metaData.text}</span>
+											}
+											<span className={styles.grayText}>{metaData.grayedText ? `(${metaData.grayedText})` : ''}</span>
+										</p>
+									</div>
+								</li>
+							)
+						})}
+					</ul>
+				</div>
 				<div className={styles.priceBoxWrapper}>
 					{courseDetail.discount == null ?
 						<div className={styles.onePersonPriceBox}>
