@@ -63,7 +63,6 @@ export default function Navbar() {
 				const [catagories, curriculumIds, instructorList] = await Promise.all([
 					getcatagoriReq, getCurriculumIdsReq, getInstructorListReq
 				])
-				console.log(catagories.data);
 				dispatch({
 					type: 'SET_CATAGORIES',
 					catagories: catagories?.data
