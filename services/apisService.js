@@ -108,8 +108,12 @@ export const getSectionListAPI = (data) => { return instance.get(`/section?curri
 export const createCurriculumSectionAPI = (data) => { return instance.post(`/section/create`, data?.data) }
 export const updateCurriculumSectionAPI = (data) => { return instance.post(`/section/update?type=single`, data?.data) }
 export const updateMultipleSectionOrderAPI = (data) => { return instance.post(`/section/update?type=multipleOrder`, data) }
+
+
 export const addItemIntoSectionAPI = (data) => { return instance.post(`/section/item`, data?.data) }
 export const removeItemFromSectionAPI = (data) => { return instance.post(`/section/item/delete`, data) }
+export const updateItemOfSectionAPI = (data) => { return instance.post(`/section/item/update`, data) }
+
 
 
 

@@ -165,7 +165,7 @@ const Appointments = ({ courseId, courseType }) => {
                                                     {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} />}
                                                     {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} />}
                                                     {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
-                                                    <span className='pr-1'>{appointment.gender == "male" ? "ولد" : "بنت"}</span>
+                                                    <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
                                                 </div><br />
                                                 <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
                                                 <Link target='_blank' href={appointment.location}>{appointment.locationName}</Link>

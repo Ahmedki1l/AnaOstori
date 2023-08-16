@@ -6,6 +6,10 @@
 	font-size: 23px;
 }
 
+.mainLoadingPage {
+	height: calc(100vh - 265px);
+}
+
 .pointList {
 	list-style: disc;
 	padding: 0 1rem;
@@ -14,14 +18,6 @@
 }
 
 .coursesWrapper {
-	display: flex;
-	flex-direction: row-reverse;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	padding-bottom: 1rem;
-}
-
-.coursesWrapper2 {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -86,6 +82,31 @@
 	border-top: 0.3px solid rgba(0, 0, 0, 0.5);
 	display: table-row;
 	height: 20px;
+	font-size: 18px;
+
+	.onePersonDetailText {
+		font-size: 16px;
+	}
+}
+
+.hidePriceBox {
+	display: flex;
+	background-color: #61b92235;
+	height: 41px;
+	margin: 12px;
+	align-items: center;
+	place-content: center;
+	border-radius: 4px;
+
+	.detailText {
+		font-size: 16px;
+		color: #3B9100;
+	}
+
+	.arrowIcon {
+		color: #3B9100;
+		font-size: 20px;
+	}
 }
 
 .onePersonPriceBox,
@@ -110,11 +131,16 @@
 .twoPersonPriceBox,
 .threePersonPriceBox {
 	.detailText {
-		font-size: 16px;
+		font-size: 19px;
 	}
 
 	.price {
 		font-size: 18px;
+	}
+
+	.eachPersonDetailText {
+		font-size: 15px;
+		color: #00000065;
 	}
 }
 
@@ -142,6 +168,7 @@
 
 .btnBox {
 	margin: 1rem 0.7rem;
+	height: 41px;
 
 	button {
 		font-size: 22px;
@@ -279,7 +306,6 @@
 
 @media (max-width: 816px) {
 	.coursesWrapper {
-		flex-direction: column-reverse;
 		align-items: center;
 	}
 }

@@ -81,7 +81,7 @@ export default function AccountInformation() {
         },
         {
             subTitle: 'الجنس',
-            subContentvalue: userProfileData?.gender == 'male' ? 'ذكر' : userProfileData?.gender == 'female' ? 'أنثى' : ' ',
+            subContentvalue: userProfileData?.gender == 'male' ? 'شاب' : userProfileData?.gender == 'female' ? 'أنثى' : ' ',
             type: 'gender'
         }
     ]

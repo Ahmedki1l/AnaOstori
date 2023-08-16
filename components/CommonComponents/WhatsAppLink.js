@@ -2,15 +2,18 @@ import Link from 'next/link';
 import * as linkConst from '../../constants/LinkConst';
 import useWindowSize from '../../hooks/useWindoSize';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
+import useScrollEvent from '../../hooks/useScrollEvent';
 
 
 export default function WhatsAppLinkComponent(props) {
 
 	const screenWidth = useWindowSize().width
 	const isBookSeatPageOpen = props.isBookSeatPageOpen
+	const offset = useScrollEvent().offset
+
 
 	return (
-		<div className={`whatsAppLogoWrapper ${isBookSeatPageOpen ? `whatsAppLogoWrapperUp` : ``}`}>
+		<div className={`whatsAppLogoWrapper ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : ``}`}>
 			<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 				<div className='whatsAppLogo' >
 					<div className='whatsAppLogoRoundWrapper'>

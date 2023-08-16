@@ -19,7 +19,9 @@ const ModelForAddCategory = ({
     console.log(categoriesDetails);
 
     useEffect(() => {
-        form.setFieldValue('name', categoriesDetails)
+        // form.setFieldValue('categoryTitle', categoriesDetails.name)
+        // form.setFieldValue('order', categoriesDetails.order)
+        // form.setFieldValue('discription', categoriesDetails.description)
     }, [categoriesDetails])
 
     const [form] = Form.useForm();

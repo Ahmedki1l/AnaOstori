@@ -12,7 +12,9 @@ const ModelForAddInstructor = ({
     isModelForAddInstructor,
     setIsModelForAddInstructor,
     isEdit,
+    instructorDetails
 }) => {
+    console.log(instructorDetails);
 
     const [form] = Form.useForm();
 

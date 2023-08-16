@@ -133,6 +133,7 @@ export default function Login() {
 			setLoading(true)
 			await startEmailPasswordLogin(email, password).then((result) => {
 				const user = result.user;
+				console.log(user);
 				localStorage.setItem("accessToken", user?.accessToken);
 				dispatch({
 					type: 'ADD_AUTH_TOKEN',

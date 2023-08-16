@@ -38,7 +38,9 @@ export default function Index(props) {
 			return catagory
 		}
 	})
-	const courseDetails = catagory?.courses?.length > 0 ? shortCourseOnType(catagory.courses) : null
+	// const courseDetails = catagory?.courses?.length > 0 ? shortCourseOnType(catagory.courses) : null
+	const [coursesDetails, setCoursesDetails] = useState([])
+
 	const mainDescription = catagory.description?.split(':')[0]
 	const listDescription = catagory?.description?.split(':')[1]?.split('<list>').splice(1, catagory.description.length)
 	const storeData = useSelector((state) => state?.globalStore);
@@ -47,38 +49,43 @@ export default function Index(props) {
 	const [pageLoading, setPageLoading] = useState(true)
 
 	useEffect(() => {
-		if (isUserLogin && loggedUserCourseDetails?.length > 0) {
-			setPageLoading(false)
-		} else if (!isUserLogin && courseDetails?.length > 0) {
+		if (coursesDetails?.length > 0) {
 			setPageLoading(false)
 		} else {
 			setPageLoading(true)
 		}
-	}, [isUserLogin, loggedUserCourseDetails, courseDetails])
+	}, [isUserLogin, loggedUserCourseDetails, coursesDetails])
 
 	useEffect(() => {
-		if (!isUserLogin) return
-		const getCourseDetails = async () => {
-
-			await getCatagoriesAPI().then((res) => {
-				res.data?.find((catagory) => {
-					if (catagory.name == catagoryName) {
-						setLoggedUserCourseDetails(catagory.courses)
+		//we need this because we want to check users has enroled or not
+		if (!isUserLogin) {
+			const courseDetails = shortCourseOnType(catagory.courses)
+			setCoursesDetails(courseDetails)
+		} else {
+			const getCourseDetails = async () => {
+				let data = {
+					accessToken: storeData?.accessToken,
+				}
+				await getCatagoriesAPI(data).then((res) => {
+					res.data?.find((catagory) => {
+						if (catagory.name == catagoryName) {
+							setCoursesDetails(shortCourseOnType(catagory.courses))
+						}
+					})
+				}).catch((error) => {
+					console.log(error)
+					if (error?.response?.status == 401) {
+						setPageLoading(false)
+						signOutUser()
+						dispatch({
+							type: 'EMPTY_STORE'
+						});
 					}
 				})
-			}).catch((error) => {
-				console.log(error)
-				if (error?.response?.status == 401) {
-					setPageLoading(false)
-					signOutUser()
-					dispatch({
-						type: 'EMPTY_STORE'
-					});
-				}
-			})
+			}
+			getCourseDetails()
 		}
-		getCourseDetails()
-	}, [catagoryName, isUserLogin])
+	}, [storeData?.accessToken, isUserLogin])
 
 	function shortCourseOnType(courses) {
 		const typeOrder = ['physical', 'online', 'on-demand'];
@@ -117,27 +124,16 @@ export default function Index(props) {
 						})}
 					</ul>
 					<h1 className='head1 pt-8'>اختار الدورة المناسبة لك</h1>
-					{isUserLogin ?
-						<div className={styles.coursesWrapper2}>
-							{loggedUserCourseDetails?.length > 0 && loggedUserCourseDetails.map((course, index) => {
-								return (
-									<div key={`courseDetaisl${index}`} className='my-4 mx-2'>
-										<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
-									</div>
-								)
-							})}
-						</div>
-						:
-						<div className={styles.coursesWrapper}>
-							{courseDetails?.length > 0 && courseDetails.map((course, index) => {
-								return (
-									<div key={`courseDetaisl${index}`} className='my-4 mx-2'>
-										<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
-									</div>
-								)
-							})}
-						</div>
-					}
+
+					<div className={styles.coursesWrapper}>
+						{coursesDetails?.length > 0 && coursesDetails.map((course, index) => {
+							return (
+								<div key={`courseDetaisl${index}`} className='my-4 mx-2'>
+									<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
+								</div>
+							)
+						})}
+					</div>
 				</div>
 			}
 		</>

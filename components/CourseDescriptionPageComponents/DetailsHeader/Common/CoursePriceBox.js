@@ -110,7 +110,7 @@ export default function CoursePriceBox(props) {
 								</>
 								:
 								<>
-									<p className={`fontBold ${styles.discountPrice}`}>مخصص</p>
+									<p className={`fontBold ${styles.discountPrice}`}>حسب العدد</p>
 									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>وفر {(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %</p>
 								</>
 							}

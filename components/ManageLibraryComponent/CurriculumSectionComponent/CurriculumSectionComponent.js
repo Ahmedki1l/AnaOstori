@@ -11,28 +11,13 @@ import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import { mediaUrl } from '../../../constants/DataManupulation'
-
-import styled from 'styled-components';
-import { Modal } from 'antd'
-import { error } from 'jquery'
+import SectionItems from './SectionItem/SectionItems'
 
 
-const StylesModal = styled(Modal)`
-    .ant-modal-close{
-        display:none;
-    }
-    .ant-modal-content{
-        border-radius: 5px;
-        padding: 0px;
-        overflow:hidden;
-    }
-    .ant-modal-body {
-        height: 800px;
-    }
-`
+
 
 const CurriculumSectionComponent = ({ onclose, sectionList }) => {
+    console.log(sectionList);
     const [sectionDetails, setSectionDetails] = useState()
     const router = useRouter()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -43,8 +28,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const [editSectionName, setEditSectionName] = useState(false)
     const [deleteItemId, setDeleteItemId] = useState()
     const [deleteItemSectionId, setDeleteItemSectionId] = useState()
-    const [fileSrc, setFileSrc] = useState()
-    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         setSectionDetails(sectionList?.sort((a, b) => a.order - b.order))
@@ -142,12 +125,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         })
     }
 
-    const openDeleteModal = async (itemType, itemId, sectionId) => {
-        setDeleteItemType(itemType)
-        setIsmodelForDeleteItems(true)
-        setDeleteItemSectionId(sectionId)
-        setDeleteItemId(itemId)
-    }
 
     const handleDeleteSectionItem = async () => {
         let body = {
@@ -191,7 +168,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         })
     }
 
-    const handleDragEnd = async (result) => {
+    const handleSectionDragEnd = async (result) => {
         if (!result.destination) {
             return;
         }
@@ -223,19 +200,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         setSelectedSection(section)
     }
 
-    const handleOpenPdfModel = (item) => {
-        if (item.type != 'quiz') {
-            setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
-            setOpen(true);
-        }
-        else {
-            window.open(item.linkKey)
-        }
-    };
-    const closePdfModel = () => {
-        setOpen(false);
-        setFileSrc(undefined)
-    };
 
     return (
         <div>
@@ -263,76 +227,67 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                     </div>
                 </div>
             }
-            {sectionDetails?.length > 0 && <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="sections" direction="vertical" >
-                    {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {sectionDetails?.map((section, index) => (
-                                <Draggable key={`section ${index}`} draggableId={`section-${index}`} index={index}>
-                                    {(provided) => (
-                                        <div
-                                            {...provided.draggableProps}
-                                            ref={provided.innerRef}
-                                        >
-                                            <input className={`hidden ${styles.tab}`} type="checkbox" id={`tab${index}`} />
-                                            <label htmlFor={`tab${index}`} className={`${styles.curriculimSectionHead} ${section.showSectionList ? `${styles.showCurriculumSectionHead}` : ""}`}>
-                                                <div className={styles.curriculimHeadText} onClick={() => showSectionItem(index)} >
-                                                    <div  {...provided.dragHandleProps}>
-                                                        <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFFFFF'} />
+            {sectionDetails?.length > 0 &&
+                <DragDropContext onDragEnd={handleSectionDragEnd}>
+                    <Droppable droppableId="sections" direction="vertical" >
+                        {(provided) => (
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                {sectionDetails?.map((section, index) => (
+                                    <Draggable key={`section ${index}`} draggableId={`section-${index}`} index={index}>
+                                        {(provided) => (
+                                            <div
+                                                {...provided.draggableProps}
+                                                ref={provided.innerRef}
+                                            >
+                                                <input className={`hidden ${styles.tab}`} type="checkbox" id={`tab${index}`} />
+                                                <label htmlFor={`tab${index}`} className={`${styles.curriculimSectionHead} ${section.showSectionList ? `${styles.showCurriculumSectionHead}` : ""}`}>
+                                                    <div className={styles.curriculimHeadText} >
+                                                        <div className={styles.updownSectionIcon}  {...provided.dragHandleProps}>
+                                                            <AllIconsComponenet iconName={'updownarrow'} height={20} width={20} color={'#FFFFFF'} />
+                                                        </div>
+                                                        <p className={styles.sectionTitle}>{section.name}</p>
+                                                        <p className={styles.numberOfItems}>({section.items.length} عنصر) </p>
                                                     </div>
-                                                    <p className={styles.sectionTitle}>{section.name}</p>
-                                                    <p className={styles.numberOfItems}>({section.items.length} عنصر) </p>
-                                                </div>
-                                                <div className={styles.headerActionWrapper} >
-                                                    <div style={{ height: '25px' }} onClick={() => handleAddItemInSection(section)}><AllIconsComponenet iconName={'plus'} height={24} width={24} alt={'key'} color={'#FFFFFF'} /></div>
-                                                    <div style={{ height: '17px' }} onClick={() => openSectionNameModel(section)}><AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} /></div>
-                                                    <div style={{ height: '19px' }} onClick={() => handleDeleteFolderItems('section', section)} ><AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} /></div>
-                                                    <div className={`${styles.arrowIcon} ${section.showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
-                                                        <AllIconsComponenet iconName={'keyBoardDownIcon'} height={24} width={24} color={'#FFFFFF'} />
+                                                    <div className={styles.headerActionWrapper} >
+                                                        <div style={{ height: '25px' }} onClick={() => handleAddItemInSection(section)}>
+                                                            <AllIconsComponenet iconName={'plus'} height={24} width={24} alt={'key'} color={'#FFFFFF'} />
+                                                        </div>
+                                                        <div style={{ height: '17px' }} onClick={() => openSectionNameModel(section)}>
+                                                            <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} />
+                                                        </div>
+                                                        <div style={{ height: '19px' }} onClick={() => handleDeleteFolderItems('section', section)} >
+                                                            <AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} />
+                                                        </div>
+                                                        <div className={`${styles.arrowIcon} ${section.showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
+                                                            <AllIconsComponenet iconName={'keyBoardDownIcon'} height={24} width={24} color={'#FFFFFF'} />
+                                                        </div>
                                                     </div>
+                                                </label>
+                                                <div className={`${styles.curriculumSectionBody} ${section.showSectionList ? `${styles.showCurriculumSectionBody}` : ""}`}>
+                                                    {section.items.length == 0 &&
+                                                        <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddItemInSection(section)}>+  إضافة عنصر</p></div>
+                                                    }
+                                                    {section.items.length > 0 &&
+                                                        <SectionItems
+                                                            sectionId={section.id}
+                                                            itemList={section.items}
+                                                            handleDeleteSectionItem={handleDeleteSectionItem}
+                                                            setDeleteItemId={setDeleteItemId}
+                                                            setDeleteItemSectionId={setDeleteItemSectionId}
+                                                        />
+                                                    }
                                                 </div>
-                                            </label>
-                                            <div className={`${styles.curriculumSectionBody} ${section.showSectionList ? `${styles.showCurriculumSectionBody}` : ""}`}>
-                                                {section.items == 0 &&
-                                                    <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddItemInSection(section)}>+  إضافة عنصر</p></div>
-                                                }
-                                                {section.items?.map((data, index) => {
-                                                    return (
-                                                        <Fragment key={`data${index}`}>
-                                                            <div className={styles.curriculumDataArea}>
-                                                                <div className={styles.curriculimDetailsData}>
-                                                                    <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#BFBFBF'} />
-                                                                    <Icon
-                                                                        height={data.type == 'video' ? 24 : data.type == 'file' ? 24 : 26}
-                                                                        width={data.type == 'video' ? 24 : data.type == 'file' ? 24 : 28}
-                                                                        iconName={data.type == 'video' ? 'videoIcon' : data.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
-                                                                        alt={'Quiz Logo'}
-                                                                    />
-                                                                    <div className={styles.sectionTitle}>
-                                                                        <p>{data.name}</p>
-                                                                        <p className={styles.duration}>(efreg)</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={styles.curriculimDetailsActions}>
-                                                                    <div style={{ height: '25px', cursor: 'pointer' }} onClick={() => handleOpenPdfModel(data)}><AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} /></div>
-                                                                    <div><AllIconsComponenet iconName={'lock2'} height={22} width={22} color={'#00CF0F'} /></div>
-                                                                    <div><AllIconsComponenet iconName={'lock2'} height={22} width={22} color={'#BC0303'} /></div>
-                                                                    <div style={{ height: '25px' }} onClick={() => openDeleteModal('sectionItem', data.id, section.id)}><AllIconsComponenet iconName={'deletecourse'} height={20} width={18} color={'#BFBFBF'} /></div>
-                                                                </div>
-                                                            </div>
-                                                        </Fragment>
-                                                    )
-                                                })}
                                             </div>
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>}
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+
+            }
             <ModelWithOneInput
                 open={isModelForAddFolderOpen}
                 setOpen={setIsModelForAddFolderOpen}
@@ -344,99 +299,18 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 onCloseModal={onCloseModal}
                 deleteItemType={deleteItemType}
-                onDelete={deleteItemType == "section" ? handleDeleteSection : handleDeleteSectionItem}
+                onDelete={handleDeleteSection}
             />
-            {isModelForAddCurriculum && <ModelForAddItemCurriculum
-                isModelForAddCurriculum={isModelForAddCurriculum}
-                handleAddItemtoSection={handleAddItemtoSection}
-                setIsModelForAddCurriculum={setIsModelForAddCurriculum}
-                onclose={onclose}
-            />}
-            <StylesModal
-                footer={false}
-                closeIcon={false}
-                open={open}
-                width={1100}
-                onCancel={closePdfModel}
-            >
-                {/* <div className='pdfCloseIcon' onClick={closePdfModel}>
-                    <AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#000000'} />
-                </div> */}
-                <embed src={fileSrc} width="100%" height="100%" type="application/pdf" />
-            </StylesModal>
-        </div>
+            {isModelForAddCurriculum &&
+                <ModelForAddItemCurriculum
+                    isModelForAddCurriculum={isModelForAddCurriculum}
+                    handleAddItemtoSection={handleAddItemtoSection}
+                    setIsModelForAddCurriculum={setIsModelForAddCurriculum}
+                    onclose={onclose}
+                />
+            }
+
+        </div >
     )
 }
 export default CurriculumSectionComponent
-
-
-
-{/* <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="sections" direction="vertical" >
-                    {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {sectionDetails.map((section, index) => (
-                                <Draggable key={`section ${index}`} draggableId={`section-${index}`} index={index}>
-                                    {(provided) => (
-                                        <div
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            ref={provided.innerRef}
-                                        >
-                                            <input className={`hidden ${styles.tab}`} type="checkbox" id={`tab$[index]`} />
-                                            <label htmlFor={`tab$[index]`} className={`${styles.curriculimSectionHead} ${section.showSectionList ? `${styles.showCurriculumSectionHead}` : ""}`}>
-                                                <div className={styles.curriculimHeadText}>
-                                                    <div><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#FFFFFF'} /></div>
-                                                    <p className={styles.sectionTitle}>{section.name}</p>
-                                                    <p className={styles.numberOfItems}>({section.items.length} عنصر) </p>
-                                                </div>
-                                                <div className={styles.headerActionWrapper} >
-                                                    <div onClick={() => handleAddItemInSection(section)}><AllIconsComponenet iconName={'plus'} height={24} width={24} alt={'key'} color={'#FFFFFF'} /></div>
-                                                    <div onClick={() => openSectionNameModel(section)}><AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#FFFFFF'} /></div>
-                                                    <div onClick={() => handleDeleteFolderItems('section')} ><AllIconsComponenet iconName={'deletecourse'} height={20} width={20} color={'#FFFFFF'} /></div>
-                                                    <div className={`${styles.arrowIcon} ${section.showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
-                                                        <AllIconsComponenet iconName={'keyBoardDownIcon'} height={24} width={24} color={'#FFFFFF'} />
-                                                    </div>
-                                                </div>
-                                            </label>
-                                            <div className={`${styles.curriculumSectionBody} ${section.showSectionList ? `${styles.showCurriculumSectionBody}` : ""}`}>
-                                                {section.items == 0 &&
-                                                    <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddItemInSection(section)}>+  إضافة عنصر</p></div>
-                                                }
-                                                {section.items?.map((data, index) => {
-                                                    return (
-                                                        <Fragment key={`data${index}`}>
-                                                            <div className={styles.curriculumDataArea}>
-                                                                <div className={styles.curriculimDetailsData}>
-                                                                    <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#BFBFBF'} />
-                                                                    <Icon
-                                                                        height={data.type == 'video' ? 24 : data.type == 'file' ? 24 : 26}
-                                                                        width={data.type == 'video' ? 24 : data.type == 'file' ? 24 : 28}
-                                                                        iconName={data.type == 'video' ? 'videoIcon' : data.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
-                                                                        alt={'Quiz Logo'}
-                                                                    />
-                                                                    <div className={styles.sectionTitle}>
-                                                                        <p>{data.name}</p>
-                                                                        <p className={styles.duration}>(efreg)</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={styles.curriculimDetailsActions}>
-                                                                    <div style={{ height: '21px' }}><AllIconsComponenet iconName={'visibilityIcon'} height={18} width={24} color={"#BFBFBF"} /></div>
-                                                                    <div><AllIconsComponenet iconName={'lock2'} height={22} width={22} color={'#00CF0F'} /></div>
-                                                                    <div><AllIconsComponenet iconName={'lock2'} height={22} width={22} color={'#BC0303'} /></div>
-                                                                    <div style={{ height: '25px' }} onClick={() => handleDeleteFolderItems('sectionItem')}><AllIconsComponenet iconName={'deletecourse'} height={20} width={18} color={'#BFBFBF'} /></div>
-                                                                </div>
-                                                            </div>
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext> */}

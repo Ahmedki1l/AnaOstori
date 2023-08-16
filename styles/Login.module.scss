@@ -147,3 +147,11 @@
 	font-size: 1.3rem !important;
 	color: #00000080;
 }
+
+@media(max-width: 550px) {
+	.loginFormDiv {
+		width: 100%;
+		border: none;
+		padding: 1rem;
+	}
+}
