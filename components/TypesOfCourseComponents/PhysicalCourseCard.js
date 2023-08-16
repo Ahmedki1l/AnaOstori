@@ -39,38 +39,41 @@ export default function PhysicalCourseCard(props) {
 				<CoverImg height={215} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 			</div>
 			<div className={styles.detailsBox}>
-				<div style={{ maxHeight: '205px', overflow: 'auto' }}>
-					<h1 className='head2 text-center'>{courseDetail.name}</h1>
-					<p className={styles.courseDetailText}>{courseDetail.cardDescription}</p>
-					<ul className={styles.descriptionList}>
-						{courseDetail.CourseCardMetaData?.map((metaData, index) => {
-							return (
-								<li key={`courseCare${index}`}>
-									<div>
-										<Icon height={isSmallScreen ? 18 : 21} width={isSmallScreen ? 18 : 21} iconName={metaData.icon} alt={'Card Meta Data Icon'} />
-									</div>
-									<div className='flex'>
-										<p className='pr-2'>
-											{metaData.link ?
-												<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
-												: metaData.tailLinkName ?
-													<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>
-													:
-													<span className={styles.listItemText}>{metaData.text}</span>
-											}
-											<span className={styles.grayText}>{metaData.grayedText ? `(${metaData.grayedText})` : ''}</span>
-										</p>
-									</div>
-								</li>
-							)
-						})}
-					</ul>
-				</div>
+				{/* <div style={{ maxHeight: '205px', overflow: 'auto' }}> */}
+				<h1 className='head2 text-center'>{courseDetail.name}</h1>
+				<p className={styles.courseDetailText}>{courseDetail.cardDescription}</p>
+				<ul className={styles.descriptionList}>
+					{courseDetail.CourseCardMetaData?.map((metaData, index) => {
+						return (
+							<li key={`courseCare${index}`}>
+								<div>
+									<Icon height={isSmallScreen ? 18 : 21} width={isSmallScreen ? 18 : 21} iconName={metaData.icon} alt={'Card Meta Data Icon'} />
+								</div>
+								<div className='flex'>
+									<p className='pr-2'>
+										{metaData.link ?
+											<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
+											: metaData.tailLinkName ?
+												<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>
+												:
+												<span className={styles.listItemText}>{metaData.text}</span>
+										}
+										<span className={styles.grayText}>{metaData.grayedText ? `(${metaData.grayedText})` : ''}</span>
+									</p>
+								</div>
+							</li>
+						)
+					})}
+				</ul>
+				{/* </div> */}
 				<div className={styles.priceBoxWrapper}>
 					{courseDetail.discount == null ?
-						<div className={styles.onePersonPriceBox}>
-							<p className={`fontMedium ${styles.detailText}`}>سعر الدورة للشخص</p>
-							<p className={`fontBold ${styles.price}`}>{oneUserPrice} ر.س</p>
+						<div>
+							<p className={`fontBold pt-4 pr-3 ${styles.detailText}`}>الأسعار شاملة الضريبة</p>
+							<div className={styles.onePersonPriceBox}>
+								<p className={` ${styles.onePersonDetailText}`}>للشخص الواحد</p>
+								<p className={`fontBold ${styles.price}`}>{oneUserPrice} ر.س</p>
+							</div>
 						</div>
 						:
 						<div className='pt-4 pr-4'>
@@ -84,33 +87,44 @@ export default function PhysicalCourseCard(props) {
 						</div>
 					}
 					{(courseDetail.type != "on-demand" && groupDiscountEligible) && <>
-						<div className={styles.specialPriceBox}>
-							<p className={styles.detailText}>*سعر خاص للمجموعات</p>
-							<div className='flex items-center cursor-pointer select-none' onClick={() => { setDiscountShow(!discountShow) }}>
+						<div>
+							<div className={`flex items-center cursor-pointer select-none ${styles.hidePriceBox}`} onClick={() => { setDiscountShow(!discountShow) }}>
 								<div style={{ height: '18px' }}>
 									<div className={discountShow == true ? `${styles.rotateArrow}` : ''}>
-										<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
+										<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#3B9100'} />
 									</div>
 								</div>
-								<p className={styles.seemoreText}>{discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
+								<p className={styles.detailText}>إخفاء خصم المجموعات</p>
 							</div>
 						</div>
-						{discountShow && <>
-							<div className={styles.twoPersonPriceBox}>
-								<p className={styles.detailText}>{courseDetail.discountForTwo} ر.س على كل شخص</p>
-								<p className={`fontBold ${styles.price}`}>{courseDetail.discountForTwo * 2} ر.س</p>
-							</div>
-							<div className={styles.threePersonPriceBox}>
-								<p className={styles.detailText}>{courseDetail.discountForThreeOrMore} ر.س على كل شخص</p>
-								<p className={`fontBold ${styles.price}`}>مخصص</p>
-							</div>
-						</>}
+						{discountShow &&
+							<>
+								<div className={styles.twoPersonPriceBox}>
+									<div>
+										<p className={styles.detailText}>للشخصين</p>
+									</div>
+									<div style={{ textAlign: 'end' }}>
+										<p className={`fontBold ${styles.price}`}>{courseDetail.discountForTwo} ر.س</p>
+										<p className={` ${styles.eachPersonDetailText}`}>على كل شخص</p>
+									</div>
+								</div>
+								<div className={styles.threePersonPriceBox}>
+									<div>
+										<p className={styles.detailText}>3 أشخاص أو أكثر</p>
+									</div>
+									<div style={{ textAlign: 'end' }}>
+										<p className={`fontBold ${styles.price}`}>{courseDetail.discountForThreeOrMore} ر.س</p>
+										<p className={` ${styles.eachPersonDetailText}`}>على كل شخص</p>
+									</div>
+								</div>
+							</>
+						}
 					</>}
 					<div className={styles.btnBox}>
 						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail)}>قراءة تفاصيل الدورة</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div >
 	)
 }

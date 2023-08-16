@@ -88,13 +88,13 @@ export default function Footer() {
 							</Link>
 						</ul>
 					</div>
-					<div className={`${styles.section4} ${styles.section}`}>
+					<div className={`${styles.section} ${styles.contactSections}`}>
 						<h3>خلنا على تواصل</h3>
 						<ul>
 							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText inline-block'>
 								<li className={styles.whatsAppWrapper} onMouseEnter={() => setPhoneIconColor('#F26722')} onMouseLeave={() => setPhoneIconColor('#000000')}>
 									<div className={styles.whatsAppBlack}>
-										<AllIconsComponenet height={32} width={32} iconName={'whatsappFill'} color={phoneIconColor} />
+										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'whatsappFill'} color={phoneIconColor} />
 									</div>
 									<p>0502413980</p>
 								</li>
@@ -102,7 +102,7 @@ export default function Footer() {
 							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText '>
 								<li className={styles.locationWrapper} onMouseEnter={() => setLocationIconColor('#F26722')} onMouseLeave={() => setLocationIconColor('#000000')}>
 									<div className={styles.locationBlack}>
-										<AllIconsComponenet height={32} width={32} iconName={'location'} color={locationIconColor} />
+										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'location'} color={locationIconColor} />
 									</div>
 									<p style={{ color: locationIconColor }}>الرياض، حي الياسمين</p>
 								</li>

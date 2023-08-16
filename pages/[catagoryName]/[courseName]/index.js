@@ -16,6 +16,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
 import { signOutUser } from '../../../services/fireBaseAuthService'
+import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
 
 
 export async function getServerSideProps(ctx) {
@@ -246,6 +247,11 @@ export default function Index(props) {
 						</div>
 					</div>
 					{(screenWidth <= 767) &&
+						<div className={` ${styles.mobilePriceBox} ${offset > 512 ? ` ${styles.fixedMobilePriceBox}` : ''}`}>
+							<CoursePriceBox courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={bookSeatButtonText} />
+						</div>
+					}
+					{(screenWidth <= 767) &&
 						<ul id={'header'} className="pr-4" style={{ paddingTop: selectedNavItem == 0 ? `${paddingTop}rem` : '2rem' }}>
 							<h3 className='fontBold pb-4'>{lang == 'en' ? `Subscription Info` : `تفاصيل الاشتراك`}</h3>
 							{courseDetail.courseDetailsMetaData && courseDetail.courseDetailsMetaData?.map((item, index) => {
@@ -272,11 +278,6 @@ export default function Index(props) {
 								)
 							})}
 						</ul>
-					}
-					{(screenWidth <= 767) &&
-						<div className={styles.mobilePriceBox}>
-							<CoursePriceBox courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={bookSeatButtonText} />
-						</div>
 					}
 					<div className={styles.courseExtraDetailsWrapper}>
 						<div className={`maxWidthDefault `}>
@@ -424,9 +425,9 @@ export default function Index(props) {
 							</div>
 						</div>
 					</div>
+					<WhatsAppLinkComponent isBookSeatPageOpen={true} />
 				</div>
 			}
-
 		</>
 	)
 }

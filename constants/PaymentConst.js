@@ -25,7 +25,7 @@ const noOfUsersTag2 = [
 ]
 
 const genders = [
-    { value: 'male', label: 'ولد' },
+    { value: 'male', label: 'شاب' },
     { value: 'female', label: 'بنت' }
 ]
 

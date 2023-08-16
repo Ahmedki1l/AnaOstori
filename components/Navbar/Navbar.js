@@ -153,7 +153,7 @@ export default function Navbar() {
 			{isMediumScreen ?
 				<div className={styles.mobileLogoBar} id="navBar">
 					<Link href={'/'} className='pt-1'>
-						<Logo height={40} width={74} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
+						<Logo height={34} width={62} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
 					</Link>
 					<div className={`p-1 ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
 						<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />

@@ -95,7 +95,6 @@ function Index() {
         }
         console.log(data);
         await createFolderAPI(data).then((res) => {
-            console.log(res);
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
         })

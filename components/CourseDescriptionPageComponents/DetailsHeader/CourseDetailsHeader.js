@@ -44,7 +44,7 @@ export default function CourseDetailsHeader(props) {
 						</div>
 					}
 					{!(screenWidth > 767) &&
-						<div className='w-80 mx-auto'>
+						<div className={`w-80 mx-auto ${styles.courseImgWrapper}`}>
 							<CoverImg height={190} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 							{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={''} thumnailHeight={190} /> */}
 						</div>

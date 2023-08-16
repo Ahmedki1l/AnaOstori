@@ -24,8 +24,10 @@
 	cursor: pointer;
 }
 
-
-
+.courseTypeText {
+	font-size: 20px;
+	font-weight: bold;
+}
 
 .mainSection {
 	padding: 2rem 1rem;
@@ -42,13 +44,6 @@
 	}
 }
 
-.animatedTextBox {
-	position: relative;
-	overflow: hidden;
-	height: 30px;
-	width: 165px;
-}
-
 .animatedText {
 	position: absolute;
 	color: $primary-color;
@@ -59,17 +54,24 @@
 	animation-iteration-count: infinite;
 }
 
+.animatedTextBox {
+	position: relative;
+	overflow: hidden;
+	height: 30px;
+	width: 165px;
+}
+
 @keyframes textAnimation {
 	0% {
 		top: 31px
 	}
 
 	16% {
-		top: 0px
+		top: 5px
 	}
 
 	24% {
-		top: 0px
+		top: 5px
 	}
 
 	40% {
@@ -347,6 +349,11 @@
 		flex-direction: column-reverse;
 	}
 
+	.videoThumnail {
+		width: 530px;
+		margin: 0 auto;
+	}
+
 	.textSection {
 		padding-top: 1rem;
 		width: 530px;
@@ -364,6 +371,7 @@
 	.badgeDiv {
 		justify-content: center;
 		padding-bottom: 2rem;
+		width: 100%;
 	}
 
 	.typeOfCourseHeader {
@@ -391,13 +399,24 @@
 
 @media (max-width: 640px) {
 	.textSection {
-		width: 350px;
+		width: 100%;
+	}
+
+	.discriptionText {
+		width: 100%;
+	}
+
+	.videoThumnail {
+		width: 100%;
 	}
 
 	.animatedTextBox {
-		position: absolute;
-		top: 30px;
-		left: 158px;
+		width: 137px;
+	}
+
+	.courseTypeText {
+		font-size: 20px;
+		font-weight: 500;
 	}
 
 	.videoSection {
@@ -414,8 +433,12 @@
 	}
 
 	.badgeDiv {
-		p {
-			width: 250px;
+		justify-content: right;
+		padding-bottom: 2rem;
+		width: 100%;
+
+		div {
+			width: 88%;
 		}
 	}
 
@@ -441,7 +464,8 @@
 
 	.courseCardWraper {
 		height: auto;
-		width: 340px;
+		width: 358px;
+		margin: 0 0px 1rem;
 	}
 
 	.notificationText {
@@ -452,9 +476,6 @@
 		font-size: 20px;
 	}
 
-	.videoThumnail {
-		width: 22rem;
-	}
 
 	.firstBtnBox,
 	.secondBtnBox {
@@ -467,6 +488,22 @@
 	}
 }
 
+@media (max-width: 525px) {
+	.mainSection {
+		align-items: flex-start;
+	}
+
+	.textSection {
+		width: 350px;
+		text-align: right;
+	}
+
+	.animatedTextBox {
+		position: absolute;
+		top: 27px;
+		left: 185px;
+	}
+}
 
 
 

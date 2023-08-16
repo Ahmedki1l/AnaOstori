@@ -66,6 +66,7 @@ const Index = () => {
                 isModelForAddInstructor={isModelForAddInstructor}
                 setIsModelForAddInstructor={setIsModelForAddInstructor}
                 isEdit={isEdit}
+                instructorDetails={instructorDetails}
             />
         </div>
     )

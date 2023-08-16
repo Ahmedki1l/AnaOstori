@@ -1,0 +1,45 @@
+.curriculumDataArea {
+    border-bottom: 1px solid #B8B8B8;
+    display: flex;
+    padding: 13px;
+    justify-content: space-between;
+    background-color: #FFFFFF;
+}
+
+.curriculumDataArea:last-child {
+    border-bottom: none;
+}
+
+.curriculimDetailsData {
+    width: 22;
+    display: flex;
+    justify-content: space-around;
+}
+
+.sectionTitle {
+    font-size: 20px;
+    margin-right: 3px;
+
+    .duration {
+        font-size: 14px;
+        color: #2d2e2d80;
+        padding: 0;
+    }
+}
+
+.curriculimDetailsActions {
+    align-items: center;
+    width: 18%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.updownArrowWrapper {
+    height: 30px;
+    padding: 5px;
+    border-radius: 3px;
+
+    &:hover {
+        background-color: #000000;
+    }
+}

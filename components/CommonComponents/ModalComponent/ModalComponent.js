@@ -88,7 +88,7 @@ const ModalComponent = (props) => {
                     حسابك راح ينحذف خلال x يوم/ أيام وراح تفقد الوصول إلى جميع الدورات المشترك بها
                 </p>
                 <div className={`${styles.buttonModalDiv} flex justify-center items-center`}>
-                    <button className={`primarySolidBtn ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery}  >استعادة الحساب</button>
+                    <button className={`primarySolidBtn ml-2  ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery}  >استعادة الحساب</button>
                     <button className={`secondryStrockedBtn ${styles.cancelBtn}`} onClick={handleCancel} >تجاهل </button>
                 </div>
             </StylesModal>

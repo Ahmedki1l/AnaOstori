@@ -239,7 +239,7 @@ export default function PaymentInfoForm(props) {
 					<div className={styles.priceDetailsBox}>
 						<div className='flex justify-between'>
 							<p>سعر الدورة</p>
-							<p>{(createdOrder.basePrice * createdOrder.qty).toFixed(2)} ر.س</p>
+							<p>{(createdOrder.price * createdOrder.qty).toFixed(2)} ر.س</p>
 						</div>
 						{createdOrder.totalDiscount && <div className='flex justify-between'>
 							<p style={{ color: '#00bd5d' }}>قيمة الخصم</p>

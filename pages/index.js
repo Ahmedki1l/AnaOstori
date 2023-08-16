@@ -85,12 +85,12 @@ export default function Home(props) {
 		router.push(`/${navigationLink}`)
 	}
 
-	const typeOfCourse = [
-		{ courseTypeHead: 'حضورية', iconName: 'physicalCourseIcon', height: isMediumScreen ? (isSmallScreen ? 41 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 44 : 54) : 70 },
-		{ courseTypeHead: 'بث مباشر', iconName: 'live', height: isMediumScreen ? (isSmallScreen ? 41 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 44 : 54) : 70 },
-		{ courseTypeHead: 'مسجلة', iconName: 'onlineCourseIcon', height: isMediumScreen ? (isSmallScreen ? 41 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 53 : 64) : 82 },
-	]
 
+	const typeOfCourse = [
+		{ courseTypeHead: 'حضورية', iconName: 'physicalCourseIcon', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
+		{ courseTypeHead: 'بث مباشر', iconName: 'live', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 33 : 54) : 70 },
+		{ courseTypeHead: 'مسجلة', iconName: 'onlineCourseIcon', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 64) : 82 },
+	]
 
 	return (
 		<div className={styles.container}>
@@ -140,14 +140,14 @@ export default function Home(props) {
 					<div className={`${styles.badgeDiv} pt-4`}>
 						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
 						<div className='px-4'>
-							<p className='head2'>وش يميزنا</p>
+							<p className='head2' style={{ fontSize: '20px' }}>وش يميزنا</p>
 							<p className={styles.discriptionText}>شاملين كل شيء تحتاجه من تأسيس وتجميعات، ونرد على أسئلتك، ونتابع معك أدائك، ونضمن لك الفائدة.</p>
 						</div>
 					</div>
-					<div className={styles.badgeDiv}>
+					<div className={`${styles.badgeDiv} pt-4`}>
 						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
 						<div className='px-4'>
-							<p className='head2'>نضمن لك الفائدة</p>
+							<p className='head2' style={{ fontSize: '20px' }}>نضمن لك الفائدة</p>
 							<p className={styles.discriptionText}>إذا التزمت معنا خطوة خطوة بنضمن لك ارتفاع بدرجتك حسب  <Link className='link' href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>سياسة الضمان</Link></p>
 						</div>
 					</div>

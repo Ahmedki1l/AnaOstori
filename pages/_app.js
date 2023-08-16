@@ -19,7 +19,6 @@ function MyApp({ Component, pageProps }) {
 	const [pageTitle, setPageTitle] = useState('الرئيسية')
 	const [isBookSeatPageOpen, setIsBookSeatPageOpen] = useState(false)
 	const pathName = router.pathname
-
 	const removeFooterFrom = ['watchCourse', 'login', 'register', 'forgotPassword', 'updateProfile', 'accountInformation', 'forgot-password', 'myCourse', 'instructorPanel']
 	const removeWhatsAppFrom = ['watchCourse', 'login', 'register', 'forgotPassword', 'updateProfile', 'accountInformation', 'forgot-password', 'myCourse', 'instructorPanel']
 	const hasFooterShown = removeFooterFrom.some(value => router.asPath.includes(value)) ? true : false
