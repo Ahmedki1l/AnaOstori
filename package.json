@@ -28,6 +28,7 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-file-utils": "^1.2.0",
+    "react-gtm-module": "^2.0.11",
     "react-indiana-drag-scroll": "^2.2.0",
     "react-player": "^2.12.0",
     "react-redux": "^8.0.5",

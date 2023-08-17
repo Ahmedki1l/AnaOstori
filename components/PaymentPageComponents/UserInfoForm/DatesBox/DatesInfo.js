@@ -66,7 +66,7 @@ export default function DatesInfo(props) {
 					{date.instructors.map((instructor, index) => {
 						return (
 							<div className={styles.instructorWrapper} key={`instructor${index}`}>
-								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={mediaUrl(instructor.avatarBucket, instructor.avatarKey)} />
+								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={instructor.avatarKey ? mediaUrl(instructor.avatarBucket, instructor.avatarKey) : '/images/anaOstori2.png'} />
 								<div>
 									{instructor?.ProfileFileKey == null ?
 										<p className='px-2 fontMedium'>{instructor.name}</p>

@@ -12,6 +12,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../components/GlobalStore/store';
 import * as fbq from '../lib/fpixel'
 import Script from 'next/script'
+import GoogleTabManager from '../lib/GoogleTabManager';
 
 
 function MyApp({ Component, pageProps }) {
@@ -140,6 +141,7 @@ function MyApp({ Component, pageProps }) {
 
 			</Head>
 			<div dir='rtl'>
+				{/* <GoogleTabManager pathName={pathName} /> */}
 				<Script
 					id="fb-pixel"
 					strategy="afterInteractive"
