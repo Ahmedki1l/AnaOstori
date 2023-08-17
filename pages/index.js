@@ -55,11 +55,10 @@ export default function Home(props) {
 	const windowScreen = useWindowSize().width
 	const refCourseSec = useRef(null);
 	const refFeedback = useRef(null);
-	const [hideNotificationBar, setHideNotificationBar] = useState(true)
 	const news = props.news ? props.news : []
+	const [hideNotificationBar, setHideNotificationBar] = useState(news.length > 0 ? true : false)
 	const catagories = props?.catagories ? props?.catagories : []
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
-	const homeVideoUrl = mediaUrl(props.homeMetaData[0]?.fileBucket, props.homeMetaData[0]?.fileKey)
 	const [scrollSectionName, setScrollSectionName] = useState()
 
 	const handleScrollToSection = (sectionName) => {
