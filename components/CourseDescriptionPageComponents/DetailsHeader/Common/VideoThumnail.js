@@ -40,7 +40,7 @@ const VideoThumnail = (props) => {
 				</div>
 			</div>
 			<div className='blurBgForVideo'></div>
-			<CoverImg height={thumnailHeight} url={'/images/anaOstori.png'} />
+			<CoverImg height={thumnailHeight} url={'/images/anaOstori.png'} videoThumnail={true} />
 			<StylesModal
 				footer={false}
 				closeIcon={false}

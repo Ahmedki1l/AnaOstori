@@ -94,7 +94,7 @@ export default function PhysicalCourseCard(props) {
 										<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#3B9100'} />
 									</div>
 								</div>
-								<p className={styles.detailText}>إخفاء خصم المجموعات</p>
+								<p className={styles.detailText}>{discountShow ? 'إخفاء خصم المجموعات' : 'عرض خصم المجموعات'}</p>
 							</div>
 						</div>
 						{discountShow &&

@@ -8,7 +8,8 @@ export default function CoverImg(props) {
 	return (
 		<>
 			<div>
-				<Image src={props?.url} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
+				<Image src={props?.url ? props?.url : props.videoThumnail == true ? '/images/anaOstori.png' : '/images/placeHolder.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
+				{/* <Image src={props?.url ? props?.url : '/images/placeHolder.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority /> */}
 			</div>
 			<style jsx>{`
 				div {

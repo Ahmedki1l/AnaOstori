@@ -292,7 +292,7 @@ export default function Register() {
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
-							<p className='mx-2'>تسجيل الدخول بإستخدام قوقل</p>
+							<p className='mx-2'>تسجيل الدخول بإستخدام Google</p>
 						</div>
 						<div className={`${styles.loginWithoutPasswordBtnBox} ${styles.appleLoginBtn}`} onClick={() => handleAppleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
