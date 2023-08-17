@@ -34,6 +34,16 @@
 	margin-right: 8px;
 	cursor: pointer;
 	font-family: 'Tajawal-Medium';
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&:disabled {
+		background-color: #BFBFBF;
+		border-color: #BFBFBF;
+		cursor: not-allowed;
+		color: white;
+	}
 }
 
 .accountRecoveryBtnBox {
