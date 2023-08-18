@@ -125,7 +125,7 @@ const ModelForAddItemLibrary = ({
                                 <div className={styles.uploadVideoWrapper}>
                                     <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
                                     <label htmlFor='uploadFileInput' className='cursor-pointer'>
-                                        <div className={styles.IconWrapper} >
+                                        <div className={styles.IconWrapper}>
                                             <div className={styles.uploadFileWrapper}>
                                                 <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
                                             </div>

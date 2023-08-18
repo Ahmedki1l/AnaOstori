@@ -114,6 +114,14 @@ export const addItemIntoSectionAPI = (data) => { return instance.post(`/section/
 export const removeItemFromSectionAPI = (data) => { return instance.post(`/section/item/delete`, data) }
 export const updateItemOfSectionAPI = (data) => { return instance.post(`/section/item/update`, data) }
 
+// ********* Manage Instructor APIs ***********//
+
+
+export const createInstroctorAPI = (data) => { return instance.post(`/instructor/create`, data) }
+export const editInstroctorAPI = (data) => { return instance.post(`/instructor/update`, data) }
+
+
+
 
 
 

@@ -1,11 +1,15 @@
 
 import { Form, Modal } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './ModelForAddInstructor.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import InputTextArea from '../antDesignCompo/InputTextArea'
+import { createInstroctorAPI, editInstroctorAPI, getInstructorListAPI, uploadFileAPI } from '../../services/apisService'
+import { deleteNullFromObj } from '../../constants/DataManupulation'
+import { useDispatch } from 'react-redux'
+import Spinner from '../CommonComponents/spinner'
 
 
 const ModelForAddInstructor = ({
@@ -14,35 +18,128 @@ const ModelForAddInstructor = ({
     isEdit,
     instructorDetails
 }) => {
-    console.log(instructorDetails);
+
+    useEffect(() => {
+        form.setFieldsValue(instructorDetails)
+        if (instructorDetails?.phone) {
+            form.setFieldValue('phone', instructorDetails?.phone?.replace("966", "0"))
+        }
+        setFileName(instructorDetails?.avatarKey)
+    }, [instructorDetails])
+
 
     const [form] = Form.useForm();
+    const [fileName, setFileName] = useState()
+    const [fileUploadResponceData, setFileUploadResponceData] = useState()
+    const dispatch = useDispatch()
+    const [uploadLoader, setUploadLoader] = useState(false)
 
-    const addInstructor = (values) => {
-        console.log(values);
+    const getFileKey = async (e) => {
+        setUploadLoader(true)
+        let formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        const data = {
+            formData,
+        }
+        await uploadFileAPI(data).then((res) => {
+            setUploadLoader(false)
+            setFileUploadResponceData(res.data)
+            setFileName(e.target.files[0].name)
+        }).catch((error) => {
+            console.log(error);
+            setUploadLoader(false)
+        })
+    }
+
+    const getInstructorListReq = async () => {
+        await getInstructorListAPI().then((res) => {
+            dispatch({
+                type: 'SET_INSTRUCTOR',
+                instructorList: res?.data,
+            })
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const onFinish = (values) => {
+        if (isEdit) {
+            editInstructor(values)
+        } else {
+            addInstructor(values)
+        }
+    };
+
+    const addInstructor = async (values) => {
+        if (values.phone) {
+            values.phone = values.phone.replace(/[0-9]/, "966")
+        }
+        if (fileUploadResponceData) {
+            values.avatarKey = fileUploadResponceData.key
+            values.avatarBucket = fileUploadResponceData.bucket
+            values.avatarMime = fileUploadResponceData.mime
+        }
+        deleteNullFromObj(values)
+        await createInstroctorAPI(values).then((res) => {
+            form.resetFields()
+            getInstructorListReq()
+            setFileUploadResponceData()
+            setIsModelForAddInstructor(false)
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const editInstructor = async (values) => {
+        values.id = instructorDetails.id
+        if (values.phone) {
+            values.phone = values.phone.replace(/[0-9]/, "966")
+        }
+        console.log(fileUploadResponceData);
+        if (fileUploadResponceData) {
+            values.avatarKey = fileUploadResponceData.key
+            values.avatarBucket = fileUploadResponceData.bucket
+            values.avatarMime = fileUploadResponceData.mime
+        }
+        deleteNullFromObj(values)
+        await editInstroctorAPI(values).then((res) => {
+            form.resetFields()
+            getInstructorListReq()
+            setFileName()
+            setFileUploadResponceData()
+            setIsModelForAddInstructor(false)
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleDelete = async (e) => {
+        console.log(e);
+    };
+    const isModelClose = () => {
         form.resetFields()
         setIsModelForAddInstructor(false)
     }
-    const handleDelete = (values) => {
-        console.log(values);
-    };
-
+    const handleRemoveFile = () => {
+        setFileName()
+        setFileUploadResponceData()
+    }
     return (
         <div>
             <Modal
                 className='addAppoinmentModal'
                 open={isModelForAddInstructor}
-                onCancel={() => setIsModelForAddInstructor(false)}
+                onCancel={isModelClose}
                 closeIcon={false}
                 footer={false}>
 
                 <div className={styles.modalHeader}>
-                    <button onClick={() => setIsModelForAddItemOpen(false)} className={styles.closebutton}>
+                    <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                     <p className={`fontBold ${styles.addInstructor}`}>إضافة مدرب</p>
                 </div>
                 <div dir='rtl'>
-                    <Form form={form} onFinish={addInstructor}>
+                    <Form form={form} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
@@ -59,7 +156,6 @@ const ModelForAddInstructor = ({
                                 <div>
                                     <FormItem
                                         name={'email'}
-                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                     >
                                         <Input
                                             fontSize={16}
@@ -71,8 +167,7 @@ const ModelForAddInstructor = ({
                                 </div>
                                 <div>
                                     <FormItem
-                                        name={'phoneNo'}
-                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                        name={'phone'}
                                     >
                                         <Input
                                             fontSize={16}
@@ -85,7 +180,6 @@ const ModelForAddInstructor = ({
                             </div>
                             <FormItem
                                 name={'role'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
                                     fontSize={16}
@@ -104,23 +198,30 @@ const ModelForAddInstructor = ({
                                 />
                             </FormItem>
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>الصورة الشخصية</p>
-                            <>
-                                <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} />
-                                <label className={styles.uploadVideoWrapper} htmlFor='uploadFileInput'>
-                                    <div className={styles.IconWrapper}>
+                            <div className={styles.uploadVideoWrapper}>
+                                <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
+                                <label htmlFor='uploadFileInput' className='cursor-pointer'>
+                                    <div className={styles.IconWrapper} >
                                         <div className={styles.uploadFileWrapper}>
                                             <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
                                         </div>
                                         <p>ارفق الملف</p>
                                     </div>
-                                    <div className={styles.uploadFileNameWrapper}>
-                                        <div className={styles.closeIconWrapper}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>
-                                        <p>video title here</p>
-                                    </div>
                                 </label>
-                            </>
+                                {fileName &&
+                                    <div className={styles.uploadFileNameWrapper}>
+                                        <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
+                                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
+                                        </div>
+                                        {fileName}
+                                    </div>
+                                }
+                                {uploadLoader &&
+                                    <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
+                                }
+                            </div>
                         </div>
-                        <div className={styles.AppointmentFieldBorderBottom}>
+                        <div className={styles.instructorFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
                                 <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>حفظ</button>
                             </div>

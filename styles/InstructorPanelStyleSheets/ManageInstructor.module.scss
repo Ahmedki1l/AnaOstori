@@ -55,6 +55,12 @@
         height: 52px;
         font-size: 18px;
         text-align: center;
+
+        .StudentListImage {
+            display: flex;
+            align-items: center;
+            margin: 18px 14px;
+        }
     }
 
     td:first-child {
