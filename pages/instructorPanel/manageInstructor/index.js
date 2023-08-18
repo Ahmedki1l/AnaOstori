@@ -5,22 +5,29 @@ import ModelForAddInstructor from '../../../components/ManageInstructor/ModelFor
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fullDate } from '../../../constants/DateConverter'
+import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 
 const Index = () => {
+
     const storeData = useSelector((state) => state?.globalStore);
     const [isModelForAddInstructor, setIsModelForAddInstructor] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const instructorDetails = storeData?.instructorList
+    const [editInstructor, setEditInstructor] = useState()
 
     const handleAddInstructor = () => {
         setIsModelForAddInstructor(true)
         setIsEdit(false)
     }
-    const handleEditInstructor = () => {
+
+    const handleEditInstructor = (instructor) => {
+        setEditInstructor(instructor)
         setIsModelForAddInstructor(true)
         setIsEdit(true)
     }
+
 
     return (
         <div>
@@ -42,12 +49,17 @@ const Index = () => {
                             {instructorDetails.map((instructor, index) => {
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
-                                        <td>{instructor.name}</td>
+                                        <td>
+                                            <div className={styles.StudentListImage}>
+                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={instructor.avatarKey == null ? '/images/anaOstori.png' : `${mediaUrl(instructor.avatarBucket, instructor.avatarKey)}`} />
+                                                <p className='pr-4'>{instructor.name}</p>
+                                            </div>
+                                        </td>
                                         <td>{instructor.email}</td>
                                         <td>{fullDate(instructor.createdAt)}</td>
                                         <td>
                                             <div className={styles.actions}>
-                                                <div className='cursor-pointer' onClick={() => handleEditInstructor()}>
+                                                <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
                                                     <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                 </div>
                                                 <div className='cursor-pointer'>
@@ -66,7 +78,7 @@ const Index = () => {
                 isModelForAddInstructor={isModelForAddInstructor}
                 setIsModelForAddInstructor={setIsModelForAddInstructor}
                 isEdit={isEdit}
-                instructorDetails={instructorDetails}
+                instructorDetails={editInstructor}
             />
         </div>
     )

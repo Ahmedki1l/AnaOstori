@@ -126,7 +126,6 @@ const TheStudenet = (props) => {
                                                         <div className={styles.requesterDetails} onClick={() => showSelectedStudentDetails()}>
                                                             <div className={styles.StudentListImage}>
                                                                 <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={studentList.avatarKey == null ? studentList.avatar : `${mediaUrl(studentList.avatarBucket, studentList.avatarKey)}`} />
-                                                                {/* <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={studentList.avatarKey == null ? studentList.avatar : `${baseUrl}/${studentList.avatarKey}`} /> */}
                                                             </div>
                                                             <p className={styles.requesterName}>{studentList.fullName == "" ? studentList.fullName : `${studentList.firstName} ${studentList.lastName}`}</p>
                                                         </div>
