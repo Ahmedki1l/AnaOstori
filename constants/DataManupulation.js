@@ -8,6 +8,9 @@ export const deleteNullFromObj = (obj) => {
 }
 
 export const mediaUrl = (bucketName, mediaKey) => {
+    if (bucketName == null) {
+        return '/images/anaOstori.png'
+    }
     // console.log(bucketName, mediaKey);
     // console.log(`https://${bucketName}.s3.eu-central-1.amazonaws.com/${mediaKey}`);
     return `https://${bucketName}.s3.eu-central-1.amazonaws.com/${mediaKey}`

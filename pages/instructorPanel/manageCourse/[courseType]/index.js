@@ -124,7 +124,7 @@ export default function Index() {
                                         <td>
                                             <div className={styles.publishedCourseDetails} >
                                                 <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
-                                                <p>30 طالب</p>
+                                                <p>{course.studentCount} طالب</p>
                                             </div>
                                         </td>
                                         <td>

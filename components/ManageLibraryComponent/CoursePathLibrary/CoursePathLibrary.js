@@ -118,12 +118,13 @@ const CoursePathLibrary = () => {
                     </div>
                 </div>
             </div>
-            <ModelForDeleteItems
-                ismodelForDeleteItems={ismodelForDeleteItems}
-                onCloseModal={onCloseModal}
-                deleteItemType={'curriculum'}
-                onDelete={handleDeleteFolderItems}
-            />
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={'curriculum'}
+                    onDelete={handleDeleteFolderItems}
+                />}
         </>
     )
 }

@@ -25,7 +25,7 @@ const Appointments = ({ courseId, courseType }) => {
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
     const genders = PaymentConst.genders
-    const [form] = Form.useForm();
+    const [appointmentForm] = Form.useForm();
     const dispatch = useDispatch();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
@@ -79,7 +79,7 @@ const Appointments = ({ courseId, courseType }) => {
                 console.log(error);
             })
         }
-        form.resetFields()
+        appointmentForm.resetFields()
     }
 
     const getAllAvailability = async () => {
@@ -110,7 +110,7 @@ const Appointments = ({ courseId, courseType }) => {
                 value: obj.id,
             }
         });
-        form.setFieldsValue({
+        appointmentForm.setFieldsValue({
             instructors: instructorsList,
             location: appointment?.location,
             locationName: appointment?.locationName,
@@ -131,7 +131,7 @@ const Appointments = ({ courseId, courseType }) => {
     }
 
     const handelModalClose = () => {
-        form.resetFields()
+        appointmentForm.resetFields()
         setIsModalOpen(false)
     }
 
@@ -223,7 +223,7 @@ const Appointments = ({ courseId, courseType }) => {
                             <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                         <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
                     </div>
-                    <Form form={form} onFinish={onFinish}>
+                    <Form form={appointmentForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'instructors'}

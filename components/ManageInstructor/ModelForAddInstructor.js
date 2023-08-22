@@ -16,19 +16,21 @@ const ModelForAddInstructor = ({
     isModelForAddInstructor,
     setIsModelForAddInstructor,
     isEdit,
-    instructorDetails
+    instructorDetails,
+    setEditInstructor,
 }) => {
 
+    const [instructorForm] = Form.useForm();
+
     useEffect(() => {
-        form.setFieldsValue(instructorDetails)
+        instructorForm.setFieldsValue(instructorDetails)
         if (instructorDetails?.phone) {
-            form.setFieldValue('phone', instructorDetails?.phone?.replace("966", "0"))
+            instructorForm.setFieldValue('phone', instructorDetails?.phone?.replace("966", "0"))
         }
         setFileName(instructorDetails?.avatarKey)
-    }, [instructorDetails])
+    }, [])
 
 
-    const [form] = Form.useForm();
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const dispatch = useDispatch()
@@ -81,7 +83,7 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         await createInstroctorAPI(values).then((res) => {
-            form.resetFields()
+            instructorForm.resetFields()
             getInstructorListReq()
             setFileUploadResponceData()
             setIsModelForAddInstructor(false)
@@ -95,7 +97,6 @@ const ModelForAddInstructor = ({
         if (values.phone) {
             values.phone = values.phone.replace(/[0-9]/, "966")
         }
-        console.log(fileUploadResponceData);
         if (fileUploadResponceData) {
             values.avatarKey = fileUploadResponceData.key
             values.avatarBucket = fileUploadResponceData.bucket
@@ -103,7 +104,7 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         await editInstroctorAPI(values).then((res) => {
-            form.resetFields()
+            instructorForm.resetFields()
             getInstructorListReq()
             setFileName()
             setFileUploadResponceData()
@@ -113,17 +114,16 @@ const ModelForAddInstructor = ({
         })
     }
 
-    const handleDelete = async (e) => {
-        console.log(e);
-    };
     const isModelClose = () => {
-        form.resetFields()
+        instructorForm.resetFields()
+        setEditInstructor()
         setIsModelForAddInstructor(false)
     }
     const handleRemoveFile = () => {
         setFileName()
         setFileUploadResponceData()
     }
+
     return (
         <div>
             <Modal
@@ -139,7 +139,7 @@ const ModelForAddInstructor = ({
                     <p className={`fontBold ${styles.addInstructor}`}>إضافة مدرب</p>
                 </div>
                 <div dir='rtl'>
-                    <Form form={form} onFinish={onFinish}>
+                    <Form form={instructorForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
@@ -213,7 +213,11 @@ const ModelForAddInstructor = ({
                                         <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
                                             <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
                                         </div>
-                                        {fileName}
+                                        {fileName.length > 20 ? (
+                                            <span>{fileName.slice(0, 20)}...</span>
+                                        ) : (
+                                            <span>{fileName}</span>
+                                        )}
                                     </div>
                                 }
                                 {uploadLoader &&
@@ -223,13 +227,13 @@ const ModelForAddInstructor = ({
                         </div>
                         <div className={styles.instructorFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>حفظ</button>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >حفظ</button>
                             </div>
-                            {isEdit &&
+                            {/* {isEdit &&
                                 <div className={styles.deleteVideoBtn}>
-                                    <button className='deleteBtn' type={'submit'} onClick={handleDelete}>حذف المدرب</button>
+                                    <button className='deleteBtn' type={'submit'} onClick={() => handleDeleteItems()}>حذف المدرب</button>
                                 </div>
-                            }
+                            } */}
                         </div>
                     </Form>
                 </div>

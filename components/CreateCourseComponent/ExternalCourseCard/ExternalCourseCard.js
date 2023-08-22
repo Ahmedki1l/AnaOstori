@@ -24,16 +24,16 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const editCourseData = storeData?.editCourseData;
     const [courseDetail, setCourseDetail] = useState(isCourseEdit ? editCourseData : createCourseApiRes)
     const [showLoader, setShowLoader] = useState(false);
-    const [form] = Form.useForm();
+    const [externalCourseForm] = Form.useForm();
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (!isCourseEdit) {
             setCourseCardMetaDataObj()
         } else {
-            form.setFieldsValue(editCourseData)
+            externalCourseForm.setFieldsValue(editCourseData)
         }
-    }, [isCourseEdit, form, editCourseData])
+    }, [isCourseEdit, externalCourseForm, editCourseData])
 
     const setCourseCardMetaDataObj = () => {
         let data = { ...courseDetail }
@@ -87,14 +87,13 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             },
             courseId: courseDetail.id
         }
-        console.log(body);
         try {
             const createCourseCardMetaDataReq = createCourseCardMetaDataAPI(body)
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
             const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
             setShowLoader(false)
             setSelectedItem(3)
-            form.resetFields()
+            externalCourseForm.resetFields()
         } catch (error) {
             setShowLoader(false)
             console.log(error);
@@ -192,7 +191,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
         <div style={{ display: 'flex' }}>
             <div className='px-6'>
-                <Form form={form} onFinish={onFinish}>
+                <Form form={externalCourseForm} onFinish={onFinish}>
                     <div className={styles.cardmetaDataForm}>
                         <FormItem
                             name="cardDescription"

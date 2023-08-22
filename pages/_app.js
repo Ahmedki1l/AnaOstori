@@ -7,12 +7,12 @@ import WhatsAppLinkComponent from '../components/CommonComponents/WhatsAppLink';
 import { useEffect, useMemo, useState } from 'react';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../components/GlobalStore/store';
 import * as fbq from '../lib/fpixel'
 import Script from 'next/script'
-import GoogleTabManager from '../lib/GoogleTabManager';
+import GoogleAnalytics from '../lib/GoogleAnalytics';
 
 
 function MyApp({ Component, pageProps }) {
@@ -141,7 +141,7 @@ function MyApp({ Component, pageProps }) {
 
 			</Head>
 			<div dir='rtl'>
-				{/* <GoogleTabManager pathName={pathName} /> */}
+				<GoogleAnalytics pathName={pathName} />
 				<Script
 					id="fb-pixel"
 					strategy="afterInteractive"

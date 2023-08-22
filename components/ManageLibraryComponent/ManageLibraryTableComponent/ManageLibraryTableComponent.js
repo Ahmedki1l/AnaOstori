@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './ManageLibraryTableComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
@@ -21,6 +21,7 @@ const ManageLibraryTableComponent = ({
     getFolderList,
     loading,
 }) => {
+
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -67,6 +68,10 @@ const ManageLibraryTableComponent = ({
         setIsmodelForDeleteItems(false)
     }
 
+    const onItemModelClose = (folderId) => {
+        getItemList(folderId)
+    }
+
     const showItemListOfSelectedFolder = async (item) => {
         if (tableDataType == "item") return
         setTypeOfListData("item")
@@ -78,6 +83,9 @@ const ManageLibraryTableComponent = ({
     const showFolderList = () => {
         setTypeOfListData("folder")
         getFolderList(folderType)
+    }
+    const handleDeleteFolderData = () => {
+        console.log("deleteFolderData");
     }
 
     return (
@@ -119,25 +127,27 @@ const ManageLibraryTableComponent = ({
                                                             alt={'Quiz Logo'} />
                                                     }
                                                     <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                    <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}  عنصر / عناصر  )`}</p>
+                                                    <p className={styles.numberOfAddedVideo}>{`(${item?.numberOfItem}  عنصر / عناصر)`}</p>
                                                 </div>
                                             </td>
                                             <td>{fullDate(item?.createdAt)}</td>
                                             <td>{fullDate(item?.updatedAt)}</td>
                                             <td>
-                                                <div className={styles.videoeventButtons}>
+                                                <div className={tableDataType == "item" ? `${styles.eventButtons}` : ""}>
                                                     <div className='cursor-pointer' onClick={() => handleEditIconClick(item)}>
                                                         <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                     </div>
-                                                    <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
-                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                                    </div>
+                                                    {tableDataType == "item" &&
+                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
+                                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                        </div>
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>
                                     )
                                 })}
-                            </tbody >
+                            </tbody>
                         }
                     </table>
                     {(folderTableData.length == 0 && !loading) &&
@@ -167,11 +177,13 @@ const ManageLibraryTableComponent = ({
                 selectedItem={selectedItem}
                 selectedFolder={selectedFolder}
                 folderType={folderType}
+                onCloseModal={onItemModelClose}
             />}
             {ismodelForDeleteItems && <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}
                 onCloseModal={onCloseModal}
                 deleteItemType={deleteItemType}
+                onDelete={handleDeleteFolderData}
             />}
         </>
     )

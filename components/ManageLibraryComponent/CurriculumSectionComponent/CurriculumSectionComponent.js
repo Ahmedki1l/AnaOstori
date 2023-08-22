@@ -17,7 +17,6 @@ import SectionItems from './SectionItem/SectionItems'
 
 
 const CurriculumSectionComponent = ({ onclose, sectionList }) => {
-    console.log(sectionList);
     const [sectionDetails, setSectionDetails] = useState()
     const router = useRouter()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -155,7 +154,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         }
         await updateCurriculumSectionAPI(body).then((res) => {
             setIsModelForAddFolderOpen(false)
-            console.log(res);
             const newSections = sectionDetails?.filter((item, index) => {
                 return item.id != selectedSection?.id
             })

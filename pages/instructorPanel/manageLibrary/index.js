@@ -17,7 +17,7 @@ function Index() {
     const router = useRouter()
     const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
-    const [selectedItem, setSelectedItem] = useState(router.query.folderType ? router.query.folderType : 'video');
+    const [selectedItem, setSelectedItem] = useState();
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
@@ -26,8 +26,13 @@ function Index() {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
+    }, [])
+
+    useEffect(() => {
         getfolderList(selectedItem)
     }, [selectedItem])
+
 
     const handleItemSelect = async (selcetedItem) => {
         getfolderList(selcetedItem)
@@ -68,7 +73,7 @@ function Index() {
             folderId: folderId
         }
         await getItemListAPI(body).then((res) => {
-            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch((error) => {
             setLoading(false)
@@ -93,7 +98,6 @@ function Index() {
                 type: selectedItem,
             }
         }
-        console.log(data);
         await createFolderAPI(data).then((res) => {
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
@@ -103,7 +107,10 @@ function Index() {
     const handleDeleteSection = () => {
         // don't delete 
     }
-
+    const handleModelClose = (folderId) => {
+        setIsModelForAddItemOpen(false)
+        getfolderList(folderId)
+    }
 
     return (
         <>
@@ -167,12 +174,14 @@ function Index() {
                 onDelete={handleDeleteSection}
                 isEdit={false}
             />
-            <ModelForAddItemLibrary
-                isModelForAddItemOpen={isModelForAddItemOpen}
-                folderType={selectedItem}
-                setIsModelForAddItemOpen={setIsModelForAddItemOpen}
-                selectedFolderId={selectedFolderId}
-            />
+            {isModelForAddItemOpen &&
+                <ModelForAddItemLibrary
+                    isModelForAddItemOpen={isModelForAddItemOpen}
+                    folderType={selectedItem}
+                    setIsModelForAddItemOpen={setIsModelForAddItemOpen}
+                    selectedFolderId={selectedFolderId}
+                    onCloseModal={handleModelClose}
+                />}
         </>
     )
 }

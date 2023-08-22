@@ -19,7 +19,7 @@ export default function Index() {
                     <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل الدورات</p>
                 </Link>
-                <Link href={'/instructorPanel/manageLibrary'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                <Link href={'/instructorPanel/manageLibrary?folderType=video'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={68} height={68} iconName='libraryIcon' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة المكتبة الرقمية</p>
                 </Link>
