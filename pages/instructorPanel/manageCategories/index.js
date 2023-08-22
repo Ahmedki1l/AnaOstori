@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageCategories.module.scss'
 import Image from 'next/legacy/image'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
-import ModelForAddCategory from '../../../components/ManageCategories/ModelForAddCategory'
 import { useSelector } from 'react-redux'
 import { fullDate } from '../../../constants/DateConverter'
 import { mediaUrl } from '../../../constants/DataManupulation';
+import ModelForAddCategory from '../../../components/ManageCategories/ModelForAddCategory'
 
 
 const Index = () => {
@@ -26,6 +26,7 @@ const Index = () => {
         setIsEdit(true)
         setEditCategory(category)
     }
+
 
     return (
         <div className='maxWidthDefault px-4'>
@@ -48,7 +49,7 @@ const Index = () => {
                     </tr>
                 </thead>
                 <tbody className={styles.tableBodyArea}>
-                    {categoriesDetails.map((category, index) => {
+                    {categoriesDetails?.map((category, index) => {
                         return (
                             <tr key={`tableRow${index}`} className={styles.tableRow}>
                                 <td>
@@ -74,9 +75,6 @@ const Index = () => {
                                         <div className='cursor-pointer' onClick={() => handleEditCategory(category)}>
                                             <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                         </div>
-                                        <div className='cursor-pointer'>
-                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -84,12 +82,15 @@ const Index = () => {
                     })}
                 </tbody>
             </table>
-            <ModelForAddCategory
-                isModelForAddCategory={isModelForAddCategory}
-                setIsModelForAddCategory={setIsModelForAddCategory}
-                isEdit={isEdit}
-                categoriesDetails={editCategory}
-            />
+            {isModelForAddCategory &&
+                <ModelForAddCategory
+                    isModelForAddCategory={isModelForAddCategory}
+                    setIsModelForAddCategory={setIsModelForAddCategory}
+                    isEdit={isEdit}
+                    categoriesDetails={editCategory}
+                    setEditCategory={setEditCategory}
+                />
+            }
         </div>
     )
 }

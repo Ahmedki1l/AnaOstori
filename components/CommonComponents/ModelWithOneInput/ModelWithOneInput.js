@@ -15,14 +15,14 @@ const ModelWithOneInput = ({
 }) => {
 
     useEffect(() => {
-        form.setFieldValue('name', itemName)
+        inputForm.setFieldValue('name', itemName)
     }, [itemName])
 
-    const [form] = Form.useForm();
+    const [inputForm] = Form.useForm();
 
     const handleCreateFolder = async (values) => {
         onSave(values)
-        form.resetFields()
+        inputForm.resetFields()
     }
 
     const handleDelete = () => {
@@ -47,7 +47,7 @@ const ModelWithOneInput = ({
                     <p className={`fontBold ${styles.createappointment}`}> إضافة مجلد</p>
                 </div>
                 <div dir='rtl'>
-                    <Form form={form} onFinish={handleCreateFolder}>
+                    <Form form={inputForm} onFinish={handleCreateFolder}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}

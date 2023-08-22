@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageInstructor.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import ModelForAddInstructor from '../../../components/ManageInstructor/ModelForAddInstructor'
-import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fullDate } from '../../../constants/DateConverter'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
@@ -62,9 +61,6 @@ const Index = () => {
                                                 <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
                                                     <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                 </div>
-                                                <div className='cursor-pointer'>
-                                                    <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -74,12 +70,15 @@ const Index = () => {
                     </table>
                 </div>
             </div>
-            <ModelForAddInstructor
-                isModelForAddInstructor={isModelForAddInstructor}
-                setIsModelForAddInstructor={setIsModelForAddInstructor}
-                isEdit={isEdit}
-                instructorDetails={editInstructor}
-            />
+            {isModelForAddInstructor &&
+                <ModelForAddInstructor
+                    isModelForAddInstructor={isModelForAddInstructor}
+                    setIsModelForAddInstructor={setIsModelForAddInstructor}
+                    isEdit={isEdit}
+                    instructorDetails={editInstructor}
+                    setEditInstructor={setEditInstructor}
+                />
+            }
         </div>
     )
 }

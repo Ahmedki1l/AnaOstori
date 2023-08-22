@@ -44,6 +44,16 @@ const ModelForDeleteItems = ({
             messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
             btnText: "تأكيد حذف المقرر",
             title: "حذف مقرر"
+        },
+        category: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
+            btnText: "تأكيد حذف المقرر",
+            title: "حذف مقرر"
+        },
+        instructor: {
+            messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
+            btnText: "تأكيد حذف المقرر",
+            title: "حذف مقرر"
         }
     }
 

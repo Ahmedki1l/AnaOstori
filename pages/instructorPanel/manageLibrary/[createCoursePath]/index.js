@@ -43,7 +43,6 @@ const CreateCoursePath = (props) => {
         let body = {
             curriculumId: routeParams.coursePathId,
         }
-        console.log(body);
         await getCurriculumDetailsAPI(body).then((res) => {
             courseForm.setFieldValue('pathTitle', res.data.name)
             setCurriculumName(res.data.name)
@@ -136,7 +135,6 @@ const CreateCoursePath = (props) => {
                                     value={curriculmName}
                                 />
                             </FormItem>
-                            {console.log(sectionDetails)}
                             {(curriculmName && sectionDetails) && <CurriculumSectionComponent
                                 onclose={onclose}
                                 sectionList={sectionDetails}

@@ -94,6 +94,9 @@ export const createFolderAPI = (data) => { return instance.post(`/folder/create`
 export const updateFolderAPI = (data) => { return instance.post(`/folder/update`, data?.data) }
 
 export const addItemToFolderAPI = (data) => { return instance.post(`item/create/${data?.folderId}`, data?.data) }
+
+export const updateItemToFolderAPI = (data) => { return instance.post(`item/update`, data?.data) }
+
 export const getItemListAPI = (data) => { return instance.get(`item/list?folderId=${data?.folderId}`) }
 
 // ********* Manage Curriculum APIs ***********//
@@ -119,6 +122,12 @@ export const updateItemOfSectionAPI = (data) => { return instance.post(`/section
 
 export const createInstroctorAPI = (data) => { return instance.post(`/instructor/create`, data) }
 export const editInstroctorAPI = (data) => { return instance.post(`/instructor/update`, data) }
+
+// ********* Manage category APIs ***********//
+export const createCatagoryAPI = (data) => { return instance.post(`/catagory/create`, data) }
+export const editCatagoryAPI = (data) => { return instance.post(`/catagory/update`, data) }
+
+
 
 
 

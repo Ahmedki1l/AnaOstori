@@ -25,7 +25,6 @@ const StylesModal = styled(Modal)`
 `
 
 const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setDeleteItemSectionId, sectionId }) => {
-    console.log(itemList);
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [sectionItemList, setSectionItemList] = useState(itemList)
     const [fileSrc, setFileSrc] = useState()
@@ -61,7 +60,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                 order: index + 1
             }
         })
-
+        console.log(data);
         await updateItemOfSectionAPI(data).then((res) => {
             console.log(res);
         }).catch((error) => {
@@ -83,6 +82,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
         setOpen(false);
         setFileSrc(undefined)
     };
+
 
     return (
         <>
@@ -140,14 +140,13 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                 </Droppable>
             </DragDropContext>
 
-
-
-            <ModelForDeleteItems
-                ismodelForDeleteItems={ismodelForDeleteItems}
-                onCloseModal={onCloseModal}
-                deleteItemType={'sectionItem'}
-                onDelete={handleDeleteSectionItem}
-            />
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={'sectionItem'}
+                    onDelete={handleDeleteSectionItem}
+                />}
             <StylesModal
                 footer={false}
                 closeIcon={false}

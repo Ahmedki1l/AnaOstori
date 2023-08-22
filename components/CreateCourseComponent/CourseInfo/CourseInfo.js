@@ -63,16 +63,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
     const [newcreatedCourse, setNewCreatedCourse] = useState()
     const [showLoader, setShowLoader] = useState(false);
-    const [courseForm] = Form.useForm();
+    const [courseInfoForm] = Form.useForm();
     const dispatch = useDispatch();
     const [discountValue, setDiscountValue] = useState()
     const [englishCourse, setEnglishCourse] = useState(false)
 
     useEffect(() => {
         if (isCourseEdit) {
-            courseForm.setFieldsValue(editCourseData)
+            courseInfoForm.setFieldsValue(editCourseData)
         }
-    }, [courseForm, isCourseEdit, editCourseData])
+    }, [courseInfoForm, isCourseEdit, editCourseData])
 
     const catagoriesItem = catagories.map((obj) => {
         return {
@@ -167,7 +167,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
                 setShowLoader(false)
-                courseForm.resetFields()
+                courseInfoForm.resetFields()
             } catch (error) {
                 setShowLoader(false)
                 console.log(error);
@@ -335,7 +335,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
 
     return (
         <div>
-            <Form form={courseForm} onFinish={onFinishCreateCourse} >
+            <Form form={courseInfoForm} onFinish={onFinishCreateCourse} >
                 <div className='px-6'>
                     <FormItem
                         name={'name'}

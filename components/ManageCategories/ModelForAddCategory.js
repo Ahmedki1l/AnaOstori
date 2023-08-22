@@ -8,26 +8,29 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { uploadFileAPI } from '../../services/apisService';
+import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI, uploadFileAPI } from '../../services/apisService';
 import Spinner from '../CommonComponents/spinner';
+import { useDispatch } from 'react-redux';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
     setIsModelForAddCategory,
     isEdit,
     categoriesDetails,
+    setEditCategory,
 }) => {
 
-    console.log(categoriesDetails);
+    const [categoryForm] = Form.useForm();
 
     useEffect(() => {
-        form.setFieldsValue(categoriesDetails)
-    }, [categoriesDetails])
+        categoryForm.setFieldsValue(categoriesDetails)
+        setFileName(categoriesDetails?.pictureKey)
+    }, [])
 
-    const [form] = Form.useForm();
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [uploadLoader, setUploadLoader] = useState(false)
+    const dispatch = useDispatch()
 
 
     const getFileKey = async (e) => {
@@ -48,45 +51,71 @@ const ModelForAddCategory = ({
     }
 
     const getCategoryListReq = async () => {
-        await getInstructorListAPI().then((res) => {
+        await getCatagoriesAPI().then((res) => {
             dispatch({
                 type: 'SET_CATAGORIES',
-                catagoriesList: res.data
+                catagories: res.data
             });
         }).catch((err) => {
             console.log(err);
         })
     }
+
     const onFinish = (values) => {
         if (isEdit) {
             editCategory(values)
         } else {
             addCategory(values)
         }
-        getCategoryListReq()
     };
 
-    const addCategory = (values) => {
-        console.log(values);
-        form.resetFields()
-        setIsModelForAddCategory(false)
+    const addCategory = async (values) => {
+        values.order = Number(values.order)
+        if (fileUploadResponceData) {
+            values.pictureKey = fileUploadResponceData.key
+            values.pictureBucket = fileUploadResponceData.bucket
+            values.pictureMime = fileUploadResponceData.mime
+        }
+        await createCatagoryAPI(values).then((res) => {
+            categoryForm.resetFields()
+            setIsModelForAddCategory(false)
+            getCategoryListReq()
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
     const editCategory = async (values) => {
-        console.log(values);
+        values.id = categoriesDetails.id
+        if (fileUploadResponceData) {
+            values.pictureKey = fileUploadResponceData.key
+            values.pictureBucket = fileUploadResponceData.bucket
+            values.pictureMime = fileUploadResponceData.mime
+        }
+        await editCatagoryAPI(values).then((res) => {
+            categoryForm.resetFields()
+            getCategoryListReq()
+            setFileName()
+            setFileUploadResponceData()
+            setIsModelForAddCategory(false)
+        }).catch((error) => {
+            console.log(error);
+        })
     }
-
-    const handleDelete = (values) => {
-        console.log(values);
-    };
 
     const onChange = (checked) => {
         console.log(`switch to ${checked}`);
     };
 
     const isModelClose = () => {
-        form.resetFields()
+        categoryForm.resetFields()
+        setEditCategory()
         setIsModelForAddCategory(false)
+    }
+
+    const handleRemoveFile = () => {
+        setFileName()
+        setFileUploadResponceData()
     }
 
     return (
@@ -104,7 +133,7 @@ const ModelForAddCategory = ({
                     <p className={`fontBold ${styles.addCategory}`}>إضافة مجال</p>
                 </div>
                 <div dir='rtl'>
-                    <Form form={form} onFinish={onFinish}>
+                    <Form form={categoryForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
@@ -119,7 +148,6 @@ const ModelForAddCategory = ({
                             </FormItem>
                             <FormItem
                                 name={'order'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
                                     fontSize={16}
@@ -153,7 +181,11 @@ const ModelForAddCategory = ({
                                         <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
                                             <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
                                         </div>
-                                        {fileName}
+                                        {fileName.length > 20 ? (
+                                            <span>{fileName.slice(0, 20)}...</span>
+                                        ) : (
+                                            <span>{fileName}</span>
+                                        )}
                                     </div>
                                 }
                                 {uploadLoader &&
@@ -170,11 +202,6 @@ const ModelForAddCategory = ({
                             <div className={styles.createAppointmentBtnBox}>
                                 <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>حفظ</button>
                             </div>
-                            {isEdit &&
-                                <div className={styles.deleteVideoBtn}>
-                                    <button className='deleteBtn' type={'submit'} onClick={handleDelete}>حذف المدرب</button>
-                                </div>
-                            }
                         </div>
                     </Form>
                 </div>

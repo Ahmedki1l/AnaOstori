@@ -5,7 +5,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
-import { addItemToFolderAPI, uploadFileAPI } from '../../../services/apisService';
+import { addItemToFolderAPI, updateItemToFolderAPI, uploadFileAPI } from '../../../services/apisService';
 import Spinner from '../../CommonComponents/spinner';
 
 
@@ -16,19 +16,17 @@ const ModelForAddItemLibrary = ({
     folderType,
     selectedFolderId,
     selectedItem,
+    onCloseModal,
 }) => {
-    const [form] = Form.useForm();
+
+    const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedFolder != undefined ? true : false
     const [uploadLoader, setUploadLoader] = useState(false)
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
 
     useEffect(() => {
-        form.setFieldValue('fileTitle', selectedItem?.name)
-        form.setFieldValue('fileDescription', selectedItem?.description)
-        form.setFieldValue('numberOfQuestions', selectedItem?.numberOfQuestions)
-        form.setFieldValue('numberOfQuestionsToPass', selectedItem?.numberOfQuestionsToPass)
-        form.setFieldValue('examLink', selectedItem?.linkKey)
+        ItemDetailsForm.setFieldsValue(selectedItem)
         setFileName(selectedItem?.linkKey)
     }, [selectedItem])
 
@@ -49,11 +47,19 @@ const ModelForAddItemLibrary = ({
         })
     }
 
+    const onFinish = (values) => {
+        if (isEdit) {
+            editFolderItems(values)
+        } else {
+            addItemToFolder(values)
+        }
+    };
+
     const addItemToFolder = async (e) => {
         let body = {}
         if (folderType !== "quiz") {
-            body.name = e.fileTitle
-            body.description = e.fileDescription
+            body.name = e.name
+            body.description = e.description
             body.type = folderType
             body.linkKey = fileUploadResponceData?.key
             body.linkBucket = fileUploadResponceData?.bucket
@@ -61,8 +67,8 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
         }
         else {
-            body.name = e.fileTitle
-            body.description = e.fileDescription
+            body.name = e.name
+            body.description = e.description
             body.type = folderType
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
@@ -74,12 +80,52 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
+            onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
         }).catch((error) => {
             console.log(error);
         })
-        form.resetFields()
+        ItemDetailsForm.resetFields()
         setIsModelForAddItemOpen(false);
     }
+    const editFolderItems = async (e) => {
+        let body = {}
+        if (folderType !== "quiz") {
+            body.id = selectedItem.id
+            body.name = e.name
+            body.description = e.description
+            body.type = folderType
+            body.linkKey = fileUploadResponceData?.key
+            body.linkBucket = fileUploadResponceData?.bucket
+            body.linkMime = fileUploadResponceData?.mime
+            body.previewAvailable = true
+        }
+        else {
+            body.id = selectedItem.id
+            body.name = e.name
+            body.description = e.description
+            body.type = folderType
+            body.previewAvailable = true
+            body.numberOfQuestions = e.numberOfQuestions
+            body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
+            body.linkKey = e.examLink
+        }
+        const data = {
+            data: body
+        }
+        console.log(data);
+        await updateItemToFolderAPI(data).then((res) => {
+            onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+        }).catch((error) => {
+            console.log(error);
+        })
+        ItemDetailsForm.resetFields()
+        setIsModelForAddItemOpen(false);
+    }
+
+    const onModelClose = () => {
+        setIsModelForAddItemOpen(false)
+    }
+
     const handleRemoveFile = () => {
         setFileName()
         setFileUploadResponceData()
@@ -89,20 +135,20 @@ const ModelForAddItemLibrary = ({
             <Modal
                 className='addAppoinmentModal'
                 open={isModelForAddItemOpen}
-                onCancel={() => setIsModelForAddItemOpen(false)}
+                onCancel={() => onModelClose()}
                 closeIcon={false}
                 footer={false}>
 
                 <div className={styles.modalHeader}>
-                    <button onClick={() => setIsModelForAddItemOpen(false)} className={styles.closebutton}>
+                    <button onClick={() => onModelClose()} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                     <p className={`fontBold ${styles.createappointment}`}>إضافة فيديو</p>
                 </div>
                 <div dir='rtl'>
-                    <Form form={form} onFinish={addItemToFolder}>
+                    <Form form={ItemDetailsForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
-                                name={'fileTitle'}
+                                name={'name'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
@@ -113,7 +159,7 @@ const ModelForAddItemLibrary = ({
                                 />
                             </FormItem>
                             <FormItem
-                                name={'fileDescription'}>
+                                name={'description'}>
                                 <InputTextArea
                                     fontSize={16}
                                     height={76}
@@ -174,7 +220,7 @@ const ModelForAddItemLibrary = ({
                                         </div>
                                     </div>
                                     <FormItem
-                                        name={'examLink'}
+                                        name={'linkKey'}
                                         rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                     >
                                         <Input
@@ -189,7 +235,7 @@ const ModelForAddItemLibrary = ({
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileUploadResponceData?.key == undefined ? true : false} >{isEdit ? "حفظ" : "إنشاء"}</button>}
+                                {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileName ? false : true} >{isEdit ? "حفظ" : "إنشاء"}</button>}
                                 {folderType == "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>}
                             </div>
                             {isEdit &&
