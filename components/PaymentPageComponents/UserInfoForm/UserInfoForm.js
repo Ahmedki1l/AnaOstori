@@ -185,6 +185,9 @@ export default function UserInfoForm(props) {
 		}
 		setStudentsData(data);
 	}
+	const handleSubmit = (studentsData, courseDetailType) => {
+		props.isInfoFill(studentsData, courseDetailType, userAgree)
+	}
 
 	return (
 		<>
@@ -320,7 +323,7 @@ export default function UserInfoForm(props) {
 										</div>
 									</ScrollContainer>
 									{i == 0 &&
-										<div className='checkBoxDiv py-4'>
+										<div className='checkBoxDiv pt-4'>
 											<input id='enrollForMe' type='checkbox' name='enrollForMySelf' onChange={(event) => handleEnrollForMe(event)} />
 											<label htmlFor='enrollForMe' className={`fontMedium ${styles.checkboxText}`}>بسجل لنفسي</label>
 										</div>
@@ -372,7 +375,7 @@ export default function UserInfoForm(props) {
 						</div>
 					)
 				})}
-				<div className='border-t border-inherit pt-4'>
+				<div className='border-t border-inherit  pr-3'>
 					<div className={`maxWidthDefault pr-4 ${styles.radioBtnsContainer}`}>
 						{(studentsData.length > 2 && studentsData.length <= 9) &&
 							<div>
@@ -383,12 +386,9 @@ export default function UserInfoForm(props) {
 							<input id='termsCheckBox' type='checkbox' name='agree' onChange={(event) => setUserAgree(event.target.checked)} />
 							<label htmlFor='termsCheckBox' className={`fontMedium ${styles.checkboxText}`}>أقر بموافقتي على <Link href={'/terms'} className='link' >الشروط والأحكام</Link></label>
 						</div>
-						<div className={styles.btnBox}>
-							{userAgree ?
-								<button className='primarySolidBtn' onClick={() => props.isInfoFill(studentsData, courseDetail.type)}>مراجعة الطلب والدفع</button>
-								:
-								<button className='secondrySolidBtn cursor-not-allowed' >مراجعة الطلب والدفع</button>
-							}
+						{props.userAgreeError == false && <div style={{ color: 'red' }} className={`${styles.errorText} pb-4`}>فضلا الموافقة على الشروط والأحكام</div>}
+						<div className={` pt-2 ${styles.btnBox}`}>
+							<button className='primarySolidBtn' onClick={() => handleSubmit(studentsData, courseDetail.type)}>مراجعة الطلب والدفع</button>
 						</div>
 					</div>
 				</div>

@@ -17,6 +17,7 @@ import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 export default function Navbar() {
 
+	const isSmallScreen = useWindowSize().smallScreen
 	const isMediumScreen = useWindowSize().mediumScreen
 	const [isMenuShow, setIsMenuShow] = useState(false)
 
@@ -251,7 +252,7 @@ export default function Navbar() {
 									</div>}
 									<div className={styles.navLeftDiv}>
 										<div className={styles.viewProfile}>
-											<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
+											<AllIconsComponenet height={isSmallScreen ? 30 : 35} width={isSmallScreen ? 30 : 35} iconName={'profileIcon'} color={'#ffffff'} />
 											<p>{userFullName ? userFullName : ""}</p>
 											<div className={styles.arrowIcon}>
 												<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />

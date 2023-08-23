@@ -202,11 +202,11 @@ export default function Login() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
+										<AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
+										<AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>

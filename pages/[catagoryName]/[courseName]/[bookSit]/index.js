@@ -58,6 +58,7 @@ export default function Index(props) {
 	const [studentsData, setStudentsData] = useState([])
 	const [createdOrder, setCreatedOrder] = useState()
 	const [checkoutId, setCheckoutId] = useState('')
+	const [userAgreeError, setUserAgreeError] = useState()
 
 	const storeData = useSelector((state) => state?.globalStore);
 	const dispatch = useDispatch();
@@ -102,7 +103,7 @@ export default function Index(props) {
 		createOrder()
 	}, [courseDetails, storeData.viewProfileData])
 
-	const validation = (studentsData, courseType) => {
+	const validation = (studentsData, courseType, userAgree) => {
 		const data = [...studentsData]
 		const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		let isError = false
@@ -185,6 +186,7 @@ export default function Index(props) {
 			}
 		}
 		setStudentsData(data);
+		setUserAgreeError(userAgree)
 		return isError
 	}
 
@@ -206,8 +208,8 @@ export default function Index(props) {
 		});
 	}
 
-	const changePageFunction = async (studentsData, courseType) => {
-		let isError = validation(studentsData, courseType)
+	const changePageFunction = async (studentsData, courseType, userAgree) => {
+		let isError = validation(studentsData, courseType, userAgree)
 		fbq.event('Create Order', { courseId: courseDetails.id })
 		if (!isError) {
 			let createOrderData = JSON.parse(JSON.stringify(studentsData))
@@ -267,7 +269,15 @@ export default function Index(props) {
 					{changePage ? (
 						<PaymentInfoForm backToUserForm={backToUserForm} createdOrder={createdOrder} studentsData={studentsData} checkoutId={checkoutId} />
 					) : (
-						<UserInfoForm isInfoFill={changePageFunction} studentsData={studentsData} courseDetails={courseDetails} maleDates={maleDates} femaleDates={femaleDates} mixDates={mixDates} />
+						<UserInfoForm
+							isInfoFill={changePageFunction}
+							studentsData={studentsData}
+							courseDetails={courseDetails}
+							maleDates={maleDates}
+							femaleDates={femaleDates}
+							mixDates={mixDates}
+							userAgreeError={userAgreeError}
+						/>
 					)}
 				</>
 			}

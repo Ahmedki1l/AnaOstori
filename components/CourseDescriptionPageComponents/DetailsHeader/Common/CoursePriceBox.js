@@ -18,7 +18,7 @@ export default function CoursePriceBox(props) {
 						:
 						<p className={`fontMedium ${styles.basePriceHead}`}>سعر الدورة</p>
 					}
-					<p className={`head2 ${styles.basePrice}`}>{courseDetail.price} ر.س</p>
+					<p className={`head2 ${styles.basePrice}`}>{courseDetail.price} {lang == 'en' ? 'SAR' : 'ر.س'}</p>
 				</div>
 				:
 				<div>

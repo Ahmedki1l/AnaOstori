@@ -51,6 +51,7 @@ const CourseInitial =
 
 const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, setSelectedItem }) => {
 
+
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
@@ -66,7 +67,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [courseInfoForm] = Form.useForm();
     const dispatch = useDispatch();
     const [discountValue, setDiscountValue] = useState()
-    const [englishCourse, setEnglishCourse] = useState(false)
+    const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -368,7 +369,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         <CheckBox
                             label={' الدورة انجليزية'}
                             defaultChecked={englishCourse}
-                            onChange={(e) => onChangeCourseChkBox(e)}
+                            onChange={(e) => onChangeCourseChkBox(e, 'englishCourse')}
                         />
                     </FormItem>
 

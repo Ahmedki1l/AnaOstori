@@ -22,14 +22,15 @@ import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsApp
 export async function getServerSideProps(ctx) {
 	const lang = ctx?.resolvedUrl.split('/')[2].split('=')[1] == 'en' ? 'en' : 'ar'
 	const courseName = lang == 'en' ? ctx?.resolvedUrl.split('/')[2].split('?')[0].replace(/-/g, ' ') : ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ')
-
 	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/courseByNameWithoutAuth/${courseName}`)
 	const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
+
 
 	const [courseDetails, homeReviews] = await Promise.all([
 		courseDetailsReq,
 		homeReviewsReq
 	])
+	console.log(courseDetails, 50);
 
 	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/male`)
 
@@ -46,8 +47,6 @@ export async function getServerSideProps(ctx) {
 		mixDatesReq,
 		// courseCurriculumReq
 	])
-	console.log(maleDatesReq, 48);
-
 	if (courseDetails.data == null) {
 		return {
 			notFound: true,
@@ -165,7 +164,7 @@ export default function Index(props) {
 	}
 
 	const handleBookSitButtonClick = () => {
-		if (isDateAvailable == true && bookSeatButtonText == "احجز مقعدك الآن") {
+		if (isDateAvailable == true && (bookSeatButtonText == "احجز مقعدك الآن" || bookSeatButtonText == "Reserve your seat now")) {
 			handleUserLogin()
 		}
 		else {
@@ -212,7 +211,12 @@ export default function Index(props) {
 		<>
 			{(courseDetail) &&
 				<div onWheel={handleWheelEvent} dir={lang == "en" ? 'ltr' : 'rtl'}>
-					<CourseDetailsHeader courseDetail={courseDetail} bookSeatButtonText={bookSeatButtonText} handleBookSitButtonClick={handleBookSitButtonClick} lang={lang} />
+					<CourseDetailsHeader
+						courseDetail={courseDetail}
+						bookSeatButtonText={bookSeatButtonText}
+						handleBookSitButtonClick={handleBookSitButtonClick}
+						lang={lang}
+					/>
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
 							{(screenWidth <= 767) ?

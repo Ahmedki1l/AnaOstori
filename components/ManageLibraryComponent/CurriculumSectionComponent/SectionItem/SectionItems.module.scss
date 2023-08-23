@@ -40,6 +40,10 @@
     border-radius: 3px;
 
     &:hover {
-        background-color: #000000;
+        background-color: #BFBFBF;
+    }
+
+    &:hover svg path {
+        fill: #FFFFFF;
     }
 }

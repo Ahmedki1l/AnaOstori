@@ -87,7 +87,7 @@ const Index = () => {
                     isModelForAddCategory={isModelForAddCategory}
                     setIsModelForAddCategory={setIsModelForAddCategory}
                     isEdit={isEdit}
-                    categoriesDetails={editCategory}
+                    editCategory={editCategory}
                     setEditCategory={setEditCategory}
                 />
             }
