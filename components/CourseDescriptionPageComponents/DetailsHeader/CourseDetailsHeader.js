@@ -9,7 +9,7 @@ import { mediaUrl } from '../../../constants/DataManupulation';
 
 
 export default function CourseDetailsHeader(props) {
-	console.log(props.courseDetail);
+
 	const courseDetail = props.courseDetail
 	const handleBookSitButtonClick = props.handleBookSitButtonClick
 	const isMediumScreen = useWindowSize().mediumScreen
@@ -52,13 +52,44 @@ export default function CourseDetailsHeader(props) {
 					<h1 className={`head1 ${styles.courseName}`}>{courseDetail.name}</h1>
 					<p className={styles.courseDiscriptionText}>{courseDetail.shortDescription}</p>
 					<div className={styles.analyticsBarWrapper}>
-						{courseDetail.type !== 'on-demand' ?
+						{courseDetail.type == 'physical' ?
 							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 								<div className='m-1'>
 									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'location'} color={'#FFFFFF'} />
 								</div>
 								<div className='px-1'>
-									<p> {lang == 'en' ? `Location` : 'يتم بثها عبر'}</p>
+									<p>{lang == 'en' ? 'Location' : 'تقدم الدورة في'}</p>
+									<p className='fontBold'>{courseDetail.type == "physical" ? courseDetail.locationName : lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
+								</div>
+							</div>
+							: courseDetail.type == 'online' ?
+								<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+									<div className='mt-2'>
+										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
+									</div>
+									<div className='px-1'>
+										<p>{lang == 'en' ? 'Location' : 'يتم تقديمها عبر'}</p>
+										<p className='fontBold'>اونلاين</p>
+									</div>
+								</div>
+								:
+								<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+									<div className='mt-2'>
+										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
+									</div>
+									<div className='px-1'>
+										<p>{lang == 'en' ? 'Location' : 'يتم تقديمها عبر'}</p>
+										<p className='fontBold'>اونلاين</p>
+									</div>
+								</div>
+						}
+						{/* {courseDetail.type !== 'on-demand' ?
+							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+								<div className='m-1'>
+									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'location'} color={'#FFFFFF'} />
+								</div>
+								<div className='px-1'>
+									<p>{lang == 'en' ? 'Location' : 'تقدم الدورة في'}</p>
 									<p className='fontBold'>{courseDetail.type == "physical" ? courseDetail.locationName : lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
 								</div>
 							</div>
@@ -68,11 +99,11 @@ export default function CourseDetailsHeader(props) {
 									<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
 								</div>
 								<div className='px-1'>
-									<p>طريقة التقديم </p>
+									<p>{lang == 'en' ? 'Location' : 'يتم تقديمها عبر'}</p>
 									<p className='fontBold'>اونلاين</p>
 								</div>
 							</div>
-						}
+						} */}
 						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 							<div className='m-1'>
 								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'star'} color={'#FFCD3C'} />

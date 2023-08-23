@@ -26,9 +26,7 @@ function Index() {
                             </div>
                         </div>
                     }
-
                 </>
-
             }
         </>
     )

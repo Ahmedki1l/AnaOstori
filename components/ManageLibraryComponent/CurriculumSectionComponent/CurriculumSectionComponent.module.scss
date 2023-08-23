@@ -148,6 +148,10 @@
     z-index: 100;
 
     &:hover {
-        background-color: #8c8c8c;
+        background-color: #FFFFFF;
+    }
+
+    &:hover svg path {
+        fill: #000000;
     }
 }

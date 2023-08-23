@@ -16,17 +16,17 @@ const ModelForAddCategory = ({
     isModelForAddCategory,
     setIsModelForAddCategory,
     isEdit,
-    categoriesDetails,
+    editCategory,
     setEditCategory,
 }) => {
 
     const [categoryForm] = Form.useForm();
 
     useEffect(() => {
-        categoryForm.setFieldsValue(categoriesDetails)
-        setFileName(categoriesDetails?.pictureKey)
+        categoryForm.setFieldsValue(editCategory)
+        setFileName(editCategory?.pictureKey)
     }, [])
-
+    console.log(editCategory);
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [uploadLoader, setUploadLoader] = useState(false)
@@ -63,7 +63,7 @@ const ModelForAddCategory = ({
 
     const onFinish = (values) => {
         if (isEdit) {
-            editCategory(values)
+            editCategoryDetail(values)
         } else {
             addCategory(values)
         }
@@ -85,8 +85,8 @@ const ModelForAddCategory = ({
         })
     }
 
-    const editCategory = async (values) => {
-        values.id = categoriesDetails.id
+    const editCategoryDetail = async (values) => {
+        values.id = editCategory.id
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
             values.pictureBucket = fileUploadResponceData.bucket
@@ -103,8 +103,18 @@ const ModelForAddCategory = ({
         })
     }
 
-    const onChange = (checked) => {
-        console.log(`switch to ${checked}`);
+    const onChange = async (checked,) => {
+        console.log(` ${checked}`);
+        let body = {
+            id: editCategory.id,
+            isDeleted: checked
+        }
+        console.log(body);
+        await editCatagoryAPI(body).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
     };
 
     const isModelClose = () => {

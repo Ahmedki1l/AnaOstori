@@ -350,7 +350,7 @@ const Appointments = ({ courseId, courseType }) => {
                                 />
                             </FormItem>
                             {showSwitchBtn && <div className='flex items-center'>
-                                <Switch defaultChecked onChange={onChange} ></Switch>
+                                <Switch defaultChecked onChange={onChange}></Switch>
                                 <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
                             </div>}
                         </div>
