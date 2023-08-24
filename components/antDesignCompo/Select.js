@@ -34,6 +34,7 @@ const StyledSelect = styled(AntdSelect)`
 `;
 
 const Select = ({
+  onChange,
   OptionData,
   placeholder,
   fontSize,
@@ -44,6 +45,7 @@ const Select = ({
       options={OptionData}
       placeholder={placeholder}
       fontSize={fontSize}
+      onChange={(e) => onChange(e)}
       dropdownStyle={{ direction: 'rtl' }}
       {...rest}
     />

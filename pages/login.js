@@ -84,7 +84,6 @@ export default function Login() {
 				isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 			});
 			let profileData = viewProfileData?.data
-			console.log(profileData);
 			if (profileData.firstName == null || profileData.lastName == null || profileData.gender == null) {
 				router.push('/registerGoogleUser')
 			} else {
@@ -133,7 +132,6 @@ export default function Login() {
 			setLoading(true)
 			await startEmailPasswordLogin(email, password).then((result) => {
 				const user = result.user;
-				console.log(user);
 				localStorage.setItem("accessToken", user?.accessToken);
 				dispatch({
 					type: 'ADD_AUTH_TOKEN',
@@ -202,11 +200,11 @@ export default function Login() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={22} width={27} iconName={'visibilityIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={22} width={27} iconName={'visibilityOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>

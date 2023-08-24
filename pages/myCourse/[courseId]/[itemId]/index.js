@@ -167,7 +167,6 @@ export default function Index() {
                 }
             }
         }
-
     }
 
     const downloadFileHandler = async (itemID) => {

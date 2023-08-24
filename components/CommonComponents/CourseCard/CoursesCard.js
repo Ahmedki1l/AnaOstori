@@ -53,7 +53,7 @@ export default function CoursesCard(props) {
 					<CoverImg height={140} url={coverImgUrl} />
 				</div>
 				<div className={styles.cardContentDiv}>
-					<p className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</p>
+					<h1 className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</h1>
 					<div className={styles.subscriptionText}>
 						<AllIconsComponenet height={14} width={14} iconName={'calander'} color={'#000000'} />
 						<p className='px-2'>{courseDetails.type == "on-demand" ? `ينتهي اشتراكك بعد ${subscriptionDaysLeft} يوم` : `من ${dateWithDay(date?.dateFrom)}إلى ${dateWithDay(date?.dateTo)}`}</p>
@@ -61,7 +61,7 @@ export default function CoursesCard(props) {
 
 					{courseDetails.type == "on-demand" ?
 						<>
-							<p className={styles.progressText}>مستوى التقدم</p>
+							<h1 className={styles.progressText}>مستوى التقدم</h1>
 							<ProgressBar percentage={courseProgress} bgColor={'#2BB741'} fontSize={17} />
 							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة التقدم</button>
 						</>

@@ -58,7 +58,7 @@ const Index = () => {
                                             <Image src={mediaUrl(category.pictureBucket, category.pictureKey)} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
                                         </div>
                                         <div className={styles.skillCourseDetails}>
-                                            <p className={`fontBold ${styles.courseNameHeader}`}>{category.name}</p>
+                                            <h1 className={`fontBold ${styles.courseNameHeader}`}>{category.name}</h1>
                                         </div>
                                     </div>
                                 </td>

@@ -112,7 +112,7 @@ const UpdateProfile = () => {
                                 <div>
                                     <ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={profileUrl} />
                                     <label className={styles.defaultText} style={uploadLoader ? { color: "#808080" } : { color: "#F26722" }} htmlFor="image">
-                                        <span>   تغيير صورة الملف </span> {uploadLoader ? <Image src={loaderColor} width={20} height={15} alt="Loder Pictur" /> : ""}
+                                        <span>   تغيير صورة الملف </span> {uploadLoader ? <Image src={loaderColor} width={20} height={15} alt="Loder Picture" /> : ""}
                                     </label>
                                     <input style={{ display: "none" }} id="image" type="file" onChange={uploadPhoto}
                                     />
@@ -130,7 +130,7 @@ const UpdateProfile = () => {
                                     <input className={styles.inputBox} type="text" name='lastName' value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder='اسم العائلة' />
                                 </div>
                                 <div className={styles.loginBtnBox}>
-                                    <button className={`primarySolidBtn ${styles.updateProfileBtn}`} name="submit" type='submit'>{showLoader ? <Image src={loader} width={50} height={30} alt="Loder Pictur" /> : ""} حفظ</button>
+                                    <button className={`primarySolidBtn ${styles.updateProfileBtn}`} name="submit" type='submit'>{showLoader ? <Image src={loader} width={50} height={30} alt="Loder Picture" /> : ""} حفظ</button>
                                 </div>
                             </div>
                         </form>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/Search.module.scss";
-import axios from "axios";
 import * as linkConst from '../constants/LinkConst';
 import Link from "next/link";
 import useWindowSize from "../hooks/useWindoSize";
@@ -14,7 +13,6 @@ import AllIconsComponenet from "../Icons/AllIconsComponenet";
 
 export default function Search(props) {
 	const whatsAppLink = linkConst.WhatsApp_Link
-	const [queryData, setQueryData] = useState('')
 	const [searchData, setSearchData] = useState([])
 	// const [queryData, setQueryData] = useState(props.orderId ? `0${props.orderId.slice(3)}` : '')
 	// const [searchData, setSearchData] = useState(props.searchData ? props.searchData.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : [])
@@ -50,7 +48,8 @@ export default function Search(props) {
 			<div className={styles.searchHeader}>
 				<h1 className={`head2 text-white text-center ${styles.headText}`}>استعلام الفواتير وتأكيد الحجوزات</h1>
 			</div>
-			<div className={`maxWidthDefault ${styles.searchBody}`}>
+			<div className={`maxWidthDefault`}>
+
 				{searchData.length > 0 && !isMediumScreen ?
 					<table className={styles.tableArea}>
 						<thead className={styles.thead}>
@@ -199,6 +198,21 @@ export default function Search(props) {
 							})}
 						</tbody>
 					</table>
+				}
+				{searchData?.length == 0 &&
+					<div className={`maxWidthDefault`}>
+						<div className={styles.noDataManiArea} >
+							<div className={styles.noDataiconWrapper}>
+								<AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+							</div>
+							<p className={`fontBold py-2 ${styles.detailsText}`} >خلك الأسطوري الجاي!</p>
+							<p style={{ fontSize: '14px' }}>ما عندك مشتريات، تصفح دوراتنا ومتأكدين انها بتعجبك و بتكون الأسطوري الجاي بإذن الله</p>
+							<div className={` pt-4 ${styles.btnWrapper}`}>
+								<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4'>تصفح الدورات</button></div>
+								<div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div>
+							</div>
+						</div>
+					</div>
 				}
 				{isOrderFound == 'show' &&
 					<div className={`pt-8 ${styles.noSearchdataContainer}`}>

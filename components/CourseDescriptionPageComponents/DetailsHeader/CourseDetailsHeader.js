@@ -40,7 +40,7 @@ export default function CourseDetailsHeader(props) {
 									<AllIconsComponenet iconName={'arrowLeft'} height={12} width={12} color={'#FFFFFF'} />
 								}
 							</div>
-							<p>{courseDetail.name}</p>
+							<h1 style={{ fontSize: '14px' }}>{courseDetail.name}</h1>
 						</div>
 					}
 					{!(screenWidth > 767) &&

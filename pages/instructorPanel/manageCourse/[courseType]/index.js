@@ -61,13 +61,12 @@ export default function Index() {
             data: { published: checked },
             courseId: courseId,
         }
-        console.log(body);
         await updateCourseDetailsAPI(body).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error)
         })
     };
+
     return (
         <div className='maxWidthDefault px-4'>
             <div className='flex justify-between items-center'>
@@ -103,7 +102,7 @@ export default function Index() {
                                                     <Image src={course.pictureKey ? mediaUrl(course.pictureBucket, course.pictureKey) : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
                                                 </div>
                                                 <div className={styles.skillCourseDetails}>
-                                                    <p className={`fontBold ${styles.courseNameHeader}`}>{course.name}</p>
+                                                    <h1 className={`fontBold ${styles.courseNameHeader}`}>{course.name}</h1>
                                                     <div className={styles.coursePrice}>
                                                         <p>{course?.price} ر.س للشخص</p>
                                                         {course?.groupDiscountEligible ?

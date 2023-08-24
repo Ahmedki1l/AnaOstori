@@ -344,7 +344,6 @@ export default function UserInfoForm(props) {
 										<input className='formInput' id="fullName" type="text" name={`name${i}`} title="fullName" placeholder=' '
 											value={fullName}
 											onChange={event => handleFormChange(event, i, '')}
-											disabled={enrollForMe && i == 0}
 										/>
 										<label className='formLabel' htmlFor="fullName">الاسم الثلاثي</label>
 									</div>
@@ -353,7 +352,6 @@ export default function UserInfoForm(props) {
 										<input className='formInput' id="phoneNo" type="number" name={`phoneNo${i}`} title="phoneNumber" placeholder=' '
 											value={phoneNumber}
 											onChange={event => handleFormChange(event, i, '')}
-											disabled={enrollForMe && i == 0}
 										/>
 										<label className='formLabel' htmlFor="phoneNo">رقم الجوال</label>
 									</div>
@@ -365,7 +363,6 @@ export default function UserInfoForm(props) {
 										<input className='formInput' id="email" type="email" name={`email${i}`} title="email" placeholder=' '
 											value={email}
 											onChange={event => handleFormChange(event, i, '')}
-											disabled={enrollForMe && i == 0}
 										/>
 										<label className='formLabel' htmlFor="email">الإيميل</label>
 									</div>
