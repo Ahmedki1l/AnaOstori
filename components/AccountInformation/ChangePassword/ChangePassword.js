@@ -98,11 +98,11 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showOldPassword ?
                             <div onClick={() => setShowOldPassword(true)}>
-                                <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
+                                <AllIconsComponenet height={20} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
                             </div>
                             :
                             <div onClick={() => setShowOldPassword(false)}>
-                                <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
+                                <AllIconsComponenet height={20} width={24} iconName={'visibilityOffIcon'} color={'#00000080'} />
                             </div>
                         }
                     </div>
@@ -125,11 +125,11 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showNewPassword ?
                             <div onClick={() => setShowNewPassword(true)}>
-                                <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
+                                <AllIconsComponenet height={20} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
                             </div>
                             :
                             <div onClick={() => setShowNewPassword(false)}>
-                                <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
+                                <AllIconsComponenet height={20} width={24} iconName={'visibilityOffIcon'} color={'#00000080'} />
                             </div>
                         }
 
@@ -153,11 +153,11 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showConfirmPassword ?
                             <div onClick={() => setShowConfirmPassword(true)}>
-                                <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
+                                <AllIconsComponenet height={20} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
                             </div>
                             :
                             <div onClick={() => setShowConfirmPassword(false)}>
-                                <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
+                                <AllIconsComponenet height={20} width={24} iconName={'visibilityOffIcon'} color={'#00000080'} />
                             </div>
                         }
                     </div>

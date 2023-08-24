@@ -5,16 +5,14 @@ import styles from './TheStudenet.module.scss'
 import Select from '../../antDesignCompo/Select'
 import { useDispatch, useSelector } from 'react-redux'
 import ProgressBar from '../../CommonComponents/progressBar'
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
-import { getStudentListAPI } from '../../../services/apisService'
+import { createStudentExamDataAPI, getStudentListAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { signOutUser } from '../../../services/fireBaseAuthService'
 import { fullDate } from '../../../constants/DateConverter';
-import * as LinkConst from '../../../constants/LinkConst';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 
@@ -23,17 +21,17 @@ import { mediaUrl } from '../../../constants/DataManupulation'
 const TheStudenet = (props) => {
 
     const [showStudentDetails, setShowStudentDetails] = useState(false)
-    const [notShowStudentDetails, setNotShowStudentDetails] = useState(true)
     const [allStudentDetails, setAllStudentDetails] = useState([])
+    const [displayedStudentList, setDisplayedStudentList] = useState([])
     const [showStudentList, setShowStudentList] = useState(false)
     const courseId = props.courseId
     const genders = PaymentConst.genders
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
     const availabilityList = storeData?.availabilityList;
-
-    const baseUrl = LinkConst.File_Base_Url2
-
+    const [examList, setExamList] = useState()
+    const [selectedStudent, setSelectedStudent] = useState()
+    const [selectedAvailabilityId, setSelectedAvailabilityId] = useState()
 
     const allavailability = availabilityList?.map((obj) => {
         return {
@@ -42,27 +40,55 @@ const TheStudenet = (props) => {
             value: obj.id,
         }
     });
-    console.log("allavailability", allavailability);
 
-    const saveStudentDetails = () => {
-        setShowStudentDetails(false)
-        setNotShowStudentDetails(true)
+    const onInputChange = (e, index, fieldeName) => {
+        const updatedExamData = [...examList]
+        if (fieldeName == 'grade') {
+            updatedExamData[index].grade = e.target.value
+        } else {
+            updatedExamData[index].note = e.target.value
+        }
+        console.log(updatedExamData);
+        setExamList(updatedExamData)
     }
-    const showSelectedStudentDetails = () => {
+    const saveStudentDetails = async () => {
+        const data = examList.map((exam) => {
+            return {
+                userProfileId: selectedStudent.id,
+                availabilityId: selectedAvailabilityId,
+                itemId: exam.id,
+                courseId: courseId,
+                grade: exam.grade ?? null,
+                note: exam.note ?? null
+            }
+        })
+        let body = {
+            data: data
+        }
+        console.log(body);
+        // await createStudentExamDataAPI(body).then((res) => {
+        //     console.log(res);
+        //     setShowStudentDetails(false)
+        // }).catch((error) => {
+        //     console.log(error)
+        // })
+    }
+    const showSelectedStudentExamDetails = (student) => {
         setShowStudentDetails(true)
-        setNotShowStudentDetails(false)
+        setExamList(student.nonCompletedQuizItems)
+        setSelectedStudent(student)
     }
     const getAllStudentList = async (e) => {
-        console.log(availabilityList);
         let data = {
             availabilityId: e,
             courseId: courseId,
         }
-        console.log(data);
         await getStudentListAPI(data).then((res) => {
-            console.log(res);
+            setSelectedAvailabilityId(e)
             setShowStudentList(true)
+            console.log(res);
             setAllStudentDetails(res?.data)
+            setDisplayedStudentList(res?.data)
         }).catch((error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -74,9 +100,16 @@ const TheStudenet = (props) => {
         })
     }
 
+    const selectGenderFilter = (value) => {
+        console.log(value, allStudentDetails);
+        const newStudentList = [...allStudentDetails]
+        setDisplayedStudentList(newStudentList.filter((student) => value == student.gender));
+        console.log(newStudentList);
+    }
+
     return (
         <div className='maxWidthDefault px-4'>
-            {notShowStudentDetails &&
+            {!showStudentDetails &&
                 <div>
                     <Form>
                         <div className='flex'>
@@ -101,6 +134,7 @@ const TheStudenet = (props) => {
                                     height={40}
                                     placeholder="اختر الجنس "
                                     OptionData={genders}
+                                    onChange={selectGenderFilter}
                                 />
                             </FormItem>
                         </div>
@@ -118,30 +152,30 @@ const TheStudenet = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody className={styles.tableBodyArea}>
-                                    {allStudentDetails?.map((studentList, index) => {
+                                    {displayedStudentList?.map((student, index) => {
                                         return (
                                             <tr key={`studentTableRow${index}`} className={styles.tableRow}>
                                                 <td>
                                                     <div className='flex'>
-                                                        <div className={styles.requesterDetails} onClick={() => showSelectedStudentDetails()}>
+                                                        <div className={styles.requesterDetails} >
                                                             <div className={styles.StudentListImage}>
-                                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={studentList.avatarKey == null ? studentList.avatar : `${mediaUrl(studentList.avatarBucket, studentList.avatarKey)}`} />
+                                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student.avatarKey == null ? student.avatar : `${mediaUrl(student.avatarBucket, student.avatarKey)}`} />
                                                             </div>
-                                                            <p className={styles.requesterName}>{studentList.fullName == "" ? studentList.fullName : `${studentList.firstName} ${studentList.lastName}`}</p>
+                                                            <p className={styles.requesterName}>{student.fullName == "" ? student.fullName : `${student.firstName} ${student.lastName}`}</p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <p>{studentList.phone} </p>
-                                                    <p>{studentList.email}</p>
+                                                    <p>{student.phone} </p>
+                                                    <p>{student.email}</p>
                                                 </td>
                                                 <td>
                                                     <div className={styles.progressbar}>
-                                                        <ProgressBar percentage={studentList.progress} bgColor={'#2BB741'} height={14} fontSize={10} />
+                                                        <ProgressBar percentage={student.progress} bgColor={'#2BB741'} height={14} fontSize={10} />
                                                     </div>
                                                 </td>
-                                                <td>مشاهدة الدرجات</td>
-                                                <td>{fullDate(studentList.createdAt)}</td>
+                                                <td className={`${styles.examText} link`} onClick={() => showSelectedStudentExamDetails(student)}>مشاهدة الدرجات</td>
+                                                <td>{fullDate(student.createdAt)}</td>
                                             </tr>
                                         )
                                     })}
@@ -155,9 +189,9 @@ const TheStudenet = (props) => {
             {showStudentDetails &&
                 <div>
                     <div className={styles.studentDetailsTable}>
-                        <p className={styles.studentDetails}>الفيديوهات</p>
-                        <p>{'>'}</p>
-                        <p className={styles.examResultsForStudents}> تجميعات سنة 23ب </p>
+                        <p className={`${styles.studentDetails}`}> الطلاب </p>
+                        <p className='pl-2'>{'>'}</p>
+                        <p className={styles.examResultsForStudents}>  نتائج درجات {selectedStudent.fullName}</p>
                     </div>
                     <div>
                         <table className={styles.studentTableArea}>
@@ -169,25 +203,33 @@ const TheStudenet = (props) => {
                                 </tr>
                             </thead>
                             <tbody className={styles.studentTableBodyArea}>
-                                <tr className={styles.studentTableRow}>
-                                    <td>اختبار أ</td>
-                                    <td>
-                                        <Input
-                                            fontSize={16}
-                                            width={125}
-                                            height={37}
-                                            placeholder="اكتب الدرجة"
-                                        />
-                                    </td>
-                                    <td>
-                                        <Input
-                                            fontSize={16}
-                                            width={324}
-                                            height={37}
-                                            placeholder="إن وجدت"
-                                        />
-                                    </td>
-                                </tr>
+                                {examList.map((exam, index) => {
+                                    return (
+                                        <tr className={styles.studentTableRow} key={exam.id}>
+                                            <td>{exam.name}</td>
+                                            <td>
+                                                <Input
+                                                    fontSize={16}
+                                                    width={125}
+                                                    height={37}
+                                                    placeholder="اكتب الدرجة"
+                                                    onChange={(e) => onInputChange(e, index, 'grade')}
+                                                />
+                                            </td>
+                                            <td>
+                                                <Input
+                                                    fontSize={16}
+                                                    width={324}
+                                                    height={37}
+                                                    placeholder="إن وجدت"
+                                                    onChange={(e) => onInputChange(e, index, 'note')}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                                }
+
                             </tbody>
                         </table>
                     </div>
@@ -196,8 +238,7 @@ const TheStudenet = (props) => {
             {
                 showStudentDetails &&
                 <div className='flex'>
-                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'}  >إنشاء</button>
-                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentDetails()}>الطلاب</button>
+                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentDetails()}> حفظ </button>
                 </div>
             }
         </div >

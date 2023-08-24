@@ -50,7 +50,7 @@ export default function UserDetailForm1(props) {
 		<>
 			{!isUserLogin ?
 				<div className={styles.noDateFormWrapper}>
-					<p className={`fontBold ${styles.formHead}`}>{lang == 'en' ? 'All seats are booked' : `انحجزت جميع المقاعد`}</p>
+					<h1 className={`fontBold ${styles.formHead}`}>{lang == 'en' ? 'All seats are booked' : `انحجزت جميع المقاعد`}</h1>
 					<p className={styles.formDiscription}>{lang == 'en' ? 'Kindly login and enable the notification so we can notify you once we update or expand more seats in the course ' : 'سجل دخولك وفعل خاصية التنبيه عشان نعلمك اول ما نوسع او نضيف مقاعد جديدة بالدورة'}</p>
 					<div className='flex space-between'>
 						<div className={styles.btnBox1}>
@@ -74,7 +74,7 @@ export default function UserDetailForm1(props) {
 					</div>
 					:
 					<div className={styles.noDateFormWrapper}>
-						<p className={`fontBold ${styles.formHead}`}>{lang == 'en' ? 'All seats are booked' : `انحجزت جميع المقاعد`}</p>
+						<h1 className={`fontBold ${styles.formHead}`}>{lang == 'en' ? 'All seats are booked' : `انحجزت جميع المقاعد`}</h1>
 						<p className={styles.formDiscription}>{lang == 'en' ? 'You want to be notified in case we added or expand more seats?' : `تبي نعلمك إذا وسعنا او ضفنا مقاعد جديدة للدورة؟`}</p>
 						<div className='checkBoxDiv py-2 md:px-4 px-2'>
 							<input type='checkbox' name='agree' onChange={(event) => { hendleChange(event) }} />

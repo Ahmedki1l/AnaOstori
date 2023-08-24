@@ -2,6 +2,8 @@ import React from 'react'
 import styles from '../styles/InvoiceUploaded.module.scss'
 import Link from 'next/link';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
+import * as linkConst from '../constants/LinkConst';
+
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 
@@ -31,8 +33,8 @@ export default function InvoiceUploaded(props) {
 				</div>
 			</div>
 			<h1 className={`head1 ${styles.pageHeader}`}>استلمنا إيصالك</h1>
-			<p className={`fontMedium ${styles.note1}`}>راح نراجع إيصال الحوالة، وبيتواصل معك فريق الدعم على الواتساب لتأكيد الحجز وتحديث حالة الطلب بمدة أقصاها <span className='fontBold'>24</span>  <span className='fontBold'>ساعة</span> ،</p>
-			<p className={`fontMedium ${styles.note1}`}>إذا احتجت مساعدة تواصل معنا على الواتساب وتقدر تشوف حالة طلبك من صفحة استعلام وتأكيد الحجوزات</p>
+			<p className={`fontMedium ${styles.note1}`}>راح نراجع إيصال الحوالة، وبيتواصل معك فريق الدعم على الواتساب لتأكيد الحجز وتحديث حالة الطلب بمدة  <span className='fontBold'> أقصاها 24</span>  <span className='fontBold'>ساعة</span> ،</p>
+			<p className={`fontMedium ${styles.note1}`}>إذا احتجت مساعدة تواصل معنا على  <Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='link'> الواتساب</Link>  وتقدر تشوف حالة طلبك من<Link href={'/search'} className='link'> صفحة استعلام المشتريات</Link></p>
 			<div className={styles.btnsBox}>
 				<div className={`${styles.btnBox} ${styles.downloadInvoicBtnBox}`}>
 					<Link href={`/search?Inquiry=${Inquiry}` ?? ""} className='no-underline'>

@@ -272,11 +272,11 @@ export default function Register() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
+										<AllIconsComponenet height={24} width={30} iconName={'visibilityIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
+										<AllIconsComponenet height={24} width={30} iconName={'visibilityOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>

@@ -84,7 +84,10 @@ export const deleteCourseTypeAPI = (data) => { return instance.post(`/course/cou
 // ********* Attendance APIs ***********//
 export const getAttendanceListAPI = (data) => { return instance.get(`/attendance/list/${data?.availabilityId}`) }
 export const updateAttendanceDataAPI = (data) => { return instance.post(`/attendance/update`, data?.data) }
-export const getStudentListAPI = (data) => { return instance.get(`/students/course/${data?.courseId}/availability/${data?.availabilityId} `) }
+export const getStudentListAPI = (data) => { return instance.get(`/students/course/${data?.courseId}/availability/${data?.availabilityId}`) }
+
+export const createStudentExamDataAPI = (data) => { return instance.post(`/course/courseTrackBulk/create`, data) }
+
 
 // ********* Manage Library APIs ***********//
 
@@ -126,6 +129,7 @@ export const editInstroctorAPI = (data) => { return instance.post(`/instructor/u
 // ********* Manage category APIs ***********//
 export const createCatagoryAPI = (data) => { return instance.post(`/catagory/create`, data) }
 export const editCatagoryAPI = (data) => { return instance.post(`/catagory/update`, data) }
+
 
 
 

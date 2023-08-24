@@ -119,6 +119,47 @@
 	width: 48%;
 }
 
+.noDataManiArea {
+	height: 480px;
+	display: grid;
+	place-content: center;
+	padding: 1rem
+}
+
+.noDataiconWrapper {
+	display: grid;
+	place-content: center;
+}
+
+.detailsText {
+	font-size: 20px;
+	text-align: center;
+}
+
+.btnWrapper {
+	display: flex;
+	justify-content: space-between;
+}
+
+.submitBtnBox,
+.cancleBtnBox {
+	height: 45px;
+	width: 245px;
+
+	button {
+		font-size: 16px;
+	}
+}
+
+.noDataBtnBox {
+	height: 3.2rem;
+
+	button {
+		align-items: center;
+		justify-content: center;
+	}
+}
+
 @media (max-width: 1024px) {
 	.tableArea {
 		border: none;
@@ -131,6 +172,11 @@
 			padding: 0 1rem;
 			border: none;
 			border-bottom: 1px solid #000000;
+		}
+
+		th:last-child,
+		td:last-child {
+			border-bottom: none;
 		}
 
 		th {
@@ -191,6 +237,8 @@
 		border-right-width: 1px;
 		border-color: #000000;
 		border-style: solid;
+		border-radius: 8px;
+		overflow: hidden;
 	}
 }
 
@@ -272,5 +320,14 @@
 
 	.rowDiv {
 		width: 320px;
+	}
+
+	.btnWrapper {
+		width: 100%;
+
+		.submitBtnBox,
+		.cancleBtnBox {
+			width: 49%;
+		}
 	}
 }

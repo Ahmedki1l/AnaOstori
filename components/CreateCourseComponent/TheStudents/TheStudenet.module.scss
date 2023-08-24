@@ -1,7 +1,7 @@
 @import "../../../styles/variables.module.scss";
 
 .tableArea {
-    width: 75%;
+    width: 1020px;
     border-collapse: collapse;
 }
 
@@ -72,6 +72,13 @@
     font-size: 16px;
     color: #2d2e2d80;
     margin-left: 10px;
+
+    &:hover {
+        cursor: pointer;
+        color: #000000;
+        background-color: #7c7c7c18;
+        border-radius: 3px;
+    }
 }
 
 .examResultsForStudents {
@@ -85,7 +92,7 @@
 }
 
 .studentTableArea {
-    width: 65%;
+    width: 1020px;
     margin-top: 20px;
     border-collapse: collapse;
 }
@@ -128,4 +135,8 @@
     border-radius: 3px;
     margin-top: 24px;
     margin-left: 20px;
+}
+
+.examText {
+    cursor: pointer;
 }
