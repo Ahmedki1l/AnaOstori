@@ -8,6 +8,7 @@ import { signOutUser } from '../../../../services/fireBaseAuthService';
 import Spinner from '../../../../components/CommonComponents/spinner';
 import * as fbq from '../../../../lib/fpixel'
 import { inputErrorMessages } from '../../../../constants/ar';
+import WhatsAppLinkComponent from '../../../../components/CommonComponents/WhatsAppLink';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 	const courseName = resolvedUrl.split('/')[2].replace(/-/g, ' ')
