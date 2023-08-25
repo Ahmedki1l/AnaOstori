@@ -64,7 +64,7 @@ export default function Payment(props) {
                             </div>
                             <h1 className={`head1 ${styles.pageHeader}`}>شكرا لك، اكتملت عملية الشراء</h1>
                             <p className={`fontMedium ${styles.note1}`}> فريق الدعم راح يتواصل معك ويضيفك في قروب واتس الدورة في أقرب وقت. إذا احتجت مساعدة تواصل معنا على  <Link href={whatsAppLink} className='link'>الواتساب</Link></p>
-                            <p className={`fontMedium ${styles.note2}`}>رسلنا الفاتورة على الواتساب وعلى الايميل. وتقدر تشوفها ايضا من <Link href={'/search'} className='link'>صفحة استعلام وتأكيد الحجوزات</Link>.</p>
+                            <p className={`fontMedium ${styles.note2}`}>رسلنا الفاتورة على الواتساب وعلى الايميل. وتقدر تشوفها ايضا من <Link href={'/purchaseInquiry'} className='link'>صفحة استعلام وتأكيد الحجوزات</Link>.</p>
                             <Link target='_blank' href={mediaUrl(transactionDetails[0]?.orderDetails?.invoiceBucket, transactionDetails[0]?.orderDetails?.invoiceKey)} className={`${styles.btnsBox} no-underline`}>
                                 <button className='primarySolidBtn flex justify-center items-center'>
                                     <div>

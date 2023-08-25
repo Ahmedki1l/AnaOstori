@@ -279,13 +279,13 @@
 }
 
 .whatsAppLogo {
-	display: flex;
 
 	&:hover .whatsAppMessageWrapper {
 		opacity: 1;
 		visibility: visible;
 		width: auto;
 		padding: 1rem;
+		margin-right: 5px;
 	}
 
 }
@@ -694,6 +694,10 @@
 
 	.whatsAppLogoWrapperDown {
 		bottom: 0;
+	}
+
+	.pageChangeLogoWrapper {
+		bottom: 7rem;
 	}
 }
 

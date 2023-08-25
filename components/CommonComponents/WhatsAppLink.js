@@ -11,22 +11,36 @@ export default function WhatsAppLinkComponent(props) {
 	const isBookSeatPageOpen = props.isBookSeatPageOpen
 	const offset = useScrollEvent().offset
 	const discountShow = props.discountShow
-	console.log(isBookSeatPageOpen, discountShow);
+	const paymentInfoChangePage = props.paymentInfoChangePage
 
 	return (
-		// <div className={`whatsAppLogoWrapper ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : ``}`}>
-		<div className={`whatsAppLogoWrapper ${discountShow == true ? `discountShowWrapperUp` : ``}  ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`}`}>
-			<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
-				<div className='whatsAppLogo' >
-					<div className='whatsAppLogoRoundWrapper'>
-						<AllIconsComponenet height={screenWidth < 769 ? 35 : 50} width={screenWidth < 769 ? 35 : 50} iconName={'whatsapp'} color={'#ffffff'} />
+		// <div className={`whatsAppLogoWrapper ${discountShow == true ? `discountShowWrapperUp` : ``}  ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`} ${paymentInfoChangePage && 'pageChangeLogoWrapper'}`}>
+		// 	<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
+		// 		<div className='whatsAppLogo' >
+		// 			<div className='whatsAppLogoRoundWrapper'>
+		// 				<AllIconsComponenet height={screenWidth < 769 ? 35 : 50} width={screenWidth < 769 ? 35 : 50} iconName={'whatsapp'} color={'#ffffff'} />
+		// 			</div>
+		// 		</div>
+		// 		<div className='whatsAppMessageWrapper'>
+		// 			<p>محتاج مساعدة؟</p>
+		// 			<p>تفضل تواصل معنا</p>
+		// 		</div>
+		// 	</Link>
+		// </div>
+		<div className={`whatsAppLogoWrapper ${discountShow == true ? `discountShowWrapperUp` : ``}  ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`} ${paymentInfoChangePage && 'pageChangeLogoWrapper'}`}>
+			<div className='whatsAppLogo'>
+				<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
+					<div className='flex'>
+						<div className='whatsAppLogoRoundWrapper'>
+							<AllIconsComponenet height={screenWidth < 769 ? 35 : 50} width={screenWidth < 769 ? 35 : 50} iconName={'whatsapp'} color={'#ffffff'} />
+						</div>
+						<div className='whatsAppMessageWrapper'>
+							<p>محتاج مساعدة؟</p>
+							<p>تفضل تواصل معنا</p>
+						</div>
 					</div>
-				</div>
-				<div className='whatsAppMessageWrapper'>
-					<p>محتاج مساعدة؟</p>
-					<p>تفضل تواصل معنا</p>
-				</div>
-			</Link>
+				</Link>
+			</div>
 		</div>
 	)
 

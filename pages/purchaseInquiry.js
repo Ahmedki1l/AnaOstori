@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "../styles/Search.module.scss";
+import styles from "../styles/purchaseInquiry.module.scss";
 import * as linkConst from '../constants/LinkConst';
 import Link from "next/link";
 import useWindowSize from "../hooks/useWindoSize";
@@ -11,7 +11,7 @@ import AllIconsComponenet from "../Icons/AllIconsComponenet";
 
 
 
-export default function Search(props) {
+export default function PurchaseInquiry(props) {
 	const whatsAppLink = linkConst.WhatsApp_Link
 	const [searchData, setSearchData] = useState([])
 	// const [queryData, setQueryData] = useState(props.orderId ? `0${props.orderId.slice(3)}` : '')
@@ -49,7 +49,6 @@ export default function Search(props) {
 				<h1 className={`head2 text-white text-center ${styles.headText}`}>استعلام الفواتير وتأكيد الحجوزات</h1>
 			</div>
 			<div className={`maxWidthDefault`}>
-
 				{searchData.length > 0 && !isMediumScreen ?
 					<table className={styles.tableArea}>
 						<thead className={styles.thead}>

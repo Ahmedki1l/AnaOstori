@@ -13,8 +13,6 @@ import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
 
 
-
-
 export async function getServerSideProps(context) {
 	const params = context.query
 	try {

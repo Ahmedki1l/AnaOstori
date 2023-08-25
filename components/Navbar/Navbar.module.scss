@@ -64,11 +64,11 @@
 	padding-bottom: 1rem;
 	text-decoration: none;
 	color: #000000;
+	cursor: pointer;
 }
 
 .arrowIcon {
-	// font-size: 70px;
-	height: 15px;
+	font-size: 19px;
 }
 
 .navItem {
@@ -102,14 +102,19 @@
 	position: relative;
 }
 
+.navLeftDivMO {
+	position: absolute;
+	left: 10px;
+	width: 100px;
+}
+
 .viewProfile {
 	width: 219px;
 	height: 46px;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
-	padding: 0 0 0 1rem;
-	margin-right: 28px;
+	padding: 0 0.75rem;
+	margin-right: 1rem;
 	cursor: pointer;
 
 	p {
@@ -163,6 +168,10 @@
 	padding-top: 0.5rem;
 }
 
+.profileMenuWrapperMo {
+	right: -133px;
+}
+
 .profileMenuSubWrapper {
 	padding-bottom: 0.5rem;
 	background-color: #ffffff;
@@ -194,15 +203,7 @@
 	padding-right: 0.5rem;
 }
 
-.instructorBtnBox {
-	width: 159px;
-	height: 38px;
 
-	button {
-		font-size: 18px;
-		padding: 12px 8px;
-	}
-}
 
 @media (max-width: 1280px) {
 	.navbarSubWrapper {
@@ -228,8 +229,6 @@
 	}
 
 	.inqBtnBox {
-		width: 181px;
-
 		.serchQueryBtn {
 			font-size: 15px;
 		}
@@ -288,7 +287,6 @@
 	.inqBtnBox {
 		height: 46px;
 		width: 100%;
-		margin: 0 auto 1rem auto;
 
 		.serchQueryBtn {
 			padding: 0.5rem 0;
@@ -312,6 +310,35 @@
 		border-top: 1px solid #0000001a;
 		margin-top: 1rem;
 		padding-top: 1rem;
+	}
+
+	.navbarSubWrapper {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.mainMenuWrapper {
+		border-bottom: 1px solid #0000001a;
+	}
+
+	.subMenuText {
+		padding: 1rem 2rem 1rem 1rem;
+		text-decoration: none;
+		color: #000000;
+		cursor: pointer;
+		border-bottom: 1px solid #0000001a;
+	}
+
+	.loginBtnsBox {
+		flex-direction: column-reverse;
+		padding: 0 1rem;
+		border-bottom: 1px solid #0000001a;
+	}
+
+	.loginBtnBox,
+	.signupBtnBox {
+		width: 100%;
+		margin: 0 0 1rem 0;
 	}
 
 }

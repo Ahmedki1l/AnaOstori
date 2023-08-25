@@ -34,10 +34,10 @@ export default function InvoiceUploaded(props) {
 			</div>
 			<h1 className={`head1 ${styles.pageHeader}`}>استلمنا إيصالك</h1>
 			<p className={`fontMedium ${styles.note1}`}>راح نراجع إيصال الحوالة، وبيتواصل معك فريق الدعم على الواتساب لتأكيد الحجز وتحديث حالة الطلب بمدة  <span className='fontBold'> أقصاها 24</span>  <span className='fontBold'>ساعة</span> ،</p>
-			<p className={`fontMedium ${styles.note1}`}>إذا احتجت مساعدة تواصل معنا على  <Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='link'> الواتساب</Link>  وتقدر تشوف حالة طلبك من<Link href={'/search'} className='link'> صفحة استعلام المشتريات</Link></p>
+			<p className={`fontMedium ${styles.note1}`}>إذا احتجت مساعدة تواصل معنا على  <Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='link'> الواتساب</Link>  وتقدر تشوف حالة طلبك من<Link href={'/purchaseInquiry'} className='link'> صفحة استعلام المشتريات</Link></p>
 			<div className={styles.btnsBox}>
 				<div className={`${styles.btnBox} ${styles.downloadInvoicBtnBox}`}>
-					<Link href={`/search?Inquiry=${Inquiry}` ?? ""} className='no-underline'>
+					<Link href={`/purchaseInquiry?Inquiry=${Inquiry}` ?? ""} className='no-underline'>
 						<button className='primarySolidBtn flex justify-center items-center'> استعلام وتأكيد الحجوزات </button>
 					</Link>
 				</div>
