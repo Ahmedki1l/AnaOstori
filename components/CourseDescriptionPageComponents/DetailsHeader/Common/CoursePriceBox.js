@@ -6,7 +6,6 @@ import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
 export default function CoursePriceBox(props) {
 	const lang = props.lang
 	const courseDetail = props?.courseDetail
-	const [discountShow, setDiscountShow] = useState(false)
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible
 
 	return (
@@ -46,20 +45,28 @@ export default function CoursePriceBox(props) {
 			{groupDiscountEligible && <>
 				<div className='flex justify-between pb-4'>
 					<p className={`fontMedium ${styles.subText}`}>{lang == 'en' ? "SPECIAL PRICE FOR GROUPS" : `*نوفر سعر خاص للمجموعات`}</p>
-					<div className='flex items-center cursor-pointer select-none' onClick={() => { setDiscountShow(!discountShow) }}>
-						<div style={{ height: '18px' }}>
-							<div className={discountShow == true ? `${styles.rotateArrow}` : ''}>
-								<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
-							</div>
+					<div className={` flex items-center cursor-pointer select-none `} onClick={() => { props.setDiscountShow(!props.discountShow) }}>
+						<div className={` ${styles.arrowIcon} ${props.discountShow == true ? 'rotate-180' : ''}`}>
+							<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
 						</div>
 						{lang == 'en' ?
-							<p className={styles.seemoreText}>{discountShow == true ? 'Hide prices' : 'Show prices'}</p>
+							<p className={styles.seemoreText}>{props.discountShow == true ? 'Hide prices' : 'Show prices'}</p>
 							:
-							<p className={styles.seemoreText}>{discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
+							<p className={styles.seemoreText}>{props.discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
 						}
 					</div>
+					{/* <div className='flex items-center cursor-pointer select-none' onClick={() => { props.setDiscountShow(!props.discountShow) }}>
+						<div className={`${styles.arrowIcon} ${props.discountShow == true ? 'rotate-180' : ''}`}>
+							<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
+						</div>
+						{lang == 'en' ?
+							<p className={styles.seemoreText}>{props.discountShow == true ? 'Hide prices' : 'Show prices'}</p>
+							:
+							<p className={styles.seemoreText}>{props.discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
+						}
+					</div> */}
 				</div>
-				{discountShow && <>
+				{props.discountShow && <>
 					<div className={`flex justify-between pb-4 ${styles.discountPriceBox}`}>
 						<div>
 							{lang == 'en' ?
