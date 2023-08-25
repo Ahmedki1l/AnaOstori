@@ -106,6 +106,7 @@ export default function Index(props) {
 
 	const bookSit = 'احجز جلوسك'
 	const dispatch = useDispatch();
+	const [discountShow, setDiscountShow] = useState(false)
 
 
 	const secondsToMinutes = (seconds) => {
@@ -252,7 +253,13 @@ export default function Index(props) {
 					</div>
 					{(screenWidth <= 767) &&
 						<div className={` ${styles.mobilePriceBox} ${offset > 512 ? ` ${styles.fixedMobilePriceBox}` : ''}`}>
-							<CoursePriceBox courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={bookSeatButtonText} />
+							<CoursePriceBox
+								courseDetail={courseDetail}
+								handleBookSitButtonClick={handleBookSitButtonClick}
+								bookSeatButtonText={bookSeatButtonText}
+								setDiscountShow={setDiscountShow}
+								discountShow={discountShow}
+							/>
 						</div>
 					}
 					{(screenWidth <= 767) &&
@@ -429,7 +436,7 @@ export default function Index(props) {
 							</div>
 						</div>
 					</div>
-					<WhatsAppLinkComponent isBookSeatPageOpen={true} />
+					<WhatsAppLinkComponent isBookSeatPageOpen={true} discountShow={discountShow} />
 				</div>
 			}
 		</>

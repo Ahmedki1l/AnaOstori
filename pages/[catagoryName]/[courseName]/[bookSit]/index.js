@@ -281,6 +281,7 @@ export default function Index(props) {
 					)}
 				</>
 			}
+			<WhatsAppLinkComponent isBookSeatPageOpen={changePage} />
 		</>
 	)
 }

@@ -21,12 +21,10 @@ function MyApp({ Component, pageProps }) {
 	const [isBookSeatPageOpen, setIsBookSeatPageOpen] = useState(false)
 	const pathName = router.pathname
 	const removeFooterFrom = ['watchCourse', 'login', 'register', 'forgotPassword', 'updateProfile', 'accountInformation', 'forgot-password', 'myCourse', 'instructorPanel']
-	const removeWhatsAppFrom = ['watchCourse', 'login', 'register', 'forgotPassword', 'updateProfile', 'accountInformation', 'forgot-password', 'myCourse', 'instructorPanel']
+	const removeWhatsAppFrom = ['watchCourse', 'login', 'register', 'forgotPassword', 'updateProfile', 'accountInformation', 'forgot-password', 'myCourse', 'instructorPanel', '/[catagoryName]/[courseName]', '/[catagoryName]/[courseName]/[bookSit]']
 	const hasFooterShown = removeFooterFrom.some(value => router.asPath.includes(value)) ? true : false
-	const hasWhatsAppShown = removeWhatsAppFrom.some(value => router.asPath.includes(value)) ? true : false
-
+	const hasWhatsAppShown = removeWhatsAppFrom.some(value => pathName.includes(value)) ? true : false
 	const storeData = store?.getState()?.globalStore;
-
 	const protectedRoutes = useMemo(() => [
 		'/myProfile',
 		'/updateProfile',

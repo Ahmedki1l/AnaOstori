@@ -10,10 +10,12 @@ export default function WhatsAppLinkComponent(props) {
 	const screenWidth = useWindowSize().width
 	const isBookSeatPageOpen = props.isBookSeatPageOpen
 	const offset = useScrollEvent().offset
-
+	const discountShow = props.discountShow
+	console.log(isBookSeatPageOpen, discountShow);
 
 	return (
-		<div className={`whatsAppLogoWrapper ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : ``}`}>
+		// <div className={`whatsAppLogoWrapper ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : ``}`}>
+		<div className={`whatsAppLogoWrapper ${discountShow == true ? `discountShowWrapperUp` : ``}  ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`}`}>
 			<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 				<div className='whatsAppLogo' >
 					<div className='whatsAppLogoRoundWrapper'>
