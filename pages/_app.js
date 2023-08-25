@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
 		'/myProfile',
 		'/updateProfile',
 		'/accountInformation',
-		'/search',
+		'/purchaseInquiry',
 		'/watchCourse/',
 		'/invoiceUploaded',
 		'/uploadInvoice',
@@ -72,7 +72,7 @@ function MyApp({ Component, pageProps }) {
 			case "/[catagoryName]/[courseName]/[bookSit]":
 				setPageTitle('تعبئة البيانات')
 				break;
-			case "/search":
+			case "/purchaseInquiry":
 				setPageTitle('استعلام وتأكيد الحجوزات')
 				break;
 			case "/studentFeedback":

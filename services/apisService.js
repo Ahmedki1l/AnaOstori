@@ -53,9 +53,9 @@ export const viewProfileAPI = () => { return instance.get('/viewProfile') }
 export const deleteAccount = () => { return instance.post('/deleteProfile') }
 export const getCourseByNameAPI = (data) => { return instance.get(`/courseByName/${data?.name}`) }
 export const accountRecovery = () => { return instance.post('/activateProfile') }
-export const markItemCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}`) }
-export const getCompleteCourseItemIDAPI = (data) => { return instance.get(`course/progress/${data?.courseID}`) }
-export const getCourseProgressAPI = (data) => { return instance.get(`course/getUserCourseProgress/${data?.courseID}`) }
+export const markItemCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/${data.enrollmentId}`) }
+export const getCompleteCourseItemIDAPI = (data) => { return instance.get(`course/progress/${data?.courseID}/${data.enrollmentId}`) }
+export const getCourseProgressAPI = (data) => { return instance.get(`course/getUserCourseProgress/${data?.courseID}/${data.enrollmentId}`) }
 export const subcribeNotificationAPI = (data) => { return instance.post(`course/subscribe/${data?.courseId}`, data?.data) }
 export const getCurriculumIdsAPI = () => { return instance.get('/curriculum/list') }
 export const generateAttendanceQRAPI = (data) => { return instance.get('/attendance/key') }

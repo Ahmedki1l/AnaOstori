@@ -138,6 +138,7 @@ export default function Index() {
             const params = {
                 courseID,
                 itemID,
+                enrollmentId
             }
             await markItemCompleteAPI(params).then((res) => {
                 let data = { itemId: itemID }
