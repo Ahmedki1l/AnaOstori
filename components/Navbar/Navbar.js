@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { signOutUser } from '../../services/fireBaseAuthService'
-import { getCatagoriesAPI, getCurriculumIdsAPI, getInstructorListAPI, } from '../../services/apisService';
+import { getCatagoriesAPI, getCurriculumIdsAPI, getInstructorListAPI, myCoursesAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 
@@ -31,7 +31,6 @@ export default function Navbar() {
 	const dispatch = useDispatch();
 
 	const storeData = useSelector((state) => state?.globalStore);
-	console.log(storeData);
 	const [catagories, setCatagories] = useState()
 	const [curriculumIds, setCurriculumIds] = useState();
 
@@ -60,9 +59,11 @@ export default function Navbar() {
 				const getcatagoriReq = getCatagoriesAPI()
 				const getCurriculumIdsReq = getCurriculumIdsAPI()
 				const getInstructorListReq = getInstructorListAPI()
+				const getMyCourseReq = myCoursesAPI()
 
-				const [catagories, curriculumIds, instructorList] = await Promise.all([
-					getcatagoriReq, getCurriculumIdsReq, getInstructorListReq
+
+				const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
+					getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
 				])
 				dispatch({
 					type: 'SET_CATAGORIES',
@@ -76,6 +77,10 @@ export default function Navbar() {
 					type: 'SET_INSTRUCTOR',
 					instructorList: instructorList?.data,
 				})
+				dispatch({
+					type: 'SET_ALL_MYCOURSE',
+					myCourses: myCourseData?.data,
+				});
 			} catch (error) {
 				console.log(error);
 			}
@@ -223,7 +228,13 @@ export default function Navbar() {
 											return (
 												<li className={`border-b border-inherit w-full list-none`} key={`navMenu${i}`}>
 													<div className={`flex items-center ${styles.mainMenuWrapper}`} onClick={() => handleshowSubMenu(i)}>
-														<p className={`py-4 pr-4  ${catagoryName == menu.name ? 'fontBold' : 'fontRegular'}`} >{menu.name}</p>
+														<p className={`py-4 pr-4  ${catagoryName == menu.name ? 'fontBold' : 'fontRegular'}`}>
+															{menu.name.length > 30 ? (
+																<span>{menu.name.slice(0, 30)}...</span>
+															) : (
+																<span>{menu.name}</span>
+															)}
+														</p>
 														<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
 													</div>
 													{showSubMenu == i &&
@@ -231,9 +242,14 @@ export default function Navbar() {
 															{menu.courses?.map((subMenu, j = index) => {
 																return (
 																	<div key={`navSubMenu${j}`}>
-																		<div
-																			className={`block ${styles.subMenuText}`} onClick={() => { handleClickOnLink(); handleClickCourseName(subMenu, menu.name, subMenu.language) }}> {subMenu.name}
-																		</div>
+																		<Link href={`/${(subMenu.name).replace(/ /g, "-")}/${(menu.name.replace(/ /g, "-"))}` ?? ""}
+																			className={`block ${styles.subMenuText}`} onClick={() => handleClickCourseName(subMenu.name, menu.name)}>
+																			{subMenu.name.length > 20 ? (
+																				<span>{subMenu.name.slice(0, 20)}...</span>
+																			) :
+																				<span>{subMenu.name}</span>
+																			}
+																		</Link>
 																	</div>
 																)
 															})}
@@ -270,12 +286,14 @@ export default function Navbar() {
 														{menu.courses?.map((subMenu, j = index) => {
 															return (
 																<div key={`navSubMenu${j}`}>
-																	<div
-																		className={`block ${styles.subMenuText}`}
-																		onClick={() => handleClickCourseName(subMenu, menu.name, subMenu.language)}
-																	>
-																		{subMenu.name}
-																	</div>
+																	<Link href={`/${(subMenu.name).replace(/ /g, "-")}/${(menu.name.replace(/ /g, "-"))}` ?? ""}
+																		className={`block ${styles.subMenuText}`} onClick={() => handleClickCourseName(subMenu.name, menu.name)}>
+																		{subMenu.name.length > 30 ? (
+																			<span>{subMenu.name.slice(0, 30)}...</span>
+																		) :
+																			<span>{subMenu.name}</span>
+																		}
+																	</Link>
 																</div>
 															)
 														})}
@@ -304,6 +322,9 @@ export default function Navbar() {
 									{/* <div>
 										<AllIconsComponenet height={30} width={30} iconName={'bell'} color={'#808080'} />
 									</div> */}
+									{isUserInstructor && <div className={styles.instructorBtnBox}>
+										<button className={`primaryStrockedBtn`} onClick={() => handleInstructorBtnClick()}>لوحة تحكم المعلم</button>
+									</div>}
 									<div className={styles.viewProfile}>
 										<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
 										<p>{userFullName ? userFullName : ""}</p>

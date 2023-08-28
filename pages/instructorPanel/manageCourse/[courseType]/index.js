@@ -18,8 +18,6 @@ export default function Index() {
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
 
-    console.log(courseType);
-
     const handleRoute = () => {
         router.push(`/instructorPanel/manageCourse/${courseType}/createCourse`)
 

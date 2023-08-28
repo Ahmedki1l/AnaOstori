@@ -18,14 +18,16 @@
 // }
 
 .circle {
-	height: 70px;
-	width: 70px;
+	height: 28px;
+	width: 28px;
 	border-radius: 50%;
 	display: flex !important;
 	justify-content: center;
 	align-items: center;
 	background-color: #00B564;
 	margin: auto;
+	position: absolute;
+	right: 8px
 }
 
 .itemIcon {

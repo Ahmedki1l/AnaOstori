@@ -12,6 +12,13 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
 
+export const metadata = {
+	title: 'Anaostori',
+	description: 'نقدم دوراتنا بالطريقة اللي تناسبك',
+	openGraph: {
+		images: ['/images/classroomImg1_big.png'],
+	},
+}
 
 export async function getServerSideProps(context) {
 	const params = context.query

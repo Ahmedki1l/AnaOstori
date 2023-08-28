@@ -24,7 +24,7 @@ export default function BuyCourseComponent(props) {
 
 
 	return (
-		<div className={`${styles.BuyCourseMainArea} ${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
+		<div className={`${lang == 'en' ? `${styles.BuyEngCourseMainArea}` : `${styles.BuyCourseMainArea}`} ${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
 			<div className={styles.BuyCourseWrapper}>
 				<CoverImg height={190} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 

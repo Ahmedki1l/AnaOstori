@@ -34,10 +34,8 @@ export default function CCItemListComponent(props) {
 			{item &&
 				<div className={`${styles.ccItemsWrapper} ${props.currentItem == true ? `${styles.activeItem}` : ``}`} onClick={() => selectNewItemHendler(itemId)}>
 					{isItemComplete &&
-						<div className='m-5'>
-							<div className={styles.circle}>
-								<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={40} width={35} color={'#FFFFFF'} />
-							</div>
+						<div className={styles.circle}>
+							<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={14} width={14} color={'#FFFFFF'} />
 						</div>
 					}
 					<div className={styles.itemIcon}>

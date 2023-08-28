@@ -31,7 +31,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        setSectionItemList(itemList?.sort((a, b) => a.sectionItem.order - b.sectionItem.order))
+        setSectionItemList(itemList?.sort((a, b) => a.sectionItem?.order - b.sectionItem?.order))
     }, [itemList])
 
     const openDeleteModal = async (itemId) => {
@@ -141,7 +141,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                                     <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />
                                                 </div>
                                                 <div onClick={() => handleFreeUsage(data)}>
-                                                    <AllIconsComponenet iconName={'lock2'} height={22} width={22} color={data.sectionItem.freeUsage ? '#00CF0F' : '#BC0303'} />
+                                                    <AllIconsComponenet iconName={'lock2'} height={22} width={22} color={data.sectionItem?.freeUsage ? '#00CF0F' : '#BC0303'} />
                                                 </div>
                                                 <div style={{ height: '25px' }} onClick={() => openDeleteModal(data.id)}>
                                                     <AllIconsComponenet iconName={'deletecourse'} height={20} width={18} color={'#BFBFBF'} />
