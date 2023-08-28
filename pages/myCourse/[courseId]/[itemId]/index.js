@@ -13,6 +13,7 @@ import styles from '../../../../styles/MyCourseWatch.module.scss'
 import Spinner from '../../../../components/CommonComponents/spinner';
 import MyCourseDetails from '../../../../components/WatchCourseComponents/MyCourseContent/MyCourseContent';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
+import { useSelector } from 'react-redux';
 
 
 
@@ -32,8 +33,13 @@ export default function Index() {
     const [completedCourseItem, setCompletedCourseItem] = useState([])
     const [loading, setLoading] = useState(false)
     const [isUserEnrolled, setIsUserEnrolled] = useState(false)
+    console.log(courseID);
+    const storeData = useSelector((state) => state?.globalStore);
+    const selectedCourse = storeData.myCourses.find((enrollment) => {
+        return enrollment.courseId == courseID
+    })
+    console.log(selectedCourse);
 
-    console.log(ccSections);
 
     const chagenCourseItemHendler = (itemId) => {
         getCourseItemHendler(itemId)
@@ -60,7 +66,9 @@ export default function Index() {
                     const params = {
                         courseID,
                         itemID: currentItemId,
+                        enrollmentId: selectedCourse.id
                     }
+                    console.log(params);
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
                     const courseProgressPrecentageReq = getCourseProgressAPI(params)
@@ -138,7 +146,7 @@ export default function Index() {
             const params = {
                 courseID,
                 itemID,
-                enrollmentId
+                enrollmentId: selectedCourse.id
             }
             await markItemCompleteAPI(params).then((res) => {
                 let data = { itemId: itemID }

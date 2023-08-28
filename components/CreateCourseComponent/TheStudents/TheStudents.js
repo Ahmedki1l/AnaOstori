@@ -53,6 +53,7 @@ const TheStudenet = (props) => {
     }
     const saveStudentDetails = async () => {
         const data = examList.map((exam) => {
+            console.log(exam);
             return {
                 userProfileId: selectedStudent.id,
                 availabilityId: selectedAvailabilityId,

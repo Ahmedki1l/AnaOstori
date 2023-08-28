@@ -61,7 +61,9 @@ const Appointments = ({ courseId, courseType }) => {
                 data: values,
                 availabilityId: editAvailability?.id
             }
+            console.log(body);
             await editAvailabilityAPI(body).then((res) => {
+                console.log(res);
                 setIsModalOpen(false)
                 getAllAvailability()
             }).catch((error) => {
@@ -104,11 +106,7 @@ const Appointments = ({ courseId, courseType }) => {
         setEditAvailability(appointment)
         // setIsFieldDisable(((dayjs(appointment.dateFrom).startOf('day') < dayjs(new Date())) || (appointment.maxNumberOfSeats > appointment.numberOfSeats)) ? true : false)
         const instructorsList = appointment?.instructors?.map((obj) => {
-            return {
-                key: obj.id,
-                label: obj.name,
-                value: obj.id,
-            }
+            return obj.id
         });
         appointmentForm.setFieldsValue({
             instructors: instructorsList,

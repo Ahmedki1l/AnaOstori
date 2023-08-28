@@ -8,6 +8,16 @@
 	z-index: 50;
 }
 
+.BuyEngCourseMainArea {
+	position: absolute;
+	background-color: #ffffff;
+	color: #000000;
+	top: 0rem;
+	border: 1px solid #00000054;
+	border-radius: 4px;
+	z-index: 50;
+}
+
 .rightSide {
 	right: 0rem;
 }
@@ -81,6 +91,10 @@
 @media (max-width: 1350px) {
 	.BuyCourseMainArea {
 		margin-left: 1rem;
+	}
+
+	.BuyEngCourseMainArea {
+		margin-right: 1rem;
 	}
 }
 

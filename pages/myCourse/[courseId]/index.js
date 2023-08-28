@@ -26,12 +26,19 @@ export default function Index() {
     const [currentItemId, setCurrentItemId] = useState()
     const [isUserEnrolled, setIsUserEnrolled] = useState(false)
 
+    console.log(storeData);
+    const selectedCourse = storeData.myCourses.find((enrollment) => {
+        return enrollment.courseId == courseID
+    })
+    console.log(selectedCourse);
+
     useEffect(() => {
         if (courseID) {
             const getPageProps = async () => {
                 try {
                     const params = {
                         courseID,
+                        enrollmentId: selectedCourse.id
                     }
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const courseProgressReq = getCourseProgressAPI(params)
@@ -42,6 +49,8 @@ export default function Index() {
                         courseProgressReq,
                         completedCourseItemReq
                     ])
+                    console.log(completedCourseItem);
+
                     setCourseCurriculum(courseCurriculum.data)
                     if (courseCurriculum.data?.enrollment != null) { setIsUserEnrolled(true) }
                     setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
