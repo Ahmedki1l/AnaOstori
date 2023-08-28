@@ -33,13 +33,10 @@ export default function Index() {
     const [completedCourseItem, setCompletedCourseItem] = useState([])
     const [loading, setLoading] = useState(false)
     const [isUserEnrolled, setIsUserEnrolled] = useState(false)
-    console.log(courseID);
     const storeData = useSelector((state) => state?.globalStore);
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
     })
-    console.log(selectedCourse);
-
 
     const chagenCourseItemHendler = (itemId) => {
         getCourseItemHendler(itemId)
@@ -68,7 +65,6 @@ export default function Index() {
                         itemID: currentItemId,
                         enrollmentId: selectedCourse.id
                     }
-                    console.log(params);
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
                     const courseProgressPrecentageReq = getCourseProgressAPI(params)

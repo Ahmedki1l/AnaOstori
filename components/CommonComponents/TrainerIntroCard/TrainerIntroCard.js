@@ -8,6 +8,8 @@ import { mediaUrl } from '../../../constants/DataManupulation'
 export default function TrainerIntroCard(props) {
 	const instructor = props.instructor
 	const isSmallScreen = useWindowSize().smallScreen
+
+
 	return (
 		<div className={`flex items-center pl-4 py-4 ${styles.instructoreContainer}`}>
 			<div className={styles.instructorPicWrapper}>

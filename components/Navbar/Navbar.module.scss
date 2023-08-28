@@ -109,7 +109,6 @@
 }
 
 .viewProfile {
-	width: 219px;
 	height: 46px;
 	display: flex;
 	align-items: center;
@@ -157,9 +156,8 @@
 
 .profileMenuWrapper {
 	position: absolute;
-	width: 219px;
 	top: 50px;
-	right: 23px;
+	left: 10px;
 	opacity: 0;
 	visibility: hidden;
 	height: 0;
