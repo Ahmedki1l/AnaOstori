@@ -135,7 +135,7 @@ function MyApp({ Component, pageProps }) {
 
 	const currentRoute = router.pathname;
 	console.log(router);
-	const metaTags = router.pathname == "/[catagoryName]/[courseName]" ? allMetaTags.metaTagsByCourse[router.query.catagoryName] : allMetaTags.metaTagsByRoute[currentRoute]
+	const metaTags = (router.pathname == "/[catagoryName]/[courseName]" ? allMetaTags.metaTagsByCourse[router.query.catagoryName] : allMetaTags.metaTagsByRoute[currentRoute]) || defaultMetaTags
 
 
 	return (
