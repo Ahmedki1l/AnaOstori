@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }) {
 	], []);
 
 	const isUserInstructor = storeData?.isUserInstructor
-
+	console.log(router);
 	useEffect(() => {
 		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
 			router.replace('/');
@@ -129,6 +129,34 @@ function MyApp({ Component, pageProps }) {
 		}
 	}, [router.events])
 
+	const defaultMetaTags = {
+		title: 'Default Title',
+		description: 'Default Description',
+		keywords: 'Default Keywords',
+	};
+	console.log(storeData);
+	const metaTagsByRoute = {
+		'/': {
+			title: 'Home Page',
+			description: 'This is the home page of our website.',
+			keywords: 'home, website, Next.js',
+			image: '/images/anaOstori.png',
+		},
+		'/myProfile': {
+			title: 'About Us',
+			description: 'Learn more about our company.',
+			keywords: 'about us, company, information',
+			image: ''
+		},
+		'/tearms': {
+			title: 'Contact Us',
+			description: 'Get in touch with us.',
+			keywords: 'contact, reach out, support',
+		},
+	};
+
+	const currentRoute = router.pathname;
+	const metaTags = metaTagsByRoute[currentRoute] || defaultMetaTags;
 
 
 	return (
@@ -136,7 +164,13 @@ function MyApp({ Component, pageProps }) {
 			<Head>
 				<title>{`${pageTitle} | أنا أسطوري`}</title>
 				<link rel="icon" href="/favicon.png" className='rounded-full' />
-
+				<meta name="description" content={metaTags.description} />
+				<meta name="keywords" content={metaTags.keywords} />
+				<meta property="og:title" content={metaTags.title} />
+				<meta property="og:description" content={metaTags.description} />
+				<meta property="og:url" content={`https://anaostori.com${router.asPath}`} />
+				<meta property="og:type" content={`https://anaostori.com}`} />
+				<meta property="og:image" content={`https://anaostori.com${metaTags.image}`} />
 			</Head>
 			<div dir='rtl'>
 				<GoogleAnalytics pathName={pathName} />

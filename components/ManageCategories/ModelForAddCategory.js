@@ -11,6 +11,7 @@ import Switch from '../antDesignCompo/Switch';
 import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI, uploadFileAPI } from '../../services/apisService';
 import Spinner from '../CommonComponents/spinner';
 import { useDispatch } from 'react-redux';
+import { stringUpdation } from '../../constants/DataManupulation';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -26,7 +27,6 @@ const ModelForAddCategory = ({
         categoryForm.setFieldsValue(editCategory)
         setFileName(editCategory?.pictureKey)
     }, [])
-    console.log(editCategory);
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [uploadLoader, setUploadLoader] = useState(false)
@@ -191,11 +191,7 @@ const ModelForAddCategory = ({
                                         <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
                                             <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
                                         </div>
-                                        {fileName.length > 20 ? (
-                                            <span>{fileName.slice(0, 20)}...</span>
-                                        ) : (
-                                            <span>{fileName}</span>
-                                        )}
+                                        {stringUpdation(fileName, 20)}
                                     </div>
                                 }
                                 {uploadLoader &&

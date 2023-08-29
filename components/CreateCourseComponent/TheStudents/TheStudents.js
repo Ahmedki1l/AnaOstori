@@ -18,7 +18,7 @@ import { mediaUrl } from '../../../constants/DataManupulation'
 
 
 
-const TheStudenet = (props) => {
+const TheStudent = (props) => {
 
     const [showStudentDetails, setShowStudentDetails] = useState(false)
     const [allStudentDetails, setAllStudentDetails] = useState([])
@@ -30,6 +30,7 @@ const TheStudenet = (props) => {
     const storeData = useSelector((state) => state?.globalStore);
     const availabilityList = storeData?.availabilityList;
     const [examList, setExamList] = useState()
+    const [oldExamList, setOldExamList] = useState()
     const [selectedStudent, setSelectedStudent] = useState()
     const [selectedAvailabilityId, setSelectedAvailabilityId] = useState()
 
@@ -41,6 +42,11 @@ const TheStudenet = (props) => {
         }
     });
 
+    const selectedCourse = storeData.myCourses.find((enrollment) => {
+        return enrollment.courseId == courseId
+    })
+    console.log(selectedCourse);
+
     const onInputChange = (e, index, fieldeName) => {
         const updatedExamData = [...examList]
         if (fieldeName == 'grade') {
@@ -51,12 +57,13 @@ const TheStudenet = (props) => {
         console.log(updatedExamData);
         setExamList(updatedExamData)
     }
+    console.log(selectedStudent);
+
     const saveStudentDetails = async () => {
         const data = examList.map((exam) => {
-            console.log(exam);
             return {
-                userProfileId: selectedStudent.id,
-                availabilityId: selectedAvailabilityId,
+                userProfileId: selectedStudent.userProfile.id,
+                enrollmentId: selectedStudent.enrollmentId,
                 itemId: exam.id,
                 courseId: courseId,
                 grade: exam.grade ?? null,
@@ -67,19 +74,42 @@ const TheStudenet = (props) => {
             data: data
         }
         console.log(body);
-        // await createStudentExamDataAPI(body).then((res) => {
-        //     console.log(res);
-        //     setShowStudentDetails(false)
-        // }).catch((error) => {
-        //     console.log(error)
-        // })
+        await createStudentExamDataAPI(body).then((res) => {
+            console.log(res);
+            setShowStudentDetails(false)
+        }).catch((error) => {
+            console.log(error)
+        })
     }
     const showSelectedStudentExamDetails = (student) => {
+        console.log(student)
         setShowStudentDetails(true)
-        setExamList(student.nonCompletedQuizItems)
+
+        const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems.map((quiz, index) => {
+            return {
+                key: quiz.id,
+                quizId: quiz.id,
+                quizName: quiz.name,
+                grade: '',
+                note: ''
+            }
+        })
+
+        const completedQuizItems = student?.userProfile.quizExams.map((quiz, index) => {
+            return {
+                key: quiz.item.id,
+                quizId: quiz.item.id,
+                quizName: quiz.item.name,
+                grade: quiz.grade,
+                note: quiz.note
+            }
+        })
+        setOldExamList([...nonCompletedQuizItems, ...completedQuizItems])
+        setExamList([...nonCompletedQuizItems, ...completedQuizItems])
         setSelectedStudent(student)
     }
     const getAllStudentList = async (e) => {
+        console.log(e);
         let data = {
             availabilityId: e,
             courseId: courseId,
@@ -87,7 +117,6 @@ const TheStudenet = (props) => {
         await getStudentListAPI(data).then((res) => {
             setSelectedAvailabilityId(e)
             setShowStudentList(true)
-            console.log(res);
             setAllStudentDetails(res?.data)
             setDisplayedStudentList(res?.data)
         }).catch((error) => {
@@ -102,10 +131,8 @@ const TheStudenet = (props) => {
     }
 
     const selectGenderFilter = (value) => {
-        console.log(value, allStudentDetails);
         const newStudentList = [...allStudentDetails]
         setDisplayedStudentList(newStudentList.filter((student) => value == student.gender));
-        console.log(newStudentList);
     }
 
     return (
@@ -160,23 +187,23 @@ const TheStudenet = (props) => {
                                                     <div className='flex'>
                                                         <div className={styles.requesterDetails} >
                                                             <div className={styles.StudentListImage}>
-                                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student.avatarKey == null ? student.avatar : `${mediaUrl(student.avatarBucket, student.avatarKey)}`} />
+                                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
                                                             </div>
-                                                            <p className={styles.requesterName}>{student.fullName == "" ? student.fullName : `${student.firstName} ${student.lastName}`}</p>
+                                                            <p className={styles.requesterName}>{student?.userProfile?.fullName == "" ? student?.userProfile?.fullName : `${student?.userProfile?.firstName} ${student?.userProfile?.lastName}`}</p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <p>{student.phone} </p>
-                                                    <p>{student.email}</p>
+                                                    <p>{student?.userProfile?.phone} </p>
+                                                    <p>{student?.userProfile?.email}</p>
                                                 </td>
                                                 <td>
                                                     <div className={styles.progressbar}>
-                                                        <ProgressBar percentage={student.progress} bgColor={'#2BB741'} height={14} fontSize={10} />
+                                                        <ProgressBar percentage={student?.userProfile?.progress} bgColor={'#2BB741'} height={14} fontSize={10} />
                                                     </div>
                                                 </td>
                                                 <td className={`${styles.examText} link`} onClick={() => showSelectedStudentExamDetails(student)}>مشاهدة الدرجات</td>
-                                                <td>{fullDate(student.createdAt)}</td>
+                                                <td>{fullDate(student?.userProfile?.createdAt)}</td>
                                             </tr>
                                         )
                                     })}
@@ -190,7 +217,7 @@ const TheStudenet = (props) => {
             {showStudentDetails &&
                 <div>
                     <div className={styles.studentDetailsTable}>
-                        <p className={`${styles.studentDetails}`}> الطلاب </p>
+                        <p className={`${styles.studentDetails}`} onClick={() => setShowStudentDetails(false)}> الطلاب </p>
                         <p className='pl-2'>{'>'}</p>
                         <p className={styles.examResultsForStudents}>  نتائج درجات {selectedStudent.fullName}</p>
                     </div>
@@ -203,17 +230,19 @@ const TheStudenet = (props) => {
                                     <th className={styles.studentTableHead3}>الملاحظات</th>
                                 </tr>
                             </thead>
+                            {console.log(examList)}
                             <tbody className={styles.studentTableBodyArea}>
                                 {examList.map((exam, index) => {
                                     return (
                                         <tr className={styles.studentTableRow} key={exam.id}>
-                                            <td>{exam.name}</td>
+                                            <td>{exam.quizName}</td>
                                             <td>
                                                 <Input
                                                     fontSize={16}
                                                     width={125}
                                                     height={37}
                                                     placeholder="اكتب الدرجة"
+                                                    value={exam.grade}
                                                     onChange={(e) => onInputChange(e, index, 'grade')}
                                                 />
                                             </td>
@@ -222,6 +251,7 @@ const TheStudenet = (props) => {
                                                     fontSize={16}
                                                     width={324}
                                                     height={37}
+                                                    value={exam.note}
                                                     placeholder="إن وجدت"
                                                     onChange={(e) => onInputChange(e, index, 'note')}
                                                 />
@@ -246,4 +276,4 @@ const TheStudenet = (props) => {
     )
 }
 
-export default TheStudenet
+export default TheStudent

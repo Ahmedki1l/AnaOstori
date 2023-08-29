@@ -88,6 +88,7 @@ export const globalStore = (state = initialState, action) => {
                 ...state,
                 loginWithoutPassword: action?.loginWithoutPassword
             }
+
         default: return state;
     }
 }

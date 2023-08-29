@@ -97,7 +97,6 @@
 
 .navLeftDiv {
 	margin-right: auto;
-	display: flex;
 	align-items: center;
 	position: relative;
 }
@@ -154,7 +153,13 @@
 	}
 }
 
+.navbarLeftDiv {
+	display: flex;
+	margin-right: auto;
+}
+
 .profileMenuWrapper {
+	width: 220px;
 	position: absolute;
 	top: 50px;
 	left: 10px;

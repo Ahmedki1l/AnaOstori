@@ -91,7 +91,6 @@ export default function Index() {
                     {allPhysicalCourses.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
                             {allPhysicalCourses.map((course, index) => {
-                                console.log(course);
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>

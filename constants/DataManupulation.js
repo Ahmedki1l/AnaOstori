@@ -12,6 +12,14 @@ export const mediaUrl = (bucketName, mediaKey) => {
         return '/images/anaOstori.png'
     }
     // console.log(bucketName, mediaKey);
-    // console.log(`https://${bucketName}.s3.eu-central-1.amazonaws.com/${mediaKey}`);
+    console.log(`https://${bucketName}.s3.eu-central-1.amazonaws.com/${mediaKey}`);
     return `https://${bucketName}.s3.eu-central-1.amazonaws.com/${mediaKey}`
+}
+
+export const stringUpdation = (value, digit) => {
+    if (value.length > digit) {
+        return `${value.slice(0, 15)}...`
+    } else {
+        return value
+    }
 }
