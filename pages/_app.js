@@ -149,7 +149,7 @@ function MyApp({ Component, pageProps }) {
 				<meta property="og:description" content={metaTags.description} />
 				<meta property="og:url" content={`https://anaostori.com${router.asPath}`} />
 				<meta property="og:type" content={`https://anaostori.com}`} />
-				<meta property="og:image" content={`https://anaostori.com/${metaTags.image}`} />
+				<meta property="og:image" content={`${metaTags.image}`} />
 			</Head>
 			<div dir='rtl'>
 				<GoogleAnalytics pathName={pathName} />
