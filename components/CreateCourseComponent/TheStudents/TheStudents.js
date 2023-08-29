@@ -54,7 +54,6 @@ const TheStudent = (props) => {
         } else {
             updatedExamData[index].note = e.target.value
         }
-        console.log(updatedExamData);
         setExamList(updatedExamData)
     }
     console.log(selectedStudent);
@@ -82,9 +81,7 @@ const TheStudent = (props) => {
         })
     }
     const showSelectedStudentExamDetails = (student) => {
-        console.log(student)
         setShowStudentDetails(true)
-
         const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems.map((quiz, index) => {
             return {
                 key: quiz.id,
@@ -115,6 +112,7 @@ const TheStudent = (props) => {
             courseId: courseId,
         }
         await getStudentListAPI(data).then((res) => {
+            console.log(res);
             setSelectedAvailabilityId(e)
             setShowStudentList(true)
             setAllStudentDetails(res?.data)
