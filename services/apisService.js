@@ -87,6 +87,8 @@ export const updateAttendanceDataAPI = (data) => { return instance.post(`/attend
 export const getStudentListAPI = (data) => { return instance.get(`/students/course/${data?.courseId}/availability/${data?.availabilityId}`) }
 
 export const createStudentExamDataAPI = (data) => { return instance.post(`/course/courseTrackBulk/create`, data) }
+export const getExamListAPI = (data) => { return instance.get(`/item/${data?.courseId}?type=${data.type}`) }
+
 
 
 // ********* Manage Library APIs ***********//

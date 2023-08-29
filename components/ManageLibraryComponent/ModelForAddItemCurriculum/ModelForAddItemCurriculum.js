@@ -1,4 +1,4 @@
-import { ConfigProvider, Modal } from 'antd'
+import { Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './ModelForAddItemCurriculum.module.scss'

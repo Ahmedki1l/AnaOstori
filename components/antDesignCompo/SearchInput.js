@@ -5,7 +5,9 @@ import { Input as AntdInput } from 'antd'
 const { Search } = AntdInput;
 const SearchInputField = styled(Search)`
     direction: ltr;
-
+    .ant-input-group:hover .ant-input{
+        border-color #7c7c7c7c !important;
+    }
     .ant-input-group .ant-input {
         height:46px;
         width: 100%;
@@ -19,9 +21,9 @@ const SearchInputField = styled(Search)`
     }
 
     .ant-btn{
-        height:46px
+        height:46px;
+        border-left:none
     }
-
 `
 const onSearch = (value) => console.log(value);
 

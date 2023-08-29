@@ -7,7 +7,7 @@ import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import InputTextArea from '../antDesignCompo/InputTextArea'
 import { createInstroctorAPI, editInstroctorAPI, getInstructorListAPI, uploadFileAPI } from '../../services/apisService'
-import { deleteNullFromObj } from '../../constants/DataManupulation'
+import { deleteNullFromObj, stringUpdation } from '../../constants/DataManupulation'
 import { useDispatch } from 'react-redux'
 import Spinner from '../CommonComponents/spinner'
 
@@ -213,11 +213,7 @@ const ModelForAddInstructor = ({
                                         <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
                                             <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
                                         </div>
-                                        {fileName.length > 20 ? (
-                                            <span>{fileName.slice(0, 20)}...</span>
-                                        ) : (
-                                            <span>{fileName}</span>
-                                        )}
+                                        {stringUpdation(fileName, 20)}
                                     </div>
                                 }
                                 {uploadLoader &&

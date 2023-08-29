@@ -13,7 +13,6 @@ export default function MyProfile() {
 	const storeData = useSelector((state) => state?.globalStore);
 	const userDetails = storeData?.viewProfileData;
 	const myCourses = storeData?.myCourses
-	console.log(storeData);
 
 	return (
 		<>
