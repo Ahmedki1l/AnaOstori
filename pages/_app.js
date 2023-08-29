@@ -13,6 +13,7 @@ import { store, persistor } from '../components/GlobalStore/store';
 import * as fbq from '../lib/fpixel'
 import Script from 'next/script'
 import GoogleAnalytics from '../lib/GoogleAnalytics';
+import * as allMetaTags from '../lib/metaData'
 
 
 function MyApp({ Component, pageProps }) {
@@ -63,14 +64,11 @@ function MyApp({ Component, pageProps }) {
 
 	useEffect(() => {
 		switch (pathName) {
-			case "/[catagoryName]":
-				setPageTitle(router.query.catagoryName)
+			case "/[catagoryName]": setPageTitle(router.query.catagoryName)
 				break;
-			case "/[catagoryName]/[courseName]":
-				setPageTitle(router.query.catagoryName)
+			case "/[catagoryName]/[courseName]": setPageTitle(router.query.catagoryName)
 				break;
-			case "/[catagoryName]/[courseName]/[bookSit]":
-				setPageTitle('تعبئة البيانات')
+			case "/[catagoryName]/[courseName]/[bookSit]": setPageTitle('تعبئة البيانات')
 				break;
 			case "/purchaseInquiry":
 				setPageTitle('استعلام وتأكيد الحجوزات')
@@ -134,29 +132,10 @@ function MyApp({ Component, pageProps }) {
 		description: 'Default Description',
 		keywords: 'Default Keywords',
 	};
-	console.log(storeData);
-	const metaTagsByRoute = {
-		'/': {
-			title: 'Home Page',
-			description: 'This is the home page of our website.',
-			keywords: 'home, website, Next.js',
-			image: '/images/anaOstori.png',
-		},
-		'/myProfile': {
-			title: 'About Us',
-			description: 'Learn more about our company.',
-			keywords: 'about us, company, information',
-			image: ''
-		},
-		'/tearms': {
-			title: 'Contact Us',
-			description: 'Get in touch with us.',
-			keywords: 'contact, reach out, support',
-		},
-	};
 
 	const currentRoute = router.pathname;
-	const metaTags = metaTagsByRoute[currentRoute] || defaultMetaTags;
+	console.log(router);
+	const metaTags = router.pathname == "/[catagoryName]/[courseName]" ? allMetaTags.metaTagsByCourse[router.query.catagoryName] : allMetaTags.metaTagsByRoute[currentRoute]
 
 
 	return (
@@ -170,7 +149,7 @@ function MyApp({ Component, pageProps }) {
 				<meta property="og:description" content={metaTags.description} />
 				<meta property="og:url" content={`https://anaostori.com${router.asPath}`} />
 				<meta property="og:type" content={`https://anaostori.com}`} />
-				<meta property="og:image" content={`https://anaostori.com${metaTags.image}`} />
+				<meta property="og:image" content={`https://anaostori.com/${metaTags.image}`} />
 			</Head>
 			<div dir='rtl'>
 				<GoogleAnalytics pathName={pathName} />
