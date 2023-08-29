@@ -58,28 +58,37 @@ const TheStudent = (props) => {
     }
     console.log(selectedStudent);
 
-    const saveStudentDetails = async () => {
-        const data = examList.map((exam) => {
-            return {
-                userProfileId: selectedStudent.userProfile.id,
-                enrollmentId: selectedStudent.enrollmentId,
-                itemId: exam.id,
-                courseId: courseId,
-                grade: exam.grade ?? null,
-                note: exam.note ?? null
-            }
-        })
-        let body = {
-            data: data
-        }
-        console.log(body);
-        await createStudentExamDataAPI(body).then((res) => {
-            console.log(res);
-            setShowStudentDetails(false)
-        }).catch((error) => {
-            console.log(error)
-        })
+    const saveStudentExamDetails = async (index) => {
+
+        // if (fieldeName == 'grade') {
+        //     if(oldExamList[index].grade == examList[index].grade && ){
+
+        //     }
+        // } else {
+
+        // }
+
+        // const data = examList.map((exam) => {
+        //     return {
+        //         userProfileId: selectedStudent.userProfile.id,
+        //         enrollmentId: selectedStudent.enrollmentId,
+        //         itemId: exam.id,
+        //         courseId: courseId,
+        //         grade: exam.grade ?? null,
+        //         note: exam.note ?? null
+        //     }
+        // })
+        // let body = {
+        //     data: data
+        // }
+        // await createStudentExamDataAPI(body).then((res) => {
+        //     console.log(res);
+        //     setShowStudentDetails(false)
+        // }).catch((error) => {
+        //     console.log(error)
+        // })
     }
+
     const showSelectedStudentExamDetails = (student) => {
         setShowStudentDetails(true)
         const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems.map((quiz, index) => {
@@ -264,10 +273,9 @@ const TheStudent = (props) => {
                     </div>
                 </div>
             }
-            {
-                showStudentDetails &&
+            {showStudentDetails &&
                 <div className='flex'>
-                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentDetails()}> حفظ </button>
+                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentExamDetails()}> حفظ </button>
                 </div>
             }
         </div >
@@ -275,3 +283,26 @@ const TheStudent = (props) => {
 }
 
 export default TheStudent
+
+
+// const saveStudentExamDetails = async () => {
+//     const data = examList.map((exam) => {
+//         return {
+//             userProfileId: selectedStudent.userProfile.id,
+//             enrollmentId: selectedStudent.enrollmentId,
+//             itemId: exam.id,
+//             courseId: courseId,
+//             grade: exam.grade ?? null,
+//             note: exam.note ?? null
+//         }
+//     })
+//     let body = {
+//         data: data
+//     }
+//     await createStudentExamDataAPI(body).then((res) => {
+//         console.log(res);
+//         setShowStudentDetails(false)
+//     }).catch((error) => {
+//         console.log(error)
+//     })
+// }
