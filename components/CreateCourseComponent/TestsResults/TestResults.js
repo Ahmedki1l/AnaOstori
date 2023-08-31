@@ -3,7 +3,7 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { getExamListAPI } from '../../../services/apisService'
+import { getExamListAPI, getStudentListAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import styles from './TestResults.module.scss'
@@ -18,6 +18,8 @@ const TestResults = (props) => {
     const [examList, setExamList] = useState()
     const availabilityList = storeData?.availabilityList;
     const [showStudentList, setShowStudentList] = useState(false)
+    const [selectedExam, setSelectedExam] = useState()
+    const [selectedAvailability, setSelectedAvailability] = useState()
 
 
     const allavailability = availabilityList?.map((obj) => {
@@ -52,9 +54,24 @@ const TestResults = (props) => {
         })
     }
 
-    const getAllStudentList = (e) => {
-        console.log("availabilityId--", e);
+    const onParamsSelect = (e, type) => {
+        if (type == 'exam') {
+            setSelectedExam(e)
+            getStudentList(e, selectedAvailability)
+        } else {
+            setSelectedAvailability(e)
+            getStudentList(selectedExam, e)
+        }
         setShowStudentList(true)
+    }
+
+    const getStudentList = async (examId, availabilityId) => {
+        if (!examId || !availabilityId) return
+        await getStudentListAPI().then((res) => {
+            console.log(res)
+        }).catch((error) => {
+            console.log(error);
+        })
     }
 
     return (
@@ -78,6 +95,7 @@ const TestResults = (props) => {
                             height={40}
                             OptionData={examList}
                             placeholder="اختر المدرب"
+                            onChange={(e) => onParamsSelect(e, 'exam')}
                         />
                     </FormItem>
                     <FormItem
@@ -89,7 +107,7 @@ const TestResults = (props) => {
                             height={40}
                             OptionData={allavailability}
                             placeholder="اختر الجنس"
-                            onChange={(e) => getAllStudentList(e)}
+                            onChange={(e) => onParamsSelect(e, 'availability')}
                         />
                     </FormItem>
                 </div>

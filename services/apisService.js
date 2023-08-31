@@ -89,6 +89,9 @@ export const getStudentListAPI = (data) => { return instance.get(`/students/cour
 export const createStudentExamDataAPI = (data) => { return instance.post(`/course/courseTrackBulk/create`, data) }
 export const getExamListAPI = (data) => { return instance.get(`/item/${data?.courseId}?type=${data.type}`) }
 
+//implement baki
+export const getExamListByItemAPI = (data) => { return instance.get(`student/item/${data?.courseId}/availability/${data?.availabilityId}`) }
+
 
 
 // ********* Manage Library APIs ***********//
@@ -123,8 +126,6 @@ export const removeItemFromSectionAPI = (data) => { return instance.post(`/secti
 export const updateItemOfSectionAPI = (data) => { return instance.post(`/section/item/update`, data) }
 
 // ********* Manage Instructor APIs ***********//
-
-
 export const createInstroctorAPI = (data) => { return instance.post(`/instructor/create`, data) }
 export const editInstroctorAPI = (data) => { return instance.post(`/instructor/update`, data) }
 

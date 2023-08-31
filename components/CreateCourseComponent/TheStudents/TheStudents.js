@@ -56,17 +56,40 @@ const TheStudent = (props) => {
         }
         setExamList(updatedExamData)
     }
-    console.log(selectedStudent);
 
-    const saveStudentExamDetails = async (index) => {
+    const saveStudentExamDetails = async () => {
+        const createApiBody = []
+        const updateApiBody = []
 
-        // if (fieldeName == 'grade') {
-        //     if(oldExamList[index].grade == examList[index].grade && ){
-
-        //     }
-        // } else {
-
-        // }
+        if (fieldeName == 'grade') {
+            if ((oldExamList.grade == examList.grade) || (oldExamList.note !== examList.note)) {
+                const data = examList.map((exam) => {
+                    return {
+                        userProfileId: selectedStudent.userProfile.id,
+                        enrollmentId: selectedStudent.enrollmentId,
+                        itemId: exam.id,
+                        courseId: courseId,
+                        grade: exam.grade ?? null,
+                        note: exam.note ?? null
+                    }
+                })
+                let body = {
+                    data: data
+                }
+                await createStudentExamDataAPI(body).then((res) => {
+                    console.log(res);
+                    setShowStudentDetails(false)
+                }).catch((error) => {
+                    console.log(error)
+                })
+            }
+        } else {
+            // await getExamListByItemAPI(body).then((res) => {
+            //     console.log(res);
+            // }).catch((error) => {
+            //     console.log(error);
+            // })
+        }
 
         // const data = examList.map((exam) => {
         //     return {
@@ -114,6 +137,7 @@ const TheStudent = (props) => {
         setExamList([...nonCompletedQuizItems, ...completedQuizItems])
         setSelectedStudent(student)
     }
+
     const getAllStudentList = async (e) => {
         console.log(e);
         let data = {
