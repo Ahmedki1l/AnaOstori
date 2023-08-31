@@ -17,7 +17,7 @@ export const mediaUrl = (bucketName, mediaKey) => {
 }
 
 export const stringUpdation = (value, digit) => {
-    if (value.length > digit) {
+    if (value?.length > digit) {
         return `${value.slice(0, 15)}...`
     } else {
         return value
