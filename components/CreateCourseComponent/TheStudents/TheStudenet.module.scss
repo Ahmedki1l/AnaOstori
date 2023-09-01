@@ -140,3 +140,16 @@
 .examText {
     cursor: pointer;
 }
+
+.tableBodyArea {
+    width: 1020px;
+    border: 0.7px solid #c3c3c3;
+    border-top: none;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.noDataManiArea {
+    height: 480px;
+    display: grid;
+    place-content: center;
+}

@@ -87,10 +87,12 @@ export const updateAttendanceDataAPI = (data) => { return instance.post(`/attend
 export const getStudentListAPI = (data) => { return instance.get(`/students/course/${data?.courseId}/availability/${data?.availabilityId}`) }
 
 export const createStudentExamDataAPI = (data) => { return instance.post(`/course/courseTrackBulk/create`, data) }
+export const updateStudentExamDataAPI = (data) => { return instance.post(`/courseTrack/update`, data) }
+
 export const getExamListAPI = (data) => { return instance.get(`/item/${data?.courseId}?type=${data.type}`) }
 
 //implement baki
-export const getExamListByItemAPI = (data) => { return instance.get(`student/item/${data?.courseId}/availability/${data?.availabilityId}`) }
+export const getStudentListByExamAPI = (data) => { return instance.get(`student/item/${data?.itemId}/availability/${data?.availabilityId}`) }
 
 
 
@@ -132,17 +134,3 @@ export const editInstroctorAPI = (data) => { return instance.post(`/instructor/u
 // ********* Manage category APIs ***********//
 export const createCatagoryAPI = (data) => { return instance.post(`/catagory/create`, data) }
 export const editCatagoryAPI = (data) => { return instance.post(`/catagory/update`, data) }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

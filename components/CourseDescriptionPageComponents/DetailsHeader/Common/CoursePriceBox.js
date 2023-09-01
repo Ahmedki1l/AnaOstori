@@ -9,7 +9,7 @@ export default function CoursePriceBox(props) {
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible
 
 	return (
-		<div className='pt-2'>
+		<div style={{ padding: '1.3rem 0' }}>
 			{courseDetail.discount == null ?
 				<div className={`py-4 ${styles.basePriceBox}`}>
 					{lang == 'en' ?
@@ -55,16 +55,6 @@ export default function CoursePriceBox(props) {
 							<p className={styles.seemoreText}>{props.discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
 						}
 					</div>
-					{/* <div className='flex items-center cursor-pointer select-none' onClick={() => { props.setDiscountShow(!props.discountShow) }}>
-						<div className={`${styles.arrowIcon} ${props.discountShow == true ? 'rotate-180' : ''}`}>
-							<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#00A3FF'} />
-						</div>
-						{lang == 'en' ?
-							<p className={styles.seemoreText}>{props.discountShow == true ? 'Hide prices' : 'Show prices'}</p>
-							:
-							<p className={styles.seemoreText}>{props.discountShow == true ? 'إخفاء الأسعار' : 'إظهار الأسعار'}</p>
-						}
-					</div> */}
 				</div>
 				{props.discountShow && <>
 					<div className={`flex justify-between pb-4 ${styles.discountPriceBox}`}>

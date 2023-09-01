@@ -40,7 +40,6 @@ function MyApp({ Component, pageProps }) {
 	], []);
 
 	const isUserInstructor = storeData?.isUserInstructor
-	console.log(router);
 	useEffect(() => {
 		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
 			router.replace('/');
@@ -134,7 +133,6 @@ function MyApp({ Component, pageProps }) {
 	};
 
 	const currentRoute = router.pathname;
-	console.log(router);
 	const metaTags = (router.pathname == "/[catagoryName]/[courseName]" ? allMetaTags.metaTagsByCourse[router.query.catagoryName] : allMetaTags.metaTagsByRoute[currentRoute]) || defaultMetaTags
 
 
