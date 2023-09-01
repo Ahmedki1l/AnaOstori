@@ -9,7 +9,7 @@ const SearchInputField = styled(Search)`
         border-color #7c7c7c7c !important;
     }
     .ant-input-group .ant-input {
-        height:46px;
+        height:40px;
         width: 100%;
         font-size: 16px;
         margin-bottom: 0;
@@ -21,22 +21,20 @@ const SearchInputField = styled(Search)`
     }
 
     .ant-btn{
-        height:46px;
+        height:40px;
         border-left:none
     }
 `
-const onSearch = (value) => console.log(value);
 
 const SearchInput = ({
-    height,
     width,
+    onChange,
     placeholder,
 }) => {
     return (
         <SearchInputField
             placeholder={placeholder}
-            onSearch={onSearch}
-            height={'46px'}
+            onChange={onChange}
             width={width}
         />
 

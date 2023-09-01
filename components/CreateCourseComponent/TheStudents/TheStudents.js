@@ -8,13 +8,14 @@ import ProgressBar from '../../CommonComponents/progressBar'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
-import { createStudentExamDataAPI, getStudentListAPI } from '../../../services/apisService'
+import { createStudentExamDataAPI, getStudentListAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { signOutUser } from '../../../services/fireBaseAuthService'
 import { fullDate } from '../../../constants/DateConverter';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 
 
 
@@ -42,11 +43,6 @@ const TheStudent = (props) => {
         }
     });
 
-    const selectedCourse = storeData.myCourses.find((enrollment) => {
-        return enrollment.courseId == courseId
-    })
-    console.log(selectedCourse);
-
     const onInputChange = (e, index, fieldeName) => {
         const updatedExamData = [...examList]
         if (fieldeName == 'grade') {
@@ -58,58 +54,59 @@ const TheStudent = (props) => {
     }
 
     const saveStudentExamDetails = async () => {
-        const createApiBody = []
-        const updateApiBody = []
+        const createDataBody = []
+        const updateDataBody = []
+        examList.forEach((newObj) => {
+            const oldObj = oldExamList.find((old) => old.quizId === newObj.quizId);
+            const oldGrade = oldObj?.grade;
+            const newGrade = newObj?.grade;
 
-        if (fieldeName == 'grade') {
-            if ((oldExamList.grade == examList.grade) || (oldExamList.note !== examList.note)) {
-                const data = examList.map((exam) => {
-                    return {
-                        userProfileId: selectedStudent.userProfile.id,
-                        enrollmentId: selectedStudent.enrollmentId,
-                        itemId: exam.id,
-                        courseId: courseId,
-                        grade: exam.grade ?? null,
-                        note: exam.note ?? null
-                    }
-                })
-                let body = {
-                    data: data
-                }
-                await createStudentExamDataAPI(body).then((res) => {
-                    console.log(res);
-                    setShowStudentDetails(false)
-                }).catch((error) => {
-                    console.log(error)
-                })
+            const oldNote = oldObj?.note;
+            const newNote = newObj?.note
+
+            if ((oldGrade === undefined && newGrade !== undefined) || (oldNote === undefined && newNote !== undefined)) {
+                createDataBody.push({
+                    userProfileId: selectedStudent.userProfile.id,
+                    enrollmentId: selectedStudent.enrollmentId,
+                    courseId: courseId,
+                    itemId: newObj.quizId,
+                    grade: newObj.grade ?? null,
+                    note: newObj.note ?? null
+                });
             }
-        } else {
-            // await getExamListByItemAPI(body).then((res) => {
-            //     console.log(res);
-            // }).catch((error) => {
-            //     console.log(error);
-            // })
+            else if ((oldGrade !== newGrade) || (oldNote !== newNote)) {
+                updateDataBody.push({
+                    userProfileId: selectedStudent.userProfile.id,
+                    enrollmentId: selectedStudent.enrollmentId,
+                    courseId: courseId,
+                    itemId: newObj.quizId,
+                    grade: newObj.grade ?? null,
+                    note: newObj.note ?? null
+                });
+            }
+        });
+
+        let createAPIBody = {
+            data: createDataBody
+        }
+        let updateAPIBody = {
+            data: updateDataBody
         }
 
-        // const data = examList.map((exam) => {
-        //     return {
-        //         userProfileId: selectedStudent.userProfile.id,
-        //         enrollmentId: selectedStudent.enrollmentId,
-        //         itemId: exam.id,
-        //         courseId: courseId,
-        //         grade: exam.grade ?? null,
-        //         note: exam.note ?? null
-        //     }
-        // })
-        // let body = {
-        //     data: data
-        // }
-        // await createStudentExamDataAPI(body).then((res) => {
-        //     console.log(res);
-        //     setShowStudentDetails(false)
-        // }).catch((error) => {
-        //     console.log(error)
-        // })
+        if (createDataBody.length > 0) {
+            await createStudentExamDataAPI(createAPIBody).then((res) => {
+                console.log(res);
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+        if (updateDataBody.length > 0) {
+            await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                console.log(res);
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
     }
 
     const showSelectedStudentExamDetails = (student) => {
@@ -119,8 +116,8 @@ const TheStudent = (props) => {
                 key: quiz.id,
                 quizId: quiz.id,
                 quizName: quiz.name,
-                grade: '',
-                note: ''
+                grade: undefined,
+                note: undefined
             }
         })
 
@@ -133,19 +130,17 @@ const TheStudent = (props) => {
                 note: quiz.note
             }
         })
-        setOldExamList([...nonCompletedQuizItems, ...completedQuizItems])
-        setExamList([...nonCompletedQuizItems, ...completedQuizItems])
+        setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
+        setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
         setSelectedStudent(student)
     }
 
     const getAllStudentList = async (e) => {
-        console.log(e);
         let data = {
             availabilityId: e,
             courseId: courseId,
         }
         await getStudentListAPI(data).then((res) => {
-            console.log(res);
             setSelectedAvailabilityId(e)
             setShowStudentList(true)
             setAllStudentDetails(res?.data)
@@ -163,7 +158,7 @@ const TheStudent = (props) => {
 
     const selectGenderFilter = (value) => {
         const newStudentList = [...allStudentDetails]
-        setDisplayedStudentList(newStudentList.filter((student) => value == student.gender));
+        setDisplayedStudentList(newStudentList.filter((student) => value == student.userProfile.gender));
     }
 
     return (
@@ -177,7 +172,7 @@ const TheStudent = (props) => {
                             >
                                 <Select
                                     fontSize={16}
-                                    width={175}
+                                    width={210}
                                     height={40}
                                     placeholder="اختر الفترة"
                                     OptionData={allavailability}
@@ -239,8 +234,17 @@ const TheStudent = (props) => {
                                         )
                                     })}
                                 </tbody>
-
                             </table>
+                            {displayedStudentList?.length == 0 &&
+                                <div className={styles.tableBodyArea}>
+                                    <div className={styles.noDataManiArea} >
+                                        <div>
+                                            <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+                                            <p className='fontBold py-2' style={{ fontSize: '18px' }}>ما أنشئت أي موعد</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
@@ -250,7 +254,7 @@ const TheStudent = (props) => {
                     <div className={styles.studentDetailsTable}>
                         <p className={`${styles.studentDetails}`} onClick={() => setShowStudentDetails(false)}> الطلاب </p>
                         <p className='pl-2'>{'>'}</p>
-                        <p className={styles.examResultsForStudents}>  نتائج درجات {selectedStudent.fullName}</p>
+                        <p className={styles.examResultsForStudents}>نتائج درجات {selectedStudent.userProfile.fullName}</p>
                     </div>
                     <div>
                         <table className={styles.studentTableArea}>
@@ -261,7 +265,6 @@ const TheStudent = (props) => {
                                     <th className={styles.studentTableHead3}>الملاحظات</th>
                                 </tr>
                             </thead>
-                            {console.log(examList)}
                             <tbody className={styles.studentTableBodyArea}>
                                 {examList.map((exam, index) => {
                                     return (
@@ -291,7 +294,6 @@ const TheStudent = (props) => {
                                     )
                                 })
                                 }
-
                             </tbody>
                         </table>
                     </div>
@@ -302,31 +304,8 @@ const TheStudent = (props) => {
                     <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentExamDetails()}> حفظ </button>
                 </div>
             }
-        </div >
+        </div>
     )
 }
 
 export default TheStudent
-
-
-// const saveStudentExamDetails = async () => {
-//     const data = examList.map((exam) => {
-//         return {
-//             userProfileId: selectedStudent.userProfile.id,
-//             enrollmentId: selectedStudent.enrollmentId,
-//             itemId: exam.id,
-//             courseId: courseId,
-//             grade: exam.grade ?? null,
-//             note: exam.note ?? null
-//         }
-//     })
-//     let body = {
-//         data: data
-//     }
-//     await createStudentExamDataAPI(body).then((res) => {
-//         console.log(res);
-//         setShowStudentDetails(false)
-//     }).catch((error) => {
-//         console.log(error)
-//     })
-// }

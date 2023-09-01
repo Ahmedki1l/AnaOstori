@@ -3,13 +3,14 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { getExamListAPI, getStudentListAPI } from '../../../services/apisService'
+import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import styles from './TestResults.module.scss'
 import ProfilePicture from '../../CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import SearchInput from '../../antDesignCompo/SearchInput'
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 
 const TestResults = (props) => {
 
@@ -20,7 +21,8 @@ const TestResults = (props) => {
     const [showStudentList, setShowStudentList] = useState(false)
     const [selectedExam, setSelectedExam] = useState()
     const [selectedAvailability, setSelectedAvailability] = useState()
-
+    const [studentList, setStudentList] = useState()
+    const [updatedStudentList, setUpdatedStudentList] = useState()
 
     const allavailability = availabilityList?.map((obj) => {
         return {
@@ -40,7 +42,6 @@ const TestResults = (props) => {
             type: 'quiz'
         }
         await getExamListAPI(body).then((res) => {
-            console.log(res);
             const allExamList = res.data?.map((exam) => {
                 return {
                     key: exam.id,
@@ -62,28 +63,119 @@ const TestResults = (props) => {
             setSelectedAvailability(e)
             getStudentList(selectedExam, e)
         }
-        setShowStudentList(true)
     }
 
     const getStudentList = async (examId, availabilityId) => {
         if (!examId || !availabilityId) return
-        await getStudentListAPI().then((res) => {
-            console.log(res)
+        let params = {
+            itemId: examId,
+            availabilityId: availabilityId
+        }
+        await getStudentListByExamAPI(params).then((res) => {
+            setStudentList(JSON.parse(JSON.stringify(res.data)))
+            setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+            setShowStudentList(true)
         }).catch((error) => {
             console.log(error);
         })
+    }
+
+    const saveStudentExamDetails = async () => {
+        const createDataBody = [];
+        const updateDataBody = [];
+
+        const oldExamMap = {};
+        studentList.forEach((item) => {
+            oldExamMap[item.userProfile.id] = item.userProfile.exam;
+        });
+
+        updatedStudentList.forEach((newItem) => {
+            const oldItem = studentList.find((item) => item.enrollmentId === newItem.enrollmentId);
+            const oldGrade = oldItem?.userProfile?.exam[0]?.grade;
+            const newGrade = newItem?.userProfile?.exam[0]?.grade;
+
+            if (oldGrade === undefined && newGrade !== undefined) {
+                createDataBody.push({
+                    userProfileId: newItem.userProfile.id,
+                    enrollmentId: newItem.enrollmentId,
+                    itemId: selectedExam,
+                    courseId: courseId,
+                    grade: newGrade,
+                    note: newItem.userProfile.exam[0].note,
+                });
+            } else if (oldGrade !== newGrade) {
+                updateDataBody.push({
+                    userProfileId: newItem.userProfile.id,
+                    enrollmentId: newItem.enrollmentId,
+                    itemId: selectedExam,
+                    courseId: courseId,
+                    grade: newGrade,
+                    note: newItem.userProfile.exam[0].note,
+                });
+            }
+        });
+
+        let createAPIBody = {
+            data: createDataBody
+        }
+        let updateAPIBody = {
+            data: updateDataBody
+        }
+
+        await createStudentExamDataAPI(createAPIBody).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error)
+        })
+        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error)
+        })
+
+    }
+
+    const onInputChange = (e, index, type) => {
+        const list = [...updatedStudentList]
+        if (list[index].userProfile.exam.length == 0) {
+            list[index].userProfile.exam.push({
+                grade: '',
+                note: ''
+            })
+        }
+        if (type == 'result') {
+            list[index].userProfile.exam[0].grade = e.target.value
+        } else {
+            list[index].userProfile.exam[0].note = e.target.value
+        }
+        setUpdatedStudentList(list)
+    }
+
+    const handleSearchName = (e) => {
+        console.log(e.target.value);
+        const newStudentList = [...studentList]
+        const filteredList = newStudentList.filter((student) => {
+            const fullName = student.userProfile.fullName.toLowerCase();
+            const searchName = e.target.value.toLowerCase();
+            return fullName.includes(searchName);
+        });
+        setUpdatedStudentList(filteredList)
     }
 
     return (
         <div className='maxWidthDefault px-4'>
             <Form>
                 <div className='flex'>
-                    <FormItem>
-                        <SearchInput
+                    <FormItem
+                        name={'selectAvailability'}
+                    >
+                        <Select
                             fontSize={16}
-                            width={331}
-                            placeholder={'بحث باسم الطالب'}
-                            suffix
+                            width={200}
+                            height={40}
+                            OptionData={allavailability}
+                            placeholder="اختر الجنس"
+                            onChange={(e) => onParamsSelect(e, 'availability')}
                         />
                     </FormItem>
                     <FormItem
@@ -98,63 +190,84 @@ const TestResults = (props) => {
                             onChange={(e) => onParamsSelect(e, 'exam')}
                         />
                     </FormItem>
-                    <FormItem
-                        name={'selectAvailability'}
-                    >
-                        <Select
+                    <FormItem>
+                        <SearchInput
                             fontSize={16}
-                            width={150}
-                            height={40}
-                            OptionData={allavailability}
-                            placeholder="اختر الجنس"
-                            onChange={(e) => onParamsSelect(e, 'availability')}
+                            width={331}
+                            placeholder={'بحث باسم الطالب'}
+                            suffix
+                            onChange={(e) => handleSearchName(e)}
                         />
                     </FormItem>
                 </div>
             </Form>
             {showStudentList &&
-                <table className={styles.examTableArea}>
-                    <thead className={styles.tableHeaderArea}>
-                        <tr>
-                            <th className={styles.examTableHead1}>الطالب</th>
-                            <th className={styles.examTableHead2}>الدرجة</th>
-                            <th className={styles.examTableHead3}>الملاحظات</th>
-                        </tr>
-                    </thead>
-                    <tbody className={styles.examTableBodyArea}>
-                        <tr className={styles.examTableRow}>
-                            <td>
-                                <div className='flex'>
-                                    <div className={styles.studentDetails} >
-                                        <div className={styles.StudentListImage}>
-                                            {/* <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} /> */}
-                                        </div>
-                                        <p>wefwf</p>
-                                        {/* <p className={styles.studentName}>{student?.userProfile?.fullName == "" ? student?.userProfile?.fullName : `${student?.userProfile?.firstName} ${student?.userProfile?.lastName}`}</p> */}
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <Input
-                                    fontSize={16}
-                                    width={125}
-                                    height={37}
-                                    placeholder='اكتب الدرجة'
-                                    onChange={(e) => onInputChange(e, index, 'result')}
-                                />
-                            </td>
-                            <td>
-                                <Input
-                                    fontSize={16}
-                                    width={324}
-                                    height={37}
-                                    placeholder='إن وجدت'
-                                    onChange={(e) => onInputChange(e, index, 'note')}
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <table className={styles.examTableArea}>
+                        <thead className={styles.tableHeaderArea}>
+                            <tr>
+                                <th className={styles.examTableHead1}>الطالب</th>
+                                <th className={styles.examTableHead2}>الدرجة</th>
+                                <th className={styles.examTableHead3}>الملاحظات</th>
+                            </tr>
+                        </thead>
+                        {updatedStudentList.length > 0 &&
+                            <tbody className={styles.examTableBodyArea}>
+                                {updatedStudentList?.map((student, index) => {
+                                    return (
+                                        <tr className={styles.examTableRow} key={student.enrollmentId} >
+                                            <td>
+                                                <div className='flex'>
+                                                    <div className={styles.studentDetails} >
+                                                        <div className={styles.StudentListImage}>
+                                                            <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
+                                                        </div>
+                                                        <p className={styles.studentName}>{student?.userProfile?.firstName == "" ? student?.userProfile?.fullName : `${student?.userProfile?.firstName} ${student?.userProfile?.lastName}`}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <Input
+                                                    fontSize={16}
+                                                    width={125}
+                                                    height={37}
+                                                    value={student?.userProfile?.exam[0]?.grade ? student?.userProfile?.exam[0]?.grade : ''}
+                                                    placeholder='اكتب الدرجة'
+                                                    onChange={(e) => onInputChange(e, index, 'result')}
+                                                />
+                                            </td>
+                                            <td>
+                                                <Input
+                                                    fontSize={16}
+                                                    width={324}
+                                                    height={37}
+                                                    value={student?.userProfile?.exam[0]?.note ? student?.userProfile?.exam[0]?.note : ''}
+                                                    placeholder='إن وجدت'
+                                                    onChange={(e) => onInputChange(e, index, 'note')}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        }
+                    </table>
+                    {updatedStudentList.length > 0 &&
+                        <div className='flex'>
+                            <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentExamDetails()}> حفظ </button>
+                        </div>
+                    }
+                </div>
+            }
+            {updatedStudentList?.length == 0 &&
+                <div className={styles.tableBodyArea}>
+                    <div className={styles.noDataManiArea} >
+                        <div>
+                            <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+                            <p className='fontBold py-2' style={{ fontSize: '18px' }}>ما أنشئت أي موعد</p>
+                        </div>
+                    </div>
+                </div>
             }
         </div>
     )
