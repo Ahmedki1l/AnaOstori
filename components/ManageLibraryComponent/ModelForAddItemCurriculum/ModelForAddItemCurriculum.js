@@ -75,7 +75,6 @@ const ModelForAddItemCurriculum = ({
         }
         await getItemListAPI(body).then((res) => {
             setTypeOfListData("item")
-            console.log(res);
 
             let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                 return {

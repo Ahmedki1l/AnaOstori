@@ -34,6 +34,7 @@ const TheStudent = (props) => {
     const [oldExamList, setOldExamList] = useState()
     const [selectedStudent, setSelectedStudent] = useState()
     const [selectedAvailabilityId, setSelectedAvailabilityId] = useState()
+    const [studentDetailsForm] = Form.useForm()
 
     const allavailability = availabilityList?.map((obj) => {
         return {
@@ -95,14 +96,12 @@ const TheStudent = (props) => {
 
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
-                console.log(res);
             }).catch((error) => {
                 console.log(error)
             })
         }
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-                console.log(res);
             }).catch((error) => {
                 console.log(error)
             })
@@ -145,6 +144,7 @@ const TheStudent = (props) => {
             setShowStudentList(true)
             setAllStudentDetails(res?.data)
             setDisplayedStudentList(res?.data)
+            studentDetailsForm.resetFields(['selectgender'])
         }).catch((error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -165,7 +165,7 @@ const TheStudent = (props) => {
         <div className='maxWidthDefault px-4'>
             {!showStudentDetails &&
                 <div>
-                    <Form>
+                    <Form form={studentDetailsForm}>
                         <div className='flex'>
                             <FormItem
                                 name={'selectperiod'}

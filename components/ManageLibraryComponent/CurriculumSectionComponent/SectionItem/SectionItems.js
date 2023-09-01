@@ -63,9 +63,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
         let body = {
             data: data
         }
-        console.log(body);
         await updateItemOfSectionAPI(body).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
         })
@@ -81,7 +79,6 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
             }]
         }
         await updateItemOfSectionAPI(body).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
         })
@@ -115,7 +112,6 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                             {...provided.draggableProps}
                                             ref={provided.innerRef}
                                         >
-                                            {console.log(data)}
                                             <div className={styles.curriculimDetailsData}>
                                                 <div {...provided.dragHandleProps} className={styles.updownArrowWrapper}>
                                                     {/* <AllIconsComponenet iconName={'updownarrow'} height={20} width={20} color={arrowColor} /> */}

@@ -87,7 +87,6 @@ export default function Login() {
 			if (profileData.firstName == null || profileData.lastName == null || profileData.gender == null) {
 				router.push('/registerGoogleUser')
 			} else {
-				console.log(storeData?.returnUrl);
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
 				}

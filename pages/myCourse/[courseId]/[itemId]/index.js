@@ -37,7 +37,6 @@ export default function Index() {
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
     })
-    console.log(selectedCourse, storeData.myCourses);
 
     const chagenCourseItemHendler = (itemId) => {
         getCourseItemHendler(itemId)

@@ -47,7 +47,7 @@ export default function Register() {
 			router.push('/')
 		}).catch(error => {
 			toast.error(error)
-			console.log("errors : ", error)
+			console.log(error)
 		});
 	}
 
@@ -113,7 +113,6 @@ export default function Register() {
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
 			handleStoreUpdate()
-			console.log(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,

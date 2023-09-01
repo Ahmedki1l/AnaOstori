@@ -285,7 +285,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             courseId: editCourseData.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
-            console.log(res);
         })
     }
 

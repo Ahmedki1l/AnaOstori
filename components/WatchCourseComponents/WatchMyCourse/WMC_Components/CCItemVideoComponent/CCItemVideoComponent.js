@@ -7,7 +7,6 @@ export default function CCItemVideoComponent(props) {
 	const currentItemContent = props?.newSelectedCourseItem
 	const videoUrl = currentItemContent?.url
 	const itemId = currentItemContent?.id
-	console.log(videoUrl);
 
 	const itemCompleteHendler = () => {
 		props.markItemCompleteHendler(itemId)

@@ -3,7 +3,6 @@ import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import styles from './AttendanceTable.module.scss'
 import dayjs from 'dayjs'
 import ProfilePicture from '../../../CommonComponents/ProfilePicture'
-import * as LinkConst from '../../../../constants/LinkConst';
 import { mediaUrl } from '../../../../constants/DataManupulation'
 
 
@@ -15,9 +14,7 @@ export default function AttendanceTable(props) {
     const [studentAttendanceList, setStudentAttendanceList] = useState(attendanceData)
     const [selectedDayIndex, setSelectedDayIndex] = useState(undefined)
     const [selectedDay, setSelectedDay] = useState('')
-    const baseUrl = LinkConst.File_Base_Url2
 
-    console.log(attendanceData);
 
     const handelDaySelection = (index, date) => {
         if (dayjs(date).startOf('day') > dayjs(new Date())) {
@@ -44,13 +41,11 @@ export default function AttendanceTable(props) {
                     }
                 }
             }
-            console.log(data);
             setSelectedDayIndex(undefined)
             setSelectedDay(date)
         } else {
             setSelectedDayIndex(index)
             setSelectedDay(date)
-            console.log(index, selectedDay);
             let data = [...studentAttendanceList]
             for (let i = 0; i < data.length; i++) {
                 const student = data[i];
@@ -80,19 +75,16 @@ export default function AttendanceTable(props) {
                             date: selectedDay,
                             attendanceType: trueVariables[0]
                         }
-                        console.log(shrinkObj);
                         data[i].attendanceDetails[j] = { ...shrinkObj }
                     }
                 }
             }
-            console.log(data);
             setStudentAttendanceList(data)
             props.setUpdatedAttendanceData(data)
         }
     }
 
     const changeStatusForIndividualType = (type, studentIndex, dayIndex) => {
-        console.log(type, studentIndex, dayIndex);
         let tempStudentAttendanceList = [...studentAttendanceList]
         if (type == 'present') {
             tempStudentAttendanceList[studentIndex].attendanceDetails[dayIndex].present = true
@@ -170,7 +162,6 @@ export default function AttendanceTable(props) {
                 </div>
                 <div id={'tableBody'}>
                     {studentAttendanceList.map((student, studentIndex) => {
-                        console.log(student);
                         return (
                             <div className='flex' key={`TableFirstColoumCell${studentIndex}`}>
                                 <div className={styles.tableFirstColoumCell} >

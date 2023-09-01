@@ -47,7 +47,7 @@ export default function Navbar() {
 				setCatagories(res?.data),
 					setCurriculumIds(res?.data)
 			}).catch(error => {
-				console.log("error : ", error);
+				console.log(error);
 			})
 		};
 		fetchResults();

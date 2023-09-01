@@ -26,11 +26,9 @@ export default function Index() {
     const [currentItemId, setCurrentItemId] = useState()
     const [isUserEnrolled, setIsUserEnrolled] = useState(false)
 
-    console.log(storeData);
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
     })
-    console.log(selectedCourse);
 
     useEffect(() => {
         if (courseID) {
@@ -49,7 +47,6 @@ export default function Index() {
                         courseProgressReq,
                         completedCourseItemReq
                     ])
-                    console.log(completedCourseItem);
 
                     setCourseCurriculum(courseCurriculum.data)
                     if (courseCurriculum.data?.enrollment != null) { setIsUserEnrolled(true) }

@@ -112,7 +112,6 @@ const ModelForAddItemLibrary = ({
         const data = {
             data: body
         }
-        console.log(data);
         await updateItemToFolderAPI(data).then((res) => {
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
         }).catch((error) => {
