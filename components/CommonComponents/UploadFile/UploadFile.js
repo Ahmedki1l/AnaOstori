@@ -8,16 +8,13 @@ const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
 
     const handleUploadFile = async (e) => {
-        console.log("video", e);
         let formData = new FormData();
         formData.append("file", e.target.files[0]);
 
         const data = {
             formData,
         }
-        console.log("data", data);
         await uploadFileAPI(data).then((res) => {
-            console.log(res);
             setImageUploadResponceData(res.data)
         }).catch((error) => {
             console.log(error);

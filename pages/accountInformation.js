@@ -144,7 +144,7 @@ export default function AccountInformation() {
             getProfileData(type)
         }).catch(error => {
             setShowLoader(false)
-            console.log("errors : ", error)
+            console.log(error)
             if (error?.response?.status == 401) {
                 signOutUser()
             }
@@ -163,7 +163,7 @@ export default function AccountInformation() {
                     getProfileData('email')
                 }).catch(error => {
                     setShowLoader(false)
-                    console.log("error :", error);
+                    console.log(error);
                 })
             }
             else {

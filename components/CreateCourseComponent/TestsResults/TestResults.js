@@ -123,12 +123,10 @@ const TestResults = (props) => {
         }
 
         await createStudentExamDataAPI(createAPIBody).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error)
         })
         await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error)
         })
@@ -152,7 +150,6 @@ const TestResults = (props) => {
     }
 
     const handleSearchName = (e) => {
-        console.log(e.target.value);
         const newStudentList = [...studentList]
         const filteredList = newStudentList.filter((student) => {
             const fullName = student.userProfile.fullName.toLowerCase();

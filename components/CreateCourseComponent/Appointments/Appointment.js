@@ -16,14 +16,15 @@ import dayjs from 'dayjs';
 import TimePicker from '../../antDesignCompo/TimePicker';
 import Switch from '../../../components/antDesignCompo/Switch';
 
-const Appointments = ({ courseId, courseType }) => {
+const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
-    const [allAppointments, setAllAppointments] = useState([])
+    // const [allAppointments, setAllAppointments] = useState([])
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
+    const allAppointments = storeData?.availabilityList;
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
     const dispatch = useDispatch();
@@ -38,12 +39,11 @@ const Appointments = ({ courseId, courseType }) => {
         }
     });
 
-    useEffect(() => {
-        getAllAvailability()
-    }, [])
+    // useEffect(() => {
+    //     getAllAvailability()
+    // }, [])
 
     const onChange = (checked) => {
-        console.log(`switch to ${checked}`);
     };
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
@@ -61,9 +61,7 @@ const Appointments = ({ courseId, courseType }) => {
                 data: values,
                 availabilityId: editAvailability?.id
             }
-            console.log(body);
             await editAvailabilityAPI(body).then((res) => {
-                console.log(res);
                 setIsModalOpen(false)
                 getAllAvailability()
             }).catch((error) => {
@@ -73,7 +71,6 @@ const Appointments = ({ courseId, courseType }) => {
             let body = {
                 data: values,
             }
-            console.log(body);
             await createCourseAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
                 getAllAvailability()
@@ -84,20 +81,20 @@ const Appointments = ({ courseId, courseType }) => {
         appointmentForm.resetFields()
     }
 
-    const getAllAvailability = async () => {
-        let body = {
-            courseId: courseId,
-        }
-        await getAllAvailabilityAPI(body).then((res) => {
-            setAllAppointments(res?.data)
-            dispatch({
-                type: 'SET_AllAVAILABILITY',
-                availabilityList: res?.data,
-            })
-        }).catch((error) => {
-            console.log(error);
-        })
-    }
+    // const getAllAvailability = async () => {
+    //     let body = {
+    //         courseId: courseId,
+    //     }
+    //     await getAllAvailabilityAPI(body).then((res) => {
+    //         setAllAppointments(res?.data)
+    //         dispatch({
+    //             type: 'SET_AllAVAILABILITY',
+    //             availabilityList: res?.data,
+    //         })
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     })
+    // }
 
     const editAppointment = (appointment) => {
         setIsModalOpen(true)

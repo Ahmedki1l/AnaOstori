@@ -28,7 +28,6 @@ const StyledDatePicker = styled(AntdDatePicker)`
 `;
 
 const onChange = (date, dateString) => {
-  console.log(date, dateString);
 };
 
 // const disabledDate = (current) => {

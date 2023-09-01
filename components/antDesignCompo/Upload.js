@@ -31,9 +31,7 @@ const Upload = ({
         const data = {
             formData,
         }
-        console.log("data", data);
         await uploadFileAPI(data).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
         })
@@ -49,9 +47,7 @@ const Upload = ({
         });
 
     const handlePreview = async (file) => {
-        console.log(file);
         if (!file.url && !file.preview) {
-            console.log(file);
             file.preview = await getBase64(file.originFileObj);
         }
         setPreviewImage(file.url || file.preview);

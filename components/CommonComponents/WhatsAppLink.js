@@ -12,9 +12,15 @@ export default function WhatsAppLinkComponent(props) {
 	const offset = useScrollEvent().offset
 	const discountShow = props.discountShow
 	const paymentInfoChangePage = props.paymentInfoChangePage
+	const groupDiscountEligible = props?.courseDetail?.groupDiscountEligible
 
 	return (
-		<div className={`whatsAppLogoWrapper ${discountShow == true ? `discountShowWrapperUp` : ``}  ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`} ${paymentInfoChangePage && 'pageChangeLogoWrapper'}`}>
+		<div className={`whatsAppLogoWrapper 
+		    ${(groupDiscountEligible == false && offset > 512) && 'notShowWrapperUP'}
+		 	${discountShow == true ? `discountShowWrapperUp` : ``} 
+		 	${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`}
+		    ${paymentInfoChangePage && 'pageChangeLogoWrapper'}`}>
+
 			<div className='whatsAppLogo'>
 				<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 					<div className='flex'>

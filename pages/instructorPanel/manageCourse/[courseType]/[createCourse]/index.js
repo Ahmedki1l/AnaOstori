@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
 import CourseInfo from '../../../../../components/CreateCourseComponent/CourseInfo/CourseInfo';
 import Appointment from '../../../../../components/CreateCourseComponent/Appointments/Appointment';
@@ -8,6 +8,8 @@ import TestsResults from '../../../../../components/CreateCourseComponent/TestsR
 import TheStudents from '../../../../../components/CreateCourseComponent/TheStudents/TheStudents';
 import Attendance from '../../../../../components/CreateCourseComponent/Attendance/Attendance';
 import { useSelector } from 'react-redux';
+import { getAllAvailabilityAPI } from '../../../../../services/apisService';
+import { useDispatch } from 'react-redux';
 
 const CourseInitial =
 {
@@ -44,6 +46,7 @@ export default function Index() {
     const { courseType, courseId } = useRouter().query
     const [selectedItem, setSelectedItem] = useState(1);
     const storeData = useSelector((state) => state?.globalStore);
+    const dispatch = useDispatch();
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
     const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)
@@ -51,6 +54,24 @@ export default function Index() {
     const courseName = isCourseEdit ? editCourseData?.name : createCourseApiRes?.name ? createCourseApiRes?.name : undefined
     const handleItemSelect = (id) => {
         setSelectedItem(id)
+    }
+
+    useEffect(() => {
+        getAllAvailability()
+    }, [])
+
+    const getAllAvailability = async () => {
+        let body = {
+            courseId: courseId,
+        }
+        await getAllAvailabilityAPI(body).then((res) => {
+            dispatch({
+                type: 'SET_AllAVAILABILITY',
+                availabilityList: res?.data,
+            })
+        }).catch((error) => {
+            console.log(error);
+        })
     }
 
     return (
@@ -87,7 +108,7 @@ export default function Index() {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
-                        {selectedItem == 3 && courseType != "onDemand" && <Appointment courseId={courseId} courseType={courseType} />}
+                        {selectedItem == 3 && courseType != "onDemand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} />}
                         {selectedItem == 4 && <TheStudents courseId={courseId} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} courseType={courseType} />}

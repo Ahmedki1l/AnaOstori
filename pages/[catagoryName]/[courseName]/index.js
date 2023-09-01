@@ -263,7 +263,7 @@ export default function Index(props) {
 						</div>
 					}
 					{(screenWidth <= 767) &&
-						<ul id={'header'} className="pr-4" style={{ paddingTop: selectedNavItem == 0 ? `${paddingTop}rem` : '2rem' }}>
+						<ul id={'header'} className="px-4" style={{ paddingTop: selectedNavItem == 0 ? `${paddingTop}rem` : '2rem' }}>
 							<h3 className='fontBold pb-4'>{lang == 'en' ? `Subscription Info` : `تفاصيل الاشتراك`}</h3>
 							{courseDetail.courseDetailsMetaData && courseDetail.courseDetailsMetaData?.map((item, index) => {
 								return (
@@ -436,7 +436,7 @@ export default function Index(props) {
 							</div>
 						</div>
 					</div>
-					<WhatsAppLinkComponent isBookSeatPageOpen={true} discountShow={discountShow} />
+					<WhatsAppLinkComponent isBookSeatPageOpen={true} courseDetail={courseDetail} discountShow={discountShow} />
 				</div>
 			}
 		</>

@@ -107,7 +107,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     }
 
     const editCourseCardMetaData = async (values) => {
-        console.log(values);
         const cardDescription = values.cardDescription
 
         let CourseCardMetaData = values.CourseCardMetaData.map((obj, index) => {
@@ -151,7 +150,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
     const deleteCourseDetails = async (index, remove, name) => {
         let data = { ...courseDetail }
-        console.log(data.CourseCardMetaData[index].id);
         if (data.CourseCardMetaData[index].id == undefined) {
             remove(name)
         } else {
@@ -169,7 +167,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
                 setShowLoader(false)
-                console.log(res);
             }).catch((error) => {
                 setShowLoader(false)
                 console.log(error);

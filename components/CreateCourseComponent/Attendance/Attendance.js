@@ -17,7 +17,6 @@ export default function Attendance(props) {
     const [attendanceKey, setAttendanceKey] = useState("")
     const [showAttendanceTable, setShowAttendanceTable] = useState(false)
     const courseId = props.courseId
-    const courseType = props.courseType
     const [dateArray, setDateArray] = useState([])
     const [attendanceData, setAttendanceData] = useState([])
     const [updatedAttendanceData, setUpdatedAttendanceData] = useState()
@@ -35,7 +34,6 @@ export default function Attendance(props) {
             DateTo: obj.dateTo,
         }
     });
-    console.log("allavailability", allavailability);
 
     const generateQR = async () => {
         setOpenQR(true)
@@ -73,7 +71,6 @@ export default function Attendance(props) {
 
 
         const attendanceDetailsData = data.map((student, index) => {
-            console.log(student);
             const studentData = {
                 key: `studentAttendance${index}`,
                 studentName: student.firstName,
@@ -124,9 +121,7 @@ export default function Attendance(props) {
             availabilityId: e,
         }
         await getAttendanceListAPI(body).then((res) => {
-            console.log(res);
             createAttendanceTableData(e, res.data)
-            // setShowAttendanceTable(true)
             setShowAttendanceTable(res.data.length > 0 ? true : false)
         }).catch((error) => {
             console.log(error);

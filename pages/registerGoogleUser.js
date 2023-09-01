@@ -108,7 +108,7 @@ export default function RegisterGoogleUser() {
                 router.push('/')
             }).catch(error => {
                 toast.error(error)
-                console.log("errors : ", error)
+                console.log(error)
             });
         }
     }

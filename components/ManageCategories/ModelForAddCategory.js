@@ -104,14 +104,11 @@ const ModelForAddCategory = ({
     }
 
     const onChange = async (checked,) => {
-        console.log(` ${checked}`);
         let body = {
             id: editCategory.id,
             isDeleted: checked
         }
-        console.log(body);
         await editCatagoryAPI(body).then((res) => {
-            console.log(res);
         }).catch((err) => {
             console.log(err);
         })

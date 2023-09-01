@@ -9,7 +9,7 @@ export default function CoursePriceBox(props) {
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible
 
 	return (
-		<div style={{ padding: '1.3rem 0' }}>
+		<div className='pt-2'>
 			{courseDetail.discount == null ?
 				<div className={`py-4 ${styles.basePriceBox}`}>
 					{lang == 'en' ?
