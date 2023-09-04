@@ -89,6 +89,13 @@
 	}
 }
 
+.separateLine {
+	margin-top: auto;
+	height: 1px;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
 .hidePriceBox {
 	display: flex;
 	background-color: #61b92235;
