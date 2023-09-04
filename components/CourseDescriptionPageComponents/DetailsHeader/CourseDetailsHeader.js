@@ -124,7 +124,13 @@ export default function CourseDetailsHeader(props) {
 						</div>
 					</div>
 					{(screenWidth > 767 && (offset < (screenWidth > 1280 ? 357 : screenWidth < 1024 ? 313 : 336))) &&
-						<BuyCourseComponent courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={props.bookSeatButtonText} lang={lang} />
+						<BuyCourseComponent
+							courseDetail={courseDetail}
+							handleBookSitButtonClick={handleBookSitButtonClick}
+							bookSeatButtonText={props.bookSeatButtonText}
+							setDiscountShow={props.setDiscountShow}
+							discountShow={props.discountShow}
+							lang={lang} />
 					}
 				</div>
 			}
