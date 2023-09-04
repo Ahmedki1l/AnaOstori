@@ -13,7 +13,7 @@ export default function PhysicalCourseCard(props) {
 
 	const courseDetail = props.courseDetails
 	const isEdit = props.isEdit
-
+	const lang = courseDetail.language
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible
 	const catagoryName = props.catagoryName ? props.catagoryName : ""
 	const [discountShow, setDiscountShow] = useState(false)
@@ -39,7 +39,6 @@ export default function PhysicalCourseCard(props) {
 				<CoverImg height={215} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 			</div>
 			<div className={styles.detailsBox}>
-				{/* <div style={{ maxHeight: '205px', overflow: 'auto' }}> */}
 				<h1 className='head2 text-center'>{courseDetail.name}</h1>
 				<p className={styles.courseDetailText}>{courseDetail.cardDescription}</p>
 				<ul className={styles.descriptionList}>
@@ -65,14 +64,14 @@ export default function PhysicalCourseCard(props) {
 						)
 					})}
 				</ul>
-				{/* </div> */}
 				<div className={styles.priceBoxWrapper}>
+					<div className={styles.separateLine}></div>
 					{courseDetail.discount == null ?
 						<div>
-							<p className={`fontBold pt-4 pr-3 ${styles.detailText}`}>الأسعار شاملة الضريبة</p>
+							<p className={`fontBold pt-4 px-3 ${styles.detailHeadText}`}>{lang == 'en' ? 'Prices includes VAT' : 'الأسعار شاملة الضريبة'}</p>
 							<div className={styles.onePersonPriceBox}>
-								<p className={` ${styles.onePersonDetailText}`}>للشخص الواحد</p>
-								<p className={`fontBold ${styles.price}`}>{oneUserPrice} ر.س</p>
+								<p className={` ${styles.detailText}`}>{lang == 'en' ? '1 Student' : 'للشخص الواحد'}</p>
+								<p className={`fontBold ${styles.price}`}>{oneUserPrice} {lang == 'en' ? 'SAR' : 'ر.س'} </p>
 							</div>
 						</div>
 						:
@@ -82,7 +81,7 @@ export default function PhysicalCourseCard(props) {
 								<p className={styles.percentageBox}>خصم {(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % </p>
 							</div>
 							<div className='flex'>
-								<p className={styles.oldPrice}>سابقًا {courseDetail.price} ر.س</p>
+								<p className={styles.oldPrice}> {lang == 'en' ? 'previously' : 'سابقًا'}   {courseDetail.price} {lang == 'en' ? 'SAR' : 'ر.س'}</p>
 							</div>
 						</div>
 					}
@@ -94,34 +93,34 @@ export default function PhysicalCourseCard(props) {
 										<AllIconsComponenet iconName={'keyBoardDownIcon'} height={18} width={30} color={'#3B9100'} />
 									</div>
 								</div>
-								<p className={styles.detailText}>{discountShow ? 'إخفاء خصم المجموعات' : 'عرض خصم المجموعات'}</p>
+								<p className={styles.detailText}>{!discountShow ? (lang == 'en' ? 'Show group discount' : 'عرض خصم المجموعات') : (lang == 'en' ? 'Hide group discount ' : 'إخفاء خصم المجموعات')}</p>
 							</div>
 						</div>
 						{discountShow &&
 							<>
 								<div className={styles.twoPersonPriceBox}>
 									<div>
-										<p className={styles.detailText}>للشخصين</p>
+										<p className={styles.detailText}>{lang == 'en' ? '2 Students' : 'للشخصين'}</p>
 									</div>
 									<div style={{ textAlign: 'end' }}>
 										<p className={`fontBold ${styles.price}`}>{courseDetail.discountForTwo} ر.س</p>
 										<p className={` ${styles.eachPersonDetailText}`}>على كل شخص</p>
 									</div>
 								</div>
-								<div className={styles.threePersonPriceBox}>
+								<div className={styles.twoPersonPriceBox}>
 									<div>
-										<p className={styles.detailText}>3 أشخاص أو أكثر</p>
+										<p className={styles.detailText}>{lang == 'en' ? '3 Students or more' : '3 أشخاص أو أكثر'}</p>
 									</div>
 									<div style={{ textAlign: 'end' }}>
-										<p className={`fontBold ${styles.price}`}>{courseDetail.discountForThreeOrMore} ر.س</p>
-										<p className={` ${styles.eachPersonDetailText}`}>على كل شخص</p>
+										<p className={`fontBold ${styles.price}`}>{courseDetail.discountForThreeOrMore} {lang == 'en' ? 'SAR' : 'ر.س'} </p>
+										<p className={` ${styles.eachPersonDetailText}`}>{lang == 'en' ? 'for each student' : 'على كل شخص'}</p>
 									</div>
 								</div>
 							</>
 						}
 					</>}
 					<div className={styles.btnBox}>
-						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail)}>قراءة تفاصيل الدورة</button>
+						<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail)}>{lang == 'en' ? 'View course details' : 'قراءة تفاصيل الدورة'}</button>
 					</div>
 				</div>
 			</div>

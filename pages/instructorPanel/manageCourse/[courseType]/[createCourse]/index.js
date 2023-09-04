@@ -11,37 +11,6 @@ import { useSelector } from 'react-redux';
 import { getAllAvailabilityAPI } from '../../../../../services/apisService';
 import { useDispatch } from 'react-redux';
 
-const CourseInitial =
-{
-    name: "",
-    shortDescription: "",
-    cardDescription: "",
-    curriculumId: "",
-    pictureKey: "",
-    pictureBucket: "",
-    pictureMime: "",
-    videoKey: "",
-    videoBucket: "",
-    videoMime: "",
-    coursePlanKey: "",
-    coursePlanBucket: "",
-    coursePlanMime: "",
-    reviewRate: "",
-    numberOfGrarduates: "",
-    price: "",
-    discount: "",
-    locationName: "",
-    location: "",
-    link: "",
-    type: "",
-    catagoryId: "",
-    groupDiscountEligible: "",
-    discountForTwo: "",
-    discountForThreeOrMore: "",
-}
-
-
-
 export default function Index() {
     const { courseType, courseId } = useRouter().query
     const [selectedItem, setSelectedItem] = useState(1);
@@ -56,11 +25,10 @@ export default function Index() {
         setSelectedItem(id)
     }
 
-    useEffect(() => {
-        getAllAvailability()
-    }, [])
-
     const getAllAvailability = async () => {
+        if (!courseId) {
+            return;
+        }
         let body = {
             courseId: courseId,
         }
@@ -73,6 +41,9 @@ export default function Index() {
             console.log(error);
         })
     }
+    useEffect(() => {
+        getAllAvailability();
+    }, [courseId]);
 
     return (
         <>
