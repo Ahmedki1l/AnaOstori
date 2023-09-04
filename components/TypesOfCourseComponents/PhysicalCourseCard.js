@@ -65,7 +65,9 @@ export default function PhysicalCourseCard(props) {
 					})}
 				</ul>
 				<div className={styles.priceBoxWrapper}>
-					<div className={styles.separateLine}></div>
+					<div style={{ height: '0.3px' }}>
+						<div className={styles.separateLine}></div>
+					</div>
 					{courseDetail.discount == null ?
 						<div>
 							<p className={`fontBold pt-4 px-3 ${styles.detailHeadText}`}>{lang == 'en' ? 'Prices includes VAT' : 'الأسعار شاملة الضريبة'}</p>

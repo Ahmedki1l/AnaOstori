@@ -79,7 +79,6 @@
 }
 
 .priceBoxWrapper {
-	border-top: 0.3px solid rgba(0, 0, 0, 0.5);
 	display: table-row;
 	height: 20px;
 	font-size: 18px;
@@ -91,7 +90,7 @@
 
 .separateLine {
 	margin-top: auto;
-	height: 1px;
+	height: 100%;
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.3);
 }
