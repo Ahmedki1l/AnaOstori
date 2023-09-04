@@ -30,7 +30,13 @@ export default function BuyCourseComponent(props) {
 
 				{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={courseDetail.videoKey} thumnailHeight={190} /> */}
 
-				<CoursePriceBox courseDetail={courseDetail} handleBookSitButtonClick={handleBookSitButtonClick} bookSeatButtonText={props.bookSeatButtonText} lang={lang} />
+				<CoursePriceBox
+					courseDetail={courseDetail}
+					handleBookSitButtonClick={handleBookSitButtonClick}
+					bookSeatButtonText={props.bookSeatButtonText}
+					setDiscountShow={props.setDiscountShow}
+					discountShow={props.discountShow}
+					lang={lang} />
 				<div className='flex justify-center py-3.5'>
 					{isUserUseApple ?
 						<Logo height={isMediumScreen ? 30 : 40} width={isMediumScreen ? 290 : 322} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />

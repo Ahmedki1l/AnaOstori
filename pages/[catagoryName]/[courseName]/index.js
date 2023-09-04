@@ -217,6 +217,8 @@ export default function Index(props) {
 						bookSeatButtonText={bookSeatButtonText}
 						handleBookSitButtonClick={handleBookSitButtonClick}
 						lang={lang}
+						setDiscountShow={setDiscountShow}
+						discountShow={discountShow}
 					/>
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
