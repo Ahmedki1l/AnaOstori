@@ -40,12 +40,17 @@ const Select = ({
   fontSize,
   ...rest
 }) => {
+
+  const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
   return (
     <StyledSelect
+      showSearch
       options={OptionData}
       placeholder={placeholder}
       fontSize={fontSize}
       onChange={(e) => onChange(e)}
+      filterOption={filterOption}
       dropdownStyle={{ direction: 'rtl' }}
       {...rest}
     />

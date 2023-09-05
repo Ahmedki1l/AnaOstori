@@ -259,7 +259,7 @@ export default function Navbar() {
 				</div>
 				:
 				<div className={styles.navbarWrapper} id="navBar" >
-					<div className='maxWidthDefault'>
+					<div>
 						<div className={styles.navbarInnerWrapper}>
 							<Link href={'/'} className={`pl-8 my-auto ${isRegisterGoogleUser && 'cursor-not-allowed'}`}>
 								<Logo height={38} width={68} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />

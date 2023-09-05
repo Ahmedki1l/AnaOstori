@@ -17,8 +17,9 @@ import Image from 'next/image'
 import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
+import * as PaymentConst from '../../../constants/PaymentConst'
 
-const { Option } = Select;
+
 
 const CourseInitial =
 {
@@ -51,7 +52,6 @@ const CourseInitial =
 
 const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, setSelectedItem }) => {
 
-
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
@@ -68,6 +68,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const dispatch = useDispatch();
     const [discountValue, setDiscountValue] = useState()
     const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
+    const iosProductIdList = PaymentConst.iosProductIdList
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -82,7 +83,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             value: obj.id
         };
     });
-
     const curriculum = curriculumIds.map((obj) => {
         return {
             key: obj.id,
@@ -110,6 +110,20 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.type = courseType
             values.language = englishCourse ? "en" : "ar"
             values.published = false
+
+            const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
+            const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
+            const iosDiscountForTwoLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForTwoId ? obj.label : null)
+            const iosDiscountForThreeLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForThreeOrMoreId ? obj.label : null)
+
+            values.iosPrice = iosPriceLabel.label
+            if (discountForOne) {
+                values.iosDiscount = iosDiscountLabel.label
+            }
+            if (groupDiscountEligible) {
+                values.iosDiscountForTwo = iosDiscountForTwoLabel.label
+                values.iosDiscountForThreeOrMore = iosDiscountForThreeLabel.label
+            }
 
             delete values.priceForTwo;
             delete values.PriceForThreeorMore;
@@ -197,7 +211,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: courseMetaData
             },
         }
-
         let courseDetailsMetaData = values.courseDetailsMetaData.map((obj, index) => {
             delete obj.createdAt
             delete obj.updatedAt
@@ -213,7 +226,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             },
         }
 
-
         if (groupDiscountEligible == false) {
             values.discountForThreeOrMore = 0
             values.discountForTwo = 0
@@ -223,11 +235,28 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.discount = editCourseData.price
         }
 
-        values.pictureKey = imageUploadResponceData?.key,
-            values.pictureBucket = imageUploadResponceData?.bucket,
-            values.pictureMime = imageUploadResponceData?.mime,
-            values.groupDiscountEligible = groupDiscountEligible
+        values.pictureKey = imageUploadResponceData?.key
+        values.pictureBucket = imageUploadResponceData?.bucket
+        values.pictureMime = imageUploadResponceData?.mime
+        values.groupDiscountEligible = groupDiscountEligible
         values.type = courseType
+
+        const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
+        const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
+        const iosDiscountForTwoLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForTwoId ? obj.label : null)
+        const iosDiscountForThreeLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForThreeOrMoreId ? obj.label : null)
+
+        if (courseType != "physical") {
+            values.iosPrice = iosPriceLabel.label
+
+            if (discountForOne) {
+                values.iosDiscount = iosDiscountLabel.label
+            }
+            if (groupDiscountEligible) {
+                values.iosDiscountForTwo = iosDiscountForTwoLabel.label
+                values.iosDiscountForThreeOrMore = iosDiscountForThreeLabel.label
+            }
+        }
 
         delete values.discountForOne
         delete values.courseMetaData;
@@ -238,7 +267,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             courseId: editCourseData.id,
         }
         try {
-
             if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
                 const editCourseReq = updateCourseDetailsAPI(courseBody)
                 const editCourseMetadataReq = updateCourseMetaDataAPI(courseMetaDataBody)
@@ -254,15 +282,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             } else if (courseMetaDataBody.data.data.length == 0 && courseDetailsMetaDataBody.data.data.length == 0) {
                 const editCourseReq = updateCourseDetailsAPI(courseBody)
                 const [editCourse] = await Promise.all([editCourseReq])
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourse.data })
 
             } else {
                 const editCourseReq = updateCourseDetailsAPI(courseBody)
                 const editCourseMetadataReq = updateCourseMetaDataAPI(courseMetaDataBody)
                 const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody)
                 const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
-                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourse.data })
             }
-
             toast.success(toastSuccessMessage.courseDetailUpdateMsg)
             setShowLoader(false)
         }
@@ -279,6 +307,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             }
         }
     }
+
     const handlepublishedCourse = async () => {
         let body = {
             data: { published: true },
@@ -314,17 +343,34 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
+    // const onChangeCheckBox = (e, checkboxName) => {
+    //     if (checkboxName === 'discount') {
+    //         setDiscountForOne(e.target.checked);
+    //         if (!e.target.checked) {
+    //             setDiscountValue('');
+    //         }
+    //     } else {
+    //         setGroupDiscountEligible(e.target.checked);
+    //         if (!e.target.checked) {
+    //             setDiscountValue('');
+    //         }
+    //     }
+    //     courseInfoForm.resetFields(['discount', 'androidDiscount', 'iosDiscountId', 'discountForTwo', 'discountForThreeOrMore', 'androidDiscountForTwo', 'androidDiscountForThreeOrMore', 'iosDiscountForTwoId', 'iosDiscountForThreeOrMoreId'])
+    // };
+
     const onChangeCheckBox = (e, checkboxName) => {
-        if (checkboxName === 'discount') {
+        if (checkboxName == 'discount') {
             setDiscountForOne(e.target.checked);
             if (!e.target.checked) {
                 setDiscountValue('');
             }
+            courseInfoForm.resetFields(['discount', 'androidDiscount', 'iosDiscountId'])
         } else {
             setGroupDiscountEligible(e.target.checked);
             if (!e.target.checked) {
                 setDiscountValue('');
             }
+            courseInfoForm.resetFields(['discountForTwo', 'discountForThreeOrMore', 'androidDiscountForTwo', 'androidDiscountForThreeOrMore', 'iosDiscountForTwoId', 'iosDiscountForThreeOrMoreId'])
         }
     };
 
@@ -394,6 +440,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         <UploadFile
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
+                            setImageUploadResponceData={setImageUploadResponceData}
                         />
                     </div>
                     <div style={{ marginTop: '20px' }}>
@@ -461,91 +508,169 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             </FormItem>
                         </div>
                     </div>
-                    <p className={styles.bottomInputText}>تسعيرة الدورة</p>
-                    <div style={{ display: 'flex' }}>
+                </div>
+                <div className={styles.borderline}>
+                    <div className="w-[95%] p-6">
+                        <p className={styles.secDetails}>تسعيرة الدورة</p>
                         <FormItem
-                            name={'price'}
-                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
-                            <Input
-                                placeholder="سعر الدورة للشخص"
-                                value={courseData.price}
+                            name={'discount'}
+                        >
+                            <CheckBox
+                                label={'الدورة تحتوي على خصم'}
+                                defaultChecked={discountForOne}
+                                onChange={(e) => onChangeCheckBox(e, 'discount')}
                             />
                         </FormItem>
-                        {discountForOne &&
+                        <FormItem
+                            name={'groupDiscountEligible'}
+                        >
+                            <CheckBox
+                                label={'امكانية التسجيل كمجموعات'}
+                                defaultChecked={groupDiscountEligible}
+                                onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
+                            />
+                        </FormItem>
+                        <div className={styles.checkBoxHead}>
+                            <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
+                            <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                        </div>
+                        <div className='flex'>
                             <FormItem
-                                name={'discount'}
-                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                name={'price'}
+                                rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
                                 <Input
-                                    // value={courseData.discount}
-                                    placeholder="السعر بعد الخصم للشخص"
+                                    placeholder="سعر الدورة للشخص"
                                 />
                             </FormItem>
-                        }
-                    </div>
-                    {groupDiscountEligible &&
-                        <div className='flex'>
-                            <div>
+                            {discountForOne &&
                                 <FormItem
-                                    name={'discountForTwo'}
-                                    rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
+                                    name={'discount'}
+                                    rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
                                     <Input
-                                        // value={courseData.discountForTwo}
-                                        placeholder="سعر الدورة لشخصين"
+                                        placeholder="السعر بعد الخصم للشخص"
                                     />
                                 </FormItem>
-                                <FormItem
-                                    name={'discountForThreeOrMore'}
-                                    rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
-                                    <Input
-                                        // value={courseData.discountForThreeOrMore}
-                                        placeholder="سعر الدورة لثلاثة اشخاص واكثر"
-                                    />
-                                </FormItem>
-                            </div>
-                            {/* {discountForOne &&
+                            }
+                        </div>
+                        {groupDiscountEligible &&
+                            <div className='flex'>
                                 <div>
                                     <FormItem
                                         name={'discountForTwo'}
-                                        rules={[{ required: true, message: 'ادخل سعر   الدورة لشخصين بعد الخصم' }]}  >
+                                        rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
                                         <Input
-                                            value={courseData.discountForTwo}
-                                            placeholder="السعر بعد الخصم لشخصين"
+                                            placeholder="سعر الدورة لشخصين"
                                         />
                                     </FormItem>
                                     <FormItem
                                         name={'discountForThreeOrMore'}
-                                        rules={[{ required: true, message: 'ادخل سعر   الدورة لـ3 اشخاص بعد الخصم' }]}  >
+                                        rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
                                         <Input
-                                            value={courseData.discountForThreeOrMore}
-                                            placeholder="السعر بعد الخصم لثلاثة اشخاص او اكثر"
+                                            placeholder="سعر الدورة لثلاثة اشخاص واكثر"
                                         />
                                     </FormItem>
-                                </div>} */}
-                        </div>
-                    }
-                    <FormItem
-                        name={'discount'}
-                    >
-                        <CheckBox
-                            label={'الدورة تحتوي على خصم'}
-                            defaultChecked={discountForOne}
-                            onChange={(e) => onChangeCheckBox(e, 'discount')}
-                        />
-                    </FormItem>
-                    <FormItem
-                        name={'groupDiscountEligible'}
-                    >
-                        <CheckBox
-                            label={'امكانية التسجيل كمجموعات'}
-                            defaultChecked={groupDiscountEligible}
-                            onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
-                        />
-                    </FormItem>
-                    {!showCourseMetaDataFields &&
-                        <div className={styles.saveCourseBtnBox}>
-                            <button className='primarySolidBtn' htmltype='submit' >حفظ ومتابعة</button>
-                        </div>
-                    }
+                                </div>
+                            </div>
+                        }
+                        {courseType != 'physical' &&
+                            <>
+                                <div className={styles.checkBoxHead}>
+                                    <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                    <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                </div>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'androidPrice'}
+                                        rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                        <Input
+                                            placeholder="سعر الدورة للشخص"
+                                        />
+                                    </FormItem>
+                                    {discountForOne &&
+                                        <FormItem
+                                            name={'androidDiscount'}
+                                            rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                            <Input
+                                                placeholder="السعر بعد الخصم للشخص"
+                                            />
+                                        </FormItem>
+                                    }
+                                </div>
+                                {groupDiscountEligible &&
+                                    <div className='flex'>
+                                        <div>
+                                            <FormItem
+                                                name={'androidDiscountForTwo'}
+                                                rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
+                                                <Input
+                                                    placeholder="سعر الدورة لشخصين"
+                                                />
+                                            </FormItem>
+                                            <FormItem
+                                                name={'androidDiscountForThreeOrMore'}
+                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
+                                                <Input
+                                                    placeholder="سعر الدورة لثلاثة اشخاص واكثر"
+                                                />
+                                            </FormItem>
+                                        </div>
+                                    </div>
+                                }
+                                <div className={styles.checkBoxHead}>
+                                    <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
+                                    <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                </div>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'iosPriceId'}
+                                        rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                        <Select
+                                            placeholder="سعر الدورة للشخص"
+                                            OptionData={iosProductIdList}
+                                        />
+                                    </FormItem>
+
+                                    {discountForOne &&
+                                        <FormItem
+                                            name={'iosDiscountId'}
+                                            rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                            <Select
+                                                placeholder="السعر بعد الخصم للشخص"
+                                                OptionData={iosProductIdList}
+                                            />
+                                        </FormItem>
+                                    }
+                                </div>
+                                {groupDiscountEligible &&
+                                    <div className='flex'>
+                                        <div>
+                                            <FormItem
+                                                name={'iosDiscountForTwoId'}
+                                                rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
+                                                <Select
+                                                    placeholder="سعر الدورة لشخصين"
+                                                    OptionData={iosProductIdList}
+                                                />
+                                            </FormItem>
+                                            <FormItem
+                                                name={'iosDiscountForThreeOrMoreId'}
+                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
+                                                <Select
+                                                    placeholder="سعر الدورة لثلاثة اشخاص واكثر"
+                                                    OptionData={iosProductIdList}
+                                                />
+                                            </FormItem>
+                                        </div>
+                                    </div>
+                                }
+                            </>
+                        }
+                        {!showCourseMetaDataFields &&
+                            <div className={styles.saveCourseBtnBox}>
+                                <button className='primarySolidBtn' htmltype='submit' >حفظ ومتابعة</button>
+                            </div>
+                        }
+                    </div>
                 </div>
                 {showCourseMetaDataFields &&
                     <>
@@ -563,7 +688,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
                                                             <div style={{ margin: '10px' }} >
-                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} /></div>
+                                                                <div className='flex justify-center items-center h-100'>
+                                                                    <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} />
+                                                                </div>
                                                             </div>
                                                         </FormItem>
                                                         <FormItem
@@ -692,7 +819,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                         <div className={styles.deleteIconWrapper} >
                                                             <div className='flex justify-center items-center h-100' onClick={() => {
                                                                 deleteCourseDetails(index, remove, name, "courseDetails")
-                                                            }}><AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} /></div>
+                                                            }}>
+                                                                <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ))}

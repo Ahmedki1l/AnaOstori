@@ -74,6 +74,8 @@ import DownloadIcon from './customeIcons/downloadIcon'
 import RedBook from './customeIcons/redBook'
 import GreenBook from './customeIcons/greenBook'
 import AppleStore from './customeIcons/appleStore'
+import MobileWebDevice from './customeIcons/mobileWebDevice'
+import AndroidStore from './customeIcons/androidStore'
 
 
 
@@ -152,6 +154,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'redBook' && <RedBook height={height} width={width} color={color} />}
 			{iconName == 'greenBook' && <GreenBook height={height} width={width} color={color} />}
 			{iconName == 'appleStore' && <AppleStore height={height} width={width} color={color} />}
+			{iconName == 'androidStore' && <AndroidStore height={height} width={width} color={color} />}
+			{iconName == 'mobileWebDevice' && <MobileWebDevice height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

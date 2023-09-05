@@ -24,6 +24,119 @@ const noOfUsersTag2 = [
     '10 اشخاص',
 ]
 
+const iosProductIdList = [
+    {
+        label: '749',
+        value: 'tier22_content_AN',
+        key: 'tier22_content_AN',
+    },
+    {
+        label: '699',
+        value: 'tier21_content_AN',
+        key: 'tier21_content_AN',
+    },
+    {
+        label: '649',
+        value: 'tier20_content_AN',
+        key: 'tier20_content_AN'
+    },
+    {
+        label: '599',
+        value: 'tier19_content_AN',
+        key: 'tier19_content_AN',
+    },
+    {
+        label: '549',
+        value: 'tier18_content_AN',
+        key: 'tier18_content_AN',
+    },
+    {
+        label: '499',
+        value: 'tier17_content_AN',
+        key: 'tier17_content_AN',
+    },
+    {
+        label: '474.99',
+        value: 'tier16_content_AN',
+        key: 'tier16_content_AN',
+    },
+    {
+        label: '449',
+        value: 'tier15_content_AN',
+        key: 'tier15_content_AN',
+    },
+    {
+        label: '424.99',
+        value: 'tier14_content_AN',
+        key: 'tier14_content_AN',
+    },
+    {
+        label: '399',
+        value: 'tier13_content_AN',
+        key: 'tier13_content_AN',
+    },
+    {
+        label: '374.99 ',
+        value: 'tier12_content_AN',
+        key: 'tier12_content_AN',
+    },
+    {
+        label: '349',
+        value: 'tier11_content_AN',
+        key: 'tier11_content_AN',
+    },
+    {
+        label: '324.99',
+        value: 'tier10_content_AN',
+        key: 'tier10_content_AN',
+    },
+    {
+        label: '299',
+        value: 'tier9_content_AN',
+        key: 'tier9_content_AN',
+    },
+    {
+        label: '274.99',
+        value: 'tier8_content_AN',
+        key: 'tier8_content_AN',
+    },
+    {
+        label: '249',
+        value: 'tier7_content_AN',
+        key: 'tier7_content_AN',
+    },
+    {
+        label: '224.99',
+        value: 'tier6_content_AN',
+        key: 'tier6_content_AN',
+    },
+    {
+        label: '199',
+        value: 'tier5_content_AN',
+        key: 'tier5_content_AN',
+    },
+    {
+        label: '173.99',
+        value: 'tier4_content_AN',
+        key: 'tier4_content_AN',
+    },
+    {
+        label: '149',
+        value: 'tier3_content_AN',
+        key: 'tier3_content_AN',
+    },
+    {
+        label: '123.99',
+        value: 'tier2_content_AN',
+        key: 'tier2_content_AN',
+    },
+    {
+        label: '99',
+        value: 'tier1_content_AN',
+        key: 'tier1_content_AN',
+    },
+]
+
 const genders = [
     { value: 'male', label: 'شاب' },
     { value: 'female', label: 'بنت' }
@@ -36,4 +149,4 @@ const bankDetails = [
 ]
 
 
-export { noOfUsersTag, noOfUsersTag2, genders, bankDetails };
+export { noOfUsersTag, noOfUsersTag2, genders, bankDetails, iosProductIdList };
