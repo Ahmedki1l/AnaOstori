@@ -6,9 +6,11 @@
 	top: 0;
 	background-color: #ffffff;
 	z-index: 100;
-	display: flex;
+	// display: flex;
 	border-bottom: 0.3px solid rgba(0, 0, 0, 0.3);
 	transition: all 0.7s;
+	// max-width: 1440px;
+	// margin: 0 auto;
 }
 
 .navbarInnerWrapper {

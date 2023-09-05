@@ -5,22 +5,31 @@ import { uploadFileAPI } from '../../../services/apisService'
 
 const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
-
-
     const handleUploadFile = async (e) => {
-        let formData = new FormData();
-        formData.append("file", e.target.files[0]);
-
-        const data = {
-            formData,
+        console.log(e);
+        // let formData = new FormData();
+        // formData.append("file", e.target.files[0]);
+        // const data = {
+        //     formData,
+        // }
+        // await uploadFileAPI(data).then((res) => {
+        //     setImageUploadResponceData(res.data)
+        // }).catch((error) => {
+        //     console.log(error);
+        // })
+        const videoType = e.target.files[0].type.split('/')[1]
+        let body = {
+            type: "signedUrl",
+            extention: videoType
         }
-        await uploadFileAPI(data).then((res) => {
-            setImageUploadResponceData(res.data)
+        await uploadFileAPI(body).then((res) => {
+            const signedUrl = res.data.signedUrl.split('?')[0]
+            console.log(signedUrl);
         }).catch((error) => {
             console.log(error);
         })
-
     }
+
     return (
         <>
             <input type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
