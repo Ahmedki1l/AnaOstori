@@ -18,6 +18,7 @@ const StylesModal = styled(Modal)`
 
 const VideoThumnail = (props) => {
 	const videoUrl = props.videoUrl
+	const pictureUrl = props.pictureUrl
 	const thumnailHeight = props.thumnailHeight
 
 	const [openVideo, setOpenVideo] = useState(false);
@@ -29,18 +30,17 @@ const VideoThumnail = (props) => {
 	const handleClose = () => {
 		setOpenVideo(false);
 	};
-
 	return (
 		<div className='relative overflow-hidden rounded'>
 			<div className='playIconDiv' onClick={handleClickOpen}>
 				<div className='playIcon' >
-					<svg width="55" height="35" viewBox="0 0 63 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<svg width={props.lang == 'en' ? "75" : "55"} height="35" viewBox="0 0 63 75" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M63 37.5L0.75 74.3061L0.75 0.69392L63 37.5Z" fill="white" />
 					</svg>
 				</div>
 			</div>
 			<div className='blurBgForVideo'></div>
-			<CoverImg height={thumnailHeight} url={'/images/anaOstori.png'} videoThumnail={true} />
+			<CoverImg height={thumnailHeight} url={pictureUrl} videoThumnail={true} />
 			<StylesModal
 				footer={false}
 				closeIcon={false}

@@ -7,6 +7,7 @@ import useWindowSize from '../../../../hooks/useWindoSize';
 import { useEffect, useState } from 'react';
 import CoverImg from '../../../CommonComponents/CoverImg';
 import { mediaUrl } from '../../../../constants/DataManupulation';
+import VideoThumnail from '../Common/VideoThumnail'
 
 
 
@@ -22,14 +23,21 @@ export default function BuyCourseComponent(props) {
 		}
 	}, [setIsUserUseApple])
 
-
 	return (
 		<div className={`${lang == 'en' ? `${styles.BuyEngCourseMainArea}` : `${styles.BuyCourseMainArea}`} ${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
 			<div className={styles.BuyCourseWrapper}>
-				<CoverImg height={190} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
-
-				{/* <VideoThumnail pictureKey={courseDetail.pictureKey} videoKey={courseDetail.videoKey} thumnailHeight={190} /> */}
-
+				{courseDetail.videoKey ?
+					<VideoThumnail
+						lang={lang}
+						pictureUrl={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'}
+						videoUrl={courseDetail.videoKey ? mediaUrl(courseDetail.videoBucket, courseDetail.videoKey) : ''} thumnailHeight={190}
+					/>
+					:
+					<CoverImg
+						height={190}
+						url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'}
+					/>
+				}
 				<CoursePriceBox
 					courseDetail={courseDetail}
 					handleBookSitButtonClick={handleBookSitButtonClick}

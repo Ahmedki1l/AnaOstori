@@ -12,10 +12,19 @@
     align-items: center;
     padding: 1rem;
     border: 0.5px solid rgba(0, 0, 0, 0.5);
+    position: relative;
 }
 
 .uploadimagetext {
     font-size: 18px;
     color: #808080a6;
     margin-top: 8px;
+}
+
+.loaderWrapper {
+    position: absolute;
+    background: #0000000b;
+    height: 100%;
+    width: 100%;
+    cursor: not-allowed;
 }

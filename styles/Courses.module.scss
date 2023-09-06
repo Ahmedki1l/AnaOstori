@@ -10,6 +10,15 @@
 	height: calc(100vh - 265px);
 }
 
+.rightSide {
+	right: 0rem;
+	direction: ltr;
+}
+
+.leftSide {
+	left: 0rem;
+}
+
 .pointList {
 	list-style: disc;
 	padding: 0 1rem;
