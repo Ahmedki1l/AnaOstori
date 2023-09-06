@@ -60,6 +60,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
     const [courseData, setCourseData] = useState(CourseInitial)
     const [imageUploadResponceData, setImageUploadResponceData] = useState();
+    const [videoUploadResponceData, setVideooUploadResponceData] = useState();
     const [discountForOne, setDiscountForOne] = useState(isCourseEdit ? (editCourseData.discount == null || editCourseData.discount == editCourseData.price) ? false : true : false)
     const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
     const [newcreatedCourse, setNewCreatedCourse] = useState()
@@ -106,6 +107,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.pictureKey = imageUploadResponceData?.key
             values.pictureBucket = imageUploadResponceData?.bucket
             values.pictureMime = imageUploadResponceData?.mime
+            values.videoKey = videoUploadResponceData?.key
+            values.videoBucket = videoUploadResponceData?.bucket
+            values.videoMime = videoUploadResponceData?.mime
             values.groupDiscountEligible = groupDiscountEligible
             values.type = courseType
             values.language = englishCourse ? "en" : "ar"
@@ -197,7 +201,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     }
 
     const editCourse = async (values) => {
-
+        setShowLoader(true)
         let courseMetaData = values.courseMetaData.map((obj, index) => {
             delete obj.createdAt
             delete obj.updatedAt
@@ -238,6 +242,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         values.pictureKey = imageUploadResponceData?.key
         values.pictureBucket = imageUploadResponceData?.bucket
         values.pictureMime = imageUploadResponceData?.mime
+        values.videoKey = videoUploadResponceData?.key
+        values.videoBucket = videoUploadResponceData?.bucket
+        values.videoMime = videoUploadResponceData?.mime
         values.groupDiscountEligible = groupDiscountEligible
         values.type = courseType
 
@@ -266,6 +273,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             data: values,
             courseId: editCourseData.id,
         }
+        console.log(courseBody);
         try {
             if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
                 const editCourseReq = updateCourseDetailsAPI(courseBody)
@@ -343,21 +351,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
-    // const onChangeCheckBox = (e, checkboxName) => {
-    //     if (checkboxName === 'discount') {
-    //         setDiscountForOne(e.target.checked);
-    //         if (!e.target.checked) {
-    //             setDiscountValue('');
-    //         }
-    //     } else {
-    //         setGroupDiscountEligible(e.target.checked);
-    //         if (!e.target.checked) {
-    //             setDiscountValue('');
-    //         }
-    //     }
-    //     courseInfoForm.resetFields(['discount', 'androidDiscount', 'iosDiscountId', 'discountForTwo', 'discountForThreeOrMore', 'androidDiscountForTwo', 'androidDiscountForThreeOrMore', 'iosDiscountForTwoId', 'iosDiscountForThreeOrMoreId'])
-    // };
-
     const onChangeCheckBox = (e, checkboxName) => {
         if (checkboxName == 'discount') {
             setDiscountForOne(e.target.checked);
@@ -417,7 +410,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             onChange={(e) => onChangeCourseChkBox(e, 'englishCourse')}
                         />
                     </FormItem>
-
                     <FormItem
                         name={'shortDescription'}>
                         <InputTextArea
@@ -430,7 +422,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <p className={styles.uploadImageHeader}>صورة الدورة</p>
                     <div>
                         <UploadFile
-                            setImageUploadResponceData={setImageUploadResponceData}
+                            setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
                             label={'ارفق الفيديو هنا'}
                         />
@@ -440,7 +432,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         <UploadFile
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
-                            setImageUploadResponceData={setImageUploadResponceData}
+                            setUploadFileData={setVideooUploadResponceData}
                         />
                     </div>
                     <div style={{ marginTop: '20px' }}>
@@ -840,11 +832,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }}>نشر الدورة</button>
                                 </div>
                             </div>
-                        </div >
+                        </div>
                     </>
                 }
             </Form>
-        </div >
+        </div>
     )
 }
 export default CourseInfo
