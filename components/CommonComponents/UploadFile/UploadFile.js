@@ -2,11 +2,13 @@ import React from 'react'
 import styles from './UploadFile.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { uploadFileAPI } from '../../../services/apisService'
+import { uploadFile } from '../../../constants/UploadFile'
 
 const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
 
     const handleUploadFile = async (e) => {
         console.log(e);
+        uploadFile(e.target.files[0])
         // let formData = new FormData();
         // formData.append("file", e.target.files[0]);
         // const data = {
@@ -17,17 +19,17 @@ const UploadFile = ({ label, accept, setImageUploadResponceData }) => {
         // }).catch((error) => {
         //     console.log(error);
         // })
-        const videoType = e.target.files[0].type.split('/')[1]
-        let body = {
-            type: "signedUrl",
-            extention: videoType
-        }
-        await uploadFileAPI(body).then((res) => {
-            const signedUrl = res.data.signedUrl.split('?')[0]
-            console.log(signedUrl);
-        }).catch((error) => {
-            console.log(error);
-        })
+        // const videoType = e.target.files[0].type.split('/')[1]
+        // let body = {
+        //     type: "signedUrl",
+        //     extention: videoType
+        // }
+        // await uploadFileAPI(body).then((res) => {
+        //     const signedUrl = res.data.signedUrl.split('?')[0]
+        //     console.log(signedUrl);
+        // }).catch((error) => {
+        //     console.log(error);
+        // })
     }
 
     return (
