@@ -1,7 +1,41 @@
-// const uploadFile = (selectedFile) => {
+import axios from "axios";
+import { uploadFileAPI } from "../services/apisService"
 
-//     const fileToBinary = (selectedFile  ) => {  return new Promise((resolve, reject) => {    const reader = new FileReader();    reader.onload = (event) => {      const binaryData = event.target.result;      resolve(binaryData);    };    reader.onerror = (error) => {      reject(error);    };    reader.readAsBinaryString(file);  });};
-// const binaryData = await fileToBinary(selectedFile);
-// axios.put(apiUrl, binaryData, {  headers: {    'Content-Type': 'application/octet-stream', // Set the content type as appropriate for your binary data  },})  .then((response) => {    // Handle the response from the server    console.log('PUT request successful', response.data);  })  .catch((error) => {    // Handle any errors that occur during the PUT request    console.error('PUT request error', error);  });
+const fileToBinary = (file) => {
+    console.log(file);
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => { resolve(event.target.result) };
+        reader.onerror = (error) => { reject(error) };
+        reader.readAsBinaryString(file);
+    });
+};
 
-// }
+
+export const uploadFile = async (file) => {
+    console.log(file);
+    const binaryData = await fileToBinary(file);
+
+    const videoType = file.type.split('/')[1]
+    let body = {
+        type: "signedUrl",
+        extention: videoType
+    }
+    await uploadFileAPI(body).then(async (res) => {
+        const signedUrl = res.data.signedUrl
+        console.log(signedUrl);
+        console.log(binaryData);
+        await axios.put(signedUrl, binaryData, {
+            headers: {
+                'Content-Type': 'application/octet-stream',
+            }
+        }).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }).catch((error) => {
+        console.log(error);
+    })
+}
+
