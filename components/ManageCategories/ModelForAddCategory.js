@@ -12,6 +12,7 @@ import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI, uploadFileAPI } f
 import Spinner from '../CommonComponents/spinner';
 import { useDispatch } from 'react-redux';
 import { stringUpdation } from '../../constants/DataManupulation';
+import { uploadFileSevices } from '../../services/UploadFileSevices';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -35,15 +36,17 @@ const ModelForAddCategory = ({
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
-        let formData = new FormData();
-        formData.append("file", e.target.files[0]);
-        const data = {
-            formData,
-        }
-        await uploadFileAPI(data).then((res) => {
-            setUploadLoader(false)
-            setFileUploadResponceData(res.data)
+        await uploadFileSevices(e.target.files[0]).then((res) => {
+            const uploadFileBucket = res.split('.')[0].split('//')[1]
+            const uploadFileKey = res.split('?')[0].split('/')[3]
+            const uploadFileType = e.target.files[0].type
+            setFileUploadResponceData({
+                key: uploadFileKey,
+                bucket: uploadFileBucket,
+                mime: uploadFileType,
+            })
             setFileName(e.target.files[0].name)
+            setUploadLoader(false)
         }).catch((error) => {
             console.log(error);
             setUploadLoader(false)

@@ -7,6 +7,7 @@ import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
 import { addItemToFolderAPI, updateItemToFolderAPI, uploadFileAPI } from '../../../services/apisService';
 import Spinner from '../../CommonComponents/spinner';
+import { uploadFileSevices } from '../../../services/UploadFileSevices';
 
 
 const ModelForAddItemLibrary = ({
@@ -32,13 +33,28 @@ const ModelForAddItemLibrary = ({
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
-        let formData = new FormData();
-        formData.append("file", e.target.files[0]);
-        const data = {
-            formData,
-        }
-        await uploadFileAPI(data).then((res) => {
-            setFileUploadResponceData(res.data)
+        // let formData = new FormData();
+        // formData.append("file", e.target.files[0]);
+        // const data = {
+        //     formData,
+        // }
+        // await uploadFileAPI(data).then((res) => {
+        //     setFileUploadResponceData(res.data)
+        //     setFileName(e.target.files[0].name)
+        //     setUploadLoader(false)
+        // }).catch((error) => {
+        //     console.log(error);
+        //     setUploadLoader(false)
+        // })
+        await uploadFileSevices(e.target.files[0]).then((res) => {
+            const uploadFileBucket = res.split('.')[0].split('//')[1]
+            const uploadFileKey = res.split('?')[0].split('/')[3]
+            const uploadFileType = e.target.files[0].type
+            setFileUploadResponceData({
+                key: uploadFileKey,
+                bucket: uploadFileBucket,
+                mime: uploadFileType,
+            })
             setFileName(e.target.files[0].name)
             setUploadLoader(false)
         }).catch((error) => {
@@ -134,7 +150,7 @@ const ModelForAddItemLibrary = ({
             <Modal
                 className='addAppoinmentModal'
                 open={isModelForAddItemOpen}
-                onCancel={() => onModelClose()}
+                // onCancel={() => onModelClose()}
                 closeIcon={false}
                 footer={false}>
 
