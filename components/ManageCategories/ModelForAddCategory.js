@@ -8,7 +8,7 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI, uploadFileAPI } from '../../services/apisService';
+import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI } from '../../services/apisService';
 import Spinner from '../CommonComponents/spinner';
 import { useDispatch } from 'react-redux';
 import { stringUpdation } from '../../constants/DataManupulation';
@@ -106,12 +106,14 @@ const ModelForAddCategory = ({
         })
     }
 
-    const onChange = async (checked,) => {
+    const onChange = async (checked) => {
         let body = {
             id: editCategory.id,
             isDeleted: checked
         }
+        console.log(body);
         await editCatagoryAPI(body).then((res) => {
+            console.log(res);
         }).catch((err) => {
             console.log(err);
         })

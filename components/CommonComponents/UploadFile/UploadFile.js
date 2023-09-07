@@ -3,9 +3,12 @@ import styles from './UploadFile.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../../CommonComponents/spinner'
+import CoverImg from '../CoverImg'
 
-const UploadFile = ({ label, accept, setUploadFileData }) => {
+const UploadFile = ({ label, accept, setUploadFileData, existingFileUrl }) => {
     const [showLoader, setShowLoader] = useState(false);
+    console.log(existingFileUrl);
+    const [isFileExist, setIsFileExist] = useState(existingFileUrl != null ? true : false)
 
     const handleUploadFile = async (e) => {
         setShowLoader(true)
@@ -29,16 +32,27 @@ const UploadFile = ({ label, accept, setUploadFileData }) => {
 
     return (
         <>
-            <input disabled={showLoader} type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
-            <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
-                {showLoader &&
-                    <div className={styles.loaderWrapper}>
-                        <Spinner borderwidth={4} width={3} height={3} margin={0.5} />
+            {isFileExist ?
+                <div className={styles.imageUploadWrapper}>
+                    <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
+                        <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
                     </div>
-                }
-                <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080a6'}></AllIconsComponenet>
-                <p className={styles.uploadimagetext}>{label}</p>
-            </label>
+                    <CoverImg height={140} url={existingFileUrl} />
+                </div>
+                :
+                <>
+                    <input disabled={showLoader} type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
+                    <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
+                        {showLoader &&
+                            <div className={styles.loaderWrapper}>
+                                <Spinner borderwidth={4} width={3} height={3} margin={0.5} />
+                            </div>
+                        }
+                        <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080a6'}></AllIconsComponenet>
+                        <p className={styles.uploadimagetext}>{label}</p>
+                    </label>
+                </>
+            }
         </>
     )
 }

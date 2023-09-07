@@ -98,7 +98,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     <div className={styles.passwordIconDiv}>
                         {!showOldPassword ?
                             <div onClick={() => setShowOldPassword(true)}>
-                                <AllIconsComponenet height={20} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
+                                height={20} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
                             </div>
                             :
                             <div onClick={() => setShowOldPassword(false)}>

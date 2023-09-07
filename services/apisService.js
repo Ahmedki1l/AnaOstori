@@ -37,7 +37,6 @@ instance2.interceptors.request.use(
 );
 
 export const uploadProfileImage = (data) => { return instance2.post('/userprofile/upload', data?.formData) }
-// export const uploadFileAPI = (data) => { return instance2.post('/file/upload', data?.formData) }
 export const uploadFileAPI = (data) => { return instance2.post('/file/upload', data) }
 
 
