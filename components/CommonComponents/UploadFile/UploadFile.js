@@ -4,11 +4,11 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../../CommonComponents/spinner'
 import CoverImg from '../CoverImg'
+import VideoThumnail from '../../CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail'
 
-const UploadFile = ({ label, accept, setUploadFileData, existingFileUrl }) => {
+const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, courseVideoUrl }) => {
     const [showLoader, setShowLoader] = useState(false);
-    console.log(existingFileUrl);
-    const [isFileExist, setIsFileExist] = useState(existingFileUrl != null ? true : false)
+    const [isFileExist, setIsFileExist] = useState(((coursePictureUrl != null) || (courseVideoUrl != null)) ? true : false)
 
     const handleUploadFile = async (e) => {
         setShowLoader(true)
@@ -16,7 +16,6 @@ const UploadFile = ({ label, accept, setUploadFileData, existingFileUrl }) => {
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = e.target.files[0].type
-            console.log(uploadFileBucket, uploadFileKey, uploadFileType);
             setUploadFileData({
                 key: uploadFileKey,
                 bucket: uploadFileBucket,
@@ -33,12 +32,28 @@ const UploadFile = ({ label, accept, setUploadFileData, existingFileUrl }) => {
     return (
         <>
             {isFileExist ?
-                <div className={styles.imageUploadWrapper}>
-                    <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
-                        <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
-                    </div>
-                    <CoverImg height={140} url={existingFileUrl} />
-                </div>
+                <>
+                    {accept === 'image' ?
+                        <div className={styles.imageUploadWrapper}>
+                            <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
+                                <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
+                            </div>
+                            <CoverImg height={177} url={coursePictureUrl} />
+                        </div>
+                        :
+                        <div className={styles.imageUploadWrapper}>
+                            <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
+                                <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
+                            </div>
+                            <VideoThumnail
+                                lang={'ar'}
+                                pictureUrl={coursePictureUrl}
+                                videoUrl={courseVideoUrl}
+                                thumnailHeight={177}
+                            />
+                        </div>
+                    }
+                </>
                 :
                 <>
                     <input disabled={showLoader} type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
