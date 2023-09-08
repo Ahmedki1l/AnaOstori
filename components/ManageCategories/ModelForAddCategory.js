@@ -13,6 +13,8 @@ import Spinner from '../CommonComponents/spinner';
 import { useDispatch } from 'react-redux';
 import { stringUpdation } from '../../constants/DataManupulation';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
+import { toast } from 'react-toastify';
+import { toastErrorMessage, toastSuccessMessage } from '../../constants/ar';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -23,7 +25,7 @@ const ModelForAddCategory = ({
 }) => {
 
     const [categoryForm] = Form.useForm();
-
+    console.log(editCategory);
     useEffect(() => {
         categoryForm.setFieldsValue(editCategory)
         setFileName(editCategory?.pictureKey)
@@ -31,6 +33,7 @@ const ModelForAddCategory = ({
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [uploadLoader, setUploadLoader] = useState(false)
+    const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? !editCategory.isDeleted : true)
     const dispatch = useDispatch()
 
 
@@ -83,13 +86,16 @@ const ModelForAddCategory = ({
             categoryForm.resetFields()
             setIsModelForAddCategory(false)
             getCategoryListReq()
-        }).catch((err) => {
-            console.log(err);
+            toast.success(toastSuccessMessage.addCategoryMsg)
+        }).catch((error) => {
+            console.log(error.response.data);
+            toast.error(error.response.data.error.message)
         })
     }
 
     const editCategoryDetail = async (values) => {
         values.id = editCategory.id
+        values.isDeleted = !isCatagoryPublished
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
             values.pictureBucket = fileUploadResponceData.bucket
@@ -101,22 +107,25 @@ const ModelForAddCategory = ({
             setFileName()
             setFileUploadResponceData()
             setIsModelForAddCategory(false)
+            toast.success(toastSuccessMessage.updateCatagoryMsg)
         }).catch((error) => {
-            console.log(error);
+            console.log(error.response.data.errors[0].message);
+            toast.error(error.response.data.errors[0].message)
         })
     }
 
     const onChange = async (checked) => {
-        let body = {
-            id: editCategory.id,
-            isDeleted: checked
-        }
-        console.log(body);
-        await editCatagoryAPI(body).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
+        setIsCatagoryPublished(checked)
+        // let body = {
+        //     id: editCategory.id,
+        //     isDeleted: checked
+        // }
+        // console.log(body);
+        // await editCatagoryAPI(body).then((res) => {
+        //     console.log(res);
+        // }).catch((err) => {
+        //     console.log(err);
+        // })
     };
 
     const isModelClose = () => {
@@ -142,7 +151,7 @@ const ModelForAddCategory = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addCategory}`}>إضافة مجال</p>
+                    <p className={`fontBold ${styles.addCategory}`}>{isEdit ? "تعديل المجال" : "إضافة مجال"}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={categoryForm} onFinish={onFinish}>
@@ -155,7 +164,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="عنوان المجال"
+                                    placeholder="العنوان"
                                 />
                             </FormItem>
                             <FormItem
@@ -185,7 +194,7 @@ const ModelForAddCategory = ({
                                         <div className={styles.uploadFileWrapper}>
                                             <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
                                         </div>
-                                        <p>ارفق الملف</p>
+                                        <p>ارفق الصورة</p>
                                     </div>
                                 </label>
                                 {fileName &&
@@ -200,15 +209,17 @@ const ModelForAddCategory = ({
                                     <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
                                 }
                             </div>
-                            <div className='flex items-center mb-2'>
-                                <Switch defaultChecked onChange={onChange} ></Switch>
-                                <p className={styles.recordedcourse}>إظهار المجال</p>
-                            </div>
+                            {isEdit &&
+                                <div className='flex items-center mb-2'>
+                                    <Switch defaultChecked={isCatagoryPublished} onChange={onChange} ></Switch>
+                                    <p className={styles.recordedcourse}>إظهار المجال</p>
+                                </div>
+                            }
                         </div>
 
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>حفظ</button>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? "حفظ" : "إضافة"}</button>
                             </div>
                         </div>
                     </Form>

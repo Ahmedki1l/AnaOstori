@@ -30,6 +30,8 @@ export const toastErrorMessage = {
     uniqueNameError: "name must be unique",
     curriculumNameError: 'Curriculum name already in use',
     sameFileError: "this item already exist in this section",
+    addCategoryMsg: "catagory added successfully",
+    updateCatagoryMsg: "catagory updated successfully",
 }
 
 export const toastSuccessMessage = {

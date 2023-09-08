@@ -112,7 +112,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.videoBucket = videoUploadResponceData?.bucket
             values.videoMime = videoUploadResponceData?.mime
             values.groupDiscountEligible = groupDiscountEligible
-            values.type = courseType
+            values.type = courseType == "onDemand" ? "on-demand" : courseType
             values.language = englishCourse ? "en" : "ar"
             values.published = false
 
@@ -153,9 +153,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         type: 'EMPTY_STORE'
                     });
                 }
-                if (error.response.data.errors) {
-                    toast.error(toastErrorMessage.uniqueNameError);
-                }
+                // if (error.response.data.errors) {
+                //     toast.error(toastErrorMessage.uniqueNameError);
+                // }
             })
         } else {
             let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
@@ -425,7 +425,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <p className={styles.uploadImageHeader}>صورة الدورة</p>
                     <div>
                         <UploadFile
-                            existingFileUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            courseVideoUrl={''}
                             setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
                             label={'ارفق الفيديو هنا'}
@@ -434,7 +435,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <p className={styles.uploadImageHeader}>فيديو الدورة</p>
                     <div>
                         <UploadFile
-                            existingFileUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoBucket)}
+                            coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoBucket)}
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
                             setUploadFileData={setVideooUploadResponceData}
