@@ -33,7 +33,7 @@ const ModelForAddCategory = ({
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [uploadLoader, setUploadLoader] = useState(false)
-    const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? !editCategory.isDeleted : true)
+    const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? editCategory.published : false)
     const dispatch = useDispatch()
 
 
@@ -95,7 +95,7 @@ const ModelForAddCategory = ({
 
     const editCategoryDetail = async (values) => {
         values.id = editCategory.id
-        values.isDeleted = !isCatagoryPublished
+        values.published = isCatagoryPublished
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
             values.pictureBucket = fileUploadResponceData.bucket
@@ -116,6 +116,7 @@ const ModelForAddCategory = ({
 
     const onChange = async (checked) => {
         setIsCatagoryPublished(checked)
+        console.log(checked);
         // let body = {
         //     id: editCategory.id,
         //     isDeleted: checked
