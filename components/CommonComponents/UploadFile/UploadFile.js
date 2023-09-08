@@ -7,8 +7,9 @@ import CoverImg from '../CoverImg'
 import VideoThumnail from '../../CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail'
 
 const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, courseVideoUrl }) => {
+    console.log(coursePictureUrl, courseVideoUrl);
     const [showLoader, setShowLoader] = useState(false);
-    const [isFileExist, setIsFileExist] = useState(((coursePictureUrl != null) || (courseVideoUrl != null)) ? true : false)
+    const [isFileExist, setIsFileExist] = useState(accept == 'image' ? (coursePictureUrl ? true : false) : (courseVideoUrl ? true : false))
 
     const handleUploadFile = async (e) => {
         setShowLoader(true)

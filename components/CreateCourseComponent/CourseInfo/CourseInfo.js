@@ -276,7 +276,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             data: values,
             courseId: editCourseData.id,
         }
-        console.log(courseBody);
         try {
             if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
                 const editCourseReq = updateCourseDetailsAPI(courseBody)
@@ -836,7 +835,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
                                 </div>
                                 <div className={`${styles.saveCourseBtnBox} mr-2`}>
-                                    <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }}>نشر الدورة</button>
+                                    <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }} disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""} نشر الدورة</button>
                                 </div>
                             </div>
                         </div>
