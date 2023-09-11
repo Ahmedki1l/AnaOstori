@@ -7,6 +7,7 @@ import { fullDate } from '../../../constants/DateConverter'
 import { mediaUrl } from '../../../constants/DataManupulation';
 import ModelForAddCategory from '../../../components/ManageCategories/ModelForAddCategory'
 import Spinner from '../../../components/CommonComponents/spinner'
+import BackToPath from '../../../components/CommonComponents/BackToPath'
 
 
 const Index = () => {
@@ -44,10 +45,15 @@ const Index = () => {
                 </div>
                 :
                 <div className='maxWidthDefault px-4'>
-                    <div className={styles.categoryDetailsTable}>
-                        <p className={styles.displayAdminText}>صفحة الأدمن الرئيسية</p>
-                        <p className={styles.categoryDetailsName}>{'>'}</p>
-                        <p className={styles.categoryDetailsName}>إدارة وإضافة المجالات</p>
+                    <div className='py-2'>
+                        <BackToPath
+                            backPathArray={
+                                [
+                                    { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                                    { lable: 'إدارة وإضافة الدورات', link: null },
+                                ]
+                            }
+                        />
                     </div>
                     <div className={`${styles.headerWrapper}`}>
                         <h1 className={`head2 py-8`}>أقسام المجالات</h1>

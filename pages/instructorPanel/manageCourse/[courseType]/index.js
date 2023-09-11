@@ -9,6 +9,7 @@ import { signOutUser } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
 import Switch from '../../../../components/antDesignCompo/Switch'
 import { mediaUrl } from '../../../../constants/DataManupulation'
+import BackToPath from '../../../../components/CommonComponents/BackToPath'
 
 export default function Index() {
 
@@ -16,7 +17,6 @@ export default function Index() {
     const courseType = router.query.courseType
     const [allPhysicalCourses, setAllPhysicalCourses] = useState([])
     const dispatch = useDispatch();
-    const storeData = useSelector((state) => state?.globalStore);
 
     const handleRoute = () => {
         router.push(`/instructorPanel/manageCourse/${courseType}/createCourse`)
@@ -64,9 +64,21 @@ export default function Index() {
             console.log(error)
         })
     };
-
+    const [backpathForPage, setBackPathForPage] = useState(true)
     return (
         <div className='maxWidthDefault px-4'>
+            <div>
+                <BackToPath
+                    backpathForPage={backpathForPage}
+                    backPathArray={
+                        [
+                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/manageCourse/' },
+                            { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel' },
+                            { lable: 'الدورات الحضورية', link: null }
+                        ]
+                    }
+                />
+            </div>
             <div className='flex justify-between items-center'>
                 <h1 className={`head2 py-8`}>
                     {courseType == "physical" ? "الدورات الحضورية " : courseType == "online" ? "الدورات المباشرة" : "الدورات المسجلة "}

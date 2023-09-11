@@ -11,6 +11,7 @@ import Table from '../../antDesignCompo/Table';
 import { fullDate } from '../../../constants/DateConverter';
 import Icon from '../../CommonComponents/Icon';
 import { useRouter } from 'next/router';
+import BackToPath from '../../CommonComponents/BackToPath';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -44,6 +45,7 @@ const ModelForAddItemCurriculum = ({
     handleAddItemtoSection,
 }) => {
     const dispatch = useDispatch()
+    const router = useRouter()
     const [selectedFolderType, setSelectedFolderType] = useState('video');
     const [folderList, setFolderList] = useState([])
     const [rowSelection, setRowSelection] = useState(false)
@@ -52,7 +54,8 @@ const ModelForAddItemCurriculum = ({
     const [typeOfListdata, setTypeOfListData] = useState('folder')//folder or item
     const [selectedItems, setSelectedItems] = useState([]);
     const [tableLoading, setTableLoading] = useState(false)
-    const router = useRouter()
+    const [backpathForTabel, setBackPathForTabel] = useState(true)
+    const [folderName, setFolderName] = useState()
 
     const IconCell = ({ item, index, icontype }) => {
         return (
@@ -106,6 +109,7 @@ const ModelForAddItemCurriculum = ({
             folderType: folderType,
         }
         await getFolderListAPI(data).then((res) => {
+            setFolderName(res.data)
             setTypeOfListData("folder")
             let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                 return {
@@ -157,7 +161,6 @@ const ModelForAddItemCurriculum = ({
             query: { folderType: selectedFolderType },
         });
     }
-
     return (
         <div>
             <StylesModal
@@ -187,10 +190,16 @@ const ModelForAddItemCurriculum = ({
                             />
                         </div>
                         {typeOfListdata == "item" &&
-                            <div className={styles.folderDetailsTable}>
-                                <p className={`${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>مكتبة الفيديوهات</p>
-                                <p className={styles.folderDetailsName}>{'>'}</p>
-                                <p className={styles.folderDetailsName}> {videoFolder ? videoFolder : "الفيديوهات"}</p>
+                            <div className={`px-2 ${styles.folderDetailsTable}`}>
+                                <BackToPath
+                                    backpathForTabel={backpathForTabel}
+                                    backPathArray={
+                                        [
+                                            { lable: 'مكتبة الملفات', handleClick: showFolderList },
+                                            { lable: 'folderName', link: null },
+                                        ]
+                                    }
+                                />
                             </div>
                         }
                         <Table

@@ -3,11 +3,14 @@ import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageCourse.module.scss'
 import Link from 'next/link';
+import Image from 'next/legacy/image';
+import BackToPath from '../../../components/CommonComponents/BackToPath';
 
 function Index() {
     const storeData = useSelector((state) => state?.globalStore);
     const isUserInstructor = storeData?.isUserInstructor
     const [selectCourseType, setSelectCourseType] = useState('')
+
     return (
         <>
             {!isUserInstructor ?
@@ -18,11 +21,30 @@ function Index() {
                 <>
                     {selectCourseType == '' &&
                         <div className='maxWidthDefault'>
-                            <h1 className={`head2 py-12`}>اختر نوع الدورة</h1>
+                            <div className='px-2'>
+                                <BackToPath
+                                    backPathArray={
+                                        [
+                                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                                            { lable: 'إدارة وإضافة الدورات', link: null },
+                                        ]
+                                    }
+                                />
+                            </div>
+                            <h1 className={`head2 py-12 px-4`}>اختر نوع الدورة</h1>
                             <div className={styles.courseTypesList}>
-                                <Link href={"/instructorPanel/manageCourse/physical"} className={`${styles.courseTypeWrapper} normalLinkText`} >حضورية</Link>
-                                <Link href={"/instructorPanel/manageCourse/onDemand"} className={`${styles.courseTypeWrapper} normalLinkText`} >مسجلة</Link>
-                                <Link href={"/instructorPanel/manageCourse/online"} className={`${styles.courseTypeWrapper} normalLinkText`} >مباشرة</Link>
+                                <Link href={"/instructorPanel/manageCourse/physical"} className={`${styles.courseTypeWrapper} normalLinkText`}>
+                                    <Image src={'/images/courseTypePhysical.png'} height={90} width={90} />
+                                    <p className={`${styles.dashboardItemName}`}>حضورية</p>
+                                </Link>
+                                <Link href={"/instructorPanel/manageCourse/onDemand"} className={`${styles.courseTypeWrapper} normalLinkText`} >
+                                    <Image src={'/images/courseTypeOnDemand.png'} height={90} width={90} />
+                                    <p className={`${styles.dashboardItemName}`}>مسجلة</p>
+                                </Link>
+                                <Link href={"/instructorPanel/manageCourse/online"} className={`${styles.courseTypeWrapper} normalLinkText`} >
+                                    <Image src={'/images/courseTypeOnline.png'} height={90} width={90} />
+                                    <p className={`${styles.dashboardItemName}`}>مباشرة عن بعد</p>
+                                </Link>
                             </div>
                         </div>
                     }

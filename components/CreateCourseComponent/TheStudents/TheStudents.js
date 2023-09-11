@@ -16,6 +16,7 @@ import { fullDate } from '../../../constants/DateConverter';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import BackToPath from '../../CommonComponents/BackToPath'
 
 
 
@@ -251,6 +252,7 @@ const TheStudent = (props) => {
             }
             {showStudentDetails &&
                 <div>
+                    {/* <BackToPath backToPathText={'الطلاب'} backToPathName={'/'} detailsText={}/> */}
                     <div className={styles.studentDetailsTable}>
                         <p className={`${styles.studentDetails}`} onClick={() => setShowStudentDetails(false)}> الطلاب </p>
                         <p className='pl-2'>{'>'}</p>
