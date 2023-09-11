@@ -34,7 +34,6 @@ export default function Navbar() {
 	const storeData = useSelector((state) => state?.globalStore);
 	const [catagories, setCatagories] = useState()
 	const [curriculumIds, setCurriculumIds] = useState();
-	console.log(catagories);
 	const userFullName = (storeData?.viewProfileData?.firstName && storeData?.viewProfileData?.lastName) ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : storeData?.viewProfileData?.fullName
 
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
@@ -44,7 +43,6 @@ export default function Navbar() {
 	useEffect(() => {
 		const fetchResults = async () => {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-				console.log(res);
 				setCatagories(res?.data),
 					setCurriculumIds(res?.data)
 			}).catch(error => {
