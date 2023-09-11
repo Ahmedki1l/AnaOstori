@@ -58,10 +58,10 @@ export default function Index() {
                             {showExtraNavItem &&
                                 <>
                                     <p onClick={() => handleItemSelect(2)} className={selectedItem == 2 ? styles.activeItem : ""}>بطاقة الدورة الخارجية</p>
-                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
+                                    {courseType != "on-demand" && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
                                     <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>
                                     <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>
-                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
+                                    {courseType != "on-demand" && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
                                 </>
                             }
                         </div>
@@ -79,7 +79,7 @@ export default function Index() {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
-                        {selectedItem == 3 && courseType != "onDemand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} />}
+                        {selectedItem == 3 && courseType != "on-demand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} />}
                         {selectedItem == 4 && <TheStudents courseId={courseId} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} courseType={courseType} />}

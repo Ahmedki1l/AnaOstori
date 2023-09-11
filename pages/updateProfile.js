@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
 import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
+import { uploadFileSevices } from '../services/UploadFileSevices';
 
 
 const UpdateProfile = () => {
@@ -48,7 +49,6 @@ const UpdateProfile = () => {
         await uploadProfileImage(data).then((response) => {
             setProfileUrl(mediaUrl(response?.data?.avatarBucket, response?.data?.avatarKey))
             setUploadLoader(false)
-            toast.success(toastSuccessMessage.profilePictureUpdateMsg)
         }).catch((error) => {
             console.error("Error:", error)
             setUploadLoader(false)

@@ -8,10 +8,13 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI, uploadFileAPI } from '../../services/apisService';
+import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI } from '../../services/apisService';
 import Spinner from '../CommonComponents/spinner';
 import { useDispatch } from 'react-redux';
 import { stringUpdation } from '../../constants/DataManupulation';
+import { uploadFileSevices } from '../../services/UploadFileSevices';
+import { toast } from 'react-toastify';
+import { toastErrorMessage, toastSuccessMessage } from '../../constants/ar';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -22,7 +25,7 @@ const ModelForAddCategory = ({
 }) => {
 
     const [categoryForm] = Form.useForm();
-
+    console.log(editCategory);
     useEffect(() => {
         categoryForm.setFieldsValue(editCategory)
         setFileName(editCategory?.pictureKey)
@@ -30,20 +33,23 @@ const ModelForAddCategory = ({
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [uploadLoader, setUploadLoader] = useState(false)
+    const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? editCategory.published : false)
     const dispatch = useDispatch()
 
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
-        let formData = new FormData();
-        formData.append("file", e.target.files[0]);
-        const data = {
-            formData,
-        }
-        await uploadFileAPI(data).then((res) => {
-            setUploadLoader(false)
-            setFileUploadResponceData(res.data)
+        await uploadFileSevices(e.target.files[0]).then((res) => {
+            const uploadFileBucket = res.split('.')[0].split('//')[1]
+            const uploadFileKey = res.split('?')[0].split('/')[3]
+            const uploadFileType = e.target.files[0].type
+            setFileUploadResponceData({
+                key: uploadFileKey,
+                bucket: uploadFileBucket,
+                mime: uploadFileType,
+            })
             setFileName(e.target.files[0].name)
+            setUploadLoader(false)
         }).catch((error) => {
             console.log(error);
             setUploadLoader(false)
@@ -82,14 +88,17 @@ const ModelForAddCategory = ({
             categoryForm.resetFields()
             setIsModelForAddCategory(false)
             getCategoryListReq()
-        }).catch((err) => {
-            console.log(err);
+            toast.success(toastSuccessMessage.addCategoryMsg)
+        }).catch((error) => {
+            console.log(error.response.data);
+            toast.error(error.response.data.error.message)
         })
     }
 
     const editCategoryDetail = async (values) => {
         console.log(values);
         values.id = editCategory.id
+        values.published = isCatagoryPublished
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
             values.pictureBucket = fileUploadResponceData.bucket
@@ -101,21 +110,26 @@ const ModelForAddCategory = ({
             setFileName()
             setFileUploadResponceData()
             setIsModelForAddCategory(false)
+            toast.success(toastSuccessMessage.updateCatagoryMsg)
         }).catch((error) => {
-            console.log(error);
+            console.log(error.response.data.errors[0].message);
+            toast.error(error.response.data.errors[0].message)
         })
     }
 
-    const onChange = async (checked,) => {
-        let body = {
-            id: editCategory.id,
-            isDeleted: checked
-        }
-        await editCatagoryAPI(body).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
+    const onChange = async (checked) => {
+        setIsCatagoryPublished(checked)
+        console.log(checked);
+        // let body = {
+        //     id: editCategory.id,
+        //     isDeleted: checked
+        // }
+        // console.log(body);
+        // await editCatagoryAPI(body).then((res) => {
+        //     console.log(res);
+        // }).catch((err) => {
+        //     console.log(err);
+        // })
     };
 
     const isModelClose = () => {
@@ -141,7 +155,7 @@ const ModelForAddCategory = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addCategory}`}>إضافة مجال</p>
+                    <p className={`fontBold ${styles.addCategory}`}>{isEdit ? "تعديل المجال" : "إضافة مجال"}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={categoryForm} onFinish={onFinish}>
@@ -154,7 +168,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='العنوان'
+                                    placeholder="العنوان"
                                 />
                             </FormItem>
                             <FormItem
@@ -201,13 +215,16 @@ const ModelForAddCategory = ({
                             </div>
                             {isEdit &&
                                 <div className='flex items-center mb-2'>
-                                    <Switch defaultChecked onChange={onChange} ></Switch>
+                                    <Switch defaultChecked={isCatagoryPublished} onChange={onChange} ></Switch>
                                     <p className={styles.recordedcourse}>إظهار المجال</p>
-                                </div>}
+                                </div>
+                            }
                         </div>
 
                         <div className={styles.AppointmentFieldBorderBottom}>
-                            <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? 'حفظ' : 'إضافة'}</button>
+                            <div className={styles.createAppointmentBtnBox}>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? "حفظ" : "إضافة"}</button>
+                            </div>
                         </div>
                     </Form>
                 </div>

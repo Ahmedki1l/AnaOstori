@@ -14,6 +14,7 @@ const Index = () => {
     const [isModelForAddCategory, setIsModelForAddCategory] = useState(false)
     const storeData = useSelector((state) => state?.globalStore);
     const categoriesDetails = storeData?.catagories
+    console.log('categoriesDetails', categoriesDetails);
     const [editCategory, setEditCategory] = useState()
 
     const handleAddCategory = () => {
@@ -69,7 +70,7 @@ const Index = () => {
                                 </td>
                                 <td>
                                     <div className={styles.publishState}>
-                                        <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={'#2A7E19'} />
+                                        <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={category.published ? '#2A7E19' : "#ebf550"} />
                                         <p className='pr-2'>منشور</p>
                                     </div>
                                 </td>

@@ -3,9 +3,13 @@ import styles from './UploadFile.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../../CommonComponents/spinner'
+import CoverImg from '../CoverImg'
+import VideoThumnail from '../../CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail'
 
-const UploadFile = ({ label, accept, setUploadFileData }) => {
+const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, courseVideoUrl }) => {
+    console.log(coursePictureUrl, courseVideoUrl);
     const [showLoader, setShowLoader] = useState(false);
+    const [isFileExist, setIsFileExist] = useState(accept == 'image' ? (coursePictureUrl ? true : false) : (courseVideoUrl ? true : false))
 
     const handleUploadFile = async (e) => {
         setShowLoader(true)
@@ -13,7 +17,6 @@ const UploadFile = ({ label, accept, setUploadFileData }) => {
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = e.target.files[0].type
-            console.log(uploadFileBucket, uploadFileKey, uploadFileType);
             setUploadFileData({
                 key: uploadFileKey,
                 bucket: uploadFileBucket,
@@ -29,16 +32,43 @@ const UploadFile = ({ label, accept, setUploadFileData }) => {
 
     return (
         <>
-            <input disabled={showLoader} type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
-            <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
-                {showLoader &&
-                    <div className={styles.loaderWrapper}>
-                        <Spinner borderwidth={4} width={3} height={3} margin={0.5} />
-                    </div>
-                }
-                <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080a6'}></AllIconsComponenet>
-                <p className={styles.uploadimagetext}>{label}</p>
-            </label>
+            {isFileExist ?
+                <>
+                    {accept === 'image' ?
+                        <div className={styles.imageUploadWrapper}>
+                            <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
+                                <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
+                            </div>
+                            <CoverImg height={177} url={coursePictureUrl} />
+                        </div>
+                        :
+                        <div className={styles.imageUploadWrapper}>
+                            <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
+                                <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
+                            </div>
+                            <VideoThumnail
+                                lang={'ar'}
+                                pictureUrl={coursePictureUrl}
+                                videoUrl={courseVideoUrl}
+                                thumnailHeight={177}
+                            />
+                        </div>
+                    }
+                </>
+                :
+                <>
+                    <input disabled={showLoader} type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
+                    <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
+                        {showLoader &&
+                            <div className={styles.loaderWrapper}>
+                                <Spinner borderwidth={4} width={3} height={3} margin={0.5} />
+                            </div>
+                        }
+                        <AllIconsComponenet iconName={'uploadFile'} height={38.37} width={57} color={'#808080a6'}></AllIconsComponenet>
+                        <p className={styles.uploadimagetext}>{label}</p>
+                    </label>
+                </>
+            }
         </>
     )
 }

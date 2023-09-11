@@ -15,7 +15,7 @@ import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
 import Image from 'next/image'
 import loader from '../../../public/icons/loader.svg'
-import { deleteNullFromObj } from '../../../constants/DataManupulation';
+import { deleteNullFromObj, mediaUrl } from '../../../constants/DataManupulation';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import * as PaymentConst from '../../../constants/PaymentConst'
 
@@ -55,6 +55,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
+    console.log(editCourseData);
     const catagories = storeData?.catagories;
     const curriculumIds = storeData?.curriculumIds
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
@@ -111,22 +112,24 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.videoBucket = videoUploadResponceData?.bucket
             values.videoMime = videoUploadResponceData?.mime
             values.groupDiscountEligible = groupDiscountEligible
-            values.type = courseType
+            values.type = courseType == "onDemand" ? "on-demand" : courseType
             values.language = englishCourse ? "en" : "ar"
             values.published = false
 
-            const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
-            const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
-            const iosDiscountForTwoLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForTwoId ? obj.label : null)
-            const iosDiscountForThreeLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForThreeOrMoreId ? obj.label : null)
+            if (courseType != "physical") {
+                const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
+                const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
+                const iosDiscountForTwoLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForTwoId ? obj.label : null)
+                const iosDiscountForThreeLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForThreeOrMoreId ? obj.label : null)
 
-            values.iosPrice = iosPriceLabel.label
-            if (discountForOne) {
-                values.iosDiscount = iosDiscountLabel.label
-            }
-            if (groupDiscountEligible) {
-                values.iosDiscountForTwo = iosDiscountForTwoLabel.label
-                values.iosDiscountForThreeOrMore = iosDiscountForThreeLabel.label
+                values.iosPrice = iosPriceLabel.label
+                if (discountForOne) {
+                    values.iosDiscount = iosDiscountLabel.label
+                }
+                if (groupDiscountEligible) {
+                    values.iosDiscountForTwo = iosDiscountForTwoLabel.label
+                    values.iosDiscountForThreeOrMore = iosDiscountForThreeLabel.label
+                }
             }
 
             delete values.priceForTwo;
@@ -150,9 +153,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         type: 'EMPTY_STORE'
                     });
                 }
-                if (error.response.data.errors) {
-                    toast.error(toastErrorMessage.uniqueNameError);
-                }
+                // if (error.response.data.errors) {
+                //     toast.error(toastErrorMessage.uniqueNameError);
+                // }
             })
         } else {
             let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
@@ -273,7 +276,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             data: values,
             courseId: editCourseData.id,
         }
-        console.log(courseBody);
         try {
             if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
                 const editCourseReq = updateCourseDetailsAPI(courseBody)
@@ -422,6 +424,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <p className={styles.uploadImageHeader}>صورة الدورة</p>
                     <div>
                         <UploadFile
+                            coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            courseVideoUrl={''}
                             setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
                             label={'ارفق الفيديو هنا'}
@@ -430,6 +434,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <p className={styles.uploadImageHeader}>فيديو الدورة</p>
                     <div>
                         <UploadFile
+                            coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoBucket)}
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
                             setUploadFileData={setVideooUploadResponceData}
@@ -829,7 +835,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
                                 </div>
                                 <div className={`${styles.saveCourseBtnBox} mr-2`}>
-                                    <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }}>نشر الدورة</button>
+                                    <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }} disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""} نشر الدورة</button>
                                 </div>
                             </div>
                         </div>
