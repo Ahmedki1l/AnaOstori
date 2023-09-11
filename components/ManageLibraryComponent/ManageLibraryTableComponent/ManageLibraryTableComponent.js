@@ -30,7 +30,6 @@ const ManageLibraryTableComponent = ({
     const [selectedFolder, setSelectedFolder] = useState()
     const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
-    const [backpathForTabel, setBackPathForTabel] = useState(true)
 
 
     const handleEditIconClick = async (item) => {
@@ -97,7 +96,7 @@ const ManageLibraryTableComponent = ({
                     {tableDataType == "item" &&
                         <div className={styles.folderDetailsTable}>
                             <BackToPath
-                                backpathForTabel={backpathForTabel}
+                                backpathForTabel={true}
                                 backPathArray={
                                     [
                                         { lable: 'صفحة الأدمن الرئيسية', handleClick: showFolderList },

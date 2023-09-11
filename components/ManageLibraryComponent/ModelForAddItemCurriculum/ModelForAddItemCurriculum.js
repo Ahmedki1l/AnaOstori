@@ -49,13 +49,12 @@ const ModelForAddItemCurriculum = ({
     const [selectedFolderType, setSelectedFolderType] = useState('video');
     const [folderList, setFolderList] = useState([])
     const [rowSelection, setRowSelection] = useState(false)
-    const [videoFolder, setVideoFolder] = useState(false)
     const [selectedRow, setSelectedRow] = useState(null)
     const [typeOfListdata, setTypeOfListData] = useState('folder')//folder or item
     const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedFolder, setSelectedFolder] = useState()
     const [tableLoading, setTableLoading] = useState(false)
-    const [backpathForTabel, setBackPathForTabel] = useState(true)
-    const [folderName, setFolderName] = useState()
+
 
     const IconCell = ({ item, index, icontype }) => {
         return (
@@ -71,14 +70,15 @@ const ModelForAddItemCurriculum = ({
             </div>
         )
     }
-    const handleClickOnIconCell = async (folderId, index) => {
+    const handleClickOnIconCell = async (selectedFolder, index) => {
+        console.log(selectedFolder.name);
+        setSelectedFolder(selectedFolder)
         setTableLoading(true)
         let body = {
-            folderId: folderId.id
+            folderId: selectedFolder.id
         }
         await getItemListAPI(body).then((res) => {
             setTypeOfListData("item")
-
             let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                 return {
                     itemName: <IconCell item={item} icontype={"item"} />,
@@ -109,7 +109,6 @@ const ModelForAddItemCurriculum = ({
             folderType: folderType,
         }
         await getFolderListAPI(data).then((res) => {
-            setFolderName(res.data)
             setTypeOfListData("folder")
             let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                 return {
@@ -141,7 +140,6 @@ const ModelForAddItemCurriculum = ({
     }
 
     const showFolderList = () => {
-        setVideoFolder(false)
         getfolderList(selectedFolderType)
     }
 
@@ -192,11 +190,11 @@ const ModelForAddItemCurriculum = ({
                         {typeOfListdata == "item" &&
                             <div className={`px-2 ${styles.folderDetailsTable}`}>
                                 <BackToPath
-                                    backpathForTabel={backpathForTabel}
+                                    backpathForTabel={true}
                                     backPathArray={
                                         [
                                             { lable: 'مكتبة الملفات', handleClick: showFolderList },
-                                            { lable: 'folderName', link: null },
+                                            { lable: `${selectedFolder?.name}`, link: null },
                                         ]
                                     }
                                 />
