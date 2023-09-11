@@ -24,6 +24,7 @@ export default function Index() {
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة المكتبة الرقمية</p>
                 </Link>
                 <Link href={'/instructorPanel/manageInstructor'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={68} height={68} iconName='instructorIcon' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وإدارة المدربين</p>
                 </Link>
             </div>

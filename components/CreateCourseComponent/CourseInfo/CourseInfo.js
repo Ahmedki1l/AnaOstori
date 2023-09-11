@@ -55,7 +55,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
-    console.log(editCourseData);
     const catagories = storeData?.catagories;
     const curriculumIds = storeData?.curriculumIds
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)

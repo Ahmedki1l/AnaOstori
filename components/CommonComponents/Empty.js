@@ -34,7 +34,7 @@ function Empty({
                 <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
                 <EmptyText fontSize={16}>{emptyText}</EmptyText>
                 <StyledButton className={'primarySolidBtn'} onClick={onClick}>{buttonText}</StyledButton>
-            </IconContainer >
+            </IconContainer>
         </>
     )
 }

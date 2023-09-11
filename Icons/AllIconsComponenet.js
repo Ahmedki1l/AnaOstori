@@ -76,6 +76,8 @@ import GreenBook from './customeIcons/greenBook'
 import AppleStore from './customeIcons/appleStore'
 import MobileWebDevice from './customeIcons/mobileWebDevice'
 import AndroidStore from './customeIcons/androidStore'
+import InstructorIcon from './customeIcons/instructorIcon'
+import CourseTypePhysical from './customeIcons/courseTypePhysical'
 
 
 
@@ -156,6 +158,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'appleStore' && <AppleStore height={height} width={width} color={color} />}
 			{iconName == 'androidStore' && <AndroidStore height={height} width={width} color={color} />}
 			{iconName == 'mobileWebDevice' && <MobileWebDevice height={height} width={width} color={color} />}
+			{iconName == 'instructorIcon' && <InstructorIcon height={height} width={width} color={color} />}
+			{iconName == 'courseTypePhysical' && <CourseTypePhysical height={height} width={width} color={color} />}
+
+
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

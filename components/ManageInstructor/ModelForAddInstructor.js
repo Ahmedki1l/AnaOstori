@@ -152,35 +152,30 @@ const ModelForAddInstructor = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="اسم المدرب"
+                                    placeholder='اسم المدرب'
                                 />
                             </FormItem>
-                            <div className="flex">
-                                <div>
-                                    <FormItem
-                                        name={'email'}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={170}
-                                            height={40}
-                                            placeholder="الايميل"
-                                        />
-                                    </FormItem>
-                                </div>
-                                <div>
-                                    <FormItem
-                                        name={'phone'}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={170}
-                                            height={40}
-                                            placeholder="رقم الجوال"
-                                        />
-                                    </FormItem>
-                                </div>
-                            </div>
+
+                            <FormItem
+                                name={'email'}
+                            >
+                                <Input
+                                    fontSize={16}
+                                    width={352}
+                                    height={40}
+                                    placeholder='الايميل'
+                                />
+                            </FormItem>
+                            <FormItem
+                                name={'phone'}
+                            >
+                                <Input
+                                    fontSize={16}
+                                    width={352}
+                                    height={40}
+                                    placeholder='رقم الجوال'
+                                />
+                            </FormItem>
                             <FormItem
                                 name={'role'}
                             >
@@ -188,19 +183,10 @@ const ModelForAddInstructor = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="المنصب"
+                                    placeholder='المنصب'
                                 />
                             </FormItem>
-                            <FormItem
-                                name={'bio'}>
-                                <InputTextArea
-                                    fontSize={16}
-                                    height={132}
-                                    width={352}
-                                    placeholder="الوصف"
-                                />
-                            </FormItem>
-                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>الصورة الشخصية</p>
+                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>الملف التعريفي</p>
                             <div className={styles.uploadVideoWrapper}>
                                 <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
                                 <label htmlFor='uploadFileInput' className='cursor-pointer'>
@@ -236,9 +222,10 @@ const ModelForAddInstructor = ({
                         </div>
                     </Form>
                 </div>
-            </Modal>
+            </Modal >
         </div >
     )
 }
 
 export default ModelForAddInstructor
+

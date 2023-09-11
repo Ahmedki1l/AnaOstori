@@ -9,6 +9,7 @@ import Spinner from '../../CommonComponents/spinner'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
 import { updateFolderAPI } from '../../../services/apisService'
 import Empty from '../../CommonComponents/Empty'
+import BackToPath from '../../CommonComponents/BackToPath'
 
 
 const ManageLibraryTableComponent = ({
@@ -29,6 +30,7 @@ const ManageLibraryTableComponent = ({
     const [selectedFolder, setSelectedFolder] = useState()
     const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
+    const [backpathForTabel, setBackPathForTabel] = useState(true)
 
 
     const handleEditIconClick = async (item) => {
@@ -93,12 +95,16 @@ const ManageLibraryTableComponent = ({
             <div className={styles.tableContainer}>
                 <div>
                     {tableDataType == "item" &&
-                        <div>
-                            <div className={styles.folderDetailsTable}>
-                                <p className={`cursor-pointer ${styles.folderDetailsVideo}`} onClick={() => showFolderList()}>الفيديوهات</p>
-                                <p className={styles.folderDetailsName}>{'>'}</p>
-                                <p className={styles.folderDetailsName}> {selectedFolder.name ? selectedFolder.name : "الفيديوهات"}</p>
-                            </div>
+                        <div className={styles.folderDetailsTable}>
+                            <BackToPath
+                                backpathForTabel={backpathForTabel}
+                                backPathArray={
+                                    [
+                                        { lable: 'صفحة الأدمن الرئيسية', handleClick: showFolderList },
+                                        { lable: selectedFolder.name ? selectedFolder.name : "الفيديوهات", link: null },
+                                    ]
+                                }
+                            />
                         </div>
                     }
                     <table className={styles.tableArea}>
