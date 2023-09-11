@@ -64,12 +64,11 @@ export default function Index() {
             console.log(error)
         })
     };
-    const [backpathForPage, setBackPathForPage] = useState(true)
     return (
         <div className='maxWidthDefault px-4'>
             <div>
                 <BackToPath
-                    backpathForPage={backpathForPage}
+                    backpathForPage={true}
                     backPathArray={
                         [
                             { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/manageCourse/' },
