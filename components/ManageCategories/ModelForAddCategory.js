@@ -25,7 +25,6 @@ const ModelForAddCategory = ({
 }) => {
 
     const [categoryForm] = Form.useForm();
-    console.log(editCategory);
     useEffect(() => {
         categoryForm.setFieldsValue(editCategory)
         setFileName(editCategory?.pictureKey)
@@ -58,7 +57,6 @@ const ModelForAddCategory = ({
 
     const getCategoryListReq = async () => {
         await getCatagoriesAPI().then((res) => {
-            console.log(res);
             dispatch({
                 type: 'SET_CATAGORIES',
                 catagories: res.data
@@ -77,7 +75,6 @@ const ModelForAddCategory = ({
     };
 
     const addCategory = async (values) => {
-        console.log(values);
         values.order = Number(values.order)
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
@@ -96,7 +93,6 @@ const ModelForAddCategory = ({
     }
 
     const editCategoryDetail = async (values) => {
-        console.log(values);
         values.id = editCategory.id
         values.published = isCatagoryPublished
         if (fileUploadResponceData) {
@@ -119,17 +115,6 @@ const ModelForAddCategory = ({
 
     const onChange = async (checked) => {
         setIsCatagoryPublished(checked)
-        console.log(checked);
-        // let body = {
-        //     id: editCategory.id,
-        //     isDeleted: checked
-        // }
-        // console.log(body);
-        // await editCatagoryAPI(body).then((res) => {
-        //     console.log(res);
-        // }).catch((err) => {
-        //     console.log(err);
-        // })
     };
 
     const isModelClose = () => {
