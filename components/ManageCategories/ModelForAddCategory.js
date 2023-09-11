@@ -52,6 +52,7 @@ const ModelForAddCategory = ({
 
     const getCategoryListReq = async () => {
         await getCatagoriesAPI().then((res) => {
+            console.log(res);
             dispatch({
                 type: 'SET_CATAGORIES',
                 catagories: res.data
@@ -70,6 +71,7 @@ const ModelForAddCategory = ({
     };
 
     const addCategory = async (values) => {
+        console.log(values);
         values.order = Number(values.order)
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
@@ -86,6 +88,7 @@ const ModelForAddCategory = ({
     }
 
     const editCategoryDetail = async (values) => {
+        console.log(values);
         values.id = editCategory.id
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
@@ -109,6 +112,7 @@ const ModelForAddCategory = ({
             isDeleted: checked
         }
         await editCatagoryAPI(body).then((res) => {
+            console.log(res);
         }).catch((err) => {
             console.log(err);
         })
@@ -150,7 +154,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="عنوان المجال"
+                                    placeholder='العنوان'
                                 />
                             </FormItem>
                             <FormItem
@@ -160,7 +164,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="الترتيب"
+                                    placeholder='الترتيب'
                                 />
                             </FormItem>
                             <FormItem
@@ -169,7 +173,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     height={132}
                                     width={352}
-                                    placeholder="الوصف"
+                                    placeholder='الوصف'
                                 />
                             </FormItem>
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>صورة المجال</p>
@@ -180,7 +184,7 @@ const ModelForAddCategory = ({
                                         <div className={styles.uploadFileWrapper}>
                                             <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
                                         </div>
-                                        <p>ارفق الملف</p>
+                                        <p>ارفق الصورة</p>
                                     </div>
                                 </label>
                                 {fileName &&
@@ -195,16 +199,15 @@ const ModelForAddCategory = ({
                                     <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
                                 }
                             </div>
-                            <div className='flex items-center mb-2'>
-                                <Switch defaultChecked onChange={onChange} ></Switch>
-                                <p className={styles.recordedcourse}>إظهار المجال</p>
-                            </div>
+                            {isEdit &&
+                                <div className='flex items-center mb-2'>
+                                    <Switch defaultChecked onChange={onChange} ></Switch>
+                                    <p className={styles.recordedcourse}>إظهار المجال</p>
+                                </div>}
                         </div>
 
                         <div className={styles.AppointmentFieldBorderBottom}>
-                            <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>حفظ</button>
-                            </div>
+                            <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? 'حفظ' : 'إضافة'}</button>
                         </div>
                     </Form>
                 </div>
