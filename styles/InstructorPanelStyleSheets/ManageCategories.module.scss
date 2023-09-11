@@ -104,3 +104,21 @@
     display: flex;
     justify-content: center;
 }
+
+.categoryDetailsTable {
+    display: flex;
+    margin: 25px 0px -15px;
+    align-items: center;
+}
+
+.displayAdminText {
+    font-size: 18px;
+    color: #2d2e2d80;
+    padding: 3px 5px;
+}
+
+.categoryDetailsName {
+    font-size: 18px;
+    margin-right: 5px;
+    color: #2d2e2d80;
+}

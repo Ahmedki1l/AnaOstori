@@ -31,6 +31,11 @@ const Index = () => {
 
     return (
         <div className='maxWidthDefault px-4'>
+            <div className={styles.categoryDetailsTable}>
+                <p className={styles.displayAdminText}>صفحة الأدمن الرئيسية</p>
+                <p className={styles.categoryDetailsName}>{'>'}</p>
+                <p className={styles.categoryDetailsName}>إدارة وإضافة المجالات</p>
+            </div>
             <div className={`${styles.headerWrapper}`}>
                 <h1 className={`head2 py-8`}>أقسام المجالات</h1>
                 <div className={`flex ${styles.createCourseHeaderText}`}>

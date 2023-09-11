@@ -58,6 +58,7 @@ const ModelForAddCategory = ({
 
     const getCategoryListReq = async () => {
         await getCatagoriesAPI().then((res) => {
+            console.log(res);
             dispatch({
                 type: 'SET_CATAGORIES',
                 catagories: res.data
@@ -76,6 +77,7 @@ const ModelForAddCategory = ({
     };
 
     const addCategory = async (values) => {
+        console.log(values);
         values.order = Number(values.order)
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
@@ -94,6 +96,7 @@ const ModelForAddCategory = ({
     }
 
     const editCategoryDetail = async (values) => {
+        console.log(values);
         values.id = editCategory.id
         values.published = isCatagoryPublished
         if (fileUploadResponceData) {
@@ -175,7 +178,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="الترتيب"
+                                    placeholder='الترتيب'
                                 />
                             </FormItem>
                             <FormItem
@@ -184,7 +187,7 @@ const ModelForAddCategory = ({
                                     fontSize={16}
                                     height={132}
                                     width={352}
-                                    placeholder="الوصف"
+                                    placeholder='الوصف'
                                 />
                             </FormItem>
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>صورة المجال</p>
