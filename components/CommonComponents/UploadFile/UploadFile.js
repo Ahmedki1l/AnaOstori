@@ -5,11 +5,13 @@ import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../../CommonComponents/spinner'
 import CoverImg from '../CoverImg'
 import VideoThumnail from '../../CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail'
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, courseVideoUrl }) => {
-    console.log(coursePictureUrl, courseVideoUrl);
     const [showLoader, setShowLoader] = useState(false);
     const [isFileExist, setIsFileExist] = useState(accept == 'image' ? (coursePictureUrl ? true : false) : (courseVideoUrl ? true : false))
+    const [pictureUrl, setPictureUrl] = useState(coursePictureUrl)
+    const [videoUrl, setVideoUrl] = useState(courseVideoUrl)
 
     const handleUploadFile = async (e) => {
         setShowLoader(true)
@@ -17,11 +19,18 @@ const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, course
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = e.target.files[0].type
+            console.log(uploadFileBucket, uploadFileKey, uploadFileType);
             setUploadFileData({
                 key: uploadFileKey,
                 bucket: uploadFileBucket,
                 mime: uploadFileType,
             })
+            if (accept == 'image') {
+                setPictureUrl(mediaUrl(uploadFileBucket, uploadFileKey))
+            } else {
+                setVideoUrl(mediaUrl(uploadFileBucket, uploadFileKey))
+            }
+            setIsFileExist(true)
             setShowLoader(false)
         }).catch((error) => {
             console.log(error);
@@ -39,7 +48,7 @@ const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, course
                             <div className={styles.closeIconWrapper} onClick={() => setIsFileExist(false)}>
                                 <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
                             </div>
-                            <CoverImg height={177} url={coursePictureUrl} />
+                            <CoverImg height={177} url={pictureUrl} />
                         </div>
                         :
                         <div className={styles.imageUploadWrapper}>
@@ -49,7 +58,7 @@ const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, course
                             <VideoThumnail
                                 lang={'ar'}
                                 pictureUrl={coursePictureUrl}
-                                videoUrl={courseVideoUrl}
+                                videoUrl={videoUrl}
                                 thumnailHeight={177}
                             />
                         </div>

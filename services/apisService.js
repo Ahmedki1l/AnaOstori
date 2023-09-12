@@ -134,3 +134,7 @@ export const editInstroctorAPI = (data) => { return instance.post(`/instructor/u
 // ********* Manage category APIs ***********//
 export const createCatagoryAPI = (data) => { return instance.post(`/catagory/create`, data) }
 export const editCatagoryAPI = (data) => { return instance.post(`/catagory/update`, data) }
+
+// ********* Manage News APIs ***********//
+export const createNewsAPI = (data) => { return instance.post(`/newsBar/create`, data) }
+export const editNewsAPI = (data) => { return instance.post(`/newsBar/update`, data) }

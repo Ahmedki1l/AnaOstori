@@ -30,7 +30,7 @@ export async function getServerSideProps(ctx) {
 		courseDetailsReq,
 		homeReviewsReq
 	])
-	console.log(courseDetails, 50);
+	console.log(courseDetails.data.id, 50);
 
 	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/male`)
 
@@ -38,15 +38,21 @@ export async function getServerSideProps(ctx) {
 
 	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/mix`)
 
-	// const courseCurriculumReq = axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
 
 
-	const [maleDates, femaleDates, mixDates, courseCurriculum] = await Promise.all([
+
+	const [maleDates, femaleDates, mixDates] = await Promise.all([
 		maleDatesReq,
 		femaleDatesReq,
 		mixDatesReq,
-		// courseCurriculumReq
 	])
+
+	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
+		.then((response) => (response.data))
+		.catch((error) => error);
+
+	console.log(courseCurriculumReq, 54);
+
 	if (courseDetails.data == null) {
 		return {
 			notFound: true,
@@ -60,7 +66,7 @@ export async function getServerSideProps(ctx) {
 			maleDates: maleDates.data,
 			femaleDates: femaleDates.data,
 			mixDates: mixDates.data,
-			// courseCurriculum: courseCurriculum?.data
+			courseCurriculum: courseCurriculumReq
 		}
 	}
 }
@@ -73,6 +79,7 @@ export default function Index(props) {
 
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
+	console.log(courseCurriculum);
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
 	const [expandedSection, setExpandedSection] = useState(0);
 	const router = useRouter()

@@ -28,7 +28,7 @@ export default function Index() {
     useEffect(() => {
         const getAllCourse = async () => {
             let body = {
-                courseType: courseType == "onDemand" ? "on-demand" : courseType,
+                courseType: courseType,
             }
             await getAllCourseByInstructor(body).then(res => {
                 setAllPhysicalCourses(res?.data)

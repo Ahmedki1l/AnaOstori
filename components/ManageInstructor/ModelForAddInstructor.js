@@ -155,7 +155,6 @@ const ModelForAddInstructor = ({
                                     placeholder='اسم المدرب'
                                 />
                             </FormItem>
-
                             <FormItem
                                 name={'email'}
                             >
@@ -222,7 +221,7 @@ const ModelForAddInstructor = ({
                         </div>
                     </Form>
                 </div>
-            </Modal >
+            </Modal>
         </div >
     )
 }

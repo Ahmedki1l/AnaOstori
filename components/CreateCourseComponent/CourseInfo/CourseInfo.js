@@ -18,6 +18,7 @@ import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj, mediaUrl } from '../../../constants/DataManupulation';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import * as PaymentConst from '../../../constants/PaymentConst'
+import Switch from '../../antDesignCompo/Switch';
 
 
 
@@ -70,7 +71,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [discountValue, setDiscountValue] = useState()
     const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
     const iosProductIdList = PaymentConst.iosProductIdList
-
+    console.log(imageUploadResponceData);
     useEffect(() => {
         if (isCourseEdit) {
             courseInfoForm.setFieldsValue(editCourseData)
@@ -114,7 +115,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.type = courseType == "onDemand" ? "on-demand" : courseType
             values.language = englishCourse ? "en" : "ar"
             values.published = false
-
+            console.log(values.type);
             if (courseType != "physical") {
                 const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
                 const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
@@ -138,6 +139,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: values,
             }
             await createCourseByInstructorAPI(body).then((res) => {
+                console.log(res);
                 setShowExtraNavItem(true)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
@@ -248,7 +250,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         values.videoBucket = videoUploadResponceData?.bucket
         values.videoMime = videoUploadResponceData?.mime
         values.groupDiscountEligible = groupDiscountEligible
-        values.type = courseType
+        values.type = courseType == "onDemand" ? "on-demand" : courseType
 
         const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
         const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
@@ -372,6 +374,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         console.log(e.target.checked);
         setEnglishCourse(e.target.checked)
     }
+    const handleChange = (e) => {
+        console.log(e);
+    }
 
     return (
         <div>
@@ -433,7 +438,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <p className={styles.uploadImageHeader}>فيديو الدورة</p>
                     <div>
                         <UploadFile
-                            coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            coursePictureUrl={isCourseEdit ? mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey) : mediaUrl(imageUploadResponceData?.bucket, imageUploadResponceData?.key)}
                             courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoBucket)}
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
@@ -528,7 +533,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             />
                         </FormItem>
                         <div className={styles.checkBoxHead}>
-                            <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
+                            <div className='pl-2'>
+                                <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
+                            </div>
+                            {courseType == 'physical' &&
+                                <div>
+                                    <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                </div>
+                            }
                             <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
                         </div>
                         <div className='flex'>
@@ -536,7 +548,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 name={'price'}
                                 rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
                                 <Input
-                                    placeholder="سعر الدورة للشخص"
+                                    placeholder='السعر لشخص واحد'
                                 />
                             </FormItem>
                             {discountForOne &&
@@ -544,7 +556,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     name={'discount'}
                                     rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
                                     <Input
-                                        placeholder="السعر بعد الخصم للشخص"
+                                        placeholder='السعر بعد الخصم'
                                     />
                                 </FormItem>
                             }
@@ -556,14 +568,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                         name={'discountForTwo'}
                                         rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
                                         <Input
-                                            placeholder="سعر الدورة لشخصين"
+                                            placeholder='السعر لشخصين'
                                         />
                                     </FormItem>
                                     <FormItem
                                         name={'discountForThreeOrMore'}
                                         rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
                                         <Input
-                                            placeholder="سعر الدورة لثلاثة اشخاص واكثر"
+                                            placeholder='السعر لـ3 أشخاص أو أكثر'
                                         />
                                     </FormItem>
                                 </div>
@@ -826,9 +838,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                         )}
                                     </Form.List>
                                 </div>
+                                <div className={styles.publishedCourseDetails}>
+                                    <Switch defaultChecked onChange={handleChange} />
+                                    <p style={{ marginRight: '3px' }}>نشر الدورة</p>
+                                </div>
+                                <div className={`pt-2 ${styles.publishedCourseDetails}`}>
+                                    <Switch defaultChecked onChange={handleChange} />
+                                    <p style={{ marginRight: '3px' }}>إغلاق صفحة الدورة</p>
+                                </div>
                             </div>
                         </div>
-                        <div className="w-[95%] p-6" >
+                        <div className="w-[95%] px-6" >
                             <div className='flex'>
                                 <div className={styles.saveCourseBtnBox} >
                                     <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
