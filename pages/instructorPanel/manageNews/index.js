@@ -7,7 +7,7 @@ import axios from 'axios'
 
 
 
-const index = () => {
+const Index = () => {
 
     const [isModelForNews, setIsModelForNews] = useState()
     const [isEdit, setIsEdit] = useState(false)
@@ -96,4 +96,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Index
