@@ -88,7 +88,7 @@ const ModelForAddCategory = ({
             toast.success(toastSuccessMessage.addCategoryMsg)
         }).catch((error) => {
             console.log(error.response.data);
-            toast.error(error.response.data.error.message)
+            toast.error(error.response.data)
         })
     }
 

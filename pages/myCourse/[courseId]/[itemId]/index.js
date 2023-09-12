@@ -61,10 +61,12 @@ export default function Index() {
             const getPageProps = async () => {
                 try {
                     const params = {
-                        courseID,
+                        courseID: courseID,
                         itemID: currentItemId,
                         enrollmentId: selectedCourse.id
                     }
+                    console.log(courseID, "&", currentItemId);
+                    console.log(params);
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
                     const courseProgressPrecentageReq = getCourseProgressAPI(params)
@@ -76,6 +78,10 @@ export default function Index() {
                         courseProgressPrecentageReq,
                         currentItemContentReq
                     ])
+                    console.log(courseCurriculum.data);
+                    console.log(courseProgressPrecentage);
+                    console.log(completedCourseItem);
+                    console.log(currentItemContent);
                     setCourseCurriculum(courseCurriculum.data)
                     setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
                     setCCSections(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
@@ -86,6 +92,7 @@ export default function Index() {
                     setLoading(false)
                     setIsUserEnrolled(true)
                 } catch (error) {
+                    console.log(error);
                     if (error?.response?.data?.message == "Enrollment not found") {
                         setLoading(false)
                         setIsUserEnrolled(false)

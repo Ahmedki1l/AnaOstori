@@ -1,0 +1,74 @@
+.createNewsBtnBox {
+    width: 117px;
+    height: 36px;
+    margin: 20px 0px;
+
+    button {
+        font-size: 16px;
+    }
+}
+
+.tableArea {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableHeaderArea {
+    height: 48px;
+    background-color: #F4F5F7;
+    overflow: hidden;
+    font-size: 20px;
+    width: 100%;
+    border-collapse: separate;
+}
+
+.tableHead1 {
+    width: 55%;
+}
+
+.tableHead2 {
+    width: 35%;
+}
+
+.tableHead3 {
+    width: 10%;
+}
+
+.tableBodyArea {
+    width: 100%;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.tableRow {
+    border: 0.7px solid #c3c3c3;
+    border-top: none;
+
+    td {
+        height: 52px;
+        font-size: 18px;
+        text-align: center;
+
+        .StudentListImage {
+            display: flex;
+            align-items: center;
+            margin: 18px 14px;
+        }
+    }
+
+    td:first-child {
+        text-align: right;
+        padding-right: 20px;
+    }
+}
+
+.noDataTableBodyArea {
+    border: 0.7px solid #c3c3c3;
+    border-top: none;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.noDataManiArea {
+    height: 480px;
+    display: grid;
+    place-content: center;
+}

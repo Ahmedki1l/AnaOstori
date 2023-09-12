@@ -10,6 +10,7 @@ import Attendance from '../../../../../components/CreateCourseComponent/Attendan
 import { useSelector } from 'react-redux';
 import { getAllAvailabilityAPI } from '../../../../../services/apisService';
 import { useDispatch } from 'react-redux';
+import BackToPath from '../../../../../components/CommonComponents/BackToPath';
 
 export default function Index() {
     const { courseType, courseId } = useRouter().query
@@ -49,6 +50,18 @@ export default function Index() {
         <>
             <div className={styles.headerWrapper}>
                 <div className='maxWidthDefault px-4'>
+                    <div>
+                        <BackToPath
+                            backpathForPage={true}
+                            backPathArray={
+                                [
+                                    { lable: 'صفحة الأدمن الرئيسية', link: `/instructorPanel` },
+                                    { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel/manageCourse' },
+                                    { lable: courseName ? courseName : 'إنشاء دورة حضورية', link: null }
+                                ]
+                            }
+                        />
+                    </div>
                     <h1 className={`head2 ${styles.createCourseHeaderText}`}>
                         {courseName ? courseName : courseType == "physical" ? "إنشاء دورة حضورية" : courseType == "online" ? "إنشاء دورة مباشرة" : "إنشاء دورة مسجلة"}
                     </h1>
