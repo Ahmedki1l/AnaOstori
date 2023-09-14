@@ -79,6 +79,11 @@ import AndroidStore from './customeIcons/androidStore'
 import InstructorIcon from './customeIcons/instructorIcon'
 import CourseTypePhysical from './customeIcons/courseTypePhysical'
 import UploadInvoice from './customeIcons/UploadInvoice'
+import VisaPayment from './customeIcons/visaPayment'
+import MasterCardPayment from './customeIcons/masterCardPayment'
+import MadaPayment from './customeIcons/madaPayment'
+import BankTransfer from './customeIcons/bankTransfer'
+import ApplePayment from './customeIcons/applePayment'
 
 
 
@@ -162,6 +167,14 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'instructorIcon' && <InstructorIcon height={height} width={width} color={color} />}
 			{iconName == 'courseTypePhysical' && <CourseTypePhysical height={height} width={width} color={color} />}
 			{iconName == 'uploadIncvoice' && <UploadInvoice height={height} width={width} color={color} />}
+
+
+			{iconName == 'visaPayment' && <VisaPayment height={height} width={width} color={color} />}
+			{iconName == 'masterCardPayment' && <MasterCardPayment height={height} width={width} color={color} />}
+			{iconName == 'madaPayment' && <MadaPayment height={height} width={width} color={color} />}
+			{iconName == 'bankTransfer' && <BankTransfer height={height} width={width} color={color} />}
+			{iconName == 'applePayment' && <ApplePayment height={height} width={width} color={color} />}
+
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
