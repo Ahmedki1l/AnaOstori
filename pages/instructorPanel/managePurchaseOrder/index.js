@@ -1,40 +1,16 @@
-import { ConfigProvider, Drawer, Form, Table } from "antd";
+import { ConfigProvider, Drawer, Table, Tag } from "antd";
 import { createOrderAPI, managePurchaseOrdersAPI } from "../../../services/apisService";
 import { useEffect, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";
 import AllIconsComponenet from "../../../Icons/AllIconsComponenet";
-import styles from '../../../styles/InstructorPanelStyleSheets/ManagePurchaseOrder.module.scss'
-import { FormItem } from "../../../components/antDesignCompo/FormItem";
-import Select from "../../../components/antDesignCompo/Select";
+import PurchaseOrderDrawer from "../../../components/ManagePurchaseOrderItem/PurchaseOrderDrawer";
+import styled from "styled-components";
+import * as paymentConst from "../../../constants/PaymentConst"
 
-const paymentStatus = [
-    {
-        key: 1,
-        label: 'بانتظار الحوالة',
-        value: 'witing'
-    },
-    {
-        key: 2,
-        label: 'خلنا نراجع الايصال',
-        value: 'review'
-    },
-    {
-        key: 3,
-        label: 'مؤكد',
-        value: 'accepted'
-    },
-    {
-        key: 4,
-        label: 'ردينا فلوسه',
-        value: 'refund'
-    },
-    {
-        key: 5,
-        label: 'ملغي',
-        value: 'rejected'
-    },
-]
+const DrawerTiitle = styled.p`
+    font-size:20px
+`
 
 const Index = () => {
 
@@ -42,9 +18,8 @@ const Index = () => {
     const [purchaseOrderList, setPurchaseOrderList] = useState()
     const [paginationConfig, setPaginationConfig] = useState()
     const [selectedOrder, setSelectedOrder] = useState()
-    const [orderForm] = Form.useForm()
-    const [selectedOrderStatus, setSelectedOrderStatus] = useState()
-    console.log(selectedOrderStatus);
+    const paymentStatus = paymentConst.paymentStatus
+
 
     const tableColumns = [
         {
@@ -84,6 +59,12 @@ const Index = () => {
             title: 'حالة الحجز',
             dataIndex: 'status',
             sorter: (a, b) => a.status.localeCompare(b.status),
+            render: (text) => {
+                const statusLabel = paymentStatus.find((item) => item.value == text)
+                return (
+                    <Tag color={statusLabel.color}>{statusLabel?.label}</Tag>
+                )
+            }
         },
         {
             title: 'طريقة الدفع',
@@ -114,12 +95,11 @@ const Index = () => {
             }
         },
         {
-            title: 'تاريخ اخر تحديث',
+            title: 'الإجراءات',
             dataIndex: 'actions',
             render: (data, _record) => {
                 const handleEditOrders = () => {
                     setOpen(true)
-                    orderForm.setFieldValue('status', _record.status)
                     setSelectedOrder(_record)
                 }
                 return (
@@ -156,28 +136,22 @@ const Index = () => {
             console.log(err);
         })
     }
+
     const handleTableChange = (pagination, filter, sorter) => {
         getPurchaseOrderList(pagination.current)
     }
+
     const onClose = () => {
         setOpen(false);
     };
-    const handleSaveOrder = async () => {
-        let body = {
-            orderUpdate: true,
-            id: selectedOrder.id,
-            status: selectedOrderStatus
-        }
-        console.log(body);
-        await createOrderAPI(body).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
+
+
     const customEmptyComponent = (
         <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={'لم تقم بإضافة اي مجلد'} containerhight={200} onClick={() => handleCreateFolder()} />
     )
+
+    const selectedOrderStatusLable = paymentStatus.find((item) => item.value == selectedOrder?.status)
+
 
     return (
         <div className="maxWidthDefault">
@@ -190,38 +164,27 @@ const Index = () => {
                     locale={{ emptyText: customEmptyComponent }}
                     onChange={handleTableChange}
                 />
-            </ConfigProvider>
 
-            {open &&
-                <Drawer
-                    title="Basic Drawer"
-                    closable={false}
-                    placement={'left'}
-                    open={open}
-                    onClose={onClose}
-                    extra={
-                        <div className='flex'>
-                            <div className={styles.saveCourseBtnBox} onClick={handleSaveOrder}>
-                                <button className='primarySolidBtn flex items-center' htmltype='submit' >حفظ</button>
-                            </div>
-                            <button onClick={onClose} className={styles.closebutton}>
-                                <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
-                            </button>
-                        </div>
-                    }
-                >
-                    <Form form={orderForm}>
-                        <FormItem
-                            name={'status'} >
-                            <Select
-                                onChange={setSelectedOrderStatus}
-                                value={selectedOrder.status}
-                                OptionData={paymentStatus}
-                                placeholder="سعر الدورة لثلاثة اشخاص واكثر"
-                            />
-                        </FormItem>
-                    </Form>
-                </Drawer>}
+                {open &&
+                    <Drawer
+                        title={
+                            <>
+                                <DrawerTiitle className="foneBold">تفاصيل حجز رقم</DrawerTiitle>
+                                <DrawerTiitle className="foneBold">#{selectedOrder.id}</DrawerTiitle>
+                            </>
+                        }
+                        closable={false}
+                        placement={'right'}
+                        open={open}
+                        onClose={onClose}
+                        width={480}
+                        extra={
+                            <Tag style={{ fontSize: 16, padding: 10 }} bordered={false} color={selectedOrderStatusLable.color}>{selectedOrderStatusLable?.label}</Tag>
+                        }
+                    >
+                        <PurchaseOrderDrawer selectedOrder={selectedOrder} />
+                    </Drawer>}
+            </ConfigProvider>
         </div>
     )
 }

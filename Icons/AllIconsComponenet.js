@@ -78,6 +78,7 @@ import MobileWebDevice from './customeIcons/mobileWebDevice'
 import AndroidStore from './customeIcons/androidStore'
 import InstructorIcon from './customeIcons/instructorIcon'
 import CourseTypePhysical from './customeIcons/courseTypePhysical'
+import UploadInvoice from './customeIcons/UploadInvoice'
 
 
 
@@ -160,8 +161,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'mobileWebDevice' && <MobileWebDevice height={height} width={width} color={color} />}
 			{iconName == 'instructorIcon' && <InstructorIcon height={height} width={width} color={color} />}
 			{iconName == 'courseTypePhysical' && <CourseTypePhysical height={height} width={width} color={color} />}
-
-
+			{iconName == 'uploadIncvoice' && <UploadInvoice height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
