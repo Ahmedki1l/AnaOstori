@@ -17,6 +17,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
 import { signOutUser } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
+import styled from 'styled-components'
+import { Modal } from 'antd'
+import { mediaUrl } from '../../../constants/DataManupulation'
+
+
+const StylesModal = styled(Modal)`
+    .ant-modal-close{
+        display:none;
+    }
+    .ant-modal-content{
+        border-radius: 5px;
+        padding: 0px;
+        overflow:hidden;
+    }
+    .ant-modal-body {
+        height: 800px;
+    }
+`
 
 
 export async function getServerSideProps(ctx) {
@@ -76,6 +94,7 @@ export default function Index(props) {
 
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
+	console.log(courseCurriculum);
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
 	const [expandedSection, setExpandedSection] = useState(0);
 	const router = useRouter()
@@ -110,6 +129,10 @@ export default function Index(props) {
 	const bookSit = 'احجز جلوسك'
 	const dispatch = useDispatch();
 	const [discountShow, setDiscountShow] = useState(false)
+
+
+	const [open, setOpen] = useState(false);
+	const [fileSrc, setFileSrc] = useState()
 
 
 	const secondsToMinutes = (seconds) => {
@@ -180,13 +203,31 @@ export default function Index(props) {
 		setPaddingTop(2)
 	}
 
-	const handleCourseItemClick = (id) => {
-		if (!isUserLogin) {
-			router.push(`/login`)
-		} else {
-			router.push(`/myCourse/${courseCurriculum?.course?.id}/${id}`)
+	// const handleCourseItemClick = (id) => {
+	// 	if (!isUserLogin) {
+	// 		router.push(`/login`)
+	// 	} else {
+	// 		router.push(`/myCourse/${courseCurriculum?.course?.id}/${id}`)
+	// 	}
+	// }
+
+	const handleCourseItemClick = (item) => {
+		if (item.type == 'video') {
+			setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
+			setOpen(true);
 		}
-	}
+		else if (item.type == 'file') {
+			window.open(mediaUrl(item.linkBucket, item.linkKey))
+		}
+		else {
+			window.open(item.linkKey)
+		}
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+		setFileSrc(undefined)
+	};
 
 	useEffect(() => {
 		if (!courseDetail) return
@@ -353,8 +394,8 @@ export default function Index(props) {
 																			</div>
 																		</div>
 																		<div className={styles.lockItemWrapper}>
-																			{item?.previewAvailable != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
-																			{item?.previewAvailable == true && <p onClick={() => handleCourseItemClick(item?.id)} className={styles.previewItemText}>شاهد مجانًا</p>}
+																			{item?.sectionItem?.freeUsage != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
+																			{item?.sectionItem?.freeUsage == true && <p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>شاهد مجانًا</p>}
 																		</div>
 																	</div>
 																)
@@ -442,6 +483,20 @@ export default function Index(props) {
 						</div>
 					</div>
 					<WhatsAppLinkComponent isBookSeatPageOpen={true} courseDetail={courseDetail} discountShow={discountShow} />
+					<StylesModal
+						footer={false}
+						closeIcon={false}
+						open={open}
+						width={1200}
+						onCancel={handleClose}
+					>
+						<div className='videoCloseIcon' onClick={handleClose}>
+							<AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />
+						</div>
+						<video controls width="100%" height="100%">
+							<source src={fileSrc} type="video/mp4" />
+						</video>
+					</StylesModal>
 				</div>
 			}
 		</>

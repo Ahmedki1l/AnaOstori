@@ -66,7 +66,7 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             {selectedOrder.reciptKey &&
                 <>
-                    <p style={{ fontSize: '18px' }}>نسخة الإيصال</p>
+                    <p style={{ fontSize: '18px' }}>معاينة الإيصال</p>
                     <Link href={mediaUrl(selectedOrder.reciptBucket, selectedOrder.reciptKey)} target='_blank'>
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>

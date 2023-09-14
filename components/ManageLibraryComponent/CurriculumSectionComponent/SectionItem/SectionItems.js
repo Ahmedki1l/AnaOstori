@@ -84,15 +84,18 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
         })
     }
     const handleOpenPdfModel = (item) => {
-        if (item.type != 'quiz') {
+        if (item.type == 'video') {
             setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
             setOpen(true);
+        }
+        else if (item.type == 'file') {
+            window.open(mediaUrl(item.linkBucket, item.linkKey))
         }
         else {
             window.open(item.linkKey)
         }
     };
-    const closePdfModel = () => {
+    const handleClose = () => {
         setOpen(false);
         setFileSrc(undefined)
     };
@@ -164,13 +167,15 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                 footer={false}
                 closeIcon={false}
                 open={open}
-                width={1100}
-                onCancel={closePdfModel}
+                width={1200}
+                onCancel={handleClose}
             >
-                {/* <div className='pdfCloseIcon' onClick={closePdfModel}>
-                    <AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#000000'} />
-                </div> */}
-                <embed src={fileSrc} width="100%" height="100%" type="application/pdf" />
+                <div className='videoCloseIcon' onClick={handleClose}>
+                    <AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />
+                </div>
+                <video controls width="100%" height="100%">
+                    <source src={fileSrc} type="video/mp4" />
+                </video>
             </StylesModal>
         </>
     )
