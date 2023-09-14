@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Select as AntdSelect } from "antd";
+import { Select as AntdSelect, ConfigProvider } from "antd";
 
 const StyledSelect = styled(AntdSelect)`
   height: ${props => (props.height ? props.height : '52')}px !important;
@@ -44,16 +44,18 @@ const Select = ({
   const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
   return (
-    <StyledSelect
-      showSearch
-      options={OptionData}
-      placeholder={placeholder}
-      fontSize={fontSize}
-      onChange={(e) => onChange(e)}
-      filterOption={filterOption}
-      dropdownStyle={{ direction: 'rtl' }}
-      {...rest}
-    />
+    <ConfigProvider direction="rtl">
+      <StyledSelect
+        showSearch
+        options={OptionData}
+        placeholder={placeholder}
+        fontSize={fontSize}
+        onChange={(e) => onChange(e)}
+        filterOption={filterOption}
+        // dropdownStyle={{ direction: 'rtl' }}
+        {...rest}
+      />
+    </ConfigProvider>
   );
 }
 

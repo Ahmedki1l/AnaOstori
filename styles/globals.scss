@@ -80,6 +80,7 @@
 	background-color: $secondary-color;
 }
 
+
 /* ****************************************************** Header css start ******************************************************  */
 .head1 {
 	font-family: 'Tajawal-Bold';
@@ -342,6 +343,11 @@
 .playIcon {
 	color: #ffffff;
 	font-size: 4rem !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
 }
 
 .videoCloseIcon {

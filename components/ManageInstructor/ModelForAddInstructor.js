@@ -5,12 +5,10 @@ import styles from './ModelForAddInstructor.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import InputTextArea from '../antDesignCompo/InputTextArea'
 import { createInstroctorAPI, editInstroctorAPI, getInstructorListAPI, uploadFileAPI } from '../../services/apisService'
-import { deleteNullFromObj, stringUpdation } from '../../constants/DataManupulation'
+import { deleteNullFromObj } from '../../constants/DataManupulation'
 import { useDispatch } from 'react-redux'
-import Spinner from '../CommonComponents/spinner'
-import { uploadFileSevices } from '../../services/UploadFileSevices'
+import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
 
 
 const ModelForAddInstructor = ({
@@ -33,28 +31,9 @@ const ModelForAddInstructor = ({
 
 
     const [fileName, setFileName] = useState()
+    const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const dispatch = useDispatch()
-    const [uploadLoader, setUploadLoader] = useState(false)
-
-    const getFileKey = async (e) => {
-        setUploadLoader(true)
-        await uploadFileSevices(e.target.files[0]).then((res) => {
-            const uploadFileBucket = res.split('.')[0].split('//')[1]
-            const uploadFileKey = res.split('?')[0].split('/')[3]
-            const uploadFileType = e.target.files[0].type
-            setFileUploadResponceData({
-                key: uploadFileKey,
-                bucket: uploadFileBucket,
-                mime: uploadFileType,
-            })
-            setFileName(e.target.files[0].name)
-            setUploadLoader(false)
-        }).catch((error) => {
-            console.log(error);
-            setUploadLoader(false)
-        })
-    }
 
     const getInstructorListReq = async () => {
         await getInstructorListAPI().then((res) => {
@@ -79,10 +58,14 @@ const ModelForAddInstructor = ({
         if (values.phone) {
             values.phone = values.phone.replace(/[0-9]/, "966")
         }
-        if (fileUploadResponceData) {
-            values.avatarKey = fileUploadResponceData.key
-            values.avatarBucket = fileUploadResponceData.bucket
-            values.avatarMime = fileUploadResponceData.mime
+        if (avatarUploadResData) {
+            values.avatarKey = avatarUploadResData.key
+            values.avatarBucket = avatarUploadResData.bucket
+            values.avatarMime = avatarUploadResData.mime
+        } else {
+            values.ProfileFileKey = fileUploadResponceData.key
+            values.ProfileFileBucket = fileUploadResponceData.bucket
+            values.ProfileFileMime = fileUploadResponceData.mime
         }
         deleteNullFromObj(values)
         await createInstroctorAPI(values).then((res) => {
@@ -100,10 +83,14 @@ const ModelForAddInstructor = ({
         if (values.phone) {
             values.phone = values.phone.replace(/[0-9]/, "966")
         }
-        if (fileUploadResponceData) {
-            values.avatarKey = fileUploadResponceData.key
-            values.avatarBucket = fileUploadResponceData.bucket
-            values.avatarMime = fileUploadResponceData.mime
+        if (avatarUploadResData) {
+            values.avatarKey = avatarUploadResData.key
+            values.avatarBucket = avatarUploadResData.bucket
+            values.avatarMime = avatarUploadResData.mime
+        } else {
+            values.ProfileFileKey = fileUploadResponceData.key
+            values.ProfileFileBucket = fileUploadResponceData.bucket
+            values.ProfileFileMime = fileUploadResponceData.mime
         }
         deleteNullFromObj(values)
         await editInstroctorAPI(values).then((res) => {
@@ -122,10 +109,7 @@ const ModelForAddInstructor = ({
         setEditInstructor()
         setIsModelForAddInstructor(false)
     }
-    const handleRemoveFile = () => {
-        setFileName()
-        setFileUploadResponceData()
-    }
+
 
     return (
         <div>
@@ -139,7 +123,7 @@ const ModelForAddInstructor = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addInstructor}`}>إضافة مدرب</p>
+                    <p className={`fontBold ${styles.addInstructor}`}>{isEdit ? 'تعديل بيانات المدرب' : 'إضافة مدرب'}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={instructorForm} onFinish={onFinish}>
@@ -185,39 +169,32 @@ const ModelForAddInstructor = ({
                                     placeholder='المنصب'
                                 />
                             </FormItem>
+
+                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>صورة المدرب</p>
+                            <UploadFileForModel
+                                fileName={instructorDetails?.avatarKey}
+                                setFileName={setFileName}
+                                uploadResData={setAvtarUploadResData}
+                                fileType={'.jpg , .png'}
+                                accept={"image"}
+                                placeHolderName={'ارفق الصورة'}
+                            />
+
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>الملف التعريفي</p>
-                            <div className={styles.uploadVideoWrapper}>
-                                <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
-                                <label htmlFor='uploadFileInput' className='cursor-pointer'>
-                                    <div className={styles.IconWrapper} >
-                                        <div className={styles.uploadFileWrapper}>
-                                            <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
-                                        </div>
-                                        <p>ارفق الملف</p>
-                                    </div>
-                                </label>
-                                {fileName &&
-                                    <div className={styles.uploadFileNameWrapper}>
-                                        <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
-                                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
-                                        </div>
-                                        {stringUpdation(fileName, 20)}
-                                    </div>
-                                }
-                                {uploadLoader &&
-                                    <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
-                                }
-                            </div>
+                            <UploadFileForModel
+                                fileName={instructorDetails?.ProfileFileKey}
+                                setFileName={setFileName}
+                                uploadResData={setFileUploadResponceData}
+                                fileType={'.pdf , .doc , .docx'}
+                                accept={"file"}
+                                placeHolderName={'ارفق الملف'}
+                            />
+
                         </div>
                         <div className={styles.instructorFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
                                 <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >حفظ</button>
                             </div>
-                            {/* {isEdit &&
-                                <div className={styles.deleteVideoBtn}>
-                                    <button className='deleteBtn' type={'submit'} onClick={() => handleDeleteItems()}>حذف المدرب</button>
-                                </div>
-                            } */}
                         </div>
                     </Form>
                 </div>

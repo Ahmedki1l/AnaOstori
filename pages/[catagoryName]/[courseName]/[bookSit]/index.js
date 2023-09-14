@@ -233,7 +233,7 @@ export default function Index(props) {
 				courseId: courseDetails.id,
 				people: createOrderData
 			}
-
+			console.log(orderData);
 			const params = {
 				orderData,
 			}
