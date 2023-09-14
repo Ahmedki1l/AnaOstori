@@ -7,6 +7,7 @@ import { fullDate } from '../../../constants/DateConverter'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
+import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 
 const Index = () => {
 
@@ -15,6 +16,7 @@ const Index = () => {
     const [isEdit, setIsEdit] = useState(false)
     const instructorDetails = storeData?.instructorList
     const [editInstructor, setEditInstructor] = useState()
+    const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
 
     const handleAddInstructor = () => {
         setIsModelForAddInstructor(true)
@@ -27,6 +29,15 @@ const Index = () => {
         setIsEdit(true)
     }
 
+    const onCloseModal = () => {
+        setIsmodelForDeleteItems(false)
+    }
+    const openDeleteFolderItems = (instructor) => {
+        setIsmodelForDeleteItems(true)
+    }
+    const handleDeleteFolderItems = () => {
+
+    }
 
     return (
         <div>
@@ -72,6 +83,9 @@ const Index = () => {
                                                 <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
                                                     <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                 </div>
+                                                {/* <div className='cursor-pointer' onClick={() => openDeleteFolderItems(instructor)}>
+                                                    <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                </div> */}
                                             </div>
                                         </td>
                                     </tr>
@@ -90,6 +104,13 @@ const Index = () => {
                     setEditInstructor={setEditInstructor}
                 />
             }
+            {/* {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={'instructor'}
+                    onDelete={handleDeleteFolderItems}
+                />} */}
         </div>
     )
 }

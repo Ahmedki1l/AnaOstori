@@ -18,7 +18,7 @@ const ModelForAddInstructor = ({
     instructorDetails,
     setEditInstructor,
 }) => {
-
+    console.log(instructorDetails);
     const [instructorForm] = Form.useForm();
 
     useEffect(() => {
