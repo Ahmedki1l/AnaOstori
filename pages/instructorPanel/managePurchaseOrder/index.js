@@ -7,6 +7,7 @@ import AllIconsComponenet from "../../../Icons/AllIconsComponenet";
 import PurchaseOrderDrawer from "../../../components/ManagePurchaseOrderItem/PurchaseOrderDrawer";
 import styled from "styled-components";
 import * as paymentConst from "../../../constants/PaymentConst"
+import Link from "next/link";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -43,17 +44,16 @@ const Index = () => {
             title: 'رقم الجوال',
             dataIndex: 'buyerPhone',
             render: (text) => {
-                if (text.includes('+')) {
-                    return (text.slice(1))
-                }
-                return text
+                const mobileNumber = text.includes('+') ? text.slice(1) : text
+                return (
+                    <Link target={'_blank'} href={`https://api.whatsapp.com/send/?phone=${mobileNumber}&text&type=phone_number&app_absent=0`}>{mobileNumber}</Link>
+                )
             }
         },
         {
             title: 'الايميل',
             dataIndex: 'buyerEmail',
             sorter: (a, b) => a.buyerEmail.localeCompare(b.buyerEmail),
-
         },
         {
             title: 'حالة الحجز',
@@ -69,6 +69,12 @@ const Index = () => {
         {
             title: 'طريقة الدفع',
             dataIndex: 'paymentMethod',
+            render: (text, _record) => {
+                const iconName = text == "bank_transfer" ? 'bankTransfer' : text == 'none' ? 'applePayment' : text == 'hyperPay' ? 'madaPayment' : 'creditCard'
+                return (
+                    <AllIconsComponenet iconName={iconName} height={18} width={18} />
+                )
+            }
         },
         {
             title: 'المبلغ المدفوع  مع الضريبة',

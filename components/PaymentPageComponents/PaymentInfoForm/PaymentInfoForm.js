@@ -241,7 +241,7 @@ export default function PaymentInfoForm(props) {
 							<p>سعر الدورة</p>
 							<p>{(createdOrder.price * createdOrder.qty).toFixed(2)} ر.س</p>
 						</div>
-						{createdOrder.totalDiscount && <div className='flex justify-between'>
+						{(createdOrder.totalDiscount > 0 || couponAppliedData?.percentage) && <div className='flex justify-between'>
 							<p style={{ color: '#00bd5d' }}>قيمة الخصم</p>
 							<p style={{ color: '#00bd5d' }}> {(createdOrder.totalDiscount) + (couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)}- ر.س</p>
 						</div>}

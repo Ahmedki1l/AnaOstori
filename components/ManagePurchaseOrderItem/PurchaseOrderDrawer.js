@@ -70,7 +70,7 @@ const PurchaseOrderDrawer = (props) => {
             {selectedOrder.reciptKey &&
                 <>
                     <p style={{ fontSize: '18px' }}>نسخة الإيصال</p>
-                    <Link href={mediaUrl(selectedOrder.reciptBucket, selectedOrder.reciptKey)} >
+                    <Link href={mediaUrl(selectedOrder.reciptBucket, selectedOrder.reciptKey)} target='_blank'>
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>
                                 <div className={styles.uploadInvoiceBtn}>
@@ -138,7 +138,7 @@ const PurchaseOrderDrawer = (props) => {
 
             {selectedOrder.orderItems.map((item, index) => {
                 return (
-                    <div>
+                    <div key={`order${index}`}>
                         <p style={{ fontSize: '18px' }}>الاسم الثلاثي</p>
                         <div className={styles.purchaseOrderBox}>
                             <p>{item.fullName}</p>
@@ -167,7 +167,7 @@ const PurchaseOrderDrawer = (props) => {
                 <>
                     <div className={styles.borderedDiv}></div>
                     <p style={{ fontSize: '18px' }}>نسخة الفاتورة</p>
-                    <Link href={mediaUrl(selectedOrder.invoiceBucket, selectedOrder.invoiceKey)} >
+                    <Link href={mediaUrl(selectedOrder.invoiceBucket, selectedOrder.invoiceKey)} target='_blank'>
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>
                                 <div className={styles.uploadInvoiceBtn}>
