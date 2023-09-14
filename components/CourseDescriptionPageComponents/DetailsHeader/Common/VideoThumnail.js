@@ -31,10 +31,10 @@ const VideoThumnail = (props) => {
 		setOpenVideo(false);
 	};
 	return (
-		<div className='relative overflow-hidden rounded'>
+		<div className='relative overflow-hidden w-full'>
 			<div className='playIconDiv' onClick={handleClickOpen}>
 				<div className='playIcon' >
-					<svg width={props.lang == 'en' ? "75" : "55"} height="35" viewBox="0 0 63 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<svg width="55" height="35" viewBox="0 0 63 75" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M63 37.5L0.75 74.3061L0.75 0.69392L63 37.5Z" fill="white" />
 					</svg>
 				</div>

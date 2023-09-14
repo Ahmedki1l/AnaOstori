@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import styles from './UploadFile.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
-import Spinner from '../../CommonComponents/spinner'
+import Spinner from '../spinner'
 import CoverImg from '../CoverImg'
 import VideoThumnail from '../../CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail'
 import { mediaUrl } from '../../../constants/DataManupulation'
 
-const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, courseVideoUrl }) => {
+const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, courseVideoUrl, type }) => {
+
     const [showLoader, setShowLoader] = useState(false);
     const [isFileExist, setIsFileExist] = useState(accept == 'image' ? (coursePictureUrl ? true : false) : (courseVideoUrl ? true : false))
     const [pictureUrl, setPictureUrl] = useState(coursePictureUrl)
@@ -66,7 +67,7 @@ const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, course
                 </>
                 :
                 <>
-                    <input disabled={showLoader} type='file' id={`upload${accept}`} accept={`${accept}/*`} className={styles.uploadFileInput} onChange={handleUploadFile} />
+                    <input disabled={showLoader} type='file' id={`upload${accept}`} accept={type} className={styles.uploadFileInput} onChange={handleUploadFile} />
                     <label htmlFor={`upload${accept}`} className={styles.imageUploadWrapper}>
                         {showLoader &&
                             <div className={styles.loaderWrapper}>

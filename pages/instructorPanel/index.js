@@ -27,9 +27,17 @@ export default function Index() {
                     <AllIconsComponenet width={68} height={68} iconName='instructorIcon' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وإدارة المدربين</p>
                 </Link>
+                <Link href={'/instructorPanel/managePurchaseOrder'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>متابعة وتحديث حالة المشتريات</p>
+                </Link>
                 <Link href={'/instructorPanel/manageNews'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل الشريط التسويقي</p>
+                </Link>
+                <Link href={'/instructorPanel/manageAppVersions'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نسخة التطبيق</p>
                 </Link>
             </div>
         </div>

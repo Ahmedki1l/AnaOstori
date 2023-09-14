@@ -38,10 +38,10 @@ const Index = () => {
                     <table className={styles.tableArea}>
                         <thead className={styles.tableHeaderArea}>
                             <tr>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>المدرب</th>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>الايميل</th>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الانشاء</th>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
+                                <th className={styles.tableHead1}>المدرب</th>
+                                <th className={styles.tableHead2}>الايميل</th>
+                                <th className={styles.tableHead3}>تاريخ الانشاء</th>
+                                <th className={styles.tableHead4}>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody className={styles.tableBodyArea}>

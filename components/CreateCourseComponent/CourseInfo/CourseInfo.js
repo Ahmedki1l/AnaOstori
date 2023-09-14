@@ -5,7 +5,6 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
 import styles from './CourseInfo.module.scss'
-import UploadFile from '../../CommonComponents/UploadFile/UploadFile';
 import CheckBox from '../../antDesignCompo/CheckBox';
 import Input from '../../antDesignCompo/Input';
 import Select from '../../antDesignCompo/Select';
@@ -19,6 +18,7 @@ import { deleteNullFromObj, mediaUrl } from '../../../constants/DataManupulation
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import * as PaymentConst from '../../../constants/PaymentConst'
 import Switch from '../../antDesignCompo/Switch';
+import UploadFile from '../../CommonComponents/UploadFileForCourse/UploadFile';
 
 
 
@@ -71,7 +71,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [discountValue, setDiscountValue] = useState()
     const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
     const iosProductIdList = PaymentConst.iosProductIdList
-    console.log(imageUploadResponceData);
+
     useEffect(() => {
         if (isCourseEdit) {
             courseInfoForm.setFieldsValue(editCourseData)
@@ -205,6 +205,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     }
 
     const editCourse = async (values) => {
+        console.log(values);
         setShowLoader(true)
         let courseMetaData = values.courseMetaData.map((obj, index) => {
             delete obj.createdAt
@@ -432,6 +433,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             courseVideoUrl={''}
                             setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
+                            type={'.jpg , .png'}
                             label={'ارفق الفيديو هنا'}
                         />
                     </div>
@@ -439,9 +441,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     <div>
                         <UploadFile
                             coursePictureUrl={isCourseEdit ? mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey) : mediaUrl(imageUploadResponceData?.bucket, imageUploadResponceData?.key)}
-                            courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoBucket)}
+                            courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoKey)}
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
+                            type={'.mp4 ,.mov ,.avi , .wmv , .fly , .webm '}
                             setUploadFileData={setVideooUploadResponceData}
                         />
                     </div>

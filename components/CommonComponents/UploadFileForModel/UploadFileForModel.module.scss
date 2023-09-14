@@ -1,0 +1,42 @@
+.uploadVideoWrapper {
+    font-size: 16px;
+    display: flex;
+    width: 352px;
+    border-radius: 4px;
+    flex-direction: row;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    margin-bottom: 1rem;
+}
+
+.uploadFileInput {
+    display: none !important;
+
+    :disabled {
+        cursor: not-allowed;
+        background-color: rgba(128, 128, 128, 0.44);
+    }
+}
+
+.IconWrapper {
+    width: 114px;
+    height: 40px;
+    border-left: 0.5px solid rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+}
+
+.uploadFileWrapper {
+    padding: 16px 8px 10px;
+}
+
+.uploadFileNameWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.closeIconWrapper {
+    padding-right: 5px;
+    height: 18px;
+    width: 25px;
+    cursor: pointer;
+}
