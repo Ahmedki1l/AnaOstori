@@ -142,3 +142,4 @@ export const editNewsAPI = (data) => { return instance.post(`/newsBar/update`, d
 // ********* Manage Orders APIs ***********//
 export const managePurchaseOrdersAPI = (data) => { return instance.get(`playground?page=${data.pageNo}&limit=${data.limit}&order=${data.order}`) }
 
+

@@ -1,0 +1,36 @@
+.purchaseOrderBox {
+    width: 425px;
+    height: 47px;
+    border: 0.5px solid #0000008a !important;
+    border-radius: 4px;
+    margin: 5px 0 15px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.borderedDiv {
+    width: 425px;
+    margin: 20px 0 15px;
+    border: 0.5px solid #0000008a !important;
+}
+
+.downloadInvoice {
+    width: 425px;
+    height: 78px;
+    border-radius: 5px;
+    border-color: #F26722;
+    margin: 5px 0 15px;
+}
+
+.uploadInvoiceBtn {
+    padding: 2px 0 0 5px;
+}
+
+.receiptItem {
+    display: grid;
+    place-content: center;
+    padding: 25px;
+    color: #F26722;
+    font-size: 16px;
+    display: flex;
+}

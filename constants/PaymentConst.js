@@ -148,5 +148,44 @@ const bankDetails = [
     { accountNumber: '25500000685307', IBANnumber: 'SA89 1000 0025 5000 0068 5307', bankLogo: 'alahliBankLogo', brndColor: '#034537' },
 ]
 
+const paymentStatus = [
+    {
+        key: 1,
+        label: 'بانتظار الحوالة',
+        value: 'witing',
+        color: 'yellow'
+    },
+    {
+        key: 2,
+        label: 'خلنا نراجع الايصال',
+        value: 'review',
+        color: 'geekblue'
+    },
+    {
+        key: 3,
+        label: 'مؤكد',
+        value: 'accepted',
+        color: 'green'
+    },
+    {
+        key: 4,
+        label: 'ردينا فلوسه',
+        value: 'refund',
+        color: 'black'
+    },
+    {
+        key: 5,
+        label: 'ملغي',
+        value: 'rejected',
+        color: 'red'
+    },
+    {
+        key: 6,
+        label: 'init',
+        value: 'init',
+        color: 'orange'
+    }
+]
 
-export { noOfUsersTag, noOfUsersTag2, genders, bankDetails, iosProductIdList };
+
+export { noOfUsersTag, noOfUsersTag2, genders, bankDetails, iosProductIdList, paymentStatus };
