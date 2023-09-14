@@ -20,7 +20,6 @@ const VideoThumnail = (props) => {
 	const videoUrl = props.videoUrl
 	const pictureUrl = props.pictureUrl
 	const thumnailHeight = props.thumnailHeight
-	console.log(pictureUrl, videoUrl, thumnailHeight);
 	const [openVideo, setOpenVideo] = useState(false);
 
 	const handleClickOpen = () => {

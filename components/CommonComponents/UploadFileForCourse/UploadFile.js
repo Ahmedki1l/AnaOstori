@@ -20,7 +20,6 @@ const UploadFile = ({ label, accept, setUploadFileData, coursePictureUrl, course
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = e.target.files[0].type
-            console.log(uploadFileBucket, uploadFileKey, uploadFileType);
             setUploadFileData({
                 key: uploadFileKey,
                 bucket: uploadFileBucket,

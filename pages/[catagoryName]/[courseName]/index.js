@@ -30,7 +30,6 @@ export async function getServerSideProps(ctx) {
 		courseDetailsReq,
 		homeReviewsReq
 	])
-	console.log(courseDetails.data.id, 50);
 
 	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/male`)
 
@@ -50,8 +49,6 @@ export async function getServerSideProps(ctx) {
 	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
 		.then((response) => (response.data))
 		.catch((error) => error);
-
-	console.log(courseCurriculumReq, 54);
 
 	if (courseDetails.data == null) {
 		return {
@@ -79,7 +76,6 @@ export default function Index(props) {
 
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
-	console.log(courseCurriculum);
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
 	const [expandedSection, setExpandedSection] = useState(0);
 	const router = useRouter()

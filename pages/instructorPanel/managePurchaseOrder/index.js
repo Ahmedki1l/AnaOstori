@@ -1,5 +1,5 @@
 import { ConfigProvider, Drawer, Table, Tag } from "antd";
-import { createOrderAPI, managePurchaseOrdersAPI } from "../../../services/apisService";
+import { managePurchaseOrdersAPI } from "../../../services/apisService";
 import { useEffect, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";

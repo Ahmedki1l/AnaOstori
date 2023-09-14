@@ -5,11 +5,9 @@ import { stringUpdation } from '../../../constants/DataManupulation'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../spinner'
 
-const UploadFileForModel = ({ fileName, setFileName, fileType, uploadResData, placeHolderName }) => {
-    console.log(fileType);
+const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName }) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
-
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
@@ -37,8 +35,8 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, uploadResData, pl
 
     return (
         <div className={styles.uploadVideoWrapper}>
-            <input id='uploadFileInput' type={'file'} accept={fileType} className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
-            <label htmlFor='uploadFileInput' className='cursor-pointer'>
+            <input id={` uploadFileInput_${accept}`} type={'file'} accept={fileType} className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
+            <label htmlFor={` uploadFileInput_${accept}`} className='cursor-pointer'>
                 <div className={styles.IconWrapper} >
                     <div className={styles.uploadFileWrapper}>
                         <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { fullDate } from '../../../constants/DateConverter'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
-
+import BackToPath from '../../../components/CommonComponents/BackToPath'
 
 const Index = () => {
 
@@ -32,6 +32,17 @@ const Index = () => {
         <div>
             <div className='maxWidthDefault px-4'>
                 <div>
+                    <div>
+                        <BackToPath
+                            backpathForPage={true}
+                            backPathArray={
+                                [
+                                    { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                                    { lable: 'إدارة وإضافة المدربين', link: null },
+                                ]
+                            }
+                        />
+                    </div>
                     <div dir='ltr'>
                         <button className={styles.createNewAvailability} onClick={() => handleAddInstructor()}>إضافة مدرب </button>
                     </div>

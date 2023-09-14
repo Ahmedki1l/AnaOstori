@@ -155,7 +155,6 @@ export default function Login() {
 			const user = result.user;
 			localStorage.setItem("accessToken", user?.accessToken);
 			handleStoreUpdate()
-			console.log(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,

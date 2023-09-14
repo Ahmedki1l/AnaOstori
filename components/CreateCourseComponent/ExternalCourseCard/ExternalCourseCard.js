@@ -28,9 +28,8 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!isCourseEdit) {
-            setCourseCardMetaDataObj()
-        } else {
+        setCourseCardMetaDataObj()
+        if (isCourseEdit && editCourseData.CourseCardMetaData) {
             externalCourseForm.setFieldsValue(editCourseData)
         }
     }, [isCourseEdit, externalCourseForm, editCourseData])
