@@ -34,7 +34,6 @@ const ModelForAddInstructor = ({
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const dispatch = useDispatch()
-
     const getInstructorListReq = async () => {
         await getInstructorListAPI().then((res) => {
             dispatch({

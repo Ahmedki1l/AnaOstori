@@ -69,7 +69,7 @@ export default function PhysicalCourseCard(props) {
 						<div style={{ height: '0.3px' }}>
 							<div className={styles.separateLine}></div>
 						</div>
-						{courseDetail.discount == null ?
+						{(courseDetail.discount == null || courseDetail.discount == courseDetail.price) ?
 							<div>
 								<p className={`fontBold pt-4 px-3 ${styles.detailHeadText}`}>{lang == 'en' ? 'Prices includes VAT' : 'الأسعار شاملة الضريبة'}</p>
 								<div className={styles.onePersonPriceBox}>

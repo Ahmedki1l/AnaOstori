@@ -16,7 +16,6 @@ const PurchaseOrderDrawer = (props) => {
     const selectedOrder = props.selectedOrder
     const [orderForm] = Form.useForm()
     const paymentStatus = paymentConst.paymentStatus
-    console.log(selectedOrder);
     const handleSaveOrder = async (value) => {
         if (value.status == 'accepted') {
             await axios.post("https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com/order/checkAcceptPayment/" + (selectedOrder.id).toString(), {
@@ -29,9 +28,7 @@ const PurchaseOrderDrawer = (props) => {
                 id: selectedOrder.id,
                 status: value.status
             }
-            console.log(body);
             await createOrderAPI(body).then((res) => {
-                console.log(res);
             }).catch((err) => {
                 console.log(err);
             })

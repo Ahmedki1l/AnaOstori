@@ -65,7 +65,7 @@ const ModelForAddNews = ({
             <div className={styles.modalHeader}>
                 <button onClick={isModelClose} className={styles.closebutton}>
                     <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                <p className={`fontBold ${styles.addNews}`}>إضافة مدرب</p>
+                <p className={`fontBold ${styles.addNews}`}>إضافة نص تسويقي</p>
             </div>
             <div dir='rtl'>
                 <Form form={newsForm} onFinish={onFinish}>
@@ -78,22 +78,12 @@ const ModelForAddNews = ({
                                 fontSize={16}
                                 width={352}
                                 height={40}
-                                placeholder='اسم المدرب'
-                            />
-                        </FormItem>
-                        <FormItem
-                            name={'link'}
-                        >
-                            <Input
-                                fontSize={16}
-                                width={352}
-                                height={40}
-                                placeholder='الايميل'
+                                placeholder='النص'
                             />
                         </FormItem>
                     </div>
                     <div className={styles.newsFieldBorderBottom}>
-                        <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >حفظ</button>
+                        <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? 'حفظ' : 'إضافة'}</button>
                     </div>
                 </Form>
             </div>

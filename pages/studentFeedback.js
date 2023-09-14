@@ -61,8 +61,6 @@ export default function StudentFeedback(props) {
 	}
 	const categoriWiseArray = categorizeArray();
 
-	console.log(categoriWiseArray);
-
 	return (
 		<div>
 			<div className={styles.headevDiv}>

@@ -181,12 +181,10 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                 order: index + 1
             }
         })
-
         let body = {
             data: data
         }
         await updateMultipleSectionOrderAPI(body).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
         })

@@ -4,6 +4,7 @@ import ModelForAddNews from '../../../components/ManageNews/ModelForAddNews'
 import { useState } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import axios from 'axios'
+import BackToPath from '../../../components/CommonComponents/BackToPath'
 
 
 
@@ -41,7 +42,19 @@ const Index = () => {
     return (
         <div>
             <div className='maxWidthDefault px-4'>
-                <div dir='ltr'>
+                <div>
+                    <BackToPath
+                        backpathForPage={true}
+                        backPathArray={
+                            [
+                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                                { lable: 'إضافة وتعديل الشريط التسويقي', link: null },
+                            ]
+                        }
+                    />
+                </div>
+                <div className={`flex justify-between items-center`}>
+                    <h1 className={`head2 py-8`}>النصوص التسويقية</h1>
                     <div className={styles.createNewsBtnBox}>
                         <button className={`primarySolidBtn`} disabled={newsDataList ? true : false} onClick={() => handleAddNews()}>إضافة مدرب </button>
                     </div>
@@ -49,8 +62,7 @@ const Index = () => {
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
                         <tr>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>المدرب</th>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>الايميل</th>
+                            <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>النص</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
                         </tr>
                     </thead>
@@ -60,7 +72,6 @@ const Index = () => {
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>{news.content}</td>
-                                        <td>{news.link}</td>
                                         <td>
                                             <div className='cursor-pointer' onClick={() => handleEditNews(news)}>
                                                 <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />

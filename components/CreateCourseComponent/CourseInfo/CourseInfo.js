@@ -115,7 +115,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.type = courseType == "onDemand" ? "on-demand" : courseType
             values.language = englishCourse ? "en" : "ar"
             values.published = false
-            console.log(values.type);
             if (courseType != "physical") {
                 const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
                 const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
@@ -139,7 +138,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: values,
             }
             await createCourseByInstructorAPI(body).then((res) => {
-                console.log(res);
                 setShowExtraNavItem(true)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
@@ -205,7 +203,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     }
 
     const editCourse = async (values) => {
-        console.log(values);
         setShowLoader(true)
         let courseMetaData = values.courseMetaData.map((obj, index) => {
             delete obj.createdAt
@@ -320,15 +317,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
-    const handlepublishedCourse = async () => {
-        let body = {
-            data: { published: true },
-            courseId: editCourseData.id,
-        }
-        await updateCourseDetailsAPI(body).then((res) => {
-        })
-    }
-
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
         setShowLoader(true)
         let data = { ...editCourseData }
@@ -372,11 +360,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     };
 
     const onChangeCourseChkBox = (e) => {
-        console.log(e.target.checked);
         setEnglishCourse(e.target.checked)
     }
-    const handleChange = (e) => {
-        console.log(e);
+    const handlePublishCourse = async (e) => {
+        let body = {
+            data: { published: e },
+            courseId: editCourseData.id,
+        }
+        await updateCourseDetailsAPI(body).then((res) => {
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
     return (
@@ -526,15 +520,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 onChange={(e) => onChangeCheckBox(e, 'discount')}
                             />
                         </FormItem>
-                        <FormItem
-                            name={'groupDiscountEligible'}
-                        >
-                            <CheckBox
-                                label={'امكانية التسجيل كمجموعات'}
-                                defaultChecked={groupDiscountEligible}
-                                onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
-                            />
-                        </FormItem>
+                        {courseType != 'onDemand' &&
+                            <FormItem
+                                name={'groupDiscountEligible'}
+                            >
+                                <CheckBox
+                                    label={'امكانية التسجيل كمجموعات'}
+                                    defaultChecked={groupDiscountEligible}
+                                    onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
+                                />
+                            </FormItem>
+                        }
                         <div className={styles.checkBoxHead}>
                             <div className='pl-2'>
                                 <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
@@ -842,11 +838,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     </Form.List>
                                 </div>
                                 <div className={styles.publishedCourseDetails}>
-                                    <Switch defaultChecked onChange={handleChange} />
+                                    <Switch defaultChecked={editCourseData.published} onChange={handlePublishCourse} />
                                     <p style={{ marginRight: '3px' }}>نشر الدورة</p>
                                 </div>
                                 <div className={`pt-2 ${styles.publishedCourseDetails}`}>
-                                    <Switch defaultChecked onChange={handleChange} />
+                                    <Switch defaultChecked={editCourseData.isPurchasable} onChange={handlePublishCourse} />
                                     <p style={{ marginRight: '3px' }}>إغلاق صفحة الدورة</p>
                                 </div>
                             </div>
@@ -856,9 +852,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 <div className={styles.saveCourseBtnBox} >
                                     <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
                                 </div>
-                                <div className={`${styles.saveCourseBtnBox} mr-2`}>
+                                {/* <div className={`${styles.saveCourseBtnBox} mr-2`}>
                                     <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }} disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""} نشر الدورة</button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </>

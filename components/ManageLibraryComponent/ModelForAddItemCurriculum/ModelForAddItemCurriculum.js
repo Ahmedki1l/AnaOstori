@@ -71,7 +71,6 @@ const ModelForAddItemCurriculum = ({
         )
     }
     const handleClickOnIconCell = async (selectedFolder, index) => {
-        console.log(selectedFolder.name);
         setSelectedFolder(selectedFolder)
         setTableLoading(true)
         let body = {
