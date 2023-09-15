@@ -31,7 +31,6 @@ const ManageLibraryTableComponent = ({
     const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
 
-
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
@@ -40,18 +39,19 @@ const ManageLibraryTableComponent = ({
             setSelectedItem(item)
             setIsModelForAddItemOpen(true)
         }
-        setSelectedItem(item)
+        // setSelectedItem(item)
     };
 
     const handleEditFolder = async ({ name }) => {
         let editFolderBody = {
-            id: selectedItem?.id,
+            id: selectedFolder?.id,
             name: name,
-            type: selectedItem?.type,
+            type: selectedFolder?.type,
         }
         let data = {
             data: editFolderBody
         }
+        console.log(data);
         await updateFolderAPI(data).then((res) => {
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
@@ -70,7 +70,10 @@ const ManageLibraryTableComponent = ({
     }
 
     const onItemModelClose = (folderId) => {
+        console.log(folderId);
         getItemList(folderId)
+        setSelectedItem()
+        setIsModelForAddItemOpen(false)
     }
 
     const showItemListOfSelectedFolder = async (item) => {
@@ -87,6 +90,9 @@ const ManageLibraryTableComponent = ({
     }
     const handleDeleteFolderData = () => {
         console.log("deleteFolderData");
+    }
+    const handleItemAddModalOpen = () => {
+        setIsModelForAddItemOpen(true)
     }
 
     return (
@@ -156,7 +162,7 @@ const ManageLibraryTableComponent = ({
                         }
                     </table>
                     {(folderTableData.length == 0 && !loading) &&
-                        <Empty buttonText={'إضافة مجلد'} emptyText={'ما رفعت أي محتوى'} containerhight={450} />
+                        <Empty buttonText={'إضافة مجلد'} onClick={() => handleItemAddModalOpen()} emptyText={'ما رفعت أي محتوى'} containerhight={450} />
                     }
                     {loading &&
                         <div className={styles.tableBodyArea}>
@@ -178,7 +184,6 @@ const ManageLibraryTableComponent = ({
             />}
             {isModelForAddItemOpen && <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}
-                setIsModelForAddItemOpen={setIsModelForAddItemOpen}
                 selectedItem={selectedItem}
                 selectedFolder={selectedFolder}
                 folderType={folderType}

@@ -70,7 +70,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [discountValue, setDiscountValue] = useState()
     const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
     const iosProductIdList = PaymentConst.iosProductIdList
-    const [publishCourse, setPublishCourse] = useState(false)
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -369,7 +368,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             courseId: editCourseData.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
-            setPublishCourse(e)
         }).catch((error) => {
             console.log(error)
         })

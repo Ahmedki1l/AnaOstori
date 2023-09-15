@@ -53,7 +53,7 @@ export default function PhysicalCourseCard(props) {
 										<p className='pr-2'>
 											{metaData?.link ?
 												<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
-												: metaData.tailLinkName ?
+												: (metaData.tailLinkName && metaData.tailLink) ?
 													<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>
 													:
 													<span className={styles.listItemText}>{metaData.text}</span>

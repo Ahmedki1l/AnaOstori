@@ -17,6 +17,8 @@ import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import CustomButton from '../../CommonComponents/CustomButton'
+import { toastSuccessMessage } from '../../../constants/ar'
+import { toast } from 'react-toastify'
 
 
 
@@ -99,6 +101,7 @@ const TheStudent = (props) => {
 
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
+                toast.success(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch((error) => {
                 console.log(error)
@@ -106,6 +109,7 @@ const TheStudent = (props) => {
         }
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch((error) => {
                 console.log(error)

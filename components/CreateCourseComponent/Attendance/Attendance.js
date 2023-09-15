@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { dateRange, dateWithDay } from '../../../constants/DateConverter'
 import dayjs from 'dayjs'
 import { signOutUser } from '../../../services/fireBaseAuthService'
+import CustomButton from '../../CommonComponents/CustomButton'
+import Empty from '../../CommonComponents/Empty'
 
 export default function Attendance(props) {
     const [openQR, setOpenQR] = useState(false)
@@ -20,6 +22,8 @@ export default function Attendance(props) {
     const [dateArray, setDateArray] = useState([])
     const [attendanceData, setAttendanceData] = useState([])
     const [updatedAttendanceData, setUpdatedAttendanceData] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
+
     const dispatch = useDispatch();
 
     const storeData = useSelector((state) => state?.globalStore);
@@ -137,7 +141,6 @@ export default function Attendance(props) {
     const handleAttendanceSave = async () => {
         let body = {
             data: { data: [] }
-
         };
         updatedAttendanceData.map((attendance) => {
             return (
@@ -152,6 +155,7 @@ export default function Attendance(props) {
             )
         })
         await updateAttendanceDataAPI(body).then((res) => {
+            console.log(res);
         }).catch((error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -179,9 +183,19 @@ export default function Attendance(props) {
                     </FormItem>
                 </div>
                 <div className='flex'>
-                    <div className={`${styles.saveAttendanceBtn}`}>
-                        <button className='primarySolidBtn' onClick={(data) => handleAttendanceSave(data)}>يحفظ</button>
-                    </div>
+                    {updatedAttendanceData &&
+                        <div className={`${styles.saveAttendanceBtn}`}>
+                            <CustomButton
+                                btnText='حفظ'
+                                width={80}
+                                height={37}
+                                showLoader={showBtnLoader}
+                                fontSize={16}
+                                onClick={(data) => handleAttendanceSave(data)}
+                            />
+                            {/* <button className='primarySolidBtn' onClick={(data) => handleAttendanceSave(data)}>يحفظ</button> */}
+                        </div>
+                    }
                     <div className={styles.createQRBtnBox}>
                         <button className='primaryStrockedBtn' onClick={() => generateQR()}>عرض كود التحضير</button>
                         <Modal
@@ -197,21 +211,13 @@ export default function Attendance(props) {
                                 </div>
                                 <p className={`fontBold ${styles.createappointment}`}>{dateWithDay(new Date())}</p>
                             </div>
-                            <QRCode attendanceKey={attendanceKey} courseId={courseId} />
+                            {attendanceKey && <QRCode attendanceKey={attendanceKey} courseId={courseId} />}
                         </Modal>
                     </div>
                 </div>
             </div>
-            {/* {showAttendanceTable && <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />} */}
             {!showAttendanceTable &&
-                <div className={styles.tableBodyArea}>
-                    <div className={styles.noDataManiArea}>
-                        <div>
-                            <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                            <p className='fontBold py-2' style={{ fontSize: '20px' }}>مافي طلاب لهذه الفترة</p>
-                        </div>
-                    </div>
-                </div>
+                <Empty emptyText={'مافي طلاب لهذه الفترة'} fontSize={20} containerhight={400} />
             }
             {showAttendanceTable &&
                 <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />

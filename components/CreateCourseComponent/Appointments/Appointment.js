@@ -16,6 +16,8 @@ import dayjs from 'dayjs';
 import TimePicker from '../../antDesignCompo/TimePicker';
 import Switch from '../../../components/antDesignCompo/Switch';
 import CustomButton from '../../CommonComponents/CustomButton';
+import { toast } from 'react-toastify';
+import { inputErrorMessages, toastSuccessMessage } from '../../../constants/ar';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
@@ -59,10 +61,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await editAvailabilityAPI(body).then((res) => {
+                toast.success(toastSuccessMessage.appoitmentupdateSuccessMsg)
                 setIsModalOpen(false)
                 getAllAvailability()
                 setShowBtnLoader(false)
             }).catch((error) => {
+                toast.success(inputErrorMessages.tryAgainErrorMsg)
                 setShowBtnLoader(false)
                 console.log(error);
             })
@@ -71,10 +75,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 data: values,
             }
             await createCourseAvailabilityAPI(body).then((res) => {
+                toast.success(toastSuccessMessage.appoitmentCretedSuccessMsg)
                 setIsModalOpen(false)
                 getAllAvailability()
                 setShowBtnLoader(false)
             }).catch((error) => {
+                toast.success(inputErrorMessages.tryAgainErrorMsg)
                 console.log(error);
                 setShowBtnLoader(false)
             })

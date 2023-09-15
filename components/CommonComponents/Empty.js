@@ -11,7 +11,8 @@ const IconContainer = styled('div')`
 `
 
 const EmptyText = styled('p')`
-    font-size: ${props => (props.fontSize ? props.fontSize : '3')}px !important; 
+    font-size: ${props => (props.fontSize ? props.fontSize : '16')}px !important; 
+    font-weight: ${props => (props.fontSize ? props.fontSize : '600')} !important; 
     color: #000000;
     margin:10px 0;
 `
@@ -26,14 +27,16 @@ function Empty({
     onClick,
     buttonText,
     emptyText,
-    containerhight
+    containerhight,
+    fontSize,
+    fontWeight,
 }) {
     return (
         <>
             <IconContainer containerhight={containerhight}>
                 <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                <EmptyText fontSize={16}>{emptyText}</EmptyText>
-                <StyledButton className={'primarySolidBtn'} onClick={onClick}>{buttonText}</StyledButton>
+                <EmptyText fontSize={fontSize} >{emptyText}</EmptyText>
+                {buttonText && <StyledButton className={'primarySolidBtn'} onClick={onClick}>{buttonText}</StyledButton>}
             </IconContainer>
         </>
     )

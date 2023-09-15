@@ -52,6 +52,7 @@ function Index() {
             folderType: selectedItem,
         }
         await getFolderListAPI(data).then((res) => {
+            console.log(res);
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch((error) => {
@@ -73,6 +74,7 @@ function Index() {
             folderId: folderId
         }
         await getItemListAPI(body).then((res) => {
+            console.log(res);
             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch((error) => {
@@ -108,8 +110,9 @@ function Index() {
         // don't delete 
     }
     const handleModelClose = (folderId) => {
+        console.log(folderId);
         setIsModelForAddItemOpen(false)
-        getfolderList(folderId)
+        getItemList(folderId)
     }
 
     return (
@@ -178,7 +181,6 @@ function Index() {
                 <ModelForAddItemLibrary
                     isModelForAddItemOpen={isModelForAddItemOpen}
                     folderType={selectedItem}
-                    setIsModelForAddItemOpen={setIsModelForAddItemOpen}
                     selectedFolderId={selectedFolderId}
                     onCloseModal={handleModelClose}
                 />}
