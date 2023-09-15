@@ -28,19 +28,56 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                     <p className={`fontBold ${styles.addCategory}`}>app version control</p>
                 </div>
-                <Form>
-                    <FormItem
-                        name={'name'}
-                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
-                    >
-                        <Input
-                            fontSize={16}
-                            width={352}
-                            height={40}
-                            placeholder="العنوان"
-                        />
-                    </FormItem>
-                </Form>
+                <div dir='rtl'>
+                    <Form>
+                        <div className={styles.createAppointmentFields}>
+                            <FormItem
+                                name={'name'}
+                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                            >
+                                <Input
+                                    fontSize={16}
+                                    width={352}
+                                    height={40}
+                                    placeholder="العنوان"
+                                />
+                            </FormItem>
+                            <FormItem
+                                name={'name'}
+                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                            >
+                                <Input
+                                    fontSize={16}
+                                    width={352}
+                                    height={40}
+                                    placeholder="العنوان"
+                                />
+                            </FormItem>
+                            <FormItem
+                                name={'name'}
+                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                            >
+                                <Input
+                                    fontSize={16}
+                                    width={352}
+                                    height={40}
+                                    placeholder="العنوان"
+                                />
+                            </FormItem>
+                            <FormItem
+                                name={'name'}
+                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                            >
+                                <Input
+                                    fontSize={16}
+                                    width={352}
+                                    height={40}
+                                    placeholder="العنوان"
+                                />
+                            </FormItem>
+                        </div>
+                    </Form>
+                </div>
             </Modal>
         </div>
     )
