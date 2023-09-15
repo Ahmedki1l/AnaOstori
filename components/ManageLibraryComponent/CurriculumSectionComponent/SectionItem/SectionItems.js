@@ -3,32 +3,17 @@ import styles from './SectionItems.module.scss'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import Icon from '../../../CommonComponents/Icon'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import { Modal } from 'antd'
-import styled from 'styled-components'
 import { mediaUrl } from '../../../../constants/DataManupulation'
 import ModelForDeleteItems from '../../ModelForDeleteItems/ModelForDeleteItems'
 import { updateItemOfSectionAPI } from '../../../../services/apisService'
+import ModalForVideo from '../../../CommonComponents/ModalForVideo/ModalForVideo'
 
-
-const StylesModal = styled(Modal)`
-    .ant-modal-close{
-        display:none;
-    }
-    .ant-modal-content{
-        border-radius: 5px;
-        padding: 0px;
-        overflow:hidden;
-    }
-    .ant-modal-body {
-        height: 800px;
-    }
-`
 
 const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setDeleteItemSectionId, sectionId }) => {
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [sectionItemList, setSectionItemList] = useState(itemList)
+    const [videoModalOpen, setVideoModalOpen] = useState(false)
     const [fileSrc, setFileSrc] = useState()
-    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         setSectionItemList(itemList?.sort((a, b) => a.sectionItem?.order - b.sectionItem?.order))
@@ -86,7 +71,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
     const handleOpenPdfModel = (item) => {
         if (item.type == 'video') {
             setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
-            setOpen(true);
+            setVideoModalOpen(true);
         }
         else if (item.type == 'file') {
             window.open(mediaUrl(item.linkBucket, item.linkKey))
@@ -95,10 +80,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
             window.open(item.linkKey)
         }
     };
-    const handleClose = () => {
-        setOpen(false);
-        setFileSrc(undefined)
-    };
+
 
     return (
         <>
@@ -163,20 +145,13 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                     deleteItemType={'sectionItem'}
                     onDelete={handleDeleteSectionItem}
                 />}
-            <StylesModal
-                footer={false}
-                closeIcon={false}
-                open={open}
-                width={1200}
-                onCancel={handleClose}
-            >
-                <div className='videoCloseIcon' onClick={handleClose}>
-                    <AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />
-                </div>
-                <video controls width="100%" height="100%">
-                    <source src={fileSrc} type="video/mp4" />
-                </video>
-            </StylesModal>
+            {videoModalOpen &&
+                <ModalForVideo
+                    videoModalOpen={videoModalOpen}
+                    setVideoModalOpen={setVideoModalOpen}
+                    sourceFile={fileSrc}
+                />
+            }
         </>
     )
 }
