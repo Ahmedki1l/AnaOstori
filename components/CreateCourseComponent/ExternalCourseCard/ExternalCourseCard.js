@@ -10,16 +10,15 @@ import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaDataAPI } from '../../../services/apisService'
 import { updateCourseDetailsAPI } from '../../../services/apisService';
-import Image from 'next/image';
-import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import CustomButton from '../../CommonComponents/CustomButton';
+import { toastSuccessMessage } from '../../../constants/ar';
+import { toast } from 'react-toastify';
 
 
 
 const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
-
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
@@ -93,6 +92,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
             const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
             setShowLoader(false)
+            toast.success(toastSuccessMessage.externalCourseDetailCreateMsg)
             setSelectedItem(3)
             externalCourseForm.resetFields()
         } catch (error) {
@@ -134,10 +134,10 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
-            console.log(updateCourseCardMetaData.data);
             setCourseDetail(updateCourseCardMetaData.data)
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
             setShowLoader(false)
+            toast.success(toastSuccessMessage.externalCourseDetailUpdateMsg)
         } catch (error) {
             setShowLoader(false)
             console.log(error);
@@ -157,7 +157,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             data.CourseCardMetaData.splice(index, 1)
             setCourseDetail(data)
         } else {
-            console.log(160);
             let body = {
                 data: {
                     type: 'courseCard',
@@ -177,7 +176,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             })
         }
     }
-
     const handleCourseDetailDiscription = (e, fieldname, arrayName, index) => {
         let data = { ...courseDetail }
         if (arrayName == null) {
@@ -262,7 +260,8 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                         </FormItem>
                                                         <FormItem
                                                             name={[name, 'tailLink']}
-                                                            rules={[{ required: field?.tailLinkName ? true : false, message: 'Please Enter TailLink' }]} >
+                                                            rules={[{ required: field?.tailLinkName ? true : false, message: 'Please Enter TailLink' }]}
+                                                        >
                                                             <Input
                                                                 height={47}
                                                                 width={292}

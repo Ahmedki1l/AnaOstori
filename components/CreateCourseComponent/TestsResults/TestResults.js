@@ -12,6 +12,8 @@ import { mediaUrl } from '../../../constants/DataManupulation'
 import SearchInput from '../../antDesignCompo/SearchInput'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import CustomButton from '../../CommonComponents/CustomButton'
+import { toastSuccessMessage } from '../../../constants/ar'
+import { toast } from 'react-toastify'
 
 const TestResults = (props) => {
 
@@ -124,20 +126,24 @@ const TestResults = (props) => {
         let updateAPIBody = {
             data: updateDataBody
         }
-
-        await createStudentExamDataAPI(createAPIBody).then((res) => {
-            setShowBtnLoader(false)
-        }).catch((error) => {
-            console.log(error)
-            setShowBtnLoader(false)
-        })
-        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-            setShowBtnLoader(false)
-        }).catch((error) => {
-            console.log(error)
-            setShowBtnLoader(false)
-        })
-
+        if (createAPIBody.length > 0) {
+            await createStudentExamDataAPI(createAPIBody).then((res) => {
+                toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                setShowBtnLoader(false)
+            }).catch((error) => {
+                console.log(error)
+                setShowBtnLoader(false)
+            })
+        }
+        else {
+            await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                setShowBtnLoader(false)
+            }).catch((error) => {
+                console.log(error)
+                setShowBtnLoader(false)
+            })
+        }
     }
 
     const onInputChange = (e, index, type) => {

@@ -12,16 +12,15 @@ import { uploadFileSevices } from '../../../services/UploadFileSevices';
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
-    setIsModelForAddItemOpen,
     selectedFolder,
     folderType,
     selectedFolderId,
     selectedItem,
     onCloseModal,
-}) => {
 
+}) => {
     const [ItemDetailsForm] = Form.useForm();
-    const isEdit = selectedFolder != undefined ? true : false
+    const isEdit = selectedItem?.id ? true : false
     const [uploadLoader, setUploadLoader] = useState(false)
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
@@ -30,7 +29,7 @@ const ModelForAddItemLibrary = ({
         ItemDetailsForm.setFieldsValue(selectedItem)
         setFileName(selectedItem?.linkKey)
     }, [selectedItem])
-
+    console.log(fileName);
     const getFileKey = async (e) => {
         setUploadLoader(true)
         await uploadFileSevices(e.target.files[0]).then((res) => {
@@ -83,12 +82,12 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
+            console.log(res);
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
         }).catch((error) => {
             console.log(error);
         })
         ItemDetailsForm.resetFields()
-        setIsModelForAddItemOpen(false);
     }
     const editFolderItems = async (e) => {
         let body = {}
@@ -121,11 +120,11 @@ const ModelForAddItemLibrary = ({
             console.log(error);
         })
         ItemDetailsForm.resetFields()
-        setIsModelForAddItemOpen(false);
     }
 
     const onModelClose = () => {
-        setIsModelForAddItemOpen(false)
+        ItemDetailsForm.resetFields()
+        onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
     }
 
     const handleRemoveFile = () => {
@@ -137,7 +136,7 @@ const ModelForAddItemLibrary = ({
             <Modal
                 className='addAppoinmentModal'
                 open={isModelForAddItemOpen}
-                // onCancel={() => onModelClose()}
+                onCancel={() => onModelClose()}
                 closeIcon={false}
                 footer={false}>
 

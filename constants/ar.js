@@ -45,6 +45,13 @@ export const toastSuccessMessage = {
     accountRestoredMsg: 'تم استعادة الحساب بنجاح', //'Account restored successfully'
     copiedMsg: "تم النسخ", //"copied"
     forgotPasswordLinkSend: " تم ارسال رابط الى ايميلك لتغيير كلمة السر", //A link has been sent to your email to change your password.
-    coursesgcreatedSuccessFullMsg: "Course details have created successfully.",
+    coursesgcreatedSuccessFullMsg: "Course details  created successfully.",
     courseDetailUpdateMsg: "تم تحديث تفاصيل الدورة بنجاح", //Course details have been updated successfully.
+    externalCourseDetailCreateMsg: 'course details created successfully',
+    externalCourseDetailUpdateMsg: 'courese details updated successfully',
+    appoitmentCretedSuccessMsg: 'appoitment has been created successfully',
+    appoitmentupdateSuccessMsg: 'appoitment has been updated successfully',
+    examCreateSuccessMsg: 'student examData created successfully',
+    examUpdateSuccessMsg: 'student examData updated successfully',
+
 }
