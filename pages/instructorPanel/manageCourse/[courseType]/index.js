@@ -71,8 +71,8 @@ export default function Index() {
                     backpathForPage={true}
                     backPathArray={
                         [
-                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/manageCourse/' },
-                            { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel' },
+                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                            { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel/manageCourse/' },
                             { lable: 'الدورات الحضورية', link: null }
                         ]
                     }

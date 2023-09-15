@@ -11,6 +11,7 @@ import ProfilePicture from '../../CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import SearchInput from '../../antDesignCompo/SearchInput'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import CustomButton from '../../CommonComponents/CustomButton'
 
 const TestResults = (props) => {
 
@@ -23,6 +24,7 @@ const TestResults = (props) => {
     const [selectedAvailability, setSelectedAvailability] = useState()
     const [studentList, setStudentList] = useState()
     const [updatedStudentList, setUpdatedStudentList] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
 
     const allavailability = availabilityList?.map((obj) => {
         return {
@@ -81,6 +83,7 @@ const TestResults = (props) => {
     }
 
     const saveStudentExamDetails = async () => {
+        setShowBtnLoader(true)
         const createDataBody = [];
         const updateDataBody = [];
 
@@ -123,12 +126,16 @@ const TestResults = (props) => {
         }
 
         await createStudentExamDataAPI(createAPIBody).then((res) => {
+            setShowBtnLoader(false)
         }).catch((error) => {
             console.log(error)
+            setShowBtnLoader(false)
         })
         await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+            setShowBtnLoader(false)
         }).catch((error) => {
             console.log(error)
+            setShowBtnLoader(false)
         })
 
     }
@@ -251,7 +258,16 @@ const TestResults = (props) => {
                     </table>
                     {updatedStudentList.length > 0 &&
                         <div className='flex'>
-                            <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentExamDetails()}> حفظ </button>
+                            <div className='pt-5'>
+                                <CustomButton
+                                    btnText='حفظ'
+                                    width={80}
+                                    height={37}
+                                    showLoader={showBtnLoader}
+                                    fontSize={16}
+                                    onClick={saveStudentExamDetails}
+                                />
+                            </div>
                         </div>
                     }
                 </div>

@@ -14,6 +14,7 @@ import Image from 'next/image';
 import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 import { signOutUser } from '../../../services/fireBaseAuthService';
+import CustomButton from '../../CommonComponents/CustomButton';
 
 
 
@@ -28,26 +29,27 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setCourseCardMetaDataObj()
+        // setCourseCardMetaDataObj()
         if (isCourseEdit && editCourseData.CourseCardMetaData) {
             externalCourseForm.setFieldsValue(editCourseData)
         }
-    }, [isCourseEdit, externalCourseForm, editCourseData])
+    }, [])
 
     const setCourseCardMetaDataObj = () => {
         let data = { ...courseDetail }
-
         if (data.CourseCardMetaData == undefined) {
             data.CourseCardMetaData = []
+        } else {
+            console.log(43);
+            data.CourseCardMetaData.push(JSON.parse(JSON.stringify({
+                icon: '',
+                link: '',
+                text: '',
+                tailLinkName: '',
+                tailLink: '',
+                grayedText: '',
+            })))
         }
-        data.CourseCardMetaData.push(JSON.parse(JSON.stringify({
-            icon: '',
-            link: '',
-            text: '',
-            tailLinkName: '',
-            tailLink: '',
-            grayedText: '',
-        })))
         setCourseDetail(data)
     }
 
@@ -107,7 +109,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
 
     const editCourseCardMetaData = async (values) => {
         const cardDescription = values.cardDescription
-
         let CourseCardMetaData = values.CourseCardMetaData.map((obj, index) => {
             delete obj.createdAt
             delete obj.updatedAt
@@ -133,6 +134,8 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
+            console.log(updateCourseCardMetaData.data);
+            setCourseDetail(updateCourseCardMetaData.data)
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
             setShowLoader(false)
         } catch (error) {
@@ -151,7 +154,10 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         let data = { ...courseDetail }
         if (data.CourseCardMetaData[index].id == undefined) {
             remove(name)
+            data.CourseCardMetaData.splice(index, 1)
+            setCourseDetail(data)
         } else {
+            console.log(160);
             let body = {
                 data: {
                     type: 'courseCard',
@@ -161,10 +167,9 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             }
 
             await deleteCourseTypeAPI(body).then((res) => {
-                data.CourseCardMetaData.splice(index, 1)
-                setCourseDetail(data)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                setCourseDetail(editCourseData)
                 setShowLoader(false)
             }).catch((error) => {
                 setShowLoader(false)
@@ -208,7 +213,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                 <p className={styles.secDetails}>تفاصيل ثانية</p>
                                                 <p className={styles.addDetails} onClick={() => { add(), setCourseCardMetaDataObj() }} >+ إضافة</p>
                                             </div>
-                                            {field.map(({ name, key }, index) => (
+                                            {field.map(({ name, key, ...restField }, index) => (
                                                 <div className={styles.courseDetails} key={key}>
                                                     <FormItem>
                                                         <div style={{ margin: '10px' }} >
@@ -217,6 +222,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                     </FormItem>
                                                     <div className='flex flex-wrap w-[95%]'>
                                                         <FormItem
+                                                            {...restField}
                                                             name={[name, 'icon']}
                                                             rules={[{ required: true, message: 'Please Select Icon' }]} >
                                                             <SelectIcon
@@ -292,12 +298,15 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                     )}
                                 </Form.List>
                             </div>
-
-                            <FormItem>
-                                <div className={styles.saveCourseBtnBox}>
-                                    <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
-                                </div>
-                            </FormItem>
+                            <div className={styles.saveCourseBtnBox}>
+                                <CustomButton
+                                    width={80}
+                                    height={37}
+                                    showLoader={showLoader}
+                                    btnText='حفظ'
+                                    fontSize={16}
+                                />
+                            </div>
                         </div>
                     </div >
                 </Form >

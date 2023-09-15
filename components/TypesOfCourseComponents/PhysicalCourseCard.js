@@ -51,7 +51,7 @@ export default function PhysicalCourseCard(props) {
 									</div>
 									<div className='flex'>
 										<p className='pr-2'>
-											{metaData.link ?
+											{metaData?.link ?
 												<Link href={`${metaData.link}` ?? ""} className={`link ${styles.listItemText}`} target='_blank'>{metaData.text}</Link>
 												: metaData.tailLinkName ?
 													<span className={styles.listItemText}>{metaData.text} <Link href={metaData.tailLink}>{metaData.tailLinkName}</Link> </span>

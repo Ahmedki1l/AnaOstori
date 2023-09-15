@@ -14,3 +14,25 @@
 .addCategory {
     font-size: 18px;
 }
+
+.createAppVersionFields {
+    padding: 14px 18px 0px 0px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.AppVersionBorderBottom {
+    direction: rtl;
+    display: flex;
+    padding: 3px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+    padding: 4px 9px 7px 0;
+}
+
+.createAppointmentBtnBox {
+    height: 35px;
+    margin: 8px;
+
+    button {
+        font-size: 16px;
+    }
+}
