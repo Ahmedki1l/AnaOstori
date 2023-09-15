@@ -64,6 +64,15 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
             }]
         }
         await updateItemOfSectionAPI(body).then((res) => {
+            const freeUsageItem = sectionItemList.map((item) => {
+                if (e.id === item.id) {
+                    item.sectionItem.freeUsage = !item.sectionItem.freeUsage
+                    return item
+                }
+                return item
+            })
+            setSectionItemList(freeUsageItem)
+            console.log(freeUsageItem);
         }).catch((error) => {
             console.log(error);
         })
