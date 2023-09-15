@@ -1,17 +1,44 @@
 import { Modal } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { Form, FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import styles from './ManageAppVersion.module.scss'
+import axios from 'axios'
 
 
 const ManageAppVersionModel = ({ isModelForAppVersion,
     setIsModelforAppVersion
 }) => {
 
+    const [appVersionForm] = Form.useForm()
+    const [formValues, setFormValues] = useState({
+        androidCurrentVersion: '',
+        androidMinVersion: '',
+        iosCurrentVersion: '',
+        iosMinVersion: '',
+    });
+
+
+    useState(async () => {
+        axios.get(`${process.env.API_BASE_URL}/home/metadata`).then((res) => {
+            const updatedFormValues = {};
+            res?.data.forEach(item => {
+                updatedFormValues[item.key] = item.value;
+            });
+            setFormValues(updatedFormValues);
+            appVersionForm.setFieldsValue(updatedFormValues)
+        }).catch((err) => {
+            console.log(err);
+        })
+    }, [])
+
     const isModelClose = () => {
         setIsModelforAppVersion(false)
+    }
+
+    const onFinish = (values) => {
+        console.log(values);
     }
 
     return (
@@ -29,52 +56,59 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                     <p className={`fontBold ${styles.addCategory}`}>app version control</p>
                 </div>
                 <div dir='rtl'>
-                    <Form>
-                        <div className={styles.createAppointmentFields}>
+                    <Form form={appVersionForm} onFinish={onFinish}>
+                        <div className={styles.createAppVersionFields}>
+                            <p className={` ${styles.addCategory}`}>Android app version </p>
                             <FormItem
-                                name={'name'}
+                                name={'androidCurrentVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="العنوان"
+                                    placeholder='androidCurrentVersion'
                                 />
                             </FormItem>
                             <FormItem
-                                name={'name'}
+                                name={'androidMinVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="العنوان"
+                                    placeholder='androidMinVersion'
                                 />
                             </FormItem>
+                            <p className={` ${styles.addCategory}`}>IOS app version </p>
                             <FormItem
-                                name={'name'}
+                                name={'iosCurrentVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="العنوان"
+                                    placeholder='iosCurrentVersion'
                                 />
                             </FormItem>
                             <FormItem
-                                name={'name'}
+                                name={'iosMinVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="العنوان"
+                                    placeholder='iosMinVersion'
                                 />
                             </FormItem>
+                        </div>
+                        <div className={styles.AppVersionBorderBottom}>
+                            <div className={styles.createAppointmentBtnBox}>
+                                <button className='primarySolidBtn' type={'submit'}>حفظ</button>
+                            </div>
                         </div>
                     </Form>
                 </div>

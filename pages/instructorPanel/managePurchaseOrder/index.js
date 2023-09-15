@@ -8,6 +8,7 @@ import PurchaseOrderDrawer from "../../../components/ManagePurchaseOrderItem/Pur
 import styled from "styled-components";
 import * as paymentConst from "../../../constants/PaymentConst"
 import Link from "next/link";
+import BackToPath from "../../../components/CommonComponents/BackToPath";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -20,7 +21,6 @@ const Index = () => {
     const [paginationConfig, setPaginationConfig] = useState()
     const [selectedOrder, setSelectedOrder] = useState()
     const paymentStatus = paymentConst.paymentStatus
-
 
     const tableColumns = [
         {
@@ -130,7 +130,6 @@ const Index = () => {
             order: "createdAt DESC"
         }
         await managePurchaseOrdersAPI(data).then((res) => {
-            console.log(res);
             setPaginationConfig({
                 pageSize: 10,
                 total: res.data.totalItems,
@@ -161,6 +160,17 @@ const Index = () => {
 
     return (
         <div className="maxWidthDefault">
+            <div style={{ height: 40 }}>
+                <BackToPath
+                    backpathForPage={true}
+                    backPathArray={
+                        [
+                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                            { lable: 'متابعة وتحديث حالة المشتريات', link: null },
+                        ]
+                    }
+                />
+            </div>
             <ConfigProvider direction="rtl">
                 <Table
                     columns={tableColumns}

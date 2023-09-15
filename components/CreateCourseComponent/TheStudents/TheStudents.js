@@ -16,6 +16,7 @@ import { fullDate } from '../../../constants/DateConverter';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import CustomButton from '../../CommonComponents/CustomButton'
 
 
 
@@ -35,6 +36,7 @@ const TheStudent = (props) => {
     const [selectedStudent, setSelectedStudent] = useState()
     const [selectedAvailabilityId, setSelectedAvailabilityId] = useState()
     const [studentDetailsForm] = Form.useForm()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
 
     const allavailability = availabilityList?.map((obj) => {
         return {
@@ -55,6 +57,7 @@ const TheStudent = (props) => {
     }
 
     const saveStudentExamDetails = async () => {
+        setShowBtnLoader(true)
         const createDataBody = []
         const updateDataBody = []
         examList.forEach((newObj) => {
@@ -96,12 +99,14 @@ const TheStudent = (props) => {
 
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
+                setShowBtnLoader(false)
             }).catch((error) => {
                 console.log(error)
             })
         }
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                setShowBtnLoader(false)
             }).catch((error) => {
                 console.log(error)
             })
@@ -300,8 +305,15 @@ const TheStudent = (props) => {
                 </div>
             }
             {showStudentDetails &&
-                <div className='flex'>
-                    <button className={styles.studentDetailsSave} height={14} width={14} type={'submit'} onClick={() => saveStudentExamDetails()}> حفظ </button>
+                <div className='pt-5'>
+                    <CustomButton
+                        btnText='حفظ'
+                        width={80}
+                        height={37}
+                        showLoader={showBtnLoader}
+                        fontSize={16}
+                        onClick={saveStudentExamDetails}
+                    />
                 </div>
             }
         </div>

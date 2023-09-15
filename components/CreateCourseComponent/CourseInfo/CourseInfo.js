@@ -12,13 +12,12 @@ import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCour
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
-import Image from 'next/image'
-import loader from '../../../public/icons/loader.svg'
 import { deleteNullFromObj, mediaUrl } from '../../../constants/DataManupulation';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import * as PaymentConst from '../../../constants/PaymentConst'
 import Switch from '../../antDesignCompo/Switch';
 import UploadFile from '../../CommonComponents/UploadFileForCourse/UploadFile';
+import CustomButton from '../../CommonComponents/CustomButton';
 
 
 
@@ -71,6 +70,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const [discountValue, setDiscountValue] = useState()
     const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
     const iosProductIdList = PaymentConst.iosProductIdList
+    const [publishCourse, setPublishCourse] = useState(false)
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -137,6 +137,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: values,
             }
             await createCourseByInstructorAPI(body).then((res) => {
+                toast.success(toastSuccessMessage.coursesgcreatedSuccessFullMsg)
                 setShowExtraNavItem(true)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)
@@ -184,6 +185,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 } else {
                     await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
                 }
+                toast.success(toastSuccessMessage.coursesgcreatedSuccessFullMsg)
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
                 setShowLoader(false)
@@ -367,9 +369,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             courseId: editCourseData.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
+            setPublishCourse(e)
         }).catch((error) => {
             console.log(error)
         })
+    }
+
+    const handlePurchasableCourse = async (e) => {
+
     }
 
     return (
@@ -837,23 +844,24 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     </Form.List>
                                 </div>
                                 <div className={styles.publishedCourseDetails}>
-                                    <Switch defaultChecked={editCourseData.published} onChange={handlePublishCourse} />
+                                    <Switch defaultChecked={editCourseData?.published} onChange={handlePublishCourse} />
                                     <p style={{ marginRight: '3px' }}>نشر الدورة</p>
                                 </div>
                                 <div className={`pt-2 ${styles.publishedCourseDetails}`}>
-                                    <Switch defaultChecked={editCourseData.isPurchasable} onChange={handlePublishCourse} />
+                                    <Switch defaultChecked={editCourseData?.isPurchasable} onChange={handlePurchasableCourse} />
                                     <p style={{ marginRight: '3px' }}>إغلاق صفحة الدورة</p>
                                 </div>
                             </div>
                         </div>
                         <div className="w-[95%] px-6" >
                             <div className='flex'>
-                                <div className={styles.saveCourseBtnBox} >
-                                    <button className='primarySolidBtn flex items-center' htmltype='submit' disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}حفظ</button>
-                                </div>
-                                {/* <div className={`${styles.saveCourseBtnBox} mr-2`}>
-                                    <button className={`primaryStrockedBtn`} onClick={() => { handlepublishedCourse(), onFinishCreateCourse }} disabled={showLoader}>{showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""} نشر الدورة</button>
-                                </div> */}
+                                <CustomButton
+                                    width={80}
+                                    height={37}
+                                    showLoader={showLoader}
+                                    btnText='حفظ'
+                                    fontSize={16}
+                                />
                             </div>
                         </div>
                     </>

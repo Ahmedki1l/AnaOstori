@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './Appointment.module.scss'
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { Form, FormItem } from '../../antDesignCompo/FormItem';
 import Select from '../../antDesignCompo/Select';
@@ -15,21 +15,21 @@ import { dateRange, fullDate, timeDuration } from '../../../constants/DateConver
 import dayjs from 'dayjs';
 import TimePicker from '../../antDesignCompo/TimePicker';
 import Switch from '../../../components/antDesignCompo/Switch';
+import CustomButton from '../../CommonComponents/CustomButton';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
-    // const [allAppointments, setAllAppointments] = useState([])
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
     const allAppointments = storeData?.availabilityList;
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
-    const dispatch = useDispatch();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
 
     const instructor = instructorList?.map((obj) => {
         return {
@@ -39,16 +39,13 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         }
     });
 
-    // useEffect(() => {
-    //     getAllAvailability()
-    // }, [])
-
     const onChange = (checked) => {
     };
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
     const onFinish = async (values) => {
+        setShowBtnLoader(true)
         values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
@@ -64,7 +61,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             await editAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
                 getAllAvailability()
+                setShowBtnLoader(false)
             }).catch((error) => {
+                setShowBtnLoader(false)
                 console.log(error);
             })
         } else {
@@ -74,27 +73,14 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             await createCourseAvailabilityAPI(body).then((res) => {
                 setIsModalOpen(false)
                 getAllAvailability()
+                setShowBtnLoader(false)
             }).catch((error) => {
                 console.log(error);
+                setShowBtnLoader(false)
             })
         }
         appointmentForm.resetFields()
     }
-
-    // const getAllAvailability = async () => {
-    //     let body = {
-    //         courseId: courseId,
-    //     }
-    //     await getAllAvailabilityAPI(body).then((res) => {
-    //         setAllAppointments(res?.data)
-    //         dispatch({
-    //             type: 'SET_AllAVAILABILITY',
-    //             availabilityList: res?.data,
-    //         })
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     })
-    // }
 
     const editAppointment = (appointment) => {
         setIsModalOpen(true)
@@ -350,7 +336,13 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                             </div>}
                         </div>
                         <div className={styles.createAppointmentBtnBox}>
-                            <button key='modalFooterBtn' className={styles.construction} type={'submit'} >إنشاء</button>
+                            <CustomButton
+                                btnText={'إنشاء'}
+                                width={80}
+                                height={37}
+                                showLoader={showBtnLoader}
+                                fontSize={16}
+                            />
                         </div>
                     </Form>
                 </Modal>
