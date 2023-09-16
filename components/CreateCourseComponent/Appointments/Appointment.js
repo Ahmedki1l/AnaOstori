@@ -17,7 +17,7 @@ import TimePicker from '../../antDesignCompo/TimePicker';
 import Switch from '../../../components/antDesignCompo/Switch';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { toast } from 'react-toastify';
-import { inputErrorMessages, toastSuccessMessage } from '../../../constants/ar';
+import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
@@ -61,12 +61,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await editAvailabilityAPI(body).then((res) => {
-                toast.success(toastSuccessMessage.appoitmentupdateSuccessMsg)
+                toast.success(toastSuccessMessage.attendanceUpdateSuccessMsg)
                 setIsModalOpen(false)
                 getAllAvailability()
                 setShowBtnLoader(false)
             }).catch((error) => {
-                toast.success(inputErrorMessages.tryAgainErrorMsg)
+                toast.error(toastErrorMessage.tryAgainErrorMsg)
                 setShowBtnLoader(false)
                 console.log(error);
             })
@@ -80,7 +80,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 getAllAvailability()
                 setShowBtnLoader(false)
             }).catch((error) => {
-                toast.success(inputErrorMessages.tryAgainErrorMsg)
+                toast.error(toastErrorMessage.tryAgainErrorMsg)
                 console.log(error);
                 setShowBtnLoader(false)
             })

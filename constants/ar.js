@@ -16,7 +16,6 @@ export const inputErrorMessages = {
     allowedFilesTypeMsg: 'الملفات المسموحة هي pdf, png ,jpg', //'Allowed files are pdf, png and jpg'
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
-    tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
 }
 export const inputSuccessMessages = {
     discountAppliedMsg: "تم تطبيق الخصم بنجاح", //The discount has been applied successfully
@@ -32,6 +31,7 @@ export const toastErrorMessage = {
     sameFileError: "this item already exist in this section",
     addCategoryMsg: "catagory added successfully",
     updateCatagoryMsg: "catagory updated successfully",
+    tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
 }
 
 export const toastSuccessMessage = {
@@ -45,13 +45,14 @@ export const toastSuccessMessage = {
     accountRestoredMsg: 'تم استعادة الحساب بنجاح', //'Account restored successfully'
     copiedMsg: "تم النسخ", //"copied"
     forgotPasswordLinkSend: " تم ارسال رابط الى ايميلك لتغيير كلمة السر", //A link has been sent to your email to change your password.
-    coursesgcreatedSuccessFullMsg: "Course details  created successfully.",
     courseDetailUpdateMsg: "تم تحديث تفاصيل الدورة بنجاح", //Course details have been updated successfully.
+    coursesgcreatedSuccessFullMsg: "Course details created successfully.",
     externalCourseDetailCreateMsg: 'course details created successfully',
     externalCourseDetailUpdateMsg: 'courese details updated successfully',
     appoitmentCretedSuccessMsg: 'appoitment has been created successfully',
-    appoitmentupdateSuccessMsg: 'appoitment has been updated successfully',
+    appoitmentUpdateSuccessMsg: 'appoitment has been updated successfully',
     examCreateSuccessMsg: 'student examData created successfully',
     examUpdateSuccessMsg: 'student examData updated successfully',
+    attendanceUpdateSuccessMsg: 'attendance has been updated successfully',
 
 }
