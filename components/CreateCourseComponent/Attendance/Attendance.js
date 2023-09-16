@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import styles from './Attendance.module.scss'
 import { generateAttendanceQRAPI, getAttendanceListAPI, updateAttendanceDataAPI } from '../../../services/apisService'
-import { Modal } from 'antd'
 import QRCode from '../../CommonComponents/QRCode/QRCode'
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import AttendanceTable from './AttendanceTableComponent/AttendanceTable'
@@ -13,6 +11,8 @@ import dayjs from 'dayjs'
 import { signOutUser } from '../../../services/fireBaseAuthService'
 import CustomButton from '../../CommonComponents/CustomButton'
 import Empty from '../../CommonComponents/Empty'
+import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
+import { toast } from 'react-toastify'
 
 export default function Attendance(props) {
     const [openQR, setOpenQR] = useState(false)
@@ -44,6 +44,7 @@ export default function Attendance(props) {
         await generateAttendanceQRAPI().then((res) => {
             setAttendanceKey(res?.data?.key)
         }).catch((error) => {
+            toast.error(toastErrorMessage.tryAgainErrorMsg)
             console.log(error);
             if (error?.response?.status == 401) {
                 signOutUser()
@@ -86,7 +87,6 @@ export default function Attendance(props) {
             const existingDates = student.attendances.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
             for (let i = 0; i < datesArray.length; i++) {
                 const date = datesArray[i].date;
-
                 if (existingDates.includes(dayjs(date).format('DD/MM/YYYY'))) {
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
@@ -95,8 +95,7 @@ export default function Attendance(props) {
                         id: student.attendances[i].id
                     };
                     studentData.attendanceDetails.push(attendanceDetail);
-                }
-                else if (dayjs(date).startOf('day') < dayjs(new Date()).startOf('day')) {
+                } else if (dayjs(date).startOf('day') < dayjs(new Date()).startOf('day')) {
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
                         date: date,
@@ -104,8 +103,7 @@ export default function Attendance(props) {
                         id: null,
                     };
                     studentData.attendanceDetails.push(attendanceDetail)
-                }
-                else {
+                } else {
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
                         date: date,
@@ -139,6 +137,7 @@ export default function Attendance(props) {
     }
 
     const handleAttendanceSave = async () => {
+        setShowBtnLoader(true)
         let body = {
             data: { data: [] }
         };
@@ -156,7 +155,11 @@ export default function Attendance(props) {
         })
         await updateAttendanceDataAPI(body).then((res) => {
             console.log(res);
+            setShowBtnLoader(false)
+            toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
         }).catch((error) => {
+            toast.error(toastErrorMessage.tryAgainErrorMsg)
+            setShowBtnLoader(false)
             console.log(error);
             if (error?.response?.status == 401) {
                 signOutUser()
@@ -193,31 +196,16 @@ export default function Attendance(props) {
                                 fontSize={16}
                                 onClick={(data) => handleAttendanceSave(data)}
                             />
-                            {/* <button className='primarySolidBtn' onClick={(data) => handleAttendanceSave(data)}>يحفظ</button> */}
                         </div>
                     }
                     <div className={styles.createQRBtnBox}>
                         <button className='primaryStrockedBtn' onClick={() => generateQR()}>عرض كود التحضير</button>
-                        <Modal
-                            className='addAppoinmentModal'
-                            open={openQR}
-                            closeIcon={false}
-                            footer={[]}
-                            onCancel={handleCancel}
-                        >
-                            <div className={styles.modalHeader}>
-                                <div className={styles.closeIcon}>
-                                    <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} onClick={handleCancel}></AllIconsComponenet>
-                                </div>
-                                <p className={`fontBold ${styles.createappointment}`}>{dateWithDay(new Date())}</p>
-                            </div>
-                            {attendanceKey && <QRCode attendanceKey={attendanceKey} courseId={courseId} />}
-                        </Modal>
+                        {attendanceKey && <QRCode openQR={openQR} attendanceKey={attendanceKey} courseId={courseId} handleCancel={handleCancel} />}
                     </div>
                 </div>
             </div>
             {!showAttendanceTable &&
-                <Empty emptyText={'مافي طلاب لهذه الفترة'} fontSize={20} containerhight={400} />
+                <Empty emptyText={'مافي طلاب لهذه الفترة'} fontWeight={'bold'} fontSize={20} containerhight={400} />
             }
             {showAttendanceTable &&
                 <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />

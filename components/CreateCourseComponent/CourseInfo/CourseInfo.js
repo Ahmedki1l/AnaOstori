@@ -312,7 +312,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     type: 'EMPTY_STORE'
                 });
             } else {
-                toast.error(inputErrorMessages.tryAgainErrorMsg);
+                toast.error(toastErrorMessage.tryAgainErrorMsg);
             }
         }
     }
