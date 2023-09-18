@@ -16,7 +16,10 @@ export const inputErrorMessages = {
     allowedFilesTypeMsg: 'الملفات المسموحة هي pdf, png ,jpg', //'Allowed files are pdf, png and jpg'
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
+    categoryNameErrorMsg: 'please enter category name',
+    categoryDiscriptionAddMsg: 'please enter category discription',
 }
+
 export const inputSuccessMessages = {
     discountAppliedMsg: "تم تطبيق الخصم بنجاح", //The discount has been applied successfully
 }
@@ -29,8 +32,6 @@ export const toastErrorMessage = {
     uniqueNameError: "name must be unique",
     curriculumNameError: 'Curriculum name already in use',
     sameFileError: "this item already exist in this section",
-    addCategoryMsg: "catagory added successfully",
-    updateCatagoryMsg: "catagory updated successfully",
     tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
 }
 
@@ -54,5 +55,9 @@ export const toastSuccessMessage = {
     examCreateSuccessMsg: 'student examData created successfully',
     examUpdateSuccessMsg: 'student examData updated successfully',
     attendanceUpdateSuccessMsg: 'attendance has been updated successfully',
-
+    instuctorCreateSuccessMsg: 'instructor created successfully',
+    instuctorUpdateSuccessMsg: 'instructor updated successfully',
+    instructorDeleteMsg: 'instructor deleted successfully',
+    addCategoryMsg: "catagory added successfully",
+    updateCatagoryMsg: "catagory updated successfully",
 }

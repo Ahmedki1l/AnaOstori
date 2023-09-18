@@ -8,6 +8,7 @@ import { mediaUrl } from '../../../constants/DataManupulation';
 import ModelForAddCategory from '../../../components/ManageCategories/ModelForAddCategory'
 import Spinner from '../../../components/CommonComponents/spinner'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
+import Empty from '../../../components/CommonComponents/Empty'
 
 
 const Index = () => {
@@ -50,13 +51,13 @@ const Index = () => {
                             backPathArray={
                                 [
                                     { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                                    { lable: 'إدارة وإضافة الدورات', link: null },
+                                    { lable: 'إدارة وإضافة المجالات', link: null },
                                 ]
                             }
                         />
                     </div>
                     <div className={`${styles.headerWrapper}`}>
-                        <h1 className={`head2 py-8`}>أقسام المجالات</h1>
+                        <h1 className={`head2 py-8`}>المجالات</h1>
                         <div className={`flex ${styles.createCourseHeaderText}`}>
                             <div className={`${styles.createCourseBtnBox}`}>
                                 <button className='primarySolidBtn' onClick={() => handleAddCategory()}>إضافة مجال</button>
@@ -73,40 +74,47 @@ const Index = () => {
                                 <th className={`${styles.tableHeadText} ${styles.tableHead5}`}>الإجراءات</th>
                             </tr>
                         </thead>
-                        <tbody className={styles.tableBodyArea}>
-                            {categoriesDetails?.map((category, index) => {
-                                return (
-                                    <tr key={`tableRow${index}`} className={styles.tableRow}>
-                                        <td>
-                                            <div className='flex'>
-                                                <div className={styles.courseInfoImage}>
-                                                    <Image src={category?.pictureKey ? mediaUrl(category?.pictureBucket, category?.pictureKey) : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
+                        {categoriesDetails.length > 0 &&
+                            <tbody className={styles.tableBodyArea}>
+                                {categoriesDetails?.map((category, index) => {
+                                    return (
+                                        <tr key={`tableRow${index}`} className={styles.tableRow}>
+                                            <td>
+                                                <div className='flex'>
+                                                    <div className={styles.courseInfoImage}>
+                                                        <Image src={category?.pictureKey ? mediaUrl(category?.pictureBucket, category?.pictureKey) : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
+                                                    </div>
+                                                    <div className={styles.skillCourseDetails}>
+                                                        <h1 className={`fontBold ${styles.courseNameHeader}`}>{category.name}</h1>
+                                                    </div>
                                                 </div>
-                                                <div className={styles.skillCourseDetails}>
-                                                    <h1 className={`fontBold ${styles.courseNameHeader}`}>{category.name}</h1>
+                                            </td>
+                                            <td>
+                                                <div className={styles.publishState}>
+                                                    <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={category.published ? '#2A7E19' : "#ebf550"} />
+                                                    <p className='pr-2'>منشور</p>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className={styles.publishState}>
-                                                <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={category.published ? '#2A7E19' : "#ebf550"} />
-                                                <p className='pr-2'>منشور</p>
-                                            </div>
-                                        </td>
-                                        <td>{fullDate(category.createdAt)}</td>
-                                        <td>{fullDate(category.updatedAt)}</td>
-                                        <td>
-                                            <div className={styles.actions}>
-                                                <div className='cursor-pointer' onClick={() => handleEditCategory(category)}>
-                                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                            </td>
+                                            <td>{fullDate(category.createdAt)}</td>
+                                            <td>{fullDate(category.updatedAt)}</td>
+                                            <td>
+                                                <div className={styles.actions}>
+                                                    <div className='cursor-pointer' onClick={() => handleEditCategory(category)}>
+                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        }
                     </table>
+                    {categoriesDetails.length < 0 &&
+                        <div>
+                            <Empty buttonText={'إضافة مجال'} emptyText={'ما أضفت مجال'} containerhight={500} onClick={() => handleAddCategory()} />
+                        </div>
+                    }
                     {isModelForAddCategory &&
                         <ModelForAddCategory
                             isModelForAddCategory={isModelForAddCategory}

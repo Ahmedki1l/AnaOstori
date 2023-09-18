@@ -1,15 +1,18 @@
 @import "../variables.module.scss";
 
-.createNewAvailability {
-    width: 105px;
+.headerWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.createNewInstructorBtnBox {
+    width: 118px;
     height: 36px;
-    font-size: 16px;
-    font-weight: bold;
-    border: 1px solid #F26722;
-    background-color: #F26722;
-    color: #FFFFFF;
-    border-radius: 3px;
     margin: 20px 0px;
+
+    button {
+        font-size: 16px;
+    }
 }
 
 .tableArea {

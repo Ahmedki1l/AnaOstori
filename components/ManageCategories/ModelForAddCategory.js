@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { stringUpdation } from '../../constants/DataManupulation';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import { toast } from 'react-toastify';
-import { toastErrorMessage, toastSuccessMessage } from '../../constants/ar';
+import { inputErrorMessages, toastSuccessMessage } from '../../constants/ar';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -82,13 +82,12 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await createCatagoryAPI(values).then((res) => {
+            toast.success(toastSuccessMessage.addCategoryMsg)
             categoryForm.resetFields()
             setIsModelForAddCategory(false)
             getCategoryListReq()
-            toast.success(toastSuccessMessage.addCategoryMsg)
         }).catch((error) => {
-            console.log(error.response.data);
-            toast.error(error.response.data)
+            toast.error(error.response.data.errors[0].message)
         })
     }
 
@@ -101,14 +100,14 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await editCatagoryAPI(values).then((res) => {
+            toast.success(toastSuccessMessage.updateCatagoryMsg)
             categoryForm.resetFields()
             getCategoryListReq()
             setFileName()
             setFileUploadResponceData()
             setIsModelForAddCategory(false)
-            toast.success(toastSuccessMessage.updateCatagoryMsg)
         }).catch((error) => {
-            console.log(error.response.data.errors[0].message);
+            console.log(error);
             toast.error(error.response.data.errors[0].message)
         })
     }
@@ -147,7 +146,7 @@ const ModelForAddCategory = ({
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: inputErrorMessages.categoryNameErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
@@ -167,7 +166,9 @@ const ModelForAddCategory = ({
                                 />
                             </FormItem>
                             <FormItem
-                                name={'description'}>
+                                name={'description'}
+                                rules={[{ required: true, message: inputErrorMessages.categoryDiscriptionAddMsg }]}
+                            >
                                 <InputTextArea
                                     fontSize={16}
                                     height={132}
