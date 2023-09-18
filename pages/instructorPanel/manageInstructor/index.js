@@ -8,6 +8,10 @@ import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
+import { editInstroctorAPI, getInstructorListAPI } from '../../../services/apisService'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar'
 
 const Index = () => {
 
@@ -17,12 +21,23 @@ const Index = () => {
     const instructorDetails = storeData?.instructorList
     const [editInstructor, setEditInstructor] = useState()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
+    const dispatch = useDispatch()
+
+    const getInstructorListReq = async () => {
+        await getInstructorListAPI().then((res) => {
+            dispatch({
+                type: 'SET_INSTRUCTOR',
+                instructorList: res?.data,
+            })
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 
     const handleAddInstructor = () => {
         setIsModelForAddInstructor(true)
         setIsEdit(false)
     }
-
     const handleEditInstructor = (instructor) => {
         setEditInstructor(instructor)
         setIsModelForAddInstructor(true)
@@ -33,17 +48,27 @@ const Index = () => {
         setIsmodelForDeleteItems(false)
     }
     const openDeleteFolderItems = (instructor) => {
+        setEditInstructor(instructor);
         setIsmodelForDeleteItems(true)
     }
-    const handleDeleteFolderItems = () => {
-
+    const handleDeleteFolderItems = async () => {
+        let body = {
+            id: editInstructor.id,
+            isDeleted: true
+        }
+        await editInstroctorAPI(body).then((res) => {
+            toast.success(toastSuccessMessage.instructorDeleteMsg)
+            getInstructorListReq()
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
     return (
         <div>
             <div className='maxWidthDefault px-4'>
                 <div>
-                    <div>
+                    <div className='flex justify-between items-center'>
                         <BackToPath
                             backpathForPage={true}
                             backPathArray={
@@ -54,8 +79,11 @@ const Index = () => {
                             }
                         />
                     </div>
-                    <div dir='ltr'>
-                        <button className={styles.createNewAvailability} onClick={() => handleAddInstructor()}>إضافة مدرب </button>
+                    <div className={`${styles.headerWrapper}`}>
+                        <h1 className={`head2 py-8`}>المدربين</h1>
+                        <div className={styles.createNewInstructorBtnBox}>
+                            <button className='primarySolidBtn' onClick={() => handleAddInstructor()}>إضافة مدرب </button>
+                        </div>
                     </div>
                     <table className={styles.tableArea}>
                         <thead className={styles.tableHeaderArea}>
@@ -83,9 +111,9 @@ const Index = () => {
                                                 <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
                                                     <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                 </div>
-                                                {/* <div className='cursor-pointer' onClick={() => openDeleteFolderItems(instructor)}>
+                                                <div className='cursor-pointer' onClick={() => openDeleteFolderItems(instructor)}>
                                                     <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                                </div> */}
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -102,15 +130,16 @@ const Index = () => {
                     isEdit={isEdit}
                     instructorDetails={editInstructor}
                     setEditInstructor={setEditInstructor}
+                    getInstructorListReq={getInstructorListReq}
                 />
             }
-            {/* {ismodelForDeleteItems &&
+            {ismodelForDeleteItems &&
                 <ModelForDeleteItems
                     ismodelForDeleteItems={ismodelForDeleteItems}
                     onCloseModal={onCloseModal}
                     deleteItemType={'instructor'}
                     onDelete={handleDeleteFolderItems}
-                />} */}
+                />}
         </div>
     )
 }

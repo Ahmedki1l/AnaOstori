@@ -35,6 +35,7 @@ export default function UserDetailForm1(props) {
 			toast.success(toastErrorMessage.seatsAvailableMsg)
 			setNotificationScreen(true)
 		}).catch((error) => {
+			setNotificationScreen(true)
 			console.log(error);
 			if (error?.response?.status == 401) {
 				signOutUser()

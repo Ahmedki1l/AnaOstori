@@ -9,6 +9,8 @@ import { createInstroctorAPI, editInstroctorAPI, getInstructorListAPI, uploadFil
 import { deleteNullFromObj } from '../../constants/DataManupulation'
 import { useDispatch } from 'react-redux'
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
+import { toast } from 'react-toastify'
+import { toastErrorMessage, toastSuccessMessage } from '../../constants/ar'
 
 
 const ModelForAddInstructor = ({
@@ -17,8 +19,8 @@ const ModelForAddInstructor = ({
     isEdit,
     instructorDetails,
     setEditInstructor,
+    getInstructorListReq,
 }) => {
-    console.log(instructorDetails);
     const [instructorForm] = Form.useForm();
 
     useEffect(() => {
@@ -34,16 +36,16 @@ const ModelForAddInstructor = ({
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const dispatch = useDispatch()
-    const getInstructorListReq = async () => {
-        await getInstructorListAPI().then((res) => {
-            dispatch({
-                type: 'SET_INSTRUCTOR',
-                instructorList: res?.data,
-            })
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
+    // const getInstructorListReq = async () => {
+    //     await getInstructorListAPI().then((res) => {
+    //         dispatch({
+    //             type: 'SET_INSTRUCTOR',
+    //             instructorList: res?.data,
+    //         })
+    //     }).catch((err) => {
+    //         console.log(err);
+    //     })
+    // }
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -58,21 +60,23 @@ const ModelForAddInstructor = ({
             values.phone = values.phone.replace(/[0-9]/, "966")
         }
         if (avatarUploadResData) {
-            values.avatarKey = avatarUploadResData.key
-            values.avatarBucket = avatarUploadResData.bucket
-            values.avatarMime = avatarUploadResData.mime
+            values.avatarKey = avatarUploadResData?.key
+            values.avatarBucket = avatarUploadResData?.bucket
+            values.avatarMime = avatarUploadResData?.mime
         } else {
-            values.ProfileFileKey = fileUploadResponceData.key
-            values.ProfileFileBucket = fileUploadResponceData.bucket
-            values.ProfileFileMime = fileUploadResponceData.mime
+            values.ProfileFileKey = fileUploadResponceData?.key
+            values.ProfileFileBucket = fileUploadResponceData?.bucket
+            values.ProfileFileMime = fileUploadResponceData?.mime
         }
         deleteNullFromObj(values)
         await createInstroctorAPI(values).then((res) => {
+            toast.success(toastSuccessMessage.instuctorCreateSuccessMsg)
             instructorForm.resetFields()
             getInstructorListReq()
             setFileUploadResponceData()
             setIsModelForAddInstructor(false)
         }).catch((error) => {
+            toast.error(toastErrorMessage.tryAgainErrorMsg)
             console.log(error);
         })
     }
@@ -83,22 +87,24 @@ const ModelForAddInstructor = ({
             values.phone = values.phone.replace(/[0-9]/, "966")
         }
         if (avatarUploadResData) {
-            values.avatarKey = avatarUploadResData.key
-            values.avatarBucket = avatarUploadResData.bucket
-            values.avatarMime = avatarUploadResData.mime
+            values.avatarKey = avatarUploadResData?.key
+            values.avatarBucket = avatarUploadResData?.bucket
+            values.avatarMime = avatarUploadResData?.mime
         } else {
-            values.ProfileFileKey = fileUploadResponceData.key
-            values.ProfileFileBucket = fileUploadResponceData.bucket
-            values.ProfileFileMime = fileUploadResponceData.mime
+            values.ProfileFileKey = fileUploadResponceData?.key
+            values.ProfileFileBucket = fileUploadResponceData?.bucket
+            values.ProfileFileMime = fileUploadResponceData?.mime
         }
         deleteNullFromObj(values)
         await editInstroctorAPI(values).then((res) => {
+            toast.success(toastSuccessMessage.instuctorUpdateSuccessMsg)
             instructorForm.resetFields()
             getInstructorListReq()
             setFileName()
             setFileUploadResponceData()
             setIsModelForAddInstructor(false)
         }).catch((error) => {
+            toast.error(toastErrorMessage.tryAgainErrorMsg)
             console.log(error);
         })
     }
@@ -191,8 +197,8 @@ const ModelForAddInstructor = ({
 
                         </div>
                         <div className={styles.instructorFieldBorderBottom}>
-                            <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >حفظ</button>
+                            <div className={styles.createInstructorBtnBox}>
+                                <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} >حفظ</button>
                             </div>
                         </div>
                     </Form>

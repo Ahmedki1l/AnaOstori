@@ -7,7 +7,7 @@ export default function BackToPath(props) {
         <div className={styles.categoryDetailsTable}>
             {props.backPathArray.map((pathName, index) => {
                 return (
-                    <>
+                    <div key={index}>
                         {props.backpathForTabel ?
                             <div>
                                 {pathName.handleClick ?
@@ -27,7 +27,7 @@ export default function BackToPath(props) {
                                 {(index + 1) !== props.backPathArray.length && <p className={styles.categoryDetailsName}>{'>'}</p>}
                             </div>
                         }
-                    </>
+                    </div>
                 )
             })}
         </div>
