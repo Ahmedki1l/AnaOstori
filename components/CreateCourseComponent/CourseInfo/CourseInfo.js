@@ -136,7 +136,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: values,
             }
             await createCourseByInstructorAPI(body).then((res) => {
-                toast.success(toastSuccessMessage.coursesgcreatedSuccessFullMsg)
+                toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
                 setShowExtraNavItem(true)
                 setShowCourseMetaDataFields(true)
                 setCreateCourseApiRes(res.data)

@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { stringUpdation } from '../../constants/DataManupulation';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import { toast } from 'react-toastify';
-import { inputErrorMessages, toastSuccessMessage } from '../../constants/ar';
+import { adminPanelCategoryConst, createAndEditBtnText, inputErrorMessages, toastSuccessMessage } from '../../constants/ar';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -100,7 +100,7 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await editCatagoryAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.updateCatagoryMsg)
+            toast.success(toastSuccessMessage.updateCategoryMsg)
             categoryForm.resetFields()
             getCategoryListReq()
             setFileName()
@@ -113,6 +113,11 @@ const ModelForAddCategory = ({
     }
 
     const onChange = async (checked) => {
+        if (checked == true) {
+            toast.success(toastSuccessMessage.showCategoryMsg)
+        } else {
+            toast.success(toastSuccessMessage.hideCategoryMsg)
+        }
         setIsCatagoryPublished(checked)
     };
 
@@ -139,44 +144,45 @@ const ModelForAddCategory = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addCategory}`}>{isEdit ? "تعديل المجال" : "إضافة مجال"}</p>
+                    <p className={`fontBold ${styles.addCategory}`}>{isEdit ? adminPanelCategoryConst.editCategoryTitle : adminPanelCategoryConst.addCategoryTitle}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={categoryForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: inputErrorMessages.categoryNameErrorMsg }]}
+                                rules={[{ required: true, message: adminPanelCategoryConst.categoryNameErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="العنوان"
+                                    placeholder={adminPanelCategoryConst.title}
                                 />
                             </FormItem>
                             <FormItem
                                 name={'order'}
+                                rules={[{ required: true, message: adminPanelCategoryConst.selectOrderErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='الترتيب'
+                                    placeholder={adminPanelCategoryConst.orderID}
                                 />
                             </FormItem>
                             <FormItem
                                 name={'description'}
-                                rules={[{ required: true, message: inputErrorMessages.categoryDiscriptionAddMsg }]}
+                                rules={[{ required: true, message: adminPanelCategoryConst.categoryDiscriptionErrorMsg }]}
                             >
                                 <InputTextArea
                                     fontSize={16}
                                     height={132}
                                     width={352}
-                                    placeholder='الوصف'
+                                    placeholder={adminPanelCategoryConst.description}
                                 />
                             </FormItem>
-                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>صورة المجال</p>
+                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelCategoryConst.categoryPhoto}</p>
                             <div className={styles.uploadVideoWrapper}>
                                 <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
                                 <label htmlFor='uploadFileInput' className='cursor-pointer'>
@@ -202,14 +208,14 @@ const ModelForAddCategory = ({
                             {isEdit &&
                                 <div className='flex items-center mb-2'>
                                     <Switch defaultChecked={isCatagoryPublished} onChange={onChange} ></Switch>
-                                    <p className={styles.recordedcourse}>إظهار المجال</p>
+                                    <p className={styles.recordedcourse}>{adminPanelCategoryConst.categorySwitch}</p>
                                 </div>
                             }
                         </div>
 
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? "حفظ" : "إضافة"}</button>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}</button>
                             </div>
                         </div>
                     </Form>
@@ -220,3 +226,77 @@ const ModelForAddCategory = ({
 }
 
 export default ModelForAddCategory
+
+
+
+
+
+// if (numberOfPeople == 1) {
+
+//     if (targatedCourse.discount > 0) {
+
+//       console.log("priceHolderfrom discount");
+
+//       priceHolder = targatedCourse.discount;
+
+//     } else {
+
+//       console.log("priceHolderfrom course price");
+
+//       priceHolder = targatedCourse.price;
+
+//     }
+
+//   }
+
+//   else if (numberOfPeople == 2 && targatedCourse.groupDiscountEligible) {
+
+//     priceHolder = targatedCourse.discountForTwo;
+
+//   }
+
+//   else if (numberOfPeople >= 3 && targatedCourse.groupDiscountEligible) {
+
+//     priceHolder = targatedCourse.discountForThreeOrMore;
+
+//   }
+
+//   else {
+
+//     return {
+
+//       statusCode: 400,
+
+//       body: JSON.stringify(
+
+//         {
+
+//           msg: "group payment not allowed"
+
+//         }
+
+//       ),
+
+//     };
+
+//   }
+
+//   console.log("ph",priceHolder);
+
+//   console.log("discount",targatedCourse.discount);
+
+//   //let price = priceHolder * 0.85;
+
+//   //let vat = priceHolder * 0.15;
+
+//   let price = priceHolder/1.15;
+
+//   let vat = priceHolder-price;
+
+//   let totalPrice = price * numberOfPeople;
+
+//   let totalVat = vat * numberOfPeople;
+
+//   let totalDiscount = (targatedCourse.price * numberOfPeople) - (totalPrice + totalVat);
+
+//   let discountPercentage = ((totalPrice + totalVat) / (targatedCourse.price * numberOfPeople)) * 100;

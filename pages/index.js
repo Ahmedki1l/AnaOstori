@@ -23,30 +23,32 @@ export const metadata = {
 export async function getServerSideProps(context) {
 	const params = context.query
 	try {
-		const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
+		// const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`)
-		const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
-		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
+		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
+		// const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
 
 		const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
-			newsReq,
+			// newsReq,
 			catagoriesReq,
-			homeReviewsReq,
-			homeMetaDataReq
+			// homeReviewsReq,
+			// homeMetaDataReq
 		])
 
 		return {
-			props: {
-				news: news.data,
-				catagories: catagories.data,
-				homeReviews: homeReviews.data,
-				homeMetaData: homeMetaData.data,
-				params: params
-			}
+			props: {}
+			// props: {
+			// 	// news: news.data,
+			// 	catagories: catagories.data,
+			// 	// homeReviews: homeReviews.data,
+			// 	// homeMetaData: homeMetaData.data,
+			// 	params: params
+			// }
 		};
 	} catch (error) {
+		console.log(error);
 		return {
-			notFound: true,
+			// notFound: true,
 		};
 	}
 

@@ -8,6 +8,7 @@
 .closebutton {
     background: none;
     border: none;
+    cursor: pointer;
 }
 
 .addNews {
@@ -25,15 +26,11 @@
     padding: 3px;
     border-top: 0.5px solid rgba(0, 0, 0, 0.5);
     padding: 4px 9px 7px 0;
-}
 
-.AddFolderBtn {
-    width: 78px;
-    height: 37px;
-    font-size: 16px;
-    color: white;
-    background: #F26722;
-    border: 1px solid #F26722;
-    border-radius: 3px;
-    margin: 7px;
+    button {
+        width: 78px;
+        height: 37px;
+        font-size: 16px;
+        margin: 7px;
+    }
 }

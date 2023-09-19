@@ -5,6 +5,8 @@ import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import { createNewsAPI, editNewsAPI } from '../../services/apisService'
+import { toast } from 'react-toastify'
+import { createAndEditBtnText, manageNewsConst, toastSuccessMessage } from '../../constants/ar'
 
 const ModelForAddNews = ({
     isModelForNews,
@@ -35,6 +37,7 @@ const ModelForAddNews = ({
 
     const addNews = async (values) => {
         await createNewsAPI(values).then((res) => {
+            toast.success(toastSuccessMessage.createNewsSuccessMsg)
             setIsModelForNews(false)
             newsForm.resetFields()
             getNewsList()
@@ -46,6 +49,7 @@ const ModelForAddNews = ({
     const editNewsData = async (values) => {
         values.id = editNews.id
         await editNewsAPI(values).then((res) => {
+            toast.success(toastSuccessMessage.updatedNewsSuccessMsg)
             setIsModelForNews(false)
             newsForm.resetFields()
             getNewsList()
@@ -65,14 +69,14 @@ const ModelForAddNews = ({
             <div className={styles.modalHeader}>
                 <button onClick={isModelClose} className={styles.closebutton}>
                     <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                <p className={`fontBold ${styles.addNews}`}>إضافة نص تسويقي</p>
+                <p className={`fontBold ${styles.addNews}`}>{isEdit ? manageNewsConst.editNewsTitle : manageNewsConst.addNewsTitle}</p>
             </div>
             <div dir='rtl'>
                 <Form form={newsForm} onFinish={onFinish}>
                     <div className={styles.createNewsFields}>
                         <FormItem
                             name={'content'}
-                            rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                            rules={[{ required: true, message: manageNewsConst.addNewsErrorMsg }]}
                         >
                             <Input
                                 fontSize={16}
@@ -83,7 +87,7 @@ const ModelForAddNews = ({
                         </FormItem>
                     </div>
                     <div className={styles.newsFieldBorderBottom}>
-                        <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? 'حفظ' : 'إضافة'}</button>
+                        <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} >{isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}</button>
                     </div>
                 </Form>
             </div>
