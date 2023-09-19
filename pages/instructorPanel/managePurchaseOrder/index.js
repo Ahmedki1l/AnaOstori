@@ -152,7 +152,7 @@ const Index = () => {
 
 
     const customEmptyComponent = (
-        <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={'لم تقم بإضافة اي مجلد'} containerhight={200} onClick={() => handleCreateFolder()} />
+        <Empty emptyText={'لم تقم بإضافة اي مجلد'} containerhight={200} onClick={() => handleCreateFolder()} />
     )
 
     const selectedOrderStatusLable = paymentStatus.find((item) => item.value == selectedOrder?.status)

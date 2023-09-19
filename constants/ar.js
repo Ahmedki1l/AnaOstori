@@ -16,7 +16,6 @@ export const inputErrorMessages = {
     allowedFilesTypeMsg: 'الملفات المسموحة هي pdf, png ,jpg', //'Allowed files are pdf, png and jpg'
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
-    categoryNameErrorMsg: 'please enter category name',
     categoryDiscriptionAddMsg: 'please enter category discription',
 }
 
@@ -29,9 +28,9 @@ export const toastErrorMessage = {
     passWordIncorrectErrorMsg: 'كلمة السر غير صحيحة', //'password is incorrect'
     seatsAvailableMsg: "رح نعلمك اول ما نضيف او نوسع المقاعد", //you will get notified once seats are available
     emailUsedErrorMsg: 'الايميل مستخدم مسبقًا', //'Email already used'
-    uniqueNameError: "name must be unique",
-    curriculumNameError: 'Curriculum name already in use',
-    sameFileError: "this item already exist in this section",
+    uniqueNameError: 'إضافة وتعديل درجات الطلاب',// "name must be unique",
+    curriculumNameError: 'بيانات مستخدمي الموقع',// 'Curriculum name already in use',
+    sameFileError: 'إضافة وتعديل الكوبونات',// "this item already exist in this section",
     tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
 }
 
@@ -47,17 +46,59 @@ export const toastSuccessMessage = {
     copiedMsg: "تم النسخ", //"copied"
     forgotPasswordLinkSend: " تم ارسال رابط الى ايميلك لتغيير كلمة السر", //A link has been sent to your email to change your password.
     courseDetailUpdateMsg: "تم تحديث تفاصيل الدورة بنجاح", //Course details have been updated successfully.
-    coursesgcreatedSuccessFullMsg: "Course details created successfully.",
-    externalCourseDetailCreateMsg: 'course details created successfully',
-    externalCourseDetailUpdateMsg: 'courese details updated successfully',
-    appoitmentCretedSuccessMsg: 'appoitment has been created successfully',
-    appoitmentUpdateSuccessMsg: 'appoitment has been updated successfully',
-    examCreateSuccessMsg: 'student examData created successfully',
-    examUpdateSuccessMsg: 'student examData updated successfully',
+    courseCreatedSuccessMsg: 'إضافة وتعديل المجالات',//"Course details created successfully.",
+    externalCourseDetailCreateMsg: 'إضافة وتعديل الدورات', //'course details created successfully',
+    externalCourseDetailUpdateMsg: 'إدارة المكتبة الرقمية',// 'courese details updated successfully',
+    appoitmentCretedSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been created successfully',
+    appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
+    examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',
+    examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',
     attendanceUpdateSuccessMsg: 'attendance has been updated successfully',
-    instuctorCreateSuccessMsg: 'instructor created successfully',
-    instuctorUpdateSuccessMsg: 'instructor updated successfully',
-    instructorDeleteMsg: 'instructor deleted successfully',
-    addCategoryMsg: "catagory added successfully",
-    updateCatagoryMsg: "catagory updated successfully",
+    instuctorCreateSuccessMsg: 'تم إضافة المدرب بنجاح',//instructor added successfully',
+    instuctorUpdateSuccessMsg: 'تم تحديث بيانات المدرب بنجاح',//Instructor info updated successfully
+    instructorDeleteMsg: 'تم حذف المدرب بنجاح',//Instructor deleted successfully,
+    createNewsSuccessMsg: 'تم إضافة النص التسويقي بنجاح',// 'newbar added successfully'
+    updatedNewsSuccessMsg: 'تم تحديث النص التسويقي بنجاح',// 'newbar updated successfully',
+    addCategoryMsg: 'تم إضافة المجال بنجاح',// "catagory added successfully",
+    updateCategoryMsg: 'تم تحديث بيانات المجال بنجاح',// "catagory updated successfully",
+    showCategoryMsg: 'SHOWEDتم إظهار المجال بنجاح',//catagory SHOWED successfully
+    hideCategoryMsg: 'hidedتم إخفاء المجال بنجاح',//catagory hided successfully
+}
+
+export const createAndEditBtnText = {
+    addBtnText: 'إضافة',
+    saveBtnText: 'حفظ'
+}
+
+export const adminPanelCategoryConst = {
+    addCategoryTitle: 'إضافة مجال',
+    editCategoryTitle: 'تعديل المجال',
+    title: 'العنوان',
+    orderID: 'الترتيب',
+    description: 'الوصف',
+    inputAttachPhoto: 'ارفق الصورة',
+    categoryNameErrorMsg: 'اكتب عنوان',//'please enter category name',
+    selectOrderErrorMsg: 'حدد الترتيب',//please select the order
+    categoryDiscriptionErrorMsg: 'اكتب وصف ',//write describtion
+    categoryPhoto: 'صورة المجال',
+    categorySwitch: 'إظهار المجال'
+}
+
+export const adminPanelInstructorConst = {
+    addInstuctorTitle: 'إضافة مدرب',
+    editInstructorTitle: 'تعديل بيانات المدرب',
+    instructorName: 'اسم المدرب',
+    instructorEmail: 'اسم المدرب',
+    instructorPhoneNo: 'رقم الجوال',
+    instructorRole: 'المنصب',
+    instructorPhoto: 'صورة المدرب',
+    instructorFile: 'الملف التعريفي',
+    instructorNameErrorMsg: 'اكتب اسم المدرب',
+    instructorPhoneNoErrorMsg: 'اكتب رقم الجوال',
+}
+
+export const manageNewsConst = {
+    addNewsTitle: 'إضافة نص تسويقي',
+    editNewsTitle: 'تعديل النص التسويقي',
+    addNewsErrorMsg: 'اكتب النص',
 }

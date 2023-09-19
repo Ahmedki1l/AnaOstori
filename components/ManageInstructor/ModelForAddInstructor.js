@@ -7,10 +7,9 @@ import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import { createInstroctorAPI, editInstroctorAPI, getInstructorListAPI, uploadFileAPI } from '../../services/apisService'
 import { deleteNullFromObj } from '../../constants/DataManupulation'
-import { useDispatch } from 'react-redux'
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
 import { toast } from 'react-toastify'
-import { toastErrorMessage, toastSuccessMessage } from '../../constants/ar'
+import { adminPanelInstructorConst, createAndEditBtnText, toastErrorMessage, toastSuccessMessage } from '../../constants/ar'
 
 
 const ModelForAddInstructor = ({
@@ -35,17 +34,6 @@ const ModelForAddInstructor = ({
     const [fileName, setFileName] = useState()
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
-    const dispatch = useDispatch()
-    // const getInstructorListReq = async () => {
-    //     await getInstructorListAPI().then((res) => {
-    //         dispatch({
-    //             type: 'SET_INSTRUCTOR',
-    //             instructorList: res?.data,
-    //         })
-    //     }).catch((err) => {
-    //         console.log(err);
-    //     })
-    // }
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -128,20 +116,20 @@ const ModelForAddInstructor = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addInstructor}`}>{isEdit ? 'تعديل بيانات المدرب' : 'إضافة مدرب'}</p>
+                    <p className={`fontBold ${styles.addInstructor}`}>{isEdit ? adminPanelInstructorConst.editInstructorTitle : adminPanelInstructorConst.addInstuctorTitle}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={instructorForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: adminPanelInstructorConst.instructorNameErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='اسم المدرب'
+                                    placeholder={adminPanelInstructorConst.instructorName}
                                 />
                             </FormItem>
                             <FormItem
@@ -151,17 +139,18 @@ const ModelForAddInstructor = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='الايميل'
+                                    placeholder={adminPanelInstructorConst.instructorEmail}
                                 />
                             </FormItem>
                             <FormItem
                                 name={'phone'}
+                                rules={[{ required: true, message: adminPanelInstructorConst.instructorPhoneNoErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='رقم الجوال'
+                                    placeholder={adminPanelInstructorConst.instructorPhoneNo}
                                 />
                             </FormItem>
                             <FormItem
@@ -171,11 +160,11 @@ const ModelForAddInstructor = ({
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='المنصب'
+                                    placeholder={adminPanelInstructorConst.instructorRole}
                                 />
                             </FormItem>
 
-                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>صورة المدرب</p>
+                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelInstructorConst.instructorPhoto}</p>
                             <UploadFileForModel
                                 fileName={instructorDetails?.avatarKey}
                                 setFileName={setFileName}
@@ -185,7 +174,7 @@ const ModelForAddInstructor = ({
                                 placeHolderName={'ارفق الصورة'}
                             />
 
-                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>الملف التعريفي</p>
+                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelInstructorConst.instructorFile}</p>
                             <UploadFileForModel
                                 fileName={instructorDetails?.ProfileFileKey}
                                 setFileName={setFileName}
@@ -198,7 +187,7 @@ const ModelForAddInstructor = ({
                         </div>
                         <div className={styles.instructorFieldBorderBottom}>
                             <div className={styles.createInstructorBtnBox}>
-                                <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} >حفظ</button>
+                                <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} >{isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}</button>
                             </div>
                         </div>
                     </Form>

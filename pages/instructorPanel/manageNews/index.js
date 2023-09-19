@@ -5,6 +5,8 @@ import { useState } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import axios from 'axios'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
+import Empty from '../../../components/CommonComponents/Empty'
+import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 
 
 
@@ -56,7 +58,7 @@ const Index = () => {
                 <div className={`flex justify-between items-center`}>
                     <h1 className={`head2 py-8`}>النصوص التسويقية</h1>
                     <div className={styles.createNewsBtnBox}>
-                        <button className={`primarySolidBtn`} disabled={newsDataList ? true : false} onClick={() => handleAddNews()}>إضافة مدرب </button>
+                        <button className={`primarySolidBtn`} disabled={newsDataList.length > 0 ? true : false} onClick={() => handleAddNews()}>إضافة نص</button>
                     </div>
                 </div>
                 <table className={styles.tableArea}>
@@ -73,8 +75,13 @@ const Index = () => {
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>{news.content}</td>
                                         <td>
-                                            <div className='cursor-pointer' onClick={() => handleEditNews(news)}>
-                                                <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                            <div className={styles.actions}>
+                                                <div className='cursor-pointer' onClick={() => handleEditNews(news)}>
+                                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                </div>
+                                                <div className='cursor-pointer' onClick={() => openDeleteFolderItems(news)}>
+                                                    <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -84,13 +91,8 @@ const Index = () => {
                     }
                 </table>
                 {newsDataList?.length == 0 &&
-                    <div className={styles.noDataTableBodyArea}>
-                        <div className={styles.noDataManiArea}>
-                            <div>
-                                <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                                <p className='fontBold py-2' style={{ fontSize: '18px' }}>ما أنشئت أي موعد</p>
-                            </div>
-                        </div>
+                    <div>
+                        <Empty buttonText={'إضافة نص'} emptyText={'ما أضفت نص تسويقي'} containerhight={500} onClick={() => handleAddNews()} />
                     </div>
                 }
             </div>
@@ -103,6 +105,13 @@ const Index = () => {
                     getNewsList={getNewsList}
                     setEditNews={setEditNews}
                 />}
+            {/* {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={'instructor'}
+                    onDelete={handleDeleteFolderItems}
+                />} */}
         </div>
     )
 }
