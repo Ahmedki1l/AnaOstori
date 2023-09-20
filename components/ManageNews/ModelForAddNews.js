@@ -37,7 +37,7 @@ const ModelForAddNews = ({
     };
 
     const apiSuccessMsg = (msg) => {
-
+        toast.success(msg)
     }
 
     const addNews = async (values) => {
@@ -57,6 +57,7 @@ const ModelForAddNews = ({
     }
 
     const editNewsData = async (values) => {
+        console.log(values);
         values.id = editNews.id
         await editNewsAPI(values).then((res) => {
             apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)

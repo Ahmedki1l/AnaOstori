@@ -58,6 +58,11 @@ const TheStudent = (props) => {
         setExamList(updatedExamData)
     }
 
+    const studentDetailsSuccessRes = (msg) => {
+        toast.success(msg)
+        setShowBtnLoader(false)
+    }
+
     const saveStudentExamDetails = async () => {
         setShowBtnLoader(true)
         const createDataBody = []
@@ -101,14 +106,12 @@ const TheStudent = (props) => {
 
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
-                toast.success(toastSuccessMessage.examCreateSuccessMsg)
-                setShowBtnLoader(false)
+                studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createStudentExamDataAPI(createAPIBody).then((res) => {
-                            toast.success(toastSuccessMessage.examCreateSuccessMsg)
-                            setShowBtnLoader(false)
+                            studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -118,14 +121,12 @@ const TheStudent = (props) => {
         }
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-                toast.success(toastSuccessMessage.examUpdateSuccessMsg)
-                setShowBtnLoader(false)
+                studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-                            toast.success(toastSuccessMessage.examUpdateSuccessMsg)
-                            setShowBtnLoader(false)
+                            studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                         })
                     }).catch(error => {
                         console.error("Error:", error);

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import { getCurriculumIdsAPI, updateCurriculumAPI } from '../../../services/apisService'
 import { useSelector, useDispatch } from 'react-redux'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 const CoursePathLibrary = () => {
 
@@ -42,8 +43,22 @@ const CoursePathLibrary = () => {
                 });
                 SetCurriculumList(res.data)
             })
-        }).catch((error) => {
-            console.log(error);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await updateCurriculumAPI(editBody).then(async (res) => {
+                        await getCurriculumIdsAPI().then((res) => {
+                            dispatch({
+                                type: 'SET_CURRICULUMIDS',
+                                curriculumIds: res.data,
+                            });
+                            SetCurriculumList(res.data)
+                        })
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 

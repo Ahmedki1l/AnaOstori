@@ -140,6 +140,5 @@ export const createNewsAPI = (data) => { return instance.post(`/newsBar/create`,
 export const editNewsAPI = (data) => { return instance.post(`/newsBar/update`, data) }
 
 // ********* Manage Orders APIs ***********//
-export const managePurchaseOrdersAPI = (data) => { return instance.get(`playground?page=${data.pageNo}&limit=${data.limit}&order=${data.order}`) }
-
+export const managePurchaseOrdersAPI = (data) => { return instance.get(`order/list?page=${data.pageNo}&limit=${data.limit}&order=${data.order}`) }
 

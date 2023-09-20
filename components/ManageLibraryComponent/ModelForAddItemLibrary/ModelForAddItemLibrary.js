@@ -8,6 +8,7 @@ import InputTextArea from '../../antDesignCompo/InputTextArea';
 import { addItemToFolderAPI, updateItemToFolderAPI } from '../../../services/apisService';
 import Spinner from '../../CommonComponents/spinner';
 import { uploadFileSevices } from '../../../services/UploadFileSevices';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 
 
 const ModelForAddItemLibrary = ({
@@ -17,8 +18,8 @@ const ModelForAddItemLibrary = ({
     selectedFolderId,
     selectedItem,
     onCloseModal,
-
 }) => {
+    console.log(selectedItem);
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
     const [uploadLoader, setUploadLoader] = useState(false)
@@ -29,7 +30,6 @@ const ModelForAddItemLibrary = ({
         ItemDetailsForm.setFieldsValue(selectedItem)
         setFileName(selectedItem?.linkKey)
     }, [selectedItem])
-    console.log(fileName);
     const getFileKey = async (e) => {
         setUploadLoader(true)
         await uploadFileSevices(e.target.files[0]).then((res) => {
@@ -75,21 +75,29 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
-            body.linkKey = e.examLink
+            body.linkKey = e.linkKey
         }
         const data = {
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
-            console.log(res);
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
-        }).catch((error) => {
-            console.log(error);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await addItemToFolderAPI(data).then(res => {
+                        onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
         ItemDetailsForm.resetFields()
     }
     const editFolderItems = async (e) => {
+        console.log(e);
         let body = {}
         if (folderType !== "quiz") {
             body.id = selectedItem.id
@@ -109,15 +117,24 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
-            body.linkKey = e.examLink
+            body.linkKey = e.linkKey
         }
         const data = {
             data: body
         }
+        console.log(body);
         await updateItemToFolderAPI(data).then((res) => {
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
-        }).catch((error) => {
-            console.log(error);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await updateItemToFolderAPI(data).then(res => {
+                        onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
         ItemDetailsForm.resetFields()
     }
