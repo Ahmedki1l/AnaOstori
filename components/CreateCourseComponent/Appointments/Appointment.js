@@ -18,6 +18,7 @@ import Switch from '../../../components/antDesignCompo/Switch';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { toast } from 'react-toastify';
 import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
@@ -65,7 +66,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 setIsModalOpen(false)
                 getAllAvailability()
                 setShowBtnLoader(false)
-            }).catch((error) => {
+            }).catch(async (error) => {
+                await getNewToken().then(async (token) => {
+                    await editAvailabilityAPI(body).then((res) => {
+                        toast.success(toastSuccessMessage.attendanceUpdateSuccessMsg)
+                        setIsModalOpen(false)
+                        getAllAvailability()
+                        setShowBtnLoader(false)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
                 toast.error(toastErrorMessage.tryAgainErrorMsg)
                 setShowBtnLoader(false)
                 console.log(error);
@@ -79,7 +90,19 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 setIsModalOpen(false)
                 getAllAvailability()
                 setShowBtnLoader(false)
-            }).catch((error) => {
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await createCourseAvailabilityAPI(body).then((res) => {
+                            toast.success(toastSuccessMessage.appoitmentCretedSuccessMsg)
+                            setIsModalOpen(false)
+                            getAllAvailability()
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
                 toast.error(toastErrorMessage.tryAgainErrorMsg)
                 console.log(error);
                 setShowBtnLoader(false)

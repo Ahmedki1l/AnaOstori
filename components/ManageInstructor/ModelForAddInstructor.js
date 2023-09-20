@@ -10,6 +10,7 @@ import { deleteNullFromObj } from '../../constants/DataManupulation'
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
 import { toast } from 'react-toastify'
 import { adminPanelInstructorConst, createAndEditBtnText, toastErrorMessage, toastSuccessMessage } from '../../constants/ar'
+import { getNewToken } from '../../services/fireBaseAuthService'
 
 
 const ModelForAddInstructor = ({
@@ -43,6 +44,14 @@ const ModelForAddInstructor = ({
         }
     };
 
+    const apiSuccessRes = (msg) => {
+        toast.success(msg)
+        instructorForm.resetFields()
+        getInstructorListReq()
+        setFileUploadResponceData()
+        setIsModelForAddInstructor(false)
+    }
+
     const addInstructor = async (values) => {
         if (values.phone) {
             values.phone = values.phone.replace(/[0-9]/, "966")
@@ -58,12 +67,17 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         await createInstroctorAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.instuctorCreateSuccessMsg)
-            instructorForm.resetFields()
-            getInstructorListReq()
-            setFileUploadResponceData()
-            setIsModelForAddInstructor(false)
-        }).catch((error) => {
+            apiSuccessRes(toastSuccessMessage.instuctorCreateSuccessMsg)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await createInstroctorAPI(values).then(res => {
+                        apiSuccessRes(toastSuccessMessage.instuctorCreateSuccessMsg)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
             toast.error(toastErrorMessage.tryAgainErrorMsg)
             console.log(error);
         })
@@ -85,15 +99,22 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         await editInstroctorAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.instuctorUpdateSuccessMsg)
-            instructorForm.resetFields()
-            getInstructorListReq()
             setFileName()
-            setFileUploadResponceData()
-            setIsModelForAddInstructor(false)
-        }).catch((error) => {
-            toast.error(toastErrorMessage.tryAgainErrorMsg)
-            console.log(error);
+            apiSuccessRes(toastSuccessMessage.instuctorUpdateSuccessMsg)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await editInstroctorAPI(values).then(res => {
+                        setFileName()
+                        apiSuccessRes(toastSuccessMessage.instuctorUpdateSuccessMsg)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            else {
+                toast.error(toastErrorMessage.tryAgainErrorMsg)
+            }
         })
     }
 

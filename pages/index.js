@@ -138,7 +138,7 @@ export default function Home(props) {
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
-					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(props.homeMetaData[0]?.fileBucket, props.homeMetaData[0]?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
+					{/* <VideoThumnail pictureKey={''} videoUrl={mediaUrl(props.homeMetaData[0]?.fileBucket, props.homeMetaData[0]?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} /> */}
 				</div>
 			</div>
 			<div className={styles.analyticsBarWrapper}>

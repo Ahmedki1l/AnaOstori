@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaDataAPI } from '../../../services/apisService'
 import { updateCourseDetailsAPI } from '../../../services/apisService';
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
-import { signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { toastSuccessMessage } from '../../../constants/ar';
 import { toast } from 'react-toastify';
@@ -98,12 +98,17 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         } catch (error) {
             setShowLoader(false)
             console.log(error);
-            if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
-                });
-            }
+            await getNewToken().then(async (token) => {
+                const createCourseCardMetaDataReq = createCourseCardMetaDataAPI(body)
+                const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
+                const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
+                setShowLoader(false)
+                toast.success(toastSuccessMessage.externalCourseDetailCreateMsg)
+                setSelectedItem(3)
+                externalCourseForm.resetFields()
+            }).catch(error => {
+                console.error("Error:", error);
+            });
         }
     }
 
@@ -142,9 +147,17 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             setShowLoader(false)
             console.log(error);
             if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
+                await getNewToken().then(async (token) => {
+                    const updateCourseCardMetaDataReq = updateCourseCardMetaDataAPI(body)
+                    const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
+
+                    const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
+                    setCourseDetail(updateCourseCardMetaData.data)
+                    dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
+                    setShowLoader(false)
+                    toast.success(toastSuccessMessage.externalCourseDetailUpdateMsg)
+                }).catch(error => {
+                    console.error("Error:", error);
                 });
             }
         }
@@ -164,13 +177,24 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                     id: data.CourseCardMetaData[index].id
                 },
             }
-
             await deleteCourseTypeAPI(body).then((res) => {
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
                 setCourseDetail(editCourseData)
                 setShowLoader(false)
-            }).catch((error) => {
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await deleteCourseTypeAPI(body).then((res) => {
+                            remove(name)
+                            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                            setCourseDetail(editCourseData)
+                            setShowLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
                 setShowLoader(false)
                 console.log(error);
             })

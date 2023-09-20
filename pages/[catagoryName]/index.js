@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCatagoriesAPI } from '../../services/apisService';
 import Spinner from '../../components/CommonComponents/spinner';
-import { signOutUser } from '../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../services/fireBaseAuthService';
 
 
 
@@ -72,13 +72,20 @@ export default function Index(props) {
 							setCoursesDetails(shortCourseOnType(catagory.courses))
 						}
 					})
-				}).catch((error) => {
+				}).catch(async (error) => {
 					console.log(error)
 					if (error?.response?.status == 401) {
-						setPageLoading(false)
-						signOutUser()
-						dispatch({
-							type: 'EMPTY_STORE'
+						await getNewToken().then(async (token) => {
+							await getCatagoriesAPI(data).then(res => {
+								res.data?.find((catagory) => {
+									if (catagory.name == catagoryName) {
+										setCoursesDetails(shortCourseOnType(catagory.courses))
+									}
+								})
+							})
+							setPageLoading(false)
+						}).catch(error => {
+							console.error("Error:", error);
 						});
 					}
 				})

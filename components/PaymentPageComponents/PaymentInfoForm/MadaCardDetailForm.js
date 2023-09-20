@@ -7,8 +7,8 @@ export default function MadaCardDetailForm(props) {
 
 	useEffect(() => {
 		const madaCardForm = document.createElement('script');
-		madaCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
-		// madaCardForm.src = `https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`
+		// madaCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
+		madaCardForm.src = `https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`
 		madaCardForm.async = true;
 		document.head.appendChild(madaCardForm);
 
@@ -49,8 +49,8 @@ export default function MadaCardDetailForm(props) {
 
 	return (
 		<div>
-			<form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form>
-			{/* <form action={`http://localhost:3000/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form> */}
+			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form> */}
+			<form action={`http://localhost:3000/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form>
 		</div>
 	)
 }

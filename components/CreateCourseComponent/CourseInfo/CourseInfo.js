@@ -9,7 +9,7 @@ import CheckBox from '../../antDesignCompo/CheckBox';
 import Input from '../../antDesignCompo/Input';
 import Select from '../../antDesignCompo/Select';
 import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCourseMetaDataAPI, deleteCourseTypeAPI, updateCourseDetailsAPI, updateCourseDetailsMetaDataAPI, updateCourseMetaDataAPI } from '../../../services/apisService';
-import { signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
 import { deleteNullFromObj, mediaUrl } from '../../../constants/DataManupulation';
@@ -100,6 +100,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
+    const createCourseApiSuccessRes = () => {
+        toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
+        setShowExtraNavItem(true)
+        setShowCourseMetaDataFields(true)
+        setCreateCourseApiRes(res.data)
+        setNewCreatedCourse(res.data)
+        setShowLoader(false)
+    }
+
     const createCourse = async (values) => {
         setShowExtraNavItem(false)
         if (!showCourseMetaDataFields) {
@@ -136,21 +145,19 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: values,
             }
             await createCourseByInstructorAPI(body).then((res) => {
-                toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
-                setShowExtraNavItem(true)
-                setShowCourseMetaDataFields(true)
-                setCreateCourseApiRes(res.data)
-                setNewCreatedCourse(res.data)
-                setShowLoader(false)
-            }).catch((error) => {
+                createCourseApiSuccessRes()
+            }).catch(async (error) => {
                 console.log(error);
-                setShowLoader(false)
                 if (error?.response?.status == 401) {
-                    signOutUser()
-                    dispatch({
-                        type: 'EMPTY_STORE'
+                    await getNewToken().then(async (token) => {
+                        await createCourseByInstructorAPI(body).then((res) => {
+                            createCourseApiSuccessRes()
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
                     });
                 }
+                setShowLoader(false)
                 // if (error.response.data.errors) {
                 //     toast.error(toastErrorMessage.uniqueNameError);
                 // }
@@ -184,7 +191,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 } else {
                     await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
                 }
-                toast.success(toastSuccessMessage.coursesgcreatedSuccessFullMsg)
+                toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
                 setShowExtraNavItem(true)
                 setSelectedItem(2)
                 setShowLoader(false)
@@ -363,13 +370,23 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         setEnglishCourse(e.target.checked)
     }
     const handlePublishCourse = async (e) => {
+        setShowLoader(true)
         let body = {
             data: { published: e },
             courseId: editCourseData.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
-        }).catch((error) => {
-            console.log(error)
+            setShowLoader(false)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await updateCourseDetailsAPI(body).then((res) => {
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            setShowLoader(false)
         })
     }
 

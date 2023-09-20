@@ -5,11 +5,12 @@ import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCourseByInstructor, updateCourseDetailsAPI } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
-import { signOutUser } from '../../../../services/fireBaseAuthService'
+import { getNewToken, signOutUser } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
 import Switch from '../../../../components/antDesignCompo/Switch'
 import { mediaUrl } from '../../../../constants/DataManupulation'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
+import Empty from '../../../../components/CommonComponents/Empty'
 
 export default function Index() {
 
@@ -32,12 +33,15 @@ export default function Index() {
             }
             await getAllCourseByInstructor(body).then(res => {
                 setAllPhysicalCourses(res?.data)
-            }).catch(error => {
+            }).catch(async (error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
-                    signOutUser()
-                    dispatch({
-                        type: 'EMPTY_STORE'
+                    await getNewToken().then(async (token) => {
+                        await getAllCourseByInstructor(body).then(res => {
+                            setAllPhysicalCourses(res?.data)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
                     });
                 }
             })
@@ -60,10 +64,18 @@ export default function Index() {
             courseId: courseId,
         }
         await updateCourseDetailsAPI(body).then((res) => {
-        }).catch((error) => {
-            console.log(error)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await updateCourseDetailsAPI(body).then(res => {
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     };
+
     return (
         <div className='maxWidthDefault px-4'>
             <div>
@@ -150,17 +162,7 @@ export default function Index() {
                 </table>
 
                 {allPhysicalCourses.length == 0 &&
-                    <div className={styles.tableBodyArea}>
-                        <div className={styles.noDataManiArea} >
-                            <div className={styles.noDataSubArea} >
-                                <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                                <p className='fontBold py-2'>ما أنشئت اي دورة</p>
-                                <div className={styles.createCourseBtnBox}>
-                                    <button className='primarySolidBtn' onClick={() => handleRoute()}>إنشاء دورة</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Empty buttonText={'إنشاء دورة'} emptyText={'ما أنشئت اي دورة'} containerhight={500} onClick={() => handleRoute()} />
                 }
             </div>
         </div>
