@@ -181,6 +181,12 @@ const paymentStatus = [
     },
     {
         key: 6,
+        label: 'مرفوضة',
+        value: 'failed',
+        color: 'red'
+    },
+    {
+        key: 7,
         label: 'init',
         value: 'init',
         color: 'orange'

@@ -70,7 +70,8 @@ const ManageLibraryTableComponent = ({
         })
     }
 
-    const handleDeleteFolderItems = () => {
+    const handleDeleteFolderItems = (item) => {
+        setSelectedItem(item);
         setDeleteItemType(tableDataType == 'folder' ? 'folder' : folderType == 'quiz' ? 'quiz' : folderType == 'file' ? 'file' : 'video')
         setIsmodelForDeleteItems(true)
     }
@@ -98,7 +99,10 @@ const ManageLibraryTableComponent = ({
         getFolderList(folderType)
     }
     const handleDeleteFolderData = () => {
-        console.log("deleteFolderData");
+        console.log(selectedItem);
+        // let data = {
+
+        // }
     }
     const handleAddModalOpen = () => {
         if (tableDataType == "item") {
@@ -162,7 +166,7 @@ const ManageLibraryTableComponent = ({
                                                         <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                     </div>
                                                     {tableDataType == "item" &&
-                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems()}>
+                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems(item)}>
                                                             <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
                                                         </div>
                                                     }

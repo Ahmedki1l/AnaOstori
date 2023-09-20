@@ -10,6 +10,7 @@ import * as paymentConst from "../../../constants/PaymentConst"
 import Link from "next/link";
 import BackToPath from "../../../components/CommonComponents/BackToPath";
 import { getNewToken } from "../../../services/fireBaseAuthService";
+import { mediaUrl } from "../../../constants/DataManupulation";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -22,6 +23,7 @@ const Index = () => {
     const [paginationConfig, setPaginationConfig] = useState()
     const [selectedOrder, setSelectedOrder] = useState()
     const paymentStatus = paymentConst.paymentStatus
+    console.log(paymentStatus);
 
     const tableColumns = [
         {
@@ -71,7 +73,10 @@ const Index = () => {
             title: 'طريقة الدفع',
             dataIndex: 'paymentMethod',
             render: (text, _record) => {
-                const iconName = text == "bank_transfer" ? 'bankTransfer' : text == 'none' ? 'applePayment' : text == 'hyperPay' ? 'madaPayment' : 'creditCard'
+                const iconName = text == "bank_transfer" ? 'bankTransfer' :
+                    (text == 'none' ? 'applePayment' :
+                        ((text == 'hyperpay' && _record.cardType == 'credit') ? 'visaPayment' : 'madaPayment'))
+                console.log(iconName, text);
                 return (
                     <AllIconsComponenet iconName={iconName} height={18} width={18} />
                 )
@@ -109,9 +114,17 @@ const Index = () => {
                     setOpen(true)
                     setSelectedOrder(_record)
                 }
+                const status = _record.status === 'accepted'
                 return (
-                    <div onClick={handleEditOrders}>
-                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                    <div className='flex'>
+                        <div className='pl-2' onClick={handleEditOrders}>
+                            <AllIconsComponenet iconName={'editicon'} height={16} width={16} color={'#000000'} />
+                        </div>
+                        {status &&
+                            <Link className='pr-2' href={mediaUrl(_record.invoiceBucket, _record.invoiceKey)} target='_blank'>
+                                <AllIconsComponenet height={18} width={18} iconName={'downloadIcon'} color={'#000000'} />
+                            </Link>
+                        }
                     </div>
                 )
             }
