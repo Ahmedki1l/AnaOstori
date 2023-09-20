@@ -22,6 +22,15 @@ const ManageCouponCourseDrawer = () => {
                         placeholder='حالة الحجز'
                     />
                 </FormItem>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الكود</p>
+                <FormItem
+                    name={'status'}>
+                    <Select
+                        width={425}
+                        height={47}
+                        placeholder='حالة الحجز'
+                    />
+                </FormItem>
             </Form>
         </div>
     )

@@ -53,7 +53,6 @@ export const toastSuccessMessage = {
     appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
     examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',
     examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',
-    attendanceUpdateSuccessMsg: 'attendance has been updated successfully',
     instuctorCreateSuccessMsg: 'تم إضافة المدرب بنجاح',//instructor added successfully',
     instuctorUpdateSuccessMsg: 'تم تحديث بيانات المدرب بنجاح',//Instructor info updated successfully
     instructorDeleteMsg: 'تم حذف المدرب بنجاح',//Instructor deleted successfully,

@@ -47,6 +47,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
+    const availabilitySuccessRes = (msg) => {
+        toast.success(msg)
+        setIsModalOpen(false)
+        getAllAvailability()
+        setShowBtnLoader(false)
+    }
     const onFinish = async (values) => {
         setShowBtnLoader(true)
         values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
@@ -62,21 +68,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await editAvailabilityAPI(body).then((res) => {
-                toast.success(toastSuccessMessage.attendanceUpdateSuccessMsg)
-                setIsModalOpen(false)
-                getAllAvailability()
-                setShowBtnLoader(false)
+                availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
-                await getNewToken().then(async (token) => {
-                    await editAvailabilityAPI(body).then((res) => {
-                        toast.success(toastSuccessMessage.attendanceUpdateSuccessMsg)
-                        setIsModalOpen(false)
-                        getAllAvailability()
-                        setShowBtnLoader(false)
-                    })
-                }).catch(error => {
-                    console.error("Error:", error);
-                });
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await editAvailabilityAPI(body).then((res) => {
+                            availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
                 toast.error(toastErrorMessage.tryAgainErrorMsg)
                 setShowBtnLoader(false)
                 console.log(error);
@@ -86,18 +88,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 data: values,
             }
             await createCourseAvailabilityAPI(body).then((res) => {
-                toast.success(toastSuccessMessage.appoitmentCretedSuccessMsg)
-                setIsModalOpen(false)
-                getAllAvailability()
-                setShowBtnLoader(false)
+                availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createCourseAvailabilityAPI(body).then((res) => {
-                            toast.success(toastSuccessMessage.appoitmentCretedSuccessMsg)
-                            setIsModalOpen(false)
-                            getAllAvailability()
-                            setShowBtnLoader(false)
+                            availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
                         })
                     }).catch(error => {
                         console.error("Error:", error);

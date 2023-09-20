@@ -69,8 +69,8 @@ export default function Payment(props) {
                             <p className={`fontMedium ${styles.note2}`}>رسلنا الفاتورة على الواتساب وعلى الايميل. وتقدر تشوفها ايضا من <Link href={'/purchaseInquiry'} className='link'>صفحة استعلام وتأكيد الحجوزات</Link>.</p>
                             <Link target='_blank' href={invoiceUrl || ''} className={`${styles.btnsBox} no-underline`}>
                                 <button className='primarySolidBtn flex justify-center items-center'>
-                                    <div>
-                                        <AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
+                                    <div className='pl-2'>
+                                        <AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#FFFFFF'} />
                                     </div>
                                     تحميل الفاتورة
                                 </button>

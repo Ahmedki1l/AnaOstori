@@ -55,7 +55,21 @@ const TestResults = (props) => {
                 }
             })
             setExamList(allExamList)
-        }).catch((error) => {
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getExamListAPI(body).then((res) => {
+                        const allExamList = res.data?.map((exam) => {
+                            return {
+                                key: exam.id,
+                                label: exam.name,
+                                value: exam.id,
+                            }
+                        })
+                        setExamList(allExamList)
+                    })
+                })
+            }
             console.log(error);
         })
     }

@@ -144,29 +144,29 @@ const Index = () => {
                         minheight={400}
                         dataSource={tableDataSourse}
                     />
+
+                    {/* {drawerForCouponCourse &&
+                        <ManageCouponCourseDrawer
+                            drawerForCouponCourse={drawerForCouponCourse}
+                            setDrawerForCouponCourse={setDrawerForCouponCourse}
+                        />
+                    } */}
+                    <Drawer
+                        closable={false}
+                        open={drawerForCouponCourse}
+                        onClose={onClose}
+                        width={480}
+                        placement={'right'}
+                        title={
+                            <>
+                                <DrawerTiitle className="foneBold">DisplayCouponTitle</DrawerTiitle>
+                            </>
+                        }
+                    >
+                        <ManageCouponCourseDrawer />
+                    </Drawer>
                 </ConfigProvider>
             </div>
-
-            {/* {drawerForCouponCourse &&
-                <ManageCouponCourseDrawer
-                    drawerForCouponCourse={drawerForCouponCourse}
-                    setDrawerForCouponCourse={setDrawerForCouponCourse}
-                />
-            } */}
-            <Drawer
-                closable={false}
-                open={drawerForCouponCourse}
-                onClose={onClose}
-                width={480}
-                placement={'right'}
-                title={
-                    <>
-                        <DrawerTiitle className="foneBold">DisplayCouponTitle</DrawerTiitle>
-                    </>
-                }
-            >
-                <ManageCouponCourseDrawer />
-            </Drawer>
         </div>
     )
 }

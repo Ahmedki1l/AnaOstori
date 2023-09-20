@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
 import { createFolderAPI, getFolderListAPI, getItemListAPI } from '../../../services/apisService';
-import { signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
 import ManageLibraryTableComponent from '../../../components/ManageLibraryComponent/ManageLibraryTableComponent/ManageLibraryTableComponent';
@@ -52,18 +52,20 @@ function Index() {
             folderType: selectedItem,
         }
         await getFolderListAPI(data).then((res) => {
-            console.log(res);
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
-        }).catch((error) => {
-            console.log(error);
-            setLoading(false)
+        }).catch(async (error) => {
             if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
+                await getNewToken().then(async (token) => {
+                    await getFolderListAPI(data).then(res => {
+                        setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+                        setLoading(false)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
                 });
             }
+            setLoading(false)
         })
     }
 
@@ -74,10 +76,19 @@ function Index() {
             folderId: folderId
         }
         await getItemListAPI(body).then((res) => {
-            console.log(res);
             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
-        }).catch((error) => {
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getItemListAPI(body).then(res => {
+                        setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+                        setLoading(false)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
             setLoading(false)
             console.log(error);
         })
@@ -103,6 +114,18 @@ function Index() {
         await createFolderAPI(data).then((res) => {
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await createFolderAPI(body).then(res => {
+                        setIsModelForAddFolderOpen(false)
+                        getfolderList(selectedItem)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            console.log(error);
         })
     }
 

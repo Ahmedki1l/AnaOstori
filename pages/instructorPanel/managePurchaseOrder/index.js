@@ -9,6 +9,7 @@ import styled from "styled-components";
 import * as paymentConst from "../../../constants/PaymentConst"
 import Link from "next/link";
 import BackToPath from "../../../components/CommonComponents/BackToPath";
+import { getNewToken } from "../../../services/fireBaseAuthService";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -121,8 +122,6 @@ const Index = () => {
         getPurchaseOrderList(1)
     }, [])
 
-
-
     const getPurchaseOrderList = async (pageNo) => {
         let data = {
             pageNo: pageNo,
@@ -137,8 +136,21 @@ const Index = () => {
                 position: ['bottomCenter']
             })
             setPurchaseOrderList(res.data.data)
-        }).catch((err) => {
-            console.log(err);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await managePurchaseOrdersAPI(data).then((res) => {
+                        setPaginationConfig({
+                            pageSize: 10,
+                            total: res.data.totalItems,
+                            pageSizeOptions: [],
+                            position: ['bottomCenter']
+                        })
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 
@@ -152,7 +164,7 @@ const Index = () => {
 
 
     const customEmptyComponent = (
-        <Empty emptyText={'لم تقم بإضافة اي مجلد'} containerhight={200} onClick={() => handleCreateFolder()} />
+        <Empty emptyText={'لم تقم بإضافة اي مجلد'} containerhight={400} onClick={() => handleCreateFolder()} />
     )
 
     const selectedOrderStatusLable = paymentStatus.find((item) => item.value == selectedOrder?.status)

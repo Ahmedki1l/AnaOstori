@@ -12,6 +12,7 @@ import { editInstroctorAPI, getInstructorListAPI } from '../../../services/apisS
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 const Index = () => {
 

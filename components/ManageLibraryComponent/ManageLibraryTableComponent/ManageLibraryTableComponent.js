@@ -10,6 +10,7 @@ import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWit
 import { updateFolderAPI } from '../../../services/apisService'
 import Empty from '../../CommonComponents/Empty'
 import BackToPath from '../../CommonComponents/BackToPath'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 
 const ManageLibraryTableComponent = ({
@@ -32,6 +33,7 @@ const ManageLibraryTableComponent = ({
     const [deleteItemType, setDeleteItemType] = useState('folder')
 
     const handleEditIconClick = async (item) => {
+        console.log(item);
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
             setSelectedFolder(item)
@@ -51,12 +53,20 @@ const ManageLibraryTableComponent = ({
         let data = {
             data: editFolderBody
         }
-        console.log(data);
         await updateFolderAPI(data).then((res) => {
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
-        }).catch((error) => {
-            console.log(error);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await updateFolderAPI(data).then(res => {
+                        setIsModelForAddFolderOpen(false)
+                        getFolderList(folderType)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 
@@ -70,7 +80,6 @@ const ManageLibraryTableComponent = ({
     }
 
     const onItemModelClose = (folderId) => {
-        console.log(folderId);
         getItemList(folderId)
         setSelectedItem()
         setIsModelForAddItemOpen(false)
