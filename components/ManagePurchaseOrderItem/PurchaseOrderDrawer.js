@@ -9,7 +9,7 @@ import Icon from '../CommonComponents/Icon'
 import axios from 'axios'
 import { mediaUrl } from '../../constants/DataManupulation'
 import Link from 'next/link'
-import { fullDate } from '../../constants/DateConverter'
+import { dateRange, fullDate } from '../../constants/DateConverter'
 
 
 const PurchaseOrderDrawer = (props) => {
@@ -34,7 +34,7 @@ const PurchaseOrderDrawer = (props) => {
             })
         }
     }
-
+    console.log(selectedOrder);
     useEffect(() => {
         orderForm.setFieldValue('status', selectedOrder.status)
     })
@@ -60,6 +60,11 @@ const PurchaseOrderDrawer = (props) => {
                     placeholder='حالة الحجز'
                 />
             </FormItem>
+            {(selectedOrder.status == "rejected" || selectedOrder.status == "failed") &&
+                <div className={styles.purchaseOrderBox}>
+                    <p>{selectedOrder.paymentMethod}</p>
+                </div>
+            }
             <p style={{ fontSize: '18px' }}>طريقة الدفع</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.paymentMethod}</p>
@@ -97,7 +102,7 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             <p style={{ fontSize: '18px' }}>المبلغ المدفوع</p>
             <div className={styles.purchaseOrderBox}>
-                <p>value</p>
+                <p>{(selectedOrder.totalPrice + selectedOrder.totalVat) - selectedOrder.totalDiscount}</p>
             </div>
             <p style={{ fontSize: '18px' }}>تاريخ الحجز</p>
             <div className={styles.purchaseOrderBox}>
@@ -118,11 +123,11 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             <p style={{ fontSize: '18px' }}>الجنس</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.gender}</p>
+                <p>{selectedOrder.userProfile.gender ? selectedOrder.userProfile.gender : '---'}</p>
             </div>
             <p style={{ fontSize: '18px' }}>رقم الجوال</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.buyerPhone}</p>
+                <p>{selectedOrder.buyerPhone.replace('+966', '05')}</p>
             </div>
             <p style={{ fontSize: '18px' }}>الايميل</p>
             <div className={styles.purchaseOrderBox}>
@@ -146,7 +151,7 @@ const PurchaseOrderDrawer = (props) => {
                         </div>
                         <p style={{ fontSize: '18px' }}>رقم الجوال</p>
                         <div className={styles.purchaseOrderBox}>
-                            <p> {item.phoneNumber}</p>
+                            <p> {item.phoneNumber.replace('+966', '05')}</p>
                         </div>
                         <p style={{ fontSize: '18px' }}>الايميل</p>
                         <div className={styles.purchaseOrderBox}>
@@ -154,7 +159,8 @@ const PurchaseOrderDrawer = (props) => {
                         </div>
                         <p style={{ fontSize: '18px' }}>موعد الدورة</p>
                         <div className={styles.purchaseOrderBox}>
-                            <p>showInfo</p>
+                            <p>{dateRange(item.createdAt, item.updatedAt
+                            )}</p>
                         </div>
                     </div>
                 )

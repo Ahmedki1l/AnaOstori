@@ -19,7 +19,6 @@ const ModelForAddItemLibrary = ({
     selectedItem,
     onCloseModal,
 }) => {
-    console.log(selectedItem);
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
     const [uploadLoader, setUploadLoader] = useState(false)
@@ -75,7 +74,7 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
-            body.linkKey = e.linkKey
+            body.linkKey = e.examLink
         }
         const data = {
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
@@ -97,7 +96,6 @@ const ModelForAddItemLibrary = ({
         ItemDetailsForm.resetFields()
     }
     const editFolderItems = async (e) => {
-        console.log(e);
         let body = {}
         if (folderType !== "quiz") {
             body.id = selectedItem.id
@@ -117,12 +115,11 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
-            body.linkKey = e.linkKey
+            body.linkKey = e.examLink
         }
         const data = {
             data: body
         }
-        console.log(body);
         await updateItemToFolderAPI(data).then((res) => {
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
         }).catch(async (error) => {
