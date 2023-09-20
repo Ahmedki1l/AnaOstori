@@ -15,6 +15,7 @@ import { stringUpdation } from '../../constants/DataManupulation';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import { toast } from 'react-toastify';
 import { adminPanelCategoryConst, createAndEditBtnText, inputErrorMessages, toastSuccessMessage } from '../../constants/ar';
+import { getNewToken } from '../../services/fireBaseAuthService';
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -61,8 +62,19 @@ const ModelForAddCategory = ({
                 type: 'SET_CATAGORIES',
                 catagories: res.data
             });
-        }).catch((err) => {
-            console.log(err);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getCatagoriesAPI().then(res => {
+                        dispatch({
+                            type: 'SET_CATAGORIES',
+                            catagories: res.data
+                        });
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 
@@ -74,6 +86,13 @@ const ModelForAddCategory = ({
         }
     };
 
+    const apiSuccessRes = (msg) => {
+        toast.success(msg)
+        categoryForm.resetFields()
+        setIsModelForAddCategory(false)
+        getCategoryListReq()
+    }
+
     const addCategory = async (values) => {
         values.order = Number(values.order)
         if (fileUploadResponceData) {
@@ -82,12 +101,20 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await createCatagoryAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.addCategoryMsg)
-            categoryForm.resetFields()
-            setIsModelForAddCategory(false)
-            getCategoryListReq()
-        }).catch((error) => {
-            toast.error(error.response.data.errors[0].message)
+            apiSuccessRes(toastSuccessMessage.addCategoryMsg)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await createCatagoryAPI(values).then(res => {
+                        apiSuccessRes(toastSuccessMessage.addCategoryMsg)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            else {
+                toast.error(error.response.data.errors[0].message)
+            }
         })
     }
 
@@ -100,15 +127,25 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await editCatagoryAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.updateCategoryMsg)
-            categoryForm.resetFields()
-            getCategoryListReq()
+            apiSuccessRes(toastSuccessMessage.updateCategoryMsg)
             setFileName()
             setFileUploadResponceData()
-            setIsModelForAddCategory(false)
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
-            toast.error(error.response.data.errors[0].message)
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await editCatagoryAPI(values).then(res => {
+                        apiSuccessRes(toastSuccessMessage.updateCategoryMsg)
+                        setFileName()
+                        setFileUploadResponceData()
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            else {
+                toast.error(error.response.data.errors[0].message)
+            }
         })
     }
 

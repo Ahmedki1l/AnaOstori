@@ -29,8 +29,19 @@ const Index = () => {
                 type: 'SET_INSTRUCTOR',
                 instructorList: res?.data,
             })
-        }).catch((err) => {
-            console.log(err);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getInstructorListAPI().then(res => {
+                        dispatch({
+                            type: 'SET_INSTRUCTOR',
+                            instructorList: res?.data,
+                        })
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 

@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { createStudentExamDataAPI, getStudentListAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
-import { signOutUser } from '../../../services/fireBaseAuthService'
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService'
 import { fullDate } from '../../../constants/DateConverter';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
@@ -103,16 +103,34 @@ const TheStudent = (props) => {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
-            }).catch((error) => {
-                console.log(error)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await createStudentExamDataAPI(createAPIBody).then((res) => {
+                            toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
             })
         }
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
-            }).catch((error) => {
-                console.log(error)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                            toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
             })
         }
     }
@@ -154,12 +172,19 @@ const TheStudent = (props) => {
             setAllStudentDetails(res?.data)
             setDisplayedStudentList(res?.data)
             studentDetailsForm.resetFields(['selectgender'])
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
             if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
+                await getNewToken().then(async (token) => {
+                    await getStudentListAPI(data).then((res) => {
+                        setSelectedAvailabilityId(e)
+                        setShowStudentList(true)
+                        setAllStudentDetails(res?.data)
+                        setDisplayedStudentList(res?.data)
+                        studentDetailsForm.resetFields(['selectgender'])
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
                 });
             }
         })

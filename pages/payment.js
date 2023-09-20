@@ -19,6 +19,7 @@ export default function Payment(props) {
     const orderID = router.asPath?.split("=")[1]?.split("&")[0]
     const transactionID = router.asPath?.split("=")[2]?.split("&")[0]
     const [loading, setLoading] = useState(true)
+    const [invoiceUrl, setInvoiceUrl] = useState('')
 
     useEffect(() => {
         const getPaymentData = async () => {
@@ -31,6 +32,7 @@ export default function Payment(props) {
                 setIsPaymentSuccess(response.data[0].result.code == "000.000.000" ? true : false)
                 response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
                 setLoading(false)
+                setInvoiceUrl(mediaUrl(transactionDetails[0]?.orderDetails?.invoiceBucket, transactionDetails[0]?.orderDetails?.invoiceKey))
                 const getMyCourseReq = myCoursesAPI()
                 const [myCourseData] = await Promise.all([getMyCourseReq])
                 dispatch({
@@ -65,7 +67,7 @@ export default function Payment(props) {
                             <h1 className={`head1 ${styles.pageHeader}`}>شكرا لك، اكتملت عملية الشراء</h1>
                             <p className={`fontMedium ${styles.note1}`}> فريق الدعم راح يتواصل معك ويضيفك في قروب واتس الدورة في أقرب وقت. إذا احتجت مساعدة تواصل معنا على  <Link href={whatsAppLink} className='link'>الواتساب</Link></p>
                             <p className={`fontMedium ${styles.note2}`}>رسلنا الفاتورة على الواتساب وعلى الايميل. وتقدر تشوفها ايضا من <Link href={'/purchaseInquiry'} className='link'>صفحة استعلام وتأكيد الحجوزات</Link>.</p>
-                            <Link target='_blank' href={mediaUrl(transactionDetails[0]?.orderDetails?.invoiceBucket, transactionDetails[0]?.orderDetails?.invoiceKey)} className={`${styles.btnsBox} no-underline`}>
+                            <Link target='_blank' href={invoiceUrl || ''} className={`${styles.btnsBox} no-underline`}>
                                 <button className='primarySolidBtn flex justify-center items-center'>
                                     <div>
                                         <AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />

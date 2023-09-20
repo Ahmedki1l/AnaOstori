@@ -14,6 +14,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import CustomButton from '../../CommonComponents/CustomButton'
 import { toastSuccessMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 const TestResults = (props) => {
 
@@ -79,8 +80,18 @@ const TestResults = (props) => {
             setStudentList(JSON.parse(JSON.stringify(res.data)))
             setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
             setShowStudentList(true)
-        }).catch((error) => {
-            console.log(error);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getStudentListByExamAPI(data).then((res) => {
+                        setStudentList(JSON.parse(JSON.stringify(res.data)))
+                        setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                        setShowStudentList(true)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 
@@ -130,8 +141,17 @@ const TestResults = (props) => {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
-            }).catch((error) => {
-                console.log(error)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await createStudentExamDataAPI(createAPIBody).then((res) => {
+                            toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
                 setShowBtnLoader(false)
             })
         }
@@ -139,8 +159,17 @@ const TestResults = (props) => {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
-            }).catch((error) => {
-                console.log(error)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                            toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
                 setShowBtnLoader(false)
             })
         }

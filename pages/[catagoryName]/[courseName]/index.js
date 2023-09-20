@@ -15,7 +15,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
-import { signOutUser } from '../../../services/fireBaseAuthService'
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/ModalForVideo'
@@ -27,12 +27,16 @@ export async function getServerSideProps(ctx) {
 	const lang = ctx?.resolvedUrl.split('/')[2].split('=')[1] == 'en' ? 'en' : 'ar'
 	const courseName = lang == 'en' ? ctx?.resolvedUrl.split('/')[2].split('?')[0].replace(/-/g, ' ') : ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ')
 	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/courseByNameWithoutAuth/${courseName}`)
-	const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
+	// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 
 
-	const [courseDetails, homeReviews] = await Promise.all([
+	// const [courseDetails, homeReviews] = await Promise.all([
+	// 	courseDetailsReq,
+	// 	homeReviewsReq
+	// ])
+
+	const [courseDetails] = await Promise.all([
 		courseDetailsReq,
-		homeReviewsReq
 	])
 
 	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/male`)
@@ -42,7 +46,7 @@ export async function getServerSideProps(ctx) {
 	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/mix`)
 
 
-
+	console.log(courseDetails.data.id, 45);
 
 	const [maleDates, femaleDates, mixDates] = await Promise.all([
 		maleDatesReq,
@@ -63,7 +67,7 @@ export async function getServerSideProps(ctx) {
 	return {
 		props: {
 			courseDetails: courseDetails.data,
-			homeReviews: homeReviews.data,
+			// homeReviews: homeReviews.data,
 			maleDates: maleDates.data,
 			femaleDates: femaleDates.data,
 			mixDates: mixDates.data,
@@ -150,17 +154,27 @@ export default function Index(props) {
 					pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 					query: query ? query : "",
 				})
-			}).catch(error => {
+			}).catch(async (error) => {
 				console.log(error);
 				if (error?.response?.status == 401) {
-					signOutUser()
-					dispatch({
-						type: 'EMPTY_STORE'
+					await getNewToken().then(async (token) => {
+						await getCatagoriesAPI().then((res) => {
+							router.push({
+								pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
+								query: query ? query : "",
+							})
+						})
+					}).catch(error => {
+						console.error("Error:", error);
 					});
-					dispatch({
-						type: 'SET_RETURN_URL',
-						returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
-					})
+					// signOutUser()
+					// dispatch({
+					// 	type: 'EMPTY_STORE'
+					// });
+					// dispatch({
+					// 	type: 'SET_RETURN_URL',
+					// 	returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
+					// })
 				}
 			})
 		}

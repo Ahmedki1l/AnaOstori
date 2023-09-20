@@ -4,7 +4,7 @@ import PaymentInfoForm from "../../../../components/PaymentPageComponents/Paymen
 import axios from 'axios';
 import { createOrderAPI } from '../../../../services/apisService'
 import { useDispatch, useSelector } from 'react-redux';
-import { signOutUser } from '../../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../../services/fireBaseAuthService';
 import Spinner from '../../../../components/CommonComponents/spinner';
 import * as fbq from '../../../../lib/fpixel'
 import { inputErrorMessages } from '../../../../constants/ar';
@@ -64,7 +64,9 @@ export default function Index(props) {
 	const storeData = useSelector((state) => state?.globalStore);
 	const dispatch = useDispatch();
 
-
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [changePage])
 
 	useEffect(() => {
 		const createOrder = async () => {
@@ -89,14 +91,22 @@ export default function Index(props) {
 				await createOrderAPI(params).then(res => {
 					setCreatedOrder(res.data)
 					generateCheckoutId(res.data.id)
-				}).catch(error => {
+				}).catch(async (error) => {
 					console.log(error)
-					setLoading(false)
 					if (error?.response?.status == 401) {
-						signOutUser()
-						dispatch({
-							type: 'EMPTY_STORE'
+						await getNewToken().then(async (token) => {
+							await createOrderAPI(params).then(res => {
+								setCreatedOrder(res.data)
+								generateCheckoutId(res.data.id)
+							})
+						}).catch(error => {
+							console.error("Error:", error);
 						});
+						setLoading(false)
+						// signOutUser()
+						// dispatch({
+						// 	type: 'EMPTY_STORE'
+						// });
 					}
 				})
 			}
@@ -240,12 +250,16 @@ export default function Index(props) {
 			await createOrderAPI(params).then(res => {
 				setCreatedOrder(res.data)
 				generateCheckoutId(res.data.id)
-			}).catch(error => {
+			}).catch(async (error) => {
 				console.log(error)
 				if (error?.response?.status == 401) {
-					signOutUser()
-					dispatch({
-						type: 'EMPTY_STORE'
+					await getNewToken().then(async (token) => {
+						await createOrderAPI(params).then(res => {
+							setCreatedOrder(res.data)
+							generateCheckoutId(res.data.id)
+						})
+					}).catch(error => {
+						console.error("Error:", error);
 					});
 				}
 			})

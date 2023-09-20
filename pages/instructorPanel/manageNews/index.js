@@ -7,6 +7,7 @@ import axios from 'axios'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import Empty from '../../../components/CommonComponents/Empty'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 
 
@@ -24,9 +25,17 @@ const Index = () => {
     const getNewsList = () => {
         axios.get(`${process.env.API_BASE_URL}/news`).then((res) => {
             setNewsDataList(res.data);
-        }).catch((err) => {
-            console.error(err);
-        });
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    axios.get(`${process.env.API_BASE_URL}/news`).then((res) => {
+                        setNewsDataList(res.data);
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+        })
     }
 
     const handleAddNews = () => {

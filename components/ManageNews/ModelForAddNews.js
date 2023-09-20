@@ -7,6 +7,7 @@ import Input from '../antDesignCompo/Input'
 import { createNewsAPI, editNewsAPI } from '../../services/apisService'
 import { toast } from 'react-toastify'
 import { createAndEditBtnText, manageNewsConst, toastSuccessMessage } from '../../constants/ar'
+import { getNewToken } from '../../services/fireBaseAuthService'
 
 const ModelForAddNews = ({
     isModelForNews,
@@ -35,26 +36,40 @@ const ModelForAddNews = ({
         }
     };
 
+    const apiSuccessMsg = (msg) => {
+
+    }
+
     const addNews = async (values) => {
         await createNewsAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.createNewsSuccessMsg)
-            setIsModelForNews(false)
-            newsForm.resetFields()
-            getNewsList()
-        }).catch((err) => {
-            console.log(err);
+            apiSuccessMsg(toastSuccessMessage.createNewsSuccessMsg)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await createNewsAPI(values).then((res) => {
+                        apiSuccessMsg(toastSuccessMessage.createNewsSuccessMsg)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 
     const editNewsData = async (values) => {
         values.id = editNews.id
         await editNewsAPI(values).then((res) => {
-            toast.success(toastSuccessMessage.updatedNewsSuccessMsg)
-            setIsModelForNews(false)
-            newsForm.resetFields()
-            getNewsList()
-        }).catch((err) => {
-            console.log(err);
+            apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await editNewsAPI(values).then((res) => {
+                        apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
 

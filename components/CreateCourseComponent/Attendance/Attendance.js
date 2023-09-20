@@ -8,7 +8,7 @@ import AttendanceTable from './AttendanceTableComponent/AttendanceTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { dateRange, dateWithDay } from '../../../constants/DateConverter'
 import dayjs from 'dayjs'
-import { signOutUser } from '../../../services/fireBaseAuthService'
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService'
 import CustomButton from '../../CommonComponents/CustomButton'
 import Empty from '../../CommonComponents/Empty'
 import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
@@ -125,12 +125,16 @@ export default function Attendance(props) {
         await getAttendanceListAPI(body).then((res) => {
             createAttendanceTableData(e, res.data)
             setShowAttendanceTable(res.data.length > 0 ? true : false)
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
             if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
+                await getNewToken().then(async (token) => {
+                    await getAttendanceListAPI(body).then((res) => {
+                        createAttendanceTableData(e, res.data)
+                        setShowAttendanceTable(res.data.length > 0 ? true : false)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
                 });
             }
         })
@@ -154,19 +158,22 @@ export default function Attendance(props) {
             )
         })
         await updateAttendanceDataAPI(body).then((res) => {
-            console.log(res);
             setShowBtnLoader(false)
             toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
-        }).catch((error) => {
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await updateAttendanceDataAPI(body).then((res) => {
+                        setShowBtnLoader(false)
+                        toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
             toast.error(toastErrorMessage.tryAgainErrorMsg)
             setShowBtnLoader(false)
             console.log(error);
-            if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
-                });
-            }
         })
     };
 

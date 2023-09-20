@@ -91,8 +91,12 @@ const ManageLibraryTableComponent = ({
     const handleDeleteFolderData = () => {
         console.log("deleteFolderData");
     }
-    const handleItemAddModalOpen = () => {
-        setIsModelForAddItemOpen(true)
+    const handleAddModalOpen = () => {
+        if (tableDataType == "item") {
+            setIsModelForAddItemOpen(true)
+        } else {
+            setIsModelForAddFolderOpen(true)
+        }
     }
 
     return (
@@ -162,7 +166,7 @@ const ManageLibraryTableComponent = ({
                         }
                     </table>
                     {(folderTableData.length == 0 && !loading) &&
-                        <Empty buttonText={'إضافة مجلد'} onClick={() => handleItemAddModalOpen()} emptyText={'ما رفعت أي محتوى'} containerhight={450} />
+                        <Empty buttonText={'إضافة مجلد'} onClick={() => handleAddModalOpen()} emptyText={'ما رفعت أي محتوى'} containerhight={450} />
                     }
                     {loading &&
                         <div className={styles.tableBodyArea}>

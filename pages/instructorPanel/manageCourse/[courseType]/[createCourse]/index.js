@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { getAllAvailabilityAPI } from '../../../../../services/apisService';
 import { useDispatch } from 'react-redux';
 import BackToPath from '../../../../../components/CommonComponents/BackToPath';
+import { getNewToken } from '../../../../../services/fireBaseAuthService';
 
 export default function Index() {
     const { courseType, courseId } = useRouter().query
@@ -38,8 +39,19 @@ export default function Index() {
                 type: 'SET_AllAVAILABILITY',
                 availabilityList: res?.data,
             })
-        }).catch((error) => {
-            console.log(error);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getAllAvailabilityAPI(body).then(res => {
+                        dispatch({
+                            type: 'SET_AllAVAILABILITY',
+                            availabilityList: res?.data,
+                        })
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
     }
     useEffect(() => {
