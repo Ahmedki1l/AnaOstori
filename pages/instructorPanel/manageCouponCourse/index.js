@@ -144,13 +144,6 @@ const Index = () => {
                         minheight={400}
                         dataSource={tableDataSourse}
                     />
-
-                    {/* {drawerForCouponCourse &&
-                        <ManageCouponCourseDrawer
-                            drawerForCouponCourse={drawerForCouponCourse}
-                            setDrawerForCouponCourse={setDrawerForCouponCourse}
-                        />
-                    } */}
                     <Drawer
                         closable={false}
                         open={drawerForCouponCourse}

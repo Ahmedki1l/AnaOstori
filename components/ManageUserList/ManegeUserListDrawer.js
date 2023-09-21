@@ -11,6 +11,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
 
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [userForm] = Form.useForm()
 
     useEffect(() => {
@@ -82,7 +83,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     <CustomButton
                         btnText='حفظ'
                         height={37}
-                        // showLoader={showBtnLoader}
+                        showLoader={showBtnLoader}
                         fontSize={16}
                     />
                 </div>
