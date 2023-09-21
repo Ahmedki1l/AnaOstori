@@ -10,17 +10,43 @@ import axios from 'axios'
 import { mediaUrl } from '../../constants/DataManupulation'
 import Link from 'next/link'
 import { dateRange, fullDate } from '../../constants/DateConverter'
+import CustomButton from '../CommonComponents/CustomButton'
+import { getNewToken } from '../../services/fireBaseAuthService'
 
 
 const PurchaseOrderDrawer = (props) => {
     const selectedOrder = props.selectedOrder
     const [orderForm] = Form.useForm()
     const paymentStatus = paymentConst.paymentStatus
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
+
     const handleSaveOrder = async (value) => {
+        setShowBtnLoader(true)
+        if (value.status == selectedOrder.status) {
+            props.onClose(false)
+            return
+        }
         if (value.status == 'accepted') {
             await axios.post("https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com/order/checkAcceptPayment/" + (selectedOrder.id).toString(), {
                 secretKey: "EAATuzkf5IYoBAN7fkM0ZAuCTiYWOf1nFZAjKScRJTdYEQHHzOZCRxFqD2MvmdYbrUBmZAH3YydU3Q2hWce0ycRBJhwqlykGbyIrbHtt0rjd8HSPKaYAoqE25iwDZAmSBihukFLdB5"
-            });
+            }).then((res) => {
+                setShowBtnLoader(false)
+                props.onClose(true)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await axios.post("https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com/order/checkAcceptPayment/" + (selectedOrder.id).toString(), {
+                            secretKey: "EAATuzkf5IYoBAN7fkM0ZAuCTiYWOf1nFZAjKScRJTdYEQHHzOZCRxFqD2MvmdYbrUBmZAH3YydU3Q2hWce0ycRBJhwqlykGbyIrbHtt0rjd8HSPKaYAoqE25iwDZAmSBihukFLdB5"
+                        }).then((res) => {
+                            setShowBtnLoader(false)
+                            props.onClose(true)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+                setShowBtnLoader(false)
+            })
         }
         else {
             let body = {
@@ -29,12 +55,20 @@ const PurchaseOrderDrawer = (props) => {
                 status: value.status
             }
             await createOrderAPI(body).then((res) => {
-            }).catch((err) => {
-                console.log(err);
+                props.onClose(true)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await createOrderAPI(body).then((res) => {
+                            props.onClose(true)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
             })
         }
     }
-    console.log(selectedOrder);
     useEffect(() => {
         orderForm.setFieldValue('status', selectedOrder.status)
     })
@@ -127,7 +161,7 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             <p style={{ fontSize: '18px' }}>رقم الجوال</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.buyerPhone.replace('+966', '05')}</p>
+                <p>{selectedOrder.buyerPhone.replace('+966', '0')}</p>
             </div>
             <p style={{ fontSize: '18px' }}>الايميل</p>
             <div className={styles.purchaseOrderBox}>
@@ -151,7 +185,7 @@ const PurchaseOrderDrawer = (props) => {
                         </div>
                         <p style={{ fontSize: '18px' }}>رقم الجوال</p>
                         <div className={styles.purchaseOrderBox}>
-                            <p> {item.phoneNumber.replace('+966', '05')}</p>
+                            <p> {item.phoneNumber.replace('+966', '0')}</p>
                         </div>
                         <p style={{ fontSize: '18px' }}>الايميل</p>
                         <div className={styles.purchaseOrderBox}>
@@ -182,8 +216,13 @@ const PurchaseOrderDrawer = (props) => {
                     </Link>
                 </>
             }
-            <div>
-                <button className='primarySolidBtn' type='submit'>حفظ</button>
+            <div className='pt-5'>
+                <CustomButton
+                    btnText='حفظ'
+                    height={37}
+                    showLoader={showBtnLoader}
+                    fontSize={16}
+                />
             </div>
         </Form>
     )

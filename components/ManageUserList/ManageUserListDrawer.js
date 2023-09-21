@@ -1,0 +1,94 @@
+import { Form } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { FormItem } from '../antDesignCompo/FormItem';
+import Input from '../antDesignCompo/Input';
+import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
+import CustomButton from '../CommonComponents/CustomButton';
+import AllIconsComponenet from '../../Icons/AllIconsComponenet';
+import styles from './manageUserList.module.scss'
+
+const ManegeUserListDrawer = ({ selectedUserDetails }) => {
+
+    const [gender, setGender] = useState();
+    const [avatarUploadResData, setAvtarUploadResData] = useState()
+    const [userForm] = Form.useForm()
+
+    useEffect(() => {
+        userForm.setFieldsValue(selectedUserDetails)
+        setGender(selectedUserDetails.gender)
+    }, [])
+
+    const handleSaveUserDetails = (values) => {
+        if (avatarUploadResData) {
+            values.avatarKey = avatarUploadResData?.key
+            values.avatarBucket = avatarUploadResData?.bucket
+            values.avatarMime = avatarUploadResData?.mime
+        }
+        console.log(values);
+    }
+
+    return (
+        <div>
+            <Form form={userForm} onFinish={handleSaveUserDetails}>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>اسم الطالب</p>
+                <FormItem
+                    name={'firstName'}>
+                    <Input
+                        width={350}
+                        height={40}
+                        placeholder='studentName'
+                    />
+                </FormItem>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الصورة الشخصية</p>
+                <UploadFileForModel
+                    fileName={selectedUserDetails?.avatarKey}
+                    fileType={'.jpg , .png'}
+                    accept={"image"}
+                    placeHolderName={'ارفق الصورة'}
+                    uploadResData={setAvtarUploadResData}
+                />
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الجنس</p>
+                <div className={styles.genderBtnBox}>
+                    <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender("male")}>
+                        <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F06A25' : '#808080'} />
+                        <span>ذكر</span>
+                    </button>
+                    <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender('female')}>
+                        <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F06A25' : '#808080'} />
+                        <span>أنثى</span>
+                    </button>
+                </div>
+
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الايميل</p>
+                <FormItem
+                    name={'email'}>
+                    <Input
+                        width={350}
+                        height={40}
+                        placeholder='DisplayEmail'
+                    />
+                </FormItem>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>رقم الجوال</p>
+                <FormItem
+                    name={'phone'}>
+                    <Input
+                        width={350}
+                        height={40}
+                        placeholder='phoneNo'
+                    />
+                </FormItem>
+
+                <div className='pt-5'>
+                    <CustomButton
+                        btnText='حفظ'
+                        height={37}
+                        // showLoader={showBtnLoader}
+                        fontSize={16}
+                    />
+                </div>
+            </Form>
+        </div>
+    )
+}
+
+export default ManegeUserListDrawer

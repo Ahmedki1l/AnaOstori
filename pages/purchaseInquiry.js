@@ -6,7 +6,7 @@ import useWindowSize from "../hooks/useWindoSize";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { getMyOrderAPI } from "../services/apisService";
-import { signOutUser } from "../services/fireBaseAuthService";
+import { getNewToken, signOutUser } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 
 
@@ -29,14 +29,17 @@ export default function PurchaseInquiry(props) {
 
 			await getMyOrderAPI().then((res) => {
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
-			}).catch((error) => {
-				console.log(error)
+			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
-					signOutUser()
-					dispatch({
-						type: 'EMPTY_STORE'
+					await getNewToken().then(async (token) => {
+						await getMyOrderAPI().then((res) => {
+							setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+						})
+					}).catch(error => {
+						console.error("Error:", error);
 					});
 				}
+				console.log(error)
 			})
 		}
 		getMyOrder()
