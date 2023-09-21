@@ -146,7 +146,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         <div className='maxWidthDefault px-4'>
             <div>
                 <div dir='ltr'>
-                    <button className={styles.createNewAvailability} onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
+                    <div className={styles.createAppointmentBtnBox}>
+                        <button className='primaryStrockedBtn' onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
+                    </div>
                 </div>
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
@@ -194,7 +196,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                             </div>
                                         </td>
                                         <td>
-                                            <div onClick={() => editAppointment(appointment)}>
+                                            <div onClick={() => editAppointment(appointment)} className='cursor-pointer'>
                                                 <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                             </div>
                                         </td>
@@ -360,7 +362,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                 <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
                             </div>}
                         </div>
-                        <div className={styles.createAppointmentBtnBox}>
+                        <div className={styles.saveBtnBox}>
                             <CustomButton
                                 btnText={'إنشاء'}
                                 width={80}

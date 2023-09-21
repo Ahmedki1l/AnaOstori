@@ -23,7 +23,6 @@ const ManageLibraryTableComponent = ({
     getFolderList,
     loading,
 }) => {
-
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -42,7 +41,6 @@ const ManageLibraryTableComponent = ({
         }
         // setSelectedItem(item)
     };
-
     const handleEditFolder = async ({ name }) => {
         let editFolderBody = {
             id: selectedFolder?.id,
@@ -110,6 +108,7 @@ const ManageLibraryTableComponent = ({
             setIsModelForAddFolderOpen(true)
         }
     }
+    console.log(folderType);
 
     return (
         <>
@@ -121,8 +120,8 @@ const ManageLibraryTableComponent = ({
                                 backpathForTabel={true}
                                 backPathArray={
                                     [
-                                        { lable: 'صفحة الأدمن الرئيسية', handleClick: showFolderList },
-                                        { lable: selectedFolder.name ? selectedFolder.name : "الفيديوهات", link: null },
+                                        { lable: folderType == 'video' ? 'الفيديوهات' : folderType == 'file' ? 'الملفات' : 'الاختبارات', handleClick: showFolderList },
+                                        { lable: selectedFolder?.name, link: null },
                                     ]
                                 }
                             />
@@ -178,7 +177,12 @@ const ManageLibraryTableComponent = ({
                         }
                     </table>
                     {(folderTableData.length == 0 && !loading) &&
-                        <Empty buttonText={'إضافة مجلد'} onClick={() => handleAddModalOpen()} emptyText={'ما رفعت أي محتوى'} containerhight={450} />
+                        <Empty
+                            onClick={() => handleAddModalOpen()}
+                            containerhight={450}
+                            buttonText={typeOfListdata == 'folder' ? 'إضافة مجلد' : folderType == 'video' ? 'إضافة فيديو' : folderType == 'file' ? 'إضافة ملف' : 'إضافة اختبار'}
+                            emptyText={typeOfListdata == 'folder' ? 'ما أضفت مجلد' : folderType == 'video' ? 'ما أضفت فيديو' : folderType == 'file' ? 'ما أضفت ملف' : 'ما أضفت اختبار'}
+                        />
                     }
                     {loading &&
                         <div className={styles.tableBodyArea}>

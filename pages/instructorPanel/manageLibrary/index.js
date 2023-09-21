@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
 import { createFolderAPI, getFolderListAPI, getItemListAPI } from '../../../services/apisService';
-import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
 import ManageLibraryTableComponent from '../../../components/ManageLibraryComponent/ManageLibraryTableComponent/ManageLibraryTableComponent';
 import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/ModelForAddItemLibrary/ModelForAddItemLibrary';
 import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput';
+import BackToPath from '../../../components/CommonComponents/BackToPath';
 
 
 
@@ -94,11 +95,13 @@ function Index() {
         })
     }
 
-    const handleAddFolder = () => {
-        setIsModelForAddFolderOpen(true);
-    };
-    const handleAddItems = () => {
-        setIsModelForAddItemOpen(true);
+    const handleAddItemsOrFolder = () => {
+        if (typeOfListdata == 'item') {
+            setIsModelForAddItemOpen(true);
+        }
+        else {
+            setIsModelForAddFolderOpen(true);
+        }
     };
     const handleRoute = () => {
         router.push(`/instructorPanel/manageLibrary/createCoursePath`)
@@ -147,17 +150,40 @@ function Index() {
                 <div>
                     <div className={styles.borderBottomNavbar}>
                         <div className='maxWidthDefault px-4'>
+                            <div className='m-0'>
+                                <BackToPath
+                                    backpathForPage={true}
+                                    backPathArray={
+                                        [
+                                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                                            { lable: 'إدارة المكتبة الرقمية', link: null },
+                                        ]
+                                    }
+                                />
+                            </div>
                             <div className={`${styles.headerWrapper}`}>
                                 <div>
-                                    <h1 className={`head2 py-8`}>مكتبة المرفقات</h1>
+                                    <h1 className={`head2 py-8`}>إدارة المكتبة الرقمية</h1>
                                 </div>
-                                <div className={`flex ${styles.createCourseHeaderText}`}>
+                                {/* <div className={`flex ${styles.createCourseHeaderText}`}>
                                     <div className={`${styles.createCourseBtnBox}`}>
                                         {(selectedItem !== 'curriculum' && typeOfListdata == 'item') && <button className={`primaryStrockedBtn`} onClick={() => handleAddItems()}>{selectedItem == 'video' ? "إضافة فيديو" : selectedItem == 'file' ? "إضافة ملف" : "إضافة اختبار"}</button>}
                                     </div>
                                     <div className={`${styles.createCourseBtnBox}  mr-2`}>
                                         {selectedItem !== 'curriculum' && <button className='primarySolidBtn' onClick={() => handleAddFolder('addFolder')}> إضافة مجلد</button>}
                                         {selectedItem == 'curriculum' && <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة قسم</button>}
+                                    </div>
+                                </div> */}
+                                <div className={`flex ${styles.createCourseHeaderText}`}>
+                                    <div className={`${styles.createCourseBtnBox}  mr-2`}>
+                                        {selectedItem !== 'curriculum' &&
+                                            <button className='primarySolidBtn' onClick={() => handleAddItemsOrFolder()}>
+                                                {typeOfListdata == 'folder' ? 'إضافة مجلد' : selectedItem == 'video' ? "إضافة فيديو" : selectedItem == 'file' ? "إضافة ملف" : "إضافة اختبار"}
+                                            </button>
+                                        }
+                                        {selectedItem == 'curriculum' &&
+                                            <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة قسم</button>
+                                        }
                                     </div>
                                 </div>
                             </div>
