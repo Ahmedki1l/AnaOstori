@@ -7,6 +7,7 @@ import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import { getCurriculumIdsAPI, updateCurriculumAPI } from '../../../services/apisService'
 import { useSelector, useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
+import Empty from '../../CommonComponents/Empty'
 
 const CoursePathLibrary = () => {
 
@@ -69,7 +70,9 @@ const CoursePathLibrary = () => {
             query: { coursePathId: item.id },
         });
     }
-
+    const handleRoute = () => {
+        router.push(`/instructorPanel/manageLibrary/createCoursePath`)
+    }
     return (
         <>
             <div>
@@ -118,17 +121,12 @@ const CoursePathLibrary = () => {
                             }
                         </table>
                         {curriculumList.length == 0 &&
-                            <div className={styles.tableBodyArea}>
-                                <div className={styles.noDataMainArea}>
-                                    <div>
-                                        <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                                        <p className={`fontBold py-2 ${styles.raisedcontent}`}>ما رفعت أي محتوى</p>
-                                        <div className={styles.createCourseBtnBox}>
-                                            <button className='primarySolidBtn'>إضافة مجلد</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <Empty
+                                onClick={handleRoute}
+                                containerhight={450}
+                                buttonText={'إضافة مقرر'}
+                                emptyText={'ما أضفت مقرر'}
+                            />
                         }
                     </div>
                 </div>

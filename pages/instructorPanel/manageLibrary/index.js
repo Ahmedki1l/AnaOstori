@@ -16,7 +16,6 @@ import BackToPath from '../../../components/CommonComponents/BackToPath';
 function Index() {
     const storeData = useSelector((state) => state?.globalStore);
     const router = useRouter()
-    const dispatch = useDispatch()
     const isUserInstructor = storeData?.isUserInstructor;
     const [selectedItem, setSelectedItem] = useState();
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
@@ -26,7 +25,9 @@ function Index() {
     const [selectedFolderId, setSelectedFolderId] = useState()
     const [loading, setLoading] = useState(false)
 
+    console.log(router.query.folderType);
     useEffect(() => {
+        console.log(router.query.folderType);
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
     }, [])
 
@@ -165,15 +166,6 @@ function Index() {
                                 <div>
                                     <h1 className={`head2 py-8`}>إدارة المكتبة الرقمية</h1>
                                 </div>
-                                {/* <div className={`flex ${styles.createCourseHeaderText}`}>
-                                    <div className={`${styles.createCourseBtnBox}`}>
-                                        {(selectedItem !== 'curriculum' && typeOfListdata == 'item') && <button className={`primaryStrockedBtn`} onClick={() => handleAddItems()}>{selectedItem == 'video' ? "إضافة فيديو" : selectedItem == 'file' ? "إضافة ملف" : "إضافة اختبار"}</button>}
-                                    </div>
-                                    <div className={`${styles.createCourseBtnBox}  mr-2`}>
-                                        {selectedItem !== 'curriculum' && <button className='primarySolidBtn' onClick={() => handleAddFolder('addFolder')}> إضافة مجلد</button>}
-                                        {selectedItem == 'curriculum' && <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة قسم</button>}
-                                    </div>
-                                </div> */}
                                 <div className={`flex ${styles.createCourseHeaderText}`}>
                                     <div className={`${styles.createCourseBtnBox}  mr-2`}>
                                         {selectedItem !== 'curriculum' &&
@@ -182,7 +174,7 @@ function Index() {
                                             </button>
                                         }
                                         {selectedItem == 'curriculum' &&
-                                            <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة قسم</button>
+                                            <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة مقرر</button>
                                         }
                                     </div>
                                 </div>

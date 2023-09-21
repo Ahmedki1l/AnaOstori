@@ -108,7 +108,6 @@ const ManageLibraryTableComponent = ({
             setIsModelForAddFolderOpen(true)
         }
     }
-    console.log(folderType);
 
     return (
         <>

@@ -9,6 +9,7 @@ import { createCurriculumAPI, createCurriculumSectionAPI, getCurriculumDetailsAP
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../../constants/ar'
 import { toast } from 'react-toastify'
+import BackToPath from '../../../../components/CommonComponents/BackToPath'
 
 export async function getServerSideProps(context) {
     const params = context.query
@@ -118,6 +119,16 @@ const CreateCoursePath = (props) => {
         <div>
             <Form form={courseForm} onFinish={onFinishCreateCoursepath} >
                 <div className={styles.borderBottomNavbar}>
+                    <BackToPath
+                        backpathForPage={true}
+                        backPathArray={
+                            [
+                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/manageLibrary' },
+                                { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/' },
+                                { lable: 'إدارة المكتبة الرقمية', link: null },
+                            ]
+                        }
+                    />
                     <div className='maxWidthDefault px-4'>
                         <div className={`${styles.headerWrapper}`}>
                             <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : "إنشاء مقرر"}</h1>
