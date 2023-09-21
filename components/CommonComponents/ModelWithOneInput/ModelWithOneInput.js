@@ -44,7 +44,7 @@ const ModelWithOneInput = ({
                     <button onClick={() => setOpen(false)} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
                     </button>
-                    <p className={`fontBold ${styles.createappointment}`}> إضافة مجلد</p>
+                    <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان المجلد' : 'إضافة مجلد'}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={inputForm} onFinish={handleCreateFolder}>
@@ -63,7 +63,7 @@ const ModelWithOneInput = ({
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>
                             </div>
                             {isEdit && <div className={styles.deleteVideoBtn}>
                                 <button className='deleteBtn' onClick={() => handleDelete()} >حذف المجلد </button>

@@ -145,6 +145,7 @@ const ModelForAddItemLibrary = ({
         setFileName()
         setFileUploadResponceData()
     }
+    console.log(folderType);
     return (
         <>
             <Modal
@@ -157,7 +158,13 @@ const ModelForAddItemLibrary = ({
                 <div className={styles.modalHeader}>
                     <button onClick={() => onModelClose()} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.createappointment}`}>إضافة فيديو</p>
+                    <p className={`fontBold ${styles.createappointment}`}>
+                        {folderType == 'video' && isEdit ? 'تعديل الفيديو' : 'إضافة فيديو' ||
+                            folderType == 'file' && isEdit ? 'إضافة ملف' : 'إضافة ملف' ||
+                                folderType == 'quiz' && isEdit ? 'تعديل الاختبار' : 'إضافة اختبار'
+                        }
+                    </p>
+                    {/* <p className={`fontBold ${styles.createappointment}`}>{folderType == 'video' ? 'إضافة فيديو' : folderType == 'file' ? 'إضافة ملف' : 'إضافة اختبار'}</p> */}
                 </div>
                 <div dir='rtl'>
                     <Form form={ItemDetailsForm} onFinish={onFinish}>
@@ -250,8 +257,8 @@ const ModelForAddItemLibrary = ({
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className={styles.createAppointmentBtnBox}>
-                                {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileName ? false : true} >{isEdit ? "حفظ" : "إنشاء"}</button>}
-                                {folderType == "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} >{isEdit ? "حفظ" : "إنشاء"}</button>}
+                                {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileName ? false : true} >{isEdit ? "حفظ" : "إضافة"}</button>}
+                                {folderType == "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>}
                             </div>
                             {isEdit &&
                                 <div className={styles.deleteVideoBtn}>
