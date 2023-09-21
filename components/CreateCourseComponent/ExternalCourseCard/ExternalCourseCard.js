@@ -39,7 +39,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         if (data.CourseCardMetaData == undefined) {
             data.CourseCardMetaData = []
         } else {
-            console.log(43);
             data.CourseCardMetaData.push(JSON.parse(JSON.stringify({
                 icon: '',
                 link: '',

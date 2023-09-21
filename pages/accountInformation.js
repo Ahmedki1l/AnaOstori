@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Icon from '../components/CommonComponents/Icon';
 import styles from '../styles/AccountInformation.module.scss'
 import loader from '../public/icons/loader.svg'
 import { toast } from "react-toastify";

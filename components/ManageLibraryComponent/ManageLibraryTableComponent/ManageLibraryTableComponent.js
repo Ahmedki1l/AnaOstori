@@ -33,7 +33,6 @@ const ManageLibraryTableComponent = ({
     const [deleteItemType, setDeleteItemType] = useState('folder')
 
     const handleEditIconClick = async (item) => {
-        console.log(item);
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
             setSelectedFolder(item)

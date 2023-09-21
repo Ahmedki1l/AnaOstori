@@ -133,7 +133,6 @@ function Index() {
         // don't delete 
     }
     const handleModelClose = (folderId) => {
-        console.log(folderId);
         setIsModelForAddItemOpen(false)
         getItemList(folderId)
     }

@@ -47,10 +47,19 @@ export default function Index() {
                     <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نسخة التطبيق</p>
                 </div>
+                <Link href={'/instructorPanel/manageStudentFeedBack'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل تجارب الطلاب</p>
+                </Link>
+                <Link href={'/instructorPanel/manageUserList'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>بيانات المستخدمين</p>
+                </Link>
                 <Link href={'/instructorPanel/manageCouponCourse'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نسخة التطبيق</p>
                 </Link>
+
             </div>
 
             {isModelForAppVersion &&

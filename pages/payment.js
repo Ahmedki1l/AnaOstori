@@ -24,15 +24,15 @@ export default function Payment(props) {
     useEffect(() => {
         const getPaymentData = async () => {
             let data = {
-                orderID: orderID,
-                transactionID: transactionID,
+                orderId: orderID,
+                transactionId: transactionID,
             }
             await getPaymentInfoAPI(data).then(async (response) => {
                 setTransactionDetails(response.data)
                 setIsPaymentSuccess(response.data[0].result.code == "000.000.000" ? true : false)
                 response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
                 setLoading(false)
-                setInvoiceUrl(mediaUrl(transactionDetails[0]?.orderDetails?.invoiceBucket, transactionDetails[0]?.orderDetails?.invoiceKey))
+                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
                 const getMyCourseReq = myCoursesAPI()
                 const [myCourseData] = await Promise.all([getMyCourseReq])
                 dispatch({
@@ -57,7 +57,7 @@ export default function Payment(props) {
                 </div>
                 :
                 <>
-                    {(transactionDetails && isPaymentSuccess) ?
+                    {(transactionDetails && isPaymentSuccess && invoiceUrl) ?
                         <div className={`maxWidthDefault ${styles.mainArea}`}>
                             <div className='m-5'>
                                 <div className={styles.circle}>

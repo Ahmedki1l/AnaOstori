@@ -42,7 +42,8 @@ export const uploadFileAPI = (data) => { return instance2.post('/file/upload', d
 
 export const createOrderAPI = (data) => { return instance.post(`/createOrder`, data?.orderData) }
 export const getMyOrderAPI = (data) => { return instance.get(`/order/query`) }
-export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment/${data?.orderID}/${data?.transactionID}`) }
+// export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment/${data?.orderID}/${data?.transactionID}`) }
+export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment`, data) }
 export const getCourseDetailsAPI = (data) => { return instance.get(`/courseByName/${data?.courseName}`) }
 export const getCatagoriesAPI = () => { return instance.get(`/catagories`) }
 export const courseCurriculumAPI = (data) => { return instance.get(`/course/curriculum/${data?.courseID}`) }
@@ -142,3 +143,6 @@ export const editNewsAPI = (data) => { return instance.post(`/newsBar/update`, d
 // ********* Manage Orders APIs ***********//
 export const managePurchaseOrdersAPI = (data) => { return instance.get(`order/list?page=${data.pageNo}&limit=${data.limit}&order=${data.order}`) }
 
+
+
+export const routeAPI = (data) => { return instance.post(`/route`, data) }

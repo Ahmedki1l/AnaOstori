@@ -72,7 +72,6 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                 return item
             })
             setSectionItemList(freeUsageItem)
-            console.log(freeUsageItem);
         }).catch((error) => {
             console.log(error);
         })
