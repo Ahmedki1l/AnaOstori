@@ -52,8 +52,11 @@ export default function Payment(props) {
     return (
         <>
             {loading ?
-                <div className={`relative ${styles.mainArea}`}>
-                    <Spinner borderwidth={7} width={6} height={6} />
+                <div>
+                    <div className={`relative ${styles.mainArea}`}>
+                        <Spinner borderwidth={7} width={6} height={6} />
+                        <h1 style={{ textAlign: 'center' }}>انتظر الله يسعدك، بنتحقق من عملية الدفع</h1>
+                    </div>
                 </div>
                 :
                 <>

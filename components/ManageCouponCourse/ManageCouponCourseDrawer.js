@@ -1,13 +1,16 @@
 import { Drawer, Form } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import { FormItem } from '../antDesignCompo/FormItem';
 import Select from '../antDesignCompo/Select';
 import Input from '../../components/antDesignCompo/Input'
+import CustomButton from '../CommonComponents/CustomButton';
+import InputTextArea from '../antDesignCompo/InputTextArea';
 
 const ManageCouponCourseDrawer = () => {
 
     const [couponCourseForm] = Form.useForm()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
 
 
     return (
@@ -67,6 +70,24 @@ const ManageCouponCourseDrawer = () => {
                         placeholder='SelectCoursesAsMulti'
                     />
                 </FormItem>
+                <FormItem
+                    name={'shortDescription'}>
+                    <InputTextArea
+                        height={274}
+                        width={549}
+                        placeholder="وصف الدورة"
+                        value={courseData.shortDescription}>
+                    </InputTextArea>
+                </FormItem>
+
+                <div className='pt-5'>
+                    <CustomButton
+                        btnText='حفظ'
+                        height={37}
+                        showLoader={showBtnLoader}
+                        fontSize={16}
+                    />
+                </div>
             </Form>
         </div>
     )

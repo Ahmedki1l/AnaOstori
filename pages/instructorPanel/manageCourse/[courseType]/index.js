@@ -150,7 +150,7 @@ export default function Index() {
                                             </div>
                                         </td>
                                         <td>
-                                            <div onClick={() => handleEditCourse(course)}>
+                                            <div className='cursor-pointer' onClick={() => handleEditCourse(course)}>
                                                 <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                             </div>
                                         </td>
