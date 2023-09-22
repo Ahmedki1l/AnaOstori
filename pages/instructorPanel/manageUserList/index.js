@@ -52,9 +52,16 @@ const Index = () => {
                 const iconColor = text == 'female' ? '#0C5D96' : '#E10768'
                 const gender = genders.find((gender) => gender.value == text)
                 return (
+
                     <div className='flex'>
-                        <AllIconsComponenet iconName={iconName} height={18} width={18} color={iconColor} />
-                        <p>{gender?.label}</p>
+                        {text == null ?
+                            <p>-</p>
+                            :
+                            <>
+                                <AllIconsComponenet iconName={iconName} height={18} width={18} color={iconColor} />
+                                <p>{gender?.label}</p>
+                            </>
+                        }
                     </div>
                 )
             }

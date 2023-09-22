@@ -1,5 +1,5 @@
 import { ConfigProvider, Drawer, Table, Tag } from "antd";
-import { managePurchaseOrdersAPI } from "../../../services/apisService";
+import { createOrderAPI, managePurchaseOrdersAPI } from "../../../services/apisService";
 import { useEffect, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";
@@ -11,6 +11,7 @@ import Link from "next/link";
 import BackToPath from "../../../components/CommonComponents/BackToPath";
 import { getNewToken } from "../../../services/fireBaseAuthService";
 import { mediaUrl } from "../../../constants/DataManupulation";
+import { error } from "jquery";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -28,10 +29,39 @@ const Index = () => {
     const [selectedOrder, setSelectedOrder] = useState()
     const paymentStatus = paymentConst.paymentStatus
     const [currentPage, setCurrentPage] = useState(1)
+
     const tableColumns = [
         {
             title: 'كلمناه؟',
-            dataIndex: '',
+            dataIndex: 'assistanceAquired',
+            render: (text, _record) => {
+                console.log(text);
+                const changeStatusForAssistantKey = async () => {
+                    let body = {
+                        orderUpdate: true,
+                        id: _record?.id,
+                        assistanceAquired: !text
+                    }
+                    console.log(body);
+                    await createOrderAPI(body).then((res) => {
+                        console.log(res);
+                    }).catch(async (error) => {
+                        if (error?.response?.status == 401) {
+                            await getNewToken().then(async (token) => {
+                                await createOrderAPI(body).then((res) => {
+                                })
+                            }).catch(error => {
+                                console.error("Error:", error);
+                            });
+                        }
+                    })
+                }
+                return (
+                    <div className="cursor-pointer" onClick={() => changeStatusForAssistantKey(true)}>
+                        <AllIconsComponenet iconName={_record.assistanceAquired == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                    </div>
+                )
+            }
         },
         {
             title: 'رقم الطلب',
@@ -143,7 +173,6 @@ const Index = () => {
             limit: 10,
             order: "createdAt DESC"
         }
-        console.log(data);
         await managePurchaseOrdersAPI(data).then((res) => {
             setPaginationConfig({
                 ...paginationConfig,

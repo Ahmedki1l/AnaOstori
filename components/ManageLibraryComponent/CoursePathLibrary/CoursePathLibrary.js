@@ -18,7 +18,6 @@ const CoursePathLibrary = () => {
     const dispatch = useDispatch();
     const router = useRouter()
 
-
     const openDeleteFolderItems = (item) => {
         setIsmodelForDeleteItems(true)
         setSelectedCurriculum(item)
