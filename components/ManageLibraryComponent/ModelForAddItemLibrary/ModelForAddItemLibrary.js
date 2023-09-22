@@ -9,6 +9,7 @@ import { addItemToFolderAPI, updateItemToFolderAPI } from '../../../services/api
 import Spinner from '../../CommonComponents/spinner';
 import { uploadFileSevices } from '../../../services/UploadFileSevices';
 import { getNewToken } from '../../../services/fireBaseAuthService';
+import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 
 
 const ModelForAddItemLibrary = ({
@@ -21,7 +22,6 @@ const ModelForAddItemLibrary = ({
 }) => {
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
-    const [uploadLoader, setUploadLoader] = useState(false)
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
 
@@ -29,24 +29,6 @@ const ModelForAddItemLibrary = ({
         ItemDetailsForm.setFieldsValue(selectedItem)
         setFileName(selectedItem?.linkKey)
     }, [selectedItem])
-    const getFileKey = async (e) => {
-        setUploadLoader(true)
-        await uploadFileSevices(e.target.files[0]).then((res) => {
-            const uploadFileBucket = res.split('.')[0].split('//')[1]
-            const uploadFileKey = res.split('?')[0].split('/')[3]
-            const uploadFileType = e.target.files[0].type
-            setFileUploadResponceData({
-                key: uploadFileKey,
-                bucket: uploadFileBucket,
-                mime: uploadFileType,
-            })
-            setFileName(e.target.files[0].name)
-            setUploadLoader(false)
-        }).catch((error) => {
-            console.log(error);
-            setUploadLoader(false)
-        })
-    }
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -74,7 +56,7 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
-            body.linkKey = e.examLink
+            body.quizLink = e.quizLink
         }
         const data = {
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
@@ -115,7 +97,7 @@ const ModelForAddItemLibrary = ({
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
-            body.linkKey = e.examLink
+            body.quizLink = e.quizLink
         }
         const data = {
             data: body
@@ -141,11 +123,6 @@ const ModelForAddItemLibrary = ({
         onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
     }
 
-    const handleRemoveFile = () => {
-        setFileName()
-        setFileUploadResponceData()
-    }
-    console.log(folderType);
     return (
         <>
             <Modal
@@ -190,26 +167,14 @@ const ModelForAddItemLibrary = ({
                                 />
                             </FormItem>
                             {folderType !== "quiz" &&
-                                <div className={styles.uploadVideoWrapper}>
-                                    <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
-                                    <label htmlFor='uploadFileInput' className='cursor-pointer'>
-                                        <div className={styles.IconWrapper}>
-                                            <div className={styles.uploadFileWrapper}>
-                                                <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
-                                            </div>
-                                            <p>ارفق الملف</p>
-                                        </div>
-                                    </label>
-                                    {fileName &&
-                                        <div className={styles.uploadFileNameWrapper}>
-                                            <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}><AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} /></div>
-                                            {fileName}
-                                        </div>
-                                    }
-                                    {uploadLoader &&
-                                        <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
-                                    }
-                                </div>
+                                <UploadFileForModel
+                                    fileName={selectedItem?.linkKey}
+                                    setFileName={setFileName}
+                                    uploadResData={setFileUploadResponceData}
+                                    fileType={folderType == 'video' ? '.mp4' : '.pdf , .doc , .docx'}
+                                    accept={"image"}
+                                    placeHolderName={'ارفق الصورة'}
+                                />
                             }
                             {folderType == "quiz" &&
                                 <>
@@ -242,7 +207,7 @@ const ModelForAddItemLibrary = ({
                                         </div>
                                     </div>
                                     <FormItem
-                                        name={'linkKey'}
+                                        name={'quizLink'}
                                         rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                     >
                                         <Input

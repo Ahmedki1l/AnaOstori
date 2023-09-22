@@ -21,7 +21,7 @@ export default function CCItemQuizComponent(props) {
 				<h1 className={`fontBold ${styles.quizText1}`}>{quizText1}</h1>
 				<p className={`fontMedium ${styles.quizText2}`}>{quizText2}</p>
 				<div className={styles.goQuizBtnBox}>
-					<Link href={`${currentItemContent?.url}`} target='_blank' className='normalLinkText'>
+					<Link href={`${currentItemContent?.quizLink}`} target='_blank' className='normalLinkText'>
 						<button className='primaryStrockedBtn'>{buttonText}</button>
 					</Link>
 				</div>

@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { dateRange, fullDate } from '../../constants/DateConverter'
 import CustomButton from '../CommonComponents/CustomButton'
 import { getNewToken } from '../../services/fireBaseAuthService'
+import Input from '../antDesignCompo/Input'
 
 
 const PurchaseOrderDrawer = (props) => {
@@ -22,7 +23,7 @@ const PurchaseOrderDrawer = (props) => {
 
     const handleSaveOrder = async (value) => {
         setShowBtnLoader(true)
-        if (value.status == selectedOrder.status) {
+        if (value.status == selectedOrder.status || selectedOrder.failedReason == value.failedReason) {
             props.onClose(false)
             return
         }
@@ -52,7 +53,8 @@ const PurchaseOrderDrawer = (props) => {
             let body = {
                 orderUpdate: true,
                 id: selectedOrder.id,
-                status: value.status
+                status: value.status,
+                failedReason: value.failedReason
             }
             await createOrderAPI(body).then((res) => {
                 props.onClose(true)
@@ -71,8 +73,9 @@ const PurchaseOrderDrawer = (props) => {
     }
     useEffect(() => {
         orderForm.setFieldValue('status', selectedOrder.status)
+        orderForm.setFieldValue('failedReason', selectedOrder.failedReason)
     })
-
+    console.log(selectedOrder);
     return (
         <Form form={orderForm} onFinish={handleSaveOrder}>
             <p className='fontBold py-2' style={{ fontSize: '18px' }}>تفاصيل الحجز</p>
@@ -95,9 +98,23 @@ const PurchaseOrderDrawer = (props) => {
                 />
             </FormItem>
             {(selectedOrder.status == "rejected" || selectedOrder.status == "failed") &&
-                <div className={styles.purchaseOrderBox}>
-                    <p>{selectedOrder.paymentMethod}</p>
-                </div>
+                <>
+                    <p style={{ fontSize: '18px' }}>failedReason</p>
+                    {selectedOrder?.paymentMethod != 'bank_transfer' ?
+                        <div className={styles.purchaseOrderBox}>
+                            <p>{selectedOrder.failedReason}</p>
+                        </div>
+                        :
+                        <FormItem
+                            name={'failedReason'}>
+                            <Input
+                                width={425}
+                                height={47}
+                                placeholder='failedReason'
+                            />
+                        </FormItem>
+                    }
+                </>
             }
             <p style={{ fontSize: '18px' }}>طريقة الدفع</p>
             <div className={styles.purchaseOrderBox}>

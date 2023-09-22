@@ -2,11 +2,12 @@ import Link from 'next/link';
 import React from 'react'
 import styles from './CCItemFileComponent.module.scss'
 import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet';
+import { mediaUrl } from '../../../../../constants/DataManupulation';
 
 export default function CCItemFileComponent(props) {
 	const courseItem = props?.newSelectedCourseItem
 	const itemId = courseItem?.id
-	const fileDownloadLink = courseItem?.url
+	const fileDownloadLink = mediaUrl(courseItem.linkBucket, courseItem.linkKey)
 
 	const itemCompleteHendler = () => {
 		props.markItemCompleteHendler(itemId)

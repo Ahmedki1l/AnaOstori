@@ -25,9 +25,7 @@ function Index() {
     const [selectedFolderId, setSelectedFolderId] = useState()
     const [loading, setLoading] = useState(false)
 
-    console.log(router.query.folderType);
     useEffect(() => {
-        console.log(router.query.folderType);
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
     }, [])
 

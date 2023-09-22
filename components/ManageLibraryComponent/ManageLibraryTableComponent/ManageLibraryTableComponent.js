@@ -7,10 +7,12 @@ import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLibrary'
 import Spinner from '../../CommonComponents/spinner'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { updateFolderAPI } from '../../../services/apisService'
+import { updateFolderAPI, updateItemToFolderAPI } from '../../../services/apisService'
 import Empty from '../../CommonComponents/Empty'
 import BackToPath from '../../CommonComponents/BackToPath'
 import { getNewToken } from '../../../services/fireBaseAuthService'
+import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo'
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 
 const ManageLibraryTableComponent = ({
@@ -30,6 +32,8 @@ const ManageLibraryTableComponent = ({
     const [selectedFolder, setSelectedFolder] = useState()
     const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
+    const [fileSrc, setFileSrc] = useState()
+    const [videoModalOpen, setVideoModalOpen] = useState(false)
 
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
@@ -39,7 +43,6 @@ const ManageLibraryTableComponent = ({
             setSelectedItem(item)
             setIsModelForAddItemOpen(true)
         }
-        // setSelectedItem(item)
     };
     const handleEditFolder = async ({ name }) => {
         let editFolderBody = {
@@ -67,12 +70,6 @@ const ManageLibraryTableComponent = ({
         })
     }
 
-    const handleDeleteFolderItems = (item) => {
-        setSelectedItem(item);
-        setDeleteItemType(tableDataType == 'folder' ? 'folder' : folderType == 'quiz' ? 'quiz' : folderType == 'file' ? 'file' : 'video')
-        setIsmodelForDeleteItems(true)
-    }
-
     const onCloseModal = () => {
         setIsmodelForDeleteItems(false)
     }
@@ -95,17 +92,77 @@ const ManageLibraryTableComponent = ({
         setTypeOfListData("folder")
         getFolderList(folderType)
     }
-    const handleDeleteFolderData = () => {
-        console.log(selectedItem);
-        // let data = {
 
-        // }
+    const handleDeleteFolderItems = (item) => {
+        setSelectedItem(item);
+        setSelectedFolder(item)
+        setDeleteItemType(tableDataType == 'folder' ? 'folder' : folderType == 'quiz' ? 'quiz' : folderType == 'file' ? 'file' : 'video')
+        setIsmodelForDeleteItems(true)
     }
+
+    const handleDeleteFolderData = async () => {
+        if (tableDataType == 'item') {
+            let deleteItemBody = {
+                id: selectedItem.id,
+                isDeleted: true
+            }
+            let data = {
+                data: deleteItemBody
+            }
+            await updateItemToFolderAPI(data).then((res) => {
+                getItemList(selectedFolder.id)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await updateItemToFolderAPI(data).then(res => {
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            })
+        }
+        else {
+            let deleteFolderBody = {
+                id: selectedFolder.id,
+                isDeleted: true
+            }
+            let data = {
+                data: deleteFolderBody
+            }
+            await updateFolderAPI(data).then((res) => {
+                getFolderList(folderType)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await updateFolderAPI(data).then(res => {
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            })
+        }
+    }
+
     const handleAddModalOpen = () => {
         if (tableDataType == "item") {
             setIsModelForAddItemOpen(true)
         } else {
             setIsModelForAddFolderOpen(true)
+        }
+    }
+
+    const handlePreviewItem = (item) => {
+        if (item.type == 'quiz') {
+            window.open(item.quizLink)
+        }
+        else if (item.type == 'video') {
+            setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
+            setVideoModalOpen(true);
+        }
+        else {
+            window.open(mediaUrl(item.linkBucket, item.linkKey))
         }
     }
 
@@ -158,15 +215,18 @@ const ManageLibraryTableComponent = ({
                                             <td>{fullDate(item?.createdAt)}</td>
                                             <td>{fullDate(item?.updatedAt)}</td>
                                             <td>
-                                                <div className={tableDataType == "item" ? `${styles.eventButtons}` : ""}>
+                                                <div className={styles.eventButtons}>
                                                     <div className='cursor-pointer' onClick={() => handleEditIconClick(item)}>
                                                         <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                     </div>
                                                     {tableDataType == "item" &&
-                                                        <div className='cursor-pointer' onClick={() => handleDeleteFolderItems(item)}>
-                                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                        <div onClick={() => handlePreviewItem(item)}>
+                                                            <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#000000'} />
                                                         </div>
                                                     }
+                                                    <div className='cursor-pointer' onClick={() => handleDeleteFolderItems(item)}>
+                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -214,6 +274,13 @@ const ManageLibraryTableComponent = ({
                 deleteItemType={deleteItemType}
                 onDelete={handleDeleteFolderData}
             />}
+            {videoModalOpen &&
+                <ModalForVideo
+                    videoModalOpen={videoModalOpen}
+                    setVideoModalOpen={setVideoModalOpen}
+                    sourceFile={fileSrc}
+                />
+            }
         </>
     )
 }
