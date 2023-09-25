@@ -11,49 +11,49 @@ const ModelForDeleteItems = ({
 ) => {
     const deleteModalProps = {
         folder: {
-            messageText: "هل انت متأكد من انك تريد حذف هذا المجلد؟",
-            btnText: "تأكيد حذف المجلد",
-            title: "حذف مجلد"
+            title: 'تأكيد حذف المجلد',
+            messageText: 'متأكد انك تبي تحذف المجلد؟',
+            btnText: 'تأكيد الحذف',
         },
         video: {
-            messageText: "هل انت متأكد من انك تريد حذف هذا الفيديو؟",
-            btnText: "تأكيد حذف الفيديو",
-            title: "حذف فيديو"
+            title: 'تأكيد حذف الفيديو',
+            messageText: 'متأكد انك تبي تحذف الفيديو؟',
+            btnText: 'تأكيد الحذف',
         },
         file: {
-            messageText: "هل انت متأكد من انك تريد حذف هذا الملف؟",
-            btnText: "تأكيد حذف الملف",
-            title: "حذف ملف"
+            title: 'تأكيد حذف الملف',
+            messageText: 'متأكد انك تبي تحذف الملف؟',
+            btnText: 'تأكيد الحذف',
         },
         quiz: {
-            messageText: "هل انت متأكد من انك تريد حذف هذا الاختبار؟",
-            btnText: "تأكيد حذف الاختبار",
-            title: "حذف اختبار"
+            title: 'تأكيد حذف الاختبار',
+            messageText: 'متأكد انك تبي تحذف الاختبار؟',
+            btnText: 'تأكيد الحذف',
         },
         section: {
-            messageText: "هل انت متأكد من انك تريد حذف هذا القسم؟",
-            btnText: "تأكيد حذف القسم",
-            title: "حذف قسم"
+            title: 'تأكيد حذف القسم',
+            messageText: 'متأكد انك تبي تحذف القسم؟',
+            btnText: 'تأكيد الحذف',
         },
         sectionItem: {
+            title: "إزالة عنصر",
             messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
             btnText: "تأكيد إزالة العنصر",
-            title: "إزالة عنصر"
         },
         curriculum: {
-            messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
-            btnText: "تأكيد حذف المقرر",
-            title: "حذف مقرر"
+            title: 'تأكيد حذف المقرر',
+            messageText: 'متأكد انك تبي تحذف المقرر؟',
+            btnText: 'تأكيد الحذف',
         },
         category: {
+            title: "حذف مقرر",
             messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
             btnText: "تأكيد حذف المقرر",
-            title: "حذف مقرر"
         },
         instructor: {
+            title: "حذف مقرر",
             messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
             btnText: "تأكيد حذف المقرر",
-            title: "حذف مقرر"
         }
     }
 

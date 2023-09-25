@@ -44,7 +44,7 @@ const ModelWithOneInput = ({
                     <button onClick={() => setOpen(false)} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
                     </button>
-                    <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان المجلد' : 'إضافة مجلد'}</p>
+                    <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان القسم' : 'إضافة قسم'}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={inputForm} onFinish={handleCreateFolder}>

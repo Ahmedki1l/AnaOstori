@@ -8,6 +8,7 @@ import { getCourseProgressAPI } from '../../../services/apisService';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { mediaUrl } from '../../../constants/DataManupulation';
 import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
+import ContentAccessModal from '../ContentAccessModal/ContentAccessModal';
 
 
 
@@ -15,8 +16,9 @@ export default function CoursesCard(props) {
 	const courseDetails = props?.data?.course
 	const [courseProgress, setCourseProgress] = useState(0)
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
-
-
+	const contentAccess = props?.data?.availability?.contentAccess
+	const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
+	console.log(contentAccess);
 	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/anaOstori.png'
 
 	const date = props?.data?.availability
@@ -45,6 +47,15 @@ export default function CoursesCard(props) {
 		const remainingDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
 		setSubscriptionDaysLeft(remainingDays)
 	}, [props])
+
+	const handleClick = () => {
+		if (contentAccess == false) {
+			setIsModelforcontentAccess(true)
+		}
+		else {
+			Router.push(`myCourse/${courseDetails.id}`)
+		}
+	}
 
 	return (
 		<>
@@ -79,10 +90,17 @@ export default function CoursesCard(props) {
 								}
 								{courseDetails.type == "physical" ? <Link href="/" className='link px-2'>{date?.locationName}</Link> : <p className='px-2'>{date?.locationName}</p>}
 							</div>
-							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة الدورة المسجلة</button>
+							{/* <button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة الدورة المسجلة</button> */}
+							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة الدورة المسجلة</button>
 						</>
 					}
 				</div>
+				{isModelForcontentAccess &&
+					<ContentAccessModal
+						isModelForcontentAccess={isModelForcontentAccess}
+						setIsModelforcontentAccess={setIsModelforcontentAccess}
+					/>
+				}
 			</div>
 		</>
 	)

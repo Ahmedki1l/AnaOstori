@@ -210,7 +210,6 @@
 .courseCardsWraper {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
 	padding: 1rem 0 0 0;
 }
 
@@ -221,7 +220,8 @@
 	border-radius: 4px;
 	cursor: pointer;
 	overflow: hidden;
-	margin-bottom: 1rem;
+	margin: 1rem;
+	margin-right: 0;
 }
 
 .courseImgBox {

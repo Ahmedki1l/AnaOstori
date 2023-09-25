@@ -15,7 +15,7 @@ export async function getServerSideProps(contex) {
 	const catagories = await axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`).then((response) => (response.data)).catch((error) => error);
 
 	const catagoryNamePresent = catagories.find((item) => item.name === catagoryName)
-
+	console.log(catagoryName);
 	if (!catagoryNamePresent) {
 		return {
 			notFound: true,

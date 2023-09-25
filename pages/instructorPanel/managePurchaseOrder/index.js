@@ -35,7 +35,6 @@ const Index = () => {
             title: 'كلمناه؟',
             dataIndex: 'assistanceAquired',
             render: (text, _record) => {
-                console.log(text);
                 const changeStatusForAssistantKey = async () => {
                     let body = {
                         orderUpdate: true,
@@ -54,6 +53,7 @@ const Index = () => {
                                 console.error("Error:", error);
                             });
                         }
+                        console.log(error);
                     })
                 }
                 return (
@@ -152,7 +152,7 @@ const Index = () => {
                         <div className='pl-2' onClick={handleEditOrders}>
                             <AllIconsComponenet iconName={'editicon'} height={16} width={16} color={'#000000'} />
                         </div>
-                        {status &&
+                        {(status && _record.invoiceKey) &&
                             <Link className='pr-2' href={mediaUrl(_record.invoiceBucket, _record.invoiceKey)} target='_blank'>
                                 <AllIconsComponenet height={18} width={18} iconName={'downloadIcon'} color={'#000000'} />
                             </Link>

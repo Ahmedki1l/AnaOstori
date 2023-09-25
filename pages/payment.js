@@ -8,6 +8,7 @@ import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
 import { mediaUrl } from '../constants/DataManupulation';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -20,6 +21,7 @@ export default function Payment(props) {
     const transactionID = router.asPath?.split("=")[2]?.split("&")[0]
     const [loading, setLoading] = useState(true)
     const [invoiceUrl, setInvoiceUrl] = useState('')
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const getPaymentData = async () => {

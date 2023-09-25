@@ -31,11 +31,12 @@ export default function PhysicalCourseCard(props) {
 
 	const isSmallScreen = useWindowSize().smallScreen
 
-
+	console.log(courseDetail);
 
 	return (
 		<div className={`${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
 			<div className={styles.typeOfCourseCardWrapper}>
+				{!courseDetail.isPurchasable && <div className={styles.notAllowedWrapper}><div className={styles.notAllowedIconWrapper}></div></div>}
 				<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail)}>
 					<CoverImg height={215} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
 				</div>
