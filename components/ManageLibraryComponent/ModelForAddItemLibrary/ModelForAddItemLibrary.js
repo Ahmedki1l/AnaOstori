@@ -6,8 +6,6 @@ import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
 import { addItemToFolderAPI, updateItemToFolderAPI } from '../../../services/apisService';
-import Spinner from '../../CommonComponents/spinner';
-import { uploadFileSevices } from '../../../services/UploadFileSevices';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 
@@ -19,6 +17,7 @@ const ModelForAddItemLibrary = ({
     selectedFolderId,
     selectedItem,
     onCloseModal,
+    onDelete,
 }) => {
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
@@ -123,6 +122,10 @@ const ModelForAddItemLibrary = ({
         onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
     }
 
+    const handleDeleteItems = () => {
+        onDelete()
+        onCloseModal()
+    };
     return (
         <>
             <Modal
@@ -227,7 +230,7 @@ const ModelForAddItemLibrary = ({
                             </div>
                             {isEdit &&
                                 <div className={styles.deleteVideoBtn}>
-                                    <button className='deleteBtn' type={'submit'} >حذف الفيديو</button>
+                                    <button className='deleteBtn' type={'submit'} onClick={() => handleDeleteItems()}>حذف الفيديو</button>
                                 </div>
                             }
                         </div>

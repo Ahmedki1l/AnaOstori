@@ -58,6 +58,7 @@ const Switch = ({ onChange, params, defaultChecked }) => {
     const [isChecked, setIsChecked] = useState(defaultChecked ? defaultChecked : false)
 
     const handleChange = () => {
+        console.log(isChecked);
         onChange(!isChecked, params)
         setIsChecked(!isChecked);
     };
@@ -66,6 +67,7 @@ const Switch = ({ onChange, params, defaultChecked }) => {
     return (
         <StyledLabel>
             <input
+                id={params}
                 type="checkbox"
                 className='hidden'
                 checked={isChecked}

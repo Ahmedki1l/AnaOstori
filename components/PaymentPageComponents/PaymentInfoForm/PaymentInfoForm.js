@@ -76,8 +76,8 @@ export default function PaymentInfoForm(props) {
 		}
 		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/coupon/isValid`, data).then(res => {
 			if (res.status != 200) { return }
-			setCouponAppliedData(res.data),
-				setCouponError(false)
+			setCouponAppliedData(res.data)
+			setCouponError(false)
 			var radio = document.querySelector('input[type=radio][name=paymentDetails]:checked');
 			if (radio) {
 				radio.checked = false;

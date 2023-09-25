@@ -15,7 +15,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
-import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/ModalForVideo'
@@ -34,7 +34,7 @@ export async function getServerSideProps(ctx) {
 	// 	courseDetailsReq,
 	// 	homeReviewsReq
 	// ])
-
+	console.log(courseName, 37);
 	const [courseDetails] = await Promise.all([
 		courseDetailsReq,
 	])
@@ -46,8 +46,6 @@ export async function getServerSideProps(ctx) {
 	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/mix`)
 
 
-	console.log(courseDetails.data.id, 45);
-
 	const [maleDates, femaleDates, mixDates] = await Promise.all([
 		maleDatesReq,
 		femaleDatesReq,
@@ -57,7 +55,7 @@ export async function getServerSideProps(ctx) {
 	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
 		.then((response) => (response.data))
 		.catch((error) => error);
-
+	console.log(courseCurriculumReq, 58);
 	if (courseDetails.data == null) {
 		return {
 			notFound: true,
@@ -77,6 +75,7 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Index(props) {
+	console.log(props.courseCurriculum);
 	const courseDetail = props.courseDetails ? props.courseDetails : null
 	const maleDates = props.maleDates
 	const femaleDates = props.femaleDates

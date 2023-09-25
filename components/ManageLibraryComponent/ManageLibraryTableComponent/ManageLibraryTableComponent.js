@@ -216,7 +216,7 @@ const ManageLibraryTableComponent = ({
                                             <td>{fullDate(item?.updatedAt)}</td>
                                             <td>
                                                 <div className={styles.eventButtons}>
-                                                    <div className='cursor-pointer' onClick={() => handleEditIconClick(item)}>
+                                                    <div onClick={() => handleEditIconClick(item)}>
                                                         <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                     </div>
                                                     {tableDataType == "item" &&
@@ -224,7 +224,7 @@ const ManageLibraryTableComponent = ({
                                                             <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#000000'} />
                                                         </div>
                                                     }
-                                                    <div className='cursor-pointer' onClick={() => handleDeleteFolderItems(item)}>
+                                                    <div onClick={() => handleDeleteFolderItems(item)}>
                                                         <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
                                                     </div>
                                                 </div>
@@ -260,6 +260,7 @@ const ManageLibraryTableComponent = ({
                 onSave={handleEditFolder}
                 isEdit={true}
                 itemName={selectedFolder?.name}
+                onDelete={handleDeleteFolderData}
             />}
             {isModelForAddItemOpen && <ModelForAddItemLibrary
                 isModelForAddItemOpen={isModelForAddItemOpen}
@@ -267,6 +268,7 @@ const ManageLibraryTableComponent = ({
                 selectedFolder={selectedFolder}
                 folderType={folderType}
                 onCloseModal={onItemModelClose}
+                onDelete={handleDeleteFolderData}
             />}
             {ismodelForDeleteItems && <ModelForDeleteItems
                 ismodelForDeleteItems={ismodelForDeleteItems}

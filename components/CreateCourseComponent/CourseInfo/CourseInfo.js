@@ -121,6 +121,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             values.groupDiscountEligible = groupDiscountEligible
             values.type = courseType == "onDemand" ? "on-demand" : courseType
             values.language = englishCourse ? "en" : "ar"
+            values.isPurchasable = false
             values.published = false
             if (courseType != "physical") {
                 const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
@@ -369,14 +370,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const onChangeCourseChkBox = (e) => {
         setEnglishCourse(e.target.checked)
     }
-    const handlePublishCourse = async (e) => {
-        setShowLoader(true)
+    const handleToggleChange = async (e, params) => {
         let body = {
-            data: { published: e },
+            data: params == "published" ? { published: e } : { isPurchasable: e },
             courseId: editCourseData.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
-            setShowLoader(false)
+            toast.success('course updated successfully')
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -386,12 +386,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                     console.error("Error:", error);
                 });
             }
-            setShowLoader(false)
         })
-    }
-
-    const handlePurchasableCourse = async (e) => {
-
     }
 
     return (
@@ -859,11 +854,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     </Form.List>
                                 </div>
                                 <div className={styles.publishedCourseDetails}>
-                                    <Switch defaultChecked={editCourseData?.published} onChange={handlePublishCourse} />
+                                    <Switch defaultChecked={editCourseData?.published} onChange={handleToggleChange} params={'published'} />
                                     <p style={{ marginRight: '3px' }}>نشر الدورة</p>
                                 </div>
                                 <div className={`pt-2 ${styles.publishedCourseDetails}`}>
-                                    <Switch defaultChecked={editCourseData?.isPurchasable} onChange={handlePurchasableCourse} />
+                                    <Switch defaultChecked={editCourseData?.isPurchasable} onChange={handleToggleChange} params={'isPurchasable'} />
                                     <p style={{ marginRight: '3px' }}>إغلاق صفحة الدورة</p>
                                 </div>
                             </div>

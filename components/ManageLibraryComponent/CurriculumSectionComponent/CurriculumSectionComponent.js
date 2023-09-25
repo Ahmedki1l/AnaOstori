@@ -12,6 +12,7 @@ import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import SectionItems from './SectionItem/SectionItems'
+import Empty from '../../CommonComponents/Empty'
 
 
 
@@ -199,29 +200,28 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     return (
         <div>
-            {sectionDetails?.length > 0 &&
-                <div className={styles.addSectionArea}>
-                    <p className={styles.sectionName}>الأقسام</p>
-                    <p className={styles.addSections} onClick={() => handleAddSection()}>+ إضافة قسم</p>
-                </div>
-            }
-            {(sectionDetails?.length == 0) &&
-                <div>
-                    <div className={`head2 py-2`}>
-                        <p>الأقسام</p>
+            {sectionDetails?.length == 0 &&
+                <>
+                    <div className={styles.addSectionArea}>
+                        <p className={styles.sectionName}>الأقسام</p>
+                        <p className={styles.addSections} onClick={() => handleAddSection()}>+ إضافة قسم</p>
                     </div>
-                    <div>
-                        <div className={styles.tableBodyArea}>
-                            <div className={styles.noDataMainArea}>
-                                <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
-                                <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
-                                <div className={styles.createCourseBtnBox}>
-                                    <button className='primarySolidBtn' onClick={() => handleAddSection()}>إضافة قسم</button>
-                                </div>
+                    <div className={styles.tableBodyArea}>
+                        <Empty
+                            onClick={handleAddSection}
+                            containerhight={240}
+                            buttonText={'إضافة قسم'}
+                            emptyText={'باقي ما أضفت قسم'}
+                        />
+                        {/* <div className={styles.noDataMainArea}>
+                            <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
+                            <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
+                            <div className={styles.createCourseBtnBox}>
+                                <button className='primarySolidBtn' onClick={() => handleAddSection()}>إضافة قسم</button>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
-                </div>
+                </>
             }
             {sectionDetails?.length > 0 &&
                 <DragDropContext onDragEnd={handleSectionDragEnd}>

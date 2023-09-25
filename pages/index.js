@@ -27,8 +27,9 @@ export async function getServerSideProps(context) {
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`)
 		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 		// const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
+		const [catagories] = await Promise.all([
 
-		const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
+			// const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
 			// newsReq,
 			catagoriesReq,
 			// homeReviewsReq,
@@ -36,7 +37,10 @@ export async function getServerSideProps(context) {
 		])
 
 		return {
-			props: {}
+			props: {
+				catagories: catagories.data,
+			}
+
 			// props: {
 			// 	// news: news.data,
 			// 	catagories: catagories.data,

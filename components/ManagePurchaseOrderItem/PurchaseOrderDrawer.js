@@ -56,6 +56,7 @@ const PurchaseOrderDrawer = (props) => {
                 status: value.status,
                 failedReason: value.failedReason
             }
+            console.log(body);
             await createOrderAPI(body).then((res) => {
                 props.onClose(true)
             }).catch(async (error) => {
@@ -101,7 +102,7 @@ const PurchaseOrderDrawer = (props) => {
                 <>
                     <p style={{ fontSize: '18px' }}>failedReason</p>
                     {selectedOrder?.paymentMethod != 'bank_transfer' ?
-                        <div className={styles.purchaseOrderBox}>
+                        <div className={styles.failedReasonBox}>
                             <p>{selectedOrder.failedReason}</p>
                         </div>
                         :

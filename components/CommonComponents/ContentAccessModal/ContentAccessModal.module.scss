@@ -1,0 +1,30 @@
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closebutton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.headeText {
+    font-size: 18px;
+}
+
+.modalParaText {
+    font-size: 16px;
+    direction: rtl;
+}
+
+.buttonModalDiv {
+    height: 40px;
+    width: 100%;
+    margin: 0;
+}
+
+.cancelBtn {
+    font-size: 16px;
+}

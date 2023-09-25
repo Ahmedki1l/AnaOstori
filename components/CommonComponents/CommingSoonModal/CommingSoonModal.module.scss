@@ -1,0 +1,57 @@
+.commingSoonModalBox {
+    width: 410px;
+}
+
+.modalTitleText {
+    font-size: 23px;
+    margin-bottom: 15px;
+}
+
+.modalParaText {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.buttonModalDiv {
+    height: 40px;
+    width: 100%;
+    margin: 0;
+}
+
+.closeIconWrapper {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+}
+
+.cancelBtn {
+    font-size: 16px;
+}
+
+@media(max-width: 664px) {
+    .commingSoonModalBox {
+        width: 390px;
+    }
+}
+
+@media(max-width: 450px) {
+    .commingSoonModalBox {
+        width: 360px;
+    }
+}
+
+@media(max-width: 400px) {
+    .commingSoonModalBox {
+        width: 300px;
+    }
+}
+
+@media(max-width: 320px) {
+    .modalTitleText {
+        font-size: 21px;
+    }
+
+    .commingSoonModalBox {
+        width: 260px;
+    }
+}

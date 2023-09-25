@@ -97,6 +97,10 @@
     display: flex;
     justify-content: space-between;
     padding: 0px 80px;
+
+    div {
+        cursor: pointer;
+    }
 }
 
 .deleteItemsModalHeader {

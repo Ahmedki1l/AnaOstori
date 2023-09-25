@@ -9,10 +9,11 @@ import useScrollEvent from '../../hooks/useScrollEvent';
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
-import { signOutUser } from '../../services/fireBaseAuthService'
+import { getNewToken, signOutUser } from '../../services/fireBaseAuthService'
 import { getCatagoriesAPI, getCurriculumIdsAPI, getInstructorListAPI, myCoursesAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
+import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
 
 
 
@@ -21,19 +22,21 @@ export default function Navbar() {
 	const isSmallScreen = useWindowSize().smallScreen
 	const isMediumScreen = useWindowSize().mediumScreen
 	const [isMenuShow, setIsMenuShow] = useState(false)
-
+	const [commingSoonModalOpen, setCommingSoonModalOpen] = useState(false);
+	const [showSubMenu, setShowSubMenuShown] = useState()
+	const prevSubMenu = useRef();
+	const [catagories, setCatagories] = useState()
+	const [curriculumIds, setCurriculumIds] = useState();
 	const [open, setOpen] = useState(false);
 
 	const router = useRouter();
-
-	const catagoryName = (router.query.catagoryName)?.replace(/-/g, ' ')
 	const offset = useScrollEvent().offset
-
 	const dispatch = useDispatch();
 
+	const catagoryName = (router.query.catagoryName)?.replace(/-/g, ' ')
+
 	const storeData = useSelector((state) => state?.globalStore);
-	const [catagories, setCatagories] = useState()
-	const [curriculumIds, setCurriculumIds] = useState();
+
 	const userFullName = (storeData?.viewProfileData?.firstName && storeData?.viewProfileData?.lastName) ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : storeData?.viewProfileData?.fullName
 
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
@@ -82,15 +85,43 @@ export default function Navbar() {
 					myCourses: myCourseData?.data,
 				});
 			} catch (error) {
-				console.log(error);
+				if (error?.response?.status == 401) {
+					await getNewToken().then(async (token) => {
+						const getcatagoriReq = getCatagoriesAPI()
+						const getCurriculumIdsReq = getCurriculumIdsAPI()
+						const getInstructorListReq = getInstructorListAPI()
+						const getMyCourseReq = myCoursesAPI()
+
+
+						const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
+							getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
+						])
+						dispatch({
+							type: 'SET_CATAGORIES',
+							catagories: catagories?.data
+						});
+						dispatch({
+							type: 'SET_CURRICULUMIDS',
+							curriculumIds: curriculumIds?.data,
+						});
+						dispatch({
+							type: 'SET_INSTRUCTOR',
+							instructorList: instructorList?.data,
+						})
+						dispatch({
+							type: 'SET_ALL_MYCOURSE',
+							myCourses: myCourseData?.data,
+						});
+					}).catch(error => {
+						console.error("Error:", error);
+					});
+				}
 			}
 		}
 
 		fetchResults();
 	}, [])
 
-	const [showSubMenu, setShowSubMenuShown] = useState()
-	const prevSubMenu = useRef();
 
 	useEffect(() => {
 		prevSubMenu.current = showSubMenu;
@@ -105,13 +136,24 @@ export default function Navbar() {
 		setIsMenuShow(false)
 	}
 
-	const handleClickCourseName = (submenu, menu) => {
+	const handleClickCourseName = (submenu, menu, lang) => {
 		setShowSubMenuShown()
 		setIsMenuShow(false)
-		router.push({
-			pathname: `/${(submenu).replace(/ /g, "-")}/${(menu.replace(/ /g, "-"))}`,
-			state: { myParam: 'some value' },
-		});
+		if (submenu.isPurchasable == false) {
+			setCommingSoonModalOpen(true)
+			return
+		} else {
+			if (lang == "en") {
+				router.push({
+					pathname: `/${(menu.replace(/ /g, "-"))}/${(submenu.name).replace(/ /g, "-")}`,
+					query: { language: 'en' },
+				})
+			} else {
+				router.push({
+					pathname: `/${(submenu.name).replace(/ /g, "-")}/${(menu.replace(/ /g, "-"))}`,
+				})
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -238,10 +280,14 @@ export default function Navbar() {
 															{menu.courses?.map((subMenu, j = index) => {
 																return (
 																	<div key={`navSubMenu${j}`}>
-																		<Link href={`/${(subMenu.name).replace(/ /g, "-")}/${(menu.name.replace(/ /g, "-"))}` ?? ""}
-																			className={`block ${styles.subMenuText}`} onClick={() => handleClickCourseName(subMenu.name, menu.name)}>
-																			{stringUpdation(subMenu.name, 30)}
-																		</Link>
+																		<div
+																			className={`block ${styles.subMenuText}`} onClick={() => { handleClickOnLink(); handleClickCourseName(subMenu, menu.name, subMenu.language) }}>
+																			{subMenu.name.length > 30 ? (
+																				<span>{subMenu.name.slice(0, 30)}...</span>
+																			) :
+																				<span>{subMenu.name}</span>
+																			}
+																		</div>
 																	</div>
 																)
 															})}
@@ -280,10 +326,12 @@ export default function Navbar() {
 														{menu.courses?.map((subMenu, j = index) => {
 															return (
 																<div key={`navSubMenu${j}`}>
-																	<Link href={`/${(subMenu.name).replace(/ /g, "-")}/${(menu.name.replace(/ /g, "-"))}` ?? ""}
-																		className={`block ${styles.subMenuText}`} onClick={() => handleClickCourseName(subMenu.name, menu.name)}>
-																		{stringUpdation(subMenu.name, 30)}
-																	</Link>
+																	<div
+																		className={`block ${styles.subMenuText}`}
+																		onClick={() => handleClickCourseName(subMenu, menu.name, subMenu.language)}
+																	>
+																		{subMenu.name}
+																	</div>
 																</div>
 															)
 														})}
@@ -352,6 +400,11 @@ export default function Navbar() {
 				</div>
 			}
 			{open && <ModalComponent open={open} handleClose={handleClose} dispatch={dispatch} toast={toast} />}
+			<CommingSoonModal
+				open={commingSoonModalOpen}
+				commingSoonModalOpen={commingSoonModalOpen}
+				setCommingSoonModalOpen={setCommingSoonModalOpen}
+			/>
 		</>
 	)
 }

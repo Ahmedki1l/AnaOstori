@@ -41,6 +41,28 @@
 	overflow: hidden;
 	display: grid;
 	grid-template-rows: 223px auto;
+	position: relative;
+
+}
+
+.notAllowedWrapper {
+	position: absolute;
+	background-color: #ffffff7a;
+	z-index: 99;
+	width: 100%;
+	height: 100%;
+}
+
+.notAllowedIconWrapper {
+	position: absolute;
+	background-image: url("../public/images/notAllowd.svg");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	cursor: not-allowed;
 }
 
 .detailsBox {

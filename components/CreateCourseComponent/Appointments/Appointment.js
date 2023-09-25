@@ -42,8 +42,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         }
     });
 
-    const onChange = (checked) => {
-    };
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
@@ -141,6 +139,19 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setIsModalOpen(false)
     }
 
+    const onChange = async (e, params) => {
+        let body = {
+            data: params == "published" ? { published: e } : { contentAccess: e },
+            availabilityId: editAvailability?.id
+        }
+        console.log(body);
+        await editAvailabilityAPI(body).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+            setShowBtnLoader(false)
+        })
+    };
 
     return (
         <div className='maxWidthDefault px-4'>
@@ -357,10 +368,18 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                     disabled={isFieldDisable}
                                 />
                             </FormItem>
-                            {showSwitchBtn && <div className='flex items-center'>
-                                <Switch defaultChecked onChange={onChange}></Switch>
-                                <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
-                            </div>}
+                            {showSwitchBtn &&
+                                <>
+                                    <div className='flex items-center'>
+                                        <Switch defaultChecked={editAvailability?.published} onChange={onChange} params={'published'} ></Switch>
+                                        <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
+                                    </div>
+                                    <div className='flex items-center'>
+                                        <Switch defaultChecked={editAvailability?.contentAccess} onChange={onChange} params={'contentAccess'} ></Switch>
+                                        <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
+                                    </div>
+                                </>
+                            }
                         </div>
                         <div className={styles.saveBtnBox}>
                             <CustomButton
