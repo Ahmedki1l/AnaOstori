@@ -76,7 +76,6 @@ const PurchaseOrderDrawer = (props) => {
         orderForm.setFieldValue('status', selectedOrder.status)
         orderForm.setFieldValue('failedReason', selectedOrder.failedReason)
     })
-    console.log(selectedOrder);
     return (
         <Form form={orderForm} onFinish={handleSaveOrder}>
             <p className='fontBold py-2' style={{ fontSize: '18px' }}>تفاصيل الحجز</p>

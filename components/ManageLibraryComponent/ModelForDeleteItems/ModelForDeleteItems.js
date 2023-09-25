@@ -38,7 +38,7 @@ const ModelForDeleteItems = ({
         sectionItem: {
             title: "إزالة عنصر",
             messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
-            btnText: "تأكيد إزالة العنصر",
+            btnText: 'تأكيد الحذف',
         },
         curriculum: {
             title: 'تأكيد حذف المقرر',
@@ -51,10 +51,25 @@ const ModelForDeleteItems = ({
             btnText: "تأكيد حذف المقرر",
         },
         instructor: {
-            title: "حذف مقرر",
-            messageText: "هل انت متأكد من انك تريد حذف هذا المقرر؟",
-            btnText: "تأكيد حذف المقرر",
-        }
+            title: 'تأكيد حذف المدرب',
+            messageText: 'متأكد انك تبي تحذف المدرب؟',
+            btnText: 'تأكيد الحذف',
+        },
+        videoDelete: {
+            title: 'تأكيد عدم تضمين الفيديو',
+            messageText: 'متأكد انك ما تبي تضم هذا الفيديو للمقرر؟',
+            btnText: 'اي، ما بضمنه',
+        },
+        fileDelete: {
+            title: 'تأكيد عدم تضمين الملف',
+            messageText: 'متأكد انك ما تبي تضم هذا الملف للمقرر؟',
+            btnText: 'اي، ما بضمنه',
+        },
+        quizDelete: {
+            title: 'تأكيد عدم تضمين الاختبار',
+            messageText: 'متأكد انك ما تبي تضم هذا الاختبار للمقرر؟',
+            btnText: 'اي، ما بضمنه',
+        },
     }
 
     const handleDeleteItems = () => {

@@ -144,9 +144,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             data: params == "published" ? { published: e } : { contentAccess: e },
             availabilityId: editAvailability?.id
         }
-        console.log(body);
         await editAvailabilityAPI(body).then((res) => {
-            console.log(res);
         }).catch((error) => {
             console.log(error);
             setShowBtnLoader(false)

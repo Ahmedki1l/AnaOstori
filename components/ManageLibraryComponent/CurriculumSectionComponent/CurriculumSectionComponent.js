@@ -213,13 +213,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                             buttonText={'إضافة قسم'}
                             emptyText={'باقي ما أضفت قسم'}
                         />
-                        {/* <div className={styles.noDataMainArea}>
-                            <AllIconsComponenet height={92} width={92} iconName={'noData'} color={'#00000080'} />
-                            <p className={`font-semibold py-2 `}>باقي ما أنشئت قسم</p>
-                            <div className={styles.createCourseBtnBox}>
-                                <button className='primarySolidBtn' onClick={() => handleAddSection()}>إضافة قسم</button>
-                            </div>
-                        </div> */}
                     </div>
                 </>
             }

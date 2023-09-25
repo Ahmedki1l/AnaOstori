@@ -14,15 +14,17 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
     const [sectionItemList, setSectionItemList] = useState(itemList)
     const [videoModalOpen, setVideoModalOpen] = useState(false)
     const [fileSrc, setFileSrc] = useState()
+    const [deleteItemType, setDeleteItemType] = useState()
 
     useEffect(() => {
         setSectionItemList(itemList?.sort((a, b) => a.sectionItem?.order - b.sectionItem?.order))
     }, [itemList])
 
-    const openDeleteModal = async (itemId) => {
+    const openDeleteModal = async (item) => {
         setIsmodelForDeleteItems(true)
         setDeleteItemSectionId(sectionId)
-        setDeleteItemId(itemId)
+        setDeleteItemId(item.id)
+        setDeleteItemType(item.type == 'video' ? 'videoDelete' : item.type == 'file' ? 'fileDelete' : 'quizDelete')
     }
 
     const onCloseModal = () => {
@@ -128,10 +130,10 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                                 <div style={{ height: '25px', cursor: 'pointer' }} onClick={() => handleOpenPdfModel(data)}>
                                                     <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />
                                                 </div>
-                                                <div onClick={() => handleFreeUsage(data)}>
+                                                <div className='cursor-pointer' onClick={() => handleFreeUsage(data)}>
                                                     <AllIconsComponenet iconName={'lock2'} height={22} width={22} color={data.sectionItem?.freeUsage ? '#00CF0F' : '#BC0303'} />
                                                 </div>
-                                                <div style={{ height: '25px' }} onClick={() => openDeleteModal(data.id)}>
+                                                <div className='cursor-pointer' style={{ height: '25px' }} onClick={() => openDeleteModal(data)}>
                                                     <AllIconsComponenet iconName={'deletecourse'} height={20} width={18} color={'#BFBFBF'} />
                                                 </div>
                                             </div>
@@ -149,7 +151,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                 <ModelForDeleteItems
                     ismodelForDeleteItems={ismodelForDeleteItems}
                     onCloseModal={onCloseModal}
-                    deleteItemType={'sectionItem'}
+                    deleteItemType={deleteItemType}
                     onDelete={handleDeleteSectionItem}
                 />}
             {videoModalOpen &&

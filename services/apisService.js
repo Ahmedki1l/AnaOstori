@@ -143,6 +143,8 @@ export const editNewsAPI = (data) => { return instance.post(`/newsBar/update`, d
 // ********* Manage Orders APIs ***********//
 export const managePurchaseOrdersAPI = (data) => { return instance.get(`order/list?page=${data.pageNo}&limit=${data.limit}&order=${data.order}`) }
 
+// ********* Manage coupons APIs ***********//
+export const createCouponsAPI = (data) => { return instance.get(`/createCoupon`, data) }
 
 
 export const routeAPI = (data) => { return instance.post(`/route`, data) }

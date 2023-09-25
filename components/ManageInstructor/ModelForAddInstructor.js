@@ -203,6 +203,7 @@ const ModelForAddInstructor = ({
                                 fileType={'.pdf , .doc , .docx'}
                                 accept={"file"}
                                 placeHolderName={'ارفق الملف'}
+                            // setShowBtnLoader={setShowBtnLoader}
                             />
 
                         </div>

@@ -53,12 +53,16 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addCategory}`}>تحديث نسخة التطبيق</p>
+                    <p className={`fontBold ${styles.appVersionHeadText}`}>تحديث نسخة التطبيق</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={appVersionForm} onFinish={onFinish}>
                         <div className={styles.createAppVersionFields}>
-                            <p className={` ${styles.addCategory}`}>نسخة الاندرويد</p>
+                            <div className={styles.checkBoxHead}>
+                                <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                <p className={styles.appleVersionText}>نسخة الاندرويد</p>
+                            </div>
+                            <p className={` ${styles.addVersion}`}>رقم النسخة الحالية</p>
                             <FormItem
                                 name={'androidCurrentVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
@@ -70,6 +74,7 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                                     placeholder='رقم النسخة الحالية'
                                 />
                             </FormItem>
+                            <p className={` ${styles.addVersion}`}>رقم النسخة الأدنى</p>
                             <FormItem
                                 name={'androidMinVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
@@ -81,7 +86,11 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                                     placeholder='رقم النسخة الأدنى'
                                 />
                             </FormItem>
-                            <p className={` ${styles.addCategory}`}>نسخة الايفون</p>
+                            <div className={styles.checkBoxHead}>
+                                <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
+                                <p className={styles.appleVersionText}>نسخة الايفون</p>
+                            </div>
+                            <p className={` ${styles.addVersion}`}>رقم النسخة الحالية</p>
                             <FormItem
                                 name={'iosCurrentVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
@@ -93,6 +102,7 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                                     placeholder='رقم النسخة الحالية'
                                 />
                             </FormItem>
+                            <p className={` ${styles.addVersion}`}>رقم النسخة الأدنى</p>
                             <FormItem
                                 name={'iosMinVersion'}
                                 rules={[{ required: true, message: "ادخل رابط الفرع" }]}
@@ -112,8 +122,8 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                         </div>
                     </Form>
                 </div>
-            </Modal>
-        </div>
+            </Modal >
+        </div >
     )
 }
 

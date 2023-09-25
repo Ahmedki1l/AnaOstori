@@ -90,6 +90,7 @@ const CoursePathLibrary = () => {
                             {curriculumList.length > 0 &&
                                 <tbody className={styles.tableBodyArea}>
                                     {curriculumList.map((item, index) => {
+                                        console.log(item);
                                         return (
                                             <tr className={styles.tableRow} key={item.id}>
                                                 <td>
@@ -97,20 +98,33 @@ const CoursePathLibrary = () => {
                                                         <AllIconsComponenet iconName={'redBook'} height={24} width={24} />
                                                         {/* <AllIconsComponenet iconName={'greenBook'} height={24} width={24} /> */}
                                                         <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                        <p className={styles.numberOfAddedVideo}>{` (${item?.numberOfItem}   عنصر  )`}</p>
+                                                        <p className={styles.numberOfAddedVideo}>{` (${item?.itemCount}   عنصر  )`}</p>
                                                     </div>
                                                 </td>
                                                 <td>{fullDate(item?.createdAt)}</td>
                                                 <td>{fullDate(item?.updatedAt)}</td>
-                                                <td>دورة القدرات الحضورية</td>
+                                                <td>
+                                                    {item.courses.length == 0 ?
+                                                        <p className='p-2'>-</p>
+                                                        :
+                                                        <>
+                                                            {item.courses.map((course, index) => {
+                                                                return (
+                                                                    <p key={index} className='p-2'>{course.name}</p>
+                                                                )
+                                                            })}
+                                                        </>
+                                                    }
+                                                </td>
                                                 <td>
                                                     <div className={styles.videoeventButtons}>
                                                         <div className='cursor-pointer' onClick={() => onEdit(item)}>
                                                             <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                                                         </div>
-                                                        <div className='cursor-pointer' onClick={() => openDeleteFolderItems(item)}>
-                                                            <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
-                                                        </div>
+                                                        {item?.courses?.length == 0 &&
+                                                            <div className='cursor-pointer' onClick={() => openDeleteFolderItems(item)}>
+                                                                <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                            </div>}
                                                     </div>
                                                 </td>
                                             </tr>

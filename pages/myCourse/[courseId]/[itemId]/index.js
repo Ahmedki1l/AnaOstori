@@ -65,8 +65,6 @@ export default function Index() {
                         itemID: currentItemId,
                         enrollmentId: selectedCourse.id
                     }
-                    console.log(courseID, "&", currentItemId);
-                    console.log(params);
                     const courseCurriculumReq = courseCurriculumAPI(params)
                     const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
                     const courseProgressPrecentageReq = getCourseProgressAPI(params)
