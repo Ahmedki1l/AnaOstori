@@ -9,6 +9,10 @@ import ModelForAddCategory from '../../../components/ManageCategories/ModelForAd
 import Spinner from '../../../components/CommonComponents/spinner'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import Empty from '../../../components/CommonComponents/Empty'
+import Switch from '../../../components/antDesignCompo/Switch'
+import { editCatagoryAPI, getCatagoriesAPI } from '../../../services/apisService'
+import { useDispatch } from 'react-redux'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 
 const Index = () => {
@@ -19,6 +23,7 @@ const Index = () => {
     const categoriesDetails = storeData?.catagories
     const [editCategory, setEditCategory] = useState()
     const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (categoriesDetails) {
@@ -37,6 +42,39 @@ const Index = () => {
         setEditCategory(category)
     }
 
+    const getCategoryListReq = async () => {
+        await getCatagoriesAPI().then((res) => {
+            dispatch({
+                type: 'SET_CATAGORIES',
+                catagories: res.data
+            });
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getCatagoriesAPI().then(res => {
+                        dispatch({
+                            type: 'SET_CATAGORIES',
+                            catagories: res.data
+                        });
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+        })
+    }
+
+    const handlePublishedCategory = async (e, catagoryId) => {
+        let body = {
+            id: catagoryId,
+            published: e
+        }
+        await editCatagoryAPI(body).then((res) => {
+            getCategoryListReq()
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
 
     return (
         <>
@@ -91,7 +129,7 @@ const Index = () => {
                                             </td>
                                             <td>
                                                 <div className={styles.publishState}>
-                                                    <AllIconsComponenet iconName={'circleicon'} height={18} width={18} color={category.published ? '#2A7E19' : "#ebf550"} />
+                                                    <Switch defaultChecked={category.published} onChange={handlePublishedCategory} params={category.id} ></Switch>
                                                     <p className='pr-2'>منشور</p>
                                                 </div>
                                             </td>
@@ -122,6 +160,7 @@ const Index = () => {
                             isEdit={isEdit}
                             editCategory={editCategory}
                             setEditCategory={setEditCategory}
+                            getCategoryListReq={getCategoryListReq}
                         />
                     }
                 </div>

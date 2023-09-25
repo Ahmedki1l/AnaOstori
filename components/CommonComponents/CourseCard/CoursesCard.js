@@ -18,7 +18,6 @@ export default function CoursesCard(props) {
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
 	const contentAccess = props?.data?.availability?.contentAccess
 	const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
-	console.log(contentAccess);
 	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/anaOstori.png'
 
 	const date = props?.data?.availability

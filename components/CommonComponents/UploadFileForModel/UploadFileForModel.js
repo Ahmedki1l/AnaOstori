@@ -5,12 +5,13 @@ import { stringUpdation } from '../../../constants/DataManupulation'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../spinner'
 
-const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName }) => {
+const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader }) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
 
     const getFileKey = async (e) => {
         setUploadLoader(true)
+        setShowBtnLoader(true)
         await uploadFileSevices(e.target.files[0]).then((res) => {
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
@@ -23,9 +24,11 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
             setUploadedFileName(e.target.files[0].name)
             setFileName(e.target.files[0].name)
             setUploadLoader(false)
+            setShowBtnLoader(false)
         }).catch((error) => {
             console.log(error);
             setUploadLoader(false)
+            setShowBtnLoader(false)
         })
     }
     const handleRemoveFile = () => {

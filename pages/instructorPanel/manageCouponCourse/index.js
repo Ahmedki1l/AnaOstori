@@ -124,6 +124,8 @@ const Index = () => {
     const onClose = () => {
         setDrawerForCouponCourse(false);
     };
+
+
     return (
         <div>
             <div className='maxWidthDefault px-4'>

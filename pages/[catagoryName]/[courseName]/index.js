@@ -34,7 +34,6 @@ export async function getServerSideProps(ctx) {
 	// 	courseDetailsReq,
 	// 	homeReviewsReq
 	// ])
-	console.log(courseName, 37);
 	const [courseDetails] = await Promise.all([
 		courseDetailsReq,
 	])
@@ -55,7 +54,6 @@ export async function getServerSideProps(ctx) {
 	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
 		.then((response) => (response.data))
 		.catch((error) => error);
-	console.log(courseCurriculumReq, 58);
 	if (courseDetails.data == null) {
 		return {
 			notFound: true,
@@ -327,7 +325,7 @@ export default function Index(props) {
 								return (
 									<div key={`courseData${i}`} id={`title${i + 1}`} style={{ paddingTop: selectedNavItem == `${i + 1}` ? `${paddingTop}rem` : '2rem' }}>
 										<h1 className='head2'>{metaData.title}</h1>
-										{metaData.content.search("<list>") ?
+										{!metaData.content.includes("<list>") ?
 											<div className='flex pt-4'>
 												<p className={styles.discriptionText}>{metaData.content}&nbsp;
 													{(metaData?.tailLink != null || metaData?.tailLink?.length === 0) &&
@@ -337,7 +335,7 @@ export default function Index(props) {
 											</div>
 											:
 											<ul className='list-disc pr-5 pt-4'>
-												{metaData.content.split("<list>").splice(1, metaData.content.length).map((list, j) => {
+												{metaData.content.split("<list>").map((list, j) => {
 													return (
 														<li key={`courseListDescrilition${j}`} className={styles.discriptionText}>{list}</li>
 													)

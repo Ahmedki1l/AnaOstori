@@ -51,6 +51,7 @@
 }
 
 .addSections {
+    cursor: pointer;
     font-size: 20px;
     color: #F26722
 }
@@ -69,6 +70,10 @@
     position: relative;
     left: 10px;
     z-index: 100;
+
+    div {
+        cursor: pointer;
+    }
 }
 
 .curriculumSectionBody {
@@ -111,6 +116,7 @@
     place-content: center;
     padding: 15px;
     border: 2px dashed #F26722;
+    cursor: pointer;
 }
 
 

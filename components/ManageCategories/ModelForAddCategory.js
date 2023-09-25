@@ -8,14 +8,12 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { createCatagoryAPI, editCatagoryAPI, getCatagoriesAPI } from '../../services/apisService';
-import Spinner from '../CommonComponents/spinner';
-import { useDispatch } from 'react-redux';
-import { stringUpdation } from '../../constants/DataManupulation';
-import { uploadFileSevices } from '../../services/UploadFileSevices';
+import { createCatagoryAPI, editCatagoryAPI } from '../../services/apisService';
 import { toast } from 'react-toastify';
 import { adminPanelCategoryConst, createAndEditBtnText, inputErrorMessages, toastSuccessMessage } from '../../constants/ar';
 import { getNewToken } from '../../services/fireBaseAuthService';
+import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel';
+import CustomButton from '../../components/CommonComponents/CustomButton'
 
 const ModelForAddCategory = ({
     isModelForAddCategory,
@@ -23,60 +21,17 @@ const ModelForAddCategory = ({
     isEdit,
     editCategory,
     setEditCategory,
+    getCategoryListReq,
 }) => {
 
     const [categoryForm] = Form.useForm();
+    const [fileUploadResponceData, setFileUploadResponceData] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? editCategory.published : false)
+
     useEffect(() => {
         categoryForm.setFieldsValue(editCategory)
-        setFileName(editCategory?.pictureKey)
     }, [])
-    const [fileName, setFileName] = useState()
-    const [fileUploadResponceData, setFileUploadResponceData] = useState()
-    const [uploadLoader, setUploadLoader] = useState(false)
-    const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? editCategory.published : false)
-    const dispatch = useDispatch()
-
-
-    const getFileKey = async (e) => {
-        setUploadLoader(true)
-        await uploadFileSevices(e.target.files[0]).then((res) => {
-            const uploadFileBucket = res.split('.')[0].split('//')[1]
-            const uploadFileKey = res.split('?')[0].split('/')[3]
-            const uploadFileType = e.target.files[0].type
-            setFileUploadResponceData({
-                key: uploadFileKey,
-                bucket: uploadFileBucket,
-                mime: uploadFileType,
-            })
-            setFileName(e.target.files[0].name)
-            setUploadLoader(false)
-        }).catch((error) => {
-            console.log(error);
-            setUploadLoader(false)
-        })
-    }
-
-    const getCategoryListReq = async () => {
-        await getCatagoriesAPI().then((res) => {
-            dispatch({
-                type: 'SET_CATAGORIES',
-                catagories: res.data
-            });
-        }).catch(async (error) => {
-            if (error?.response?.status == 401) {
-                await getNewToken().then(async (token) => {
-                    await getCatagoriesAPI().then(res => {
-                        dispatch({
-                            type: 'SET_CATAGORIES',
-                            catagories: res.data
-                        });
-                    })
-                }).catch(error => {
-                    console.error("Error:", error);
-                });
-            }
-        })
-    }
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -85,7 +40,7 @@ const ModelForAddCategory = ({
             addCategory(values)
         }
     };
-
+    console.log(fileUploadResponceData);
     const apiSuccessRes = (msg) => {
         toast.success(msg)
         categoryForm.resetFields()
@@ -94,6 +49,7 @@ const ModelForAddCategory = ({
     }
 
     const addCategory = async (values) => {
+        setShowBtnLoader(true)
         values.order = Number(values.order)
         if (fileUploadResponceData) {
             values.pictureKey = fileUploadResponceData.key
@@ -101,6 +57,7 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await createCatagoryAPI(values).then((res) => {
+            setShowBtnLoader(false)
             apiSuccessRes(toastSuccessMessage.addCategoryMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -119,6 +76,7 @@ const ModelForAddCategory = ({
     }
 
     const editCategoryDetail = async (values) => {
+        setShowBtnLoader(true)
         values.id = editCategory.id
         values.published = isCatagoryPublished
         if (fileUploadResponceData) {
@@ -127,16 +85,16 @@ const ModelForAddCategory = ({
             values.pictureMime = fileUploadResponceData.mime
         }
         await editCatagoryAPI(values).then((res) => {
-            apiSuccessRes(toastSuccessMessage.updateCategoryMsg)
-            setFileName()
+            setShowBtnLoader(false)
+            getCategoryListReq()
             setFileUploadResponceData()
+            apiSuccessRes(toastSuccessMessage.updateCategoryMsg)
         }).catch(async (error) => {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await editCatagoryAPI(values).then(res => {
                         apiSuccessRes(toastSuccessMessage.updateCategoryMsg)
-                        setFileName()
                         setFileUploadResponceData()
                     })
                 }).catch(error => {
@@ -146,6 +104,7 @@ const ModelForAddCategory = ({
             else {
                 toast.error(error.response.data.errors[0].message)
             }
+            setShowBtnLoader(false)
         })
     }
 
@@ -162,11 +121,6 @@ const ModelForAddCategory = ({
         categoryForm.resetFields()
         setEditCategory()
         setIsModelForAddCategory(false)
-    }
-
-    const handleRemoveFile = () => {
-        setFileName()
-        setFileUploadResponceData()
     }
 
     return (
@@ -220,28 +174,14 @@ const ModelForAddCategory = ({
                                 />
                             </FormItem>
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelCategoryConst.categoryPhoto}</p>
-                            <div className={styles.uploadVideoWrapper}>
-                                <input type={'file'} id='uploadFileInput' className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
-                                <label htmlFor='uploadFileInput' className='cursor-pointer'>
-                                    <div className={styles.IconWrapper}>
-                                        <div className={styles.uploadFileWrapper}>
-                                            <AllIconsComponenet iconName={'uploadFile'} height={20} width={20} color={'#6D6D6D'} />
-                                        </div>
-                                        <p>ارفق الصورة</p>
-                                    </div>
-                                </label>
-                                {fileName &&
-                                    <div className={styles.uploadFileNameWrapper}>
-                                        <div className={styles.closeIconWrapper} onClick={() => handleRemoveFile()}>
-                                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
-                                        </div>
-                                        {stringUpdation(fileName, 20)}
-                                    </div>
-                                }
-                                {uploadLoader &&
-                                    <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
-                                }
-                            </div>
+                            <UploadFileForModel
+                                fileName={editCategory?.pictureKey}
+                                uploadResData={setFileUploadResponceData}
+                                fileType={'.jpg , .png'}
+                                accept={"file"}
+                                placeHolderName={'ارفق الملف'}
+                                setShowBtnLoader={setShowBtnLoader}
+                            />
                             {isEdit &&
                                 <div className='flex items-center mb-2'>
                                     <Switch defaultChecked={isCatagoryPublished} onChange={onChange} ></Switch>
@@ -251,9 +191,14 @@ const ModelForAddCategory = ({
                         </div>
 
                         <div className={styles.AppointmentFieldBorderBottom}>
-                            <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'}>{isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}</button>
-                            </div>
+                            <CustomButton
+                                btnText={isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}
+                                width={80}
+                                height={37}
+                                showLoader={showBtnLoader}
+                                fontSize={16}
+                                fileUploadResponceData={fileUploadResponceData}
+                            />
                         </div>
                     </Form>
                 </div>

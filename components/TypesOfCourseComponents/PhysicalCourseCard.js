@@ -31,7 +31,6 @@ export default function PhysicalCourseCard(props) {
 
 	const isSmallScreen = useWindowSize().smallScreen
 
-	console.log(courseDetail);
 
 	return (
 		<div className={`${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
