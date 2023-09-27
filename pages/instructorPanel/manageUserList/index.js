@@ -23,8 +23,9 @@ const Index = () => {
     const [paginationConfig, setPaginationConfig] = useState({
         pageSizeOptions: [],
         position: ['bottomCenter'],
-        pageSize: 5,
+        pageSize: 10,
     })
+    console.log(userList);
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState()
 
@@ -47,32 +48,55 @@ const Index = () => {
         {
             title: 'الجنس',
             dataIndex: 'gender',
+            align: 'center',
             render: (text, _record) => {
                 const iconName = text == 'female' ? 'female' : 'male'
                 const iconColor = text == 'female' ? '#0C5D96' : '#E10768'
                 const gender = genders.find((gender) => gender.value == text)
                 return (
+                    text == null ?
+                        <p>-</p>
+                        :
+                        <div className='flex'>
+                            <AllIconsComponenet iconName={iconName} height={18} width={18} color={iconColor} />
+                            <p>{gender?.label}</p>
+                        </div>
 
-                    <div className='flex'>
-                        {text == null ?
-                            <p>-</p>
-                            :
-                            <>
-                                <AllIconsComponenet iconName={iconName} height={18} width={18} color={iconColor} />
-                                <p>{gender?.label}</p>
-                            </>
-                        }
-                    </div>
                 )
             }
         },
         {
             title: 'الدورات المشترك فيها',
             dataIndex: 'enrolledCourse',
+            align: 'center',
+            render: (text, _record) => {
+                const uniqueCourses = _record?.enrollments?.reduce((acc, current) => {
+                    const x = acc.find(_record => _record.courseId === current.courseId
+                    );
+                    if (!x) {
+                        return acc.concat([current]);
+                    } else {
+                        return acc;
+                    }
+                }, []);
+                return (
+                    _record.enrollments.length == 0 ?
+                        <p className='p-2'>-</p>
+                        :
+                        <>
+                            {uniqueCourses.map((data, index) => {
+                                return (
+                                    <p key={index} className='p-2'>{data.course.name}</p>
+                                )
+                            })}
+                        </>
+                )
+            }
         },
         {
             title: 'الايميل',
             dataIndex: 'email',
+            align: 'center',
         },
         {
             title: 'رقم الجوال',
@@ -130,10 +154,11 @@ const Index = () => {
         let body = {
             routeName: "userList",
             page: pageNo,
-            limit: 5,
+            limit: 10,
             order: "createdAt DESC"
         }
         await routeAPI(body).then((res) => {
+            console.log(res);
             setPaginationConfig({
                 ...paginationConfig,
                 total: res.data.totalItems,

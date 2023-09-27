@@ -10,14 +10,15 @@ const StyledTable = styled(AntdTable)`
 `
 
 const Table = ({
-    tableColumns,
-    rowSelection,
-    tableData,
     minheight,
+    rowSelection,
+    tableColumns,
+    tableData,
     onItemSelection,
     tableLoading,
     onEmptyBtnClick,
     selectedItems,
+    selectedFolderType
 }) => {
 
     const onSelectChange = (newSelectedRowKeys) => {
@@ -38,7 +39,7 @@ const Table = ({
     }
 
     const customEmptyComponent = (
-        <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={'لم تقم بإضافة اي مجلد'} containerhight={200} onClick={() => handleCreateFolder()} />
+        <Empty buttonText={'الإنتقال إلى إدارة المكتبة'} emptyText={selectedFolderType == 'video' ? 'ما أضفت فيديو' : selectedFolderType == 'file' ? 'ما أضفت ملف' : 'ما أضفت اختبار'} containerhight={230} onClick={() => handleCreateFolder()} />
     )
 
     return (

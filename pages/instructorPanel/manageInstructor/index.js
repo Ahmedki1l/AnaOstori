@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar'
 import { getNewToken } from '../../../services/fireBaseAuthService'
+import Empty from '../../../components/CommonComponents/Empty'
 
 const Index = () => {
 
@@ -100,39 +101,49 @@ const Index = () => {
                     <table className={styles.tableArea}>
                         <thead className={styles.tableHeaderArea}>
                             <tr>
-                                <th className={styles.tableHead1}>المدرب</th>
+                                <th className={styles.tableHead1}>اسم المدرب</th>
                                 <th className={styles.tableHead2}>الايميل</th>
-                                <th className={styles.tableHead3}>تاريخ الانشاء</th>
-                                <th className={styles.tableHead4}>الإجراءات</th>
+                                <th className={styles.tableHead3}>تاريخ الإنشاء</th>
+                                <th className={styles.tableHead4}>اخر تعديل</th>
+                                <th className={styles.tableHead5}>الإجراءات</th>
                             </tr>
                         </thead>
-                        <tbody className={styles.tableBodyArea}>
-                            {instructorDetails.map((instructor, index) => {
-                                return (
-                                    <tr key={`tableRow${index}`} className={styles.tableRow}>
-                                        <td>
-                                            <div className={styles.StudentListImage}>
-                                                <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={instructor.avatarKey == null ? '/images/anaOstori.png' : `${mediaUrl(instructor.avatarBucket, instructor.avatarKey)}`} />
-                                                <p className='pr-4'>{instructor.name}</p>
-                                            </div>
-                                        </td>
-                                        <td>{instructor.email}</td>
-                                        <td>{fullDate(instructor.createdAt)}</td>
-                                        <td>
-                                            <div className={styles.actions}>
-                                                <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
-                                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                        {instructorDetails.length > 0 &&
+                            <tbody className={styles.tableBodyArea}>
+                                {instructorDetails.map((instructor, index) => {
+                                    return (
+                                        <tr key={`tableRow${index}`} className={styles.tableRow}>
+                                            <td>
+                                                <div className={styles.StudentListImage}>
+                                                    <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={instructor.avatarKey == null ? '/images/anaOstori.png' : `${mediaUrl(instructor.avatarBucket, instructor.avatarKey)}`} />
+                                                    <p className='pr-4'>{instructor.name}</p>
                                                 </div>
-                                                <div className='cursor-pointer' onClick={() => openDeleteFolderItems(instructor)}>
-                                                    <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                            </td>
+                                            <td>{instructor.email}</td>
+                                            <td>{fullDate(instructor.createdAt)}</td>
+                                            <td>{fullDate(instructor.updatedAt)}</td>
+                                            <td>
+                                                <div className={styles.actions}>
+                                                    <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
+                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                    </div>
+                                                    <div className='cursor-pointer' onClick={() => openDeleteFolderItems(instructor)}>
+                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                                }
+                            </tbody>
+                        }
                     </table>
+                    {instructorDetails.length == 0 &&
+                        <div className={styles.tableBodyArea}>
+                            <Empty buttonText={'إضافة مدرب'} emptyText={'ما أضفت مدرب'} containerhight={500} onClick={() => handleAddInstructor()} />
+                        </div>
+                    }
                 </div>
             </div>
             {isModelForAddInstructor &&

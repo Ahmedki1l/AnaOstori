@@ -200,21 +200,19 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     return (
         <div>
+            <div className={styles.addSectionArea}>
+                <p className={styles.sectionName}>الأقسام</p>
+                <p className={styles.addSections} onClick={() => handleAddSection()}>+ إضافة قسم</p>
+            </div>
             {sectionDetails?.length == 0 &&
-                <>
-                    <div className={styles.addSectionArea}>
-                        <p className={styles.sectionName}>الأقسام</p>
-                        <p className={styles.addSections} onClick={() => handleAddSection()}>+ إضافة قسم</p>
-                    </div>
-                    <div className={styles.tableBodyArea}>
-                        <Empty
-                            onClick={handleAddSection}
-                            containerhight={240}
-                            buttonText={'إضافة قسم'}
-                            emptyText={'باقي ما أضفت قسم'}
-                        />
-                    </div>
-                </>
+                <div className={styles.tableBodyArea}>
+                    <Empty
+                        onClick={handleAddSection}
+                        containerhight={240}
+                        buttonText={'إضافة قسم'}
+                        emptyText={'باقي ما أضفت قسم'}
+                    />
+                </div>
             }
             {sectionDetails?.length > 0 &&
                 <DragDropContext onDragEnd={handleSectionDragEnd}>
@@ -257,7 +255,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                 </label>
                                                 <div className={`${styles.curriculumSectionBody} ${section.showSectionList ? `${styles.showCurriculumSectionBody}` : ""}`}>
                                                     {section.items.length == 0 &&
-                                                        <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddItemInSection(section)}>+  إضافة عنصر</p></div>
+                                                        <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddItemInSection(section)}>+ إضافة عنصر</p></div>
                                                     }
                                                     {section.items.length > 0 &&
                                                         <SectionItems

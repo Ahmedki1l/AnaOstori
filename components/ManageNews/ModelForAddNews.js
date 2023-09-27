@@ -4,7 +4,7 @@ import styles from './ModelForAddNews.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import { createNewsAPI, editNewsAPI } from '../../services/apisService'
+import { createNewsAPI, editNewsAPI, routeAPI } from '../../services/apisService'
 import { toast } from 'react-toastify'
 import { createAndEditBtnText, manageNewsConst, toastSuccessMessage } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
@@ -15,8 +15,9 @@ const ModelForAddNews = ({
     isEdit,
     editNews,
     setEditNews,
-    getNewsList
+    getNewsList,
 }) => {
+
     const [newsForm] = Form.useForm()
 
     useEffect(() => {
@@ -41,7 +42,13 @@ const ModelForAddNews = ({
     }
 
     const addNews = async (values) => {
-        await createNewsAPI(values).then((res) => {
+        let body = {
+            routeName: "createNewsBar",
+            content: values.content
+        }
+        await routeAPI(body).then((res) => {
+            getNewsList()
+            isModelClose();
             apiSuccessMsg(toastSuccessMessage.createNewsSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -57,8 +64,14 @@ const ModelForAddNews = ({
     }
 
     const editNewsData = async (values) => {
-        values.id = editNews.id
-        await editNewsAPI(values).then((res) => {
+        let body = {
+            routeName: "updateNewsBar",
+            id: editNews.id,
+            content: values.content
+        }
+        await routeAPI(body).then((res) => {
+            getNewsList()
+            isModelClose()
             apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {

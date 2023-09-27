@@ -35,6 +35,16 @@ const tableColumns = [
         title: 'تاريخ اخر تعديل',
         dataIndex: 'updateAt',
     },
+    // {
+    //     title: 'معاينة',
+    //     dataIndex: 'actions',
+    //     render: (text, _record) => {
+    //         console.log(_record);
+    //         return (
+    //             <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />
+    //         )
+    //     }
+    // },
 ];
 
 
@@ -44,6 +54,7 @@ const ModelForAddItemCurriculum = ({
     onclose,
     handleAddItemtoSection,
 }) => {
+
     const dispatch = useDispatch()
     const router = useRouter()
     const [selectedFolderType, setSelectedFolderType] = useState('video');
@@ -54,7 +65,6 @@ const ModelForAddItemCurriculum = ({
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState()
     const [tableLoading, setTableLoading] = useState(false)
-
 
     const IconCell = ({ item, index, icontype }) => {
         return (
@@ -192,7 +202,7 @@ const ModelForAddItemCurriculum = ({
                                     backpathForTabel={true}
                                     backPathArray={
                                         [
-                                            { lable: 'مكتبة الملفات', handleClick: showFolderList },
+                                            { lable: `${selectedFolderType}`, handleClick: showFolderList },
                                             { lable: `${selectedFolder?.name}`, link: null },
                                         ]
                                     }
@@ -200,7 +210,6 @@ const ModelForAddItemCurriculum = ({
                             </div>
                         }
                         <Table
-                            typeOfListdata={typeOfListdata}
                             minheight={typeOfListdata == "item" ? 250 : 400}
                             rowSelection={rowSelection}
                             tableColumns={tableColumns}
@@ -209,6 +218,7 @@ const ModelForAddItemCurriculum = ({
                             tableLoading={tableLoading}
                             onEmptyBtnClick={onEmptyBtnClick}
                             selectedItems={selectedItems}
+                            selectedFolderType={selectedFolderType}
                         />
                         {typeOfListdata == "item" &&
                             <div className={styles.createSectionBtnBox}>

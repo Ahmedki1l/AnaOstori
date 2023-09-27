@@ -11,6 +11,7 @@ import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFil
 import { toast } from 'react-toastify'
 import { adminPanelInstructorConst, createAndEditBtnText, toastErrorMessage, toastSuccessMessage } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
+import CustomButton from '../CommonComponents/CustomButton'
 
 
 const ModelForAddInstructor = ({
@@ -35,6 +36,7 @@ const ModelForAddInstructor = ({
     const [fileName, setFileName] = useState()
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -53,6 +55,7 @@ const ModelForAddInstructor = ({
     }
 
     const addInstructor = async (values) => {
+        setShowBtnLoader(true)
         if (values.phone) {
             values.phone = values.phone.replace(/[0-9]/, "966")
         }
@@ -67,6 +70,7 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         await createInstroctorAPI(values).then((res) => {
+            setShowBtnLoader(false)
             apiSuccessRes(toastSuccessMessage.instuctorCreateSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -80,10 +84,12 @@ const ModelForAddInstructor = ({
             }
             toast.error(toastErrorMessage.tryAgainErrorMsg)
             console.log(error);
+            setShowBtnLoader(false)
         })
     }
 
     const editInstructor = async (values) => {
+        setShowBtnLoader(true)
         values.id = instructorDetails.id
         if (values.phone) {
             values.phone = values.phone.replace(/[0-9]/, "966")
@@ -99,6 +105,7 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         await editInstroctorAPI(values).then((res) => {
+            setShowBtnLoader(false)
             setFileName()
             apiSuccessRes(toastSuccessMessage.instuctorUpdateSuccessMsg)
         }).catch(async (error) => {
@@ -115,6 +122,7 @@ const ModelForAddInstructor = ({
             else {
                 toast.error(toastErrorMessage.tryAgainErrorMsg)
             }
+            setShowBtnLoader(false)
         })
     }
 
@@ -193,6 +201,7 @@ const ModelForAddInstructor = ({
                                 fileType={'.jpg , .png'}
                                 accept={"image"}
                                 placeHolderName={'ارفق الصورة'}
+                                setShowBtnLoader={setShowBtnLoader}
                             />
 
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelInstructorConst.instructorFile}</p>
@@ -203,13 +212,20 @@ const ModelForAddInstructor = ({
                                 fileType={'.pdf , .doc , .docx'}
                                 accept={"file"}
                                 placeHolderName={'ارفق الملف'}
-                            // setShowBtnLoader={setShowBtnLoader}
+                                setShowBtnLoader={setShowBtnLoader}
                             />
 
                         </div>
                         <div className={styles.instructorFieldBorderBottom}>
                             <div className={styles.createInstructorBtnBox}>
-                                <button key='modalFooterBtn' className='primarySolidBtn' type={'submit'} >{isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}</button>
+                                <CustomButton
+                                    btnText={isEdit ? createAndEditBtnText.saveBtnText : createAndEditBtnText.addBtnText}
+                                    width={80}
+                                    height={37}
+                                    showLoader={showBtnLoader}
+                                    fontSize={16}
+                                    fileUploadResponceData={fileUploadResponceData}
+                                />
                             </div>
                         </div>
                     </Form>

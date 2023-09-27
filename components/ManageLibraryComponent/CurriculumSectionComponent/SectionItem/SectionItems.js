@@ -7,7 +7,7 @@ import { mediaUrl } from '../../../../constants/DataManupulation'
 import ModelForDeleteItems from '../../ModelForDeleteItems/ModelForDeleteItems'
 import { updateItemOfSectionAPI } from '../../../../services/apisService'
 import ModalForVideo from '../../../CommonComponents/ModalForVideo/ModalForVideo'
-
+import Switch from '../../../../components/antDesignCompo/Switch'
 
 const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setDeleteItemSectionId, sectionId }) => {
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -56,28 +56,43 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
         })
     };
 
-    const handleFreeUsage = async (e) => {
+    // const handleFreeUsage = async (e) => {
+    //     let body = {
+    //         data: [{
+    //             sectionId: sectionId,
+    //             itemId: e.id,
+    //             freeUsage: !e.sectionItem.freeUsage,
+    //             order: e.sectionItem.order + 1
+    //         }]
+    //     }
+    //     await updateItemOfSectionAPI(body).then((res) => {
+    //         const freeUsageItem = sectionItemList.map((item) => {
+    //             if (e.id === item.id) {
+    //                 item.sectionItem.freeUsage = !item.sectionItem.freeUsage
+    //                 return item
+    //             }
+    //             return item
+    //         })
+    //         setSectionItemList(freeUsageItem)
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     })
+    // }
+
+    const handleFreeUsage = async (e, itemId) => {
         let body = {
             data: [{
                 sectionId: sectionId,
-                itemId: e.id,
-                freeUsage: !e.sectionItem.freeUsage,
-                order: e.sectionItem.order + 1
+                itemId: itemId,
+                freeUsage: e,
             }]
         }
         await updateItemOfSectionAPI(body).then((res) => {
-            const freeUsageItem = sectionItemList.map((item) => {
-                if (e.id === item.id) {
-                    item.sectionItem.freeUsage = !item.sectionItem.freeUsage
-                    return item
-                }
-                return item
-            })
-            setSectionItemList(freeUsageItem)
         }).catch((error) => {
             console.log(error);
         })
     }
+
     const handleOpenPdfModel = (item) => {
         if (item.type == 'video') {
             setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
@@ -90,7 +105,6 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
             window.open(item.linkKey)
         }
     };
-
 
     return (
         <>
@@ -127,12 +141,16 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                                 </div>
                                             </div>
                                             <div className={styles.curriculimDetailsActions}>
+                                                <div className='flex'>
+                                                    <Switch defaultChecked={data?.sectionItem?.freeUsage} onChange={handleFreeUsage} params={data.id}></Switch>
+                                                    <p>عينة مجانية</p>
+                                                </div>
                                                 <div style={{ height: '25px', cursor: 'pointer' }} onClick={() => handleOpenPdfModel(data)}>
                                                     <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />
                                                 </div>
-                                                <div className='cursor-pointer' onClick={() => handleFreeUsage(data)}>
+                                                {/* <div className='cursor-pointer' onClick={() => handleFreeUsage(data)}>
                                                     <AllIconsComponenet iconName={'lock2'} height={22} width={22} color={data.sectionItem?.freeUsage ? '#00CF0F' : '#BC0303'} />
-                                                </div>
+                                                </div> */}
                                                 <div className='cursor-pointer' style={{ height: '25px' }} onClick={() => openDeleteModal(data)}>
                                                     <AllIconsComponenet iconName={'deletecourse'} height={20} width={18} color={'#BFBFBF'} />
                                                 </div>
