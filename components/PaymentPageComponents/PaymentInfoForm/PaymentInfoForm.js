@@ -22,6 +22,7 @@ export default function PaymentInfoForm(props) {
 	const studentsData = props.studentsData
 	const bankDetails = PaymentConst.bankDetails
 	const noOfUser = PaymentConst.noOfUsersTag2
+	const numberOfUser = PaymentConst.noOfUsersTag3
 	const router = useRouter()
 	const screenWidth = useWindowSize().width
 	const isSmallScreen = useWindowSize().smallScreen
@@ -96,9 +97,6 @@ export default function PaymentInfoForm(props) {
 			setIsCanMakePayments(false)
 		}
 	}, [setIsCanMakePayments])
-
-
-
 
 	return (
 		<div className='maxWidthDefault'>
@@ -235,24 +233,31 @@ export default function PaymentInfoForm(props) {
 					{couponAppliedData &&
 						<p className={styles.sucessText}>{inputSuccessMessages.discountAppliedMsg}</p>
 					}
-
 					<div className={styles.priceDetailsBox}>
 						<div className='flex justify-between  py-2'>
-							<p>سعر الدورة</p>
+							<p>{numberOfUser[createdOrder.orderItems.length - 1]}سعر الدورة</p>
 							<p>{(createdOrder.price * createdOrder.qty).toFixed(2)} ر.س</p>
 						</div>
-						{(couponAppliedData?.percentage) && <div className='flex justify-between'>
-							<p style={{ color: '#00bd5d' }}>قيمة الخصم</p>
-							<p style={{ color: '#00bd5d' }}> {(couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)}- ر.س</p>
-						</div>}
 						<div className='flex justify-between  py-2'>
 							<p>ضريبة القيمة المضافة</p>
 							<p>{(createdOrder.totalVat)} ر.س</p>
 						</div>
-						<div className='flex justify-between '>
-							<p className='fontBold'>المبلغ المطلوب</p>
-							<p className='fontBold pb-2'>{((createdOrder.totalPrice + createdOrder.totalVat) - (couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)).toFixed(2)} ر.س</p>
+						<div className='flex justify-between py-2 '>
+							<p className='fontBold'>المبلغ الإجمالي</p>
+							<p className='fontBold pb-2'>{((createdOrder.totalPrice + createdOrder.totalVat))} ر.س</p>
 						</div>
+						{(couponAppliedData?.percentage) &&
+							<>
+								<div className='flex justify-between'>
+									<p style={{ color: '#00bd5d' }} className='fontBold  pb-2'>خصم كود ({couponAppliedData?.percentage} %) </p>
+									<p style={{ color: '#00bd5d' }}> {(couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)}- ر.س</p>
+								</div>
+								<div className='flex justify-between '>
+									<p style={{ color: '#F26722' }} className='fontBold'>المبلغ المطلوب</p>
+									<p className='fontBold pb-2'>{((((createdOrder.totalPrice + createdOrder.totalVat) - (couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)).toFixed(2)))} ر.س</p>
+								</div>
+							</>
+						}
 					</div>
 				</div>
 			</div>

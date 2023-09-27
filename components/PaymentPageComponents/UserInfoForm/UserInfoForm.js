@@ -56,8 +56,8 @@ export default function UserInfoForm(props) {
 
 	const noOfUsersLabelData = [
 		{ iconName: 'studentOneIcon', iconWidth: '24', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `وفر ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
-		{ iconName: 'studentTwoIcon', iconWidth: '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${(100 - ((courseDetail.discountForTwo / courseDetail.price) * 100)).toFixed(2)} %`, oldPrice: '', singleDiscount: '' },
-		{ iconName: 'studentThreeIcon', iconWidth: '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', subLabel2: `وفر ${(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %`, oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentTwoIcon', iconWidth: '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentThreeIcon', iconWidth: '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
 	]
 
 	const router = useRouter()

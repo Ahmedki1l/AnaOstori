@@ -201,6 +201,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	&:disabled {
+		background-color: #BFBFBF;
+		border-color: #BFBFBF;
+		color: #FFFFFF;
+		cursor: not-allowed;
+	}
 }
 
 .iconButton {

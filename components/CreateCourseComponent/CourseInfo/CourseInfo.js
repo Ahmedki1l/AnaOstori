@@ -246,7 +246,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
 
         if (discountForOne == false) {
-            values.discount = editCourseData.price
+            values.discount = null
         }
 
         values.pictureKey = imageUploadResponceData?.key
@@ -256,6 +256,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         values.videoBucket = videoUploadResponceData?.bucket
         values.videoMime = videoUploadResponceData?.mime
         values.groupDiscountEligible = groupDiscountEligible
+        values.language = englishCourse ? "en" : "ar"
         values.type = courseType == "onDemand" ? "on-demand" : courseType
 
         const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
@@ -552,9 +553,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                 <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
                             </div>
                             {courseType == 'physical' &&
-                                <div>
-                                    <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
-                                </div>
+                                <>
+                                    <div>
+                                        <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                    </div>
+                                    <div className='pr-2'>
+                                        <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
+                                    </div>
+                                </>
                             }
                             <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
                         </div>

@@ -84,6 +84,17 @@ import MasterCardPayment from './customeIcons/masterCardPayment'
 import MadaPayment from './customeIcons/madaPayment'
 import BankTransfer from './customeIcons/bankTransfer'
 import ApplePayment from './customeIcons/applePayment'
+import ManageCatagory from './customeIcons/manageCatagory'
+import ManageCourse from './customeIcons/manageCourse'
+import ManageLibrary from './customeIcons/manageLibrary'
+import ManageInstructor from './customeIcons/manageInstructor'
+import ManagePurchaseOrder from './customeIcons/managePurchaseOrder'
+import ManageNews from './customeIcons/manageNews'
+import ManageAppVersion from './customeIcons/manageAppVersion'
+import ManageStudentFeedBack from './customeIcons/manageStudentFeedBack'
+import ManageUsers from './customeIcons/manageUsers'
+import ManageAppCoupons from './customeIcons/manageCoupons'
+import ManageCoupons from './customeIcons/manageCoupons'
 
 
 
@@ -175,6 +186,17 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'bankTransfer' && <BankTransfer height={height} width={width} color={color} />}
 			{iconName == 'applePayment' && <ApplePayment height={height} width={width} color={color} />}
 
+
+			{iconName == 'manageCatagory' && <ManageCatagory height={height} width={width} color={color} />}
+			{iconName == 'manageCourse' && <ManageCourse height={height} width={width} color={color} />}
+			{iconName == 'manageLibrary' && <ManageLibrary height={height} width={width} color={color} />}
+			{iconName == 'manageInstructor' && <ManageInstructor height={height} width={width} color={color} />}
+			{iconName == 'managePurchaseOrder' && <ManagePurchaseOrder height={height} width={width} color={color} />}
+			{iconName == 'manageNews' && <ManageNews height={height} width={width} color={color} />}
+			{iconName == 'manageAppVersion' && <ManageAppVersion height={height} width={width} color={color} />}
+			{iconName == 'manageStudentFeedBack' && <ManageStudentFeedBack height={height} width={width} color={color} />}
+			{iconName == 'manageUsers' && <ManageUsers height={height} width={width} color={color} />}
+			{iconName == 'manageCoupons' && <ManageCoupons height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

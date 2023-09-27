@@ -40,9 +40,7 @@ const Index = () => {
                         id: _record?.id,
                         assistanceAquired: !text
                     }
-                    console.log(body);
                     await createOrderAPI(body).then((res) => {
-                        console.log(res);
                     }).catch(async (error) => {
                         if (error?.response?.status == 401) {
                             await getNewToken().then(async (token) => {

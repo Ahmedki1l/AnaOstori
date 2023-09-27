@@ -20,44 +20,44 @@ export default function Index() {
             <h1 className={`${styles.instructorName} fontBold`}> <span className='fontMedium'> حياك الله</span> {instructorName}</h1>
             <div className='flex flex-wrap p-4'>
                 <Link href={'/instructorPanel/manageCategories'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل المجالات</p>
+                    <AllIconsComponenet width={39} height={39} iconName='manageCatagory' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وإدارة المجالات</p>
                 </Link>
                 <Link href={'/instructorPanel/manageCourse'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
+                    <AllIconsComponenet width={39} height={39} iconName='manageCourse' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل الدورات</p>
                 </Link>
                 <Link href={'/instructorPanel/manageLibrary?folderType=video'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={68} height={68} iconName='libraryIcon' color={'#000000'} />
+                    <AllIconsComponenet width={39} height={39} iconName='manageLibrary' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة المكتبة الرقمية</p>
                 </Link>
                 <Link href={'/instructorPanel/manageInstructor'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={68} height={68} iconName='instructorIcon' color={'#000000'} />
+                    <AllIconsComponenet width={39} height={39} iconName='manageInstructor' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وإدارة المدربين</p>
                 </Link>
                 <Link href={'/instructorPanel/managePurchaseOrder'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>متابعة وتحديث حالة المشتريات</p>
+                    <AllIconsComponenet width={39} height={39} iconName='managePurchaseOrder' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>استعلام ومتابعة الحجوزات</p>
                 </Link>
                 <Link href={'/instructorPanel/manageNews'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل الشريط التسويقي</p>
+                    <AllIconsComponenet width={39} height={39} iconName='manageNews' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل النص التسويقي</p>
                 </Link>
                 <div onClick={handleOpenAppVersionModel} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نسخة التطبيق</p>
+                    <AllIconsComponenet width={39} height={39} iconName='manageAppVersion' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نُسخ التطبيق</p>
                 </div>
                 <Link href={'/instructorPanel/manageStudentFeedBack'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
+                    <AllIconsComponenet width={39} height={39} iconName='manageStudentFeedBack' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل تجارب الطلاب</p>
                 </Link>
                 <Link href={'/instructorPanel/manageUserList'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>بيانات المستخدمين</p>
+                    <AllIconsComponenet width={39} height={39} iconName='manageUsers' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة بيانات المستخدمين</p>
                 </Link>
                 <Link href={'/instructorPanel/manageCouponCourse'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
-                    <AllIconsComponenet width={45} height={45} iconName='plus' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نسخة التطبيق</p>
+                    <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل كوبونات الخصم</p>
                 </Link>
 
             </div>

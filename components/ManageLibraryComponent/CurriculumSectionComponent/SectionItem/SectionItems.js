@@ -143,7 +143,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                             <div className={styles.curriculimDetailsActions}>
                                                 <div className='flex'>
                                                     <Switch defaultChecked={data?.sectionItem?.freeUsage} onChange={handleFreeUsage} params={data.id}></Switch>
-                                                    <p>عينة مجانية</p>
+                                                    <p className='pr-2'>عينة مجانية</p>
                                                 </div>
                                                 <div style={{ height: '25px', cursor: 'pointer' }} onClick={() => handleOpenPdfModel(data)}>
                                                     <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />

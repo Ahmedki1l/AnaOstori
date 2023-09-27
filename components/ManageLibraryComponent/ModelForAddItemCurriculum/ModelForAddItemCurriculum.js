@@ -6,12 +6,14 @@ import styled from 'styled-components';
 import SearchInput from '../../antDesignCompo/SearchInput';
 import { getFolderListAPI, getItemListAPI } from '../../../services/apisService';
 import { useDispatch } from 'react-redux';
-import { signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import Table from '../../antDesignCompo/Table';
 import { fullDate } from '../../../constants/DateConverter';
 import Icon from '../../CommonComponents/Icon';
 import { useRouter } from 'next/router';
 import BackToPath from '../../CommonComponents/BackToPath';
+import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo';
+import { mediaUrl } from '../../../constants/DataManupulation';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -22,31 +24,6 @@ const StylesModal = styled(Modal)`
         padding: 0px;
     }
 `
-const tableColumns = [
-    {
-        title: 'العنوان',
-        dataIndex: 'itemName',
-    },
-    {
-        title: 'تاريخ الإنشاء',
-        dataIndex: 'createAt',
-    },
-    {
-        title: 'تاريخ اخر تعديل',
-        dataIndex: 'updateAt',
-    },
-    // {
-    //     title: 'معاينة',
-    //     dataIndex: 'actions',
-    //     render: (text, _record) => {
-    //         console.log(_record);
-    //         return (
-    //             <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />
-    //         )
-    //     }
-    // },
-];
-
 
 const ModelForAddItemCurriculum = ({
     isModelForAddCurriculum,
@@ -65,6 +42,57 @@ const ModelForAddItemCurriculum = ({
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState()
     const [tableLoading, setTableLoading] = useState(false)
+    const [videoModalOpen, setVideoModalOpen] = useState(false)
+    const [fileSrc, setFileSrc] = useState()
+
+    const tableColumns = [
+        {
+            title: 'العنوان',
+            dataIndex: 'itemName',
+        },
+        {
+            title: 'تاريخ الإنشاء',
+            dataIndex: 'createdAt',
+        },
+        {
+            title: 'تاريخ اخر تعديل',
+            dataIndex: 'updatedAt',
+        },
+    ]
+    {
+        typeOfListdata == 'item' &&
+            tableColumns.push(
+                {
+                    title: 'معاينة',
+                    render: (text, _record) => {
+                        const { linkKey, linkBucket, linkMime, quizLink } = _record.itemName.props.item;
+                        const fileSrc = {
+                            key: linkKey,
+                            bucket: linkBucket,
+                            mime: linkMime,
+                            quizLink: quizLink,
+                        };
+                        const handlePreview = () => {
+                            if (_record.itemName.props.item.type === 'quiz') {
+                                window.open(fileSrc.quizLink)
+                            }
+                            else if (_record.itemName.props.item.type === 'video') {
+                                setFileSrc(mediaUrl(fileSrc.bucket, fileSrc.key))
+                                setVideoModalOpen(true)
+                            }
+                            else {
+                                window.open(mediaUrl(fileSrc.bucket, fileSrc.key))
+                            }
+                        }
+                        return (
+                            <div onClick={handlePreview}>
+                                <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#BFBFBF'} />
+                            </div>
+                        )
+                    }
+                }
+            )
+    }
 
     const IconCell = ({ item, index, icontype }) => {
         return (
@@ -88,14 +116,15 @@ const ModelForAddItemCurriculum = ({
         }
         await getItemListAPI(body).then((res) => {
             setTypeOfListData("item")
-            let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
-                return {
-                    itemName: <IconCell item={item} icontype={"item"} />,
-                    createAt: fullDate(item?.createdAt),
-                    updateAt: fullDate(item?.updatedAt),
-                    key: item.id
-                }
-            })
+            let data = res?.data?.filter(item => item !== null).sort((a, b) =>
+                a.createdAt.localeCompare(b.createdAt)).map((item) => {
+                    return {
+                        itemName: <IconCell item={item} icontype={"item"} />,
+                        createdAt: fullDate(item?.createdAt),
+                        updatedAt: fullDate(item?.updatedAt),
+                        key: item.id
+                    }
+                })
             setFolderList(data)
             setTableLoading(false)
         }).catch((error) => {
@@ -122,22 +151,36 @@ const ModelForAddItemCurriculum = ({
             let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                 return {
                     itemName: <IconCell item={item} icontype={"folder"} />,
-                    createAt: fullDate(item?.createdAt),
-                    updateAt: fullDate(item?.updatedAt),
+                    createdAt: fullDate(item?.createdAt),
+                    updatedAt: fullDate(item?.updatedAt),
                     key: item.id
                 }
             })
             setRowSelection(false)
             setFolderList(data)
             setTableLoading(false)
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
             setTableLoading(false)
             setFolderList([])
             if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
+                await getNewToken().then(async (token) => {
+                    await getFolderListAPI(data).then((res) => {
+                        setTypeOfListData("folder")
+                        let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
+                            return {
+                                itemName: <IconCell item={item} icontype={"folder"} />,
+                                createdAt: fullDate(item?.createdAt),
+                                updatedAt: fullDate(item?.updatedAt),
+                                key: item.id
+                            }
+                        })
+                        setRowSelection(false)
+                        setFolderList(data)
+                        setTableLoading(false)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
                 });
             }
         })
@@ -228,6 +271,14 @@ const ModelForAddItemCurriculum = ({
                     </div>
                 </div>
             </StylesModal>
+
+            {videoModalOpen &&
+                <ModalForVideo
+                    videoModalOpen={videoModalOpen}
+                    setVideoModalOpen={setVideoModalOpen}
+                    sourceFile={fileSrc}
+                />
+            }
         </div>
     )
 }
