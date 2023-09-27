@@ -24,6 +24,19 @@ const noOfUsersTag2 = [
     '10 اشخاص',
 ]
 
+const noOfUsersTag3 = [
+    'للشخص',
+    'لشخصين',
+    'لـ3 أشخاص',
+    'لـ4 أشخاص',
+    'لـ5 أشخاص',
+    'لـ6 أشخاص',
+    'لـ7 أشخاص',
+    'لـ8 أشخاص',
+    'لـ9 أشخاص',
+    'لـ10 أشخاص'
+]
+
 const iosProductIdList = [
     {
         label: '749',
@@ -194,4 +207,4 @@ const paymentStatus = [
 ]
 
 
-export { noOfUsersTag, noOfUsersTag2, genders, bankDetails, iosProductIdList, paymentStatus };
+export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatus };

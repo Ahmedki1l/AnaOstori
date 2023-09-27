@@ -8,7 +8,7 @@ import InputTextArea from '../../antDesignCompo/InputTextArea';
 import { addItemToFolderAPI, updateItemToFolderAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
-
+import CustomButton from '../../CommonComponents/CustomButton'
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
@@ -23,6 +23,7 @@ const ModelForAddItemLibrary = ({
     const isEdit = selectedItem?.id ? true : false
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
 
     useEffect(() => {
         ItemDetailsForm.setFieldsValue(selectedItem)
@@ -177,6 +178,7 @@ const ModelForAddItemLibrary = ({
                                     fileType={folderType == 'video' ? '.mp4' : '.pdf , .doc , .docx'}
                                     accept={"image"}
                                     placeHolderName={'ارفق الصورة'}
+                                    setShowBtnLoader={setShowBtnLoader}
                                 />
                             }
                             {folderType == "quiz" &&
@@ -224,13 +226,23 @@ const ModelForAddItemLibrary = ({
                             }
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
-                            <div className={styles.createAppointmentBtnBox}>
+                            <div className='pt-2'>
+                                <CustomButton
+                                    btnText={isEdit ? "حفظ" : "إضافة"}
+                                    width={80}
+                                    height={37}
+                                    showLoader={showBtnLoader}
+                                    fontSize={16}
+                                    fileUploadResponceData={fileUploadResponceData}
+                                />
+                            </div>
+                            {/* <div className={styles.createAppointmentBtnBox}>
                                 {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileName ? false : true} >{isEdit ? "حفظ" : "إضافة"}</button>}
                                 {folderType == "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>}
-                            </div>
+                            </div> */}
                             {isEdit &&
                                 <div className={styles.deleteVideoBtn}>
-                                    <button className='deleteBtn' type={'submit'} onClick={() => handleDeleteItems()}>حذف الفيديو</button>
+                                    <button className='deleteBtn' type={'submit'} onClick={() => handleDeleteItems()} disabled={showBtnLoader}>حذف الفيديو</button>
                                 </div>
                             }
                         </div>

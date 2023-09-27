@@ -75,12 +75,13 @@ export default function CoursePriceBox(props) {
 							{lang == 'en' ?
 								<>
 									<p className={`fontBold ${styles.discountPrice}`}>{courseDetail.discountForTwo * 2} SAR</p>
-									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>Save {(100 - ((courseDetail.discountForTwo / courseDetail.price) * 100)).toFixed(2)} %</p>
+									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>Save {((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} SAR</p>
 								</>
 								:
 								<>
 									<p className={`fontBold ${styles.discountPrice}`}>{courseDetail.discountForTwo * 2} ر.س</p>
-									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>وفر {(100 - ((courseDetail.discountForTwo / courseDetail.price) * 100)).toFixed(2)} %</p>
+									{/* <p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>وفر {(100 - ((courseDetail.discountForTwo / courseDetail.price) * 100)).toFixed(2)} %</p> */}
+									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>وفر {((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س</p>
 								</>
 							}
 						</div>
@@ -103,12 +104,12 @@ export default function CoursePriceBox(props) {
 							{lang == 'en' ?
 								<>
 									<p className={`fontBold ${styles.discountPrice}`}>Customized</p>
-									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>Save {(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %</p>
+									{/* <p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>Save {(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %</p> */}
 								</>
 								:
 								<>
 									<p className={`fontBold ${styles.discountPrice}`}>حسب العدد</p>
-									<p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>وفر {(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %</p>
+									{/* <p className={`fontMedium text-center text-red-500 ${styles.discountPercentege}`}>وفر {(100 - ((courseDetail.discountForThreeOrMore / courseDetail.price) * 100)).toFixed(2)} %</p> */}
 								</>
 							}
 						</div>

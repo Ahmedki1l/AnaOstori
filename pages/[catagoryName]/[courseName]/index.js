@@ -77,7 +77,6 @@ export default function Index(props) {
 	const maleDates = props.maleDates
 	const femaleDates = props.femaleDates
 	const mixDates = props.mixDates
-	console.log(mixDates);
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)

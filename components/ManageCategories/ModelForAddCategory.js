@@ -40,7 +40,6 @@ const ModelForAddCategory = ({
             addCategory(values)
         }
     };
-    console.log(fileUploadResponceData);
     const apiSuccessRes = (msg) => {
         toast.success(msg)
         categoryForm.resetFields()

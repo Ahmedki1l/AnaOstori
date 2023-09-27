@@ -48,7 +48,15 @@ export default function Navbar() {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
 				setCatagories(res?.data),
 					setCurriculumIds(res?.data)
-			}).catch(error => {
+			}).catch(async (error) => {
+				if (error?.response?.status == 401) {
+					await getNewToken().then(async (token) => {
+						await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
+							setCatagories(res?.data),
+								setCurriculumIds(res?.data)
+						})
+					})
+				}
 				console.log(error);
 			})
 		};

@@ -34,7 +34,7 @@ const ManageLibraryTableComponent = ({
     const [deleteItemType, setDeleteItemType] = useState('folder')
     const [fileSrc, setFileSrc] = useState()
     const [videoModalOpen, setVideoModalOpen] = useState(false)
-
+    console.log(fileSrc);
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);

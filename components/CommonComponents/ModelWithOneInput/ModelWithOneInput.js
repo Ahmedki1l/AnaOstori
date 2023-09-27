@@ -4,6 +4,7 @@ import styles from './ModelWithOneInput.module.scss'
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
+import CustomButton from '../CustomButton';
 
 const ModelWithOneInput = ({
     open,
@@ -62,9 +63,17 @@ const ModelWithOneInput = ({
                             </FormItem>
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
-                            <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>
+                            <div className='pt-2'>
+                                <CustomButton
+                                    btnText={isEdit ? "حفظ" : "إضافة"}
+                                    width={80}
+                                    height={37}
+                                    fontSize={16}
+                                />
                             </div>
+                            {/* <div className={styles.createAppointmentBtnBox}>
+                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>
+                            </div> */}
                             {isEdit && <div className={styles.deleteVideoBtn}>
                                 <button className='deleteBtn' onClick={() => handleDelete()} >حذف المجلد </button>
                             </div>}

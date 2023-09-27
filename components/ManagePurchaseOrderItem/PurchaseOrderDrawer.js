@@ -23,7 +23,6 @@ const PurchaseOrderDrawer = (props) => {
 
     const handleSaveOrder = async (value) => {
         setShowBtnLoader(true)
-        console.log(value.status, selectedOrder.status);
         if (value.status == selectedOrder.status && selectedOrder.failedReason == value.failedReason) {
             props.onClose(false)
             return
@@ -57,7 +56,6 @@ const PurchaseOrderDrawer = (props) => {
                 status: value.status,
                 // failedReason: value.failedReason 
             }
-            console.log(body);
             await createOrderAPI(body).then((res) => {
                 props.onClose(true)
             }).catch(async (error) => {

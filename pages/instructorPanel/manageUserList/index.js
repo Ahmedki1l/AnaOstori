@@ -25,7 +25,6 @@ const Index = () => {
         position: ['bottomCenter'],
         pageSize: 10,
     })
-    console.log(userList);
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState()
 
@@ -158,7 +157,6 @@ const Index = () => {
             order: "createdAt DESC"
         }
         await routeAPI(body).then((res) => {
-            console.log(res);
             setPaginationConfig({
                 ...paginationConfig,
                 total: res.data.totalItems,
