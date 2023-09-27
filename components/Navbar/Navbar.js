@@ -400,11 +400,12 @@ export default function Navbar() {
 				</div>
 			}
 			{open && <ModalComponent open={open} handleClose={handleClose} dispatch={dispatch} toast={toast} />}
-			<CommingSoonModal
-				open={commingSoonModalOpen}
-				commingSoonModalOpen={commingSoonModalOpen}
-				setCommingSoonModalOpen={setCommingSoonModalOpen}
-			/>
+			{commingSoonModalOpen &&
+				<CommingSoonModal
+					open={commingSoonModalOpen}
+					commingSoonModalOpen={commingSoonModalOpen}
+					setCommingSoonModalOpen={setCommingSoonModalOpen}
+				/>}
 		</>
 	)
 }

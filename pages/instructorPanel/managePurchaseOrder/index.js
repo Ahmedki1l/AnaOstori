@@ -11,7 +11,6 @@ import Link from "next/link";
 import BackToPath from "../../../components/CommonComponents/BackToPath";
 import { getNewToken } from "../../../services/fireBaseAuthService";
 import { mediaUrl } from "../../../constants/DataManupulation";
-import { error } from "jquery";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -41,7 +40,9 @@ const Index = () => {
                         id: _record?.id,
                         assistanceAquired: !text
                     }
+                    console.log(body);
                     await createOrderAPI(body).then((res) => {
+                        console.log(res);
                     }).catch(async (error) => {
                         if (error?.response?.status == 401) {
                             await getNewToken().then(async (token) => {

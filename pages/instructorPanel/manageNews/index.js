@@ -8,6 +8,7 @@ import BackToPath from '../../../components/CommonComponents/BackToPath'
 import Empty from '../../../components/CommonComponents/Empty'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 import { getNewToken } from '../../../services/fireBaseAuthService'
+import { routeAPI } from '../../../services/apisService'
 
 
 
@@ -22,8 +23,11 @@ const Index = () => {
         getNewsList()
     }, []);
 
-    const getNewsList = () => {
-        axios.get(`${process.env.API_BASE_URL}/news`).then((res) => {
+    const getNewsList = async () => {
+        let body = {
+            routeName: "listNewsBar",
+        }
+        await routeAPI(body).then((res) => {
             setNewsDataList(res.data);
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -37,7 +41,6 @@ const Index = () => {
             }
         })
     }
-
     const handleAddNews = () => {
         setIsModelForNews(true)
         setIsEdit(false)

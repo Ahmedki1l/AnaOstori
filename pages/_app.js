@@ -104,6 +104,31 @@ function MyApp({ Component, pageProps }) {
 				break;
 			case "/":
 				setPageTitle('الرئيسية')
+				break;
+			case "/instructorPanel":
+				setPageTitle('صفحة الادمن الرئيسية')
+				break;
+			case "/instructorPanel/manageCategories":
+				setPageTitle('إدارة وإضافة المجالات')
+				break;
+			case "/instructorPanel/manageInstructor":
+				setPageTitle(' إدارة وإضافة المدربين')
+				break;
+			case "/instructorPanel/managePurchaseOrder":
+				setPageTitle('استعلام المشتريات')
+				break;
+			case "/instructorPanel/manageNews":
+				setPageTitle('إضافة وتعديل الشريط التسويقي')
+				break;
+			case "/instructorPanel/manageCouponCourse":
+				setPageTitle('إضافة وتعديل كوبونات الخصم')
+				break;
+			case "/instructorPanel/manageUserList":
+				setPageTitle('بيانات المستخدمين')
+				break;
+			case "/instructorPanel/manageLibrary":
+				setPageTitle('إدارة المكتبة الرقمية')
+				break;
 		}
 	}, [router.asPath, pathName, router.query.catagoryName]);
 
