@@ -86,7 +86,6 @@ export default function Index(props) {
 	const isUserLogin = storeData?.accessToken ? true : false;
 	const lang = courseDetail.language
 
-
 	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
 	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
 	const isSeatFullForFemale = femaleDates.length > 0 ? femaleDates.every(obj => obj.numberOfSeats === 0) : false;
@@ -162,14 +161,6 @@ export default function Index(props) {
 					}).catch(error => {
 						console.error("Error:", error);
 					});
-					// signOutUser()
-					// dispatch({
-					// 	type: 'EMPTY_STORE'
-					// });
-					// dispatch({
-					// 	type: 'SET_RETURN_URL',
-					// 	returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
-					// })
 				}
 			})
 		}

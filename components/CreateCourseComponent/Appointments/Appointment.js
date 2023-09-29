@@ -33,6 +33,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
     const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
+    const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
 
     const instructor = instructorList?.map((obj) => {
         return {
@@ -41,7 +43,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             value: obj.id,
         }
     });
-
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
@@ -58,6 +59,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = courseId
+        // values.published = isAppointmentPublished
+        values.contentAccess = isContentAccess
         values.numberOfSeats = isAvailabilityEdit ? calculateNumberOfSeats(values.maxNumberOfSeats) : values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
         if (isAvailabilityEdit) {
@@ -66,8 +69,10 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await editAvailabilityAPI(body).then((res) => {
+                setShowBtnLoader(false)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
+                console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await editAvailabilityAPI(body).then((res) => {
@@ -139,16 +144,32 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setIsModalOpen(false)
     }
 
-    const onChange = async (e, params) => {
-        let body = {
-            data: params == "published" ? { published: e } : { contentAccess: e },
-            availabilityId: editAvailability?.id
+    // const onChange = async (e, params) => {
+    //     let body = {
+    //         data: params == "published" ? { published: e } : { contentAccess: e },
+    //         availabilityId: editAvailability?.id
+    //     }
+    //     await editAvailabilityAPI(body).then((res) => {
+    //     }).catch((error) => {
+    //         console.log(error);
+    //         setShowBtnLoader(false)
+    //     })
+    // };
+    const onChangeContentAccess = async (checked) => {
+        if (checked == true) {
+            toast.success("content accesss true")
+        } else {
+            toast.success('content access false')
         }
-        await editAvailabilityAPI(body).then((res) => {
-        }).catch((error) => {
-            console.log(error);
-            setShowBtnLoader(false)
-        })
+        setIsContentAccess(checked)
+    };
+    const onChangeCatagoryPublished = async (checked) => {
+        if (checked == true) {
+            toast.success("Catagory Published")
+        } else {
+            toast.success('Catagory Not Published')
+        }
+        setIAppointmentPublished(checked)
     };
 
     return (
@@ -368,12 +389,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                             </FormItem>
                             {showSwitchBtn &&
                                 <>
-                                    <div className='flex items-center'>
-                                        <Switch defaultChecked={editAvailability?.published} onChange={onChange} params={'published'} ></Switch>
+                                    {/* <div className='flex items-center'>
+                                        <Switch defaultChecked={isAppointmentPublished} onChange={onChangeCatagoryPublished}></Switch>
                                         <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
-                                    </div>
+                                    </div> */}
                                     <div className='flex items-center'>
-                                        <Switch defaultChecked={editAvailability?.contentAccess} onChange={onChange} params={'contentAccess'} ></Switch>
+                                        <Switch defaultChecked={isContentAccess} onChange={onChangeContentAccess}></Switch>
                                         <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
                                     </div>
                                 </>

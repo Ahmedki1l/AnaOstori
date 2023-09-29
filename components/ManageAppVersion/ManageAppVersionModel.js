@@ -5,6 +5,7 @@ import Input from '../antDesignCompo/Input'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import styles from './ManageAppVersion.module.scss'
 import axios from 'axios'
+import { appVersionConst } from '../../constants/adminPanelConst/appVersionConst/appVersionConst'
 
 
 const ManageAppVersionModel = ({ isModelForAppVersion,
@@ -53,65 +54,65 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.appVersionHeadText}`}>تحديث نسخة التطبيق</p>
+                    <p className={`fontBold ${styles.appVersionHeadText}`}>{appVersionConst.appVersionTitle}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={appVersionForm} onFinish={onFinish}>
                         <div className={styles.createAppVersionFields}>
                             <div className={styles.checkBoxHead}>
                                 <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
-                                <p className={styles.appleVersionText}>نسخة الاندرويد</p>
+                                <p className={styles.appleVersionText}>{appVersionConst.androidVersionText}</p>
                             </div>
-                            <p className={` ${styles.addVersion}`}>رقم النسخة الحالية</p>
+                            <p className={` ${styles.addVersion}`}>{appVersionConst.curruentVersionText}</p>
                             <FormItem
                                 name={'androidCurrentVersion'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: appVersionConst.currurentVersionInputError }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='رقم النسخة الحالية'
+                                    placeholder={appVersionConst.currentVersionPlaceHolder}
                                 />
                             </FormItem>
-                            <p className={` ${styles.addVersion}`}>رقم النسخة الأدنى</p>
+                            <p className={` ${styles.addVersion}`}>{appVersionConst.minimumVersionText}</p>
                             <FormItem
                                 name={'androidMinVersion'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: appVersionConst.minimumVersionInputError }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='رقم النسخة الأدنى'
+                                    placeholder={appVersionConst.minimumVersionPlaceHolder}
                                 />
                             </FormItem>
                             <div className={styles.checkBoxHead}>
                                 <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
-                                <p className={styles.appleVersionText}>نسخة الايفون</p>
+                                <p className={styles.appleVersionText}>{appVersionConst.appleVersionText}</p>
                             </div>
-                            <p className={` ${styles.addVersion}`}>رقم النسخة الحالية</p>
+                            <p className={` ${styles.addVersion}`}>{appVersionConst.curruentVersionText}</p>
                             <FormItem
                                 name={'iosCurrentVersion'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: appVersionConst.currurentVersionInputError }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='رقم النسخة الحالية'
+                                    placeholder={appVersionConst.currentVersionPlaceHolder}
                                 />
                             </FormItem>
-                            <p className={` ${styles.addVersion}`}>رقم النسخة الأدنى</p>
+                            <p className={` ${styles.addVersion}`}>{appVersionConst.minimumVersionText}</p>
                             <FormItem
                                 name={'iosMinVersion'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: appVersionConst.minimumVersionInputError }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder='رقم النسخة الأدنى'
+                                    placeholder={appVersionConst.minimumVersionPlaceHolder}
                                 />
                             </FormItem>
                         </div>

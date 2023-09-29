@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const StyledLabel = styled(`label`)`
@@ -56,6 +56,10 @@ const StyledLabel = styled(`label`)`
 
 const Switch = ({ onChange, params, defaultChecked }) => {
     const [isChecked, setIsChecked] = useState(defaultChecked ? defaultChecked : false)
+
+    useEffect(() => {
+        setIsChecked(defaultChecked)
+    }, [defaultChecked])
 
     const handleChange = () => {
         onChange(!isChecked, params)

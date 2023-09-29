@@ -95,6 +95,8 @@ import ManageStudentFeedBack from './customeIcons/manageStudentFeedBack'
 import ManageUsers from './customeIcons/manageUsers'
 import ManageAppCoupons from './customeIcons/manageCoupons'
 import ManageCoupons from './customeIcons/manageCoupons'
+import NewEditIcon from './customeIcons/newEditIcon'
+import NewDeleteIcon from './customeIcons/newDeleteIcon'
 
 
 
@@ -197,6 +199,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'manageStudentFeedBack' && <ManageStudentFeedBack height={height} width={width} color={color} />}
 			{iconName == 'manageUsers' && <ManageUsers height={height} width={width} color={color} />}
 			{iconName == 'manageCoupons' && <ManageCoupons height={height} width={width} color={color} />}
+
+
+			{iconName == 'newEditIcon' && <NewEditIcon height={height} width={width} color={color} />}
+			{iconName == 'newDeleteIcon' && <NewDeleteIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

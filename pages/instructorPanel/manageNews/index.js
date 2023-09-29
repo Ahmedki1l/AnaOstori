@@ -18,6 +18,7 @@ const Index = () => {
     const [isEdit, setIsEdit] = useState(false)
     const [editNews, setEditNews] = useState()
     const [newsDataList, setNewsDataList] = useState([])
+    const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
 
     useEffect(() => {
         getNewsList()
@@ -52,6 +53,9 @@ const Index = () => {
         setIsEdit(true)
     }
 
+    const openDeleteFolderItems = (news) => {
+        setIsmodelForDeleteItems(true)
+    }
 
     return (
         <div>
@@ -117,13 +121,13 @@ const Index = () => {
                     getNewsList={getNewsList}
                     setEditNews={setEditNews}
                 />}
-            {/* {ismodelForDeleteItems &&
+            {ismodelForDeleteItems &&
                 <ModelForDeleteItems
                     ismodelForDeleteItems={ismodelForDeleteItems}
                     onCloseModal={onCloseModal}
                     deleteItemType={'instructor'}
-                    onDelete={handleDeleteFolderItems}
-                />} */}
+                // onDelete={handleDeleteFolderItems}
+                />}
         </div>
     )
 }

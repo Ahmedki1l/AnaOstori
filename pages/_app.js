@@ -164,7 +164,7 @@ function MyApp({ Component, pageProps }) {
 	return (
 		<>
 			<Head>
-				<title>{`${pageTitle} | أنا أسطوري`}</title>
+				<title>{`${pageTitle} | منصة أنا أسطوري`}</title>
 				<link rel="icon" href="/favicon.png" className='rounded-full' />
 				<meta name="description" content={metaTags.description} />
 				<meta name="keywords" content={metaTags.keywords} />

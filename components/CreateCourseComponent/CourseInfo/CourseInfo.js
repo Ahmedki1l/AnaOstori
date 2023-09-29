@@ -8,49 +8,20 @@ import styles from './CourseInfo.module.scss'
 import CheckBox from '../../antDesignCompo/CheckBox';
 import Input from '../../antDesignCompo/Input';
 import Select from '../../antDesignCompo/Select';
-import { createCourseByInstructorAPI, createCourseDetailsMetaDataAPI, createCourseMetaDataAPI, deleteCourseTypeAPI, updateCourseDetailsAPI, updateCourseDetailsMetaDataAPI, updateCourseMetaDataAPI } from '../../../services/apisService';
+import { createCourseByInstructorAPI, deleteCourseTypeAPI, updateCourseDetailsAPI, updateCourseDetailsMetaDataAPI, updateCourseMetaDataAPI } from '../../../services/apisService';
 import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
 import { deleteNullFromObj, mediaUrl } from '../../../constants/DataManupulation';
-import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
+import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import * as PaymentConst from '../../../constants/PaymentConst'
 import Switch from '../../antDesignCompo/Switch';
 import UploadFile from '../../CommonComponents/UploadFileForCourse/UploadFile';
 import CustomButton from '../../CommonComponents/CustomButton';
+import { useRouter } from 'next/router';
 
 
-
-const CourseInitial =
-{
-    name: "",
-    shortDescription: "",
-    cardDescription: "",
-    curriculumId: "",
-    pictureKey: "",
-    pictureBucket: "",
-    pictureMime: "",
-    videoKey: "",
-    videoBucket: "",
-    videoMime: "",
-    coursePlanKey: "",
-    coursePlanBucket: "",
-    coursePlanMime: "",
-    reviewRate: "",
-    numberOfGrarduates: "",
-    price: "",
-    discount: "",
-    locationName: "",
-    location: "",
-    link: "",
-    type: "",
-    catagoryId: "",
-    groupDiscountEligible: "",
-    discountForTwo: "",
-    discountForThreeOrMore: "",
-}
-
-const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, setSelectedItem }) => {
+const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) => {
 
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
@@ -58,18 +29,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
     const catagories = storeData?.catagories;
     const curriculumIds = storeData?.curriculumIds
     const [showCourseMetaDataFields, setShowCourseMetaDataFields] = useState(isCourseEdit)
-    const [courseData, setCourseData] = useState(CourseInitial)
     const [imageUploadResponceData, setImageUploadResponceData] = useState();
     const [videoUploadResponceData, setVideooUploadResponceData] = useState();
-    const [discountForOne, setDiscountForOne] = useState(isCourseEdit ? (editCourseData.discount == null || editCourseData.discount == editCourseData.price) ? false : true : false)
-    const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData.groupDiscountEligible : false)
-    const [newcreatedCourse, setNewCreatedCourse] = useState()
+    const [discountForOne, setDiscountForOne] = useState(isCourseEdit ? ((editCourseData?.discount == null) ? false : true) : false)
+    const [groupDiscountEligible, setGroupDiscountEligible] = useState(isCourseEdit ? editCourseData?.groupDiscountEligible : false)
     const [showLoader, setShowLoader] = useState(false);
     const [courseInfoForm] = Form.useForm();
     const dispatch = useDispatch();
     const [discountValue, setDiscountValue] = useState()
-    const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData.language == 'en' : false)
+    const [englishCourse, setEnglishCourse] = useState(isCourseEdit ? editCourseData?.language == 'en' : false)
     const iosProductIdList = PaymentConst.iosProductIdList
+    const router = useRouter()
 
     useEffect(() => {
         if (isCourseEdit) {
@@ -83,6 +53,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
             value: obj.id
         };
     });
+
     const curriculum = curriculumIds.map((obj) => {
         return {
             key: obj.id,
@@ -100,13 +71,18 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
         }
     }
 
-    const createCourseApiSuccessRes = () => {
+    const createCourseApiSuccessRes = (res) => {
         toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
         setShowExtraNavItem(true)
         setShowCourseMetaDataFields(true)
         setCreateCourseApiRes(res.data)
-        setNewCreatedCourse(res.data)
         setShowLoader(false)
+        dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+        dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
+        router.push({
+            pathname: (`/instructorPanel/manageCourse/${courseType}/editCourse`),
+            query: { courseId: res.data?.id }
+        })
     }
 
     const createCourse = async (values) => {
@@ -146,67 +122,20 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                 data: values,
             }
             await createCourseByInstructorAPI(body).then((res) => {
-                createCourseApiSuccessRes()
+                createCourseApiSuccessRes(res)
             }).catch(async (error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createCourseByInstructorAPI(body).then((res) => {
-                            createCourseApiSuccessRes()
+                            createCourseApiSuccessRes(res)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
                     });
                 }
                 setShowLoader(false)
-                // if (error.response.data.errors) {
-                //     toast.error(toastErrorMessage.uniqueNameError);
-                // }
             })
-        } else {
-            let courseDetailMetadata = values.courseDetailsMetaData.map((obj, index) => {
-                return { ...obj, order: (`${index + 1}`) }
-            })
-            let courseMetadata = values.courseMetaData.map((obj, index) => {
-                return { ...obj, order: (`${index + 1}`) }
-            })
-            let courseDetailMetadataBody = {
-                data: {
-                    data: courseDetailMetadata,
-                    courseId: newcreatedCourse.id
-                },
-            }
-            let courseMetadataBody = {
-                data: {
-                    data: courseMetadata,
-                    courseId: newcreatedCourse.id
-                },
-            }
-            try {
-                const courseDetailMetaDataReq = createCourseDetailsMetaDataAPI(courseDetailMetadataBody)
-                const courseMetaDataReq = createCourseMetaDataAPI(courseMetadataBody)
-                if (courseDetailMetadataBody.data.data.length == 0) {
-                    await Promise.all([courseMetaDataReq])
-                } else if (courseMetadataBody.data.data.length == 0) {
-                    await Promise.all([courseDetailMetaDataReq])
-                } else {
-                    await Promise.all([courseDetailMetaDataReq, courseMetaDataReq])
-                }
-                toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
-                setShowExtraNavItem(true)
-                setSelectedItem(2)
-                setShowLoader(false)
-                courseInfoForm.resetFields()
-            } catch (error) {
-                setShowLoader(false)
-                console.log(error);
-                if (error?.response?.status == 401) {
-                    signOutUser()
-                    dispatch({
-                        type: 'EMPTY_STORE'
-                    });
-                }
-            }
         }
     }
 
@@ -282,41 +211,42 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
 
         const courseBody = {
             data: values,
-            courseId: editCourseData.id,
+            courseId: editCourseData?.id,
         }
+
         try {
-            if (courseDetailsMetaDataBody.data.data.length == 0 && courseMetaDataBody.data.data.length > 0) {
-                const editCourseReq = updateCourseDetailsAPI(courseBody)
-                const editCourseMetadataReq = updateCourseMetaDataAPI(courseMetaDataBody)
-                const [editCourse, editCourseMetaData] = await Promise.all([editCourseMetadataReq, editCourseReq])
-                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseMetaData.data })
+            const promiseArray = [];
 
-            } else if (courseMetaDataBody.data.data.length == 0 && courseDetailsMetaDataBody.data.data.length > 0) {
-                const editCourseReq = updateCourseDetailsAPI(courseBody)
-                const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody)
-                const [editCourse, editCourseDetailsMetadata] = await Promise.all([editCourseDetailsMetaDataReq, editCourseReq])
-                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourseDetailsMetadata.data })
+            promiseArray.push(updateCourseDetailsAPI(courseBody));
 
-            } else if (courseMetaDataBody.data.data.length == 0 && courseDetailsMetaDataBody.data.data.length == 0) {
-                const editCourseReq = updateCourseDetailsAPI(courseBody)
-                const [editCourse] = await Promise.all([editCourseReq])
-                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourse.data })
-
-            } else {
-                const editCourseReq = updateCourseDetailsAPI(courseBody)
-                const editCourseMetadataReq = updateCourseMetaDataAPI(courseMetaDataBody)
-                const editCourseDetailsMetaDataReq = updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody)
-                const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all([editCourseReq, editCourseMetadataReq, editCourseDetailsMetaDataReq])
-                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: editCourse.data })
+            if (courseMetaDataBody.data.data.length > 0) {
+                promiseArray.push(updateCourseMetaDataAPI(courseMetaDataBody));
             }
-            toast.success(toastSuccessMessage.courseDetailUpdateMsg)
-            setShowLoader(false)
-        }
-        catch (error) {
-            setShowLoader(false)
+            if (courseDetailsMetaDataBody.data.data.length > 0) {
+                promiseArray.push(updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody));
+            }
+            const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all(promiseArray);
+
+            let editCourseData;
+
+            if (courseDetailsMetaDataBody.data.data.length === 0 && courseMetaDataBody.data.data.length > 0) {
+                editCourseData = editCourseMetaData.data;
+            } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length > 0) {
+                editCourseData = editCourseDetailsMetadata.data;
+            } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
+                editCourseData = editCourse.data;
+            } else {
+                editCourseData = editCourseDetailsMetadata.data;
+            }
+            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
+            toast.success(toastSuccessMessage.courseDetailUpdateMsg);
+            setShowLoader(false);
+        } catch (error) {
+            setShowLoader(false);
             console.log(error);
-            if (error?.response?.status == 401) {
-                signOutUser()
+
+            if (error?.response?.status === 401) {
+                signOutUser();
                 dispatch({
                     type: 'EMPTY_STORE'
                 });
@@ -399,7 +329,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}>
                         <Input
                             placeholder="عنوان الدورة"
-                            value={courseData.name}
                         />
                     </FormItem>
                     <FormItem
@@ -407,7 +336,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         rules={[{ required: true, message: 'اختر تصنيف الدورة' }]} >
                         <Select
                             placeholder="اختر تصنيف الدورة"
-                            value={courseData.catagoryId}
                             OptionData={catagoriesItem} />
                     </FormItem>
                     <FormItem
@@ -415,7 +343,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                         rules={[{ required: true, message: 'اختر مقرر الدورة' }]}  >
                         <Select
                             placeholder="اختر تصنيف الدورة"
-                            value={courseData.curriculumId}
                             OptionData={curriculum}
                             filterOption={false} />
                     </FormItem>
@@ -434,7 +361,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             height={274}
                             width={549}
                             placeholder="وصف الدورة"
-                            value={courseData.shortDescription}>
+                        >
                         </InputTextArea>
                     </FormItem>
                     <p className={styles.uploadImageHeader}>صورة الدورة</p>
@@ -455,7 +382,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                             courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoKey)}
                             accept={"video"}
                             label={'ارفق الفيديو هنا'}
-                            type={'.mp4 ,.mov ,.avi , .wmv , .fly , .webm '}
+                            type={'.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv '}
                             setUploadFileData={setVideooUploadResponceData}
                         />
                     </div>
@@ -475,17 +402,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     height={47}
                                     width={247}
                                     placeholder="الرياض، حي الياسمين"
-                                    value={courseData.locationName} />
+                                />
                             </FormItem>
-                            <FormItem
+                            {/* <FormItem
                                 name={'location'}
                                 rules={[{ required: true, message: 'ضع رابط الموقع' }]}  >
                                 <Input
                                     height={47}
                                     width={247}
                                     placeholder="hyperlink(optional)"
-                                    value={courseData.location} />
-                            </FormItem>
+                                    />
+                            </FormItem> */}
                         </div>
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
@@ -502,7 +429,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     height={47}
                                     width={247}
                                     placeholder="قيمة التقييم"
-                                    value={courseData.reviewRate} />
+                                />
                             </FormItem>
                         </div>
                         <div className='flex'>
@@ -520,7 +447,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                     height={47}
                                     width={247}
                                     placeholder="قيمة عدد الخريجين"
-                                    value={courseData.numberOfGrarduates} />
+                                />
                             </FormItem>
                         </div>
                     </div>
@@ -772,10 +699,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             <Input placeholder="نص منفصل" width={216} height={47} />
                                                         </FormItem>
                                                         <div className={styles.deleteIconWrapper} >
-                                                            <div className='flex justify-center items-center h-100'
-                                                                onClick={() => {
-                                                                    deleteCourseDetails(index, remove, name, "courseMeta")
-                                                                }}>
+                                                            <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseMeta") }}>
                                                                 <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                             </div>
                                                         </div>
@@ -847,9 +771,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType, se
                                                             <Input placeholder="رابط للنص المنفصل" width={216} height={47} />
                                                         </FormItem>
                                                         <div className={styles.deleteIconWrapper} >
-                                                            <div className='flex justify-center items-center h-100' onClick={() => {
-                                                                deleteCourseDetails(index, remove, name, "courseDetails")
-                                                            }}>
+                                                            <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }}>
                                                                 <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                             </div>
                                                         </div>

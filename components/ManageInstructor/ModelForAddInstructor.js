@@ -5,14 +5,14 @@ import styles from './ModelForAddInstructor.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import { createInstroctorAPI, editInstroctorAPI, getInstructorListAPI, uploadFileAPI } from '../../services/apisService'
+import { createInstroctorAPI, editInstroctorAPI } from '../../services/apisService'
 import { deleteNullFromObj } from '../../constants/DataManupulation'
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
 import { toast } from 'react-toastify'
-import { adminPanelInstructorConst, createAndEditBtnText, toastErrorMessage, toastSuccessMessage } from '../../constants/ar'
+import { createAndEditBtnText, toastErrorMessage } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import CustomButton from '../CommonComponents/CustomButton'
-
+import { adminPanelInstructorConst } from '../../constants/adminPanelConst/instructorConst/instructorConst'
 
 const ModelForAddInstructor = ({
     isModelForAddInstructor,
@@ -32,11 +32,11 @@ const ModelForAddInstructor = ({
         setFileName(instructorDetails?.avatarKey)
     }, [])
 
-
     const [fileName, setFileName] = useState()
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [uploadfileError, setUploadFileError] = useState(false)
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -50,80 +50,88 @@ const ModelForAddInstructor = ({
         toast.success(msg)
         instructorForm.resetFields()
         getInstructorListReq()
-        setFileUploadResponceData()
         setIsModelForAddInstructor(false)
     }
 
     const addInstructor = async (values) => {
         setShowBtnLoader(true)
-        if (values.phone) {
-            values.phone = values.phone.replace(/[0-9]/, "966")
-        }
-        if (avatarUploadResData) {
-            values.avatarKey = avatarUploadResData?.key
-            values.avatarBucket = avatarUploadResData?.bucket
-            values.avatarMime = avatarUploadResData?.mime
+        if (!(avatarUploadResData && fileUploadResponceData)) {
+            setUploadFileError(true)
         } else {
-            values.ProfileFileKey = fileUploadResponceData?.key
-            values.ProfileFileBucket = fileUploadResponceData?.bucket
-            values.ProfileFileMime = fileUploadResponceData?.mime
-        }
-        deleteNullFromObj(values)
-        await createInstroctorAPI(values).then((res) => {
-            setShowBtnLoader(false)
-            apiSuccessRes(toastSuccessMessage.instuctorCreateSuccessMsg)
-        }).catch(async (error) => {
-            if (error?.response?.status == 401) {
-                await getNewToken().then(async (token) => {
-                    await createInstroctorAPI(values).then(res => {
-                        apiSuccessRes(toastSuccessMessage.instuctorCreateSuccessMsg)
-                    })
-                }).catch(error => {
-                    console.error("Error:", error);
-                });
+            if (values.phone) {
+                values.phone = values.phone.replace(/[0-9]/, "966")
             }
-            toast.error(toastErrorMessage.tryAgainErrorMsg)
-            console.log(error);
-            setShowBtnLoader(false)
-        })
+            else if (avatarUploadResData) {
+                values.avatarKey = avatarUploadResData?.key
+                values.avatarBucket = avatarUploadResData?.bucket
+                values.avatarMime = avatarUploadResData?.mime
+            } else {
+                values.ProfileFileKey = fileUploadResponceData?.key
+                values.ProfileFileBucket = fileUploadResponceData?.bucket
+                values.ProfileFileMime = fileUploadResponceData?.mime
+            }
+            setUploadFileError(false)
+            deleteNullFromObj(values)
+            await createInstroctorAPI(values).then((res) => {
+                setShowBtnLoader(false)
+                apiSuccessRes(adminPanelInstructorConst.instuctorCreateSuccessMsg)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await createInstroctorAPI(values).then(res => {
+                            apiSuccessRes(adminPanelInstructorConst.instuctorCreateSuccessMsg)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+                toast.error(toastErrorMessage.tryAgainErrorMsg)
+                console.log(error);
+                setShowBtnLoader(false)
+            })
+        }
     }
 
     const editInstructor = async (values) => {
         setShowBtnLoader(true)
-        values.id = instructorDetails.id
-        if (values.phone) {
-            values.phone = values.phone.replace(/[0-9]/, "966")
-        }
-        if (avatarUploadResData) {
-            values.avatarKey = avatarUploadResData?.key
-            values.avatarBucket = avatarUploadResData?.bucket
-            values.avatarMime = avatarUploadResData?.mime
+        if (!(avatarUploadResData && fileUploadResponceData)) {
+            setUploadFileError(true)
         } else {
-            values.ProfileFileKey = fileUploadResponceData?.key
-            values.ProfileFileBucket = fileUploadResponceData?.bucket
-            values.ProfileFileMime = fileUploadResponceData?.mime
+            if (avatarUploadResData) {
+                values.avatarKey = avatarUploadResData?.key
+                values.avatarBucket = avatarUploadResData?.bucket
+                values.avatarMime = avatarUploadResData?.mime
+            } else {
+                values.ProfileFileKey = fileUploadResponceData?.key
+                values.ProfileFileBucket = fileUploadResponceData?.bucket
+                values.ProfileFileMime = fileUploadResponceData?.mime
+            }
+            setUploadFileError(false)
+            deleteNullFromObj(values)
+            values.id = instructorDetails.id
+            await editInstroctorAPI(values).then((res) => {
+                setShowBtnLoader(false)
+                setFileName()
+                apiSuccessRes(adminPanelInstructorConst.instuctorUpdateSuccessMsg)
+            }).catch(async (error) => {
+                setShowBtnLoader(false)
+                console.log(error);
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await editInstroctorAPI(values).then(res => {
+                            setFileName()
+                            apiSuccessRes(adminPanelInstructorConst.instuctorUpdateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+                else {
+                    toast.error(toastErrorMessage.tryAgainErrorMsg)
+                }
+            })
         }
-        deleteNullFromObj(values)
-        await editInstroctorAPI(values).then((res) => {
-            setShowBtnLoader(false)
-            setFileName()
-            apiSuccessRes(toastSuccessMessage.instuctorUpdateSuccessMsg)
-        }).catch(async (error) => {
-            if (error?.response?.status == 401) {
-                await getNewToken().then(async (token) => {
-                    await editInstroctorAPI(values).then(res => {
-                        setFileName()
-                        apiSuccessRes(toastSuccessMessage.instuctorUpdateSuccessMsg)
-                    })
-                }).catch(error => {
-                    console.error("Error:", error);
-                });
-            }
-            else {
-                toast.error(toastErrorMessage.tryAgainErrorMsg)
-            }
-            setShowBtnLoader(false)
-        })
     }
 
     const isModelClose = () => {
@@ -161,7 +169,7 @@ const ModelForAddInstructor = ({
                                     placeholder={adminPanelInstructorConst.instructorName}
                                 />
                             </FormItem>
-                            <FormItem
+                            {/* <FormItem
                                 name={'email'}
                             >
                                 <Input
@@ -170,8 +178,8 @@ const ModelForAddInstructor = ({
                                     height={40}
                                     placeholder={adminPanelInstructorConst.instructorEmail}
                                 />
-                            </FormItem>
-                            <FormItem
+                            </FormItem> */}
+                            {/* <FormItem
                                 name={'phone'}
                                 rules={[{ required: true, message: adminPanelInstructorConst.instructorPhoneNoErrorMsg }]}
                             >
@@ -181,9 +189,10 @@ const ModelForAddInstructor = ({
                                     height={40}
                                     placeholder={adminPanelInstructorConst.instructorPhoneNo}
                                 />
-                            </FormItem>
+                            </FormItem> */}
                             <FormItem
                                 name={'role'}
+                                rules={[{ required: true, message: adminPanelInstructorConst.instructorRoleErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
@@ -193,28 +202,32 @@ const ModelForAddInstructor = ({
                                 />
                             </FormItem>
 
-                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelInstructorConst.instructorPhoto}</p>
-                            <UploadFileForModel
-                                fileName={instructorDetails?.avatarKey}
-                                setFileName={setFileName}
-                                uploadResData={setAvtarUploadResData}
-                                fileType={'.jpg , .png'}
-                                accept={"image"}
-                                placeHolderName={'ارفق الصورة'}
-                                setShowBtnLoader={setShowBtnLoader}
-                            />
-
-                            <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelInstructorConst.instructorFile}</p>
-                            <UploadFileForModel
-                                fileName={instructorDetails?.ProfileFileKey}
-                                setFileName={setFileName}
-                                uploadResData={setFileUploadResponceData}
-                                fileType={'.pdf , .doc , .docx'}
-                                accept={"file"}
-                                placeHolderName={'ارفق الملف'}
-                                setShowBtnLoader={setShowBtnLoader}
-                            />
-
+                            <p className={`my-2 ${styles.addInstructor}`} style={{ fontWeight: 'bold' }}>{adminPanelInstructorConst.instructorPhoto}</p>
+                            <div className='mt-1'>
+                                <UploadFileForModel
+                                    fileName={instructorDetails?.avatarKey}
+                                    setFileName={setFileName}
+                                    uploadResData={setAvtarUploadResData}
+                                    fileType={'.jpg , .png'}
+                                    accept={"image"}
+                                    placeHolderName={'ارفق الصورة'}
+                                    setShowBtnLoader={setShowBtnLoader}
+                                    uploadfileError={uploadfileError}
+                                />
+                            </div>
+                            <p className={`my-3 ${styles.addInstructor}`} style={{ fontWeight: 'bold' }}>{adminPanelInstructorConst.instructorFile}</p>
+                            <div className='mb-5'>
+                                <UploadFileForModel
+                                    fileName={instructorDetails?.ProfileFileKey}
+                                    setFileName={setFileName}
+                                    uploadResData={setFileUploadResponceData}
+                                    fileType={'.pdf , .doc , .docx'}
+                                    accept={"file"}
+                                    placeHolderName={'ارفق الملف'}
+                                    setShowBtnLoader={setShowBtnLoader}
+                                    uploadfileError={uploadfileError}
+                                />
+                            </div>
                         </div>
                         <div className={styles.instructorFieldBorderBottom}>
                             <div className={styles.createInstructorBtnBox}>
