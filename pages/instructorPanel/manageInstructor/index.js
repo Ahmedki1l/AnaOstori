@@ -11,9 +11,9 @@ import ModelForDeleteItems from '../../../components/ManageLibraryComponent/Mode
 import { editInstroctorAPI, getInstructorListAPI } from '../../../services/apisService'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
-import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../../components/CommonComponents/Empty'
+import { adminPanelInstructorConst } from '../../../constants/adminPanelConst/instructorConst/instructorConst'
 
 const Index = () => {
 
@@ -70,7 +70,7 @@ const Index = () => {
             isDeleted: true
         }
         await editInstroctorAPI(body).then((res) => {
-            toast.success(toastSuccessMessage.instructorDeleteMsg)
+            toast.success(adminPanelInstructorConst.instructorDeleteMsg)
             getInstructorListReq()
         }).catch((err) => {
             console.log(err);
@@ -87,7 +87,7 @@ const Index = () => {
                             backPathArray={
                                 [
                                     { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
-                                    { lable: 'إدارة وإضافة المدربين', link: null },
+                                    { lable: 'إضافة وإدارة المدربين', link: null },
                                 ]
                             }
                         />
@@ -102,10 +102,9 @@ const Index = () => {
                         <thead className={styles.tableHeaderArea}>
                             <tr>
                                 <th className={styles.tableHead1}>اسم المدرب</th>
-                                <th className={styles.tableHead2}>الايميل</th>
-                                <th className={styles.tableHead3}>تاريخ الإنشاء</th>
-                                <th className={styles.tableHead4}>اخر تعديل</th>
-                                <th className={styles.tableHead5}>الإجراءات</th>
+                                <th className={styles.tableHead2}>تاريخ الإنشاء</th>
+                                <th className={styles.tableHead3}>اخر تعديل</th>
+                                <th className={styles.tableHead4}>الإجراءات</th>
                             </tr>
                         </thead>
                         {instructorDetails.length > 0 &&
@@ -119,16 +118,15 @@ const Index = () => {
                                                     <p className='pr-4'>{instructor.name}</p>
                                                 </div>
                                             </td>
-                                            <td>{instructor.email}</td>
                                             <td>{fullDate(instructor.createdAt)}</td>
                                             <td>{fullDate(instructor.updatedAt)}</td>
                                             <td>
                                                 <div className={styles.actions}>
                                                     <div className='cursor-pointer' onClick={() => handleEditInstructor(instructor)}>
-                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                        <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
                                                     <div className='cursor-pointer' onClick={() => openDeleteFolderItems(instructor)}>
-                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                        <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
                                                 </div>
                                             </td>

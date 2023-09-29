@@ -24,6 +24,7 @@ const ModelForAddItemLibrary = ({
     const [fileName, setFileName] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [uploadfileError, setUploadFileError] = useState(false)
 
     useEffect(() => {
         ItemDetailsForm.setFieldsValue(selectedItem)
@@ -39,6 +40,9 @@ const ModelForAddItemLibrary = ({
     };
 
     const addItemToFolder = async (e) => {
+        if (!fileUploadResponceData) {
+            setUploadFileError(true)
+        }
         let body = {}
         if (folderType !== "quiz") {
             body.name = e.name
@@ -78,6 +82,9 @@ const ModelForAddItemLibrary = ({
         ItemDetailsForm.resetFields()
     }
     const editFolderItems = async (e) => {
+        if (!fileUploadResponceData) {
+            setUploadFileError(true)
+        }
         let body = {}
         if (folderType !== "quiz") {
             body.id = selectedItem.id
@@ -175,7 +182,7 @@ const ModelForAddItemLibrary = ({
                                     fileName={selectedItem?.linkKey}
                                     setFileName={setFileName}
                                     uploadResData={setFileUploadResponceData}
-                                    fileType={folderType == 'video' ? '.mp4' : '.pdf , .doc , .docx'}
+                                    fileType={folderType == 'video' ? '.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv' : '.pdf , .doc , .docx'}
                                     accept={"image"}
                                     placeHolderName={'ارفق الصورة'}
                                     setShowBtnLoader={setShowBtnLoader}

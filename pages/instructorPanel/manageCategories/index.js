@@ -13,6 +13,8 @@ import Switch from '../../../components/antDesignCompo/Switch'
 import { editCatagoryAPI, getCatagoriesAPI } from '../../../services/apisService'
 import { useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
+import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
+import { toast } from 'react-toastify'
 
 
 const Index = () => {
@@ -70,6 +72,11 @@ const Index = () => {
             published: e
         }
         await editCatagoryAPI(body).then((res) => {
+            if (e == true) {
+                toast.success(adminPanelCategoryConst.showCategoryMsg)
+            } else {
+                toast.success(adminPanelCategoryConst.hideCategoryMsg)
+            }
             getCategoryListReq()
         }).catch((error) => {
             console.log(error);
@@ -89,7 +96,7 @@ const Index = () => {
                             backPathArray={
                                 [
                                     { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                                    { lable: 'إدارة وإضافة المجالات', link: null },
+                                    { lable: 'إضافة وإدارة المجالات', link: null },
                                 ]
                             }
                         />
@@ -105,8 +112,8 @@ const Index = () => {
                     <table className={styles.tableArea}>
                         <thead className={styles.tableHeaderArea}>
                             <tr>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>بيانات المجال</th>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>حالة النشر</th>
+                                <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>عنوان المجال</th>
+                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>حالة الظهور</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead5}`}>الإجراءات</th>
@@ -130,7 +137,7 @@ const Index = () => {
                                             <td>
                                                 <div className={styles.publishState}>
                                                     <Switch defaultChecked={category.published} onChange={handlePublishedCategory} params={category.id} ></Switch>
-                                                    <p className='pr-2'>منشور</p>
+                                                    <p className='pr-2'>{category.published ? 'إظهار' : 'مخفي'}</p>
                                                 </div>
                                             </td>
                                             <td>{fullDate(category.createdAt)}</td>
@@ -138,7 +145,7 @@ const Index = () => {
                                             <td>
                                                 <div className={styles.actions}>
                                                     <div className='cursor-pointer' onClick={() => handleEditCategory(category)}>
-                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                        <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
                                                 </div>
                                             </td>

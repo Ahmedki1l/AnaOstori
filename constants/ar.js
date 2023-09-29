@@ -16,7 +16,7 @@ export const inputErrorMessages = {
     allowedFilesTypeMsg: 'الملفات المسموحة هي pdf, png ,jpg', //'Allowed files are pdf, png and jpg'
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
-    categoryDiscriptionAddMsg: 'please enter category discription',
+    // categoryDiscriptionAddMsg: 'please enter category discription',
 }
 
 export const inputSuccessMessages = {
@@ -52,48 +52,14 @@ export const toastSuccessMessage = {
     appoitmentCretedSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been created successfully',
     appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
     examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',
-    examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',
-    instuctorCreateSuccessMsg: 'تم إضافة المدرب بنجاح',//instructor added successfully',
-    instuctorUpdateSuccessMsg: 'تم تحديث بيانات المدرب بنجاح',//Instructor info updated successfully
-    instructorDeleteMsg: 'تم حذف المدرب بنجاح',//Instructor deleted successfully,
+    examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',    
     createNewsSuccessMsg: 'تم إضافة النص التسويقي بنجاح',// 'newbar added successfully'
     updatedNewsSuccessMsg: 'تم تحديث النص التسويقي بنجاح',// 'newbar updated successfully',
-    addCategoryMsg: 'تم إضافة المجال بنجاح',// "catagory added successfully",
-    updateCategoryMsg: 'تم تحديث بيانات المجال بنجاح',// "catagory updated successfully",
-    showCategoryMsg: 'SHOWEDتم إظهار المجال بنجاح',//catagory SHOWED successfully
-    hideCategoryMsg: 'hidedتم إخفاء المجال بنجاح',//catagory hided successfully
 }
 
 export const createAndEditBtnText = {
     addBtnText: 'إضافة',
     saveBtnText: 'حفظ'
-}
-
-export const adminPanelCategoryConst = {
-    addCategoryTitle: 'إضافة مجال',
-    editCategoryTitle: 'تعديل المجال',
-    title: 'العنوان',
-    orderID: 'الترتيب',
-    description: 'الوصف',
-    inputAttachPhoto: 'ارفق الصورة',
-    categoryNameErrorMsg: 'اكتب عنوان',//'please enter category name',
-    selectOrderErrorMsg: 'حدد الترتيب',//please select the order
-    categoryDiscriptionErrorMsg: 'اكتب وصف ',//write describtion
-    categoryPhoto: 'صورة المجال',
-    categorySwitch: 'إظهار المجال'
-}
-
-export const adminPanelInstructorConst = {
-    addInstuctorTitle: 'إضافة مدرب',
-    editInstructorTitle: 'تعديل بيانات المدرب',
-    instructorName: 'اسم المدرب',
-    instructorEmail: 'اسم المدرب',
-    instructorPhoneNo: 'رقم الجوال',
-    instructorRole: 'المنصب',
-    instructorPhoto: 'صورة المدرب',
-    instructorFile: 'الملف التعريفي',
-    instructorNameErrorMsg: 'اكتب اسم المدرب',
-    instructorPhoneNoErrorMsg: 'اكتب رقم الجوال',
 }
 
 export const manageNewsConst = {

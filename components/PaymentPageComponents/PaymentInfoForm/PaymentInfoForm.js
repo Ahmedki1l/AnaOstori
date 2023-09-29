@@ -31,7 +31,7 @@ export default function PaymentInfoForm(props) {
 	const [couponError, setCouponError] = useState(false)
 	const [couponAppliedData, setCouponAppliedData] = useState()
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
-	const [paymentType, setPaymentType] = useState('mada')
+	const [paymentType, setPaymentType] = useState(window.ApplePaySession ? 'applepay' : 'mada')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
 

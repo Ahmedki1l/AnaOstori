@@ -366,7 +366,7 @@ export default function Navbar() {
 								:
 								<div className={styles.navbarLeftDiv}>
 									{isUserInstructor && <div className={styles.instructorBtnBox}>
-										<button className={`primaryStrockedBtn`} onClick={() => handleInstructorBtnClick()}>لوحة تحكم المعلم</button>
+										<button className={`primaryStrockedBtn`} onClick={() => handleInstructorBtnClick()}>لوحة التحكم</button>
 									</div>}
 									<div className={styles.navLeftDiv}>
 										<div className={styles.viewProfile}>

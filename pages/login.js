@@ -116,6 +116,7 @@ export default function Login() {
 			handleStoreUpdate(user?.accessToken)
 		}).catch((error) => {
 			console.log(error);
+			setLoading(false)
 		});
 	}
 
@@ -144,6 +145,7 @@ export default function Login() {
 				toast.success(toastSuccessMessage.successLoginMsg)
 				router.push('/')
 			}).catch((error) => {
+				setLoading(false)
 				console.log(error);
 				toast.error(toastErrorMessage.emailPasswordErrorMsg);
 			});

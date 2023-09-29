@@ -26,8 +26,8 @@ export default function PurchaseInquiry(props) {
 
 	useEffect(() => {
 		const getMyOrder = async () => {
-
 			await getMyOrderAPI().then((res) => {
+				console.log(res);
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
@@ -74,8 +74,8 @@ export default function PurchaseInquiry(props) {
 												return (
 													<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
 														<p>{student.fullName}</p>
-														<p>{data.courseName} - {new Date(student.availability.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student.availability.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp;
-															{new Date(student.availability.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student.availability.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}
+														<p>{data.courseName} - {new Date(student?.availability?.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp;
+															{new Date(student?.availability?.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}
 														</p>
 													</div>
 												)
