@@ -77,8 +77,8 @@ export default function Index() {
                         currentItemContentReq
                     ])
                     console.log(courseCurriculum.data);
-                    console.log(courseProgressPrecentage);
                     console.log(completedCourseItem);
+                    console.log(courseProgressPrecentage);
                     console.log(currentItemContent);
                     setCourseCurriculum(courseCurriculum.data)
                     setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))

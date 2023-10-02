@@ -1,91 +1,74 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import { ConfigProvider, Drawer, Form, Table } from 'antd'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import styled from 'styled-components'
 import ManageCouponCourseDrawer from '../../../components/ManageCouponCourse/ManageCouponCourseDrawer'
+import { routeAPI } from '../../../services/apisService'
+import { getNewToken } from '../../../services/fireBaseAuthService'
+import styles from '../../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
+import Empty from '../../../components/CommonComponents/Empty'
+import { useSelector } from 'react-redux'
 
 const DrawerTiitle = styled.p`
     font-size:20px
 `
-const tableDataSourse = [
-    {
-        code: 49,
-        uuid: "102b3b3d-e58d-48ad-b32e-caa503517d52",
-        courseId: "02c7d210-af35-4bcb-9c48-97d5425f89e3",
-        summary: "mkjjjj\nPramit tewari\n",
-        notes: null,
-        title: "mkjjjj",
-        vat: 1.5,
-        totalVat: 1.5,
-        noOfUsed: 8.5,
-        percantage: 100,
-        appliedCourse: "Pramit tewari",
-        buyerPhone: "+966590243374",
-        buyerEmail: "pramit@uex.ai",
-        paymentMethod: "none",
-        coupanState: 'مفعل',
-        couponType: "init",
-        hyperpayCheckoutResponse: null,
-        createdAt: "2023-09-14T13:01:33.000Z",
-        updatedAt: "2023-09-14T13:01:33.000Z",
-        orderItems: [
-            {
-                id: "28c6045e-eb19-44c9-954a-497ff5afa581",
-                fullName: "Pramit tewari",
-                phoneNumber: "+966590243374",
-                email: "pramit@uex.ai",
-                gender: "male",
-                paid: false,
-                courseId: "02c7d210-af35-4bcb-9c48-97d5425f89e3",
-                availabilityId: null,
-                orderId: 49,
-                createdAt: "2023-09-14T13:01:33.000Z",
-                updatedAt: "2023-09-14T13:01:33.000Z"
-            }
-        ]
-    },
-]
 
 const Index = () => {
+
+    const [drawerForCouponCourse, setDrawerForCouponCourse] = useState(false)
+    const [listOfCoupon, setListOfCoupon] = useState()
+    const [selectedCoupon, setSelectedCoupon] = useState()
+    const storeData = useSelector((state) => state?.globalStore);
+    const category = storeData.catagories
+    console.log(category);
 
     const tableColumns = [
         {
             title: 'عنوان الكوبون',
-            dataIndex: 'title',
+            dataIndex: 'name',
         },
         {
             title: 'الكود',
-            dataIndex: 'code',
+            dataIndex: 'couponCode',
         },
         {
             title: 'نسبة الخصم',
-            dataIndex: 'percantage',
+            dataIndex: 'percentage',
         },
         {
             title: 'نوع الخصم',
-            dataIndex: 'couponType',
+            dataIndex: 'type',
         },
         {
             title: 'تاريخ الانتهاء',
-            dataIndex: 'expiredyDate',
-            sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
+            dataIndex: 'expires',
+            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
             render: (text, _date) => {
-                return (fullDate(_date.updatedAt))
+                return (fullDate(_date.createdAt))
             }
         },
         {
             title: 'حالة الكوبون',
-            dataIndex: 'coupanState',
+            dataIndex: 'status',
         },
         {
             title: 'مرات الاستخدام',
-            dataIndex: 'noOfUsed',
+            dataIndex: 'NoOfUsage',
         },
         {
             title: 'مطبق مع اي دورة',
             dataIndex: 'appliedCourse',
+            render: (text, _record) => {
+                return (
+                    _record.couponCourses.map((item, index) => {
+                        return (
+                            <p key={item.course.id}>{item.course.name}</p>
+                        )
+                    })
+                )
+            }
         },
         {
             title: 'تاريخ الانشاء',
@@ -106,12 +89,13 @@ const Index = () => {
         {
             title: 'الإجراءات',
             dataIndex: 'action',
-            render: () => {
-                const handleEditOrders = () => {
+            render: (index, _record) => {
+                const handleEditCoupon = () => {
+                    setSelectedCoupon(_record);
                     setDrawerForCouponCourse(true)
                 }
                 return (
-                    <div onClick={handleEditOrders}>
+                    <div className='cursor-pointer' onClick={handleEditCoupon}>
                         <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                     </div>
                 )
@@ -119,47 +103,79 @@ const Index = () => {
         },
     ]
 
-    const [drawerForCouponCourse, setDrawerForCouponCourse] = useState(false)
+    useEffect(() => {
+        getCouponList(1)
+    }, [])
 
+    const getCouponList = async () => {
+        let body = {
+            routeName: "listCoupon",
+        }
+        await routeAPI(body).then((res) => {
+            setListOfCoupon(res.data);
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await routeAPI(data).then((res) => {
+                        setUserList(res.data.data)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+        })
+    }
     const onClose = () => {
         setDrawerForCouponCourse(false);
     };
 
-
+    const handleAddCouponCourse = () => {
+        setDrawerForCouponCourse(true)
+    }
+    const customEmptyComponent = (
+        <Empty emptyText={'ما أضفت كوبون'} containerhight={400} buttonText={'إضافة كوبون'} onClick={() => handleAddCouponCourse()} />
+    )
     return (
         <div>
             <div className='maxWidthDefault px-4'>
-                <div style={{ height: 40 }}>
-                    <BackToPath
-                        backpathForPage={true}
-                        backPathArray={
-                            [
-                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
-                                { lable: 'إضافة وتعديل كوبونات الخصم', link: null },
-                            ]
-                        }
-                    />
+                <div className={'flex justify-between items-center'}>
+                    <div style={{ height: 70 }}>
+                        <BackToPath
+                            backpathForPage={true}
+                            backPathArray={
+                                [
+                                    { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                                    { lable: 'إضافة وتعديل كوبونات الخصم', link: null },
+                                ]
+                            }
+                        />
+                    </div>
+                    <div className={`${styles.createCourseBtnBox}`}>
+                        <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة مجال</button>
+                    </div>
                 </div>
                 <ConfigProvider direction="rtl">
                     <Table
                         columns={tableColumns}
                         minheight={400}
-                        dataSource={tableDataSourse}
+                        dataSource={listOfCoupon}
+                        locale={{ emptyText: customEmptyComponent }}
                     />
-                    <Drawer
-                        closable={false}
-                        open={drawerForCouponCourse}
-                        onClose={onClose}
-                        width={480}
-                        placement={'right'}
-                        title={
-                            <>
-                                <DrawerTiitle className="foneBold">DisplayCouponTitle</DrawerTiitle>
-                            </>
-                        }
-                    >
-                        <ManageCouponCourseDrawer />
-                    </Drawer>
+                    {drawerForCouponCourse &&
+                        <Drawer
+                            closable={false}
+                            open={drawerForCouponCourse}
+                            onClose={onClose}
+                            width={480}
+                            placement={'right'}
+                            title={
+                                <>
+                                    <DrawerTiitle className="foneBold">DisplayCouponTitle</DrawerTiitle>
+                                </>
+                            }
+                        >
+                            <ManageCouponCourseDrawer selectedCoupon={selectedCoupon} />
+                        </Drawer>}
                 </ConfigProvider>
             </div>
         </div>

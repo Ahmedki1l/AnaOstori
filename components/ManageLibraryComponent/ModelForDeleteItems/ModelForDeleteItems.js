@@ -70,6 +70,11 @@ const ModelForDeleteItems = ({
             messageText: 'متأكد انك ما تبي تضم هذا الاختبار للمقرر؟',
             btnText: 'اي، ما بضمنه',
         },
+        news: {
+            title: 'تأكيد حذف نص تسويقي',
+            messageText: 'متأكد انك تبي تحذف النص التسويقي؟',
+            btnText: 'تأكيد الحذف',
+        }
     }
 
     const handleDeleteItems = () => {

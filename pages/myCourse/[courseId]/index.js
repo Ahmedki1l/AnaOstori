@@ -47,7 +47,6 @@ export default function Index() {
                         courseProgressReq,
                         completedCourseItemReq
                     ])
-
                     setCourseCurriculum(courseCurriculum.data)
                     if (courseCurriculum.data?.enrollment != null) { setIsUserEnrolled(true) }
                     setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
@@ -133,7 +132,7 @@ export default function Index() {
                     <div className={`px-4 maxWidthDefault ${styles.myCourseContentMainWrapper}`}>
                         <div className={`${styles.myCourseDetailsWrapper} ${styles.boxBorder}`}>
                             <div className={styles.courseThumnailDiv}>
-                                <Image src={mediaUrl(courseCurriculum?.course?.pictureBucket, courseCurriculum?.course?.pictureKey)} alt='My Course Image' layout='fill' objectFit="cover" priority />
+                                <Image src={courseCurriculum?.course?.pictureKey ? mediaUrl(courseCurriculum?.course?.pictureBucket, courseCurriculum?.course?.pictureKey) : '/images/anaOstori.png'} alt='My Course Image' layout='fill' objectFit="cover" priority />
                             </div>
                             <div className={styles.courseDetailTextWrapper}>
                                 <h1 className={`fontBold ${styles.myCourseTitle}`}>{courseCurriculum?.course?.name}</h1>

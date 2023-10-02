@@ -9,6 +9,8 @@ import Empty from '../../../components/CommonComponents/Empty'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import { routeAPI } from '../../../services/apisService'
+import { toast } from 'react-toastify'
+import { manageNewsConst } from '../../../constants/ar'
 
 
 
@@ -54,9 +56,26 @@ const Index = () => {
     }
 
     const openDeleteFolderItems = (news) => {
+        setEditNews(news)
         setIsmodelForDeleteItems(true)
     }
-
+    const onCloseModal = () => {
+        setIsmodelForDeleteItems(false)
+    }
+    const handleDeleteNews = async () => {
+        let body = {
+            routeName: "listNewsBar",
+            id: editNews.id,
+            isDeleted: true
+        }
+        await routeAPI(body).then((res) => {
+            console.log(res);
+            toast.success(manageNewsConst.deleteNewsSuccessMsg)
+            getNewsList()
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     return (
         <div>
             <div className='maxWidthDefault px-4'>
@@ -93,10 +112,10 @@ const Index = () => {
                                         <td>
                                             <div className={styles.actions}>
                                                 <div className='cursor-pointer' onClick={() => handleEditNews(news)}>
-                                                    <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                    <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                 </div>
                                                 <div className='cursor-pointer' onClick={() => openDeleteFolderItems(news)}>
-                                                    <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                    <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
                                                 </div>
                                             </div>
                                         </td>
@@ -125,8 +144,8 @@ const Index = () => {
                 <ModelForDeleteItems
                     ismodelForDeleteItems={ismodelForDeleteItems}
                     onCloseModal={onCloseModal}
-                    deleteItemType={'instructor'}
-                // onDelete={handleDeleteFolderItems}
+                    deleteItemType={'news'}
+                    onDelete={handleDeleteNews}
                 />}
         </div>
     )

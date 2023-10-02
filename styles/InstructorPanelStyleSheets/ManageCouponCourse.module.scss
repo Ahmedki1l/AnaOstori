@@ -1,0 +1,14 @@
+.couponHeadArea {
+    display: flex;
+    justify-content: space-between;
+}
+
+.createCourseBtnBox {
+    width: 105px;
+    height: 36px;
+
+    button {
+        padding: 9px 10px !important;
+        font-size: 16px;
+    }
+}

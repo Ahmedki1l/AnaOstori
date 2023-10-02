@@ -60,7 +60,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = courseId
         // values.published = isAppointmentPublished
-        values.contentAccess = isContentAccess
+        if (isAvailabilityEdit) values.contentAccess = isContentAccess
         values.numberOfSeats = isAvailabilityEdit ? calculateNumberOfSeats(values.maxNumberOfSeats) : values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
         if (isAvailabilityEdit) {
@@ -249,168 +249,170 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         </div>
                     </div>
                 }
-                <Modal
-                    className='addAppoinmentModal'
-                    open={isModalOpen}
-                    onCancel={() => handelModalClose()}
-                    closeIcon={false}
-                    footer={false}
-                >
-                    <div className={styles.modalHeader}>
-                        <button onClick={() => handelModalClose()} className={styles.closebutton}>
-                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                        <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
-                    </div>
-                    <Form form={appointmentForm} onFinish={onFinish}>
-                        <div className={styles.createAppointmentFields}>
-                            <FormItem
-                                name={'instructors'}
-                                rules={[{ required: true, message: "اختر المدرب" }]}
-                            >
-                                <Select
-                                    fontSize={16}
-                                    width={352}
-                                    height={40}
-                                    placeholder="اختر المدرب"
-                                    OptionData={instructor}
-                                    mode="multiple"
-                                    maxTagCount='responsive'
-                                    disabled={isFieldDisable}
-                                />
-                            </FormItem>
-                            {courseType == 'physical' &&
+                {isModalOpen &&
+                    <Modal
+                        className='addAppoinmentModal'
+                        open={isModalOpen}
+                        onCancel={() => handelModalClose()}
+                        closeIcon={false}
+                        footer={false}
+                    >
+                        <div className={styles.modalHeader}>
+                            <button onClick={() => handelModalClose()} className={styles.closebutton}>
+                                <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
+                            <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
+                        </div>
+                        <Form form={appointmentForm} onFinish={onFinish}>
+                            <div className={styles.createAppointmentFields}>
                                 <FormItem
-                                    name={'gender'}
-                                    rules={[{ required: true, message: "حدد الجنس" }]}
+                                    name={'instructors'}
+                                    rules={[{ required: true, message: "اختر المدرب" }]}
                                 >
                                     <Select
                                         fontSize={16}
                                         width={352}
                                         height={40}
-                                        placeholder="اختر الجنس"
-                                        OptionData={genders}
+                                        placeholder="اختر المدرب"
+                                        OptionData={instructor}
+                                        mode="multiple"
+                                        maxTagCount='responsive'
                                         disabled={isFieldDisable}
                                     />
                                 </FormItem>
-                            }
-                            <div className='flex'>
+                                {courseType == 'physical' &&
+                                    <FormItem
+                                        name={'gender'}
+                                        rules={[{ required: true, message: "حدد الجنس" }]}
+                                    >
+                                        <Select
+                                            fontSize={16}
+                                            width={352}
+                                            height={40}
+                                            placeholder="اختر الجنس"
+                                            OptionData={genders}
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                }
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'dateFrom'}
+                                        rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
+                                    >
+                                        <DatePicker
+                                            format={'YYYY-MM-DD'}
+                                            width={172}
+                                            height={40}
+                                            disabled={isFieldDisable}
+                                            placeholder="تاريخ البداية"
+                                            suFFixIconName="calander"
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'dateTo'}
+                                        rules={[{ required: true, message: "ادخل تاريخ النهاية" }]}
+                                    >
+                                        <DatePicker
+                                            format={'YYYY-MM-DD'}
+                                            width={172}
+                                            height={40}
+                                            placeholder="تاريخ النهاية"
+                                            suFFixIconName="calander"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                </div>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'timeFrom'}
+                                        rules={[{ required: true, message: "ادخل ساعة البداية " }]}
+                                    >
+                                        <TimePicker
+                                            width={172}
+                                            height={40}
+                                            placeholder="من الساعة"
+                                            picker="time"
+                                            suFFixIconName="clock"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'timeTo'}
+                                        rules={[{ required: true, message: "ادخل ساعة النهاية" }]}
+                                    >
+                                        <TimePicker
+                                            width={172}
+                                            height={40}
+                                            placeholder="إلى الساعة"
+                                            picker="time"
+                                            suFFixIconName="clock"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                </div>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'locationName'}
+                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                    >
+                                        <Input
+                                            fontSize={16}
+                                            width={172}
+                                            height={40}
+                                            placeholder="الموقع"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'location'}
+                                        rules={[{ required: true, message: "ادخل المكان (نص)" }]}
+                                    >
+                                        <Input
+                                            fontSize={16}
+                                            width={172}
+                                            height={40}
+                                            placeholder="الرابط"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                </div>
                                 <FormItem
-                                    name={'dateFrom'}
-                                    rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
-                                >
-                                    <DatePicker
-                                        format={'YYYY-MM-DD'}
-                                        width={172}
-                                        height={40}
-                                        disabled={isFieldDisable}
-                                        placeholder="تاريخ البداية"
-                                        suFFixIconName="calander"
-                                    />
-                                </FormItem>
-                                <FormItem
-                                    name={'dateTo'}
-                                    rules={[{ required: true, message: "ادخل تاريخ النهاية" }]}
-                                >
-                                    <DatePicker
-                                        format={'YYYY-MM-DD'}
-                                        width={172}
-                                        height={40}
-                                        placeholder="تاريخ النهاية"
-                                        suFFixIconName="calander"
-                                        disabled={isFieldDisable}
-                                    />
-                                </FormItem>
-                            </div>
-                            <div className='flex'>
-                                <FormItem
-                                    name={'timeFrom'}
-                                    rules={[{ required: true, message: "ادخل ساعة البداية " }]}
-                                >
-                                    <TimePicker
-                                        width={172}
-                                        height={40}
-                                        placeholder="من الساعة"
-                                        picker="time"
-                                        suFFixIconName="clock"
-                                        disabled={isFieldDisable}
-                                    />
-                                </FormItem>
-                                <FormItem
-                                    name={'timeTo'}
-                                    rules={[{ required: true, message: "ادخل ساعة النهاية" }]}
-                                >
-                                    <TimePicker
-                                        width={172}
-                                        height={40}
-                                        placeholder="إلى الساعة"
-                                        picker="time"
-                                        suFFixIconName="clock"
-                                        disabled={isFieldDisable}
-                                    />
-                                </FormItem>
-                            </div>
-                            <div className='flex'>
-                                <FormItem
-                                    name={'locationName'}
-                                    rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                    name={'maxNumberOfSeats'}
+                                    rules={[{ required: true, message: "ادخل عدد المقاعد" }]}
                                 >
                                     <Input
                                         fontSize={16}
                                         width={172}
                                         height={40}
-                                        placeholder="الموقع"
+                                        placeholder="عدد المقاعد"
                                         disabled={isFieldDisable}
                                     />
                                 </FormItem>
-                                <FormItem
-                                    name={'location'}
-                                    rules={[{ required: true, message: "ادخل المكان (نص)" }]}
-                                >
-                                    <Input
-                                        fontSize={16}
-                                        width={172}
-                                        height={40}
-                                        placeholder="الرابط"
-                                        disabled={isFieldDisable}
-                                    />
-                                </FormItem>
-                            </div>
-                            <FormItem
-                                name={'maxNumberOfSeats'}
-                                rules={[{ required: true, message: "ادخل عدد المقاعد" }]}
-                            >
-                                <Input
-                                    fontSize={16}
-                                    width={172}
-                                    height={40}
-                                    placeholder="عدد المقاعد"
-                                    disabled={isFieldDisable}
-                                />
-                            </FormItem>
-                            {showSwitchBtn &&
-                                <>
-                                    {/* <div className='flex items-center'>
+                                {showSwitchBtn &&
+                                    <>
+                                        {/* <div className='flex items-center'>
                                         <Switch defaultChecked={isAppointmentPublished} onChange={onChangeCatagoryPublished}></Switch>
                                         <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
                                     </div> */}
-                                    <div className='flex items-center'>
-                                        <Switch defaultChecked={isContentAccess} onChange={onChangeContentAccess}></Switch>
-                                        <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
-                                    </div>
-                                </>
-                            }
-                        </div>
-                        <div className={styles.saveBtnBox}>
-                            <CustomButton
-                                btnText={'إنشاء'}
-                                width={80}
-                                height={37}
-                                showLoader={showBtnLoader}
-                                fontSize={16}
-                            />
-                        </div>
-                    </Form>
-                </Modal>
+                                        <div className='flex items-center'>
+                                            <Switch defaultChecked={isContentAccess} onChange={onChangeContentAccess}></Switch>
+                                            <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
+                                        </div>
+                                    </>
+                                }
+                            </div>
+                            <div className={styles.saveBtnBox}>
+                                <CustomButton
+                                    btnText={'إنشاء'}
+                                    width={80}
+                                    height={37}
+                                    showLoader={showBtnLoader}
+                                    fontSize={16}
+                                />
+                            </div>
+                        </Form>
+                    </Modal>
+                }
             </div >
         </div >
     )

@@ -11,6 +11,7 @@ import Link from 'next/link'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import ManegeUserListDrawer from '../../../components/ManageUserList/ManegeUserListDrawer'
+// import styles from '../../../../'
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -200,6 +201,14 @@ const Index = () => {
                 />
             </div>
             <h1 className={`head2 py-8`}>بيانات المستخدمين</h1>
+            {/* 
+            <div className={styles.backBtnBox}>
+                <button className='fontBold primaryStrockedBtn'>
+                    <div className={styles.arrowIcon}>
+                        <AllIconsComponenet height={20} width={20} iconName={'rightArrowIcon'} color={'#F26722'} />
+                    </div>
+                    الصفحة السابقة </button>
+            </div> */}
 
             <ConfigProvider direction="rtl">
                 <Table

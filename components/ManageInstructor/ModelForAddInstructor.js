@@ -23,20 +23,34 @@ const ModelForAddInstructor = ({
     getInstructorListReq,
 }) => {
     const [instructorForm] = Form.useForm();
+    const [fileName, setFileName] = useState()
+    const [avatarUploadResData, setAvtarUploadResData] = useState()
+    const [fileUploadResponceData, setFileUploadResponceData] = useState()
+    const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [uploadfileError, setUploadFileError] = useState(false)
 
     useEffect(() => {
         instructorForm.setFieldsValue(instructorDetails)
         if (instructorDetails?.phone) {
             instructorForm.setFieldValue('phone', instructorDetails?.phone?.replace("966", "0"))
         }
+        if (instructorDetails?.avatarKey) {
+            setAvtarUploadResData({
+                key: instructorDetails.avatarKey,
+                bucket: instructorDetails.avatarBucket,
+                mime: instructorDetails.avatarMime
+            })
+        }
+        if (instructorDetails?.ProfileFileKey) {
+            setFileUploadResponceData({
+                key: instructorDetails.ProfileFileKey,
+                bucket: instructorDetails.ProfileFileBucket,
+                mime: instructorDetails.ProfileFileMime
+            })
+        }
         setFileName(instructorDetails?.avatarKey)
     }, [])
 
-    const [fileName, setFileName] = useState()
-    const [avatarUploadResData, setAvtarUploadResData] = useState()
-    const [fileUploadResponceData, setFileUploadResponceData] = useState()
-    const [showBtnLoader, setShowBtnLoader] = useState(false)
-    const [uploadfileError, setUploadFileError] = useState(false)
 
     const onFinish = (values) => {
         if (isEdit) {
@@ -93,15 +107,16 @@ const ModelForAddInstructor = ({
     }
 
     const editInstructor = async (values) => {
-        setShowBtnLoader(true)
-        if (!(avatarUploadResData && fileUploadResponceData)) {
+        if (((!avatarUploadResData) || (!fileUploadResponceData))) {
             setUploadFileError(true)
         } else {
+            setShowBtnLoader(true)
             if (avatarUploadResData) {
                 values.avatarKey = avatarUploadResData?.key
                 values.avatarBucket = avatarUploadResData?.bucket
                 values.avatarMime = avatarUploadResData?.mime
-            } else {
+            }
+            if (fileUploadResponceData) {
                 values.ProfileFileKey = fileUploadResponceData?.key
                 values.ProfileFileBucket = fileUploadResponceData?.bucket
                 values.ProfileFileMime = fileUploadResponceData?.mime

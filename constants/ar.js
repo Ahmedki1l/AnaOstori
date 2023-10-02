@@ -55,6 +55,7 @@ export const toastSuccessMessage = {
     examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',    
     createNewsSuccessMsg: 'تم إضافة النص التسويقي بنجاح',// 'newbar added successfully'
     updatedNewsSuccessMsg: 'تم تحديث النص التسويقي بنجاح',// 'newbar updated successfully',
+    deleteNewsSuccessMsg: 'تم حذف النص التسويقي بنجاح',// 'newbar deleted successfully',
 }
 
 export const createAndEditBtnText = {
