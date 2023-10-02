@@ -4,7 +4,7 @@ import styles from './ModelForAddNews.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import { createNewsAPI, editNewsAPI, routeAPI } from '../../services/apisService'
+import { routeAPI } from '../../services/apisService'
 import { toast } from 'react-toastify'
 import { createAndEditBtnText, manageNewsConst, toastSuccessMessage } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
@@ -53,7 +53,9 @@ const ModelForAddNews = ({
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await createNewsAPI(values).then((res) => {
+                    await routeAPI(values).then((res) => {
+                        getNewsList()
+                        isModelClose();
                         apiSuccessMsg(toastSuccessMessage.createNewsSuccessMsg)
                     })
                 }).catch(error => {
@@ -76,7 +78,9 @@ const ModelForAddNews = ({
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await editNewsAPI(values).then((res) => {
+                    await routeAPI(values).then((res) => {
+                        getNewsList()
+                        isModelClose()
                         apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)
                     })
                 }).catch(error => {
