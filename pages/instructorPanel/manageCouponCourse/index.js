@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { ConfigProvider, Drawer, Form, Table } from 'antd'
+import { ConfigProvider, Drawer, Form, Table, Tag } from 'antd'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import styled from 'styled-components'
@@ -10,6 +10,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
 import Empty from '../../../components/CommonComponents/Empty'
 import { useSelector } from 'react-redux'
+import * as paymentConst from '../../../constants/PaymentConst'
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -22,7 +23,20 @@ const Index = () => {
     const [selectedCoupon, setSelectedCoupon] = useState()
     const storeData = useSelector((state) => state?.globalStore);
     const category = storeData.catagories
-    console.log(category);
+    // const couponStatus = [
+    //     {
+    //         key: 1,
+    //         value: 'active',
+    //         label: 'مفعل',
+    //         color: 'green'
+    //     },
+    //     {
+    //         key: 2,
+    //         value: 'inActive',
+    //         label: 'منتهي',
+    //         color: 'red'
+    //     }
+    // ]
 
     const tableColumns = [
         {
@@ -52,10 +66,22 @@ const Index = () => {
         {
             title: 'حالة الكوبون',
             dataIndex: 'status',
+            render: (text) => {
+                return (
+                    <Tag color={text == true ? 'green' : 'red'} style={{ fontFamily: 'Tajawal-Regular' }}>
+                        {text == true ? 'مفعل' : 'منتهي'}
+                    </Tag>
+                )
+            }
         },
         {
             title: 'مرات الاستخدام',
             dataIndex: 'NoOfUsage',
+            render: (text) => {
+                return (
+                    text == null ? 0 : text
+                )
+            }
         },
         {
             title: 'مطبق مع اي دورة',
@@ -174,7 +200,7 @@ const Index = () => {
                                 </>
                             }
                         >
-                            <ManageCouponCourseDrawer selectedCoupon={selectedCoupon} />
+                            <ManageCouponCourseDrawer selectedCoupon={selectedCoupon} category={category} />
                         </Drawer>}
                 </ConfigProvider>
             </div>

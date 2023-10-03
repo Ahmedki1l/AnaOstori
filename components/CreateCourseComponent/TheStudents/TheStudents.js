@@ -82,7 +82,8 @@ const TheStudent = (props) => {
                     courseId: courseId,
                     itemId: newObj.quizId,
                     grade: newObj.grade ?? null,
-                    note: newObj.note ?? null
+                    note: newObj.note ?? null,
+                    pass: newObj.present ? true : false ?? null
                 });
             }
             else if ((oldGrade !== newGrade) || (oldNote !== newNote)) {
@@ -92,11 +93,11 @@ const TheStudent = (props) => {
                     courseId: courseId,
                     itemId: newObj.quizId,
                     grade: newObj.grade ?? null,
-                    note: newObj.note ?? null
+                    note: newObj.note ?? null,
+                    pass: newObj.present ? true : false ?? null
                 });
             }
         });
-
         let createAPIBody = {
             data: createDataBody
         }
@@ -107,7 +108,9 @@ const TheStudent = (props) => {
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
                 studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
+                setShowBtnLoader(false)
             }).catch(async (error) => {
+                setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createStudentExamDataAPI(createAPIBody).then((res) => {
@@ -122,7 +125,9 @@ const TheStudent = (props) => {
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
                 studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
+                setShowBtnLoader(false)
             }).catch(async (error) => {
+                setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateStudentExamDataAPI(updateAPIBody).then((res) => {
@@ -194,6 +199,29 @@ const TheStudent = (props) => {
     const selectGenderFilter = (value) => {
         const newStudentList = [...allStudentDetails]
         setDisplayedStudentList(newStudentList.filter((student) => value == student.userProfile.gender));
+    }
+
+    const changeStatusForIndividualType = (type, index) => {
+        let tempStudentExamList = [...examList]
+        if (type == 'present') {
+            if (tempStudentExamList[index].present == true) {
+                tempStudentExamList[index].present = false
+                tempStudentExamList[index].absent = false
+            } else {
+                tempStudentExamList[index].present = true
+                tempStudentExamList[index].absent = false
+            }
+        }
+        if (type == 'absent') {
+            if (tempStudentExamList[index].absent == true) {
+                tempStudentExamList[index].present = false
+                tempStudentExamList[index].absent = false
+            } else {
+                tempStudentExamList[index].present = false
+                tempStudentExamList[index].absent = true
+            }
+        }
+        setExamList(tempStudentExamList)
     }
 
     return (
@@ -297,7 +325,9 @@ const TheStudent = (props) => {
                                 <tr>
                                     <th className={styles.studentTableHead1}>عنوان الاختبار</th>
                                     <th className={styles.studentTableHead2}>الدرجة</th>
-                                    <th className={styles.studentTableHead3}>الملاحظات</th>
+                                    <th className={styles.studentTableHead3}>مجتاز</th>
+                                    <th className={styles.studentTableHead4}>غير مجتاز</th>
+                                    <th className={styles.studentTableHead5}>الملاحظات</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.studentTableBodyArea}>
@@ -316,9 +346,20 @@ const TheStudent = (props) => {
                                                 />
                                             </td>
                                             <td>
+                                                <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', index)}>
+                                                    <AllIconsComponenet iconName={exam.present ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', index)}>
+                                                    <AllIconsComponenet iconName={exam.absent ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                </div>
+                                            </td>
+
+                                            <td>
                                                 <Input
                                                     fontSize={16}
-                                                    width={324}
+                                                    width={270}
                                                     height={37}
                                                     value={exam.note}
                                                     placeholder="إن وجدت"

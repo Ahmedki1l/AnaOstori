@@ -37,9 +37,7 @@ export default function Index() {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await getAllCourseByInstructor(body).then(res => {
-                            setAllPhysicalCourses(res?.data)
-                        })
+                        getAllCourse()
                     }).catch(error => {
                         console.error("Error:", error);
                     });

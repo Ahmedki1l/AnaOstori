@@ -6,7 +6,7 @@ import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../spinner'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
 
-const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError }) => {
+const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError, setVideoDuration }) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
 
@@ -16,6 +16,7 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
         video.preload = 'metadata';
         video.onloadedmetadata = () => {
             window.URL.revokeObjectURL(video.src);
+            setVideoDuration(video.duration);
         };
 
         video.src = URL.createObjectURL(file);

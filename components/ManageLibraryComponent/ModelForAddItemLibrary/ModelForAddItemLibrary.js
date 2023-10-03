@@ -25,6 +25,7 @@ const ModelForAddItemLibrary = ({
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [uploadfileError, setUploadFileError] = useState(false)
+    const [videoDuration, setVideoDuration] = useState()
 
     useEffect(() => {
         ItemDetailsForm.setFieldsValue(selectedItem)
@@ -61,6 +62,7 @@ const ModelForAddItemLibrary = ({
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
             body.quizLink = e.quizLink
+            body.duration = folderType == "video" ? videoDuration : null
         }
         const data = {
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
@@ -183,9 +185,10 @@ const ModelForAddItemLibrary = ({
                                     setFileName={setFileName}
                                     uploadResData={setFileUploadResponceData}
                                     fileType={folderType == 'video' ? '.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv' : '.pdf , .doc , .docx'}
-                                    accept={"image"}
+                                    accept={folderType == 'video' ? "video" : "image"}
                                     placeHolderName={'ارفق الصورة'}
                                     setShowBtnLoader={setShowBtnLoader}
+                                    setVideoDuration={setVideoDuration}
                                 />
                             }
                             {folderType == "quiz" &&

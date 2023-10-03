@@ -39,14 +39,12 @@ const disabledDate = (current) => {
 };
 
 const DatePicker = ({
-  OptionData,
   placeholder,
   picker,
   suFFixIconName,
   disabled = false,
   ...rest
 }) => {
-
   return (
 
     <StyledDatePicker
