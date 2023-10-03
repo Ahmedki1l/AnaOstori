@@ -9,6 +9,7 @@ import Spinner from '../../../../components/CommonComponents/spinner';
 import * as fbq from '../../../../lib/fpixel'
 import { inputErrorMessages } from '../../../../constants/ar';
 import WhatsAppLinkComponent from '../../../../components/CommonComponents/WhatsAppLink';
+import { toast } from 'react-toastify';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 	const courseName = resolvedUrl.split('/')[2].replace(/-/g, ' ')
@@ -251,7 +252,7 @@ export default function Index(props) {
 				setCreatedOrder(res.data)
 				generateCheckoutId(res.data.id)
 			}).catch(async (error) => {
-				console.log(error)
+				console.log(error.response.data.message)
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						await createOrderAPI(params).then(res => {
@@ -262,6 +263,8 @@ export default function Index(props) {
 						console.error("Error:", error);
 					});
 				}
+				// if (error.response.data.message)
+				toast.error(error.response.data.message)
 			})
 		}
 		setStudentsData(studentsData)

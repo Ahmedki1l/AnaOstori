@@ -69,7 +69,6 @@ const Index = () => {
             isDeleted: true
         }
         await routeAPI(body).then((res) => {
-            console.log(res);
             toast.success(manageNewsConst.deleteNewsSuccessMsg)
             getNewsList()
         }).catch((err) => {

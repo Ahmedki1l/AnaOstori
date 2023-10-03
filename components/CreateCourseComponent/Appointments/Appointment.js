@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './Appointment.module.scss'
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { Form, FormItem } from '../../antDesignCompo/FormItem';
@@ -9,7 +8,7 @@ import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
 import Input from '../../antDesignCompo/Input';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import { createCourseAvailabilityAPI, editAvailabilityAPI, getAllAvailabilityAPI } from '../../../services/apisService';
+import { createCourseAvailabilityAPI, editAvailabilityAPI } from '../../../services/apisService';
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
@@ -33,7 +32,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-    const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
+    // const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
 
     const instructor = instructorList?.map((obj) => {
@@ -163,14 +162,16 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         }
         setIsContentAccess(checked)
     };
-    const onChangeCatagoryPublished = async (checked) => {
-        if (checked == true) {
-            toast.success("Catagory Published")
-        } else {
-            toast.success('Catagory Not Published')
-        }
-        setIAppointmentPublished(checked)
-    };
+
+    // for Appointment Publish
+    // const onChangeCatagoryPublished = async (checked) => {
+    //     if (checked == true) {
+    //         toast.success("Catagory Published")
+    //     } else {
+    //         toast.success('Catagory Not Published')
+    //     }
+    //     setIAppointmentPublished(checked)
+    // };
 
     return (
         <div className='maxWidthDefault px-4'>
