@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaDataAPI } from '../../../services/apisService'
 import { updateCourseDetailsAPI } from '../../../services/apisService';
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
-import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { toastSuccessMessage } from '../../../constants/ar';
 import { toast } from 'react-toastify';
@@ -28,7 +28,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // setCourseCardMetaDataObj()
         if (isCourseEdit && editCourseData.CourseCardMetaData) {
             externalCourseForm.setFieldsValue(editCourseData)
         }
@@ -217,7 +216,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                     <div className={styles.cardmetaDataForm}>
                         <FormItem
                             name="cardDescription"
-                            rules={[{ required: true }]}>
+                            rules={[{ required: true, message: 'اكتب وصف الدورة' }]}>
                             <InputTextArea
                                 height={142}
                                 width={549}
@@ -231,14 +230,14 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                     {(field, { add, remove }) => (
                                         <>
                                             <div style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                                <p className={styles.secDetails}>تفاصيل ثانية</p>
+                                                <p className={styles.secDetails}>النقاط</p>
                                                 <p className={styles.addDetails} onClick={() => { add(), setCourseCardMetaDataObj() }} >+ إضافة</p>
                                             </div>
                                             {field.map(({ name, key, ...restField }, index) => (
                                                 <div className={styles.courseDetails} key={key}>
                                                     <FormItem>
-                                                        <div style={{ margin: '10px' }} >
-                                                            <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} /></div>
+                                                        <div className='mt-2'>
+                                                            <AllIconsComponenet iconName={'dragIcon'} height={27} width={27} color={'#808080a6'} />
                                                         </div>
                                                     </FormItem>
                                                     <div className='flex flex-wrap w-[95%]'>

@@ -123,8 +123,8 @@ const CreateCoursePath = (props) => {
                         backpathForPage={true}
                         backPathArray={
                             [
-                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/manageLibrary' },
-                                { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/' },
+                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                                { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/manageLibrary' },
                                 { lable: 'إدارة المكتبة الرقمية', link: null },
                             ]
                         }

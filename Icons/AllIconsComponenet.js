@@ -96,6 +96,8 @@ import ManageUsers from './customeIcons/manageUsers'
 import ManageCoupons from './customeIcons/manageCoupons'
 import NewEditIcon from './customeIcons/newEditIcon'
 import NewDeleteIcon from './customeIcons/newDeleteIcon'
+import DragIcon from './customeIcons/dragIcon'
+import NewLiveTVIcon from './customeIcons/newLiveTVIcon'
 
 
 
@@ -179,6 +181,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'instructorIcon' && <InstructorIcon height={height} width={width} color={color} />}
 			{iconName == 'courseTypePhysical' && <CourseTypePhysical height={height} width={width} color={color} />}
 			{iconName == 'uploadIncvoice' && <UploadInvoice height={height} width={width} color={color} />}
+			{iconName == 'dragIcon' && <DragIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'visaPayment' && <VisaPayment height={height} width={width} color={color} />}
@@ -202,6 +205,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 
 			{iconName == 'newEditIcon' && <NewEditIcon height={height} width={width} color={color} />}
 			{iconName == 'newDeleteIcon' && <NewDeleteIcon height={height} width={width} color={color} />}
+			{iconName == 'newLiveTVIcon' && <NewLiveTVIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
