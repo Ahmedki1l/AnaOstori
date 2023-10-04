@@ -14,7 +14,9 @@ import BackToPath from '../../../../../components/CommonComponents/BackToPath';
 import { getNewToken } from '../../../../../services/fireBaseAuthService';
 
 export default function Index() {
-    const { courseType, courseId } = useRouter().query
+    // const { courseType, courseId } = useRouter().query
+    const courseId = useRouter().query.courseId
+    const courseType = useRouter().query.courseType
     const [selectedItem, setSelectedItem] = useState(1);
     const storeData = useSelector((state) => state?.globalStore);
     const dispatch = useDispatch();
@@ -69,13 +71,14 @@ export default function Index() {
                                 [
                                     { lable: 'صفحة الأدمن الرئيسية', link: `/instructorPanel` },
                                     { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel/manageCourse' },
-                                    { lable: courseName ? courseName : courseType == "physical" ? 'الدورات الحضورية' : courseType == "on-demand" ? 'الدورات المسجلة' : '', link: null }
+                                    { lable: courseName ? courseName : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة', link: null },
+                                    // {lable: courseName ? courseName : courseType == "on-demand" ? 'الدورات المسجلة' : '', link: null }
                                 ]
                             }
                         />
                     </div>
                     <h1 className={`head2 ${styles.createCourseHeaderText}`}>
-                        {courseName ? courseName : courseType == "physical" ? 'إضافة دورة حضورية' : courseType == "online" ? 'إضافة دورة مباشرة' : 'إضافة دورة مسجلة'}
+                        {courseName ? courseName : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة'}
                     </h1>
                     <div>
                         <div className={styles.navItems}>
@@ -83,10 +86,10 @@ export default function Index() {
                             {showExtraNavItem &&
                                 <>
                                     <p onClick={() => handleItemSelect(2)} className={selectedItem == 2 ? styles.activeItem : ""}>بطاقة الدورة الخارجية</p>
-                                    {courseType != "on-demand" && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
+                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
                                     <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>
                                     <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>
-                                    {courseType != "on-demand" && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
+                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
                                 </>
                             }
                         </div>
@@ -105,9 +108,9 @@ export default function Index() {
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
                         {selectedItem == 3 && courseType != "on-demand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} />}
-                        {selectedItem == 4 && <TheStudents courseId={courseId} />}
+                        {selectedItem == 4 && <TheStudzents courseId={courseId} courseType={courseType} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} />}
-                        {selectedItem == 6 && <Attendance courseId={courseId} courseType={courseType} />}
+                        {selectedItem == 6 && <Attendance courseId={courseId} />}
                     </div>
                 </div >
             </div >

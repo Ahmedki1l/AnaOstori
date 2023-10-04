@@ -96,6 +96,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             values.videoMime = videoUploadResponceData?.mime
             values.groupDiscountEligible = groupDiscountEligible
             values.type = courseType == "onDemand" ? "on-demand" : courseType
+            values.locationName = courseType == "onDemand" ? 'بجودة عالية' : values.locationName
             values.language = englishCourse ? "en" : "ar"
             values.isPurchasable = false
             values.published = false
@@ -114,9 +115,30 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     values.iosDiscountForThreeOrMore = iosDiscountForThreeLabel.label
                 }
             }
-
-            delete values.priceForTwo;
-            delete values.PriceForThreeorMore;
+            if (courseType == "physical") {
+                values.androidPrice = values.price
+                values.iosPrice = values.price
+                if (discountForOne) {
+                    values.androidDiscount = values.discount
+                    values.iosDiscount = values.discount
+                }
+                if (groupDiscountEligible) {
+                    values.androidDiscountForTwo = values.discountForTwo
+                    values.androidDiscountForThreeOrMore = values.discountForThreeOrMore
+                    values.iosDiscountForTwo = values.discountForTwo
+                    values.iosDiscountForThreeOrMore = values.discountForThreeOrMore
+                }
+            }
+            if (courseType == "online") {
+                values.androidPrice = values.price
+                if (discountForOne) {
+                    values.androidDiscount = values.discount
+                }
+                if (groupDiscountEligible) {
+                    values.androidDiscountForTwo = values.discountForTwo
+                    values.androidDiscountForThreeOrMore = values.discountForThreeOrMore
+                }
+            }
 
             let body = {
                 data: values,
@@ -188,14 +210,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         values.language = englishCourse ? "en" : "ar"
         values.type = courseType == "onDemand" ? "on-demand" : courseType
 
-        const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
-        const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
-        const iosDiscountForTwoLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForTwoId ? obj.label : null)
-        const iosDiscountForThreeLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForThreeOrMoreId ? obj.label : null)
-
         if (courseType != "physical") {
-            values.iosPrice = iosPriceLabel.label
+            const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
+            const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
+            const iosDiscountForTwoLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForTwoId ? obj.label : null)
+            const iosDiscountForThreeLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountForThreeOrMoreId ? obj.label : null)
 
+            values.iosPrice = iosPriceLabel.label
             if (discountForOne) {
                 values.iosDiscount = iosDiscountLabel.label
             }
@@ -204,10 +225,30 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 values.iosDiscountForThreeOrMore = iosDiscountForThreeLabel.label
             }
         }
-
-        delete values.discountForOne
-        delete values.courseMetaData;
-        delete values.courseDetailsMetaData;
+        if (courseType == "physical") {
+            values.androidPrice = values.price
+            values.iosPrice = values.price
+            if (discountForOne) {
+                values.androidDiscount = values.discount
+                values.iosDiscount = values.discount
+            }
+            if (groupDiscountEligible) {
+                values.androidDiscountForTwo = values.discountForTwo
+                values.androidDiscountForThreeOrMore = values.discountForThreeOrMore
+                values.iosDiscountForTwo = values.discountForTwo
+                values.iosDiscountForThreeOrMore = values.discountForThreeOrMore
+            }
+        }
+        if (courseType == "online") {
+            values.androidPrice = values.price
+            if (discountForOne) {
+                values.androidDiscount = values.discount
+            }
+            if (groupDiscountEligible) {
+                values.androidDiscountForTwo = values.discountForTwo
+                values.androidDiscountForThreeOrMore = values.discountForThreeOrMore
+            }
+        }
 
         const courseBody = {
             data: values,
@@ -307,7 +348,19 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             courseId: editCourseData.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
-            toast.success('course updated successfully')
+            if (params == "published") {
+                if (e) {
+                    toast.success(`بنجاح ${editCourseData.name} تم نشر  `)
+                } else {
+                    toast.success(` بنجاح ${editCourseData.name} تم إخفاء `)
+                }
+            } else {
+                if (e) {
+                    toast.success(`أصبحت الدورة قابلة للشراء`)
+                } else {
+                    toast.success(`أصبحت الدورة غير قابلة للشراء`)
+                }
+            }
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -326,23 +379,23 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 <div className='px-6'>
                     <FormItem
                         name={'name'}
-                        rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}>
+                        rules={[{ required: true, message: 'اكتب عنوان الدورة' }]}>
                         <Input
                             placeholder="عنوان الدورة"
                         />
                     </FormItem>
                     <FormItem
                         name={'catagoryId'}
-                        rules={[{ required: true, message: 'اختر تصنيف الدورة' }]} >
+                        rules={[{ required: true, message: 'اختار المجال' }]} >
                         <Select
-                            placeholder="اختر تصنيف الدورة"
+                            placeholder='اختار المجال'
                             OptionData={catagoriesItem} />
                     </FormItem>
                     <FormItem
                         name={'curriculumId'}
-                        rules={[{ required: true, message: 'اختر مقرر الدورة' }]}  >
+                        rules={[{ required: true, message: 'اختار المقرر' }]}  >
                         <Select
-                            placeholder="اختر تصنيف الدورة"
+                            placeholder='اختار مقرر الدورة'
                             OptionData={curriculum}
                             filterOption={false} />
                     </FormItem>
@@ -350,13 +403,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         name={'englishCourse'}
                     >
                         <CheckBox
+                            disabled
                             label={' الدورة انجليزية'}
                             defaultChecked={englishCourse}
                             onChange={(e) => onChangeCourseChkBox(e, 'englishCourse')}
                         />
                     </FormItem>
                     <FormItem
-                        name={'shortDescription'}>
+                        name={'shortDescription'}
+                        rules={[{ required: true, message: 'اكتب الوصف' }]}
+                    >
                         <InputTextArea
                             height={274}
                             width={549}
@@ -372,7 +428,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                             setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
                             type={'.jpg , .png'}
-                            label={'ارفق الفيديو هنا'}
+                            label={'ارفق الصورة هنا'}
                         />
                     </div>
                     <p className={styles.uploadImageHeader}>فيديو الدورة</p>
@@ -390,29 +446,25 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
                                 <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
-                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#FFFFFF'} /></div>
+                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? 'تقدم الدورة في' : courseType == 'onDemand' ? 'تقدر تشوفها' : 'يتم بثها عبر'}</p>
+                                <p>{courseType == 'physical' ? 'تقام الدورة في' : courseType == 'onDemand' ? 'تقدر تشوفها' : 'يتم بثها عبر'}</p>
                             </div>
-                            <FormItem
-                                name={'locationName'}
-                                rules={[{ required: true, message: '	حدد الموقع' }]} >
-                                <Input
-                                    height={47}
-                                    width={247}
-                                    placeholder="الرياض، حي الياسمين"
-                                />
-                            </FormItem>
-                            {/* <FormItem
-                                name={'location'}
-                                rules={[{ required: true, message: 'ضع رابط الموقع' }]}  >
-                                <Input
-                                    height={47}
-                                    width={247}
-                                    placeholder="hyperlink(optional)"
+                            {courseType == "onDemand" ?
+                                <div className={styles.detailDataWrapper} style={{ marginBottom: '20px' }}>
+                                    <p>{'بجودة عالية'}</p>
+                                </div>
+                                :
+                                <FormItem
+                                    name={'locationName'}
+                                    rules={[{ required: true, message: 'اكتب المدينة والمركز' }]} >
+                                    <Input
+                                        height={47}
+                                        width={247}
+                                        placeholder='المدينة والمركز'
                                     />
-                            </FormItem> */}
+                                </FormItem>}
                         </div>
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
@@ -438,15 +490,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personegroup'} height={24} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? ' عدد الخريجين' : courseType == 'onDemand' ? 'عدد الاشتراكات' : 'عدد الخريجين'}</p>
+                                <p>{courseType == 'physical' ? 'عدد الاشتراكات' : courseType == 'onDemand' ? 'عدد الاشتراكات' : 'عدد الخريجين'}</p>
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}
-                                rules={[{ required: true, message: 'ادخل رقم الخريجين' }]} >
+                                rules={[{ required: true, message: 'حط رقم تخميني' }]} >
                                 <Input
                                     height={47}
                                     width={247}
-                                    placeholder="قيمة عدد الخريجين"
+                                    placeholder='عدد الاشتركات كرقم فقط'
                                 />
                             </FormItem>
                         </div>
@@ -469,86 +521,40 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 name={'groupDiscountEligible'}
                             >
                                 <CheckBox
-                                    label={'امكانية التسجيل كمجموعات'}
+                                    label='إمكانية التسجيل كمجموعة'
                                     defaultChecked={groupDiscountEligible}
                                     onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
                                 />
                             </FormItem>
                         }
-                        <div className={styles.checkBoxHead}>
-                            <div className='pl-2'>
-                                <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
-                            </div>
-                            {courseType == 'physical' &&
-                                <>
-                                    <div>
-                                        <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
-                                    </div>
-                                    <div className='pr-2'>
-                                        <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
-                                    </div>
-                                </>
-                            }
-                            <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
-                        </div>
-                        <div className='flex'>
-                            <FormItem
-                                name={'price'}
-                                rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
-                                <Input
-                                    placeholder='السعر لشخص واحد'
-                                />
-                            </FormItem>
-                            {discountForOne &&
-                                <FormItem
-                                    name={'discount'}
-                                    rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
-                                    <Input
-                                        placeholder='السعر بعد الخصم'
-                                    />
-                                </FormItem>
-                            }
-                        </div>
-                        {groupDiscountEligible &&
-                            <div className='flex'>
-                                <div>
-                                    <FormItem
-                                        name={'discountForTwo'}
-                                        rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
-                                        <Input
-                                            placeholder='السعر لشخصين'
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        name={'discountForThreeOrMore'}
-                                        rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
-                                        <Input
-                                            placeholder='السعر لـ3 أشخاص أو أكثر'
-                                        />
-                                    </FormItem>
-                                </div>
-                            </div>
-                        }
-                        {courseType != 'physical' &&
+                        {courseType == 'physical' ?
                             <>
                                 <div className={styles.checkBoxHead}>
-                                    <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
-                                    <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                    <div>
+                                        <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
+                                    </div>
+                                    <div className='px-2'>
+                                        <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
+                                    </div>
+                                    <div >
+                                        <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                    </div>
+                                    <p className={styles.chechBoxHeadText}>السعر</p>
                                 </div>
                                 <div className='flex'>
                                     <FormItem
-                                        name={'androidPrice'}
+                                        name={'price'}
                                         rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
                                         <Input
-                                            placeholder="سعر الدورة للشخص"
+                                            placeholder='السعر'
                                         />
                                     </FormItem>
                                     {discountForOne &&
                                         <FormItem
-                                            name={'androidDiscount'}
-                                            rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                            name={'discount'}
+                                            rules={[{ required: true, message: 'ادخل سعر الدورة بعد الخصم' }]}  >
                                             <Input
-                                                placeholder="السعر بعد الخصم للشخص"
+                                                placeholder='السعر بعد الخصم'
                                             />
                                         </FormItem>
                                     }
@@ -557,70 +563,191 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                     <div className='flex'>
                                         <div>
                                             <FormItem
-                                                name={'androidDiscountForTwo'}
+                                                name={'discountForTwo'}
                                                 rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
                                                 <Input
-                                                    placeholder="سعر الدورة لشخصين"
+                                                    placeholder='شخصين (السعر على كل شخص)'
                                                 />
                                             </FormItem>
                                             <FormItem
-                                                name={'androidDiscountForThreeOrMore'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
+                                                name={'discountForThreeOrMore'}
+                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص او اكثر' }]} >
                                                 <Input
-                                                    placeholder="سعر الدورة لثلاثة اشخاص واكثر"
-                                                />
-                                            </FormItem>
-                                        </div>
-                                    </div>
-                                }
-                                <div className={styles.checkBoxHead}>
-                                    <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
-                                    <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
-                                </div>
-                                <div className='flex'>
-                                    <FormItem
-                                        name={'iosPriceId'}
-                                        rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
-                                        <Select
-                                            placeholder="سعر الدورة للشخص"
-                                            OptionData={iosProductIdList}
-                                        />
-                                    </FormItem>
-
-                                    {discountForOne &&
-                                        <FormItem
-                                            name={'iosDiscountId'}
-                                            rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
-                                            <Select
-                                                placeholder="السعر بعد الخصم للشخص"
-                                                OptionData={iosProductIdList}
-                                            />
-                                        </FormItem>
-                                    }
-                                </div>
-                                {groupDiscountEligible &&
-                                    <div className='flex'>
-                                        <div>
-                                            <FormItem
-                                                name={'iosDiscountForTwoId'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
-                                                <Select
-                                                    placeholder="سعر الدورة لشخصين"
-                                                    OptionData={iosProductIdList}
-                                                />
-                                            </FormItem>
-                                            <FormItem
-                                                name={'iosDiscountForThreeOrMoreId'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]} >
-                                                <Select
-                                                    placeholder="سعر الدورة لثلاثة اشخاص واكثر"
-                                                    OptionData={iosProductIdList}
+                                                    placeholder='3 أو أكثر (السعر على كل شخص)'
                                                 />
                                             </FormItem>
                                         </div>
                                     </div>
                                 }
                             </>
+                            :
+                            courseType == 'online' ?
+                                <>
+                                    <div className={styles.checkBoxHead}>
+                                        <div className='px-2'>
+                                            <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
+                                        </div>
+                                        <div>
+                                            <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                        </div>
+                                        <p className={styles.chechBoxHeadText}>تسعيرة الموقع والاندرويد</p>
+                                    </div>
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'price'}
+                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            <Input
+                                                placeholder='السعر'
+                                            />
+                                        </FormItem>
+                                        {discountForOne &&
+                                            <FormItem
+                                                name={'discount'}
+                                                rules={[{ required: true, message: 'ادخل سعر الدورة بعد الخصم' }]}  >
+                                                <Input
+                                                    placeholder='السعر بعد الخصم'
+                                                />
+                                            </FormItem>
+                                        }
+                                    </div>
+                                    {groupDiscountEligible &&
+                                        <div className='flex'>
+                                            <div>
+                                                <FormItem
+                                                    name={'discountForTwo'}
+                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
+                                                    <Input
+                                                        placeholder='شخصين (السعر على كل شخص)'
+                                                    />
+                                                </FormItem>
+                                                <FormItem
+                                                    name={'discountForThreeOrMore'}
+                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص او اكثر' }]} >
+                                                    <Input
+                                                        placeholder='3 أو أكثر (السعر على كل شخص)'
+                                                    />
+                                                </FormItem>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div className={styles.checkBoxHead}>
+                                        <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
+                                        <p className={styles.chechBoxHeadText}>تسعيرة الايفون</p>
+                                    </div>
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'iosPriceId'}
+                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            <Select
+                                                placeholder='السعر لشخص واحد'
+                                                OptionData={iosProductIdList}
+                                            />
+                                        </FormItem>
+                                        {discountForOne &&
+                                            <FormItem
+                                                name={'iosDiscountId'}
+                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                <Select
+                                                    placeholder='السعر بعد الخصم'
+                                                    OptionData={iosProductIdList}
+                                                />
+                                            </FormItem>
+                                        }
+                                    </div>
+                                    {groupDiscountEligible &&
+                                        <div className='flex'>
+                                            <div>
+                                                <FormItem
+                                                    name={'iosDiscountForTwoId'}
+                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]}  >
+                                                    <Select
+                                                        placeholder='شخصين (السعر على كل شخص)'
+                                                        OptionData={iosProductIdList}
+                                                    />
+                                                </FormItem>
+                                                <FormItem
+                                                    name={'iosDiscountForThreeOrMoreId'}
+                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]}  >
+                                                    <Select
+                                                        placeholder='3 أو أكثر (السعر على كل شخص)'
+                                                        OptionData={iosProductIdList}
+                                                    />
+                                                </FormItem>
+                                            </div>
+                                        </div>
+                                    }
+                                </>
+                                :
+                                <>
+                                    <div className={styles.checkBoxHead}>
+                                        <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
+                                        <p className={styles.chechBoxHeadText}>تسعيرة الموقع </p>
+                                    </div>
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'price'}
+                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            <Input
+                                                placeholder='السعر لشخص واحد'
+                                            />
+                                        </FormItem>
+                                        {discountForOne &&
+                                            <FormItem
+                                                name={'discount'}
+                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                <Input
+                                                    placeholder='السعر بعد الخصم'
+                                                />
+                                            </FormItem>
+                                        }
+                                    </div>
+                                    <div className={styles.checkBoxHead}>
+                                        <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
+                                        <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                    </div>
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'androidPrice'}
+                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            <Input
+                                                placeholder='السعر لشخص واحد'
+                                            />
+                                        </FormItem>
+                                        {discountForOne &&
+                                            <FormItem
+                                                name={'androidDiscount'}
+                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                <Input
+                                                    placeholder='السعر بعد الخصم'
+                                                />
+                                            </FormItem>
+                                        }
+                                    </div>
+                                    <div className={styles.checkBoxHead}>
+                                        <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
+                                        <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                    </div>
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'iosPriceId'}
+                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            <Select
+                                                placeholder='السعر لشخص واحد'
+                                                OptionData={iosProductIdList}
+                                            />
+                                        </FormItem>
+                                        {discountForOne &&
+                                            <FormItem
+                                                name={'iosDiscountId'}
+                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                <Select
+                                                    placeholder='السعر بعد الخصم'
+                                                    OptionData={iosProductIdList}
+                                                />
+                                            </FormItem>
+                                        }
+                                    </div>
+                                </>
                         }
                         {!showCourseMetaDataFields &&
                             <div className={styles.saveCourseBtnBox}>
@@ -629,7 +756,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         }
                     </div>
                 </div>
-                {showCourseMetaDataFields &&
+                {
+                    showCourseMetaDataFields &&
                     <>
                         <div className={styles.borderline}>
                             <div className="w-[95%] p-6">
@@ -644,20 +772,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                 {field.map(({ name, key, ...restField }, index) => (
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
-                                                            <div style={{ margin: '10px' }} >
-                                                                <div className='flex justify-center items-center h-100'>
-                                                                    <AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} />
-                                                                </div>
+                                                            <div className='mt-2'>
+                                                                <AllIconsComponenet iconName={'dragIcon'} height={27} width={27} color={'#808080a6'} />
                                                             </div>
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'title']}
-                                                            rules={[
-                                                                {
-                                                                    required: true,
-                                                                    message: 'ادخل العنوان'
-                                                                },
+                                                            rules={[{
+                                                                required: true,
+                                                                message: 'ادخل العنوان'
+                                                            },
                                                             ]}
                                                         >
                                                             <Input placeholder="العنوان" width={216} height={47} />
@@ -696,7 +821,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                                 },
                                                             ]}
                                                         >
-                                                            <Input placeholder="نص منفصل" width={216} height={47} />
+                                                            <Input placeholder='رابط للنص المنفصل' width={216} height={47} />
                                                         </FormItem>
                                                         <div className={styles.deleteIconWrapper} >
                                                             <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseMeta") }}>
@@ -724,8 +849,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                 {field.map(({ name, key, ...restField }, index) => (
                                                     <div className={styles.courseDetails} key={key}>
                                                         <FormItem>
-                                                            <div style={{ margin: '10px' }} >
-                                                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'updownarrow'} height={27} width={27} color={'#2D2E2D'} /></div>
+                                                            <div className='mt-2'>
+                                                                <AllIconsComponenet iconName={'dragIcon'} height={27} width={27} color={'#808080a6'} />
                                                             </div>
                                                         </FormItem>
                                                         <FormItem
@@ -787,7 +912,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 </div>
                                 <div className={`pt-2 ${styles.publishedCourseDetails}`}>
                                     <Switch defaultChecked={editCourseData?.isPurchasable} onChange={handleToggleChange} params={'isPurchasable'} />
-                                    <p style={{ marginRight: '3px' }}>إغلاق صفحة الدورة</p>
+                                    <p style={{ marginRight: '3px' }}>قابلة للشراء</p>
                                 </div>
                             </div>
                         </div>
@@ -804,8 +929,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         </div>
                     </>
                 }
-            </Form>
-        </div>
+            </Form >
+        </div >
     )
 }
 export default CourseInfo

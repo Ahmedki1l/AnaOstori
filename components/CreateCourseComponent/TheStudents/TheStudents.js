@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import styles from './TheStudenet.module.scss'
 import Select from '../../antDesignCompo/Select'
@@ -23,12 +23,12 @@ import { toast } from 'react-toastify'
 
 
 const TheStudent = (props) => {
-
     const [showStudentDetails, setShowStudentDetails] = useState(false)
     const [allStudentDetails, setAllStudentDetails] = useState([])
     const [displayedStudentList, setDisplayedStudentList] = useState([])
     const [showStudentList, setShowStudentList] = useState(false)
     const courseId = props.courseId
+    const courseType = props.courseType
     const genders = PaymentConst.genders
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
@@ -47,6 +47,12 @@ const TheStudent = (props) => {
             value: obj.id,
         }
     });
+
+    useEffect(() => {
+        if (courseType == 'onDemand') {
+            getAllStudentList("007")
+        }
+    }, [courseType])
 
     const onInputChange = (e, index, fieldeName) => {
         const updatedExamData = [...examList]
@@ -230,18 +236,20 @@ const TheStudent = (props) => {
                 <div>
                     <Form form={studentDetailsForm}>
                         <div className='flex'>
-                            <FormItem
-                                name={'selectperiod'}
-                            >
-                                <Select
-                                    fontSize={16}
-                                    width={210}
-                                    height={40}
-                                    placeholder="اختر الفترة"
-                                    OptionData={allavailability}
-                                    onChange={(e) => getAllStudentList(e)}
-                                />
-                            </FormItem>
+                            {courseType !== "onDemand" &&
+                                <FormItem
+                                    name={'selectperiod'}
+                                >
+                                    <Select
+                                        fontSize={16}
+                                        width={210}
+                                        height={40}
+                                        placeholder="اختر الفترة"
+                                        OptionData={allavailability}
+                                        onChange={(e) => getAllStudentList(e)}
+                                    />
+                                </FormItem>
+                            }
                             <FormItem
                                 name={'selectgender'}
                             >

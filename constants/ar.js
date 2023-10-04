@@ -48,7 +48,7 @@ export const toastSuccessMessage = {
     courseDetailUpdateMsg: "تم تحديث تفاصيل الدورة بنجاح", //Course details have been updated successfully.
     courseCreatedSuccessMsg: 'إضافة وتعديل المجالات',//"Course details created successfully.",
     externalCourseDetailCreateMsg: 'إضافة وتعديل الدورات', //'course details created successfully',
-    externalCourseDetailUpdateMsg: 'إدارة المكتبة الرقمية',// 'courese details updated successfully',
+    externalCourseDetailUpdateMsg: 'تم تحديث بيانات البطاقة الخارجية بنجاح',// 'courese details updated successfully',
     appoitmentCretedSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been created successfully',
     appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
     examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',

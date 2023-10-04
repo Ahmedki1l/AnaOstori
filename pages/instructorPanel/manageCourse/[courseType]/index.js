@@ -11,6 +11,7 @@ import Switch from '../../../../components/antDesignCompo/Switch'
 import { mediaUrl } from '../../../../constants/DataManupulation'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import Empty from '../../../../components/CommonComponents/Empty'
+import { toast } from 'react-toastify'
 
 export default function Index() {
 
@@ -56,12 +57,17 @@ export default function Index() {
         })
     }
 
-    const handleCoursePublished = async (checked, courseId) => {
+    const handleCoursePublished = async (checked, course) => {
         let body = {
             data: { published: checked },
-            courseId: courseId,
+            courseId: course.id,
         }
         await updateCourseDetailsAPI(body).then((res) => {
+            if (checked) {
+                toast.success(`بنجاح ${course.name} تم نشر  `)
+            } else {
+                toast.success(` بنجاح ${course.name} تم إخفاء `)
+            }
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -115,41 +121,41 @@ export default function Index() {
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>
-                                            <div className='flex'>
+                                            <div className='flex items-center'>
                                                 <div className={styles.courseInfoImage}>
                                                     <Image src={course.pictureKey ? mediaUrl(course.pictureBucket, course.pictureKey) : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
                                                 </div>
+                                                <h1 className={`fontBold ${styles.courseNameHeader}`}>{course.name}</h1>
                                                 <div className={styles.skillCourseDetails}>
-                                                    <h1 className={`fontBold ${styles.courseNameHeader}`}>{course.name}</h1>
-                                                    <div className={styles.coursePrice}>
+                                                    {/* <div className={styles.coursePrice}>
                                                         <p>{course?.price} ر.س للشخص</p>
                                                         {course?.groupDiscountEligible ?
                                                             <p>500 ر.س شخصين ، 70 ر.س لـ 3 اشخاص او اكثر</p>
                                                             :
                                                             <p>{course.price * 2} ر.س شخصين ، {course.price * 3} ر.س لـ 3 اشخاص او اكثر</p>
                                                         }
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div className={styles.publishedCourseDetails}>
-                                                <Switch defaultChecked={course.published} onChange={handleCoursePublished} params={course.id}
+                                                <Switch defaultChecked={course.published} onChange={handleCoursePublished} params={course}
                                                 />
-                                                <p style={{ marginRight: '3px' }}> نشر</p>
+                                                <p style={{ marginRight: '3px' }}>منشورة</p>
                                             </div>
                                         </td>
                                         <td>{fullDate(course.createdAt)}</td>
                                         <td>{fullDate(course.updatedAt)}</td>
                                         <td>
                                             <div className={styles.publishedCourseDetails} >
-                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#000000'} backColor={'#F26722'} />
+                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#F26722'} backColor={'#000000'} />
                                                 <p>{course.studentCount} طالب</p>
                                             </div>
                                         </td>
                                         <td>
                                             <div className='cursor-pointer' onClick={() => handleEditCourse(course)}>
-                                                <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                             </div>
                                         </td>
                                     </tr>
@@ -160,7 +166,7 @@ export default function Index() {
                 </table>
 
                 {allPhysicalCourses.length == 0 &&
-                    <Empty buttonText={'إنشاء دورة'} emptyText={'ما أنشئت اي دورة'} containerhight={500} onClick={() => handleRoute()} />
+                    <Empty buttonText={'إضافة دورة'} emptyText={'ما أضفت أي دورة'} containerhight={500} onClick={() => handleRoute()} />
                 }
             </div>
         </div>

@@ -51,7 +51,7 @@ const Index = () => {
             align: 'center',
             render: (text, _record) => {
                 const iconName = text == 'female' ? 'female' : 'male'
-                const iconColor = text == 'female' ? '#0C5D96' : '#E10768'
+                const iconColor = text == 'female' ? '#E10768' : '#0C5D96'
                 const gender = genders.find((gender) => gender.value == text)
                 return (
                     text == null ?
@@ -220,20 +220,21 @@ const Index = () => {
                     onChange={handleTableChange}
                 />
 
-                {drawerForUsers && <Drawer
-                    closable={false}
-                    open={drawerForUsers}
-                    onClose={onClose}
-                    width={400}
-                    placement={'right'}
-                    title={
-                        <>
-                            <DrawerTiitle className="foneBold">تحديث بيانات المستخدم</DrawerTiitle>
-                        </>
-                    }
-                >
-                    <ManegeUserListDrawer selectedUserDetails={selectedUser} />
-                </Drawer>
+                {drawerForUsers &&
+                    <Drawer
+                        closable={false}
+                        open={drawerForUsers}
+                        onClose={onClose}
+                        width={400}
+                        placement={'right'}
+                        title={
+                            <>
+                                <DrawerTiitle className="foneBold">تحديث بيانات المستخدم</DrawerTiitle>
+                            </>
+                        }
+                    >
+                        <ManegeUserListDrawer selectedUserDetails={selectedUser} />
+                    </Drawer>
                 }
             </ConfigProvider>
         </div >
