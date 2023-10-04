@@ -266,9 +266,9 @@ export default function Index() {
                                 <div className={styles.ccItemDetailsWrapper}>
                                     <h1 className={`font-bold pr-4 pt-4 ${styles.currentItemName}`}>{newSelectedCourseItem?.name}</h1>
                                     <p className={`pr-4 ${styles.currentItemDiscription}`}>{newSelectedCourseItem?.description}</p>
-                                    <div className={styles.currentItemBtnBox}>
+                                    {/* <div className={styles.currentItemBtnBox}>
                                         <button className={`primarySolidBtn ${styles.currentItemBtn}`}>نص ينكتب هنا</button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
