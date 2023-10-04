@@ -252,18 +252,17 @@ export default function Index(props) {
 				setCreatedOrder(res.data)
 				generateCheckoutId(res.data.id)
 			}).catch(async (error) => {
-				console.log(error.response.data.message)
+				console.log(error)
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						await createOrderAPI(params).then(res => {
 							setCreatedOrder(res.data)
-							generateCheckoutId(res.data.id)
+							// generateCheckoutId(res.data.id)
 						})
 					}).catch(error => {
 						console.error("Error:", error);
 					});
 				}
-				// if (error.response.data.message)
 				toast.error(error.response.data.message)
 			})
 		}
