@@ -76,7 +76,7 @@ const ModelForAddCategory = ({
                     });
                 }
                 else {
-                    toast.error(error.response.data.errors[0].message == "order must be unique" ? 'ما يصير تستخدم رقم مستخدم من قبل حتى لو كان مخفي' : '')
+                    toast.error(error.response.data.errors[0].message == "order must be unique" && adminPanelCategoryConst.sameOrderIdErrorMsg)
                 }
                 setShowBtnLoader(false)
             })

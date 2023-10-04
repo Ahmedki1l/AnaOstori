@@ -19,6 +19,7 @@ const ModelForAddItemLibrary = ({
     onCloseModal,
     onDelete,
 }) => {
+    console.log(selectedItem);
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
     const [fileName, setFileName] = useState()
@@ -39,12 +40,13 @@ const ModelForAddItemLibrary = ({
             addItemToFolder(values)
         }
     };
-
+    console.log(videoDuration);
     const addItemToFolder = async (e) => {
         if (!fileUploadResponceData) {
             setUploadFileError(true)
         }
         let body = {}
+
         if (folderType !== "quiz") {
             body.name = e.name
             body.description = e.description
@@ -53,6 +55,7 @@ const ModelForAddItemLibrary = ({
             body.linkBucket = fileUploadResponceData?.bucket
             body.linkMime = fileUploadResponceData?.mime
             body.previewAvailable = true
+            body.duration = folderType == "video" ? Number(Math.floor(videoDuration)) : null
         }
         else {
             body.name = e.name
@@ -62,7 +65,6 @@ const ModelForAddItemLibrary = ({
             body.numberOfQuestions = e.numberOfQuestions
             body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
             body.quizLink = e.quizLink
-            body.duration = folderType == "video" ? videoDuration : null
         }
         const data = {
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
