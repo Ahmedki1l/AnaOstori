@@ -89,7 +89,7 @@ const CoursePathLibrary = () => {
                             </thead>
                             {curriculumList.length > 0 &&
                                 <tbody className={styles.tableBodyArea}>
-                                    {curriculumList.map((item, index) => {
+                                    {c.map((item, index) => {
                                         return (
                                             <tr className={styles.tableRow} key={item.id}>
                                                 <td>

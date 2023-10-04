@@ -75,7 +75,9 @@ function Index() {
         let body = {
             folderId: folderId
         }
+        console.log(body);
         await getItemListAPI(body).then((res) => {
+            console.log(res);
             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch(async (error) => {

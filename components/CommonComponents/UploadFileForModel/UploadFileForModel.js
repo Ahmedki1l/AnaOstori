@@ -71,9 +71,9 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
                 }
             </div>
             {(uploadfileError && !uploadedFileName) &&
-                < div >
+                <div>
                     <p style={{ color: 'red' }}>{adminPanelCategoryConst.categoryPhotoErrorMsg}</p>
-                </div >
+                </div>
             }
         </>
     )

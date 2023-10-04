@@ -94,8 +94,11 @@ const ManageLibraryTableComponent = ({
     }
 
     const handleDeleteFolderItems = (item) => {
-        setSelectedItem(item);
-        setSelectedFolder(item)
+        if (tableDataType == 'item') {
+            setSelectedItem(item);
+        } else {
+            setSelectedFolder(item)
+        }
         setDeleteItemType(tableDataType == 'folder' ? 'folder' : folderType == 'quiz' ? 'quiz' : folderType == 'file' ? 'file' : 'video')
         setIsmodelForDeleteItems(true)
     }
@@ -110,11 +113,13 @@ const ManageLibraryTableComponent = ({
                 data: deleteItemBody
             }
             await updateItemToFolderAPI(data).then((res) => {
+                console.log(selectedFolder.id);
                 getItemList(selectedFolder.id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateItemToFolderAPI(data).then(res => {
+                            getItemList(selectedFolder.id)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -136,6 +141,7 @@ const ManageLibraryTableComponent = ({
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateFolderAPI(data).then(res => {
+                            getFolderList(folderType)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
