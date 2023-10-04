@@ -69,13 +69,13 @@ export default function Index() {
                                 [
                                     { lable: 'صفحة الأدمن الرئيسية', link: `/instructorPanel` },
                                     { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel/manageCourse' },
-                                    { lable: courseName ? courseName : 'إنشاء دورة حضورية', link: null }
+                                    { lable: courseName ? courseName : courseType == "physical" ? 'الدورات الحضورية' : courseType == "on-demand" ? 'الدورات المسجلة' : '', link: null }
                                 ]
                             }
                         />
                     </div>
                     <h1 className={`head2 ${styles.createCourseHeaderText}`}>
-                        {courseName ? courseName : courseType == "physical" ? "إنشاء دورة حضورية" : courseType == "online" ? "إنشاء دورة مباشرة" : "إنشاء دورة مسجلة"}
+                        {courseName ? courseName : courseType == "physical" ? 'إضافة دورة حضورية' : courseType == "online" ? 'إضافة دورة مباشرة' : 'إضافة دورة مسجلة'}
                     </h1>
                     <div>
                         <div className={styles.navItems}>

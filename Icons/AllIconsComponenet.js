@@ -93,14 +93,13 @@ import ManageNews from './customeIcons/manageNews'
 import ManageAppVersion from './customeIcons/manageAppVersion'
 import ManageStudentFeedBack from './customeIcons/manageStudentFeedBack'
 import ManageUsers from './customeIcons/manageUsers'
-import ManageAppCoupons from './customeIcons/manageCoupons'
 import ManageCoupons from './customeIcons/manageCoupons'
 import NewEditIcon from './customeIcons/newEditIcon'
 import NewDeleteIcon from './customeIcons/newDeleteIcon'
 
 
 
-const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor = {} }) => {
+const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor = {}, backColor = {} }) => {
 	return (
 		<>
 			{iconName == 'file' && <File height={height} width={width} color={color} />}
@@ -156,7 +155,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'deletecourse' && <DeleteCourse height={height} width={width} color={color} />}
 			{iconName == 'closeicon' && <CloseIcon height={height} width={width} color={color} />}
 			{iconName == 'editicon' && <EditIcon height={height} width={width} color={color} />}
-			{iconName == 'personegroup' && <PersoneGroup height={height} width={width} color={color} />}
+			{iconName == 'personegroup' && <PersoneGroup height={height} width={width} color={color} backColor={backColor} />}
 			{iconName == 'progressicon' && <ProgressIcon height={height} width={width} color={color} />}
 			{iconName == 'circleicon' && <Circle height={height} width={width} color={color} />}
 			{iconName == 'present' && <PresentAtTime height={height} width={width} color={color} />}

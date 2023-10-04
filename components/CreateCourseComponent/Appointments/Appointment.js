@@ -222,7 +222,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <td>{fullDate(appointment?.updatedAt)}</td>
                                         <td>
                                             <div className={styles.personeDetails}>
-                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#000000'} backColor={'#F26722'} />
                                                 <p>{appointment.maxNumberOfSeats - appointment.numberOfSeats} طالب</p>
                                             </div>
                                         </td>

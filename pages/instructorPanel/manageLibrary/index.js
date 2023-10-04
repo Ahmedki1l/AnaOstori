@@ -52,11 +52,14 @@ function Index() {
             folderType: selectedItem,
         }
         await getFolderListAPI(data).then((res) => {
+            console.log(res);
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
+                console.log("unAuth");
                 await getNewToken().then(async (token) => {
+                    console.log("token :", token);
                     await getFolderListAPI(data).then(res => {
                         setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
                         setLoading(false)

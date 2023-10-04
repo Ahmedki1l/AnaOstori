@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComponent.module.scss'
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getAllCourseByInstructor, updateCourseDetailsAPI } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
-import { getNewToken, signOutUser } from '../../../../services/fireBaseAuthService'
+import { getNewToken } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
 import Switch from '../../../../components/antDesignCompo/Switch'
 import { mediaUrl } from '../../../../constants/DataManupulation'
@@ -93,7 +93,7 @@ export default function Index() {
                     {courseType == "physical" ? "الدورات الحضورية " : courseType == "online" ? "الدورات المباشرة" : "الدورات المسجلة "}
                 </h1>
                 <div className={styles.createCourseBtnBox}>
-                    <button className='primarySolidBtn' onClick={() => handleRoute()}>إنشاء دورة</button>
+                    <button className='primarySolidBtn' onClick={() => handleRoute()}>إضافة دورة</button>
                 </div>
             </div>
             <div>
@@ -143,7 +143,7 @@ export default function Index() {
                                         <td>{fullDate(course.updatedAt)}</td>
                                         <td>
                                             <div className={styles.publishedCourseDetails} >
-                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} />
+                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#000000'} backColor={'#F26722'} />
                                                 <p>{course.studentCount} طالب</p>
                                             </div>
                                         </td>
