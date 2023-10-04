@@ -390,10 +390,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
                                 <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
-                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#000000'} /></div>
+                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={'location'} height={24} width={24} color={'#FFFFFF'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>تقدم الدورة في</p>
+                                <p>{courseType == 'physical' ? 'تقدم الدورة في' : courseType == 'onDemand' ? 'تقدر تشوفها' : 'يتم بثها عبر'}</p>
                             </div>
                             <FormItem
                                 name={'locationName'}
@@ -420,7 +420,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>تقييم الدورة</p>
+                                <p>{courseType == 'physical' ? 'تقييم الدورة' : courseType == 'onDemand' ? 'تقييم الدورة' : 'تقييم الدورة'}</p>
                             </div>
                             <FormItem
                                 name={'reviewRate'}
@@ -435,10 +435,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
                                 <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
-                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'graduate'} height={24} width={24} color={'#000000'} ></AllIconsComponenet></div>
+                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personegroup'} height={24} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>عدد الخريجين</p>
+                                <p>{courseType == 'physical' ? ' عدد الخريجين' : courseType == 'onDemand' ? 'عدد الاشتراكات' : 'عدد الخريجين'}</p>
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}

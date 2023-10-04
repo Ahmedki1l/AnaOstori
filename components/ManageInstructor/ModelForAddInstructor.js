@@ -28,7 +28,6 @@ const ModelForAddInstructor = ({
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [fileUploadResponceData, setFileUploadResponceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-    console.log(avatarUploadResData);
 
     useEffect(() => {
         instructorForm.setFieldsValue(instructorDetails)
@@ -193,7 +192,7 @@ const ModelForAddInstructor = ({
                                     uploadResData={setAvtarUploadResData}
                                     fileType={'.jpg , .png'}
                                     accept={"image"}
-                                    placeHolderName={'ارفق الصورة'}
+                                    placeHolderName={adminPanelInstructorConst.instructorPhotoPlaceHolder}
                                     setShowBtnLoader={setShowBtnLoader}
                                 />
                             </div>
@@ -205,7 +204,7 @@ const ModelForAddInstructor = ({
                                     uploadResData={setFileUploadResponceData}
                                     fileType={'.pdf , .doc , .docx'}
                                     accept={"file"}
-                                    placeHolderName={'ارفق الملف'}
+                                    placeHolderName={adminPanelInstructorConst.instructorFilePlaceHolder}
                                     setShowBtnLoader={setShowBtnLoader}
                                 />
                             </div>
