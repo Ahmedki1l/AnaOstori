@@ -15,7 +15,7 @@ export default function CCItemListComponent(props) {
 	const [isItemComplete, setIsItemComplete] = useState(false)
 
 	useEffect(() => {
-		setIsItemComplete(completedCourseItem?.some(item => item.itemId == itemId))
+		setIsItemComplete(completedCourseItem?.some(item => item.itemId == itemId && item.pass !== false))
 		setVideoDuration(secondsToMinutes(item.duration))
 	}, [completedCourseItem, itemId, item?.duration])
 

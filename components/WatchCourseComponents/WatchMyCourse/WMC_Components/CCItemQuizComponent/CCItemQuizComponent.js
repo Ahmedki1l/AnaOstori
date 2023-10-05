@@ -3,21 +3,27 @@ import React from 'react'
 import Icon from '../../../../CommonComponents/Icon'
 import styles from './CCItemQuizComponent.module.scss'
 import useWindowSize from '../../../../../hooks/useWindoSize'
+import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet'
 
 export default function CCItemQuizComponent(props) {
 	const mediumScreen = useWindowSize().mediumScreen
 	const currentItemContent = props?.newSelectedCourseItem
 	const quizeStatus = currentItemContent.grade == null ? 'notAttempted' : currentItemContent.pass == true ? 'pass' : 'fail'
-	const quizIcon = quizeStatus == 'pass' ? 'quizPassIcon' : quizeStatus == 'fail' ? 'quizFailIcon' : 'quizNotAttemptIcon'
+	const quizIcon = quizeStatus == 'pass' ? 'quizPassIcon' : quizeStatus == 'fail' ? 'quizFailIcon' : 'curriculumNewQuizIcon'
 	const iconHeight = quizeStatus == 'pass' ? (mediumScreen ? '72' : '107') : quizeStatus == 'fail' ? (mediumScreen ? '70' : '105') : (mediumScreen ? '65' : '97')
-	const quizText1 = quizeStatus == 'pass' ? 'مجتاز ' : quizeStatus == 'fail' ? 'الشاطر يتعلم من غلطه' : 'الاختبار موجود على مايكروسوفت فورم '
+	const quizText1 = quizeStatus == 'pass' ? 'مجتاز ' : quizeStatus == 'fail' ? 'الشاطر يتعلم من غلطه' : 'بعد ما تختبر، المدرب حيراجع حلك ويرصدلك الدرجة هنا'
 	// const quizText2 = quizeStatus == 'pass' ? 'رسالة المعلم هنا ' : quizeStatus == 'fail' ? 'رسالة المعلم هنا ' : 'بعد ما تختبر، المعلم رح يرصد لك الدرجة هنا'
-	const buttonText = quizeStatus == 'pass' ? 'برجع اختبر' : quizeStatus == 'fail' ? 'إعادة الاختبار ' : 'انتقال إلى الاختبار'
+	const buttonText = quizeStatus == 'pass' ? 'برجع اختبر' : quizeStatus == 'fail' ? 'برجع اختبر ' : 'بختبر الآن'
 
 	return (
 		<div className={styles.quizContentWrapper}>
 			<div className={styles.quizContentSubWrapper}>
-				<Icon height={`${iconHeight}`} width={mediumScreen ? 72 : 107} iconName={`${quizIcon}`} alt={'Quiz Logo'} />
+
+				{quizeStatus == "notAttempted" ?
+					<AllIconsComponenet height={mediumScreen ? 60 : 100} width={mediumScreen ? 60 : 100} iconName={`curriculumNewQuizIcon`} color={'#F26722'} />
+					:
+					<Icon height={`${iconHeight}`} width={mediumScreen ? 72 : 107} iconName={`${quizIcon}`} alt={'Quiz Logo'} />
+				}
 				<h1 className={`fontBold ${styles.quizText1}`}>{quizText1}</h1>
 				<p className={`fontMedium ${styles.quizText2}`}>{currentItemContent.notes ? currentItemContent.notes : ''}</p>
 				<div className={styles.goQuizBtnBox}>

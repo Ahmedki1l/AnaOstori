@@ -34,6 +34,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                 <FormItem
                     name={'firstName'}>
                     <Input
+                        disabled={true}
                         width={350}
                         height={40}
                         placeholder='studentName'
@@ -46,14 +47,15 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     accept={"image"}
                     placeHolderName={'ارفق الصورة'}
                     uploadResData={setAvtarUploadResData}
+                    disabledInput={true}
                 />
                 <p className='fontBold py-2' style={{ fontSize: '18px' }}>الجنس</p>
                 <div className={styles.genderBtnBox}>
-                    <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender("male")}>
+                    <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender("male")} disabled>
                         <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F06A25' : '#808080'} />
                         <span>ذكر</span>
                     </button>
-                    <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender('female')}>
+                    <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender('female')} disabled>
                         <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F06A25' : '#808080'} />
                         <span>أنثى</span>
                     </button>
@@ -63,6 +65,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                 <FormItem
                     name={'email'}>
                     <Input
+                        disabled={true}
                         width={350}
                         height={40}
                         placeholder='DisplayEmail'
@@ -72,20 +75,22 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                 <FormItem
                     name={'phone'}>
                     <Input
+                        disabled={true}
                         width={350}
                         height={40}
                         placeholder='phoneNo'
                     />
                 </FormItem>
+                <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' disabled>حفظ</button>
 
-                <div className='pt-5'>
+                {/* <div className='pt-5'>
                     <CustomButton
                         btnText='حفظ'
                         height={37}
                         showLoader={showBtnLoader}
                         fontSize={16}
                     />
-                </div>
+                </div> */}
             </Form>
         </div>
     )

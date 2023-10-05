@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useWindowSize from '../../../../hooks/useWindoSize'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
-import { courseCurriculumAPI, getCompleteCourseItemIDAPI, getCourseItemAPI, getCourseProgressAPI, markItemCompleteAPI } from '../../../../services/apisService';
+import { courseCurriculumAPI, getCompleteCourseItemIDAPI, getCourseItemAPI, getCourseProgressAPI, markCourseCompleteAPI, markItemCompleteAPI } from '../../../../services/apisService';
 import { signOutUser } from '../../../../services/fireBaseAuthService';
 import CCItemListComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemListComponent/CCItemListComponent'
 import CCItemVideoComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemVideoComponent/CCItemVideoComponent';
@@ -37,12 +37,9 @@ export default function Index() {
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
     })
+    const [isAllItemsCompleted, setIsAllItemsCompleted] = useState(false)
 
-    const chagenCourseItemHendler = (itemId) => {
-        getCourseItemHendler(itemId)
-    }
-
-    const getCourseItemHendler = async (itemID) => {
+    const chagenCourseItemHendler = async (itemID) => {
         if (itemID) {
             const params = {
                 courseID,
@@ -52,6 +49,27 @@ export default function Index() {
                 setNewSelectedCourseItem(res.data)
                 router.push(`/myCourse/${courseID}/${itemID}`)
             }).catch(error => console.log(error))
+        }
+    }
+
+    const markCourseCompleteHandler = async (completedItems, curriculum) => {
+        const filteredItems = completedItems.filter(item => item.pass !== false);
+        const completedItemIds = new Set(filteredItems.map(item => item.itemId));
+        const allItemsCompleted = curriculum.sections.every(section =>
+            section.items.every(item => completedItemIds.has(item.id))
+        );
+        setIsAllItemsCompleted(allItemsCompleted)
+        if (allItemsCompleted) {
+            const params = {
+                courseID,
+                itemID: currentItemId,
+                enrollmentId: selectedCourse?.id
+            }
+            await markCourseCompleteAPI(params).then((res) => {
+                console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            })
         }
     }
 
@@ -83,6 +101,7 @@ export default function Index() {
                     setCompletedCourseItem(completedCourseItem.data)
                     setNewSelectedCourseItem(currentItemContent.data)
                     getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+                    markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
                     setLoading(false)
                     setIsUserEnrolled(true)
                 } catch (error) {
@@ -92,17 +111,13 @@ export default function Index() {
                         setIsUserEnrolled(false)
                     }
                     if (error?.response?.status == 401) {
-                        setLoading(false)
-                        signOutUser()
-                        dispatch({
-                            type: 'EMPTY_STORE'
-                        });
+                        getPageProps()
                     }
                 }
             }
             getPageProps()
         }
-    }, [courseID, currentItemId])
+    }, [courseID])
 
     useEffect(() => {
         if (!smallScreen) setSelectedTab(1)
@@ -125,8 +140,7 @@ export default function Index() {
                         } else if ((j - 1) == ((itemInSection?.length) - 1)) {
                             setExpandedSection(i)
                             return
-                        }
-                        else {
+                        } else {
                             setExpandedSection(i - 1)
                         }
                         return
@@ -146,7 +160,7 @@ export default function Index() {
                 enrollmentId: selectedCourse.id
             }
             await markItemCompleteAPI(params).then((res) => {
-                let data = { itemId: itemID }
+                let data = { itemId: itemID, pass: null }
                 setCompletedCourseItem([...completedCourseItem, data])
             }).catch((error) => {
                 console.log(error);
@@ -272,7 +286,7 @@ export default function Index() {
                                 </div>
                             </div>
                         </div>
-                        {courseProgressPrecentage?.overallProgress == "100.00" && <div>
+                        {(!courseCurriculum.enrollment.isCompleted && isAllItemsCompleted) && < div >
                             <CourseCompleteDialog />
                         </div>}
                     </>

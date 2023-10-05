@@ -8,10 +8,12 @@
     border: 1px solid #0000001a;
     border-radius: 4px;
     overflow: hidden;
+    cursor: not-allowed;
+
 
     button {
         border: none;
-        background: #FFFFFF;
+        background-color: #3e3e3e1a;
         font-size: 16px;
         line-height: 19px;
         color: #000000;
@@ -20,7 +22,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
+        cursor: not-allowed;
 
         span {
             margin-right: 5px;

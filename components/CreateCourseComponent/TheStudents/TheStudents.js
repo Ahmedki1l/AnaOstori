@@ -19,6 +19,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import CustomButton from '../../CommonComponents/CustomButton'
 import { toastSuccessMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
+import Link from 'next/link'
 
 
 
@@ -174,7 +175,6 @@ const TheStudent = (props) => {
         })
 
         const completedQuizItems = student?.userProfile.quizExams.map((quiz, index) => {
-            console.log(quiz);
             return {
                 key: quiz.item.id,
                 quizId: quiz.item.id,
@@ -286,9 +286,9 @@ const TheStudent = (props) => {
                             <table className={styles.tableArea}>
                                 <thead className={styles.tableHeaderArea}>
                                     <tr>
-                                        <th className={styles.tableHead1}>الطالب</th>
-                                        <th className={styles.tableHead2}>معلومات التواصل</th>
-                                        <th className={styles.tableHead3}>مستوى التقدم</th>
+                                        <th className={styles.tableHead1}>اسم الطالب</th>
+                                        <th className={styles.tableHead2}>رقم الجوال</th>
+                                        <th className={styles.tableHead3}>الايميل</th>
                                         <th className={styles.tableHead4}>نتائج الاختبارات</th>
                                         <th className={styles.tableHead5}>تاريخ الاشتراك</th>
                                     </tr>
@@ -308,14 +308,9 @@ const TheStudent = (props) => {
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <p>{student?.userProfile?.phone} </p>
-                                                    <p>{student?.userProfile?.email}</p>
+                                                    <Link className='link' target={'_blank'} href={`https://api.whatsapp.com/send/?phone=${student?.userProfile?.phone}&text&type=phone_number&app_absent=0`}>{student?.userProfile?.phone}</Link>
                                                 </td>
-                                                <td>
-                                                    <div className={styles.progressbar}>
-                                                        <ProgressBar percentage={student?.userProfile?.progress} bgColor={'#2BB741'} height={14} fontSize={10} />
-                                                    </div>
-                                                </td>
+                                                <td>{student?.userProfile?.email}</td>
                                                 <td className={`${styles.examText} link`} onClick={() => showSelectedStudentExamDetails(student)}>مشاهدة الدرجات</td>
                                                 <td>{fullDate(student?.userProfile?.createdAt)}</td>
                                             </tr>
