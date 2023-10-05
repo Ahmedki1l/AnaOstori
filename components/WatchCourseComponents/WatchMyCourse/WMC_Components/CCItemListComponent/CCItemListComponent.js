@@ -38,8 +38,11 @@ export default function CCItemListComponent(props) {
 							<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={14} width={14} color={'#FFFFFF'} />
 						</div>
 					}
-					<div className={styles.itemIcon}>
+					{/* <div className={styles.itemIcon}>
 						<AllIconsComponenet height={isSmallScreen ? 20 : 14} width={isSmallScreen ? 20 : 14} iconName={`${item?.type == "video" ? 'playButton' : item?.type == "file" ? 'file' : 'quiz'}`} color={'#F26722'} />
+					</div> */}
+					<div className='ml-5'>
+						<AllIconsComponenet height={isSmallScreen ? 20 : 24} width={isSmallScreen ? 20 : 24} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
 					</div>
 					<div>
 						<p className={`font-medium ${styles.itemName}`}>{item?.name}</p>

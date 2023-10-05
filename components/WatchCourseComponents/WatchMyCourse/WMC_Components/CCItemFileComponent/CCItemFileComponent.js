@@ -21,7 +21,7 @@ export default function CCItemFileComponent(props) {
 						<AllIconsComponenet height={97} width={70} iconName={'file'} color={'#F26722'} />
 						<div className={styles.downloadFileBtnBox} onClick={() => { itemCompleteHendler() }}>
 							<Link href={`${fileDownloadLink}`} target='_blank' className='normalLinkText'>
-								<button className='primaryStrockedBtn'>فتح الملف</button>
+								<button className='primarySolidBtn'>فتح الملف</button>
 							</Link>
 						</div>
 					</div>

@@ -12,7 +12,7 @@ export default function CCItemQuizComponent(props) {
 	const iconHeight = quizeStatus == 'pass' ? (mediumScreen ? '72' : '107') : quizeStatus == 'fail' ? (mediumScreen ? '70' : '105') : (mediumScreen ? '65' : '97')
 	const quizText1 = quizeStatus == 'pass' ? 'مجتاز ' : quizeStatus == 'fail' ? 'تغلط بالتدريب احسن من انك تغلط بالاختبار الحقيقي ' : 'الاختبار موجود على مايكروسوفت فورم '
 	const quizText2 = quizeStatus == 'pass' ? 'رسالة المعلم هنا ' : quizeStatus == 'fail' ? 'رسالة المعلم هنا ' : 'بعد ما تختبر، المعلم رح يرصد لك الدرجة هنا'
-	const buttonText = quizeStatus == 'pass' ? 'إعادة الاختبار ' : quizeStatus == 'fail' ? 'إعادة الاختبار ' : 'انتقال إلى الاختبار'
+	const buttonText = quizeStatus == 'pass' ? 'برجع اختبر' : quizeStatus == 'fail' ? 'إعادة الاختبار ' : 'انتقال إلى الاختبار'
 
 	return (
 		<div className={styles.quizContentWrapper}>
@@ -22,7 +22,8 @@ export default function CCItemQuizComponent(props) {
 				<p className={`fontMedium ${styles.quizText2}`}>{quizText2}</p>
 				<div className={styles.goQuizBtnBox}>
 					<Link href={`${currentItemContent?.quizLink}`} target='_blank' className='normalLinkText'>
-						<button className='primaryStrockedBtn'>{buttonText}</button>
+						{/* <button className='primaryStrockedBtn'>{buttonText}</button> */}
+						<button className='primarySolidBtn'>{buttonText}</button>
 					</Link>
 				</div>
 			</div>
