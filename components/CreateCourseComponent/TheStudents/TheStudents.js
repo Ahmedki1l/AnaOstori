@@ -19,6 +19,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import CustomButton from '../../CommonComponents/CustomButton'
 import { toastSuccessMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
+import { studentsExamsConst } from '../../../constants/adminPanelConst/studentsExamsConst/studentsExamsConst'
 
 
 
@@ -65,7 +66,7 @@ const TheStudent = (props) => {
     }
 
     const studentDetailsSuccessRes = (msg) => {
-        toast.success(msg)
+        toast.success(studentsExamsConst?.toastSuccess)
         setShowBtnLoader(false)
     }
 
@@ -269,7 +270,8 @@ const TheStudent = (props) => {
                             <table className={styles.tableArea}>
                                 <thead className={styles.tableHeaderArea}>
                                     <tr>
-                                        <th className={styles.tableHead1}>الطالب</th>
+                                        <th className={styles.tableHead1}>اسم الطالب</th>
+                                        {/* <th className={styles.tableHead1}>رقم الجوال</th> */}
                                         <th className={styles.tableHead2}>معلومات التواصل</th>
                                         <th className={styles.tableHead3}>مستوى التقدم</th>
                                         <th className={styles.tableHead4}>نتائج الاختبارات</th>
@@ -325,7 +327,7 @@ const TheStudent = (props) => {
                     <div className={styles.studentDetailsTable}>
                         <p className={`${styles.studentDetails}`} onClick={() => setShowStudentDetails(false)}> الطلاب </p>
                         <p className='pl-2'>{'>'}</p>
-                        <p className={styles.examResultsForStudents}>نتائج درجات {selectedStudent.userProfile.fullName}</p>
+                        <p className={styles.examResultsForStudents}>درجات الطالب {selectedStudent.userProfile.fullName}</p>
                     </div>
                     <div>
                         <table className={styles.studentTableArea}>
@@ -348,7 +350,7 @@ const TheStudent = (props) => {
                                                     fontSize={16}
                                                     width={125}
                                                     height={37}
-                                                    placeholder="اكتب الدرجة"
+                                                    placeholder={studentsExamsConst?.grades}
                                                     value={exam.grade}
                                                     onChange={(e) => onInputChange(e, index, 'grade')}
                                                 />
@@ -370,7 +372,7 @@ const TheStudent = (props) => {
                                                     width={270}
                                                     height={37}
                                                     value={exam.note}
-                                                    placeholder="إن وجدت"
+                                                    placeholder={studentsExamsConst?.notes}
                                                     onChange={(e) => onInputChange(e, index, 'note')}
                                                 />
                                             </td>
