@@ -66,6 +66,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         values.numberOfSeats = isAvailabilityEdit ? calculateNumberOfSeats(values.maxNumberOfSeats) : values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
         if (isAvailabilityEdit) {
+            if (values.maxNumberOfSeats < (editAvailability.maxNumberOfSeats - editAvailability?.numberOfSeats)) {
+                toast.error('max number of seates are not less then number of enrolled students')
+                setShowBtnLoader(false)
+                return
+            }
             let body = {
                 data: values,
                 availabilityId: editAvailability?.id
@@ -211,7 +216,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                 </div><br /> */}
                                                 <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
                                                 <Link target='_blank' href={appointment.location}>{appointment.locationName}</Link>
-                                                <p>{appointment.maxNumberOfSeats} مقعد مخصص</p>
+                                                <p>{appointment.numberOfSeats} مقعد مخصص</p>
                                             </div>
                                         </td>
                                         <td className='py-2'>{appointment.instructors.map((instructor, index) => {

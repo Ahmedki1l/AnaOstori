@@ -3,7 +3,7 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, updateStudentExamDataAPI } from '../../../services/apisService'
+import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import styles from './TestResults.module.scss'
@@ -92,27 +92,53 @@ const TestResults = (props) => {
 
     const getStudentList = async (examId, availabilityId) => {
         if (!examId || !availabilityId) return
-        let params = {
-            itemId: examId,
-            availabilityId: availabilityId
-        }
-        await getStudentListByExamAPI(params).then((res) => {
-            setStudentList(JSON.parse(JSON.stringify(res.data)))
-            setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
-            setShowStudentList(true)
-        }).catch(async (error) => {
-            if (error?.response?.status == 401) {
-                await getNewToken().then(async (token) => {
-                    await getStudentListByExamAPI(data).then((res) => {
-                        setStudentList(JSON.parse(JSON.stringify(res.data)))
-                        setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
-                        setShowStudentList(true)
-                    })
-                }).catch(error => {
-                    console.error("Error:", error);
-                });
+        if (courseType == "onDemand") {
+            let params = {
+                itemId: examId,
+                availabilityId: availabilityId,
+                courseId: courseId
             }
-        })
+            await getStudentListByExamOnDemandAPI(params).then((res) => {
+                setStudentList(JSON.parse(JSON.stringify(res.data)))
+                console.log("res.data", res.data);
+                setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                setShowStudentList(true)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await getStudentListByExamOnDemandAPI(params).then((res) => {
+                            setStudentList(JSON.parse(JSON.stringify(res.data)))
+                            setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                            setShowStudentList(true)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            })
+        } else {
+            let params = {
+                itemId: examId,
+                availabilityId: availabilityId
+            }
+            await getStudentListByExamAPI(params).then((res) => {
+                setStudentList(JSON.parse(JSON.stringify(res.data)))
+                setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                setShowStudentList(true)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await getStudentListByExamAPI(params).then((res) => {
+                            setStudentList(JSON.parse(JSON.stringify(res.data)))
+                            setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                            setShowStudentList(true)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            })
+        }
     }
 
     const saveStudentExamDetails = async () => {
@@ -267,8 +293,10 @@ const TestResults = (props) => {
                     <table className={styles.examTableArea}>
                         <thead className={styles.tableHeaderArea}>
                             <tr>
-                                <th className={styles.examTableHead1}>الطالب</th>
+                                <th className={styles.examTableHead1}>عنوان الاختبار</th>
                                 <th className={styles.examTableHead2}>الدرجة</th>
+                                <th className={styles.examTableHead2}>مجتاز</th>
+                                <th className={styles.examTableHead2}>غير مجتاز</th>
                                 <th className={styles.examTableHead3}>الملاحظات</th>
                             </tr>
                         </thead>
@@ -296,6 +324,16 @@ const TestResults = (props) => {
                                                     placeholder='اكتب الدرجة'
                                                     onChange={(e) => onInputChange(e, index, 'result')}
                                                 />
+                                            </td>
+                                            <td>
+                                                <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', index)}>
+                                                    <AllIconsComponenet iconName={student?.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', index)}>
+                                                    <AllIconsComponenet iconName={student?.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                </div>
                                             </td>
                                             <td>
                                                 <Input

@@ -6,7 +6,7 @@ import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../spinner'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
 
-const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError, setVideoDuration }) => {
+const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError, setVideoDuration, disabledInput }) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
 
@@ -48,8 +48,8 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
 
     return (
         <>
-            <div className={styles.uploadVideoWrapper}>
-                <input id={` uploadFileInput_${accept}`} type={'file'} accept={fileType} className={styles.uploadFileInput} disabled={uploadLoader} onChange={getFileKey} />
+            <div className={disabledInput ? styles.disabledUploadVideoWrapper : styles.uploadVideoWrapper}>
+                <input id={` uploadFileInput_${accept}`} type={'file'} accept={fileType} className={styles.uploadFileInput} disabled={disabledInput || uploadLoader} onChange={getFileKey} />
                 <label htmlFor={` uploadFileInput_${accept}`} className='cursor-pointer'>
                     <div className={styles.IconWrapper} >
                         <div className={styles.uploadFileWrapper}>

@@ -42,7 +42,6 @@ export const uploadFileAPI = (data) => { return instance2.post('/file/upload', d
 
 export const createOrderAPI = (data) => { return instance.post(`/createOrder`, data?.orderData) }
 export const getMyOrderAPI = (data) => { return instance.get(`/order/query`) }
-// export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment/${data?.orderID}/${data?.transactionID}`) }
 export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment`, data) }
 export const getCourseDetailsAPI = (data) => { return instance.get(`/courseByName/${data?.courseName}`) }
 export const getCatagoriesAPI = () => { return instance.get(`/catagories`) }
@@ -54,7 +53,8 @@ export const viewProfileAPI = () => { return instance.get('/viewProfile') }
 export const deleteAccount = () => { return instance.post('/deleteProfile') }
 export const getCourseByNameAPI = (data) => { return instance.get(`/courseByName/${data?.name}`) }
 export const accountRecovery = () => { return instance.post('/activateProfile') }
-export const markItemCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}`) }
+export const markItemCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}?type=item&value=false`) }
+export const markCourseCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}?type=markCourseComplete&value=true`) }
 export const getCompleteCourseItemIDAPI = (data) => { return instance.get(`course/progress/${data?.courseID}/enrollment/${data.enrollmentId}`) }
 export const getCourseProgressAPI = (data) => { return instance.get(`course/getUserCourseProgress/${data?.courseID}/enrollment/${data.enrollmentId}`) }
 export const subcribeNotificationAPI = (data) => { return instance.post(`course/subscribe/${data?.courseId}`, data?.data) }
@@ -92,9 +92,9 @@ export const updateStudentExamDataAPI = (data) => { return instance.post(`/cours
 
 export const getExamListAPI = (data) => { return instance.get(`/item/${data?.courseId}?type=${data.type}`) }
 
-//implement baki
-export const getStudentListByExamAPI = (data) => { return instance.get(`student/item/${data?.itemId}/availability/${data?.availabilityId}`) }
 
+export const getStudentListByExamAPI = (data) => { return instance.get(`student/item/${data?.itemId}/availability/${data?.availabilityId}`) }
+export const getStudentListByExamOnDemandAPI = (data) => { return instance.get(`student/item/${data?.itemId}/availability/${data?.availabilityId}?courseId=${data.courseId}`) }
 
 
 // ********* Manage Library APIs ***********//
