@@ -342,7 +342,7 @@ export default function Index(props) {
 								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }} className={styles.courseCurriculumWrapper}>
 									<div className='flex justify-between items-center'>
 										<h1 className='head2'>محتوى الدورة </h1>
-										<p className='link'>إظهار جميع الأقسام</p>
+										{/* <p className='link'>إظهار جميع الأقسام</p> */}
 									</div>
 									<p className={styles.courseContentDetailsText}>{noOfVideos} فيديو، {noOfQuizes} اختبارات، {noOfFiles} ملفات</p>
 									<div>
