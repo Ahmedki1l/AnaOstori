@@ -331,7 +331,7 @@ const TestResults = (props) => {
             }
             {updatedStudentList?.length == 0 &&
                 <div className={styles.tableBodyArea}>
-                    <div className={styles.noDataManiArea} >
+                    <div className={styles.noDataManiArea}>
                         <div>
                             <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
                             <p className='fontBold py-2' style={{ fontSize: '18px' }}>ما أنشئت أي موعد</p>
