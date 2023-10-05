@@ -154,7 +154,7 @@ const ModelForAddItemLibrary = ({
         onDelete()
         onCloseModal()
     };
-    console.log(folderType);
+
     return (
         <>
             <Modal
@@ -244,7 +244,7 @@ const ModelForAddItemLibrary = ({
                                     </FormItem>
                                     <FormItem
                                         name={'numberOfQuestions'}
-                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                        rules={[{ required: true, message: 'لازم تكتب عددها' }]}
                                     >
                                         <Input
                                             fontSize={16}
@@ -256,7 +256,7 @@ const ModelForAddItemLibrary = ({
                                     <p className={styles.uploadFileText}>رابط الاختبار*</p>
                                     <FormItem
                                         name={'quizLink'}
-                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                        rules={[{ required: true, message: 'exam link is required' }]}
                                     >
                                         <Input
                                             fontSize={16}

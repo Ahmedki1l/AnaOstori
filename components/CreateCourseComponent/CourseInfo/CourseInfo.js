@@ -209,6 +209,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         values.groupDiscountEligible = groupDiscountEligible
         values.language = englishCourse ? "en" : "ar"
         values.type = courseType == "onDemand" ? "on-demand" : courseType
+        delete values.courseMetaData
+        delete values.courseDetailsMetaData
 
         if (courseType != "physical") {
             const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)

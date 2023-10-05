@@ -102,6 +102,10 @@ import NewFolderIcon from './customeIcons/newFolderIcon'
 import NewVisibleIcon from './customeIcons/newVisibleIcon'
 import NewVideoIcon from './customeIcons/newVideoIcon'
 
+import CurriculumNewVideoIcon from './customeIcons/curriculumNewVideoIcon'
+import CurriculumNewFileIcon from './customeIcons/curriculumNewFileIcon'
+import CurriculumNewQuizIcon from './customeIcons/curriculumNewQuizIcon'
+
 
 
 const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor = {}, backColor = {} }) => {
@@ -213,6 +217,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newVisibleIcon' && <NewVisibleIcon height={height} width={width} color={color} />}
 			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
 
+
+			{iconName == 'curriculumNewQuizIcon' && <CurriculumNewQuizIcon height={height} width={width} color={color} />}
+			{iconName == 'curriculumNewVideoIcon' && <CurriculumNewVideoIcon height={height} width={width} color={color} />}
+			{iconName == 'curriculumNewFileIcon' && <CurriculumNewFileIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
