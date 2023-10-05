@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
 		'/purchaseInquiry',
 		'/watchCourse/',
 		'/invoiceUploaded',
-		'/uploadInvoice',
+		// '/uploadInvoice',
 		'/payment',
 		'/receiveRequest',
 		'/instructorPanel',

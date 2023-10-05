@@ -289,10 +289,33 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             console.log(error);
 
             if (error?.response?.status === 401) {
-                signOutUser();
-                dispatch({
-                    type: 'EMPTY_STORE'
-                });
+                const promiseArray = [];
+
+                promiseArray.push(updateCourseDetailsAPI(courseBody));
+
+                if (courseMetaDataBody.data.data.length > 0) {
+                    promiseArray.push(updateCourseMetaDataAPI(courseMetaDataBody));
+                }
+                if (courseDetailsMetaDataBody.data.data.length > 0) {
+                    promiseArray.push(updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody));
+                }
+                const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all(promiseArray);
+
+                let editCourseData;
+
+                if (courseDetailsMetaDataBody.data.data.length === 0 && courseMetaDataBody.data.data.length > 0) {
+                    editCourseData = editCourseMetaData.data;
+                } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length > 0) {
+                    editCourseData = editCourseDetailsMetadata.data;
+                } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
+                    editCourseData = editCourse.data;
+                } else {
+                    editCourseData = editCourseDetailsMetadata.data;
+                }
+                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
+                toast.success(toastSuccessMessage.courseDetailUpdateMsg);
+                setShowLoader(false);
+
             } else {
                 toast.error(toastErrorMessage.tryAgainErrorMsg);
             }
@@ -474,7 +497,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? 'تقييم الدورة' : courseType == 'onDemand' ? 'تقييم الدورة' : 'تقييم الدورة'}</p>
+                                <p>{'تقييم الدورة'}</p>
                             </div>
                             <FormItem
                                 name={'reviewRate'}
@@ -492,7 +515,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personegroup'} height={24} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? 'عدد الاشتراكات' : courseType == 'onDemand' ? 'عدد الاشتراكات' : 'عدد الخريجين'}</p>
+                                <p>{courseType == 'onDemand' ? 'عدد الاشتراكات' : ' عدد الخريجين'}</p>
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}

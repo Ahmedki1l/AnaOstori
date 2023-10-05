@@ -68,7 +68,7 @@ export default function CourseDetailsHeader(props) {
 										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
 									</div>
 									<div className='px-1'>
-										<p>{lang == 'en' ? 'Location' : 'يتم تقديمها عبر'}</p>
+										<p>{lang == 'en' ? 'Location' : 'يتم بثها عبر'}</p>
 										<p className='fontBold'>اونلاين</p>
 									</div>
 								</div>
@@ -78,7 +78,7 @@ export default function CourseDetailsHeader(props) {
 										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
 									</div>
 									<div className='px-1'>
-										<p>{lang == 'en' ? 'Location' : 'يتم تقديمها عبر'}</p>
+										<p>{lang == 'en' ? 'Location' : 'تقدر تشوفها'}</p>
 										<p className='fontBold'>اونلاين</p>
 									</div>
 								</div>
@@ -109,7 +109,7 @@ export default function CourseDetailsHeader(props) {
 								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'star'} color={'#FFCD3C'} />
 							</div>
 							<div className='px-1'>
-								<p> {lang == 'en' ? `Course Review` : `تقييم الدورة`} </p>
+								<p> {lang == 'en' ? `Course Review` : 'تقييم الدورة'} </p>
 								<p className='fontBold'>{courseDetail.reviewRate}</p>
 							</div>
 						</div>
@@ -118,7 +118,11 @@ export default function CourseDetailsHeader(props) {
 								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'graduate'} color={'#FFFFFF'} />
 							</div>
 							<div className='px-1'>
-								<p> {lang == 'en' ? `Number of graduates` : `عدد الخريجين`} </p>
+								{courseDetail.type == 'onDemand' ?
+									<p>{lang == 'en' ? 'Number of graduates subscriptions ' : 'عدد الاشتراكات'}</p>
+									:
+									<p>{lang == 'en' ? `Number of graduates` : `عدد الخريجين`} </p>
+								}
 								<p className='fontBold'>{courseDetail.numberOfGrarduates}</p>
 							</div>
 						</div>

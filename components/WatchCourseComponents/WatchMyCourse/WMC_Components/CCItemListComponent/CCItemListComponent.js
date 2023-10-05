@@ -35,14 +35,11 @@ export default function CCItemListComponent(props) {
 				<div className={`${styles.ccItemsWrapper} ${props.currentItem == true ? `${styles.activeItem}` : ``}`} onClick={() => selectNewItemHendler(itemId)}>
 					{isItemComplete &&
 						<div className={styles.circle}>
-							<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={14} width={14} color={'#FFFFFF'} />
+							<AllIconsComponenet iconName={'checkCircleRoundIcon'} height={10} width={10} color={'#FFFFFF'} />
 						</div>
 					}
-					{/* <div className={styles.itemIcon}>
-						<AllIconsComponenet height={isSmallScreen ? 20 : 14} width={isSmallScreen ? 20 : 14} iconName={`${item?.type == "video" ? 'playButton' : item?.type == "file" ? 'file' : 'quiz'}`} color={'#F26722'} />
-					</div> */}
 					<div className='ml-5'>
-						<AllIconsComponenet height={isSmallScreen ? 20 : 24} width={isSmallScreen ? 20 : 24} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
+						<AllIconsComponenet height={20} width={20} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
 					</div>
 					<div>
 						<p className={`font-medium ${styles.itemName}`}>{item?.name}</p>
