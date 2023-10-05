@@ -13,6 +13,8 @@ import BackToPath from '../../CommonComponents/BackToPath'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo'
 import { mediaUrl } from '../../../constants/DataManupulation'
+import { toast } from 'react-toastify'
+import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst'
 
 
 const ManageLibraryTableComponent = ({
@@ -54,6 +56,7 @@ const ManageLibraryTableComponent = ({
             data: editFolderBody
         }
         await updateFolderAPI(data).then((res) => {
+            toast.success(manageLibraryConst.updateFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch(async (error) => {
@@ -113,7 +116,13 @@ const ManageLibraryTableComponent = ({
                 data: deleteItemBody
             }
             await updateItemToFolderAPI(data).then((res) => {
-                console.log(selectedFolder.id);
+                if (folderType == "video") {
+                    toast.success(manageLibraryConst.deleteVideoSuccessMsg)
+                } else if (folderType == "quiz") {
+                    toast.success(manageLibraryConst.deleteQuizSuccessMsg)
+                } else if (folderType == "file") {
+                    toast.success(manageLibraryConst.deleteFileSuccessMsg)
+                }
                 getItemList(selectedFolder.id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
@@ -136,6 +145,7 @@ const ManageLibraryTableComponent = ({
                 data: deleteFolderBody
             }
             await updateFolderAPI(data).then((res) => {
+                toast.success(manageLibraryConst.deleteFolderSuccessMsg)
                 getFolderList(folderType)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
@@ -206,16 +216,12 @@ const ManageLibraryTableComponent = ({
                                             <td>
                                                 <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
                                                     {tableDataType == "folder" ?
-                                                        <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />
+                                                        <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />
                                                         :
-                                                        <Icon
-                                                            height={24}
-                                                            width={24}
-                                                            iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'videoIcon'}
-                                                            alt={'Quiz Logo'} />
+                                                        <AllIconsComponenet iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'newVideoIcon'} height={24} width={24} />
                                                     }
                                                     <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                    <p className={styles.numberOfAddedVideo}>{`(${item?.numberOfItem}  عنصر / عناصر)`}</p>
+                                                    {tableDataType == "folder" && <p className={styles.numberOfAddedVideo}>{`(${item?.numberOfItem}  عنصر / عناصر)`}</p>}
                                                 </div>
                                             </td>
                                             <td>{fullDate(item?.createdAt)}</td>
@@ -223,15 +229,15 @@ const ManageLibraryTableComponent = ({
                                             <td>
                                                 <div className={styles.eventButtons}>
                                                     <div onClick={() => handleEditIconClick(item)}>
-                                                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                        <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
                                                     {tableDataType == "item" &&
                                                         <div onClick={() => handlePreviewItem(item)}>
-                                                            <AllIconsComponenet iconName={'visibilityIcon'} height={22} width={22} color={'#000000'} />
+                                                            <AllIconsComponenet iconName={'newVisibleIcon'} height={24} width={24} color={'#000000'} />
                                                         </div>
                                                     }
                                                     <div onClick={() => handleDeleteFolderItems(item)}>
-                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                        <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
                                                 </div>
                                             </td>
@@ -244,9 +250,9 @@ const ManageLibraryTableComponent = ({
                     {(folderTableData.length == 0 && !loading) &&
                         <Empty
                             onClick={() => handleAddModalOpen()}
-                            containerhight={450}
-                            buttonText={typeOfListdata == 'folder' ? 'إضافة مجلد' : folderType == 'video' ? 'إضافة فيديو' : folderType == 'file' ? 'إضافة ملف' : 'إضافة اختبار'}
+                            containerhight={448}
                             emptyText={typeOfListdata == 'folder' ? 'ما أضفت مجلد' : folderType == 'video' ? 'ما أضفت فيديو' : folderType == 'file' ? 'ما أضفت ملف' : 'ما أضفت اختبار'}
+                            buttonText={typeOfListdata == 'folder' ? 'إضافة مجلد' : folderType == 'video' ? 'إضافة فيديو' : folderType == 'file' ? 'إضافة ملف' : 'إضافة اختبار'}
                         />
                     }
                     {loading &&

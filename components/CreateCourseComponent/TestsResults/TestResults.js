@@ -19,6 +19,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 const TestResults = (props) => {
 
     const courseId = props.courseId
+    const courseType = props.courseType
     const storeData = useSelector((state) => state?.globalStore);
     const [examList, setExamList] = useState()
     const availabilityList = storeData?.availabilityList;
@@ -75,12 +76,17 @@ const TestResults = (props) => {
     }
 
     const onParamsSelect = (e, type) => {
-        if (type == 'exam') {
+        if (courseType == "onDemand") {
             setSelectedExam(e)
-            getStudentList(e, selectedAvailability)
+            getStudentList(e, "007")
         } else {
-            setSelectedAvailability(e)
-            getStudentList(selectedExam, e)
+            if (type == 'exam') {
+                setSelectedExam(e)
+                getStudentList(e, selectedAvailability)
+            } else {
+                setSelectedAvailability(e)
+                getStudentList(selectedExam, e)
+            }
         }
     }
 
@@ -219,18 +225,20 @@ const TestResults = (props) => {
         <div className='maxWidthDefault px-4'>
             <Form>
                 <div className='flex'>
-                    <FormItem
-                        name={'selectAvailability'}
-                    >
-                        <Select
-                            fontSize={16}
-                            width={200}
-                            height={40}
-                            OptionData={allavailability}
-                            placeholder="اختر الجنس"
-                            onChange={(e) => onParamsSelect(e, 'availability')}
-                        />
-                    </FormItem>
+                    {courseType !== "onDemand" &&
+                        <FormItem
+                            name={'selectAvailability'}
+                        >
+                            <Select
+                                fontSize={16}
+                                width={200}
+                                height={40}
+                                OptionData={allavailability}
+                                placeholder="اختر الجنس"
+                                onChange={(e) => onParamsSelect(e, 'availability')}
+                            />
+                        </FormItem>
+                    }
                     <FormItem
                         name={'examList'}
                     >

@@ -10,6 +10,8 @@ import ManageLibraryTableComponent from '../../../components/ManageLibraryCompon
 import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/ModelForAddItemLibrary/ModelForAddItemLibrary';
 import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput';
 import BackToPath from '../../../components/CommonComponents/BackToPath';
+import { toast } from 'react-toastify';
+import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst';
 
 
 
@@ -52,14 +54,11 @@ function Index() {
             folderType: selectedItem,
         }
         await getFolderListAPI(data).then((res) => {
-            console.log(res);
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
-                console.log("unAuth");
                 await getNewToken().then(async (token) => {
-                    console.log("token :", token);
                     await getFolderListAPI(data).then(res => {
                         setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
                         setLoading(false)
@@ -78,9 +77,7 @@ function Index() {
         let body = {
             folderId: folderId
         }
-        console.log(body);
         await getItemListAPI(body).then((res) => {
-            console.log(res);
             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch(async (error) => {
@@ -118,7 +115,9 @@ function Index() {
                 type: selectedItem,
             }
         }
+        console.log(data);
         await createFolderAPI(data).then((res) => {
+            toast.success(manageLibraryConst.createFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
         }).catch(async (error) => {

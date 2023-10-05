@@ -18,6 +18,7 @@ import CustomButton from '../../CommonComponents/CustomButton';
 import { toast } from 'react-toastify';
 import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import { getNewToken } from '../../../services/fireBaseAuthService';
+import Empty from '../../CommonComponents/Empty';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
@@ -178,17 +179,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             <div>
                 <div dir='ltr'>
                     <div className={styles.createAppointmentBtnBox}>
-                        <button className='primaryStrockedBtn' onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
+                        <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
                     </div>
                 </div>
                 <table className={styles.tableArea}>
                     <thead className={styles.tableHeaderArea}>
                         <tr>
                             <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>بيانات الفترة</th>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>المدرب</th>
+                            <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>المدربين</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>
-                            <th className={`${styles.tableHeadText} ${styles.tableHead5}`}> الطلاب المسجلين</th>
+                            <th className={`${styles.tableHeadText} ${styles.tableHead5}`}>المسجلين</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
@@ -200,12 +201,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <td>
                                             <div className={styles.PeriodDataDetails}>
                                                 <p className={`head2`}>{dateRange(appointment.dateFrom, appointment.dateTo)}</p>
-                                                <div className={styles.genderDetails}>
+                                                {/* <div className={styles.genderDetails}>
                                                     {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} />}
                                                     {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} />}
                                                     {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
                                                     <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
-                                                </div><br />
+                                                </div><br /> */}
                                                 <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
                                                 <Link target='_blank' href={appointment.location}>{appointment.locationName}</Link>
                                                 <p>{appointment.maxNumberOfSeats} مقعد مخصص</p>
@@ -222,7 +223,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <td>{fullDate(appointment?.updatedAt)}</td>
                                         <td>
                                             <div className={styles.personeDetails}>
-                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#000000'} backColor={'#F26722'} />
+                                                <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#F26722'} backColor={'#000000'} />
                                                 <p>{appointment.maxNumberOfSeats - appointment.numberOfSeats} طالب</p>
                                             </div>
                                         </td>
@@ -238,17 +239,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                     }
                 </table>
                 {allAppointments?.length == 0 &&
-                    <div className={styles.tableBodyArea}>
-                        <div className={styles.noDataManiArea} >
-                            <div>
-                                <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                                <p className='fontBold py-2' style={{ fontSize: '20px' }}>ما أنشئت أي موعد</p>
-                                <div>
-                                    <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Empty buttonText={'إضافة موعد'} emptyText={'ما أضفت أي موعد'} containerhight={500} onClick={() => handleCreateAvailability()} />
                 }
                 {isModalOpen &&
                     <Modal

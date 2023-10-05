@@ -45,20 +45,20 @@ const ModelWithOneInput = ({
                     <button onClick={() => setOpen(false)} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
                     </button>
-                    <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان القسم' : 'إضافة قسم'}</p>
+                    <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان المجلد' : 'إضافة مجلد'}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={inputForm} onFinish={handleCreateFolder}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: 'لازم تكتب العنوان' }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="عنوان المجلد"
+                                    placeholder='عنوان المجلد*'
                                 />
                             </FormItem>
                         </div>
@@ -71,12 +71,9 @@ const ModelWithOneInput = ({
                                     fontSize={16}
                                 />
                             </div>
-                            {/* <div className={styles.createAppointmentBtnBox}>
-                                <button key='modalFooterBtn' className={styles.AddFolderBtn} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>
-                            </div> */}
-                            {isEdit && <div className={styles.deleteVideoBtn}>
+                            {/* {isEdit && <div className={styles.deleteVideoBtn}>
                                 <button className='deleteBtn' onClick={() => handleDelete()} >حذف المجلد </button>
-                            </div>}
+                            </div>} */}
                         </div>
                     </Form>
                 </div>
