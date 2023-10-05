@@ -98,6 +98,9 @@ import NewEditIcon from './customeIcons/newEditIcon'
 import NewDeleteIcon from './customeIcons/newDeleteIcon'
 import DragIcon from './customeIcons/dragIcon'
 import NewLiveTVIcon from './customeIcons/newLiveTVIcon'
+import NewFolderIcon from './customeIcons/newFolderIcon'
+import NewVisibleIcon from './customeIcons/newVisibleIcon'
+import NewVideoIcon from './customeIcons/newVideoIcon'
 
 
 
@@ -206,6 +209,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newEditIcon' && <NewEditIcon height={height} width={width} color={color} />}
 			{iconName == 'newDeleteIcon' && <NewDeleteIcon height={height} width={width} color={color} />}
 			{iconName == 'newLiveTVIcon' && <NewLiveTVIcon height={height} width={width} color={color} />}
+			{iconName == 'newFolderIcon' && <NewFolderIcon height={height} width={width} color={color} />}
+			{iconName == 'newVisibleIcon' && <NewVisibleIcon height={height} width={width} color={color} />}
+			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
+
 
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}

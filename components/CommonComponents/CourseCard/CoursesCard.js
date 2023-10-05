@@ -71,8 +71,8 @@ export default function CoursesCard(props) {
 
 					{courseDetails.type == "on-demand" ?
 						<>
-							<h1 className={styles.progressText}>مستوى التقدم</h1>
-							<ProgressBar percentage={courseProgress} bgColor={'#2BB741'} fontSize={17} />
+							{/* <h1 className={styles.progressText}>مستوى التقدم</h1>
+							<ProgressBar percentage={courseProgress} bgColor={'#2BB741'} fontSize={17} /> */}
 							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة التقدم</button>
 						</>
 						:

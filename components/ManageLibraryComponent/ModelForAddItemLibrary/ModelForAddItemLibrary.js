@@ -9,6 +9,8 @@ import { addItemToFolderAPI, updateItemToFolderAPI } from '../../../services/api
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 import CustomButton from '../../CommonComponents/CustomButton'
+import { toast } from 'react-toastify';
+import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst';
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
@@ -55,7 +57,7 @@ const ModelForAddItemLibrary = ({
             body.linkBucket = fileUploadResponceData?.bucket
             body.linkMime = fileUploadResponceData?.mime
             body.previewAvailable = true
-            body.duration = folderType == "video" ? Number(Math.floor(videoDuration)) : null
+            folderType == "video" ? body.duration = Number(Math.floor(videoDuration)) : null
         }
         else {
             body.name = e.name
@@ -71,6 +73,13 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
+            if (folderType == "video") {
+                toast.success(manageLibraryConst.addVideoSuccessMsg)
+            } else if (folderType == "quiz") {
+                toast.success(manageLibraryConst.addQuizSuccessMsg)
+            } else if (folderType == "file") {
+                toast.success(manageLibraryConst.addFileSuccessMsg)
+            }
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -114,6 +123,13 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await updateItemToFolderAPI(data).then((res) => {
+            if (folderType == "video") {
+                toast.success(manageLibraryConst.updateVideoSuccessMsg)
+            } else if (folderType == "quiz") {
+                toast.success(manageLibraryConst.updateQuizSuccessMsg)
+            } else if (folderType == "file") {
+                toast.success(manageLibraryConst.updateFileSuccessMsg)
+            }
             onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -138,6 +154,7 @@ const ModelForAddItemLibrary = ({
         onDelete()
         onCloseModal()
     };
+    console.log(folderType);
     return (
         <>
             <Modal
@@ -150,79 +167,93 @@ const ModelForAddItemLibrary = ({
                 <div className={styles.modalHeader}>
                     <button onClick={() => onModelClose()} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.createappointment}`}>
-                        {folderType == 'video' && isEdit ? 'تعديل الفيديو' : 'إضافة فيديو' ||
-                            folderType == 'file' && isEdit ? 'إضافة ملف' : 'إضافة ملف' ||
-                                folderType == 'quiz' && isEdit ? 'تعديل الاختبار' : 'إضافة اختبار'
-                        }
-                    </p>
-                    {/* <p className={`fontBold ${styles.createappointment}`}>{folderType == 'video' ? 'إضافة فيديو' : folderType == 'file' ? 'إضافة ملف' : 'إضافة اختبار'}</p> */}
+                    {!isEdit &&
+                        <p className={`fontBold ${styles.createappointment}`}>
+                            {folderType == 'video' ? 'إضافة فيديو' : folderType == 'quiz' ? 'إضافة اختبار' : 'إضافة ملف'}
+                        </p>}
+                    {isEdit &&
+                        <p className={`fontBold ${styles.createappointment}`}>
+                            {folderType == 'video' ? 'تعديل الفيديو' : folderType == 'quiz' ? 'تعديل الاختبار' : 'تعديل الملف'}
+                        </p>}
                 </div>
                 <div dir='rtl'>
                     <Form form={ItemDetailsForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                rules={[{ required: true, message: 'لازم تكتب العنوان' }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder="عنوان الفيديو"
+                                    placeholder={folderType == 'video' ? "عنوان الفيديو" : folderType == "quiz" ? 'عنوان الاختبار' : 'عنوان الملف'}
                                 />
                             </FormItem>
-                            <FormItem
-                                name={'description'}>
-                                <InputTextArea
-                                    fontSize={16}
-                                    height={76}
-                                    width={352}
-                                    placeholder="وصف الفيديو"
-                                />
-                            </FormItem>
+                            {folderType == "video" &&
+                                <FormItem
+                                    name={'description'}
+                                >
+                                    <InputTextArea
+                                        fontSize={16}
+                                        height={76}
+                                        width={352}
+                                        placeholder='الوصف'
+                                    />
+                                </FormItem>}
+                            {folderType == "file" &&
+                                <FormItem
+                                    name={'description'}
+                                    rules={[{ required: true, message: 'لازم تكتب وصف' }]}
+                                >
+                                    <InputTextArea
+                                        fontSize={16}
+                                        height={76}
+                                        width={352}
+                                        placeholder='الوصف'
+                                    />
+                                </FormItem>
+                            }
                             {folderType !== "quiz" &&
-                                <UploadFileForModel
-                                    fileName={selectedItem?.linkKey}
-                                    setFileName={setFileName}
-                                    uploadResData={setFileUploadResponceData}
-                                    fileType={folderType == 'video' ? '.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv' : '.pdf , .doc , .docx'}
-                                    accept={folderType == 'video' ? "video" : "image"}
-                                    placeHolderName={'ارفق الصورة'}
-                                    setShowBtnLoader={setShowBtnLoader}
-                                    setVideoDuration={setVideoDuration}
-                                />
+                                <>
+                                    <p className={styles.uploadFileText}>{folderType == 'video' ? 'الفيديو*' : 'الملف*'}</p>
+                                    <UploadFileForModel
+                                        fileName={selectedItem?.linkKey}
+                                        setFileName={setFileName}
+                                        uploadResData={setFileUploadResponceData}
+                                        fileType={folderType == 'video' ? '.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv' : '.pdf , .doc , .docx'}
+                                        accept={folderType == 'video' ? "video" : "image"}
+                                        placeHolderName={folderType == 'video' ? 'ارفق الفيديو' : 'ارفق الملف'}
+                                        setShowBtnLoader={setShowBtnLoader}
+                                        setVideoDuration={setVideoDuration}
+                                    />
+                                </>
                             }
                             {folderType == "quiz" &&
                                 <>
-                                    <div className="flex">
-                                        <div>
-                                            <FormItem
-                                                name={'numberOfQuestions'}
-                                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
-                                            >
-                                                <Input
-                                                    fontSize={16}
-                                                    width={170}
-                                                    height={40}
-                                                    placeholder="عدد الأسئلة"
-                                                />
-                                            </FormItem>
-                                        </div>
-                                        <div>
-                                            <FormItem
-                                                name={'numberOfQuestionsToPass'}
-                                                rules={[{ required: true, message: "ادخل رابط الفرع" }]}
-                                            >
-                                                <Input
-                                                    fontSize={16}
-                                                    width={170}
-                                                    height={40}
-                                                    placeholder="عدد الأسئلة"
-                                                />
-                                            </FormItem>
-                                        </div>
-                                    </div>
+                                    <FormItem
+                                        name={'description'}
+                                        rules={[{ required: true, message: 'لازم تكتب وصف' }]}
+                                    >
+                                        <InputTextArea
+                                            fontSize={16}
+                                            height={76}
+                                            width={352}
+                                            placeholder='الوصف'
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'numberOfQuestions'}
+                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                    >
+                                        <Input
+                                            fontSize={16}
+                                            width={352}
+                                            height={40}
+                                            placeholder='عدد الأسئلة (رقم فقط)'
+                                        />
+                                    </FormItem>
+                                    <p className={styles.uploadFileText}>رابط الاختبار*</p>
                                     <FormItem
                                         name={'quizLink'}
                                         rules={[{ required: true, message: "ادخل رابط الفرع" }]}
@@ -231,7 +262,7 @@ const ModelForAddItemLibrary = ({
                                             fontSize={16}
                                             width={352}
                                             height={40}
-                                            placeholder="رابط الاختبار"
+                                            placeholder='الرابط'
                                         />
                                     </FormItem>
                                 </>
@@ -248,15 +279,11 @@ const ModelForAddItemLibrary = ({
                                     fileUploadResponceData={fileUploadResponceData}
                                 />
                             </div>
-                            {/* <div className={styles.createAppointmentBtnBox}>
-                                {folderType !== "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} disabled={fileName ? false : true} >{isEdit ? "حفظ" : "إضافة"}</button>}
-                                {folderType == "quiz" && <button key='modalFooterBtn' className={`primarySolidBtn ${styles.AddFolderBtn}`} type={'submit'} >{isEdit ? "حفظ" : "إضافة"}</button>}
-                            </div> */}
-                            {isEdit &&
+                            {/* {isEdit &&
                                 <div className={styles.deleteVideoBtn}>
                                     <button className='deleteBtn' type={'submit'} onClick={() => handleDeleteItems()} disabled={showBtnLoader}>حذف الفيديو</button>
                                 </div>
-                            }
+                            } */}
                         </div>
                     </Form>
                 </div>
