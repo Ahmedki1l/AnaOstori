@@ -12,7 +12,10 @@ import { mediaUrl } from '../constants/DataManupulation';
 
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
-    const orderId = resolvedUrl.split('=')[1]
+    const orderId = resolvedUrl.split('=')[1].split('%2F')[0]
+    const token = resolvedUrl.split('=')[1].split('%2F')[1]
+    console.log(orderId, 17);
+    console.log(token, 18);
     const courseDetail = await axios.get(`${process.env.API_BASE_URL}/order/displayUploadInfo/${orderId}`)
         .then((response) => (response.data)).catch((error) => error);
 
@@ -24,13 +27,17 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 
     return {
         props: {
-            courseDetail
+            courseDetail,
+            token
         }
     }
+
 }
 
 export default function ApproveTrans(props) {
     const courseDetail = props.courseDetail
+    const token = props.token
+    // console.log(token);
     const router = useRouter()
     const noOfUser = PaymentConst.noOfUsersTag2
     const bankDetails = PaymentConst.bankDetails
@@ -76,7 +83,7 @@ export default function ApproveTrans(props) {
             return
         }
     }
-
+    console.log(courseDetail);
     const handleUploadFile = async (uplodedFile) => {
         let formData = new FormData();
         formData.append("file", uplodedFile);

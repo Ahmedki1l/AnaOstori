@@ -225,7 +225,7 @@ export default function Index() {
                                     )
                                 })}
                             </div>}
-                            {smallScreen && selectedTab == 2 && <MyCourseDetails courseCurriculum={courseCurriculum} courseID={courseID} courseProgressPrecentage={courseProgressPrecentage} />}
+                            {/* {smallScreen && selectedTab == 2 && <MyCourseDetails courseCurriculum={courseCurriculum} courseID={courseID} courseProgressPrecentage={courseProgressPrecentage} />} */}
                             {smallScreen && selectedTab == 3 && <>
                                 {filesInCourse?.map((fileItem, index) => {
                                     return (
@@ -239,7 +239,7 @@ export default function Index() {
                             {smallScreen &&
                                 <div className={styles.navItemsWrapper}>
                                     <p className={`fontMedium ${styles.navItemText} ${selectedTab == '1' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(1)}>المحتوى</p>
-                                    <p className={`fontMedium ${styles.navItemText} ${selectedTab == '2' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(2)}>الملفات</p>
+                                    {/* <p className={`fontMedium ${styles.navItemText} ${selectedTab == '2' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(2)}>الملفات</p> */}
                                     <p className={`fontMedium ${styles.navItemText} ${selectedTab == '3' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(3)}>نظرة عامة</p>
                                 </div>
                             }
