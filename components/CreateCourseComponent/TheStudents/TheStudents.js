@@ -81,7 +81,16 @@ const TheStudent = (props) => {
             const oldNote = oldObj?.note;
             const newNote = newObj?.note
 
-            if ((oldGrade === undefined && newGrade !== undefined) || (oldNote === undefined && newNote !== undefined)) {
+            const oldPresent = oldObj?.present;
+            const newPresent = newObj?.present;
+
+            const oldAbsent = oldObj?.absent;
+            const newAbsent = newObj?.absent;
+
+            if ((oldGrade === undefined && newGrade !== undefined)
+                || (oldNote === undefined && newNote !== undefined)
+                || (oldPresent === undefined && newPresent !== undefined)
+                || (oldAbsent === undefined && newAbsent !== undefined)) {
                 createDataBody.push({
                     userProfileId: selectedStudent.userProfile.id,
                     enrollmentId: selectedStudent.enrollmentId,
@@ -92,7 +101,7 @@ const TheStudent = (props) => {
                     pass: newObj.present ? true : false ?? null
                 });
             }
-            else if ((oldGrade !== newGrade) || (oldNote !== newNote)) {
+            else if ((oldGrade !== newGrade) || (oldNote !== newNote) || (oldPresent !== newPresent) || (oldAbsent !== newAbsent)) {
                 updateDataBody.push({
                     userProfileId: selectedStudent.userProfile.id,
                     enrollmentId: selectedStudent.enrollmentId,
@@ -110,9 +119,11 @@ const TheStudent = (props) => {
         let updateAPIBody = {
             data: updateDataBody
         }
-
+        console.log(createAPIBody);
+        console.log(updateDataBody);
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
+                console.log(res);
                 studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
@@ -130,6 +141,7 @@ const TheStudent = (props) => {
         }
         if (updateDataBody.length > 0) {
             await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                console.log(res);
                 studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
@@ -155,17 +167,22 @@ const TheStudent = (props) => {
                 quizId: quiz.id,
                 quizName: quiz.name,
                 grade: undefined,
-                note: undefined
+                note: undefined,
+                present: undefined,
+                absent: undefined
             }
         })
 
         const completedQuizItems = student?.userProfile.quizExams.map((quiz, index) => {
+            console.log(quiz);
             return {
                 key: quiz.item.id,
                 quizId: quiz.item.id,
                 quizName: quiz.item.name,
                 grade: quiz.grade,
-                note: quiz.note
+                note: quiz.note,
+                present: quiz.pass == true ? true : false,
+                absent: quiz.pass == false ? true : false
             }
         })
         setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
@@ -206,7 +223,7 @@ const TheStudent = (props) => {
         const newStudentList = [...allStudentDetails]
         setDisplayedStudentList(newStudentList.filter((student) => value == student.userProfile.gender));
     }
-
+    console.log(examList);
     const changeStatusForIndividualType = (type, index) => {
         let tempStudentExamList = [...examList]
         if (type == 'present') {
@@ -340,6 +357,7 @@ const TheStudent = (props) => {
                             </thead>
                             <tbody className={styles.studentTableBodyArea}>
                                 {examList.map((exam, index) => {
+                                    console.log(exam);
                                     return (
                                         <tr className={styles.studentTableRow} key={exam.id}>
                                             <td>{exam.quizName}</td>
@@ -355,12 +373,12 @@ const TheStudent = (props) => {
                                             </td>
                                             <td>
                                                 <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', index)}>
-                                                    <AllIconsComponenet iconName={exam.present ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                    <AllIconsComponenet iconName={exam.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', index)}>
-                                                    <AllIconsComponenet iconName={exam.absent ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                    <AllIconsComponenet iconName={exam.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                 </div>
                                             </td>
 

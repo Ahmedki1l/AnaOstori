@@ -387,7 +387,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
                                     </div> */}
                                         <div className='flex items-center'>
-                                            <Switch defaultChecked={isContentAccess} onChange={onChangeContentAccess}></Switch>
+                                            <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
                                             <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
                                         </div>
                                     </>

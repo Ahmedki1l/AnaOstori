@@ -83,7 +83,6 @@ export default function ApproveTrans(props) {
             return
         }
     }
-    console.log(courseDetail);
     const handleUploadFile = async (uplodedFile) => {
         let formData = new FormData();
         formData.append("file", uplodedFile);
