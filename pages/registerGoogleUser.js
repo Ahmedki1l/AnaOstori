@@ -74,15 +74,9 @@ export default function RegisterGoogleUser() {
             setLastNameError(inputErrorMessages.lastNameErrorMsg)
         }
 
-        if (phoneNumber && (phoneNumber.startsWith("05"))) {
-            setShowPhoneError(false)
-            setPhoneNumberError('')
-        } else if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+        if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setShowPhoneError(true)
             setPhoneNumberValidError(inputErrorMessages.mobileNumberFormatErrorMsg)
-        } else {
-            setShowPhoneError(true)
-            setPhoneNumberError(inputErrorMessages.mobileNumberRequiredErrorMsg)
         }
 
     }, [firstName, lastName, phoneNumber])
@@ -95,7 +89,7 @@ export default function RegisterGoogleUser() {
             const body = {
                 firstName: firstName,
                 lastName: lastName,
-                phone: phoneNumber.replace(/[0-9]/, "+966"),
+                phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,
                 gender: gender
             }
 
@@ -118,31 +112,17 @@ export default function RegisterGoogleUser() {
     return (
         <div className={`relative ${styles.mainPage}`}>
             <div className={styles.loginFormDiv}>
-                <h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
+                <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
                 <p className={`pb-2 ${styles.signUpPageSubText}`}>فضلا اكتب بياناتك بدقة، حيث ستٌعتمد وقت تسجيلك بالدورات</p>
                 <form onSubmit={handleUpdateProfile}>
-                    <div className='flex justify-between'>
-                        <div>
-                            <div className={`formInputBox ${styles.loginPageSmallInputBox}`}>
-                                <div className='formInputIconDiv'>
-                                    <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
-                                </div>
-                                <input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
-                                <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الاول</label>
-                            </div>
-                            {showFirstNameError && <p className={styles.errorText}>{firstNameError}</p>}
+                    <div className={`formInputBox`}>
+                        <div className='formInputIconDiv'>
+                            <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                         </div>
-                        <div>
-                            <div className={`formInputBox ${styles.loginPageSmallInputBox}`}>
-                                <div className='formInputIconDiv'>
-                                    <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
-                                </div>
-                                <input className={`formInput ${styles.loginFormInput}`} type="text" name='lastName' id='lastName' value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder=' ' />
-                                <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="lastName">اسم العائلة</label>
-                            </div>
-                            {showLastNameError && <p className={styles.errorText}>{lastNameError}</p>}
-                        </div>
+                        <input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
+                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الثلاثي</label>
                     </div>
+                    {showFirstNameError && <p className={styles.errorText}>{firstNameError}</p>}
                     <div className={`formInputBox ${styles.radioBtnDiv}`}>
                         <p className={`pl-4 ${styles.genderText}`}>الجنس</p>
                         <input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
@@ -155,7 +135,7 @@ export default function RegisterGoogleUser() {
                             <AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
                         </div>
                         <input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال</label>
+                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
                     </div>
                     {showPhoneError && <p className={styles.errorText}> {phoneNumberError ? phoneNumberError : phoneNumberValidError}</p>}
                     <div className={styles.loginBtnBox}>
