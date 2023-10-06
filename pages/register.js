@@ -27,10 +27,10 @@ export default function Register() {
 	const [isPhoneNumberError, setIsPhoneNumberError] = useState(false);
 	const [isGenderError, setIsGenderError] = useState(false);
 
-	const [firstNameError, setFirstNameError] = useState(false);
+	const [firstNameError, setFirstNameError] = useState(null);
 	const [phoneNumberError, setPhoneNumberError] = useState(false);
-	const [emailError, setEmailError] = useState(false);
-	const [passwordError, setPasswordError] = useState(false);
+	const [emailError, setEmailError] = useState(null);
+	const [passwordError, setPasswordError] = useState(null);
 
 	const [user, setUser] = useState();
 	const [loading, setLoading] = useState(false)
@@ -135,31 +135,28 @@ export default function Register() {
 
 
 	useEffect(() => {
-
 		if (firstName) {
-			setFirstNameError(false)
+			setFirstNameError(inputErrorMessages.firstNameErrorMsg)
 		}
-
 		if (email && !(regexEmail.test(email))) {
-			setIsEmailError(true)
+			setIsEmailError(inputErrorMessages.noEmailErrorMsg)
 		}
 		else {
-			setIsEmailError(false)
+			setIsEmailError(null)
 		}
 
 		if (password && !(regexPassword.test(password))) {
-			setIsPasswordError(true)
+			setIsPasswordError(inputErrorMessages.noPasswordMsg)
 		}
 		else {
-			setIsPasswordError(false)
+			setIsPasswordError(null)
 		}
 
 		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-			setIsPhoneNumberError(true)
-			setPhoneNumberError(false)
+			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
 		}
 		else {
-			setIsPhoneNumberError(false)
+			setIsPhoneNumberError(null)
 		}
 
 	}, [firstName, email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
@@ -167,14 +164,14 @@ export default function Register() {
 
 	const handleSignup = async () => {
 		setLoading(true)
+		console.log((firstName.split(" ").length - 1) < 2);
 		if (!firstName) {
 			setFirstNameError(inputErrorMessages.firstNameErrorMsg)
+		} else if (firstName && (firstName.split(" ").length - 1) < 2) {
+			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
 		}
 		if (!gender) {
 			setIsGenderError(inputErrorMessages.genderErrorMsg)
-		}
-		if (!phoneNumber) {
-			setPhoneNumberError(inputErrorMessages.mobileNumberRequiredErrorMsg)
 		}
 		if (!email) {
 			setEmailError(inputErrorMessages.noEmailErrorMsg)
@@ -182,7 +179,7 @@ export default function Register() {
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
-		else if (firstName && phoneNumber && email && password && gender) {
+		else if (firstNameError == null && emailError == null && passwordError == null) {
 			await signupWithEmailAndPassword(email, password, firstName, phoneNumber, gender)
 		}
 	}
@@ -260,7 +257,7 @@ export default function Register() {
 						{!isPasswordError && <p className={styles.passwordHintText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p>}
 						{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
 						<div className={styles.loginBtnBox}>
-							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (emailError || passwordError || isEmailError || isPasswordError || !email || !password) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
+							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (firstNameError == null && emailError == null && passwordError == null) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>

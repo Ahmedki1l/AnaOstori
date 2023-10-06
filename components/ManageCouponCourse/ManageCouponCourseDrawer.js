@@ -33,6 +33,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
     const handleSaveCouponDetails = async (values) => {
         setShowBtnLoader(true)
         values.expires = dayjs(values?.expires?.$d).format('YYYY-MM-DD HH:mm:ss');
+        values.global = true
         let body = {
             routeName: "createCoupon",
             ...values

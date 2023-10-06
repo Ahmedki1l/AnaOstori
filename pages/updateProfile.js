@@ -10,7 +10,7 @@ import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
-import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
+import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
 // import { uploadFileSevices } from '../services/UploadFileSevices';
 
@@ -26,6 +26,8 @@ const UpdateProfile = () => {
     const [profileUrl, setProfileUrl] = useState(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
 
     const [uploadLoader, setUploadLoader] = useState(false)
+
+    const [firstNameError, setFirstNameError] = useState(null);
 
     const dispatch = useDispatch();
     const router = useRouter()
@@ -69,9 +71,17 @@ const UpdateProfile = () => {
 
 
     const handleSubmit = async (event) => {
-
-        setShowLoader(true)
         event.preventDefault();
+
+        if (!firstName) {
+            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
+            return
+        }
+        else if ((firstName.split(" ").length - 1) < 2) {
+            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
+            return
+        }
+        setShowLoader(true)
 
         const data = {
             firstName: firstName,
@@ -117,11 +127,14 @@ const UpdateProfile = () => {
                                     <input style={{ display: "none" }} id="image" type="file" onChange={uploadPhoto}
                                     />
                                 </div>
-                                <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
-                                    <div className={styles.loginPageIconDiv}>
-                                        <Icon height={19} width={16} iconName={'person'} alt={'Persone Icon'} />
+                                <div className='w-full'>
+                                    <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
+                                        <div className={styles.loginPageIconDiv}>
+                                            <Icon height={19} width={16} iconName={'person'} alt={'Persone Icon'} />
+                                        </div>
+                                        <input className={styles.inputBox} type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='الاسم الاول' />
                                     </div>
-                                    <input className={styles.inputBox} type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='الاسم الاول' />
+                                    {firstNameError !== null && <p className={styles.errorText}>{firstNameError}</p>}
                                 </div>
                                 {/* <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
                                     <div className={styles.loginPageIconDiv}>
