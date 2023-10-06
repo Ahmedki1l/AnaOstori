@@ -33,7 +33,7 @@ function Index() {
 
     useEffect(() => {
         getfolderList(selectedItem)
-    }, [selectedItem])
+    }, [])
 
 
     const handleItemSelect = async (selcetedItem) => {
