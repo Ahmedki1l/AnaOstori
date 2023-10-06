@@ -76,7 +76,6 @@ const TestResults = (props) => {
     }
 
     const createUpdatedList = (list) => {
-        console.log(list);
         const updatedList = list.map(item => {
             const updatedExam = item.userProfile.exam.map(examItem => {
                 return {
@@ -254,10 +253,7 @@ const TestResults = (props) => {
     }
 
     const onInputChange = (e, index, type, student) => {
-        console.log('student :', student);
         const list = [...updatedStudentList]
-        console.log('list :', list);
-        console.log(selectedExam);
         if (type == 'result') {
             if (list[index].userProfile.exam.length == 0) {
                 list[index].userProfile.exam.push({
@@ -291,7 +287,6 @@ const TestResults = (props) => {
                 list[index].userProfile.exam[0].note = e.target.value
             }
         }
-        console.log(list);
         setUpdatedStudentList(list)
     }
 
@@ -395,7 +390,6 @@ const TestResults = (props) => {
                         {updatedStudentList.length > 0 &&
                             <tbody className={styles.examTableBodyArea}>
                                 {updatedStudentList?.map((student, index) => {
-                                    console.log(student);
                                     return (
                                         <tr className={styles.examTableRow} key={student.enrollmentId} >
                                             <td>

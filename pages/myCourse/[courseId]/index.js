@@ -96,9 +96,7 @@ export default function Index() {
     }
 
     const getCurrentItemId = (watchedItems, ccSections) => {
-        console.log("hi");
         if (watchedItems.length == 0) {
-            console.log("hi2");
             setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id)
             router.push(`/myCourse/${courseID}/${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id}`)
         }
@@ -109,17 +107,14 @@ export default function Index() {
                     const itemId = itemInSection[j - 1]?.id;
                     if (watchedItems?.some(watchedItem => watchedItem.itemId == itemId)) {
                         if ((j - 1) == ((itemInSection?.length) - 1) && (i - 1) == ((ccSections?.length) - 1)) {
-                            console.log("hi3");
                             setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id)
                             router.push(`/myCourse/${courseID}/${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
                             return
                         } else if ((j - 1) == ((itemInSection?.length) - 1)) {
-                            console.log("hi4");
                             setCurrentItemId(ccSections[i]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id)
                             router.push(`/myCourse/${courseID}/${ccSections[i]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
                             return
                         } else {
-                            console.log("hi5");
                             setCurrentItemId(itemInSection[j]?.id)
                             router.push(`/myCourse/${courseID}/${itemInSection[j]?.id}`)
                         }

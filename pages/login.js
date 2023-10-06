@@ -84,7 +84,7 @@ export default function Login() {
 				isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 			});
 			let profileData = viewProfileData?.data
-			if (profileData.firstName == null || profileData.lastName == null || profileData.gender == null) {
+			if (profileData.firstName == null || profileData.gender == null) {
 				router.push('/registerGoogleUser')
 			} else {
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {

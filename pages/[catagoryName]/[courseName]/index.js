@@ -74,7 +74,6 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	const courseDetail = props.courseDetails ? props.courseDetails : null
-	console.log(courseDetail);
 	const maleDates = props.maleDates
 	const femaleDates = props.femaleDates
 	const mixDates = props.mixDates

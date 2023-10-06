@@ -164,7 +164,6 @@ export default function Register() {
 
 	const handleSignup = async () => {
 		setLoading(true)
-		console.log((firstName.split(" ").length - 1) < 2);
 		if (!firstName) {
 			setFirstNameError(inputErrorMessages.firstNameErrorMsg)
 		} else if (firstName && (firstName.split(" ").length - 1) < 2) {

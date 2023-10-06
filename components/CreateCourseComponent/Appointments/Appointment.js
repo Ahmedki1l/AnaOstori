@@ -36,7 +36,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     // const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
 
-    console.log("editAvailability", editAvailability);
 
     const instructor = instructorList?.map((obj) => {
         return {
