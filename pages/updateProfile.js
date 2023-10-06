@@ -12,14 +12,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
 import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
-import { uploadFileSevices } from '../services/UploadFileSevices';
+// import { uploadFileSevices } from '../services/UploadFileSevices';
 
 
 const UpdateProfile = () => {
     const storeData = useSelector((state) => state?.globalStore);
     const [firstName, setFirstName] = useState(storeData?.viewProfileData?.firstName)
 
-    const [lastName, setLastName] = useState(storeData?.viewProfileData?.lastName)
+    // const [lastName, setLastName] = useState(storeData?.viewProfileData?.lastName)
 
     const [showLoader, setShowLoader] = useState(false);
 
@@ -32,7 +32,7 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         setFirstName(storeData?.viewProfileData?.firstName);
-        setLastName(storeData?.viewProfileData?.lastName)
+        // setLastName(storeData?.viewProfileData?.lastName)
         setProfileUrl(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
     }, [storeData?.viewProfileData])
 
@@ -75,7 +75,7 @@ const UpdateProfile = () => {
 
         const data = {
             firstName: firstName,
-            lastName: lastName
+            // lastName: lastName
         }
 
         const params = {
@@ -123,12 +123,12 @@ const UpdateProfile = () => {
                                     </div>
                                     <input className={styles.inputBox} type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='الاسم الاول' />
                                 </div>
-                                <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
+                                {/* <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
                                     <div className={styles.loginPageIconDiv}>
                                         <Icon height={19} width={16} iconName={'person'} alt={'Persone Icon'} />
                                     </div>
                                     <input className={styles.inputBox} type="text" name='lastName' value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder='اسم العائلة' />
-                                </div>
+                                </div> */}
                                 <div className={styles.loginBtnBox}>
                                     <button className={`primarySolidBtn ${styles.updateProfileBtn}`} name="submit" type='submit'>{showLoader ? <Image src={loader} width={50} height={30} alt="Loder Picture" /> : ""} حفظ</button>
                                 </div>

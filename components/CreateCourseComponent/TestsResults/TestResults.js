@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
 import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
-import { Form } from 'antd'
+import { Form, message } from 'antd'
 import styles from './TestResults.module.scss'
 import ProfilePicture from '../../CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
@@ -75,6 +75,36 @@ const TestResults = (props) => {
         })
     }
 
+    const createUpdatedList = (list) => {
+        console.log("list", list);
+        const updatedList = list.map(item => {
+            if (item.userProfile.exam.length == 0) {
+                item.userProfile.exam.push({
+                    grade: '',
+                    note: '',
+                    present: null,
+                    absent: null
+                })
+            }
+            const updatedExam = item.userProfile.exam.map(examItem => {
+                return {
+                    ...examItem,
+                    present: examItem.pass === true ? true : null,
+                    absent: examItem.pass === false ? true : null
+                };
+            });
+            return {
+                ...item,
+                userProfile: {
+                    ...item.userProfile,
+                    exam: updatedExam
+                }
+            };
+        });
+        console.log("updatedList", updatedList);
+        setStudentList(JSON.parse(JSON.stringify(updatedList)))
+        setUpdatedStudentList(JSON.parse(JSON.stringify(updatedList)))
+    }
     const onParamsSelect = (e, type) => {
         if (courseType == "onDemand") {
             setSelectedExam(e)
@@ -99,16 +129,13 @@ const TestResults = (props) => {
                 courseId: courseId
             }
             await getStudentListByExamOnDemandAPI(params).then((res) => {
-                setStudentList(JSON.parse(JSON.stringify(res.data)))
-                console.log("res.data", res.data);
-                setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                createUpdatedList(res.data)
                 setShowStudentList(true)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await getStudentListByExamOnDemandAPI(params).then((res) => {
-                            setStudentList(JSON.parse(JSON.stringify(res.data)))
-                            setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                            createUpdatedList(res.data)
                             setShowStudentList(true)
                         })
                     }).catch(error => {
@@ -122,15 +149,13 @@ const TestResults = (props) => {
                 availabilityId: availabilityId
             }
             await getStudentListByExamAPI(params).then((res) => {
-                setStudentList(JSON.parse(JSON.stringify(res.data)))
-                setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                createUpdatedList(res.data)
                 setShowStudentList(true)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await getStudentListByExamAPI(params).then((res) => {
-                            setStudentList(JSON.parse(JSON.stringify(res.data)))
-                            setUpdatedStudentList(JSON.parse(JSON.stringify(res.data)))
+                            createUpdatedList(res.data)
                             setShowStudentList(true)
                         })
                     }).catch(error => {
@@ -183,55 +208,59 @@ const TestResults = (props) => {
         let updateAPIBody = {
             data: updateDataBody
         }
-        if (createAPIBody.length > 0) {
-            await createStudentExamDataAPI(createAPIBody).then((res) => {
-                toast.success(toastSuccessMessage.examCreateSuccessMsg)
-                setShowBtnLoader(false)
-            }).catch(async (error) => {
-                if (error?.response?.status == 401) {
-                    await getNewToken().then(async (token) => {
-                        await createStudentExamDataAPI(createAPIBody).then((res) => {
-                            toast.success(toastSuccessMessage.examCreateSuccessMsg)
-                            setShowBtnLoader(false)
-                        })
-                    }).catch(error => {
-                        console.error("Error:", error);
-                    });
-                }
-                setShowBtnLoader(false)
-            })
-        }
-        else {
-            await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-                toast.success(toastSuccessMessage.examUpdateSuccessMsg)
-                setShowBtnLoader(false)
-            }).catch(async (error) => {
-                if (error?.response?.status == 401) {
-                    await getNewToken().then(async (token) => {
-                        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-                            toast.success(toastSuccessMessage.examUpdateSuccessMsg)
-                            setShowBtnLoader(false)
-                        })
-                    }).catch(error => {
-                        console.error("Error:", error);
-                    });
-                }
-                setShowBtnLoader(false)
-            })
-        }
+        console.log("createAPIBody", createAPIBody);
+        console.log("updateAPIBody", updateAPIBody);
+        // if (createAPIBody.length > 0) {
+        //     await createStudentExamDataAPI(createAPIBody).then((res) => {
+        //         toast.success(toastSuccessMessage.examCreateSuccessMsg)
+        //         setShowBtnLoader(false)
+        //     }).catch(async (error) => {
+        //         if (error?.response?.status == 401) {
+        //             await getNewToken().then(async (token) => {
+        //                 await createStudentExamDataAPI(createAPIBody).then((res) => {
+        //                     toast.success(toastSuccessMessage.examCreateSuccessMsg)
+        //                     setShowBtnLoader(false)
+        //                 })
+        //             }).catch(error => {
+        //                 console.error("Error:", error);
+        //             });
+        //         }
+        //         setShowBtnLoader(false)
+        //     })
+        // }
+        // else {
+        //     await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+        //         toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+        //         setShowBtnLoader(false)
+        //     }).catch(async (error) => {
+        //         if (error?.response?.status == 401) {
+        //             await getNewToken().then(async (token) => {
+        //                 await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+        //                     toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+        //                     setShowBtnLoader(false)
+        //                 })
+        //             }).catch(error => {
+        //                 console.error("Error:", error);
+        //             });
+        //         }
+        //         setShowBtnLoader(false)
+        //     })
+        // }
     }
 
     const onInputChange = (e, index, type) => {
         const list = [...updatedStudentList]
-        if (list[index].userProfile.exam.length == 0) {
-            list[index].userProfile.exam.push({
-                grade: '',
-                note: ''
-            })
-        }
+        // if (list[index].userProfile.exam.length == 0) {
+        //     list[index].userProfile.exam.push({
+        //         grade: '',
+        //         note: '',
+        //         present: null,
+        //         absent: null
+        //     })
+        // }
         if (type == 'result') {
             list[index].userProfile.exam[0].grade = e.target.value
-        } else {
+        } else if (type == 'note') {
             list[index].userProfile.exam[0].note = e.target.value
         }
         setUpdatedStudentList(list)
@@ -245,6 +274,36 @@ const TestResults = (props) => {
             return fullName.includes(searchName);
         });
         setUpdatedStudentList(filteredList)
+    }
+
+    const handlePassOrFaild = (type, index) => {
+        const list = [...updatedStudentList]
+        // if (list[index].userProfile.exam.length == 0) {
+        //     list[index].userProfile.exam.push({
+        //         grade: '',
+        //         note: '',
+        //         present: null,
+        //         absent: null
+        //     })
+        // }
+        if (type == 'present') {
+            if (list[index].userProfile.exam[0]?.present && list[index].userProfile.exam[0].present == true) {
+                list[index].userProfile.exam[0].absent = false
+                list[index].userProfile.exam[0].present = false
+            } else {
+                list[index].userProfile.exam[0].absent = false
+                list[index].userProfile.exam[0].present = true
+            }
+        } else {
+            if (list[index].userProfile.exam[0].absent && list[index].userProfile.exam[0].absent == true) {
+                list[index].userProfile.exam[0].present = false
+                list[index].userProfile.exam[0].absent = false
+            } else {
+                list[index].userProfile.exam[0].present = false
+                list[index].userProfile.exam[0].absent = true
+            }
+        }
+        setUpdatedStudentList(list)
     }
 
     return (
@@ -295,14 +354,15 @@ const TestResults = (props) => {
                             <tr>
                                 <th className={styles.examTableHead1}>عنوان الاختبار</th>
                                 <th className={styles.examTableHead2}>الدرجة</th>
-                                <th className={styles.examTableHead2}>مجتاز</th>
-                                <th className={styles.examTableHead2}>غير مجتاز</th>
-                                <th className={styles.examTableHead3}>الملاحظات</th>
+                                <th className={styles.examTableHead3}>مجتاز</th>
+                                <th className={styles.examTableHead4}>غير مجتاز</th>
+                                <th className={styles.examTableHead5}>الملاحظات</th>
                             </tr>
                         </thead>
                         {updatedStudentList.length > 0 &&
                             <tbody className={styles.examTableBodyArea}>
                                 {updatedStudentList?.map((student, index) => {
+                                    console.log("student", student);
                                     return (
                                         <tr className={styles.examTableRow} key={student.enrollmentId} >
                                             <td>
@@ -320,19 +380,19 @@ const TestResults = (props) => {
                                                     fontSize={16}
                                                     width={125}
                                                     height={37}
-                                                    value={student?.userProfile?.exam[0]?.grade ? student?.userProfile?.exam[0]?.grade : ''}
+                                                    value={student?.userProfile?.exam[index]?.grade ? student?.userProfile?.exam[index]?.grade : ''}
                                                     placeholder='اكتب الدرجة'
                                                     onChange={(e) => onInputChange(e, index, 'result')}
                                                 />
                                             </td>
                                             <td>
-                                                <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('present', index)}>
-                                                    <AllIconsComponenet iconName={student?.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                <div className="cursor-pointer" onClick={() => handlePassOrFaild('present', index)}>
+                                                    <AllIconsComponenet iconName={student?.userProfile?.exam[0]?.present == true ? 'present' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className="cursor-pointer" onClick={() => changeStatusForIndividualType('absent', index)}>
-                                                    <AllIconsComponenet iconName={student?.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
+                                                <div className="cursor-pointer" onClick={() => handlePassOrFaild('absent', index)}>
+                                                    <AllIconsComponenet iconName={student?.userProfile?.exam[0]?.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                 </div>
                                             </td>
                                             <td>
@@ -340,7 +400,7 @@ const TestResults = (props) => {
                                                     fontSize={16}
                                                     width={324}
                                                     height={37}
-                                                    value={student?.userProfile?.exam[0]?.note ? student?.userProfile?.exam[0]?.note : ''}
+                                                    value={student?.userProfile?.exam[index]?.note ? student?.userProfile?.exam[index]?.note : ''}
                                                     placeholder='إن وجدت'
                                                     onChange={(e) => onInputChange(e, index, 'note')}
                                                 />

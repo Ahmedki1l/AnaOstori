@@ -28,7 +28,7 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
     return {
         props: {
             courseDetail,
-            token
+            token: token ?? null
         }
     }
 

@@ -119,17 +119,17 @@ const CreateCoursePath = (props) => {
         <div>
             <Form form={courseForm} onFinish={onFinishCreateCoursepath} >
                 <div className={styles.borderBottomNavbar}>
-                    <BackToPath
-                        backpathForPage={true}
-                        backPathArray={
-                            [
-                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                                { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/manageLibrary' },
-                                { lable: 'إدارة المكتبة الرقمية', link: null },
-                            ]
-                        }
-                    />
                     <div className='maxWidthDefault px-4'>
+                        <BackToPath
+                            backpathForPage={true}
+                            backPathArray={
+                                [
+                                    { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                                    { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/manageLibrary' },
+                                    { lable: 'إدارة المكتبة الرقمية', link: null },
+                                ]
+                            }
+                        />
                         <div className={`${styles.headerWrapper}`}>
                             <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : "إنشاء مقرر"}</h1>
                         </div>

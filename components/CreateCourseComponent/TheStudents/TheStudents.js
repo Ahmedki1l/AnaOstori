@@ -4,14 +4,13 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import styles from './TheStudenet.module.scss'
 import Select from '../../antDesignCompo/Select'
 import { useDispatch, useSelector } from 'react-redux'
-import ProgressBar from '../../CommonComponents/progressBar'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
 import { createStudentExamDataAPI, getStudentListAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
-import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 import { fullDate } from '../../../constants/DateConverter';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
@@ -89,10 +88,10 @@ const TheStudent = (props) => {
             const oldAbsent = oldObj?.absent;
             const newAbsent = newObj?.absent;
 
-            if ((oldGrade === undefined && newGrade !== undefined)
-                || (oldNote === undefined && newNote !== undefined)
-                || (oldPresent === undefined && newPresent !== undefined)
-                || (oldAbsent === undefined && newAbsent !== undefined)) {
+            if (newObj.old == false && (oldGrade == undefined && newGrade != undefined) ||
+                (oldNote == undefined && newNote != undefined) ||
+                (oldPresent == undefined && newPresent != undefined) ||
+                (oldAbsent == undefined && newAbsent != undefined)) {
                 createDataBody.push({
                     userProfileId: selectedStudent.userProfile.id,
                     enrollmentId: selectedStudent.enrollmentId,
@@ -100,10 +99,9 @@ const TheStudent = (props) => {
                     itemId: newObj.quizId,
                     grade: newObj.grade ?? null,
                     note: newObj.note ?? null,
-                    pass: newObj.present ? true : false ?? null
+                    pass: newObj.present ? true : null
                 });
-            }
-            else if ((oldGrade !== newGrade) || (oldNote !== newNote) || (oldPresent !== newPresent) || (oldAbsent !== newAbsent)) {
+            } else if (newObj.old == true && (oldGrade != newGrade || oldNote != newNote || oldPresent != newPresent || oldAbsent != newAbsent)) {
                 updateDataBody.push({
                     userProfileId: selectedStudent.userProfile.id,
                     enrollmentId: selectedStudent.enrollmentId,
@@ -111,7 +109,7 @@ const TheStudent = (props) => {
                     itemId: newObj.quizId,
                     grade: newObj.grade ?? null,
                     note: newObj.note ?? null,
-                    pass: newObj.present ? true : false ?? null
+                    pass: newObj.present ? true : null
                 });
             }
         });
@@ -121,8 +119,6 @@ const TheStudent = (props) => {
         let updateAPIBody = {
             data: updateDataBody
         }
-        console.log(createAPIBody);
-        console.log(updateDataBody);
         if (createDataBody.length > 0) {
             await createStudentExamDataAPI(createAPIBody).then((res) => {
                 console.log(res);
@@ -171,7 +167,8 @@ const TheStudent = (props) => {
                 grade: undefined,
                 note: undefined,
                 present: undefined,
-                absent: undefined
+                absent: undefined,
+                old: false
             }
         })
 
@@ -183,7 +180,8 @@ const TheStudent = (props) => {
                 grade: quiz.grade,
                 note: quiz.note,
                 present: quiz.pass == true ? true : false,
-                absent: quiz.pass == false ? true : false
+                absent: quiz.pass == false ? true : false,
+                old: true
             }
         })
         setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
@@ -224,7 +222,6 @@ const TheStudent = (props) => {
         const newStudentList = [...allStudentDetails]
         setDisplayedStudentList(newStudentList.filter((student) => value == student.userProfile.gender));
     }
-    console.log(examList);
     const changeStatusForIndividualType = (type, index) => {
         let tempStudentExamList = [...examList]
         if (type == 'present') {
@@ -353,7 +350,6 @@ const TheStudent = (props) => {
                             </thead>
                             <tbody className={styles.studentTableBodyArea}>
                                 {examList.map((exam, index) => {
-                                    console.log(exam);
                                     return (
                                         <tr className={styles.studentTableRow} key={exam.id}>
                                             <td>{exam.quizName}</td>
