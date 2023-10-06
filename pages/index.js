@@ -26,19 +26,20 @@ export async function getServerSideProps(context) {
 		// const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`)
 		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
-		// const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
-		const [catagories] = await Promise.all([
+		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
+		const [catagories, homeMetaData] = await Promise.all([
 
 			// const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
 			// newsReq,
 			catagoriesReq,
 			// homeReviewsReq,
-			// homeMetaDataReq
+			homeMetaDataReq
 		])
 
 		return {
 			props: {
 				catagories: catagories.data,
+				homeMetaData: homeMetaData.data,
 			}
 
 			// props: {
@@ -71,6 +72,8 @@ export default function Home(props) {
 	const catagories = props?.catagories ? props?.catagories : []
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
 	const [scrollSectionName, setScrollSectionName] = useState()
+
+	console.log("homeMeteData :", props.homeMetaData);
 
 	const handleScrollToSection = (sectionName) => {
 		if (sectionName == 'refCourseSec') {
@@ -142,7 +145,7 @@ export default function Home(props) {
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
-					{/* <VideoThumnail pictureKey={''} videoUrl={mediaUrl(props.homeMetaData[0]?.fileBucket, props.homeMetaData[0]?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} /> */}
+					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(props.homeMetaData[4]?.fileBucket, props.homeMetaData[4]?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
 				</div>
 			</div>
 			<div className={styles.analyticsBarWrapper}>

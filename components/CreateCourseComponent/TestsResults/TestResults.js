@@ -76,16 +76,8 @@ const TestResults = (props) => {
     }
 
     const createUpdatedList = (list) => {
+        console.log(list);
         const updatedList = list.map(item => {
-            if (item.userProfile.exam.length == 0) {
-                item.userProfile.exam.push({
-                    grade: '',
-                    note: '',
-                    present: null,
-                    absent: null,
-                    old: false,
-                })
-            }
             const updatedExam = item.userProfile.exam.map(examItem => {
                 return {
                     ...examItem,
@@ -261,12 +253,43 @@ const TestResults = (props) => {
         }
     }
 
-    const onInputChange = (e, index, type) => {
+    const onInputChange = (e, index, type, student) => {
+        console.log('student :', student);
         const list = [...updatedStudentList]
+        console.log('list :', list);
+        console.log(selectedExam);
         if (type == 'result') {
-            list[index].userProfile.exam[0].grade = e.target.value
+            if (list[index].userProfile.exam.length == 0) {
+                list[index].userProfile.exam.push({
+                    grade: e.target.value,
+                    note: '',
+                    present: null,
+                    absent: null,
+                    old: false,
+                    courseId: courseId,
+                    enrollmentId: student.enrollmentId,
+                    itemId: selectedExam,
+                    userProfileId: student.userProfile.id
+                })
+            } else {
+                list[index].userProfile.exam[0].grade = e.target.value
+            }
         } else if (type == 'note') {
-            list[index].userProfile.exam[0].note = e.target.value
+            if (list[index].userProfile.exam.length == 0) {
+                list[index].userProfile.exam.push({
+                    grade: null,
+                    note: e.target.value,
+                    present: null,
+                    absent: null,
+                    old: false,
+                    courseId: courseId,
+                    enrollmentId: student.enrollmentId,
+                    itemId: selectedExam,
+                    userProfileId: student.userProfile.id
+                })
+            } else {
+                list[index].userProfile.exam[0].note = e.target.value
+            }
         }
         console.log(list);
         setUpdatedStudentList(list)
@@ -285,7 +308,19 @@ const TestResults = (props) => {
     const handlePassOrFaild = (type, index) => {
         const list = [...updatedStudentList]
         if (type == 'present') {
-            if (list[index].userProfile.exam[0]?.present && list[index].userProfile.exam[0].present == true) {
+            if (list[index].userProfile.exam.length == 0) {
+                // list[index].userProfile.exam.push({
+                //     grade: null,
+                //     note: '',
+                //     present: true,
+                //     absent: false,
+                //     old: false,
+                //     courseId: courseId,
+                //     enrollmentId: list[index].enrollmentId,
+                //     itemId: selectedExam,
+                //     userProfileId: list[index].userProfile.id
+                // })
+            } else if (list[index].userProfile.exam[0]?.present && list[index].userProfile.exam[0].present == true) {
                 list[index].userProfile.exam[0].present = false
                 list[index].userProfile.exam[0].absent = false
             } else {
@@ -369,7 +404,7 @@ const TestResults = (props) => {
                                                         <div className={styles.StudentListImage}>
                                                             <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
                                                         </div>
-                                                        <p className={styles.studentName}>{student?.userProfile?.firstName == "" ? student?.userProfile?.fullName : `${student?.userProfile?.firstName} ${student?.userProfile?.lastName}`}</p>
+                                                        <p className={styles.studentName}>{student?.userProfile?.firstName == "" ? student?.userProfile?.fullName : `${student?.userProfile?.firstName}`}</p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -380,7 +415,7 @@ const TestResults = (props) => {
                                                     height={37}
                                                     value={student?.userProfile?.exam[0]?.grade ? student?.userProfile?.exam[0]?.grade : ''}
                                                     placeholder='اكتب الدرجة'
-                                                    onChange={(e) => onInputChange(e, index, 'result')}
+                                                    onChange={(e) => onInputChange(e, index, 'result', student)}
                                                 />
                                             </td>
                                             <td>
@@ -400,7 +435,7 @@ const TestResults = (props) => {
                                                     height={37}
                                                     value={student?.userProfile?.exam[0]?.note ? student?.userProfile?.exam[0]?.note : ''}
                                                     placeholder='إن وجدت'
-                                                    onChange={(e) => onInputChange(e, index, 'note')}
+                                                    onChange={(e) => onInputChange(e, index, 'note', student)}
                                                 />
                                             </td>
                                         </tr>
