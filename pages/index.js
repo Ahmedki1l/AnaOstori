@@ -73,8 +73,6 @@ export default function Home(props) {
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
 	const [scrollSectionName, setScrollSectionName] = useState()
 
-	console.log("homeMeteData :", props.homeMetaData);
-
 	const handleScrollToSection = (sectionName) => {
 		if (sectionName == 'refCourseSec') {
 			refCourseSec.current?.scrollIntoView({ behavior: 'smooth' });

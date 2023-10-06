@@ -910,13 +910,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
-                                                            name={[name, 'tailLink']}
+                                                            name={[name, 'tailLinkName']}
                                                         >
                                                             <Input placeholder="نص منفصل" width={216} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
-                                                            name={[name, 'tailLinkName']}
+                                                            name={[name, 'tailLink']}
                                                         >
                                                             <Input placeholder="رابط للنص المنفصل" width={216} height={47} />
                                                         </FormItem>

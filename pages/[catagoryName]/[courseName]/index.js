@@ -74,6 +74,7 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	const courseDetail = props.courseDetails ? props.courseDetails : null
+	console.log(courseDetail);
 	const maleDates = props.maleDates
 	const femaleDates = props.femaleDates
 	const mixDates = props.mixDates
@@ -320,11 +321,15 @@ export default function Index(props) {
 										<h1 className='head2'>{metaData.title}</h1>
 										{!metaData.content.includes("<list>") ?
 											<div className='flex pt-4'>
-												<p className={styles.discriptionText}>{metaData.content}&nbsp;
-													{(metaData?.tailLink != null || metaData?.tailLink?.length === 0) &&
-														<Link href={metaData.tailLink ?? ""} className='link mx-1' target={'_blank'}>{metaData.tailLinkName}</Link>
-													}
-												</p>
+												{metaData.link ?
+													<Link href={metaData.link} className={`${styles.discriptionText} link`} target={'_blank'}>{metaData.content}</Link>
+													:
+													<p className={styles.discriptionText}>{metaData.content}&nbsp;
+														{(metaData?.tailLink != null || metaData?.tailLink?.length === 0) &&
+															<Link href={metaData.tailLink ?? ""} className='link mx-1' target={'_blank'}>{metaData.tailLinkName}</Link>
+														}
+													</p>
+												}
 											</div>
 											:
 											<ul className='list-disc pr-5 pt-4'>
