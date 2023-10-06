@@ -21,7 +21,6 @@ const ModelForAddItemLibrary = ({
     onCloseModal,
     onDelete,
 }) => {
-    console.log(selectedItem);
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
     const [fileName, setFileName] = useState()
@@ -42,7 +41,6 @@ const ModelForAddItemLibrary = ({
             addItemToFolder(values)
         }
     };
-    console.log(videoDuration);
     const addItemToFolder = async (e) => {
         if (!fileUploadResponceData) {
             setUploadFileError(true)

@@ -50,8 +50,8 @@ export default function CoursesCard(props) {
 	const handleClick = () => {
 		if (contentAccess == false) {
 			setIsModelforcontentAccess(true)
-		}
-		else {
+			return
+		} else {
 			Router.push(`myCourse/${courseDetails.id}`)
 		}
 	}
@@ -59,7 +59,7 @@ export default function CoursesCard(props) {
 	return (
 		<>
 			<div className={styles.cardMainDiv}>
-				<div className='cursor-pointer' onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>
+				<div className='cursor-pointer' onClick={() => handleClick()}>
 					<CoverImg height={140} url={coverImgUrl} />
 				</div>
 				<div className={styles.cardContentDiv}>
@@ -73,7 +73,7 @@ export default function CoursesCard(props) {
 						<>
 							{/* <h1 className={styles.progressText}>مستوى التقدم</h1>
 							<ProgressBar percentage={courseProgress} bgColor={'#2BB741'} fontSize={17} /> */}
-							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة التقدم</button>
+							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة التقدم</button>
 						</>
 						:
 						<>

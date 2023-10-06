@@ -14,8 +14,6 @@ import { mediaUrl } from '../constants/DataManupulation';
 export async function getServerSideProps({ req, res, resolvedUrl }) {
     const orderId = resolvedUrl.split('=')[1].split('%2F')[0]
     const token = resolvedUrl.split('=')[1].split('%2F')[1]
-    console.log(orderId, 17);
-    console.log(token, 18);
     const courseDetail = await axios.get(`${process.env.API_BASE_URL}/order/displayUploadInfo/${orderId}`)
         .then((response) => (response.data)).catch((error) => error);
 

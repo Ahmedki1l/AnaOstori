@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { getMyOrderAPI } from "../services/apisService";
 import { getNewToken, signOutUser } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
+import { mediaUrl } from "../constants/DataManupulation";
 
 
 
@@ -27,7 +28,6 @@ export default function PurchaseInquiry(props) {
 	useEffect(() => {
 		const getMyOrder = async () => {
 			await getMyOrderAPI().then((res) => {
-				console.log(res);
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
@@ -110,15 +110,15 @@ export default function PurchaseInquiry(props) {
 											}
 										</td>
 										<td className={styles.tbodyInvoice}>
-											{data?.status == "accepted" ?
-												<div className="flex items-center justify-center">
+											{(data?.status == "accepted" && data?.invoiceKey) ?
+												<Link href={mediaUrl(data?.invoiceBucket, data?.invoiceKey)} target={'_blank'} className="noUnderlineLink flex items-center justify-center">
 													<div>
 														<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
 													</div>
-													<p className={styles.downloadSearchText}>تحميل الفاتورة</p>
-												</div>
+													<p className={`${styles.downloadSearchText} mr-2`}>تحميل الفاتورة</p>
+												</Link>
 												:
-												<div>لم يتم إنشاء الفاتورة</div>
+												<div>Invoice not generated</div>
 											}
 										</td>
 									</tr>
@@ -184,12 +184,12 @@ export default function PurchaseInquiry(props) {
 											</td>
 											<td className={styles.tbodyInvoice}>
 												{data?.status == "accepted" ?
-													<div className="flex items-center justify-center">
+													<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center justify-center">
 														<div>
 															<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
 														</div>
 														<p className={styles.downloadSearchText}>تحميل الفاتورة</p>
-													</div>
+													</Link>
 													:
 													<div>Invoice not generated</div>
 												}
