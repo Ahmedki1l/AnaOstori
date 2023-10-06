@@ -19,7 +19,7 @@ function Index() {
     const storeData = useSelector((state) => state?.globalStore);
     const router = useRouter()
     const isUserInstructor = storeData?.isUserInstructor;
-    const [selectedItem, setSelectedItem] = useState();
+    const [selectedItem, setSelectedItem] = useState('');
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
@@ -28,13 +28,11 @@ function Index() {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
+        if (router.query.folderType) {
+            setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
+            getfolderList(router.query.folderType)
+        }
     }, [])
-
-    useEffect(() => {
-        getfolderList(selectedItem)
-    }, [])
-
 
     const handleItemSelect = async (selcetedItem) => {
         getfolderList(selcetedItem)
@@ -145,7 +143,7 @@ function Index() {
 
     return (
         <>
-            {!isUserInstructor ?
+            {(!isUserInstructor && selectedItem) ?
                 <div className='flex justify-center items-center'>
                     <Spinner />
                 </div>
