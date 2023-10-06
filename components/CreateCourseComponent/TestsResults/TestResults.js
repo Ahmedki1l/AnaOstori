@@ -76,21 +76,22 @@ const TestResults = (props) => {
     }
 
     const createUpdatedList = (list) => {
-        console.log("list", list);
         const updatedList = list.map(item => {
             if (item.userProfile.exam.length == 0) {
                 item.userProfile.exam.push({
                     grade: '',
                     note: '',
                     present: null,
-                    absent: null
+                    absent: null,
+                    old: false,
                 })
             }
             const updatedExam = item.userProfile.exam.map(examItem => {
                 return {
                     ...examItem,
                     present: examItem.pass === true ? true : null,
-                    absent: examItem.pass === false ? true : null
+                    absent: examItem.pass === false ? true : null,
+                    old: true,
                 };
             });
             return {
@@ -101,7 +102,6 @@ const TestResults = (props) => {
                 }
             };
         });
-        console.log("updatedList", updatedList);
         setStudentList(JSON.parse(JSON.stringify(updatedList)))
         setUpdatedStudentList(JSON.parse(JSON.stringify(updatedList)))
     }
@@ -178,10 +178,24 @@ const TestResults = (props) => {
 
         updatedStudentList.forEach((newItem) => {
             const oldItem = studentList.find((item) => item.enrollmentId === newItem.enrollmentId);
+
             const oldGrade = oldItem?.userProfile?.exam[0]?.grade;
             const newGrade = newItem?.userProfile?.exam[0]?.grade;
 
-            if (oldGrade === undefined && newGrade !== undefined) {
+            const oldPresent = oldItem?.userProfile?.exam[0]?.present;
+            const newPresent = newItem?.userProfile?.exam[0]?.present;
+
+            const oldAbsent = oldItem?.userProfile?.exam[0]?.absent;
+            const newAbsent = newItem?.userProfile?.exam[0]?.absent;
+
+            const oldNote = oldItem?.userProfile?.exam[0]?.note;
+            const newNote = newItem?.userProfile?.exam[0]?.note;
+
+
+            if (newItem?.userProfile?.exam[0]?.old == false && (oldGrade == undefined && newGrade != undefined) ||
+                (oldNote == undefined && newNote != undefined) ||
+                (oldPresent == undefined && newPresent != undefined) ||
+                (oldAbsent == undefined && newAbsent != undefined)) {
                 createDataBody.push({
                     userProfileId: newItem.userProfile.id,
                     enrollmentId: newItem.enrollmentId,
@@ -190,7 +204,7 @@ const TestResults = (props) => {
                     grade: newGrade,
                     note: newItem.userProfile.exam[0].note,
                 });
-            } else if (oldGrade !== newGrade) {
+            } else if (newItem?.userProfile?.exam[0]?.old == true && (oldGrade != newGrade || oldNote != newNote || oldPresent != newPresent || oldAbsent != newAbsent)) {
                 updateDataBody.push({
                     userProfileId: newItem.userProfile.id,
                     enrollmentId: newItem.enrollmentId,
@@ -208,61 +222,53 @@ const TestResults = (props) => {
         let updateAPIBody = {
             data: updateDataBody
         }
-        console.log("createAPIBody", createAPIBody);
-        console.log("updateAPIBody", updateAPIBody);
-        // if (createAPIBody.length > 0) {
-        //     await createStudentExamDataAPI(createAPIBody).then((res) => {
-        //         toast.success(toastSuccessMessage.examCreateSuccessMsg)
-        //         setShowBtnLoader(false)
-        //     }).catch(async (error) => {
-        //         if (error?.response?.status == 401) {
-        //             await getNewToken().then(async (token) => {
-        //                 await createStudentExamDataAPI(createAPIBody).then((res) => {
-        //                     toast.success(toastSuccessMessage.examCreateSuccessMsg)
-        //                     setShowBtnLoader(false)
-        //                 })
-        //             }).catch(error => {
-        //                 console.error("Error:", error);
-        //             });
-        //         }
-        //         setShowBtnLoader(false)
-        //     })
-        // }
-        // else {
-        //     await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-        //         toast.success(toastSuccessMessage.examUpdateSuccessMsg)
-        //         setShowBtnLoader(false)
-        //     }).catch(async (error) => {
-        //         if (error?.response?.status == 401) {
-        //             await getNewToken().then(async (token) => {
-        //                 await updateStudentExamDataAPI(updateAPIBody).then((res) => {
-        //                     toast.success(toastSuccessMessage.examUpdateSuccessMsg)
-        //                     setShowBtnLoader(false)
-        //                 })
-        //             }).catch(error => {
-        //                 console.error("Error:", error);
-        //             });
-        //         }
-        //         setShowBtnLoader(false)
-        //     })
-        // }
+
+        if (createDataBody.length > 0) {
+            await createStudentExamDataAPI(createAPIBody).then((res) => {
+                toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                setShowBtnLoader(false)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await createStudentExamDataAPI(createAPIBody).then((res) => {
+                            toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+                setShowBtnLoader(false)
+            })
+        }
+        else if (updateDataBody.length > 0) {
+            await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                setShowBtnLoader(false)
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                            toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                            setShowBtnLoader(false)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+                setShowBtnLoader(false)
+            })
+        }
     }
 
     const onInputChange = (e, index, type) => {
         const list = [...updatedStudentList]
-        // if (list[index].userProfile.exam.length == 0) {
-        //     list[index].userProfile.exam.push({
-        //         grade: '',
-        //         note: '',
-        //         present: null,
-        //         absent: null
-        //     })
-        // }
         if (type == 'result') {
             list[index].userProfile.exam[0].grade = e.target.value
         } else if (type == 'note') {
             list[index].userProfile.exam[0].note = e.target.value
         }
+        console.log(list);
         setUpdatedStudentList(list)
     }
 
@@ -278,21 +284,13 @@ const TestResults = (props) => {
 
     const handlePassOrFaild = (type, index) => {
         const list = [...updatedStudentList]
-        // if (list[index].userProfile.exam.length == 0) {
-        //     list[index].userProfile.exam.push({
-        //         grade: '',
-        //         note: '',
-        //         present: null,
-        //         absent: null
-        //     })
-        // }
         if (type == 'present') {
             if (list[index].userProfile.exam[0]?.present && list[index].userProfile.exam[0].present == true) {
-                list[index].userProfile.exam[0].absent = false
                 list[index].userProfile.exam[0].present = false
-            } else {
                 list[index].userProfile.exam[0].absent = false
+            } else {
                 list[index].userProfile.exam[0].present = true
+                list[index].userProfile.exam[0].absent = false
             }
         } else {
             if (list[index].userProfile.exam[0].absent && list[index].userProfile.exam[0].absent == true) {
@@ -362,7 +360,7 @@ const TestResults = (props) => {
                         {updatedStudentList.length > 0 &&
                             <tbody className={styles.examTableBodyArea}>
                                 {updatedStudentList?.map((student, index) => {
-                                    console.log("student", student);
+                                    console.log(student);
                                     return (
                                         <tr className={styles.examTableRow} key={student.enrollmentId} >
                                             <td>
@@ -380,7 +378,7 @@ const TestResults = (props) => {
                                                     fontSize={16}
                                                     width={125}
                                                     height={37}
-                                                    value={student?.userProfile?.exam[index]?.grade ? student?.userProfile?.exam[index]?.grade : ''}
+                                                    value={student?.userProfile?.exam[0]?.grade ? student?.userProfile?.exam[0]?.grade : ''}
                                                     placeholder='اكتب الدرجة'
                                                     onChange={(e) => onInputChange(e, index, 'result')}
                                                 />
@@ -400,7 +398,7 @@ const TestResults = (props) => {
                                                     fontSize={16}
                                                     width={324}
                                                     height={37}
-                                                    value={student?.userProfile?.exam[index]?.note ? student?.userProfile?.exam[index]?.note : ''}
+                                                    value={student?.userProfile?.exam[0]?.note ? student?.userProfile?.exam[0]?.note : ''}
                                                     placeholder='إن وجدت'
                                                     onChange={(e) => onInputChange(e, index, 'note')}
                                                 />

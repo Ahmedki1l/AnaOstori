@@ -220,11 +220,11 @@ export default function Login() {
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
-							<p className='mx-2'>تسجيل الدخول بإستخدام Google</p>
+							<p className='mx-2'>تسجيل الدخول باستخدام قوقل</p>
 						</div>
 						<div className={`${styles.loginWithoutPasswordBtnBox} ${styles.appleLoginBtn}`} onClick={() => handleAppleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
-							<p className='mx-2'>تسجيل الدخول بإستخدام Apple</p>
+							<p className='mx-2'>تسجيل الدخول باستخدام ابل</p>
 						</div>
 						<p className={`fontMedium ${styles.gotoPageText}`} > مستخدم جديد؟ <Link href={'/register'} className="primarylink">إنشاء حساب</Link></p>
 					</div>
