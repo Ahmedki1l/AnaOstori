@@ -9,6 +9,7 @@ import { getMyOrderAPI } from "../services/apisService";
 import { getNewToken, signOutUser } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
+import { dateRange, fullDate } from "../constants/DateConverter";
 
 
 
@@ -68,15 +69,18 @@ export default function PurchaseInquiry(props) {
 								return (
 									<tr key={`order${i}`}>
 										<td className={styles.tbodyOrder}>{data.id}</td>
-										<td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td>
+										<td >{fullDate(data.createdAt)}</td>
+										{/* <td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td> */}
 										<td className={styles.tbodyName}>
 											{data.orderItems?.map((student, j = index) => {
 												return (
 													<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
 														<p>{student.fullName}</p>
-														<p>{data.courseName} - {new Date(student?.availability?.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp;
-															{new Date(student?.availability?.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}
+														<p>{data.courseName}
+															{/* - {new Date(student?.availability?.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp; */}
+															{/* {new Date(student?.availability?.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} */}
 														</p>
+														{data.course.type != "on-demand" && <p>{dateRange(student?.availability?.dateFrom, student?.availability?.dateTo)}</p>}
 													</div>
 												)
 											})}
