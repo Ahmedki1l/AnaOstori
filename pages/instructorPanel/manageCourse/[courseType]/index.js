@@ -49,6 +49,7 @@ export default function Index() {
     }, [courseType])
 
     const handleEditCourse = (course) => {
+        console.log(course);
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
         router.push({

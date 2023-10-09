@@ -263,18 +263,19 @@ const TheStudent = (props) => {
                                     />
                                 </FormItem>
                             }
-                            <FormItem
-                                name={'selectgender'}
-                            >
-                                <Select
-                                    fontSize={16}
-                                    width={133}
-                                    height={40}
-                                    placeholder="اختر الجنس "
-                                    OptionData={genders}
-                                    onChange={selectGenderFilter}
-                                />
-                            </FormItem>
+                            {!(courseType == 'physical') &&
+                                <FormItem
+                                    name={'selectgender'}
+                                >
+                                    <Select
+                                        fontSize={16}
+                                        width={133}
+                                        height={40}
+                                        placeholder="اختر الجنس "
+                                        OptionData={genders}
+                                        onChange={selectGenderFilter}
+                                    />
+                                </FormItem>}
                         </div>
                     </Form>
                     {showStudentList &&

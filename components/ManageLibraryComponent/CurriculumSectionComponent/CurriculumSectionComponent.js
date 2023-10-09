@@ -13,6 +13,7 @@ import { toast } from 'react-toastify'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import SectionItems from './SectionItem/SectionItems'
 import Empty from '../../CommonComponents/Empty'
+import { noOfItemTag } from '../../../constants/adminPanelConst/commonConst'
 
 
 
@@ -68,6 +69,9 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             setIsModelForAddFolderOpen(false)
         }).catch((error) => {
             console.log(error);
+            if (error?.response?.data?.message == "section name already in use in this curriculum") {
+                toast.error(toastErrorMessage.sameSectionNameError)
+            }
         })
     }
 
@@ -236,7 +240,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                             {/* <AllIconsComponenet iconName={'updownarrow'} height={20} width={20} color={'#FFFFFF'} /> */}
                                                         </div>
                                                         <p className={styles.sectionTitle}>{section.name}</p>
-                                                        <p className={styles.numberOfItems}>({section.items.length} عنصر) </p>
+                                                        <p className={styles.numberOfItems}>({noOfItemTag(section.items.length)}) </p>
                                                     </div>
                                                     <div className={styles.headerActionWrapper} >
                                                         <div style={{ height: '25px' }} onClick={() => handleAddItemInSection(section)}>
@@ -278,19 +282,22 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                 </DragDropContext>
 
             }
-            <ModelWithOneInput
-                open={isModelForAddFolderOpen}
-                setOpen={setIsModelForAddFolderOpen}
-                isEdit={editSectionName}
-                onSave={editSectionName ? handleEditSection : handleCreateSection}
-                itemName={selectedSection?.name}
-            />
-            <ModelForDeleteItems
-                ismodelForDeleteItems={ismodelForDeleteItems}
-                onCloseModal={onCloseModal}
-                deleteItemType={deleteItemType}
-                onDelete={handleDeleteSection}
-            />
+            {isModelForAddFolderOpen &&
+                <ModelWithOneInput
+                    open={isModelForAddFolderOpen}
+                    setOpen={setIsModelForAddFolderOpen}
+                    isEdit={editSectionName}
+                    onSave={editSectionName ? handleEditSection : handleCreateSection}
+                    itemName={selectedSection?.name}
+                    curriCulumSection={'addSection'}
+                />}
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={deleteItemType}
+                    onDelete={handleDeleteSection}
+                />}
             {isModelForAddCurriculum &&
                 <ModelForAddItemCurriculum
                     isModelForAddCurriculum={isModelForAddCurriculum}

@@ -37,10 +37,13 @@ const ManageLibraryTableComponent = ({
     const [fileSrc, setFileSrc] = useState()
     const [videoModalOpen, setVideoModalOpen] = useState(false)
 
+    const [editCategory, setEditCategory] = useState(false)
+
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
             setSelectedFolder(item)
+            setEditCategory(true)
         } else {
             setSelectedItem(item)
             setIsModelForAddItemOpen(true)
@@ -270,7 +273,7 @@ const ManageLibraryTableComponent = ({
                 open={isModelForAddFolderOpen}
                 setOpen={setIsModelForAddFolderOpen}
                 onSave={handleEditFolder}
-                isEdit={true}
+                isEdit={editCategory}
                 itemName={selectedFolder?.name}
                 onDelete={handleDeleteFolderData}
             />}

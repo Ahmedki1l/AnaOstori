@@ -8,6 +8,7 @@ import { getCurriculumIdsAPI, updateCurriculumAPI } from '../../../services/apis
 import { useSelector, useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../CommonComponents/Empty'
+import { noOfItemTag } from '../../../constants/adminPanelConst/commonConst'
 
 const CoursePathLibrary = () => {
 
@@ -80,7 +81,7 @@ const CoursePathLibrary = () => {
                         <table className={styles.tableArea}>
                             <thead className={styles.tableHeaderArea}>
                                 <tr>
-                                    <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>عنوان المقرر</th>
+                                    <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>العنوان</th>
                                     <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>تاريخ الإنشاء  </th>
                                     <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>اخر تعديل</th>
                                     <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>حالة الاستخدام</th>
@@ -97,7 +98,7 @@ const CoursePathLibrary = () => {
                                                         <AllIconsComponenet iconName={'redBook'} height={24} width={24} />
                                                         {/* <AllIconsComponenet iconName={'greenBook'} height={24} width={24} /> */}
                                                         <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                        <p className={styles.numberOfAddedVideo}>{` (${item?.itemCount}   عنصر  )`}</p>
+                                                        <p className={styles.numberOfAddedVideo}>({noOfItemTag(item?.itemCount)})</p>
                                                     </div>
                                                 </td>
                                                 <td>{fullDate(item?.createdAt)}</td>

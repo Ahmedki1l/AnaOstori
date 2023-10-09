@@ -157,7 +157,7 @@ const Index = () => {
                                             <td>{fullDate(category.updatedAt)}</td>
                                             <td>
                                                 <div className={styles.actions}>
-                                                    <div className='cursor-pointer' onClick={() => handleEditCategory(category)}>
+                                                    <div className='cursor-pointer pl-2' onClick={() => handleEditCategory(category)}>
                                                         <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
                                                     <div className='cursor-pointer' onClick={() => handleDeleteCatagory(category)}>

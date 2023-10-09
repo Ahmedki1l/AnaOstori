@@ -44,6 +44,7 @@ const ModelForAddItemCurriculum = ({
     const [tableLoading, setTableLoading] = useState(false)
     const [videoModalOpen, setVideoModalOpen] = useState(false)
     const [fileSrc, setFileSrc] = useState()
+    const [updatedFolderList, setUpdatedFolderList] = useState([])
 
     const tableColumns = [
         {
@@ -189,6 +190,7 @@ const ModelForAddItemCurriculum = ({
     const handleItemSelect = async (type) => {
         setSelectedFolderType(type)
         setRowSelection(false)
+        setUpdatedFolderList([])
     }
 
     const showFolderList = () => {
@@ -211,6 +213,16 @@ const ModelForAddItemCurriculum = ({
             query: { folderType: selectedFolderType },
         });
     }
+
+    const handleSearchName = (e) => {
+        const newItemList = [...folderList]
+        const filteredList = newItemList.filter((item) => {
+            const itemData = item.itemName.props.item.name.toLowerCase();
+            return itemData.includes(e.target.value.toLowerCase());
+        });
+        setUpdatedFolderList(filteredList)
+    }
+
     return (
         <div>
             <StylesModal
@@ -237,6 +249,7 @@ const ModelForAddItemCurriculum = ({
                         <div className={styles.searchWrapper}>
                             <SearchInput
                                 placeholder={'ابحث باسم العنصر'}
+                                onChange={(e) => handleSearchName(e)}
                             />
                         </div>
                         {typeOfListdata == "item" &&
@@ -245,7 +258,7 @@ const ModelForAddItemCurriculum = ({
                                     backpathForTabel={true}
                                     backPathArray={
                                         [
-                                            { lable: `${selectedFolderType}`, handleClick: showFolderList },
+                                            { lable: `${selectedFolderType == 'video' ? 'الفيديوهات' : selectedFolderType == 'file' ? 'الملفات' : 'الاختبارات'}`, handleClick: showFolderList },
                                             { lable: `${selectedFolder?.name}`, link: null },
                                         ]
                                     }
@@ -256,7 +269,8 @@ const ModelForAddItemCurriculum = ({
                             minheight={typeOfListdata == "item" ? 250 : 400}
                             rowSelection={rowSelection}
                             tableColumns={tableColumns}
-                            tableData={folderList.length > 0 ? folderList : []}
+                            tableData={updatedFolderList.length > 0 ? updatedFolderList : [] || folderList.length > 0 ? folderList : []}
+                            // tableData={folderList.length > 0 ? folderList : []}
                             onItemSelection={onItemSelection}
                             tableLoading={tableLoading}
                             onEmptyBtnClick={onEmptyBtnClick}
