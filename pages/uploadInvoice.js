@@ -35,7 +35,6 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 export default function ApproveTrans(props) {
     const courseDetail = props.courseDetail
     const token = props.token
-    // console.log(token);
     const router = useRouter()
     const noOfUser = PaymentConst.noOfUsersTag2
     const bankDetails = PaymentConst.bankDetails
