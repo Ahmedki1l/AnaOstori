@@ -30,6 +30,7 @@ const ModelForAddCategory = ({
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [isCatagoryPublished, setIsCatagoryPublished] = useState(isEdit ? editCategory.published : false)
     const [uploadfileError, setUploadFileError] = useState(false)
+    const [fileName, setFileName] = useState()
 
     useEffect(() => {
         categoryForm.setFieldsValue(editCategory)
@@ -90,6 +91,11 @@ const ModelForAddCategory = ({
             setShowBtnLoader(true)
             values.id = editCategory.id
             values.published = isCatagoryPublished
+
+            if (values.order == editCategory.order) delete values.order
+            if (values.name == editCategory.name) delete values.name
+            if (values.description == editCategory.description) delete values.description
+
             if (fileUploadResponceData) {
                 values.pictureKey = fileUploadResponceData.key
                 values.pictureBucket = fileUploadResponceData.bucket
@@ -113,8 +119,8 @@ const ModelForAddCategory = ({
                         console.error("Error:", error);
                     });
                 }
-                else {
-                    toast.error(error.response.data.errors[0].message)
+                else if (error?.response?.data?.errors?.length > 0) {
+                    toast.error(error?.response?.data?.errors[0]?.message)
                 }
                 setShowBtnLoader(false)
             })
@@ -189,6 +195,7 @@ const ModelForAddCategory = ({
                             <p className={`mb-3 fontBold ${styles.addInstructor}`}>{adminPanelCategoryConst.categoryPhoto}</p>
                             <UploadFileForModel
                                 fileName={editCategory?.pictureKey}
+                                setFileName={setFileName}
                                 uploadResData={setFileUploadResponceData}
                                 fileType={'.jpg , .png'}
                                 accept={"file"}
