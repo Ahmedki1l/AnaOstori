@@ -99,7 +99,7 @@ const TheStudent = (props) => {
                     itemId: newObj.quizId,
                     grade: newObj.grade ?? null,
                     note: newObj.note ?? null,
-                    pass: newObj.present ? true : null
+                    pass: newObj.present ? true : newObj.absent ? false : null
                 });
             } else if (newObj.old == true && (oldGrade != newGrade || oldNote != newNote || oldPresent != newPresent || oldAbsent != newAbsent)) {
                 updateDataBody.push({
@@ -109,7 +109,7 @@ const TheStudent = (props) => {
                     itemId: newObj.quizId,
                     grade: newObj.grade ?? null,
                     note: newObj.note ?? null,
-                    pass: newObj.present ? true : null
+                    pass: newObj.present ? true : newObj.absent ? false : null
                 });
             }
         });
