@@ -1,6 +1,6 @@
 .noDateFormWrapper {
     border-radius: 6px;
-    max-width: 530px;
+    max-width: 358px;
     padding: 1rem 0;
     border: 1px solid #a9a9a9;
 }
@@ -19,13 +19,12 @@
     padding: 0.5rem 1rem;
 }
 
-.btnBox {
-    padding: 0 1rem;
-}
-
 .btnBox1 {
-    width: 49%;
     padding: 0 1rem;
+
+    button {
+        font-size: 18px;
+    }
 }
 
 .loginDialogWrapper {

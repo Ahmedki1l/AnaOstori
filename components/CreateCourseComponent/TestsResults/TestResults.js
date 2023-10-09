@@ -77,21 +77,43 @@ const TestResults = (props) => {
 
     const createUpdatedList = (list) => {
         const updatedList = list.map(item => {
-            const updatedExam = item.userProfile.exam.map(examItem => {
-                return {
-                    ...examItem,
-                    present: examItem.pass === true ? true : null,
-                    absent: examItem.pass === false ? true : null,
-                    old: true,
-                };
-            });
-            return {
-                ...item,
-                userProfile: {
-                    ...item.userProfile,
-                    exam: updatedExam
+            if (item.userProfile.exam.length == 0) {
+                const updatedExam = {
+                    grade: null,
+                    note: null,
+                    present: null,
+                    absent: null,
+                    old: false,
+                    courseId: courseId,
+                    enrollmentId: item.enrollmentId,
+                    itemId: selectedExam,
+                    userProfileId: item.userProfile.id
                 }
-            };
+                return {
+                    ...item,
+                    userProfile: {
+                        ...item.userProfile,
+                        exam: [updatedExam]
+                    }
+                }
+            }
+            else {
+                const updatedExam = item.userProfile.exam.map(examItem => {
+                    return {
+                        ...examItem,
+                        present: examItem.pass === true ? true : null,
+                        absent: examItem.pass === false ? true : null,
+                        old: true,
+                    };
+                });
+                return {
+                    ...item,
+                    userProfile: {
+                        ...item.userProfile,
+                        exam: updatedExam
+                    }
+                };
+            }
         });
         setStudentList(JSON.parse(JSON.stringify(updatedList)))
         setUpdatedStudentList(JSON.parse(JSON.stringify(updatedList)))
@@ -170,23 +192,25 @@ const TestResults = (props) => {
         updatedStudentList.forEach((newItem) => {
             const oldItem = studentList.find((item) => item.enrollmentId === newItem.enrollmentId);
 
-            const oldGrade = oldItem?.userProfile?.exam[0]?.grade;
-            const newGrade = newItem?.userProfile?.exam[0]?.grade;
+            const oldExam = oldItem?.userProfile?.exam[0]
+            const newExam = newItem?.userProfile?.exam[0]
 
-            const oldPresent = oldItem?.userProfile?.exam[0]?.present;
-            const newPresent = newItem?.userProfile?.exam[0]?.present;
+            const oldGrade = oldExam?.grade;
+            const newGrade = newExam?.grade;
 
-            const oldAbsent = oldItem?.userProfile?.exam[0]?.absent;
-            const newAbsent = newItem?.userProfile?.exam[0]?.absent;
+            const oldPresent = oldExam?.present;
+            const newPresent = newExam?.present;
 
-            const oldNote = oldItem?.userProfile?.exam[0]?.note;
-            const newNote = newItem?.userProfile?.exam[0]?.note;
+            const oldAbsent = oldExam?.absent;
+            const newAbsent = newExam?.absent;
 
+            const oldNote = oldExam?.note;
+            const newNote = newExam?.note;
 
-            if (newItem?.userProfile?.exam[0]?.old == false && (oldGrade == undefined && newGrade != undefined) ||
-                (oldNote == undefined && newNote != undefined) ||
-                (oldPresent == undefined && newPresent != undefined) ||
-                (oldAbsent == undefined && newAbsent != undefined)) {
+            if (newExam?.old == false && ((oldGrade == null && newGrade != null) ||
+                (oldNote == null && newNote != null) ||
+                (oldPresent == null && newPresent != null) ||
+                (oldAbsent == null && newAbsent != null))) {
                 createDataBody.push({
                     userProfileId: newItem.userProfile.id,
                     enrollmentId: newItem.enrollmentId,
@@ -194,8 +218,9 @@ const TestResults = (props) => {
                     courseId: courseId,
                     grade: newGrade,
                     note: newItem.userProfile.exam[0].note,
+                    pass: newExam.present ? true : newExam.absent ? false : null
                 });
-            } else if (newItem?.userProfile?.exam[0]?.old == true && (oldGrade != newGrade || oldNote != newNote || oldPresent != newPresent || oldAbsent != newAbsent)) {
+            } else if (newExam?.old == true && (oldGrade != newGrade || oldNote != newNote || oldPresent != newPresent || oldAbsent != newAbsent)) {
                 updateDataBody.push({
                     userProfileId: newItem.userProfile.id,
                     enrollmentId: newItem.enrollmentId,
@@ -203,6 +228,7 @@ const TestResults = (props) => {
                     courseId: courseId,
                     grade: newGrade,
                     note: newItem.userProfile.exam[0].note,
+                    pass: newExam.present ? true : newExam.absent ? false : null
                 });
             }
         });
@@ -258,7 +284,7 @@ const TestResults = (props) => {
             if (list[index].userProfile.exam.length == 0) {
                 list[index].userProfile.exam.push({
                     grade: e.target.value,
-                    note: '',
+                    note: null,
                     present: null,
                     absent: null,
                     old: false,

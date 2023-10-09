@@ -151,8 +151,8 @@ const iosProductIdList = [
 ]
 
 const genders = [
-    { value: 'male', label: 'شاب' },
-    { value: 'female', label: 'بنت' }
+    { value: 'male', label: 'ذكر' },
+    { value: 'female', label: 'أنثى' }
 ]
 
 const bankDetails = [

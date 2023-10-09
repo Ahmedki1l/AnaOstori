@@ -83,6 +83,19 @@ const Index = () => {
         })
     }
 
+    const handleDeleteCatagory = async (item) => {
+        let body = {
+            id: item.id,
+            isDeleted: true
+        }
+        await editCatagoryAPI(body).then((res) => {
+            console.log(res);
+            getCategoryListReq()
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
     return (
         <>
             {loading ?
@@ -146,6 +159,9 @@ const Index = () => {
                                                 <div className={styles.actions}>
                                                     <div className='cursor-pointer' onClick={() => handleEditCategory(category)}>
                                                         <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
+                                                    </div>
+                                                    <div className='cursor-pointer' onClick={() => handleDeleteCatagory(category)}>
+                                                        <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
                                                     </div>
                                                 </div>
                                             </td>

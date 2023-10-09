@@ -168,6 +168,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             delete obj.updatedAt
             obj.order = `${index + 1}`
             obj.courseId = editCourseData.id
+            // obj.tailLinkName = obj.tailLinkName ? obj.tailLinkName : ''
+            // obj.tailLink = obj.tailLink ? obj.tailLink : ''
+            // obj.link = obj.link ? obj.link : ''
+            // obj.content = obj.content ? obj.content : ''
             deleteNullFromObj(obj)
             return obj
         })
