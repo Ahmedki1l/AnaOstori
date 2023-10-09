@@ -137,7 +137,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                                 </div>
                                                 <div className={styles.sectionTitle}>
                                                     <p>{data.name}</p>
-                                                    <p className={styles.duration}>(efreg)</p>
+                                                    <p className={styles.duration}>({data.duration})</p>
                                                 </div>
                                             </div>
                                             <div className={styles.curriculimDetailsActions}>

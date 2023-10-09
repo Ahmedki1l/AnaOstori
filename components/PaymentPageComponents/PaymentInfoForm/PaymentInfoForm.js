@@ -108,8 +108,8 @@ export default function PaymentInfoForm(props) {
 					<p className='py-4 text-center w-100'>مراجعة الطلب والدفع</p>
 				</div>
 			}
-			<SecondPageIndicator />
-			<div className={styles.paymentInfoMainArea}>
+			{createdOrder.course.type != "on-demand" && <SecondPageIndicator />}
+			<div className={`${styles.paymentInfoMainArea} createdOrder.course.type != "on-demand" && pt-4`}>
 				<div className={`px-4 ${styles.paymentInfoContainer}`}>
 					<h1 className='head2'>اختار طريقة الدفع</h1>
 					<div className={styles.paymentInfoDiv}>

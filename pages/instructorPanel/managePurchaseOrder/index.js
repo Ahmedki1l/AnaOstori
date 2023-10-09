@@ -36,9 +36,11 @@ const Index = () => {
             render: (text, _record) => {
                 const changeStatusForAssistantKey = async () => {
                     let body = {
-                        orderUpdate: true,
-                        id: _record?.id,
-                        assistanceAquired: !text
+                        orderData: {
+                            orderUpdate: true,
+                            id: _record?.id,
+                            assistanceAquired: !text
+                        }
                     }
                     await createOrderAPI(body).then((res) => {
                     }).catch(async (error) => {

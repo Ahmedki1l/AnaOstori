@@ -23,14 +23,13 @@ export const metadata = {
 export async function getServerSideProps(context) {
 	const params = context.query
 	try {
-		// const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
+		const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`)
 		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
-		const [catagories, homeMetaData] = await Promise.all([
-
+		const [news, catagories, homeMetaData] = await Promise.all([
 			// const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
-			// newsReq,
+			newsReq,
 			catagoriesReq,
 			// homeReviewsReq,
 			homeMetaDataReq
@@ -40,6 +39,7 @@ export async function getServerSideProps(context) {
 			props: {
 				catagories: catagories.data,
 				homeMetaData: homeMetaData.data,
+				news: news.data,
 			}
 
 			// props: {

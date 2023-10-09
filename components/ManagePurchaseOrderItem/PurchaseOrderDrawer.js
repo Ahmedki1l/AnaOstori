@@ -51,10 +51,12 @@ const PurchaseOrderDrawer = (props) => {
         }
         else {
             let body = {
-                orderUpdate: true,
-                id: selectedOrder.id,
-                status: value.status,
-                // failedReason: value.failedReason 
+                orderData: {
+                    orderUpdate: true,
+                    id: selectedOrder.id,
+                    status: value.status,
+                    // failedReason: value.failedReason }
+                }
             }
             await createOrderAPI(body).then((res) => {
                 props.onClose(true)

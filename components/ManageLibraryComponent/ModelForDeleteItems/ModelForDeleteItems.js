@@ -41,7 +41,7 @@ const ModelForDeleteItems = ({
             btnText: 'تأكيد الحذف',
         },
         curriculum: {
-            title: 'تأكيد حذف المقرر',
+            title: 'تم حذف المقرر بنجاح',
             messageText: 'متأكد انك تبي تحذف المقرر؟',
             btnText: 'تأكيد الحذف',
         },

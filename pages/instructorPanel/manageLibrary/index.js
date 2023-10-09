@@ -210,13 +210,14 @@ function Index() {
                     </div>
                 </div>
             }
-            <ModelWithOneInput
-                open={isModelForAddFolderOpen}
-                setOpen={setIsModelForAddFolderOpen}
-                onSave={handleCreateFolder}
-                onDelete={handleDeleteSection}
-                isEdit={false}
-            />
+            {isModelForAddFolderOpen &&
+                <ModelWithOneInput
+                    open={isModelForAddFolderOpen}
+                    setOpen={setIsModelForAddFolderOpen}
+                    onSave={handleCreateFolder}
+                    onDelete={handleDeleteSection}
+                    isEdit={false}
+                />}
             {isModelForAddItemOpen &&
                 <ModelForAddItemLibrary
                     isModelForAddItemOpen={isModelForAddItemOpen}
