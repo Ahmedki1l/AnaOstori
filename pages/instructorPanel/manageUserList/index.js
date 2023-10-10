@@ -39,7 +39,7 @@ const Index = () => {
                 return (
                     <div className='flex items-center'>
                         <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={_record.avatarKey == null ? _record.avatar : ''} />
-                        <p className='pr-2'>{_record.fullName ? _record.fullName : `${_record.firstName} ${_record.lastName}`}</p>
+                        <p className='pr-2'>{_record.firstName ? _record.firstName : _record.fullName}</p>
                     </div>
                 )
 
@@ -97,6 +97,15 @@ const Index = () => {
             title: 'الايميل',
             dataIndex: 'email',
             align: 'center',
+            render: (text) => {
+                if (text) {
+                    return (
+                        <Link target={'_blank'} href={`mailto:${text}`}>{text}</Link>
+                    )
+                } else {
+                    return '-'
+                }
+            }
         },
         {
             title: 'رقم الجوال',
@@ -138,7 +147,7 @@ const Index = () => {
                     setSelectedUser(_record)
                 }
                 return (
-                    <div onClick={handleEditUsers}>
+                    <div className='cursor-pointer' onClick={handleEditUsers}>
                         <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
                     </div>
                 )

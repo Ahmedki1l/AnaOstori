@@ -220,7 +220,7 @@ const ModelForAddItemLibrary = ({
                                         setFileName={setFileName}
                                         uploadResData={setFileUploadResponceData}
                                         fileType={folderType == 'video' ? '.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv' : '.pdf , .doc , .docx'}
-                                        accept={folderType == 'video' ? "video" : "image"}
+                                        accept={folderType == 'video' ? "video" : "file"}
                                         placeHolderName={folderType == 'video' ? 'ارفق الفيديو' : 'ارفق الملف'}
                                         setShowBtnLoader={setShowBtnLoader}
                                         setVideoDuration={setVideoDuration}

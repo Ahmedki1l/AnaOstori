@@ -26,7 +26,6 @@ export default function Navbar() {
 	const [showSubMenu, setShowSubMenuShown] = useState()
 	const prevSubMenu = useRef();
 	const [catagories, setCatagories] = useState()
-	const [curriculumIds, setCurriculumIds] = useState();
 	const [open, setOpen] = useState(false);
 
 	const router = useRouter();
@@ -46,14 +45,12 @@ export default function Navbar() {
 	useEffect(() => {
 		const fetchResults = async () => {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-				setCatagories(res?.data),
-					setCurriculumIds(res?.data)
+				setCatagories(res?.data)
 			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-							setCatagories(res?.data),
-								setCurriculumIds(res?.data)
+							setCatagories(res?.data)
 						})
 					})
 				}
@@ -61,7 +58,7 @@ export default function Navbar() {
 			})
 		};
 		fetchResults();
-	}, [setCatagories, setCurriculumIds])
+	}, [setCatagories])
 
 
 	useEffect(() => {
@@ -145,6 +142,7 @@ export default function Navbar() {
 	}
 
 	const handleClickCourseName = (submenu, menu, lang) => {
+		console.log(submenu);
 		setShowSubMenuShown()
 		setIsMenuShow(false)
 		if (submenu.isPurchasable == false) {

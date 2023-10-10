@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import BackToPath from '../../CommonComponents/BackToPath';
 import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo';
 import { mediaUrl } from '../../../constants/DataManupulation';
+import { type } from 'jquery';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -44,7 +45,8 @@ const ModelForAddItemCurriculum = ({
     const [tableLoading, setTableLoading] = useState(false)
     const [videoModalOpen, setVideoModalOpen] = useState(false)
     const [fileSrc, setFileSrc] = useState()
-    const [updatedFolderList, setUpdatedFolderList] = useState([])
+    const [tableData, setTableData] = useState([])
+    const [serchInput, setSerchInput] = useState('')
 
     const tableColumns = [
         {
@@ -97,7 +99,7 @@ const ModelForAddItemCurriculum = ({
 
     const IconCell = ({ item, index, icontype }) => {
         return (
-            <div className='flex items-center' onClick={() => handleClickOnIconCell(item, index)}>
+            <div className='flex items-center cursor-pointer' onClick={() => handleClickOnIconCell(item, index)}>
                 {icontype == "folder" && <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />}
                 {icontype == "item" &&
                     <Icon
@@ -110,12 +112,14 @@ const ModelForAddItemCurriculum = ({
         )
     }
     const handleClickOnIconCell = async (selectedFolder, index) => {
+        setSerchInput('')
         setSelectedFolder(selectedFolder)
         setTableLoading(true)
         let body = {
             folderId: selectedFolder.id
         }
         await getItemListAPI(body).then((res) => {
+            console.log("itemList", res);
             setTypeOfListData("item")
             let data = res?.data?.filter(item => item !== null).sort((a, b) =>
                 a.createdAt.localeCompare(b.createdAt)).map((item) => {
@@ -126,12 +130,40 @@ const ModelForAddItemCurriculum = ({
                         key: item.id
                     }
                 })
+            console.log(data);
+            setSerchInput('')
+            setTableData(data)
             setFolderList(data)
             setTableLoading(false)
-        }).catch((error) => {
+        }).catch(async (error) => {
             setTableLoading(false)
+            setTableData([])
             setFolderList([])
             console.log(error);
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getItemListAPI(data).then((res) => {
+                        setTypeOfListData("item")
+                        let data = res?.data?.filter(item => item !== null).sort((a, b) =>
+                            a.createdAt.localeCompare(b.createdAt)).map((item) => {
+                                return {
+                                    itemName: <IconCell item={item} icontype={"item"} />,
+                                    createdAt: fullDate(item?.createdAt),
+                                    updatedAt: fullDate(item?.updatedAt),
+                                    key: item.id
+                                }
+                            })
+                    })
+                    setSerchInput('')
+                    setRowSelection(false)
+                    setTableData(data)
+                    setFolderList(data)
+                    setTableLoading(false)
+
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
         })
         setRowSelection(true)
         setSelectedRow(index)
@@ -157,13 +189,16 @@ const ModelForAddItemCurriculum = ({
                     key: item.id
                 }
             })
+            setSerchInput('')
             setRowSelection(false)
             setFolderList(data)
+            setTableData(data)
             setTableLoading(false)
         }).catch(async (error) => {
             console.log(error);
             setTableLoading(false)
             setFolderList([])
+            setTableData([])
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getFolderListAPI(data).then((res) => {
@@ -176,8 +211,10 @@ const ModelForAddItemCurriculum = ({
                                 key: item.id
                             }
                         })
+                        setSerchInput('')
                         setRowSelection(false)
                         setFolderList(data)
+                        setTableData(data)
                         setTableLoading(false)
                     })
                 }).catch(error => {
@@ -190,7 +227,6 @@ const ModelForAddItemCurriculum = ({
     const handleItemSelect = async (type) => {
         setSelectedFolderType(type)
         setRowSelection(false)
-        setUpdatedFolderList([])
     }
 
     const showFolderList = () => {
@@ -215,12 +251,17 @@ const ModelForAddItemCurriculum = ({
     }
 
     const handleSearchName = (e) => {
-        const newItemList = [...folderList]
-        const filteredList = newItemList.filter((item) => {
-            const itemData = item.itemName.props.item.name.toLowerCase();
-            return itemData.includes(e.target.value.toLowerCase());
-        });
-        setUpdatedFolderList(filteredList)
+        setSerchInput(e.target.value)
+        if (e.target.value == "") {
+            setTableData(folderList)
+        } else {
+            const newItemList = [...folderList]
+            const filteredList = newItemList.filter((item) => {
+                const itemData = item.itemName.props.item.name.toLowerCase();
+                return itemData.includes(e.target.value.toLowerCase());
+            });
+            setTableData(filteredList)
+        }
     }
 
     return (
@@ -250,6 +291,7 @@ const ModelForAddItemCurriculum = ({
                             <SearchInput
                                 placeholder={'ابحث باسم العنصر'}
                                 onChange={(e) => handleSearchName(e)}
+                                value={serchInput}
                             />
                         </div>
                         {typeOfListdata == "item" &&
@@ -266,11 +308,10 @@ const ModelForAddItemCurriculum = ({
                             </div>
                         }
                         <Table
-                            minheight={typeOfListdata == "item" ? 250 : 400}
+                            minheight={400}
                             rowSelection={rowSelection}
                             tableColumns={tableColumns}
-                            tableData={updatedFolderList.length > 0 ? updatedFolderList : [] || folderList.length > 0 ? folderList : []}
-                            // tableData={folderList.length > 0 ? folderList : []}
+                            tableData={tableData.length > 0 ? tableData : []}
                             onItemSelection={onItemSelection}
                             tableLoading={tableLoading}
                             onEmptyBtnClick={onEmptyBtnClick}
@@ -279,7 +320,7 @@ const ModelForAddItemCurriculum = ({
                         />
                         {typeOfListdata == "item" &&
                             <div className={styles.createSectionBtnBox}>
-                                <button className='primarySolidBtn' type='submit' onClick={() => handleItemAddInToSection()}>إضافة x عنصر</button>
+                                <button className='primarySolidBtn' type='submit' onClick={() => handleItemAddInToSection()}>إضافة</button>
                             </div>
                         }
                     </div>

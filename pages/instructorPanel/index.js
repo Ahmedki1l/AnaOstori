@@ -55,10 +55,10 @@ export default function Index() {
                     <AllIconsComponenet width={39} height={39} iconName='manageUsers' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة بيانات المستخدمين</p>
                 </Link>
-                <Link href={'/instructorPanel/manageCouponCourse'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                {/* <Link href={'/instructorPanel/manageCouponCourse'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل كوبونات الخصم</p>
-                </Link>
+                </Link> */}
 
             </div>
 

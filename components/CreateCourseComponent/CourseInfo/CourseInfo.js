@@ -53,14 +53,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             value: obj.id
         };
     });
-
-    const curriculum = curriculumIds.map((obj) => {
+    const curriculum = curriculumIds.filter((obj) => obj.itemCount != 0).map((obj) => {
         return {
             key: obj.id,
             label: obj.name,
             value: obj.id
         }
     })
+    console.log(curriculum);
 
     const onFinishCreateCourse = async (values) => {
         setShowLoader(true)
@@ -215,8 +215,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         values.type = courseType == "onDemand" ? "on-demand" : courseType
         // delete values.courseMetaData
         // delete values.courseDetailsMetaData
-
-        console.log(values);
 
         if (courseType != "physical") {
             const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
@@ -403,6 +401,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             }
         })
     }
+    const filterOption = (input, option) =>
+        (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
     return (
         <div>
@@ -420,7 +420,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         rules={[{ required: true, message: 'اختار المجال' }]} >
                         <Select
                             placeholder='اختار المجال'
-                            OptionData={catagoriesItem} />
+                            OptionData={catagoriesItem}
+                            filterOption={filterOption}
+                        />
                     </FormItem>
                     <FormItem
                         name={'curriculumId'}
@@ -428,7 +430,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         <Select
                             placeholder='اختار مقرر الدورة'
                             OptionData={curriculum}
-                            filterOption={false} />
+                            filterOption={filterOption}
+                        />
                     </FormItem>
                     <FormItem
                         name={'englishCourse'}

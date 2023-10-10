@@ -123,6 +123,7 @@ export default function AccountInformation() {
     }
 
     const handleUpdateDetails = async (type) => {
+        if (isPhoneNumberError) return
         setShowLoader(true)
         let body = {};
         if (type == 'phone') {
@@ -261,7 +262,7 @@ export default function AccountInformation() {
                                                     <div className={styles.IconDiv}>
                                                         <AllIconsComponenet height={20} width={20} iconName={'phone'} color={'#00000080'} />
                                                     </div>
-                                                    <input className='formInput' id="phone" type="tel" name="phone" title="Phone" placeholder=' '
+                                                    <input className='formInput' id="phone" type="number" name="phone" title="Phone" placeholder=' '
                                                         value={phoneNumber}
                                                         onChange={(e) => {
                                                             if (e.target.value.length > 10) return
