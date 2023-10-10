@@ -133,7 +133,6 @@ export default function AttendanceTable(props) {
                     <div className={styles.tableFirstColoumHead}>
                         <div className={styles.tableFirstColoumHeadSubWrapper}>
                             <p>الطالب</p>
-                            <p>نسبة الحضور</p>
                         </div>
                     </div>
                     <div className='flex'>
@@ -167,13 +166,9 @@ export default function AttendanceTable(props) {
                                 <div className={styles.tableFirstColoumCell} >
                                     <div className='flex items-center px-3'>
                                         <div>
-                                            {/* <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student.studentAvatarKey == null ? student.studentAvatar : `${baseUrl}/${student.studentAvatarKey}`} /> */}
                                             <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student.studentAvatarKey == null ? student.studentAvatar : `${mediaUrl(student.studentAvatarBucket, student.studentAvatarKey)}`} />
                                         </div>
                                         <div className='pr-3'><p>{student.studentName}</p></div>
-                                    </div>
-                                    <div className={styles.studentPercantageBox}>
-                                        <p>{student.attendancePercentage}%</p>
                                     </div>
                                 </div>
                                 <div className='flex'>

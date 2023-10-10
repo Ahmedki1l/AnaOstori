@@ -18,7 +18,7 @@ import Input from '../antDesignCompo/Input'
 const PurchaseOrderDrawer = (props) => {
     const selectedOrder = props.selectedOrder
     const [orderForm] = Form.useForm()
-    const paymentStatus = paymentConst.paymentStatus
+    const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [showBtnLoader, setShowBtnLoader] = useState(false)
 
     const handleSaveOrder = async (value) => {
@@ -94,7 +94,7 @@ const PurchaseOrderDrawer = (props) => {
                 <Select
                     width={425}
                     height={47}
-                    OptionData={paymentStatus}
+                    OptionData={selectedOrder?.paymentMethod != 'bank_transfer' ? paymentStatusOther : paymentStatusBank}
                     placeholder='حالة الحجز'
                 />
             </FormItem>
@@ -119,7 +119,12 @@ const PurchaseOrderDrawer = (props) => {
             }
             <p style={{ fontSize: '18px' }}>طريقة الدفع</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.paymentMethod}</p>
+                {/* <p>{selectedOrder.paymentMethod}</p> */}
+                <p>
+                    {selectedOrder.paymentMethod == 'hyperpay' ? selectedOrder.cardType == 'credit' ? selectedOrder.cardBrand == 'visa' ? 'فيزا' : 'ماستر كارد' :
+                        selectedOrder.cardType == 'mada' ? 'مدى' : 'ابل باي' :
+                        (selectedOrder.paymentMethod == 'bank_transfer' ? 'تحويل بنكي' : 'مشتريات داخل التطبيق')}
+                </p>
             </div>
             {selectedOrder.reciptKey &&
                 <>
