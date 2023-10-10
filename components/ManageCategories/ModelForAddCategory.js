@@ -128,11 +128,11 @@ const ModelForAddCategory = ({
     }
 
     const onChange = async (checked) => {
-        if (checked == true) {
-            toast.success(adminPanelCategoryConst.showCategoryMsg)
-        } else {
-            toast.success(adminPanelCategoryConst.hideCategoryMsg)
-        }
+        // if (checked == true) {
+        //     toast.success(adminPanelCategoryConst.showCategoryMsg)
+        // } else {
+        //     toast.success(adminPanelCategoryConst.hideCategoryMsg)
+        // }
         setIsCatagoryPublished(checked)
     };
 

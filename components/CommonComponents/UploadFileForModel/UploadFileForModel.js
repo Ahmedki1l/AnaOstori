@@ -5,34 +5,53 @@ import { stringUpdation } from '../../../constants/DataManupulation'
 import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../spinner'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
+import { PDFDocument } from 'pdf-lib';
 
 const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError, setVideoDuration, disabledInput }) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
 
-    const getFileKey = async (e) => {
-        const file = e.target.files[0];
-        const video = document.createElement('video');
-        video.preload = 'metadata';
-        video.onloadedmetadata = () => {
-            window.URL.revokeObjectURL(video.src);
-            setVideoDuration(video.duration);
-        };
+    console.log(accept);
 
-        video.src = URL.createObjectURL(file);
+    const getFileKey = async (e) => {
+        let file = e.target.files[0];
+        if (accept == 'video') {
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.onloadedmetadata = () => {
+                window.URL.revokeObjectURL(video.src);
+                setVideoDuration(video.duration);
+            };
+            video.src = URL.createObjectURL(file);
+        }
+        if (accept == 'file') {
+            const pdfBytes = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve(reader.result);
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+
+            // Count the number of pages in the PDF file.
+            const pageCount = await getPageCount(pdfBytes);
+            console.log(pageCount);
+            // Do something with the page count, such as display it to the user or store it in a database.
+        }
         setUploadLoader(true)
         setShowBtnLoader(true)
-        await uploadFileSevices(e.target.files[0]).then((res) => {
+        await uploadFileSevices(file).then((res) => {
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
-            const uploadFileType = e.target.files[0].type
+            const uploadFileType = file.type
             uploadResData({
                 key: uploadFileKey,
                 bucket: uploadFileBucket,
                 mime: uploadFileType,
             })
-            setUploadedFileName(e.target.files[0].name)
-            setFileName(e.target.files[0].name)
+            setUploadedFileName(file.name)
+            setFileName(file.name)
             setUploadLoader(false)
             setShowBtnLoader(false)
         }).catch((error) => {
@@ -46,6 +65,10 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
         uploadResData()
     }
 
+    async function getPageCount(pdfFile) {
+        const doc = await PDFDocument.load(pdfFile);
+        return doc.getPageCount();
+    }
     return (
         <>
             <div className={disabledInput ? styles.disabledUploadVideoWrapper : styles.uploadVideoWrapper}>

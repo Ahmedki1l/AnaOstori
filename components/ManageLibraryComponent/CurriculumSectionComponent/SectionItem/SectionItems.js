@@ -8,6 +8,7 @@ import ModelForDeleteItems from '../../ModelForDeleteItems/ModelForDeleteItems'
 import { updateItemOfSectionAPI } from '../../../../services/apisService'
 import ModalForVideo from '../../../CommonComponents/ModalForVideo/ModalForVideo'
 import Switch from '../../../../components/antDesignCompo/Switch'
+import { secondsToMinutes } from '../../../../constants/DataManupulation'
 
 const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setDeleteItemSectionId, sectionId }) => {
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -128,16 +129,16 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                                     </svg>
                                                 </div>
                                                 <div className='px-1'>
-                                                    <Icon
-                                                        height={data.type == 'quiz' ? 26 : 24}
-                                                        width={data.type == 'quiz' ? 28 : 24}
-                                                        iconName={data.type == 'video' ? 'videoIcon' : data.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
-                                                        alt={'Quiz Logo'}
-                                                    />
+                                                    <AllIconsComponenet height={24} width={24} iconName={`${data?.type == "video" ? 'curriculumNewVideoIcon' : data?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#000000'} />
                                                 </div>
                                                 <div className={styles.sectionTitle}>
                                                     <p>{data.name}</p>
-                                                    <p className={styles.duration}>({data.duration})</p>
+                                                    <p className={styles.duration}>
+                                                        {data?.type == "video" ? `${secondsToMinutes(data?.duration)} دقائق` :
+                                                            data?.type == "quiz" ? `${data.numberOfQuestions} سؤال` :
+                                                                `${data.discription ? data.discription : ''}`}
+                                                    </p>
+
                                                 </div>
                                             </div>
                                             <div className={styles.curriculimDetailsActions}>

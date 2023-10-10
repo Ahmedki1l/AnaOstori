@@ -30,12 +30,14 @@ const SearchInput = ({
     width,
     onChange,
     placeholder,
+    ...rest
 }) => {
     return (
         <SearchInputField
             placeholder={placeholder}
             onChange={onChange}
             width={width}
+            {...rest}
         />
 
     )

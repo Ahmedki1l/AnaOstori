@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
-import { mediaUrl } from '../../../constants/DataManupulation'
+import { mediaUrl, secondsToMinutes } from '../../../constants/DataManupulation'
 import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/ModalForVideo'
 
 
@@ -117,12 +117,6 @@ export default function Index(props) {
 	const [videoModalOpen, setVideoModalOpen] = useState(false)
 	const [fileSrc, setFileSrc] = useState()
 
-
-	const secondsToMinutes = (seconds) => {
-		const minutes = Math.floor(seconds / 60);
-		const remainingSeconds = seconds % 60;
-		return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-	}
 
 	const handleSlectedItem = (data, id) => {
 		setSelectedNavItem(data)
@@ -363,14 +357,16 @@ export default function Index(props) {
 																return (
 																	<div key={`ccSectionItem${j}`} className={styles.ccItemWrapper}>
 																		<div className='flex items-center'>
-																			{item?.type == "video" && <Icon height={24} width={24} iconName={"videoIcon"} alt={'Icons'} />}
-																			{item?.type == "quiz" && <Icon height={24} width={24} iconName={"quizNotAttemptIcon"} alt={'Icons'} />}
-																			{item?.type == "file" && <Icon height={24} width={24} iconName={"pdfIcon"} alt={'Icons'} />}
+																			<div>
+																				<AllIconsComponenet height={24} width={24} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
+																			</div>
 																			<div>
 																				<p className={styles.ccItemName}>{item.name}</p>
-																				{item?.type == "video" && <p className={styles.ccItemDiscription}>{secondsToMinutes(item?.duration)} دقائق</p>}
-																				{item?.type == "quiz" && <p className={styles.ccItemDiscription}>{item.numberOfQuestions} سؤال</p>}
-																				{item?.type == "file" && <p className={styles.ccItemDiscription}>{item.discription}</p>}
+																				<p className={styles.ccItemDiscription}>
+																					{item?.type == "video" ? `${secondsToMinutes(item?.duration)} دقائق` :
+																						item?.type == "quiz" ? `${item.numberOfQuestions} سؤال` :
+																							`${item.discription}`}
+																				</p>
 																			</div>
 																		</div>
 																		<div className={styles.lockItemWrapper}>

@@ -31,7 +31,7 @@ export default function Payment(props) {
             }
             await getPaymentInfoAPI(data).then(async (response) => {
                 setTransactionDetails(response.data)
-                setIsPaymentSuccess(response.data[0].result.code == "000.000.000" ? true : false)
+                setIsPaymentSuccess(response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false)
                 response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
                 setLoading(false)
                 setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))

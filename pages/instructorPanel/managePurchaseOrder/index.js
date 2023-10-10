@@ -11,6 +11,7 @@ import Link from "next/link";
 import BackToPath from "../../../components/CommonComponents/BackToPath";
 import { getNewToken } from "../../../services/fireBaseAuthService";
 import { mediaUrl } from "../../../constants/DataManupulation";
+import { toast } from "react-toastify";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -29,6 +30,8 @@ const Index = () => {
     const paymentStatus = paymentConst.paymentStatus
     const [currentPage, setCurrentPage] = useState(1)
 
+    console.log(purchaseOrderList);
+
     const tableColumns = [
         {
             title: 'كلمناه؟',
@@ -43,10 +46,19 @@ const Index = () => {
                         }
                     }
                     await createOrderAPI(body).then((res) => {
+                        getPurchaseOrderList(1)
+                        if (text) {
+                            toast.success(' student has not contacted ')
+                        }
+                        else {
+                            toast.success(' student contact successfully')
+                        }
                     }).catch(async (error) => {
                         if (error?.response?.status == 401) {
                             await getNewToken().then(async (token) => {
                                 await createOrderAPI(body).then((res) => {
+                                    getPurchaseOrderList(1)
+                                    toast.success(' student contact successfully')
                                 })
                             }).catch(error => {
                                 console.error("Error:", error);
@@ -89,6 +101,15 @@ const Index = () => {
             title: 'الايميل',
             dataIndex: 'buyerEmail',
             sorter: (a, b) => a.buyerEmail.localeCompare(b.buyerEmail),
+            render: (text) => {
+                if (text) {
+                    return (
+                        <Link target={'_blank'} href={`mailto:${text}`}>{text}</Link>
+                    )
+                } else {
+                    return '-'
+                }
+            }
         },
         {
             title: 'حالة الحجز',
@@ -104,13 +125,58 @@ const Index = () => {
         {
             title: 'طريقة الدفع',
             dataIndex: 'paymentMethod',
+            // render: (text, _record) => {
+            //     const iconName = text == "bank_transfer" ? 'bankTransfer' :
+            //         (text == 'none' ? 'applePayment' :
+            //             ((text == 'hyperpay' && _record.cardType == 'credit') ? 'visaPayment' : 'madaPayment'))
+            //     return (
+            //         <AllIconsComponenet iconName={iconName} height={18} width={18} />
+            //     )
+            // }
             render: (text, _record) => {
-                const iconName = text == "bank_transfer" ? 'bankTransfer' :
-                    (text == 'none' ? 'applePayment' :
-                        ((text == 'hyperpay' && _record.cardType == 'credit') ? 'visaPayment' : 'madaPayment'))
+                // const paymentMode = _record.paymentMode == 'bank_transfer' ? 'bank_transfer' : 
+                // _record.paymentMode == 'hyperpay' ? _record.cardType == 'mada' ? 'mada' : _record.cardType == 'applepay' ? 'applepay' :
+                // _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visa' : 'mastercard' : 'bank_transfer' : 'applepay'
+                console.log(_record.paymentMethod, _record.cardType, _record.cardBrand)
+                const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
+                    _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
+                    (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'applePayment')
+                console.log(paymentMode);
                 return (
-                    <AllIconsComponenet iconName={iconName} height={18} width={18} />
+                    <AllIconsComponenet iconName={paymentMode} height={18} width={18} />
                 )
+
+                // if (paymentMode == 'hyperpay' && _record.cardType == 'mada') {
+                //     console.log('mada');
+                //     return (
+                //         <AllIconsComponenet iconName={'madaPayment'} height={18} width={18} />
+                //     )
+                // }
+                // else if (paymentMode == 'hyperpay' && _record.cardType == 'applepay') {
+                //     return (
+                //         <AllIconsComponenet iconName={'applePayment'} height={18} width={18} />
+                //     )
+                // }
+                // else if (paymentMode == 'hyperpay' && _record.cardType == 'credit') {
+                //     if (_record.cardBrand == 'visa') {
+                //         return (
+                //             <AllIconsComponenet iconName={'masterCard'} height={18} width={18} />
+                //         )
+                //     }
+                //     else {
+                //         return (
+                //             <AllIconsComponenet iconName={'visaPayment'} height={18} width={18} />
+                //         )
+                //     }
+                //     // return (
+                //     //     <AllIconsComponenet iconName={'visaPayment'} height={18} width={18} />
+                //     // )
+                // }
+                // else {
+                //     return (
+                //         <AllIconsComponenet iconName={'bankTransfer'} height={18} width={18} />
+                //     )
+                // }
             }
         },
         {
@@ -148,11 +214,11 @@ const Index = () => {
                 const status = _record.status === 'accepted'
                 return (
                     <div className='flex'>
-                        <div className='pl-2' onClick={handleEditOrders}>
+                        <div className='pl-2 cursor-pointer' onClick={handleEditOrders}>
                             <AllIconsComponenet iconName={'editicon'} height={16} width={16} color={'#000000'} />
                         </div>
                         {(status && _record.invoiceKey) &&
-                            <Link className='pr-2' href={mediaUrl(_record.invoiceBucket, _record.invoiceKey)} target='_blank'>
+                            <Link className='pr-2 cursor-pointer' href={mediaUrl(_record.invoiceBucket, _record.invoiceKey)} target='_blank'>
                                 <AllIconsComponenet height={18} width={18} iconName={'downloadIcon'} color={'#000000'} />
                             </Link>
                         }
@@ -177,7 +243,13 @@ const Index = () => {
                 ...paginationConfig,
                 total: res.data.totalItems,
             })
-            setPurchaseOrderList(res.data.data)
+            const purchaseOrderList = res.data.data.map((item) => {
+                return {
+                    ...item,
+                    key: item.id
+                }
+            })
+            setPurchaseOrderList(purchaseOrderList)
             setCurrentPage(res.data.currentPage)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {

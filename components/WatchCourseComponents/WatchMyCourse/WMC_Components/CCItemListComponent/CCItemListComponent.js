@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './CCItemListComponent.module.scss'
 import useWindowSize from '../../../../../hooks/useWindoSize';
 import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet';
+import { secondsToMinutes } from '../../../../../constants/DataManupulation';
 
 
 
@@ -16,14 +17,8 @@ export default function CCItemListComponent(props) {
 
 	useEffect(() => {
 		setIsItemComplete(completedCourseItem?.some(item => item.itemId == itemId && item.pass !== false))
-		setVideoDuration(secondsToMinutes(item.duration))
-	}, [completedCourseItem, itemId, item?.duration])
+	}, [completedCourseItem, itemId])
 
-	const secondsToMinutes = (seconds) => {
-		const minutes = Math.floor(seconds / 60);
-		const remainingSeconds = seconds % 60;
-		return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-	}
 
 	const selectNewItemHendler = (itemId) => {
 		props.chagenCourseItemHendler(itemId)
@@ -39,11 +34,11 @@ export default function CCItemListComponent(props) {
 						</div>
 					}
 					<div className='ml-5'>
-						<AllIconsComponenet height={20} width={20} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
+						<AllIconsComponenet height={24} width={24} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
 					</div>
 					<div>
 						<p className={`font-medium ${styles.itemName}`}>{item?.name}</p>
-						{item?.type == "video" && <p className={styles.itemDiscription}>{videoDuration} دقائق</p>}
+						{item?.type == "video" && <p className={styles.itemDiscription}>{secondsToMinutes(item.duration)} دقائق</p>}
 						{item?.type == "quiz" && <p className={styles.itemDiscription}>{item.numberOfQuestions} دقائق</p>}
 						{item?.type == "file" && <p className={styles.itemDiscription}>{item.discription} دقائق</p>}
 					</div>

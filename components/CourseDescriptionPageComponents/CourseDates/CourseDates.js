@@ -62,9 +62,13 @@ export default function CourseDates(props) {
 						:
 						<>
 							<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'locationStroked'} color={'#000000'} />
-							<Link href={date.location ?? ''} target='_blank' className='noUnderlineLink'>
+							{date.location ?
+								<Link href={date.location ?? ''} target='_blank' className='noUnderlineLink'>
+									<p className={`fontMedium ${styles.listItemText}`}>{date.locationName}</p>
+								</Link>
+								:
 								<p className={`fontMedium ${styles.listItemText}`}>{date.locationName}</p>
-							</Link>
+							}
 						</>
 					}
 				</li>

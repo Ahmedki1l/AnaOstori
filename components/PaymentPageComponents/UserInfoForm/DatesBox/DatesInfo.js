@@ -41,9 +41,13 @@ export default function DatesInfo(props) {
 						:
 						<>
 							<AllIconsComponenet height={24} width={28} iconName={'location'} color={'#000000'} />
-							<Link href={date.location ?? ""} target='_blank'>
+							{date.location ?
+								<Link href={date.location ?? ""} target='_blank'>
+									<p className={`fontMedium link ${styles.listItemText}`}>{date.locationName}</p>
+								</Link>
+								:
 								<p className={`fontMedium link ${styles.listItemText}`}>{date.locationName}</p>
-							</Link>
+							}
 						</>
 					}
 				</li>
@@ -71,7 +75,8 @@ export default function DatesInfo(props) {
 									{instructor?.ProfileFileKey == null ?
 										<p className='px-2 fontMedium'>{instructor.name}</p>
 										:
-										<Link href={mediaUrl(instructor.avatarBucket, instructor.avatarKey)} className='px-2 fontMedium link'>{instructor.name}</Link>
+										// 'hi'
+										<Link href={mediaUrl(instructor.ProfileFileBucket, instructor.ProfileFileKey)} className='px-2 fontMedium link'>{instructor.name}</Link>
 									}
 									<p className='px-2 fontMedium'>Role</p>
 								</div>
