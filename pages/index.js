@@ -137,9 +137,9 @@ export default function Home(props) {
 						<div className={styles.firstBtnBox}>
 							<button className={`secondrySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>تصفح الدورات</button>
 						</div>
-						<div className={styles.secondBtnBox}>
+						{/* <div className={styles.secondBtnBox}>
 							<button className={`secondryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>تجارب الأساطير</button>
-						</div>
+						</div> */}
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
@@ -204,14 +204,14 @@ export default function Home(props) {
 				</div>
 			</div>
 			<hr />
-			<div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
+			{/* <div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
 				<div className={`flex justify-between items-center px-4`}>
 					<h1 className='head1'>تجارب الأساطير</h1>
 					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>مشاهدة الكل</p>
 				</div>
 				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>+25,000 طالب وطالبة ساعدناهم يحققون أهدافهم، <span className='fontPrimarycolor'>وعقبالك</span> تكون منهم 🧡</p>
 				<ReviewComponent homeReviews={homeReviews} />
-			</div>
+			</div> */}
 		</div>
 	)
 }

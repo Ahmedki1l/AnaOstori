@@ -211,8 +211,25 @@ export default function Index(props) {
 						setIsMixSubscribed(true)
 					}
 				})
-			}).catch((err) => {
-				console.log(err);
+			}).catch(async (err) => {
+				console.log("error", err);
+				if (err?.response?.status == 401) {
+					await getNewToken().then(async (token) => {
+						await getCourseByNameAPI(data).then((res) => {
+							res.data?.subscriptions?.forEach((item) => {
+								if (item.type == 'male') {
+									setIsMaleSubscribed(true)
+								} else if (item.type == "female") {
+									setIsFemaleSubscribed(true)
+								} else {
+									setIsMixSubscribed(true)
+								}
+							})
+						})
+					}).catch(error => {
+						console.error("Error:", error);
+					});
+				}
 			})
 		}
 		getCourseByName()
@@ -254,9 +271,9 @@ export default function Index(props) {
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 											}
 										</div>
-										<div>
+										{/* <div>
 											<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`} </li>
-										</div>
+										</div> */}
 									</ScrollContainer>
 								</ul>
 							}
@@ -452,10 +469,10 @@ export default function Index(props) {
 									}
 								</div>
 							}
-							<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
+							{/* <div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
 								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
 								<ReviewComponent homeReviews={homeReviews} />
-							</div>
+							</div> */}
 						</div>
 					</div>
 					<WhatsAppLinkComponent isBookSeatPageOpen={true} courseDetail={courseDetail} discountShow={discountShow} />
