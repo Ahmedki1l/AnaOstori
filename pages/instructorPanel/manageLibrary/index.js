@@ -28,11 +28,9 @@ function Index() {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (router.query.folderType) {
-            setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
-            getfolderList(router.query.folderType)
-        }
-    }, [])
+        setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
+        getfolderList(router.query.folderType)
+    }, [router.query.folderType])
 
     const handleItemSelect = async (selcetedItem) => {
         getfolderList(selcetedItem)
