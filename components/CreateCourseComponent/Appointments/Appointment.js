@@ -20,6 +20,7 @@ import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import Empty from '../../CommonComponents/Empty';
 import Image from 'next/legacy/image';
+import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -149,6 +150,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const handelModalClose = () => {
         appointmentForm.resetFields()
         setIsModalOpen(false)
+        setEditAvailability()
     }
 
     const handlePublishedCategory = async (e, availabilityId) => {
@@ -186,7 +188,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const onChangePublish = async (checked) => {
         setIAppointmentPublished(checked)
     }
-
     return (
         <div className='maxWidthDefault px-4'>
             <div>
@@ -293,10 +294,95 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         <div className={styles.modalHeader}>
                             <button onClick={() => handelModalClose()} className={styles.closebutton}>
                                 <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                            <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
+                            <p className={`fontBold ${styles.createappointment}`}>{editAvailability ? 'تعديل بيانات الموعد' : 'إضافة موعد'}</p>
                         </div>
                         <Form form={appointmentForm} onFinish={onFinish}>
                             <div className={styles.createAppointmentFields}>
+                                <p className={` ${styles.createappointmentFormFileds}`}>تفاصيل الموعد</p>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'dateFrom'}
+                                        rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
+                                    >
+                                        <DatePicker
+                                            format={'YYYY-MM-DD'}
+                                            width={172}
+                                            height={40}
+                                            disabled={isFieldDisable}
+                                            placeholder="تاريخ البداية"
+                                            suFFixIconName="calenderDoubleColorIcon"
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'dateTo'}
+                                        rules={[{ required: true, message: "ادخل تاريخ النهاية" }]}
+                                    >
+                                        <DatePicker
+                                            format={'YYYY-MM-DD'}
+                                            width={172}
+                                            height={40}
+                                            placeholder="تاريخ النهاية"
+                                            suFFixIconName="calenderDoubleColorIcon"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                </div>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'timeFrom'}
+                                        rules={[{ required: true, message: "ادخل ساعة البداية " }]}
+                                    >
+                                        <TimePicker
+                                            width={172}
+                                            height={40}
+                                            placeholder="من الساعة"
+                                            picker="time"
+                                            suFFixIconName="clockDoubleColor"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'timeTo'}
+                                        rules={[{ required: true, message: "ادخل ساعة النهاية" }]}
+                                    >
+                                        <TimePicker
+                                            width={172}
+                                            height={40}
+                                            placeholder="إلى الساعة"
+                                            picker="time"
+                                            suFFixIconName="clockDoubleColor"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                </div>
+                                <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
+                                <div className='flex'>
+                                    <FormItem
+                                        name={'locationName'}
+                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                    >
+                                        <InputWithLocation
+                                            width={171}
+                                            height={40}
+                                            suFFixIconName='locationDoubleColor'
+                                            placeholder="الموقع"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name={'location'}
+                                        rules={[{ required: true, message: "ادخل المكان (نص)" }]}
+                                    >
+                                        <InputWithLocation
+                                            width={171}
+                                            height={40}
+                                            placeholder="الرابط"
+                                            suFFixIconName="linkDoubleColorIcon"
+                                            disabled={isFieldDisable}
+                                        />
+                                    </FormItem>
+                                </div>
+                                <p className={`${styles.createappointmentFormFileds}`}>اختر المدربين</p>
                                 <FormItem
                                     name={'instructors'}
                                     rules={[{ required: true, message: "اختر المدرب" }]}
@@ -312,6 +398,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         disabled={isFieldDisable}
                                     />
                                 </FormItem>
+                                <p className={`${styles.createappointmentFormFileds}`}>الدورة لمين؟</p>
                                 {courseType == 'physical' &&
                                     <FormItem
                                         name={'gender'}
@@ -327,95 +414,14 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         />
                                     </FormItem>
                                 }
-                                <div className='flex'>
-                                    <FormItem
-                                        name={'dateFrom'}
-                                        rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
-                                    >
-                                        <DatePicker
-                                            format={'YYYY-MM-DD'}
-                                            width={172}
-                                            height={40}
-                                            disabled={isFieldDisable}
-                                            placeholder="تاريخ البداية"
-                                            suFFixIconName="calander"
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        name={'dateTo'}
-                                        rules={[{ required: true, message: "ادخل تاريخ النهاية" }]}
-                                    >
-                                        <DatePicker
-                                            format={'YYYY-MM-DD'}
-                                            width={172}
-                                            height={40}
-                                            placeholder="تاريخ النهاية"
-                                            suFFixIconName="calander"
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                </div>
-                                <div className='flex'>
-                                    <FormItem
-                                        name={'timeFrom'}
-                                        rules={[{ required: true, message: "ادخل ساعة البداية " }]}
-                                    >
-                                        <TimePicker
-                                            width={172}
-                                            height={40}
-                                            placeholder="من الساعة"
-                                            picker="time"
-                                            suFFixIconName="clock"
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        name={'timeTo'}
-                                        rules={[{ required: true, message: "ادخل ساعة النهاية" }]}
-                                    >
-                                        <TimePicker
-                                            width={172}
-                                            height={40}
-                                            placeholder="إلى الساعة"
-                                            picker="time"
-                                            suFFixIconName="clock"
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                </div>
-                                <div className='flex'>
-                                    <FormItem
-                                        name={'locationName'}
-                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={172}
-                                            height={40}
-                                            placeholder="الموقع"
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        name={'location'}
-                                        rules={[{ required: true, message: "ادخل المكان (نص)" }]}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={172}
-                                            height={40}
-                                            placeholder="الرابط"
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                </div>
+                                <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المقاعد</p>
                                 <FormItem
                                     name={'maxNumberOfSeats'}
                                     rules={[{ required: true, message: "ادخل عدد المقاعد" }]}
                                 >
                                     <Input
                                         fontSize={16}
-                                        width={172}
+                                        width={352}
                                         height={40}
                                         placeholder="عدد المقاعد"
                                         disabled={isFieldDisable}
@@ -425,11 +431,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                     <>
                                         <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
-                                            <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
+                                            <p className={styles.recordedcourse}>إظهار المقرر للطلاب</p>
                                         </div>
                                         <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
-                                            <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
+                                            <p className={styles.recordedcourse}>إخفاء الموعد</p>
                                         </div>
                                     </>
                                 }

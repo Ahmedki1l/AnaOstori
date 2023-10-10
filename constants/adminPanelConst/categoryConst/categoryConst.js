@@ -4,7 +4,6 @@ export const adminPanelCategoryConst = {
     title: 'عنوان المجال*',
     orderID: 'الترتيب ( خلك حذر)*',
     description: 'وصف المجال*',
-    inputAttachPhoto: 'ارفق الصورة',
     categoryNameErrorMsg: 'اكتب عنوان المجال',//'please enter category name',
     selectOrderErrorMsg: 'حدد الترتيب، وخلك حذر',//please select the order
     categoryDiscriptionErrorMsg: 'لا تنسى الوصف يا حلو',//write describtion
@@ -33,7 +32,7 @@ export const addEditCategoryConst = {
 }
 
 
-export const addManageCategoryConst ={
+export const addManageCategoryConst = {
     successGreenToGreyToast: 'تم إخفاء المجال بنجاح',
     successGreyToGreenToast: 'تم إظهار المجال بنجاح'
 }
