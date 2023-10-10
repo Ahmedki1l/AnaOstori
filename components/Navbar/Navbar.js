@@ -225,7 +225,7 @@ export default function Navbar() {
 													<div className='p-2'>
 														<AllIconsComponenet height={20} width={20} iconName={'history'} color={'#ffffff'} /> &nbsp;
 													</div>
-													استعلام المشتريات
+													استعلام الحجوزات
 												</button>
 											</Link>
 										</div>
@@ -384,7 +384,7 @@ export default function Navbar() {
 													<Link href={'/purchaseInquiry'} className='no-underline'>
 														<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
 															<AllIconsComponenet height={20} width={20} iconName={'history'} color={'#ffffff'} /> &nbsp;
-															استعلام المشتريات
+															استعلام الحجوزات
 														</button>
 													</Link>
 												</div>

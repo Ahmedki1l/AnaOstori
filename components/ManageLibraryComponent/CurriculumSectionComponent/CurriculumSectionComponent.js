@@ -29,7 +29,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const [editSectionName, setEditSectionName] = useState(false)
     const [deleteItemId, setDeleteItemId] = useState()
     const [deleteItemSectionId, setDeleteItemSectionId] = useState()
-
+    console.log(isModelForAddFolderOpen);
     useEffect(() => {
         setSectionDetails(sectionList?.sort((a, b) => a.order - b.order))
     }, [sectionList])
@@ -213,7 +213,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                     <Empty
                         onClick={handleAddSection}
                         containerhight={240}
-                        buttonText={'إضافة قسم'}
+                        buttonText={'+ إضافة قسم'}
                         emptyText={'باقي ما أضفت قسم'}
                     />
                 </div>
@@ -290,6 +290,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                     onSave={editSectionName ? handleEditSection : handleCreateSection}
                     itemName={selectedSection?.name}
                     curriCulumSection={'addSection'}
+                    setSelectedSection={setSelectedSection}
                 />}
             {ismodelForDeleteItems &&
                 <ModelForDeleteItems

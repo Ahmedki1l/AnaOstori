@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps }) {
 			case "/[catagoryName]/[courseName]/[bookSit]": setPageTitle('تعبئة البيانات')
 				break;
 			case "/purchaseInquiry":
-				setPageTitle('استعلام وتأكيد الحجوزات')
+				setPageTitle('استعلام الحجوزات')
 				break;
 			case "/studentFeedback":
 				setPageTitle('تجارب الأساطير')
