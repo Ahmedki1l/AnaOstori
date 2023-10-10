@@ -33,7 +33,7 @@ function Index() {
     }, [router.query.folderType])
 
     const handleItemSelect = async (selcetedItem) => {
-        getfolderList(selcetedItem)
+        // getfolderList(selcetedItem)
         setSelectedItem(selcetedItem)
         router.push({
             pathname: '/instructorPanel/manageLibrary',
