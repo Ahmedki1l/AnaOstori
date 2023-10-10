@@ -283,10 +283,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
                 editCourseData = editCourse.data;
             } else {
-                console.log(288);
-                editCourseData = editCourseDetailsMetadata.data;
+                editCourseData = editCourseMetaData.data;
+                editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
             }
-            console.log(editCourseData);
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
             toast.success(toastSuccessMessage.courseDetailUpdateMsg);
             setShowLoader(false);
@@ -311,17 +310,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         let editCourseData;
 
                         if (courseDetailsMetaDataBody.data.data.length === 0 && courseMetaDataBody.data.data.length > 0) {
-                            console.log(310);
                             editCourseData = editCourseMetaData?.data;
                         } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length > 0) {
-                            console.log(313);
                             editCourseData = editCourseDetailsMetadata?.data;
                         } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
-                            console.log(316);
                             editCourseData = editCourse.data;
                         } else {
-                            console.log(319);
                             editCourseData = editCourseDetailsMetadata.data;
+                            editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
                         }
                         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
                         toast.success(toastSuccessMessage.courseDetailUpdateMsg);
