@@ -25,7 +25,6 @@ export default function Navbar() {
 	const [commingSoonModalOpen, setCommingSoonModalOpen] = useState(false);
 	const [showSubMenu, setShowSubMenuShown] = useState()
 	const prevSubMenu = useRef();
-	const [catagories, setCatagories] = useState()
 	const [open, setOpen] = useState(false);
 
 	const router = useRouter();
@@ -42,6 +41,9 @@ export default function Navbar() {
 
 	const isUserInstructor = storeData?.isUserInstructor
 
+	const [catagories, setCatagories] = useState(storeData.catagories.length > 0 ? storeData.catagories.filter((catagory) => catagory.published == true) : [])
+
+
 	useEffect(() => {
 		const fetchResults = async () => {
 			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
@@ -57,7 +59,9 @@ export default function Navbar() {
 				console.log(error);
 			})
 		};
-		fetchResults();
+		if (!storeData?.accessToken) {
+			fetchResults();
+		}
 	}, [setCatagories])
 
 
@@ -90,6 +94,7 @@ export default function Navbar() {
 					myCourses: myCourseData?.data,
 				});
 			} catch (error) {
+				console.log("NavBarError", error);
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						const getcatagoriReq = getCatagoriesAPI()
@@ -142,22 +147,25 @@ export default function Navbar() {
 	}
 
 	const handleClickCourseName = (submenu, menu, lang) => {
-		console.log(submenu);
 		setShowSubMenuShown()
 		setIsMenuShow(false)
-		if (submenu.isPurchasable == false) {
-			setCommingSoonModalOpen(true)
-			return
+		if (submenu.type == "on-demand" && submenu.isEnrolled == true) {
+			router.push(`/myCourse/${submenu.id}`)
 		} else {
-			if (lang == "en") {
-				router.push({
-					pathname: `/${(menu.replace(/ /g, "-"))}/${(submenu.name).replace(/ /g, "-")}`,
-					query: { language: 'en' },
-				})
+			if (submenu.isPurchasable == false) {
+				setCommingSoonModalOpen(true)
+				return
 			} else {
-				router.push({
-					pathname: `/${(submenu.name).replace(/ /g, "-")}/${(menu.replace(/ /g, "-"))}`,
-				})
+				if (lang == "en") {
+					router.push({
+						pathname: `/${(menu.replace(/ /g, "-"))}/${(submenu.name).replace(/ /g, "-")}`,
+						query: { language: 'en' },
+					})
+				} else {
+					router.push({
+						pathname: `/${(submenu.name).replace(/ /g, "-")}/${(menu.replace(/ /g, "-"))}`,
+					})
+				}
 			}
 		}
 	}

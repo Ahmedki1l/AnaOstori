@@ -124,33 +124,3 @@ export const getNewToken = async () => {
 		throw new Error("User is not signed in");
 	}
 };
-
-// let tokenRefreshTimer;
-
-// const scheduleTokenRefresh = async (user) => {
-// 	if (!user) return;
-
-// 	tokenRefreshTimer = setTimeout(async () => {
-// 		try {
-// 			const idToken = await user.getIdToken();
-// 			localStorage.setItem("accessToken", idToken);
-// 			scheduleTokenRefresh(user);
-// 		} catch (error) {
-// 			console.error("Error refreshing token:", error);
-// 		}
-// 	}, 200000);
-// };
-
-// const clearTokenRefreshTimer = () => {
-// 	if (tokenRefreshTimer) {
-// 		clearTimeout(tokenRefreshTimer);
-// 	}
-// };
-
-// auth.onAuthStateChanged((user) => {
-// 	if (user) {
-// 		scheduleTokenRefresh(user);
-// 	} else {
-// 		clearTokenRefreshTimer();
-// 	}
-// });
