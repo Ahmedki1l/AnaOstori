@@ -27,10 +27,8 @@ const Index = () => {
         pageSize: 10,
     })
     const [selectedOrder, setSelectedOrder] = useState()
-    const paymentStatus = paymentConst.paymentStatus
+    const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [currentPage, setCurrentPage] = useState(1)
-
-    console.log(purchaseOrderList);
 
     const tableColumns = [
         {
@@ -115,68 +113,26 @@ const Index = () => {
             title: 'حالة الحجز',
             dataIndex: 'status',
             sorter: (a, b) => a.status.localeCompare(b.status),
-            render: (text) => {
-                const statusLabel = paymentStatus.find((item) => item.value == text)
+            render: (text, _record) => {
+                console.log(text, _record?.paymentMethod);
+                // const statusLabel = paymentStatus.find((item) => item.value == text)
+                const statusLabel = _record?.paymentMethod == "bank_transfer" ? paymentStatusBank.find((item) => item.value == text) : paymentStatusOther.find((item) => item.value == text)
+
                 return (
-                    <Tag color={statusLabel.color}>{statusLabel?.label}</Tag>
+                    <Tag color={statusLabel?.color}>{statusLabel?.label}</Tag>
                 )
             }
         },
         {
             title: 'طريقة الدفع',
             dataIndex: 'paymentMethod',
-            // render: (text, _record) => {
-            //     const iconName = text == "bank_transfer" ? 'bankTransfer' :
-            //         (text == 'none' ? 'applePayment' :
-            //             ((text == 'hyperpay' && _record.cardType == 'credit') ? 'visaPayment' : 'madaPayment'))
-            //     return (
-            //         <AllIconsComponenet iconName={iconName} height={18} width={18} />
-            //     )
-            // }
             render: (text, _record) => {
-                // const paymentMode = _record.paymentMode == 'bank_transfer' ? 'bank_transfer' : 
-                // _record.paymentMode == 'hyperpay' ? _record.cardType == 'mada' ? 'mada' : _record.cardType == 'applepay' ? 'applepay' :
-                // _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visa' : 'mastercard' : 'bank_transfer' : 'applepay'
-                console.log(_record.paymentMethod, _record.cardType, _record.cardBrand)
                 const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
                     _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
                     (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'applePayment')
-                console.log(paymentMode);
                 return (
                     <AllIconsComponenet iconName={paymentMode} height={18} width={18} />
                 )
-
-                // if (paymentMode == 'hyperpay' && _record.cardType == 'mada') {
-                //     console.log('mada');
-                //     return (
-                //         <AllIconsComponenet iconName={'madaPayment'} height={18} width={18} />
-                //     )
-                // }
-                // else if (paymentMode == 'hyperpay' && _record.cardType == 'applepay') {
-                //     return (
-                //         <AllIconsComponenet iconName={'applePayment'} height={18} width={18} />
-                //     )
-                // }
-                // else if (paymentMode == 'hyperpay' && _record.cardType == 'credit') {
-                //     if (_record.cardBrand == 'visa') {
-                //         return (
-                //             <AllIconsComponenet iconName={'masterCard'} height={18} width={18} />
-                //         )
-                //     }
-                //     else {
-                //         return (
-                //             <AllIconsComponenet iconName={'visaPayment'} height={18} width={18} />
-                //         )
-                //     }
-                //     // return (
-                //     //     <AllIconsComponenet iconName={'visaPayment'} height={18} width={18} />
-                //     // )
-                // }
-                // else {
-                //     return (
-                //         <AllIconsComponenet iconName={'bankTransfer'} height={18} width={18} />
-                //     )
-                // }
             }
         },
         {
@@ -283,8 +239,9 @@ const Index = () => {
         <Empty emptyText={'باقي محد اشترى'} containerhight={300} onClick={() => handleCreateFolder()} />
     )
 
-    const selectedOrderStatusLable = paymentStatus.find((item) => item.value == selectedOrder?.status)
+    // const selectedOrderStatusLable = paymentStatus.find((item) => item.value == selectedOrder?.status)
 
+    const selectedOrderStatusLable = selectedOrder?.paymentMethod == "bank_transfer" ? paymentStatusBank.find((item) => item.value == selectedOrder?.status) : paymentStatusOther.find((item) => item.value == selectedOrder?.status)
 
     return (
         <div className="maxWidthDefault">

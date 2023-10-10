@@ -161,7 +161,7 @@ const bankDetails = [
     { accountNumber: '25500000685307', IBANnumber: 'SA89 1000 0025 5000 0068 5307', bankLogo: 'alahliBankLogo', brndColor: '#034537' },
 ]
 
-const paymentStatus = [
+const paymentStatusBank = [
     {
         key: 1,
         label: 'بانتظار الحوالة',
@@ -170,7 +170,7 @@ const paymentStatus = [
     },
     {
         key: 2,
-        label: 'خلنا نراجع الايصال',
+        label: 'بنراجع طلبك',
         value: 'review',
         color: 'geekblue'
     },
@@ -182,31 +182,47 @@ const paymentStatus = [
     },
     {
         key: 4,
-        label: 'ردينا فلوسه',
-        value: 'refund',
-        color: 'black'
-    },
-    {
-        key: 5,
         label: 'ملغي',
         value: 'rejected',
         color: 'red'
     },
     {
-        key: 6,
+        key: 5,
+        label: 'تم استرجاع المبلغ',
+        value: 'refund',
+        color: 'black'
+    },
+]
+
+const paymentStatusOther = [
+    {
+        key: 1,
+        label: 'مؤكد',
+        value: 'accepted',
+        color: 'green'
+    },
+    {
+        key: 2,
         label: 'مرفوضة',
         value: 'failed',
         color: 'red'
     },
+
     {
-        key: 7,
-        label: 'init',
-        value: 'init',
-        color: 'orange'
-    }
+        key: 5,
+        label: ' جديد',
+        value: 'witing',
+        color: 'yellow'
+    },
+    {
+        key: 5,
+        label: 'تم استرجاع المبلغ',
+        value: 'rejected',
+        color: 'red'
+    },
+
 ]
 
 
 
-
-export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatus };
+export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatusBank, paymentStatusOther };

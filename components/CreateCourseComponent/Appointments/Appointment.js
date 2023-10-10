@@ -19,9 +19,9 @@ import { toast } from 'react-toastify';
 import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import Empty from '../../CommonComponents/Empty';
+import Image from 'next/legacy/image';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
@@ -33,7 +33,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-    // const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
+    const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
 
 
@@ -60,7 +60,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = courseId
-        // values.published = isAppointmentPublished
+        values.published = isAppointmentPublished
         if (isAvailabilityEdit) values.contentAccess = isContentAccess
         values.numberOfSeats = isAvailabilityEdit ? calculateNumberOfSeats(values.maxNumberOfSeats) : values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
@@ -117,6 +117,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     }
 
     const editAppointment = (appointment) => {
+        console.log(appointment);
         setIsModalOpen(true)
         setShowSwitchBtn(true)
         setIsAvailabilityEdit(true)
@@ -150,35 +151,41 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setIsModalOpen(false)
     }
 
-    // const onChange = async (e, params) => {
-    //     let body = {
-    //         data: params == "published" ? { published: e } : { contentAccess: e },
-    //         availabilityId: editAvailability?.id
-    //     }
-    //     await editAvailabilityAPI(body).then((res) => {
-    //     }).catch((error) => {
-    //         console.log(error);
-    //         setShowBtnLoader(false)
-    //     })
-    // };
-    const onChangeContentAccess = async (checked) => {
-        if (checked == true) {
-            toast.success("content accesss true")
-        } else {
-            toast.success('content access false')
+    const handlePublishedCategory = async (e, availabilityId) => {
+        let body = {
+            data: { published: e },
+            availabilityId: availabilityId
         }
+        await editAvailabilityAPI(body).then((res) => {
+            setShowBtnLoader(false)
+            availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+            getAllAvailability()
+        }).catch(async (error) => {
+            console.log(error);
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await editAvailabilityAPI(body).then((res) => {
+                        setShowBtnLoader(false)
+                        availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+                        getAllAvailability()
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            toast.error(toastErrorMessage.tryAgainErrorMsg)
+            setShowBtnLoader(false)
+            console.log(error);
+        })
+    }
+
+    const onChangeContentAccess = async (checked) => {
         setIsContentAccess(checked)
     };
 
-    // for Appointment Publish
-    // const onChangeCatagoryPublished = async (checked) => {
-    //     if (checked == true) {
-    //         toast.success("Catagory Published")
-    //     } else {
-    //         toast.success('Catagory Not Published')
-    //     }
-    //     setIAppointmentPublished(checked)
-    // };
+    const onChangePublish = async (checked) => {
+        setIAppointmentPublished(checked)
+    }
 
     return (
         <div className='maxWidthDefault px-4'>
@@ -192,6 +199,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                     <thead className={styles.tableHeaderArea}>
                         <tr>
                             <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>بيانات الفترة</th>
+                            <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>حالة الظهور</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>المدربين</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ الإنشاء</th>
                             <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>اخر تعديل</th>
@@ -207,15 +215,42 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <td>
                                             <div className={styles.PeriodDataDetails}>
                                                 <p className={`head2`}>{dateRange(appointment.dateFrom, appointment.dateTo)}</p>
-                                                {/* <div className={styles.genderDetails}>
-                                                    {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} />}
-                                                    {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} />}
-                                                    {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={10} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
+                                                <div className={styles.genderDetails}>
+                                                    {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} />}
+                                                    {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={17} color={'#E10768'} />}
+                                                    {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
                                                     <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
-                                                </div><br /> */}
-                                                <p>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
-                                                <Link target='_blank' href={appointment.location}>{appointment.locationName}</Link>
-                                                <p>{appointment.numberOfSeats} مقعد مخصص</p>
+                                                </div><br />
+                                                <div className={styles.genderDetails}>
+                                                    <AllIconsComponenet iconName={'clockDoubleColor'} height={17} width={17} color={'#000000'} />
+                                                    <p className='mr-1'>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
+                                                </div><br />
+                                                <div className={styles.genderDetails}>
+                                                    <AllIconsComponenet iconName={'locationDoubleColor'} height={17} width={17} color={'#000000'} />
+                                                    <Link className='mr-1' target='_blank' href={appointment.location}>{appointment.locationName}</Link>
+                                                </div><br />
+                                                <div className={styles.genderDetails}>
+                                                    {appointment.numberOfSeats > 5 ?
+                                                        <div className={`${styles.outerCircle} ${styles.green}`}><div className={styles.innerCircle}></div></div>
+                                                        :
+                                                        <div className={styles.alretWrapper}>
+                                                            <Image src={`/images/alert-blink.gif`} alt={'alert gif'} layout="fill" objectFit="cover" />
+                                                        </div>
+                                                    }
+                                                    <p className='mr-1'> {appointment.numberOfSeats == 0 ? "جميع المقاعد محجوزة"
+                                                        : appointment.numberOfSeats == 1 ? "مقعد واحد متبقي"
+                                                            : appointment.numberOfSeats == 2 ? "مقعدين متبقيين"
+                                                                : appointment.numberOfSeats > 3 && appointment.numberOfSeats < 10 ? `${appointment.numberOfSeats} مقاعد متبقية`
+                                                                    : `${appointment.numberOfSeats} مقعد متبقي`}
+                                                    </p>
+                                                </div>
+                                                {/* <p>{appointment.numberOfSeats} مقعد مخصص</p> */}
+                                            </div>
+                                        </td>
+                                        <td className='py-2'>
+                                            <div className={styles.publishState}>
+                                                <Switch defaultChecked={appointment.published} onChange={handlePublishedCategory} params={appointment.id} ></Switch>
+                                                <p className='pr-2'>{appointment.published ? 'إظهار' : 'مخفي'}</p>
                                             </div>
                                         </td>
                                         <td className='py-2'>{appointment.instructors.map((instructor, index) => {
@@ -388,10 +423,10 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                 </FormItem>
                                 {showSwitchBtn &&
                                     <>
-                                        {/* <div className='flex items-center'>
-                                        <Switch defaultChecked={isAppointmentPublished} onChange={onChangeCatagoryPublished}></Switch>
-                                        <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
-                                    </div> */}
+                                        <div className='flex items-center'>
+                                            <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
+                                            <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
+                                        </div>
                                         <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
                                             <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>

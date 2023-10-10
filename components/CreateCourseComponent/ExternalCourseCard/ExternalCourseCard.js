@@ -22,6 +22,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
+    console.log("editCourseData", editCourseData);
     const [courseDetail, setCourseDetail] = useState(isCourseEdit ? editCourseData : createCourseApiRes)
     const [showLoader, setShowLoader] = useState(false);
     const [externalCourseForm] = Form.useForm();
@@ -30,6 +31,19 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     useEffect(() => {
         if (isCourseEdit && editCourseData.CourseCardMetaData) {
             externalCourseForm.setFieldsValue(editCourseData)
+        }
+        else {
+            externalCourseForm.setFieldsValue({
+                cardDescription: '',
+                CourseCardMetaData: [{
+                    icon: '',
+                    link: '',
+                    text: '',
+                    tailLinkName: '',
+                    tailLink: '',
+                    grayedText: '',
+                }]
+            })
         }
     }, [])
 
@@ -117,7 +131,10 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             delete obj.updatedAt
             obj.order = `${index + 1}`
             obj.courseId = editCourseData.id
-            deleteNullFromObj(obj)
+            obj.tailLinkName = obj.tailLinkName ? obj.tailLinkName : null
+            obj.tailLink = obj.tailLink ? obj.tailLink : null
+            obj.link = obj.link ? obj.link : null
+            obj.grayedText = obj.grayedText ? obj.grayedText : null
             return obj
         })
         let body = {
@@ -200,6 +217,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     }
     const handleCourseDetailDiscription = (e, fieldname, arrayName, index) => {
         let data = { ...courseDetail }
+        console.log("data", data);
         if (arrayName == null) {
             data[fieldname] = e
         } else {
@@ -226,7 +244,14 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                         </FormItem>
                         <div className='w-[872px]'>
                             <div>
-                                <Form.List name="CourseCardMetaData" initialValue={[{}]}>
+                                <Form.List name="CourseCardMetaData" initialValue={[{
+                                    icon: '',
+                                    link: '',
+                                    text: '',
+                                    tailLinkName: '',
+                                    tailLink: '',
+                                    grayedText: '',
+                                }]}>
                                     {(field, { add, remove }) => (
                                         <>
                                             <div style={{ display: 'flex', justifyContent: 'space-between' }} >
