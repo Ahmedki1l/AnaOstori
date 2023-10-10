@@ -18,3 +18,22 @@ export const adminPanelCategoryConst = {
     showCategoryMsg: 'تم إظهار المجال بنجاح',//catagory SHOWED successfully
     hideCategoryMsg: 'تم إخفاء المجال بنجاح',//catagory hided successfully
 }
+
+
+export const addEditCategoryConst = {
+    categoryTitle: 'عنوان المجال*',
+    orderId: 'الترتيب ( خلك حذر)*',
+    description: 'وصف المجال*',
+    categoryPhoto: 'صورة المجال*',
+    attachPhoto: 'ارفق الصورة',
+    errorEnterTitleToast: 'اكتب عنوان المجال',
+    errorSelectOrderToast: 'حدد الترتيب، وخلك حذر',
+    errorWriteDescribtionToast: 'لا تنسى الوصف يا حلو',
+    errorAddPhotoToast: 'لازم تحط صورة'
+}
+
+
+export const addManageCategoryConst ={
+    successGreenToGreyToast: 'تم إخفاء المجال بنجاح',
+    successGreyToGreenToast: 'تم إظهار المجال بنجاح'
+}
