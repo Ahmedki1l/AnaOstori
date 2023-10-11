@@ -14,7 +14,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import { toast } from 'react-toastify'
-import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst'
+import { folderConst, manageLibraryConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 
 const ManageLibraryTableComponent = ({
@@ -26,6 +26,7 @@ const ManageLibraryTableComponent = ({
     getItemList,
     getFolderList,
     loading,
+    handleCreateFolder
 }) => {
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
@@ -36,14 +37,14 @@ const ManageLibraryTableComponent = ({
     const [deleteItemType, setDeleteItemType] = useState('folder')
     const [fileSrc, setFileSrc] = useState()
     const [videoModalOpen, setVideoModalOpen] = useState(false)
-
-    const [editCategory, setEditCategory] = useState(false)
+    const [editFolder, setEditFolder] = useState(false)
+    console.log(editFolder);
 
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
             setSelectedFolder(item)
-            setEditCategory(true)
+            setEditFolder(true)
         } else {
             setSelectedItem(item)
             setIsModelForAddItemOpen(true)
@@ -59,13 +60,14 @@ const ManageLibraryTableComponent = ({
             data: editFolderBody
         }
         await updateFolderAPI(data).then((res) => {
-            toast.success(manageLibraryConst.updateFolderSuccessMsg)
+            toast.success(folderConst.folderToastMsgConst.updateFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await updateFolderAPI(data).then(res => {
+                        toast.success(folderConst.folderToastMsgConst.updateFolderSuccessMsg)
                         setIsModelForAddFolderOpen(false)
                         getFolderList(folderType)
                     })
@@ -148,13 +150,14 @@ const ManageLibraryTableComponent = ({
                 data: deleteFolderBody
             }
             await updateFolderAPI(data).then((res) => {
-                toast.success(manageLibraryConst.deleteFolderSuccessMsg)
+                toast.success(folderConst.folderToastMsgConst.deleteFolderSuccessMsg)
                 getFolderList(folderType)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateFolderAPI(data).then(res => {
                             getFolderList(folderType)
+                            toast.success(folderConst.folderToastMsgConst.deleteFolderSuccessMsg)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -269,28 +272,35 @@ const ManageLibraryTableComponent = ({
                     }
                 </div>
             </div>
-            {isModelForAddFolderOpen && <ModelWithOneInput
-                open={isModelForAddFolderOpen}
-                setOpen={setIsModelForAddFolderOpen}
-                onSave={handleEditFolder}
-                isEdit={editCategory}
-                itemName={selectedFolder?.name}
-                onDelete={handleDeleteFolderData}
-            />}
-            {isModelForAddItemOpen && <ModelForAddItemLibrary
-                isModelForAddItemOpen={isModelForAddItemOpen}
-                selectedItem={selectedItem}
-                selectedFolder={selectedFolder}
-                folderType={folderType}
-                onCloseModal={onItemModelClose}
-                onDelete={handleDeleteFolderData}
-            />}
-            {ismodelForDeleteItems && <ModelForDeleteItems
-                ismodelForDeleteItems={ismodelForDeleteItems}
-                onCloseModal={onCloseModal}
-                deleteItemType={deleteItemType}
-                onDelete={handleDeleteFolderData}
-            />}
+            {isModelForAddFolderOpen &&
+                <ModelWithOneInput
+                    open={isModelForAddFolderOpen}
+                    setOpen={setIsModelForAddFolderOpen}
+                    onSave={editFolder ? handleEditFolder : handleCreateFolder}
+                    isEdit={editFolder}
+                    itemName={selectedFolder?.name}
+                    onDelete={handleDeleteFolderData}
+                    curriCulumSection={'folder'}
+                />
+            }
+            {isModelForAddItemOpen &&
+                <ModelForAddItemLibrary
+                    isModelForAddItemOpen={isModelForAddItemOpen}
+                    selectedItem={selectedItem}
+                    selectedFolder={selectedFolder}
+                    folderType={folderType}
+                    onCloseModal={onItemModelClose}
+                    onDelete={handleDeleteFolderData}
+                />
+            }
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={deleteItemType}
+                    onDelete={handleDeleteFolderData}
+                />
+            }
             {videoModalOpen &&
                 <ModalForVideo
                     videoModalOpen={videoModalOpen}

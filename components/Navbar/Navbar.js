@@ -41,96 +41,98 @@ export default function Navbar() {
 
 	const isUserInstructor = storeData?.isUserInstructor
 
-	const [catagories, setCatagories] = useState(storeData.catagories.length > 0 ? storeData.catagories.filter((catagory) => catagory.published == true) : [])
-
+	console.log("storeData", storeData.catagories);
+	const [catagories, setCatagories] = useState()
 
 	useEffect(() => {
-		const fetchResults = async () => {
-			await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-				setCatagories(res?.data)
-			}).catch(async (error) => {
-				if (error?.response?.status == 401) {
-					await getNewToken().then(async (token) => {
-						await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-							setCatagories(res?.data)
-						})
-					})
-				}
-				console.log(error);
-			})
-		};
-		if (!storeData?.accessToken) {
-			fetchResults();
+		if (storeData?.accessToken) {
+			catagoryAuth()
+			console.log("catagoryAuth");
+		} else {
+			catagoryNoAuth()
+			console.log("catagoryNoAuth");
 		}
-	}, [setCatagories])
+	}, [storeData?.accessToken])
 
 
-	useEffect(() => {
-		const fetchResults = async () => {
-			try {
-				const getcatagoriReq = getCatagoriesAPI()
-				const getCurriculumIdsReq = getCurriculumIdsAPI()
-				const getInstructorListReq = getInstructorListAPI()
-				const getMyCourseReq = myCoursesAPI()
-
-
-				const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
-					getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
-				])
-				dispatch({
-					type: 'SET_CATAGORIES',
-					catagories: catagories?.data
-				});
-				dispatch({
-					type: 'SET_CURRICULUMIDS',
-					curriculumIds: curriculumIds?.data,
-				});
-				dispatch({
-					type: 'SET_INSTRUCTOR',
-					instructorList: instructorList?.data,
+	const catagoryNoAuth = async () => {
+		await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
+			setCatagories(res?.data)
+		}).catch(async (error) => {
+			if (error?.response?.status == 401) {
+				await getNewToken().then(async (token) => {
+					await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
+						setCatagories(res?.data)
+					})
 				})
-				dispatch({
-					type: 'SET_ALL_MYCOURSE',
-					myCourses: myCourseData?.data,
-				});
-			} catch (error) {
-				console.log("NavBarError", error);
-				if (error?.response?.status == 401) {
-					await getNewToken().then(async (token) => {
-						const getcatagoriReq = getCatagoriesAPI()
-						const getCurriculumIdsReq = getCurriculumIdsAPI()
-						const getInstructorListReq = getInstructorListAPI()
-						const getMyCourseReq = myCoursesAPI()
+			}
+			console.log(error);
+		})
+	};
+
+	const catagoryAuth = async () => {
+		try {
+			const getcatagoriReq = getCatagoriesAPI()
+			const getCurriculumIdsReq = getCurriculumIdsAPI()
+			const getInstructorListReq = getInstructorListAPI()
+			const getMyCourseReq = myCoursesAPI()
 
 
-						const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
-							getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
-						])
-						dispatch({
-							type: 'SET_CATAGORIES',
-							catagories: catagories?.data
-						});
-						dispatch({
-							type: 'SET_CURRICULUMIDS',
-							curriculumIds: curriculumIds?.data,
-						});
-						dispatch({
-							type: 'SET_INSTRUCTOR',
-							instructorList: instructorList?.data,
-						})
-						dispatch({
-							type: 'SET_ALL_MYCOURSE',
-							myCourses: myCourseData?.data,
-						});
-					}).catch(error => {
-						console.error("Error:", error);
+			const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
+				getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
+			])
+			setCatagories(catagories?.data.filter((item) => item.published == true))
+			dispatch({
+				type: 'SET_CATAGORIES',
+				catagories: catagories?.data
+			});
+			dispatch({
+				type: 'SET_CURRICULUMIDS',
+				curriculumIds: curriculumIds?.data,
+			});
+			dispatch({
+				type: 'SET_INSTRUCTOR',
+				instructorList: instructorList?.data,
+			})
+			dispatch({
+				type: 'SET_ALL_MYCOURSE',
+				myCourses: myCourseData?.data,
+			});
+		} catch (error) {
+			console.log("NavBarError", error);
+			if (error?.response?.status == 401) {
+				await getNewToken().then(async (token) => {
+					const getcatagoriReq = getCatagoriesAPI()
+					const getCurriculumIdsReq = getCurriculumIdsAPI()
+					const getInstructorListReq = getInstructorListAPI()
+					const getMyCourseReq = myCoursesAPI()
+
+
+					const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
+						getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
+					])
+					dispatch({
+						type: 'SET_CATAGORIES',
+						catagories: catagories?.data
 					});
-				}
+					dispatch({
+						type: 'SET_CURRICULUMIDS',
+						curriculumIds: curriculumIds?.data,
+					});
+					dispatch({
+						type: 'SET_INSTRUCTOR',
+						instructorList: instructorList?.data,
+					})
+					dispatch({
+						type: 'SET_ALL_MYCOURSE',
+						myCourses: myCourseData?.data,
+					});
+				}).catch(error => {
+					console.error("Error:", error);
+				});
 			}
 		}
-
-		fetchResults();
-	}, [])
+	}
 
 
 	useEffect(() => {
@@ -329,6 +331,7 @@ export default function Navbar() {
 										<Link href={'/'} className='normalLinkText'><p className={styles.homeText}>الرئيسية</p></Link>
 									</div>
 									<ul className={styles.navbarSubWrapper}>
+										{console.log("catagories", catagories)}
 										{catagories?.map((menu, i = index) => {
 											return (
 												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>

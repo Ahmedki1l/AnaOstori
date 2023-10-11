@@ -29,7 +29,7 @@ const Index = () => {
     const [selectedOrder, setSelectedOrder] = useState()
     const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [currentPage, setCurrentPage] = useState(1)
-
+    console.log(purchaseOrderList);
     const tableColumns = [
         {
             title: 'كلمناه؟',
