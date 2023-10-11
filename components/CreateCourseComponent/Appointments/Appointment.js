@@ -20,6 +20,7 @@ import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import Empty from '../../CommonComponents/Empty';
 import Image from 'next/legacy/image';
+import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,9 +55,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setShowBtnLoader(false)
     }
     const onFinish = async (values) => {
-        setShowBtnLoader(true)
-        values.dateFrom = dayjs(values?.dateFrom?.$d).format('YYYY-MM-DD HH:mm:ss');
-        values.dateTo = dayjs(values?.dateTo?.$d).format('YYYY-MM-DD HH:mm:ss');
+        values.dateFrom = dayjs(values?.dateFrom?.$d).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        values.dateTo = dayjs(values?.dateTo?.$d).endOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
         values.timeTo = dayjs(values?.timeTo?.$d).format('HH:mm:ss')
         values.courseId = courseId
@@ -149,6 +149,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const handelModalClose = () => {
         appointmentForm.resetFields()
         setIsModalOpen(false)
+        setEditAvailability()
     }
 
     const handlePublishedCategory = async (e, availabilityId) => {
@@ -186,7 +187,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const onChangePublish = async (checked) => {
         setIAppointmentPublished(checked)
     }
-
     return (
         <div className='maxWidthDefault px-4'>
             <div>
@@ -218,7 +218,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                 <div className={styles.genderDetails}>
                                                     {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} />}
                                                     {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={17} color={'#E10768'} />}
-                                                    {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>}
+                                                    {/* {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>} */}
                                                     <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
                                                 </div><br />
                                                 <div className={styles.genderDetails}>
@@ -293,40 +293,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         <div className={styles.modalHeader}>
                             <button onClick={() => handelModalClose()} className={styles.closebutton}>
                                 <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                            <p className={`fontBold ${styles.createappointment}`}>إنشاء موعد</p>
+                            <p className={`fontBold ${styles.createappointment}`}>{editAvailability ? 'تعديل بيانات الموعد' : 'إضافة موعد'}</p>
                         </div>
                         <Form form={appointmentForm} onFinish={onFinish}>
                             <div className={styles.createAppointmentFields}>
-                                <FormItem
-                                    name={'instructors'}
-                                    rules={[{ required: true, message: "اختر المدرب" }]}
-                                >
-                                    <Select
-                                        fontSize={16}
-                                        width={352}
-                                        height={40}
-                                        placeholder="اختر المدرب"
-                                        OptionData={instructor}
-                                        mode="multiple"
-                                        maxTagCount='responsive'
-                                        disabled={isFieldDisable}
-                                    />
-                                </FormItem>
-                                {courseType == 'physical' &&
-                                    <FormItem
-                                        name={'gender'}
-                                        rules={[{ required: true, message: "حدد الجنس" }]}
-                                    >
-                                        <Select
-                                            fontSize={16}
-                                            width={352}
-                                            height={40}
-                                            placeholder="اختر الجنس"
-                                            OptionData={genders}
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                }
+                                <p className={` ${styles.createappointmentFormFileds}`}>تفاصيل الموعد</p>
                                 <div className='flex'>
                                     <FormItem
                                         name={'dateFrom'}
@@ -337,8 +308,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                             width={172}
                                             height={40}
                                             disabled={isFieldDisable}
-                                            placeholder="تاريخ البداية"
-                                            suFFixIconName="calander"
+                                            placeholder='تبدأ يوم'
+                                            suFFixIconName="calenderDoubleColorIcon"
                                         />
                                     </FormItem>
                                     <FormItem
@@ -349,8 +320,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                             format={'YYYY-MM-DD'}
                                             width={172}
                                             height={40}
-                                            placeholder="تاريخ النهاية"
-                                            suFFixIconName="calander"
+                                            placeholder='تنتهي يوم'
+                                            suFFixIconName="calenderDoubleColorIcon"
                                             disabled={isFieldDisable}
                                         />
                                     </FormItem>
@@ -363,9 +334,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <TimePicker
                                             width={172}
                                             height={40}
-                                            placeholder="من الساعة"
+                                            placeholder='تبدأ ع الساعة'
                                             picker="time"
-                                            suFFixIconName="clock"
+                                            suFFixIconName="clockDoubleColor"
                                             disabled={isFieldDisable}
                                         />
                                     </FormItem>
@@ -376,48 +347,100 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <TimePicker
                                             width={172}
                                             height={40}
-                                            placeholder="إلى الساعة"
+                                            placeholder='تنتهي ع الساعة'
                                             picker="time"
-                                            suFFixIconName="clock"
+                                            suFFixIconName="clockDoubleColor"
                                             disabled={isFieldDisable}
                                         />
                                     </FormItem>
                                 </div>
-                                <div className='flex'>
+                                <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
+                                {courseType != 'physical' &&
                                     <FormItem
                                         name={'locationName'}
                                         rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                     >
-                                        <Input
-                                            fontSize={16}
-                                            width={172}
+                                        <InputWithLocation
+                                            width={352}
                                             height={40}
-                                            placeholder="الموقع"
+                                            suFFixIconName='onlineDoubleColorIcon'
+                                            placeholder='المكان'
                                             disabled={isFieldDisable}
                                         />
                                     </FormItem>
-                                    <FormItem
-                                        name={'location'}
-                                        rules={[{ required: true, message: "ادخل المكان (نص)" }]}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={172}
-                                            height={40}
-                                            placeholder="الرابط"
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                </div>
+                                }
+                                {courseType == 'physical' &&
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'locationName'}
+                                            rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                        >
+                                            <InputWithLocation
+                                                width={171}
+                                                height={40}
+                                                suFFixIconName='locationDoubleColor'
+                                                placeholder='الفرع والمدينة'
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                        <FormItem
+                                            name={'location'}
+                                            rules={[{ required: true, message: "ادخل المكان (نص)" }]}
+                                        >
+                                            <InputWithLocation
+                                                width={171}
+                                                height={40}
+                                                placeholder='رابط المركز'
+                                                suFFixIconName="linkDoubleColorIcon"
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                    </div>
+                                }
+                                <p className={`${styles.createappointmentFormFileds}`}>اختر المدربين</p>
+                                <FormItem
+                                    name={'instructors'}
+                                    rules={[{ required: true, message: "اختر المدرب" }]}
+                                >
+                                    <Select
+                                        fontSize={16}
+                                        width={352}
+                                        height={40}
+                                        placeholder='اختار المدربين'
+                                        OptionData={instructor}
+                                        mode="multiple"
+                                        maxTagCount='responsive'
+                                        disabled={isFieldDisable}
+                                    />
+                                </FormItem>
+                                {courseType == 'physical' &&
+                                    <>
+                                        <p className={`${styles.createappointmentFormFileds}`}>الدورة لمين؟</p>
+                                        <FormItem
+                                            name={'gender'}
+                                            rules={[{ required: true, message: "حدد الجنس" }]}
+                                        >
+                                            <Select
+                                                fontSize={16}
+                                                width={352}
+                                                height={40}
+                                                placeholder='اختار الجنس'
+                                                OptionData={genders}
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                    </>
+                                }
+                                <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المقاعد</p>
                                 <FormItem
                                     name={'maxNumberOfSeats'}
                                     rules={[{ required: true, message: "ادخل عدد المقاعد" }]}
                                 >
                                     <Input
                                         fontSize={16}
-                                        width={172}
+                                        width={352}
                                         height={40}
-                                        placeholder="عدد المقاعد"
+                                        placeholder='عدد المقاعد'
                                         disabled={isFieldDisable}
                                     />
                                 </FormItem>
@@ -425,11 +448,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                     <>
                                         <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
-                                            <p className={styles.recordedcourse}>إخفاء بطاقة الموعد</p>
+                                            <p className={styles.recordedcourse}>إظهار المقرر للطلاب</p>
                                         </div>
                                         <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
-                                            <p className={styles.recordedcourse}>تفعيل محتوى الدورة المسجلة</p>
+                                            <p className={styles.recordedcourse}>إخفاء الموعد</p>
                                         </div>
                                     </>
                                 }

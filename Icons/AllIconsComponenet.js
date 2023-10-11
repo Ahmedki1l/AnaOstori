@@ -107,6 +107,10 @@ import CurriculumNewFileIcon from './customeIcons/curriculumNewFileIcon'
 import CurriculumNewQuizIcon from './customeIcons/curriculumNewQuizIcon'
 import ClockDoubleColor from './customeIcons/clockDoubleColor'
 import LocationDoubleColor from './customeIcons/locationDoubleColor'
+import CalenderDoubleColorIcon from './customeIcons/calenderDoubleColorIcon'
+import LinkDoubleColorIcon from './customeIcons/linkDoubleColorIcon'
+import OnlineDoubleColorIcon from './customeIcons/onlineDoubleColorIcon'
+import TelevisonDoubleColorIcon from './customeIcons/televisonDoubleColorIcon'
 
 
 
@@ -221,11 +225,14 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 
 			{iconName == 'clockDoubleColor' && <ClockDoubleColor height={height} width={width} color={color} />}
 			{iconName == 'locationDoubleColor' && <LocationDoubleColor height={height} width={width} color={color} />}
+			{iconName == 'calenderDoubleColorIcon' && <CalenderDoubleColorIcon height={height} width={width} color={color} />}
+			{iconName == 'linkDoubleColorIcon' && <LinkDoubleColorIcon height={height} width={width} color={color} />}
+			{iconName == 'onlineDoubleColorIcon' && <OnlineDoubleColorIcon height={height} width={width} color={color} />}
+			{iconName == 'televisonDoubleColorIcon' && <TelevisonDoubleColorIcon height={height} width={width} color={color} />}
 
 			{iconName == 'curriculumNewQuizIcon' && <CurriculumNewQuizIcon height={height} width={width} color={color} />}
 			{iconName == 'curriculumNewVideoIcon' && <CurriculumNewVideoIcon height={height} width={width} color={color} />}
 			{iconName == 'curriculumNewFileIcon' && <CurriculumNewFileIcon height={height} width={width} color={color} />}
-
 
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
 			{iconName == 'studentTwoIcon' && <StudentTwoIcon height={height} width={width} color={color} strockColor={strockColor} />}

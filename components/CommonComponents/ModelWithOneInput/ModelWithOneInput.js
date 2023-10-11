@@ -15,6 +15,7 @@ const ModelWithOneInput = ({
     onDelete,
     itemName,
     curriCulumSection,
+    setSelectedSection
 }) => {
 
     useEffect(() => {
@@ -25,26 +26,27 @@ const ModelWithOneInput = ({
 
     const handleCreateFolder = async (values) => {
         onSave(values)
+        setSelectedSection()
         inputForm.resetFields()
     }
 
-    const handleDelete = () => {
-        onDelete()
+    const onModalClose = () => {
+        inputForm.resetFields()
+        setSelectedSection()
+        setOpen(false)
     }
-
 
     return (
         <>
             <Modal
                 className='addAppoinmentModal'
                 open={open}
-                onCancel={() => setOpen(false)}
+                onCancel={() => onModalClose()}
                 closeIcon={false}
                 footer={false}
-                afterClose={onclose}
             >
                 <div className={styles.modalHeader}>
-                    <button onClick={() => setOpen(false)} className={styles.closebutton}>
+                    <button onClick={() => onModalClose()} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
                     </button>
                     {curriCulumSection == 'addSection' ?
