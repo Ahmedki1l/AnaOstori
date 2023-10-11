@@ -12,6 +12,7 @@ import BackToPath from "../../../components/CommonComponents/BackToPath";
 import { getNewToken } from "../../../services/fireBaseAuthService";
 import { mediaUrl } from "../../../constants/DataManupulation";
 import { toast } from "react-toastify";
+import { managePurchaseOrderConst } from "../../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst";
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -29,7 +30,7 @@ const Index = () => {
     const [selectedOrder, setSelectedOrder] = useState()
     const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [currentPage, setCurrentPage] = useState(1)
-    console.log(purchaseOrderList);
+
     const tableColumns = [
         {
             title: 'كلمناه؟',
@@ -46,10 +47,10 @@ const Index = () => {
                     await createOrderAPI(body).then((res) => {
                         getPurchaseOrderList(1)
                         if (text) {
-                            toast.success(' student has not contacted ')
+                            toast.success(managePurchaseOrderConst.studentHasNotContacted)
                         }
                         else {
-                            toast.success(' student contact successfully')
+                            toast.success(managePurchaseOrderConst.studentHasContacted)
                         }
                     }).catch(async (error) => {
                         if (error?.response?.status == 401) {
@@ -270,7 +271,7 @@ const Index = () => {
                     <Drawer
                         title={
                             <>
-                                <DrawerTiitle className="foneBold">تفاصيل حجز رقم</DrawerTiitle>
+                                <DrawerTiitle className="foneBold">{managePurchaseOrderConst.purchaseOrderDrawerTitle}</DrawerTiitle>
                                 <DrawerTiitle className="foneBold">#{selectedOrder.id}</DrawerTiitle>
                             </>
                         }
