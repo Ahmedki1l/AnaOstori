@@ -189,7 +189,7 @@ const paymentStatusBank = [
     {
         key: 5,
         label: 'تم استرجاع المبلغ',
-        value: 'refuend',
+        value: 'refund',
         color: 'black'
     },
 ]
@@ -217,7 +217,7 @@ const paymentStatusOther = [
     {
         key: 5,
         label: 'تم استرجاع المبلغ',
-        value: 'refuend',
+        value: 'refund',
         color: 'red'
     },
 
