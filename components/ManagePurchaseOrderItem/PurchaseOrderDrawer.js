@@ -13,7 +13,7 @@ import { dateRange, fullDate } from '../../constants/DateConverter'
 import CustomButton from '../CommonComponents/CustomButton'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import Input from '../antDesignCompo/Input'
-import { managePuchaseOrderDrawerConst } from '../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst'
+import { managePuchaseOrderDrawerConst, paymentTypeConst } from '../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst'
 
 
 const PurchaseOrderDrawer = (props) => {
@@ -21,6 +21,8 @@ const PurchaseOrderDrawer = (props) => {
     const [orderForm] = Form.useForm()
     const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [paymentStatus, setPaymentStatus] = useState()
+
 
     const handleSaveOrder = async (value) => {
         setShowBtnLoader(true)
@@ -77,11 +79,17 @@ const PurchaseOrderDrawer = (props) => {
     useEffect(() => {
         orderForm.setFieldValue('status', selectedOrder.status)
         orderForm.setFieldValue('failedReason', selectedOrder.failedReason)
-    })
+    }, [])
 
     const orderItems = selectedOrder.orderItems.map((item, index) => {
         return item.course.type
     })
+
+    const handleStatusChange = (e) => {
+        console.log(e);
+        setPaymentStatus(e)
+        orderForm.setFieldValue('status', e)
+    }
 
     return (
         <Form form={orderForm} onFinish={handleSaveOrder}>
@@ -105,8 +113,19 @@ const PurchaseOrderDrawer = (props) => {
                     height={47}
                     OptionData={selectedOrder?.paymentMethod != 'bank_transfer' ? paymentStatusOther : paymentStatusBank}
                     placeholder={managePuchaseOrderDrawerConst.selectedOrderStatusPlaceHolder}
+                    onChange={handleStatusChange}
                 />
             </FormItem>
+            {paymentStatus == 'refund' &&
+                <FormItem
+                    name={'refund'}>
+                    <Input
+                        width={425}
+                        height={47}
+                        placeholder='refund'
+                    />
+                </FormItem>
+            }
             {(selectedOrder.status == "rejected" || selectedOrder.status == "failed") &&
                 <>
                     <p style={{ fontSize: '18px' }}>failedReason</p>
@@ -129,9 +148,9 @@ const PurchaseOrderDrawer = (props) => {
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.selectedOrderPaymentMethodTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>
-                    {selectedOrder.paymentMethod == 'hyperpay' ? selectedOrder.cardType == 'credit' ? selectedOrder.cardBrand == 'visa' ? 'فيزا' : 'ماستر كارد' :
-                        selectedOrder.cardType == 'mada' ? 'مدى' : 'ابل باي' :
-                        (selectedOrder.paymentMethod == 'bank_transfer' ? 'تحويل بنكي' : 'مشتريات داخل التطبيق')}
+                    {selectedOrder.paymentMethod == 'hyperpay' ? selectedOrder.cardType == 'credit' ? selectedOrder.cardBrand == 'visa' ? paymentTypeConst.visaPayment : paymentTypeConst.masterCardPayment :
+                        selectedOrder.cardType == 'mada' ? paymentTypeConst.madaPaymet : paymentTypeConst.applePayment :
+                        (selectedOrder.paymentMethod == 'bank_transfer' ? paymentTypeConst.bankTransferPayment : paymentTypeConst.inAppPurchasePayment)}
                 </p>
             </div>
             {selectedOrder.reciptKey &&
