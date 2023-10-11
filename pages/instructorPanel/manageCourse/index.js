@@ -5,6 +5,8 @@ import styles from '../../../styles/InstructorPanelStyleSheets/ManageCourse.modu
 import Link from 'next/link';
 import Image from 'next/legacy/image';
 import BackToPath from '../../../components/CommonComponents/BackToPath';
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
+import { typeOfCourseConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
 
 function Index() {
     const storeData = useSelector((state) => state?.globalStore);
@@ -26,24 +28,24 @@ function Index() {
                                     backPathArray={
                                         [
                                             { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                                            { lable: 'إدارة وإضافة الدورات', link: null },
+                                            { lable: 'إضافة وتعديل الدورات', link: null },
                                         ]
                                     }
                                 />
                             </div>
-                            <h1 className={`head2 py-12 px-4`}>اختر نوع الدورة</h1>
+                            <h1 className={`font-medium text-2xl py-12 px-4`}>اختر نوع الدورة</h1>
                             <div className={styles.courseTypesList}>
                                 <Link href={"/instructorPanel/manageCourse/physical"} className={`${styles.courseTypeWrapper} normalLinkText`}>
-                                    <Image src={'/images/courseTypePhysical.png'} height={90} width={90} />
-                                    <p className={`${styles.dashboardItemName}`}>حضورية</p>
-                                </Link>
-                                <Link href={"/instructorPanel/manageCourse/onDemand"} className={`${styles.courseTypeWrapper} normalLinkText`} >
-                                    <Image src={'/images/courseTypeOnDemand.png'} height={90} width={90} />
-                                    <p className={`${styles.dashboardItemName}`}>مسجلة</p>
+                                    <AllIconsComponenet iconName={'locationDoubleColor'} height={50} width={50} color={'#000000'} />
+                                    <p className={`${styles.dashboardItemName}`}>{typeOfCourseConst.physical}</p>
                                 </Link>
                                 <Link href={"/instructorPanel/manageCourse/online"} className={`${styles.courseTypeWrapper} normalLinkText`} >
-                                    <Image src={'/images/courseTypeOnline.png'} height={90} width={90} />
-                                    <p className={`${styles.dashboardItemName}`}>مباشرة عن بعد</p>
+                                    <AllIconsComponenet iconName={'onlineDoubleColorIcon'} height={50} width={50} color={'#000000'} />
+                                    <p className={`${styles.dashboardItemName}`}>{typeOfCourseConst.online}</p>
+                                </Link>
+                                <Link href={"/instructorPanel/manageCourse/onDemand"} className={`${styles.courseTypeWrapper} normalLinkText`} >
+                                    <AllIconsComponenet iconName={'televisonDoubleColorIcon'} height={50} width={50} color={'#000000'} />
+                                    <p className={`${styles.dashboardItemName}`}>{typeOfCourseConst.onDemand}</p>
                                 </Link>
                             </div>
                         </div>

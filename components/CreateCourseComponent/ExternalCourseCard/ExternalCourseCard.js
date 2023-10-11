@@ -15,6 +15,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { toastSuccessMessage } from '../../../constants/ar';
 import { toast } from 'react-toastify';
+import { externalCourseCardDetailsConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
 
 
 
@@ -234,11 +235,11 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                     <div className={styles.cardmetaDataForm}>
                         <FormItem
                             name="cardDescription"
-                            rules={[{ required: true, message: 'اكتب وصف الدورة' }]}>
+                            rules={[{ required: true, message: externalCourseCardDetailsConst.addDiscriptionInputErrorMsg }]}>
                             <InputTextArea
                                 height={142}
                                 width={549}
-                                placeholder="وصف الدورة"
+                                placeholder={externalCourseCardDetailsConst.addDiscriptionInputPlaceHolder}
                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "cardDescription", null, null)}
                             />
                         </FormItem>
@@ -255,7 +256,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                     {(field, { add, remove }) => (
                                         <>
                                             <div style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                                <p className={styles.secDetails}>النقاط</p>
+                                                <p className={styles.secDetails}>{externalCourseCardDetailsConst.addExteralDetailsLabel}</p>
                                                 <p className={styles.addDetails} onClick={() => { add(), setCourseCardMetaDataObj() }} >+ إضافة</p>
                                             </div>
                                             {field.map(({ name, key, ...restField }, index) => (
@@ -280,7 +281,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                             <Input
                                                                 height={47}
                                                                 width={216}
-                                                                placeholder="النص"
+                                                                placeholder={externalCourseCardDetailsConst.addTitleInputPlaceHolder}
                                                                 value={field.text}
                                                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "text", 'CourseCardMetaData', index)}
                                                             />
@@ -290,7 +291,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                             <Input
                                                                 height={47}
                                                                 width={216}
-                                                                placeholder="رابط"
+                                                                placeholder={externalCourseCardDetailsConst.addLinkInputPlaceHolder}
                                                                 value={field.link}
                                                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "link", 'CourseCardMetaData', index)}
                                                             />
@@ -300,7 +301,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                             <Input
                                                                 height={47}
                                                                 width={216}
-                                                                placeholder="نص منفصل"
+                                                                placeholder={externalCourseCardDetailsConst.addSeparateTextInputPlaceHolder}
                                                                 value={field.tailLinkName}
                                                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "tailLinkName", 'CourseCardMetaData', index)}
                                                             />
@@ -312,7 +313,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                             <Input
                                                                 height={47}
                                                                 width={292}
-                                                                placeholder="رابط للنص المنفصل"
+                                                                placeholder={externalCourseCardDetailsConst.addSeparateTextLinkInputPlaceHolder}
                                                                 value={field.tailLink}
                                                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "tailLink", 'CourseCardMetaData', index)}
                                                             />
@@ -322,7 +323,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                             <Input
                                                                 height={47}
                                                                 width={216}
-                                                                placeholder="النص الرمادي"
+                                                                placeholder={externalCourseCardDetailsConst.adGreyTextInputPlaceHolder}
                                                                 value={field.grayedText}
                                                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "grayedText", 'CourseCardMetaData', index)}
                                                             />
