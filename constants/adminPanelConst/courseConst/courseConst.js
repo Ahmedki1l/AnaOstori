@@ -7,14 +7,17 @@ export const courseToaseSuccessMessage = {
 }
 
 export const appointmentsNotesConst = {
-    oneSeatsRemaining:'مقعد واحد متبقي',
-    twoSeatsReamining: 'مقعدين متبقيين',
-    threeToTenSeatsRemaining : 'Num مقاعد متبقية',
-    aboveElevenSeatsRemaining: 'Num مقعد متبقي',
-    allSeatesReserved: 'جميع المقاعد محجوزة'
+    oneSeatsRemainingErrorMsg:'مقعد واحد متبقي',
+    twoSeatsReaminingErrorMsg: 'مقعدين متبقيين',
+    threeToTenSeatsRemainingErrorMsg : 'Num مقاعد متبقية',
+    aboveElevenSeatsRemainingErrorMsg: 'Num مقعد متبقي',
+    allSeatesReservedErrorMsg: 'جميع المقاعد محجوزة'
 }
 
 export const onDemandCoursesConst = { 
+
+    onDemanedCourse: 'الدورات المسجلة | منصة أنا أسطوري',
+
     successGreenToGrayToast: 'تم إخفاء الدورة بنجاح',
     successGrayToGreenToast: 'تم إظهار الدورة بنجاح',
 
@@ -58,19 +61,25 @@ export const onDemandCoursesConst = {
     publishCourse: 'نشر الدورة',
     ableToPurchases: 'قابلة للشراء',
 
-    errorCourseTitleToast: 'اكتب عنوان الدورة',
-    errorSelectCategoryToast: 'اختار المجال',
-    errorSelectCirrToast: 'اختار المقرر',
-    errorDescriptionToast: 'اكتب الوصف',
-    errorRatingValueToast: 'ادخل تقييم الدورة',
-    errorInputNumberOfEnrolledValueToast: 'حط رقم تخميني',
-    errorOneUserPricingToast : 'ادخل سعر الدورة',
-    errorOneUserDiscountPricingToast: 'ادخل سعر الدورة بعد الخصم',
+    courseTitleErrorMsg: 'اكتب عنوان الدورة',
+    selectCategoryErrorMsg: 'اختار المجال',
+    selectCirrErrorMsg: 'اختار المقرر',
+    descriptionErrorMsg: 'اكتب الوصف',
+
+    ratingValueErrorMsg: 'ادخل تقييم الدورة',
+    inputNumberOfEnrolledValueErrorMsg: 'حط رقم تخميني',
+    oneUserPricingErrorMsg : 'ادخل سعر الدورة',
+    oneUserDiscountPricingErrorMsg: 'ادخل سعر الدورة بعد الخصم',
+
+    inputDescriptionErrMsg:'اكتب وصف الدورة',
     errorGreenToGrayNotPurchaseToast: 'أصبحت الدورة غير قابلة للشراء',
     errorSomethingWentWrongToast: 'حصلت مشكلة، حاول مرة ثانية'
 }
 
-export default onlineCoursesConst = {
+export const onlineCoursesConst = {
+
+    onlineCourse: 'الدورات المباشرة | منصة أنا أسطوري',
+
     successGreenToGrayToast: 'تم إخفاء الدورة بنجاح',
     successGrayToGreenToast: 'تم إظهار الدورة بنجاح',
 
@@ -79,9 +88,65 @@ export default onlineCoursesConst = {
     twoUserPricing: 'شخصين (السعر على كل شخص)',
     threeUserPricing: '3 أو أكثر (السعر على كل شخص)',
 
+    twoUserPricingErrMsg: 'ادخل سعر الدورة لشخصين',
+    threeUserPricing: 'ادخل سعر الدورة لـ3 اشخاص او اكثر',
+
+
     errorTwoUserPricingToast : 'ادخل سعر الدورة لشخصين',
     errorThreeUserPricingToast : 'ادخل سعر الدورة لـ3 اشخاص او اكثر',
 
     apointmentHidden: 'تم إخفاء الموعد بنجاح',
-    appointmentShown: 'تم إظهار الموعد بنجاح'
+    appointmentShown: 'تم إظهار الموعد بنجاح',
+
+    appoitmentInfoTitle: 'تفاصيل الموعد',
+    inputStartDate: 'تبدأ يوم',
+    inputEndDate: 'تنتهي يوم',
+    inputStartHour: 'تبدأ ع الساعة',
+    inputEndHour: 'تنتهي ع الساعة',
+    placeInfoTitle: 'تفاصيل المكان',
+    inputPlace: 'المكان',
+    selectInstructour: 'اختار المدربين',
+    inputSelectInstructor: 'اختار المدربين',
+    seatsInfo: 'تفاصيل المقاعد',
+    inputNumOfSeats: 'عدد المقاعد',
+    addButton: 'إضافة',
+
+    inputStartDateErrorMsg:  'حدد أي يوم تبدأ',
+    inputEndDateErrorMsg:  'حدد أي يوم تنتهي',
+    inputStartHourErrorMsg:  'حدد أي ساعة تبدأ',
+    inputEndHourErrorMsg:  'حدد أي ساعة تنتهي',
+    
+    inputPlaceErrorMsg:  'اكتب وين المكان',
+
+    inputSelectInstructorErrorMsg: 'حدد المدربين', 
+    
+    inputNumOfSeatsErrorMsg:  'دخل عدد المقاعد',
+
+    buttonShowContent: 'إظهار المقرر للطلاب',
+    buttonHideAppointment: 'إخفاء الموعد',
+    saveButton: 'حفظ',
+
+    successNewAppointmentAddedToast: 'تم إضافة الموعد بنجاح',
+    successAppointmentUpdatedToast: 'تم تعديل بيانات الموعد بنجاح',
+    successShowContentToUsersGreenToast: 'الحين المحتوى يظهر للطلاب',
+    successShowContentToUsersGrayToast: 'الحين المحتوى ما يظهر للطلاب',
+    successAppointmentHiddenGreenToast: 'تم إخفاء الموعد بنجاح',
+    successAppointmentShownGrayToast: 'تم إظهار الموعد بنجاح'
+
+}
+
+export const physicalCoursesConst = {
+    physicalCourse: 'الدورات الحضورية | منصة أنا أسطوري',
+    successGreenToGrayToast: 'تم إخفاء الدورة بنجاح',
+    successGrayToGreenToast: 'تم إظهار الدورة بنجاح',
+
+    inputPlace: 'الفرع والمدينة',
+    inputPlaceLink: 'رابط المركز',
+    
+    gender: 'الدورة لمين؟',
+    inputSelectGender: 'اختار الجنس',
+
+    inputPlaceLinkErrorMsg: 'ادخل رابط المركز',
+    inputSelectGenderErrorMsg: 'اختار الجنس'
+
 }
