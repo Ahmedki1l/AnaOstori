@@ -5,6 +5,7 @@ import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import CustomButton from '../CustomButton';
+import { folderConst, curriculumConst, commonLibraryConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 const ModelWithOneInput = ({
     open,
@@ -16,6 +17,7 @@ const ModelWithOneInput = ({
     curriCulumSection,
     setSelectedSection
 }) => {
+
     useEffect(() => {
         inputForm.setFieldValue('name', itemName)
     }, [itemName])
@@ -48,9 +50,9 @@ const ModelWithOneInput = ({
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
                     </button>
                     {curriCulumSection == 'addSection' ?
-                        <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان القسم' : 'إضافة قسم'}</p>
+                        <p className={`fontBold ${styles.createappointment}`}>{isEdit ? curriculumConst.addSectionModelConst.editSectionTitle : curriculumConst.addSectionModelConst.addSectionTitle}</p>
                         :
-                        <p className={`fontBold ${styles.createappointment}`}>{isEdit ? 'تعديل عنوان المجلد' : 'إضافة مجلد'}</p>
+                        <p className={`fontBold ${styles.createappointment}`}>{isEdit ? folderConst.addAndEditFolderModelConst.editPopUpTitle : folderConst.addAndEditFolderModelConst.addPopUpTitle}</p>
                     }
                 </div>
                 <div dir='rtl'>
@@ -58,20 +60,20 @@ const ModelWithOneInput = ({
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: 'لازم تكتب العنوان' }]}
+                                rules={[{ required: true, message: curriCulumSection == 'addSection' ? curriculumConst.addSectionModelConst.sectionTitleInputError : folderConst.addAndEditFolderModelConst.folderNameInputError }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder={curriCulumSection == 'addSection' ? 'عنوان القسم' : 'عنوان المجلد*'}
+                                    placeholder={curriCulumSection == 'addSection' ? curriculumConst.addSectionModelConst.sectionTitleInputPlaceholder : folderConst.addAndEditFolderModelConst.folderNameInputPlaceholder}
                                 />
                             </FormItem>
                         </div>
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className='pt-2'>
                                 <CustomButton
-                                    btnText={isEdit ? "حفظ" : "إضافة"}
+                                    btnText={isEdit ? commonLibraryConst.updateBtnText : commonLibraryConst.addBtnText}
                                     width={80}
                                     height={37}
                                     fontSize={16}

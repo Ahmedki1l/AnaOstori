@@ -10,7 +10,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 import CustomButton from '../../CommonComponents/CustomButton'
 import { toast } from 'react-toastify';
-import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst';
+import { manageLibraryConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,

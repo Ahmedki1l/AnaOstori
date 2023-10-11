@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal } from 'antd';
 import styles from './ModelForDeleteItems.module.scss'
+import { curriculumConst, folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
@@ -11,39 +12,54 @@ const ModelForDeleteItems = ({
 ) => {
     const deleteModalProps = {
         folder: {
-            title: 'تأكيد حذف المجلد',
-            messageText: 'متأكد انك تبي تحذف المجلد؟',
-            btnText: 'تأكيد الحذف',
+            title: folderConst.deleteFolderModelConst.deletePopUpTitle,
+            messageText: folderConst.deleteFolderModelConst.deletePopUpText,
+            btnText: folderConst.deleteFolderModelConst.deleteBtnText,
         },
         video: {
-            title: 'تأكيد حذف الفيديو',
-            messageText: 'متأكد انك تبي تحذف الفيديو؟',
-            btnText: 'تأكيد الحذف',
+            title: videoFileConst.deleteVideoModelConst.deletePopUpTitle,
+            messageText: videoFileConst.deleteVideoModelConst.deletePopUpText,
+            btnText: videoFileConst.deleteVideoModelConst.deleteBtnText,
         },
         file: {
-            title: 'تأكيد حذف الملف',
-            messageText: 'متأكد انك تبي تحذف الملف؟',
-            btnText: 'تأكيد الحذف',
+            title: pdfFileConst.deletePdfModelConst.deletePopUpTitle,
+            messageText: pdfFileConst.deletePdfModelConst.deletePopUpText,
+            btnText: pdfFileConst.deletePdfModelConst.deleteBtnText,
         },
         quiz: {
-            title: 'تأكيد حذف الاختبار',
-            messageText: 'متأكد انك تبي تحذف الاختبار؟',
-            btnText: 'تأكيد الحذف',
+            title: quizConst.deleteExamModelConst.deletePopUpTitle,
+            messageText: quizConst.deleteExamModelConst.deletePopUpText,
+            btnText: quizConst.deleteExamModelConst.deleteBtnText,
         },
         section: {
-            title: 'تأكيد حذف القسم',
-            messageText: 'متأكد انك تبي تحذف القسم؟',
-            btnText: 'تأكيد الحذف',
+            title: curriculumConst.deleteSectionModelConst.deleteSectionPopUpTitle,
+            messageText: curriculumConst.deleteSectionModelConst.deletePopUpText,
+            btnText: curriculumConst.deleteSectionModelConst.deleteBtnText,
         },
-        sectionItem: {
-            title: "إزالة عنصر",
-            messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
-            btnText: 'تأكيد الحذف',
-        },
+        // sectionItem: {
+        //     title: "إزالة عنصر",
+        //     messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
+        //     btnText: 'تأكيد الحذف',
+        // },
         curriculum: {
-            title: 'تم حذف المقرر بنجاح',
-            messageText: 'متأكد انك تبي تحذف المقرر؟',
-            btnText: 'تأكيد الحذف',
+            title: curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg,
+            messageText: curriculumConst.curriculumToastMsgConst.deletePopUpText,
+            btnText: curriculumConst.curriculumToastMsgConst.deleteBtnText,
+        },
+        videoDelete: {
+            title: curriculumConst.deleteVideoFromSectionModelConst.deleteVideoPopUpTitle,//'تأكيد عدم تضمين الفيديو',
+            messageText: curriculumConst.deleteVideoFromSectionModelConst.deleteVideoPopUpText,// 'متأكد انك ما تبي تضم هذا الفيديو للمقرر؟',
+            btnText: curriculumConst.deleteVideoFromSectionModelConst.deleteBtnText,//'اي، ما بضمنه',
+        },
+        fileDelete: {
+            title: curriculumConst.deletePdfFileFromSectionModelConst.deletePdfPopUpTitle, // 'تأكيد عدم تضمين الملف',
+            messageText: curriculumConst.deletePdfFileFromSectionModelConst.deletePdfPopUpText, //'متأكد انك ما تبي تضم هذا الملف للمقرر؟',
+            btnText: curriculumConst.deletePdfFileFromSectionModelConst.deletePdfBtnText, // 'اي، ما بضمنه',
+        },
+        quizDelete: {
+            title: curriculumConst.deleteExamFromSectionModelConst.deleteExamPopUpTitle, //  'تأكيد عدم تضمين الاختبار',
+            messageText: curriculumConst.deleteExamFromSectionModelConst.deleteExamPopUpText, // 'متأكد انك ما تبي تضم هذا الاختبار للمقرر؟',
+            btnText: curriculumConst.deleteExamFromSectionModelConst.deleteExamBtnText, // 'اي، ما بضمنه',
         },
         category: {
             title: "حذف مقرر",
@@ -54,21 +70,6 @@ const ModelForDeleteItems = ({
             title: 'تأكيد حذف المدرب',
             messageText: 'متأكد انك تبي تحذف المدرب؟',
             btnText: 'تأكيد الحذف',
-        },
-        videoDelete: {
-            title: 'تأكيد عدم تضمين الفيديو',
-            messageText: 'متأكد انك ما تبي تضم هذا الفيديو للمقرر؟',
-            btnText: 'اي، ما بضمنه',
-        },
-        fileDelete: {
-            title: 'تأكيد عدم تضمين الملف',
-            messageText: 'متأكد انك ما تبي تضم هذا الملف للمقرر؟',
-            btnText: 'اي، ما بضمنه',
-        },
-        quizDelete: {
-            title: 'تأكيد عدم تضمين الاختبار',
-            messageText: 'متأكد انك ما تبي تضم هذا الاختبار للمقرر؟',
-            btnText: 'اي، ما بضمنه',
         },
         news: {
             title: 'تأكيد حذف نص تسويقي',

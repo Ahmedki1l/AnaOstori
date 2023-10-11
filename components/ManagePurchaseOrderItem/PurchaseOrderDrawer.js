@@ -77,6 +77,12 @@ const PurchaseOrderDrawer = (props) => {
         orderForm.setFieldValue('status', selectedOrder.status)
         orderForm.setFieldValue('failedReason', selectedOrder.failedReason)
     })
+
+    const orderItems = selectedOrder.orderItems.map((item, index) => {
+        return item.course.type
+    })
+    console.log(orderItems);
+
     return (
         <Form form={orderForm} onFinish={handleSaveOrder}>
             <p className='fontBold py-2' style={{ fontSize: '18px' }}>تفاصيل الحجز</p>
@@ -84,10 +90,13 @@ const PurchaseOrderDrawer = (props) => {
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.courseName}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>عدد المسجلين</p>
-            <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.qty}</p>
-            </div>
+            {orderItems != 'on-demand' &&
+                <>
+                    <p style={{ fontSize: '18px' }}>عدد المسجلين</p>
+                    <div className={styles.purchaseOrderBox}>
+                        <p>{selectedOrder.qty}</p>
+                    </div>
+                </>}
             <p style={{ fontSize: '18px' }}>حالة الحجز</p>
             <FormItem
                 name={'status'}>
@@ -214,11 +223,15 @@ const PurchaseOrderDrawer = (props) => {
                         <div className={styles.purchaseOrderBox}>
                             <p> {item.email}</p>
                         </div>
-                        <p style={{ fontSize: '18px' }}>موعد الدورة</p>
-                        <div className={styles.purchaseOrderBox}>
-                            <p>{dateRange(item.createdAt, item.updatedAt
-                            )}</p>
-                        </div>
+                        {orderItems != 'on-demand' &&
+                            <>
+                                <p style={{ fontSize: '18px' }}>موعد الدورة</p>
+                                <div className={styles.purchaseOrderBox}>
+                                    <p>{dateRange(item.createdAt, item.updatedAt
+                                    )}</p>
+                                </div>
+                            </>
+                        }
                     </div>
                 )
             })}
