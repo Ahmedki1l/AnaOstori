@@ -34,7 +34,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-    const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : false)
+    const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
 
 
@@ -215,19 +215,27 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         <td>
                                             <div className={styles.PeriodDataDetails}>
                                                 <p className={`head2`}>{dateRange(appointment.dateFrom, appointment.dateTo)}</p>
-                                                <div className={styles.genderDetails}>
-                                                    {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} />}
-                                                    {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={17} color={'#E10768'} />}
-                                                    {/* {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>} */}
-                                                    <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
-                                                </div><br />
+                                                {appointment.gender !== "mix" &&
+                                                    <>
+                                                        <div className={styles.genderDetails}>
+                                                            {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} />}
+                                                            {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={17} color={'#E10768'} />}
+                                                            {/* {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>} */}
+                                                            <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
+                                                        </div><br />
+                                                    </>
+                                                }
                                                 <div className={styles.genderDetails}>
                                                     <AllIconsComponenet iconName={'clockDoubleColor'} height={17} width={17} color={'#000000'} />
                                                     <p className='mr-1'>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
                                                 </div><br />
                                                 <div className={styles.genderDetails}>
                                                     <AllIconsComponenet iconName={'locationDoubleColor'} height={17} width={17} color={'#000000'} />
-                                                    <Link className='mr-1' target='_blank' href={appointment.location}>{appointment.locationName}</Link>
+                                                    {appointment.location ?
+                                                        <Link className='mr-1' target='_blank' href={appointment.location}>{appointment.locationName}</Link>
+                                                        :
+                                                        <p className='mr-1'>{appointment.locationName}</p>
+                                                    }
                                                 </div><br />
                                                 <div className={styles.genderDetails}>
                                                     {appointment.numberOfSeats > 5 ?
