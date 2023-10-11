@@ -50,7 +50,7 @@ export default function PurchaseInquiry(props) {
 	return (
 		<>
 			<div className={styles.searchHeader}>
-				<h1 className={`head2 text-white text-center ${styles.headText}`}>استعلام الفواتير وتأكيد الحجوزات</h1>
+				<h1 className={`head2 text-white text-center ${styles.headText}`}>استعلام الحجوزات</h1>
 			</div>
 			<div className={`maxWidthDefault`}>
 				{searchData.length > 0 && !isMediumScreen ?

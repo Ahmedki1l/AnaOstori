@@ -60,7 +60,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             value: obj.id
         }
     })
-    console.log(curriculum);
 
     const onFinishCreateCourse = async (values) => {
         setShowLoader(true)
@@ -167,12 +166,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             delete obj.createdAt
             delete obj.updatedAt
             obj.order = `${index + 1}`
-            obj.courseId = editCourseData.id
-            // obj.tailLinkName = obj.tailLinkName ? obj.tailLinkName : ''
-            // obj.tailLink = obj.tailLink ? obj.tailLink : ''
-            // obj.link = obj.link ? obj.link : ''
-            // obj.content = obj.content ? obj.content : ''
-            deleteNullFromObj(obj)
+            obj.courseId = editCourseData?.id
+            obj.tailLinkName = obj.tailLinkName ? obj.tailLinkName : null
+            obj.tailLink = obj.tailLink ? obj.tailLink : null
+            obj.link = obj.link ? obj.link : null
+            obj.content = obj.content ? obj.content : null
             return obj
         })
         const courseMetaDataBody = {
@@ -186,7 +184,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             delete obj.grayedText
             obj.order = `${index + 1}`
             obj.courseId = editCourseData.id
-            deleteNullFromObj(obj)
+            obj.tailLinkName = obj.tailLinkName ? obj.tailLinkName : null
+            obj.tailLink = obj.tailLink ? obj.tailLink : null
+            obj.link = obj.link ? obj.link : null
             return obj
         })
         const courseDetailsMetaDataBody = {
@@ -213,8 +213,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         values.groupDiscountEligible = groupDiscountEligible
         values.language = englishCourse ? "en" : "ar"
         values.type = courseType == "onDemand" ? "on-demand" : courseType
-        // delete values.courseMetaData
-        // delete values.courseDetailsMetaData
+        delete values.courseMetaData
+        delete values.courseDetailsMetaData
 
         if (courseType != "physical") {
             const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
@@ -277,13 +277,14 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             let editCourseData;
 
             if (courseDetailsMetaDataBody.data.data.length === 0 && courseMetaDataBody.data.data.length > 0) {
-                editCourseData = editCourseMetaData.data;
+                editCourseData = editCourseMetaData?.data;
             } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length > 0) {
-                editCourseData = editCourseDetailsMetadata.data;
+                editCourseData = editCourseDetailsMetadata?.data;
             } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
                 editCourseData = editCourse.data;
             } else {
-                editCourseData = editCourseDetailsMetadata.data;
+                editCourseData = editCourseMetaData.data;
+                editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
             }
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
             toast.success(toastSuccessMessage.courseDetailUpdateMsg);
@@ -291,34 +292,38 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         } catch (error) {
             setShowLoader(false);
             console.log(error);
-
             if (error?.response?.status === 401) {
-                const promiseArray = [];
+                async function reAuthenticate() {
+                    await getNewToken().then(async (token) => {
+                        const promiseArray = [];
 
-                promiseArray.push(updateCourseDetailsAPI(courseBody));
+                        promiseArray.push(updateCourseDetailsAPI(courseBody));
 
-                if (courseMetaDataBody.data.data.length > 0) {
-                    promiseArray.push(updateCourseMetaDataAPI(courseMetaDataBody));
+                        if (courseMetaDataBody.data.data.length > 0) {
+                            promiseArray.push(updateCourseMetaDataAPI(courseMetaDataBody));
+                        }
+                        if (courseDetailsMetaDataBody.data.data.length > 0) {
+                            promiseArray.push(updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody));
+                        }
+                        const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all(promiseArray);
+
+                        let editCourseData;
+
+                        if (courseDetailsMetaDataBody.data.data.length === 0 && courseMetaDataBody.data.data.length > 0) {
+                            editCourseData = editCourseMetaData?.data;
+                        } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length > 0) {
+                            editCourseData = editCourseDetailsMetadata?.data;
+                        } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
+                            editCourseData = editCourse.data;
+                        } else {
+                            editCourseData = editCourseDetailsMetadata.data;
+                            editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
+                        }
+                        dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
+                        toast.success(toastSuccessMessage.courseDetailUpdateMsg);
+                        setShowLoader(false);
+                    })
                 }
-                if (courseDetailsMetaDataBody.data.data.length > 0) {
-                    promiseArray.push(updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody));
-                }
-                const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all(promiseArray);
-
-                let editCourseData;
-
-                if (courseDetailsMetaDataBody.data.data.length === 0 && courseMetaDataBody.data.data.length > 0) {
-                    editCourseData = editCourseMetaData.data;
-                } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length > 0) {
-                    editCourseData = editCourseDetailsMetadata.data;
-                } else if (courseMetaDataBody.data.data.length === 0 && courseDetailsMetaDataBody.data.data.length === 0) {
-                    editCourseData = editCourse.data;
-                } else {
-                    editCourseData = editCourseDetailsMetadata.data;
-                }
-                dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
-                toast.success(toastSuccessMessage.courseDetailUpdateMsg);
-                setShowLoader(false);
 
             } else {
                 toast.error(toastErrorMessage.tryAgainErrorMsg);
@@ -327,6 +332,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     }
 
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
+        console.log(name);
         setShowLoader(true)
         let data = { ...editCourseData }
         if ((deleteFieldName == 'courseMeta' && data.courseMetaData[index]?.id == undefined) || (deleteFieldName == 'courseDetails' && data.courseDetailsMetaData[index]?.id == undefined)) {
@@ -341,17 +347,29 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 },
             }
             await deleteCourseTypeAPI(body).then((res) => {
+                console.log(res.data);
                 data.courseMetaData.splice(index, 1)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
                 setShowLoader(false)
-            }).catch((error) => {
+            }).catch(async (error) => {
                 setShowLoader(false)
                 console.log(error);
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await deleteCourseTypeAPI(body).then((res) => {
+                            data.courseMetaData.splice(index, 1)
+                            remove(name)
+                            dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
+                            setShowLoader(false)
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    })
+                }
             })
         }
     }
-
     const onChangeCheckBox = (e, checkboxName) => {
         if (checkboxName == 'discount') {
             setDiscountForOne(e.target.checked);
@@ -790,8 +808,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         }
                     </div>
                 </div>
-                {
-                    showCourseMetaDataFields &&
+                {showCourseMetaDataFields &&
                     <>
                         <div className={styles.borderline}>
                             <div className="w-[95%] p-6">
@@ -857,8 +874,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                         >
                                                             <Input placeholder='رابط للنص المنفصل' width={216} height={47} />
                                                         </FormItem>
-                                                        <div className={styles.deleteIconWrapper} >
-                                                            <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseMeta") }}>
+                                                        <div className={`${styles.deleteIconWrapper} cursor-pointer`} onClick={() => { deleteCourseDetails(index, remove, name, "courseMeta") }}>
+                                                            <div className='flex justify-center items-center h-100 cursor-pointer' >
                                                                 <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                             </div>
                                                         </div>
@@ -929,7 +946,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                         >
                                                             <Input placeholder="رابط للنص المنفصل" width={216} height={47} />
                                                         </FormItem>
-                                                        <div className={styles.deleteIconWrapper} >
+                                                        <div className={`${styles.deleteIconWrapper} cursor-pointer`} onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }} >
                                                             <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }}>
                                                                 <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                             </div>

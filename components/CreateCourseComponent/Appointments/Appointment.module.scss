@@ -76,7 +76,7 @@
     display: inline-flex;
     align-items: center;
     font-size: 14px;
-    border: 0.2px solid rgba(137, 135, 135, 0.2);
+    // border: 0.2px solid rgba(137, 135, 135, 0.2);
     border-radius: 2px;
     height: 25px;
     padding: 0 5px;
@@ -117,8 +117,13 @@
 }
 
 .createappointment {
-    width: 92px;
     font-size: 18px;
+}
+
+.createappointmentFormFileds {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
 }
 
 .createAppointmentFields {
@@ -151,4 +156,32 @@
         font-size: 16px;
 
     }
+}
+
+.outerCircle {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+}
+
+.innerCircle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.green {
+    background-color: #2F9B5B4D;
+
+    .innerCircle {
+        background-color: #007D33;
+    }
+}
+
+.alretWrapper {
+    height: 17px;
+    width: 17px;
+    position: relative;
 }

@@ -224,7 +224,7 @@ const ManageLibraryTableComponent = ({
                                                         <AllIconsComponenet iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'newVideoIcon'} height={24} width={24} />
                                                     }
                                                     <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                    {tableDataType == "folder" && <p className={styles.numberOfAddedVideo}>{`(${item?.numberOfItem}  عنصر / عناصر)`}</p>}
+                                                    {/* {tableDataType == "folder" && <p className={styles.numberOfAddedVideo}>{`(${item?.numberOfItem}  عنصر / عناصر)`}</p>} */}
                                                 </div>
                                             </td>
                                             <td>{fullDate(item?.createdAt)}</td>

@@ -105,6 +105,10 @@ import NewVideoIcon from './customeIcons/newVideoIcon'
 import CurriculumNewVideoIcon from './customeIcons/curriculumNewVideoIcon'
 import CurriculumNewFileIcon from './customeIcons/curriculumNewFileIcon'
 import CurriculumNewQuizIcon from './customeIcons/curriculumNewQuizIcon'
+import ClockDoubleColor from './customeIcons/clockDoubleColor'
+import LocationDoubleColor from './customeIcons/locationDoubleColor'
+import CalenderDoubleColorIcon from './customeIcons/calenderDoubleColorIcon'
+import LinkDoubleColorIcon from './customeIcons/linkDoubleColorIcon'
 
 
 
@@ -217,6 +221,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newVisibleIcon' && <NewVisibleIcon height={height} width={width} color={color} />}
 			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
 
+			{iconName == 'clockDoubleColor' && <ClockDoubleColor height={height} width={width} color={color} />}
+			{iconName == 'locationDoubleColor' && <LocationDoubleColor height={height} width={width} color={color} />}
+			{iconName == 'calenderDoubleColorIcon' && <CalenderDoubleColorIcon height={height} width={width} color={color} />}
+			{iconName == 'linkDoubleColorIcon' && <LinkDoubleColorIcon height={height} width={width} color={color} />}
 
 			{iconName == 'curriculumNewQuizIcon' && <CurriculumNewQuizIcon height={height} width={width} color={color} />}
 			{iconName == 'curriculumNewVideoIcon' && <CurriculumNewVideoIcon height={height} width={width} color={color} />}
