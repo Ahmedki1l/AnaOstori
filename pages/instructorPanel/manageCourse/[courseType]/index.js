@@ -12,6 +12,8 @@ import { mediaUrl } from '../../../../constants/DataManupulation'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import Empty from '../../../../components/CommonComponents/Empty'
 import { toast } from 'react-toastify'
+import { toastSuccessMessage } from '../../../../constants/ar'
+import { coursePublishedFromMainPageConst } from '../../../../constants/adminPanelConst/courseConst/courseConst'
 
 export default function Index() {
 
@@ -49,7 +51,6 @@ export default function Index() {
     }, [courseType])
 
     const handleEditCourse = (course) => {
-        console.log(course);
         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: course })
         dispatch({ type: 'SET_IS_COURSE_EDIT', isCourseEdit: true })
         router.push({
@@ -65,9 +66,11 @@ export default function Index() {
         }
         await updateCourseDetailsAPI(body).then((res) => {
             if (checked) {
-                toast.success(`بنجاح ${course.name} تم نشر  `)
+                toast.success(coursePublishedFromMainPageConst.toMakeCoursePublished)
+                // toast.success(`بنجاح ${course.name} تم نشر  `)
             } else {
-                toast.success(` بنجاح ${course.name} تم إخفاء `)
+                toast.success(coursePublishedFromMainPageConst.toMakeCourseNotPublished)
+                // toast.success(` بنجاح ${course.name} تم إخفاء `)
             }
         }).catch(async (error) => {
             if (error?.response?.status == 401) {

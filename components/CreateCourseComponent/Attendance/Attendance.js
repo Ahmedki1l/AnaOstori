@@ -87,11 +87,13 @@ export default function Attendance(props) {
             const existingDates = student.attendances.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
             for (let i = 0; i < datesArray.length; i++) {
                 const date = datesArray[i].date;
+                console.log(date);
                 if (existingDates.includes(dayjs(date).format('DD/MM/YYYY'))) {
+                    console.log(student, i);
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
                         date: date,
-                        attendanceType: student.attendances[i].status,
+                        attendanceType: student?.attendances[i]?.status,
                         id: student.attendances[i].id
                     };
                     studentData.attendanceDetails.push(attendanceDetail);
