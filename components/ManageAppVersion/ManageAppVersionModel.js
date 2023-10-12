@@ -66,7 +66,7 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                             <p className={` ${styles.addVersion}`}>{appVersionConst.curruentVersionText}</p>
                             <FormItem
                                 name={'androidCurrentVersion'}
-                                rules={[{ required: true, message: appVersionConst.currurentVersionInputError }]}
+                                rules={[{ required: true, message: appVersionConst.currentAndroidVersionInputErorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
@@ -78,7 +78,7 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                             <p className={` ${styles.addVersion}`}>{appVersionConst.minimumVersionText}</p>
                             <FormItem
                                 name={'androidMinVersion'}
-                                rules={[{ required: true, message: appVersionConst.minimumVersionInputError }]}
+                                rules={[{ required: true, message: appVersionConst.minimumVersionInputErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
@@ -94,25 +94,25 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
                             <p className={` ${styles.addVersion}`}>{appVersionConst.curruentVersionText}</p>
                             <FormItem
                                 name={'iosCurrentVersion'}
-                                rules={[{ required: true, message: appVersionConst.currurentVersionInputError }]}
+                                rules={[{ required: true, message: appVersionConst.iorCurrenVersionInputErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder={appVersionConst.currentVersionPlaceHolder}
+                                    placeholder={appVersionConst.iosCurrentVersionPlaceHolder}
                                 />
                             </FormItem>
                             <p className={` ${styles.addVersion}`}>{appVersionConst.minimumVersionText}</p>
                             <FormItem
                                 name={'iosMinVersion'}
-                                rules={[{ required: true, message: appVersionConst.minimumVersionInputError }]}
+                                rules={[{ required: true, message: appVersionConst.iosMinimumVersionInputErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder={appVersionConst.minimumVersionPlaceHolder}
+                                    placeholder={appVersionConst.iosMinimunVersionPlaceHolder}
                                 />
                             </FormItem>
                         </div>
