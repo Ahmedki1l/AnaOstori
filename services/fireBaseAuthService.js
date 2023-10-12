@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { updateProfile } from "./apisService";
 import * as fbq from '../lib/fpixel'
 import { toastErrorMessage, toastSuccessMessage } from "../constants/ar";
+import { data } from "jquery";
 
 
 
@@ -49,19 +50,22 @@ export const forgotPassword = async (email) => {
 }
 
 
-export const signupWithEmailAndPassword = async (email, password, firstName, lastName, phoneNumber, gender) => {
+export const signupWithEmailAndPassword = async (email, password, firstName, phoneNumber, gender) => {
 	await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
 		localStorage.setItem("accessToken", userCredential?.user?.accessToken);
 		const body = {
 			firstName: firstName,
-			lastName: lastName,
-			fullName: firstName + " " + lastName,
+			fullName: firstName,
 			phone: phoneNumber.replace(/[0-9]/, "+966"),
 			gender: gender
+		}
+		if(!gender?.length){
+			delete data?.gender
 		}
 		const params = {
 			data: body,
 		}
+		
 		await updateProfile(params).then(res => {
 			Router.push('/login')
 			fbq.event('Sign up', { email: email })

@@ -38,6 +38,10 @@
 	border: 1px solid #0000001a;
 }
 
+.formInputField{
+	margin-bottom: .5rem !important;
+}
+
 .loginFormLabel {
 	padding-right: 1.5rem;
 	font-size: 16px;
@@ -113,7 +117,7 @@
 }
 
 .radioBtnDiv {
-	margin-top: 0 !important;
+	margin-top: .5rem !important;
 }
 
 .gotoPageText {
@@ -154,4 +158,16 @@
 		border: none;
 		padding: 1rem;
 	}
+}
+
+
+.noteText {
+	color: var(--grary-not-selected, #808080);
+	text-align: right;
+	font-family: Tajawal;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	text-align: right;
 }

@@ -16,6 +16,7 @@ export const inputErrorMessages = {
     allowedFilesTypeMsg: 'الملفات المسموحة هي pdf, png ,jpg', //'Allowed files are pdf, png and jpg'
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
+    mobileRequiredErrorMsg: "رقم جوالك لاهنت",
     // categoryDiscriptionAddMsg: 'please enter category discription',
 }
 

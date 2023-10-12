@@ -25,10 +25,12 @@ export const addEditCategoryConst = {
     description: 'وصف المجال*',
     categoryPhoto: 'صورة المجال*',
     attachPhoto: 'ارفق الصورة',
-    errorEnterTitleToast: 'اكتب عنوان المجال',
-    errorSelectOrderToast: 'حدد الترتيب، وخلك حذر',
-    errorWriteDescribtionToast: 'لا تنسى الوصف يا حلو',
-    errorAddPhotoToast: 'لازم تحط صورة'
+    titleErrorMsg: 'اكتب عنوان المجال',
+    selectOrderErrorMsg: 'حدد الترتيب، وخلك حذر',
+    writeDescribtionErrorMsg: 'لا تنسى الوصف يا حلو',
+    addPhotoErrorMsg: 'لازم تحط صورة',
+    successGreenToGreyToast: 'تم إضافة المجال بنجاح',
+    errorIDAlreadyUsedToast: 'ما يصير تستخدم رقم مستخدم من قبل حتى لو كان مخفي'
 }
 
 
