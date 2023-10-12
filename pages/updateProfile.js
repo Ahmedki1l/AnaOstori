@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../services/fireBaseAuthService';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
+import AllIconsComponenet from '../Icons/AllIconsComponenet';
 // import { uploadFileSevices } from '../services/UploadFileSevices';
 
 
@@ -26,8 +27,11 @@ const UpdateProfile = () => {
     const [profileUrl, setProfileUrl] = useState(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
 
     const [uploadLoader, setUploadLoader] = useState(false)
+    const [gender, setGender] = useState();
 
     const [firstNameError, setFirstNameError] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumberError, setPhoneNumberError] = useState(null);
 
     const dispatch = useDispatch();
     const router = useRouter()
@@ -69,18 +73,38 @@ const UpdateProfile = () => {
     };
 
 
+    useEffect(() => {
+        if (firstName && (firstName.split(" ").length - 1) < 2) {
+			setFirstNameError(inputErrorMessages.firstNameErrorMsg);
+		}
+		else{
+			setFirstNameError(null)
+		}
+
+		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+		}
+		else {
+			setPhoneNumberError(null);
+		}
+    },[firstName,phoneNumber])
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (!firstName) {
             setFirstNameError(inputErrorMessages.firstNameErrorMsg)
-            return
+            
         }
         else if ((firstName.split(" ").length - 1) < 2) {
             setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
-            return
+           
         }
+        if(!phoneNumber){
+            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
+        }
+        else if (firstNameError == null && phoneNumberError == null){
         setShowLoader(true)
 
         const data = {
@@ -109,8 +133,9 @@ const UpdateProfile = () => {
             setShowLoader(false)
         });
     }
+    }
 
-
+console.log("phoneNumberError : ",phoneNumberError, firstNameError);
 
     return (
         <>
@@ -122,20 +147,56 @@ const UpdateProfile = () => {
                                 <div>
                                     <ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={profileUrl} />
                                     <label className={styles.defaultText} style={uploadLoader ? { color: "#808080" } : { color: "#F26722" }} htmlFor="image">
-                                        <span>   تغيير صورة الملف </span> {uploadLoader ? <Image src={loaderColor} width={20} height={15} alt="Loder Picture" /> : ""}
+                                        <span>تغيير الصورة الشخصية</span> {uploadLoader ? <Image src={loaderColor} width={20} height={15} alt="Loder Picture" /> : ""}
                                     </label>
                                     <input style={{ display: "none" }} id="image" type="file" onChange={uploadPhoto}
                                     />
                                 </div>
                                 <div className='w-full'>
+                                    <p className={styles.notePara}><span>ملاحظة:</span> جميع البيانات مطلوبة ما عدا الصورة الشخصية</p>
+                                </div>
+                                {/* <div className='w-full'>
                                     <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
                                         <div className={styles.loginPageIconDiv}>
                                             <Icon height={19} width={16} iconName={'person'} alt={'Persone Icon'} />
                                         </div>
                                         <input className={styles.inputBox} type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='الاسم الاول' />
+                                    </div> */}
+
+                                <div className='w-full'>
+                                    <div className={`formInputBox ${styles.formFieldDiv}`}>
+                                        <div className={`formInputIconDiv ${styles.iconDiv}`}>
+                                            <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+                                        </div>
+                                        <input className={`formInput ${styles.formFieldInput}`}name='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
+                                        <label className={`formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">رقم الجوال</label>
                                     </div>
-                                    {firstNameError !== null && <p className={styles.errorText}>{firstNameError}</p>}
+                                    {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                                 </div>
+                                <div className='w-full'>
+                                    <div className={`formInputBox ${styles.formFieldDiv}`}>
+                                        <div className={`formInputIconDiv ${styles.iconDiv}`}>
+                                            <AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
+                                        </div>
+                                        <input className={`formInput ${styles.formFieldInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                                        <label className={`formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">رقم الجوال</label>
+                                    </div>
+                                    {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>بصيغة 05xxxxxxxx</p>}
+                                </div>
+                                <div className='w-full'>
+                                    <p className={styles.titleLabel}>الجنس</p>
+                                    <div className={styles.genderBtnBox}>
+                                        <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => {e.preventDefault(); setGender("male")}}>
+                                            <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#FFFFFF' : '#808080'} />
+                                            <span>ذكر</span>
+                                        </button>
+                                        <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => {e.preventDefault(); setGender('female')}}>
+                                            <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#FFFFFF' : '#808080'} />
+                                            <span>أنثى</span>
+                                        </button>
+                                    </div>
+                                </div>
+
                                 {/* <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
                                     <div className={styles.loginPageIconDiv}>
                                         <Icon height={19} width={16} iconName={'person'} alt={'Persone Icon'} />

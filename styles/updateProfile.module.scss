@@ -39,12 +39,53 @@
 	margin-top: -0.5rem;
 }
 
+.noteText {
+	color: var(--grary-not-selected, #808080);
+	text-align: right;
+	font-family: Tajawal;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	text-align: right;
+}
+
+.formFieldDiv {
+	margin: 1rem 0 .5rem;
+}
+
+.formFieldInput {
+	padding: 12px !important;
+	border-radius: 4px !important;
+	border: 0.3px solid var(--grary-not-selected, #808080) !important;
+	display: flex !important;
+	justify-content: flex-end !important;
+	align-items: center !important;
+	padding-right: 2.5rem !important;
+	padding-top: 1.5rem !important;
+}
+
+.formFieldLabel {
+	color: var(--grary-not-selected, #808080);
+	font-family: Tajawal;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin-right: 1.5rem;
+	padding-top: .3rem !important;
+}
+
+.iconDiv {
+	margin-right: 5px;
+}
+
 .loginPageInputBox {
 	height: 46px;
 	width: 100%;
 	border: 0.5px solid rgba(0, 0, 0, 0.5);
 	border-radius: 4px;
-	margin: 0 auto 1rem auto;
+	margin: 0 auto .5rem auto;
 	display: flex;
 	align-items: center;
 	padding: 12px;
@@ -59,4 +100,79 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+
+.phoneTitleDiv {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 15px;
+	cursor: pointer;
+}
+
+
+.genderBtnBox {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	width: 19.8rem;
+	height: 47px;
+	margin: .5rem 0 1rem 0;
+	border: 1px solid #0000001a;
+	border-radius: 4px;
+	overflow: hidden;
+
+	button {
+		border: none;
+		background: #FFFFFF;
+		font-size: 16px;
+		line-height: 19px;
+		color: #000000;
+		width: 50%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+
+		span {
+			margin-right: 5px;
+		}
+	}
+
+	.maleBtn {
+		border-left: 1px solid #0000001a;
+	}
+	
+}
+
+
+.genderActiveBtn {
+	background: #F06A25 !important;
+	color: #FFFFFF !important;
+}
+
+
+.titleLabel{
+color: #191919;
+font-family: Tajawal;
+font-size: 18px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+margin-top: 1rem;
+}
+
+.notePara{
+color: #191919;
+font-family: Tajawal;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+margin-bottom: 1rem;
+span{
+	color: #E5342F;
+}
 }
