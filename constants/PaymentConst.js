@@ -188,9 +188,9 @@ const paymentStatusBank = [
     },
     {
         key: 5,
-        label: 'تم استرجاع المبلغ',
+        label: 'ردينا فلوسه',
         value: 'refund',
-        color: 'black'
+        color: ''
     },
 ]
 
@@ -207,7 +207,6 @@ const paymentStatusOther = [
         value: 'failed',
         color: 'red'
     },
-
     {
         key: 3,
         label: ' جديد',
@@ -216,9 +215,9 @@ const paymentStatusOther = [
     },
     {
         key: 4,
-        label: 'تم استرجاع المبلغ',
+        label: 'ردينا فلوسه',
         value: 'refund',
-        color: 'red'
+        color: ''
     },
 
 ]

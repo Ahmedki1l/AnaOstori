@@ -93,14 +93,16 @@ export default function PurchaseInquiry(props) {
 										</td>
 										<td className={styles.tbodyStatus}>
 											{data?.status == "accepted" ?
-												<p className={`${styles.greenBox} ${styles.colorBox}`}>{inqPaymentStateConst.accepted}</p>
+												<StyledTag color="green">{inqPaymentStateConst.accepted}</StyledTag>
+
 												: data?.status == "review" ?
 													<>
-														<p className={`${styles.yellowBox} ${styles.colorBox}`}>{inqPaymentStateConst.review}</p>
+														<StyledTag color="gold">{inqPaymentStateConst.review}</StyledTag>
 														<p className="py-2">استلمنا إيصالك وبنراجعه بأقرب وقت، تواصل معنا&nbsp;
 															<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
 														</p>
 													</>
+
 													: data?.status == "witing" ?
 														<>
 															<StyledTag color="red">{inqPaymentStateConst.witing}</StyledTag>
@@ -109,20 +111,21 @@ export default function PurchaseInquiry(props) {
 																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو احتجت مساعدة
 															</p>
 														</>
-														: data?.status == "review" ?
-															<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.review}</p>
-															: data?.status == "failed" ?
-																<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.failed}</p>
-																: data?.status == "rejected" ?
-																	<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.rejected}</p>
-																	:
-																	<>
-																		<p className={`${styles.redBox} ${styles.colorBox}`}>ملغى</p>
-																		<p className="py-2">الحجز ملغى لعدم سدادك المبلغ في المدة المحددة</p>
-																		<p> نرجو منك الحجز مرة أخرى وللمساعدة تواصل معنا واتساب
-																			<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>
-																		</p>
-																	</>
+
+														: data?.status == "failed" ?
+															<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.failed}</p>
+															: data?.status == "rejected" ?
+																<>
+																	<StyledTag color="red">{inqPaymentStateConst.rejected}</StyledTag>
+																	<p className="py-2">ملّغى لعدم سدادك المبلغ في المدة المحددة، احجز مرة ثانية وتواصل معنا&nbsp;
+																		<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
+																	</p>
+																</>
+
+																:
+																<>
+																	<StyledTag color="gray">{inqPaymentStateConst.refund}</StyledTag>
+																</>
 											}
 										</td>
 										<td className={styles.tbodyInvoice}>

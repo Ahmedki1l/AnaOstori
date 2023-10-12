@@ -30,6 +30,8 @@ export const managePuchaseOrderDrawerConst = {
     userFullNameTitle: 'الاسم الثلاثي',
     availabilityTitle: 'موعد الدورة',
     invoiceCopyTitle: 'نسخة الفاتورة',
+    userReceiptTitle: 'نسخة الإيصال',
+    userReceiptBtnText: 'معاينة الإيصال'
 }
 
 export const paymentTypeConst = {
