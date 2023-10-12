@@ -250,11 +250,11 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                         <div style={{ height: '14px' }} onClick={() => handleAddItemInSection(section)}>
                                                             <AllIconsComponenet iconName={'plus'} height={18} width={18} alt={'key'} color={'#000000'} />
                                                         </div>
-                                                        <div style={{ height: '16px' }} onClick={() => openSectionNameModel(section)}>
-                                                            <AllIconsComponenet iconName={'newEditIcon'} height={22} width={24} color={'#000000'} />
+                                                        <div style={{ height: '20px' }} onClick={() => openSectionNameModel(section)}>
+                                                            <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                         </div>
                                                         <div style={{ height: '16px' }} onClick={() => handleDeleteFolderItems('section', section)} >
-                                                            <AllIconsComponenet iconName={'newDeleteIcon'} height={20} width={20} color={'#000000'} />
+                                                            <AllIconsComponenet iconName={'newDeleteIcon'} height={22} width={22} color={'#000000'} />
                                                         </div>
                                                         <div style={{ height: '20px' }} className={`${styles.arrowIcon} ${section.showSectionList && 'rotate-180'}`} onClick={() => showSectionItem(index)}>
                                                             <AllIconsComponenet iconName={'keyBoardDownIcon'} height={22} width={22} color={'#000000'} />

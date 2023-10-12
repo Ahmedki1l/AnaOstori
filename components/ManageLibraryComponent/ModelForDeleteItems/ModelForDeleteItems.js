@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from 'antd';
 import styles from './ModelForDeleteItems.module.scss'
 import { curriculumConst, folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
+import { instructorConst } from '../../../constants/adminPanelConst/instructorConst';
 
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
@@ -67,9 +68,9 @@ const ModelForDeleteItems = ({
             btnText: "تأكيد حذف المقرر",
         },
         instructor: {
-            title: 'تأكيد حذف المدرب',
-            messageText: 'متأكد انك تبي تحذف المدرب؟',
-            btnText: 'تأكيد الحذف',
+            title: instructorConst.deleteInstructorPopUpTitle,
+            messageText: instructorConst.deleteInstructorPopText,
+            btnText: instructorConst.deleteInsteuctorBtnText,
         },
         news: {
             title: 'تأكيد حذف نص تسويقي',
