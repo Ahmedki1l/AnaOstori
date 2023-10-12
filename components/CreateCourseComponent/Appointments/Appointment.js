@@ -93,18 +93,15 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 console.log(error);
             })
         } else {
-            let body = {
-                data: values,
-                // routeName: "createAvailability"
-            }
-            await createCourseAvailabilityAPI(body).then((res) => {
-                // await routeAPI(body).then((res) => {
+            values.routeName = "createAvailability"
+            // await createCourseAvailabilityAPI(body).then((res) => {
+            await routeAPI(values).then((res) => {
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await createCourseAvailabilityAPI(body).then((res) => {
-                            // await routeAPI(body).then((res) => {
+                        // await createCourseAvailabilityAPI(body).then((res) => {
+                        await routeAPI(values).then((res) => {
                             availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
                         })
                     }).catch(error => {

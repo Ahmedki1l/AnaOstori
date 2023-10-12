@@ -113,7 +113,7 @@ const PurchaseOrderDrawer = (props) => {
                 <Select
                     width={425}
                     height={47}
-                    OptionData={selectedOrder?.paymentMethod != 'bank_transfer' ? paymentStatusOther : paymentStatusBank}
+                    OptionData={selectedOrder?.paymentMethod != 'bank_transfer' ? paymentStatusOther.filter(item => item.value != "failed") : paymentStatusBank}
                     placeholder={managePuchaseOrderDrawerConst.selectedOrderStatusPlaceHolder}
                     onChange={handleStatusChange}
                 />
@@ -128,25 +128,28 @@ const PurchaseOrderDrawer = (props) => {
                     />
                 </FormItem>
             } */}
-            {(paymentStatus == "rejected" || paymentStatus == "failed") &&
+            {paymentStatus == "rejected" &&
                 <>
-                    <p style={{ fontSize: '18px' }}>failedReason</p>
-                    {selectedOrder?.paymentMethod != 'bank_transfer' ?
-                        <div className={styles.failedReasonBox}>
-                            <p>{selectedOrder.failedReason}</p>
-                        </div>
-                        :
-                        <FormItem
-                            name={'failedReason'}>
-                            <Input
-                                width={425}
-                                height={47}
-                                placeholder='failedReason'
-                            />
-                        </FormItem>
-                    }
+                    <p style={{ fontSize: '18px' }}>توضيح السبب  </p>
+                    <FormItem
+                        name={'failedReason'}>
+                        <Input
+                            width={425}
+                            height={47}
+                            placeholder='توضيح السبب '
+                        />
+                    </FormItem>
                 </>
             }
+            {paymentStatus == "failed" &&
+                <>
+                    <p style={{ fontSize: '18px' }}>رسالة الرفض</p>
+                    <div className={styles.failedReasonBox}>
+                        <p>{selectedOrder.failedReason}</p>
+                    </div>
+                </>
+            }
+
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.selectedOrderPaymentMethodTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>
@@ -157,14 +160,14 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             {selectedOrder.reciptKey &&
                 <>
-                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.uploadInvoiceTitle}</p>
+                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.userReceiptTitle}</p>
                     <Link href={mediaUrl(selectedOrder.reciptBucket, selectedOrder.reciptKey)} target='_blank'>
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>
                                 <div className={styles.uploadInvoiceBtn}>
                                     <AllIconsComponenet iconName={'uploadIncvoice'} />
                                 </div>
-                                <p>{managePuchaseOrderDrawerConst.downloadInvoiceTitle}</p>
+                                <p>{managePuchaseOrderDrawerConst.userReceiptBtnText}</p>
                             </div>
                         </div>
                     </Link>
@@ -233,7 +236,7 @@ const PurchaseOrderDrawer = (props) => {
                         </div>
                         <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
                         <div className={styles.purchaseOrderBox}>
-                            <p> {item.gender == 'male' ? 'شاب' : 'بنت'}</p>
+                            <p> {item.gender}</p>
                         </div>
                         <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
                         <div className={styles.purchaseOrderBox}>
@@ -254,8 +257,29 @@ const PurchaseOrderDrawer = (props) => {
                         }
                     </div>
                 )
-            })}
-
+            })
+            }
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
+            <div className={styles.purchaseOrderBox}>
+                <p> {item.gender == 'male' ? 'شاب' : 'بنت'}</p>
+            </div>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
+            <div className={styles.purchaseOrderBox}>
+                <p> {item.phoneNumber.replace('+966', '0')}</p>
+            </div>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerEmailTitle}</p>
+            <div className={styles.purchaseOrderBox}>
+                <p> {item.email}</p>
+            </div>
+            {orderItems != 'on-demand' &&
+                <>
+                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.availabilityTitle}</p>
+                    <div className={styles.purchaseOrderBox}>
+                        <p>{dateRange(item.createdAt, item.updatedAt
+                        )}</p>
+                    </div>
+                </>
+            }
             {selectedOrder.invoiceKey &&
                 <>
                     <div className={styles.borderedDiv}></div>
@@ -280,7 +304,7 @@ const PurchaseOrderDrawer = (props) => {
                     fontSize={16}
                 />
             </div>
-        </Form>
+        </Form >
     )
 }
 
