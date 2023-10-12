@@ -57,10 +57,10 @@ export default function PurchaseInquiry(props) {
 					<table className={styles.tableArea}>
 						<thead className={styles.thead}>
 							<tr>
-								<th className={styles.theadOrder}>رقم الفاتورة</th>
-								<th className={styles.theadDate}>تاريخ الشراء</th>
-								<th className={styles.theadName}>تفاصيل الطلب</th>
-								<th className={styles.theadStatus}>حالة التسجيل</th>
+								<th className={styles.theadOrder}>رقم الحجز</th>
+								<th className={styles.theadDate}>تاريخ الطلب</th>
+								<th className={styles.theadName}>التفاصيل</th>
+								<th className={styles.theadStatus}>الحالة</th>
 								<th className={styles.theadInvoice}>الفاتورة</th>
 							</tr>
 						</thead>
@@ -68,7 +68,7 @@ export default function PurchaseInquiry(props) {
 							{searchData.map((data, i = index) => {
 								return (
 									<tr key={`order${i}`}>
-										<td className={styles.tbodyOrder}>{data.id}</td>
+										{data?.status == "accepted" ? <td className={styles.tbodyOrder}>{data.id}</td> : "-"}
 										<td >{fullDate(data.createdAt)}</td>
 										{/* <td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td> */}
 										<td className={styles.tbodyName}>
@@ -137,14 +137,14 @@ export default function PurchaseInquiry(props) {
 								return (
 									<div className={styles.rowDiv} key={`order${i}`}>
 										<tr>
-											<th className={styles.theadOrder}>رقم الفاتورة</th>
-											<th className={styles.theadDate}>تاريخ الشراء</th>
-											<th className={styles.theadName}>تفاصيل الطلب</th>
-											<th className={styles.theadStatus}>حالة التسجيل</th>
+											<th className={styles.theadOrder}>رقم الحجز</th>
+											<th className={styles.theadDate}>تاريخ الطلب</th>
+											<th className={styles.theadName}>التفاصيل</th>
+											<th className={styles.theadStatus}>الحالة</th>
 											<th className={styles.theadInvoice}>الفاتورة</th>
 										</tr>
 										<tr>
-											<td className={styles.tbodyOrder}>{data.id}</td>
+											{data?.status == "accepted" ? <td className={styles.tbodyOrder}>{data.id}</td> : "-"}
 											<td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", year: 'numeric', day: 'numeric', month: 'long' })}</td>
 											<td className={styles.tbodyName}>
 												{data.orderItems?.map((student, j = index) => {
@@ -211,11 +211,11 @@ export default function PurchaseInquiry(props) {
 							<div className={styles.noDataiconWrapper}>
 								<AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
 							</div>
-							<p className={`fontBold py-2 ${styles.detailsText}`} >خلك الأسطوري الجاي!</p>
-							<p style={{ fontSize: '14px' }}>ما عندك مشتريات، تصفح دوراتنا ومتأكدين انها بتعجبك و بتكون الأسطوري الجاي بإذن الله</p>
+							<p className={`fontBold py-2 ${styles.detailsText}`} >ما حجزت بأي دورة</p>
+							<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 							<div className={` pt-4 ${styles.btnWrapper}`}>
-								<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4'>تصفح الدورات</button></div>
-								<div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div>
+								<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
+								{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
 							</div>
 						</div>
 					</div>

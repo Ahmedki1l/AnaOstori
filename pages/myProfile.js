@@ -22,7 +22,7 @@ export default function MyProfile() {
 						<ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={userDetails?.avatarKey == null ? userDetails?.avatar : mediaUrl(userDetails?.avatarBucket, userDetails?.avatarKey)} />
 						<p className={`font-bold ${styles.userNameText}`}>{userDetails?.firstName}</p>
 						<div className={styles.updateProfileBtnBox}>
-							<button className='primaryStrockedBtn' onClick={() => Router.push('/updateProfile')}>تعديل الملف الشخصي</button>
+							<button className='primaryStrockedBtn' onClick={() => Router.push('/updateProfile')}>تعديل البيانات الشخصية</button>
 						</div>
 					</div>
 
@@ -40,9 +40,10 @@ export default function MyProfile() {
 						:
 						<div className={styles.noCourseWrapper}>
 							<AllIconsComponenet height={150} width={150} iconName={'noData'} color={''} />
-							<p className={`fontBold ${styles.noCourseText}`}>ما عندك اشتراكات</p>
-							<div className={styles.homeBtnBox}>
-								<button className="primarySolidBtn" onClick={() => Router.push('/')}>تصفح الدورات</button>
+							<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
+							<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
+							<div className={`pt-4 ${styles.homeBtnBox}`}>
+								<button className="primarySolidBtn" onClick={() => Router.push('/')}>تصفح المجالات</button>
 							</div>
 						</div>
 					}

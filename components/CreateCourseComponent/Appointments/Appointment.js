@@ -21,6 +21,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService';
 import Empty from '../../CommonComponents/Empty';
 import Image from 'next/legacy/image';
 import InputWithLocation from '../../antDesignCompo/InputWithLocation';
+import ProfilePicture from '../../CommonComponents/ProfilePicture';
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,8 +37,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
-
-
+    console.log(genders);
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -187,6 +187,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const onChangePublish = async (checked) => {
         setIAppointmentPublished(checked)
     }
+
+
     return (
         <div className='maxWidthDefault px-4'>
             <div>
@@ -221,7 +223,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                             {appointment.gender == "male" && <AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} />}
                                                             {appointment.gender == "female" && <AllIconsComponenet iconName={'female'} height={17} width={17} color={'#E10768'} />}
                                                             {/* {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>} */}
-                                                            <span className='pr-1'>{appointment.gender == "male" ? "شاب" : "بنت"}</span>
+                                                            <span className='pr-1'>{appointment.gender == "male" ? genders[0].label : genders[1].label}</span>
                                                         </div><br />
                                                     </>
                                                 }
@@ -252,18 +254,21 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                                     : `${appointment.numberOfSeats} مقعد متبقي`}
                                                     </p>
                                                 </div>
-                                                {/* <p>{appointment.numberOfSeats} مقعد مخصص</p> */}
                                             </div>
                                         </td>
-                                        <td className='py-2'>
+                                        <td>
                                             <div className={styles.publishState}>
                                                 <Switch defaultChecked={appointment.published} onChange={handlePublishedCategory} params={appointment.id} ></Switch>
                                                 <p className='pr-2'>{appointment.published ? 'إظهار' : 'مخفي'}</p>
                                             </div>
                                         </td>
+                                        {console.log(instructor)}
                                         <td className='py-2'>{appointment.instructors.map((instructor, index) => {
                                             return (
                                                 <p key={`instructor${index}`} className='pb-3 text-right pr-20 '>
+                                                    {/* <div className={styles.StudentListImage}>
+                                                        <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
+                                                    </div> */}
                                                     {instructor.name}
                                                 </p>
                                             )
