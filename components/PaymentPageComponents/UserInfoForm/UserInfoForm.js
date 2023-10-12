@@ -28,7 +28,7 @@ export default function UserInfoForm(props) {
 	const storeData = useSelector((state) => state?.globalStore);
 	const userPredefineEmail = storeData?.viewProfileData?.email
 	const userPredefinePhone = storeData?.viewProfileData?.phone?.replace("966", "0")
-	const userPredefinefullName = (storeData?.viewProfileData?.firstName && storeData?.viewProfileData?.lastName) ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : storeData?.viewProfileData?.fullName
+	const userPredefinefullName = (storeData?.viewProfileData?.firstName) ? `${storeData?.viewProfileData?.firstName}` : storeData?.viewProfileData?.fullName
 	const userPredefineGender = storeData?.viewProfileData?.gender
 
 	const userTemplet = {

@@ -15,17 +15,14 @@ export default function RegisterGoogleUser() {
 
     const [phoneNumber, setPhoneNumber] = useState("");
     const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
     const [gender, setGender] = useState("")
 
 
     const [firstNameError, setFirstNameError] = useState('');
-    const [lastNameError, setLastNameError] = useState('');
     const [phoneNumberError, setPhoneNumberError] = useState('');
     const [phoneNumberValidError, setPhoneNumberValidError] = useState('')
 
     const [showFirstNameError, setShowFirstNameError] = useState(false)
-    const [showLastNameError, setShowLastNameError] = useState(false)
     const [showPhoneError, setShowPhoneError] = useState(false)
 
 
@@ -67,28 +64,20 @@ export default function RegisterGoogleUser() {
             setFirstNameError(inputErrorMessages.firstNameErrorMsg)
         }
 
-        if (lastName) {
-            setLastNameError('')
-        }
-        else {
-            setLastNameError(inputErrorMessages.lastNameErrorMsg)
-        }
-
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setShowPhoneError(true)
             setPhoneNumberValidError(inputErrorMessages.mobileNumberFormatErrorMsg)
         }
 
-    }, [firstName, lastName, phoneNumber])
+    }, [firstName, phoneNumber])
 
 
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
-        if (firstName && lastName && phoneNumber && gender) {
+        if (firstName && phoneNumber && gender) {
             const body = {
                 firstName: firstName,
-                lastName: lastName,
                 phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,
                 gender: gender
             }
@@ -139,7 +128,7 @@ export default function RegisterGoogleUser() {
                     </div>
                     {showPhoneError && <p className={styles.errorText}> {phoneNumberError ? phoneNumberError : phoneNumberValidError}</p>}
                     <div className={styles.loginBtnBox}>
-                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || lastNameError || phoneNumberError) ? true : false} >انشاء حساب</button>
+                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || phoneNumberError) ? true : false} >انشاء حساب</button>
                     </div>
                 </form>
                 <p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink"> تسجيل الدخول</Link></p>
