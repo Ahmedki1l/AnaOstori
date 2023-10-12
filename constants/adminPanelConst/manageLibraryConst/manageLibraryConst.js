@@ -165,8 +165,9 @@ export const curriculumConst = {
         cancelExamBtnText: 'تراجع',
     },
     curriculumToastMsgConst: {
-        deleteCurriculumSuccessMsg: 'تم حذف المقرر بنجاح',//delete curriculum success message
+        addCurriCulumSuccessMsg: 'تم إضافة المقرر بنجاح',//add curriculum success message
         editCurriculumSuccessMsg: 'تم تحديث المقرر بنجاح',//edit curriculum success message
+        deleteCurriculumSuccessMsg: 'تم حذف المقرر بنجاح',//delete curriculum success message
         curriculumNameDuplicateErrorMsg: 'ما ينفع تستخدم نفس العنوان',//curriculum name duplicate message
 
         addSectionSuccessMsg: 'تم إضافة القسم بنجاح',

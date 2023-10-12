@@ -148,7 +148,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                                     <AllIconsComponenet iconName={'newVisibleIcon'} height={20} width={20} color={'#BFBFBF'} />
                                                 </div>
                                                 <div className='cursor-pointer' style={{ height: '25px' }} onClick={() => openDeleteModal(data)}>
-                                                    <AllIconsComponenet iconName={'newDeleteIcon'} height={20} width={20} color={'#000000'} />
+                                                    <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
                                                 </div>
                                             </div>
                                         </div>

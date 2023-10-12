@@ -81,7 +81,7 @@ const CreateCoursePath = (props) => {
                 }
             }
             await createCurriculumAPI(createBody).then(async (res) => {
-                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
+                toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg)
                 setCurriculumName(res.data.name)
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
