@@ -19,7 +19,7 @@ import Switch from '../../antDesignCompo/Switch';
 import UploadFile from '../../CommonComponents/UploadFileForCourse/UploadFile';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { useRouter } from 'next/router';
-import { createCoursePageConst, onDemandCourseConst, onDemandCoursesConst, onlineCourseConst, onlineCoursesConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
+import { courseToastSuccessMessage, createCoursePageConst, onDemandCourseConst, onlineCourseConst, physicalCourseConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
 
 
 const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) => {
@@ -398,15 +398,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         await updateCourseDetailsAPI(body).then((res) => {
             if (params == "published") {
                 if (e) {
-                    toast.success(`بنجاح ${editCourseData.name} تم نشر  `)
+                    toast.success(courseToastSuccessMessage.toMakeCoursePublished)
                 } else {
-                    toast.success(` بنجاح ${editCourseData.name} تم إخفاء `)
+                    toast.success(courseToastSuccessMessage.toMakeCourseNotPublished)
                 }
             } else {
                 if (e) {
-                    toast.success(`أصبحت الدورة قابلة للشراء`)
+                    toast.success(courseToastSuccessMessage.toMakeCoursePurchasable)
                 } else {
-                    toast.success(`أصبحت الدورة غير قابلة للشراء`)
+                    toast.success(courseToastSuccessMessage.toMakeCourseNotPurchasable)
                 }
             }
         }).catch(async (error) => {
@@ -498,11 +498,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     <div style={{ marginTop: '20px' }}>
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
-                                <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
-                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
+                                <div className={styles.dropDownArrowWrapper}>
+                                    <AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
+                                <div className='flex justify-center items-center h-100'>
+                                    <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? 'تقام الدورة في' :
+                                <p>{courseType == 'physical' ? physicalCourseConst.locationDisabledInputPlaceHolder :
                                     courseType == 'onDemand' ? onDemandCourseConst.recordedVideoDisabledFirstInputPlaceHolder
                                         : onlineCourseConst.locationDisabledInputPlaceHolder}
                                 </p>
@@ -606,15 +608,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         name={'price'}
                                         rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}>
                                         <Input
-                                            placeholder='السعر'
+                                            placeholder={createCoursePageConst.priceForOneUserInputPlaceHolder}
                                         />
                                     </FormItem>
                                     {discountForOne &&
                                         <FormItem
                                             name={'discount'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة بعد الخصم' }]}  >
+                                            rules={[{ required: true, message: physicalCourseConst.inputForDiscountedPricePlaceHolder }]}  >
                                             <Input
-                                                placeholder='السعر بعد الخصم'
+                                                placeholder={physicalCourseConst.inputForDiscountedPricePlaceHolder}
                                             />
                                         </FormItem>
                                     }
@@ -624,16 +626,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         <div>
                                             <FormItem
                                                 name={'discountForTwo'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
+                                                rules={[{ required: true, message: physicalCourseConst.priceForTwoInputErrorMsg }]} >
                                                 <Input
-                                                    placeholder='شخصين (السعر على كل شخص)'
+                                                    placeholder={physicalCourseConst.priceForTwoInputPlaceHolder}
                                                 />
                                             </FormItem>
                                             <FormItem
                                                 name={'discountForThreeOrMore'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص او اكثر' }]} >
+                                                rules={[{ required: true, message: physicalCourseConst.priceForGroupInputErrorMsg }]} >
                                                 <Input
-                                                    placeholder='3 أو أكثر (السعر على كل شخص)'
+                                                    placeholder={physicalCourseConst.priceForGroupInputPlaceHolder}
                                                 />
                                             </FormItem>
                                         </div>
@@ -752,9 +754,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         {discountForOne &&
                                             <FormItem
                                                 name={'discount'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}  >
                                                 <Input
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onDemandCourseConst.inputForDiscountedPricePlaceHolder}
                                                 />
                                             </FormItem>
                                         }
@@ -774,9 +776,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         {discountForOne &&
                                             <FormItem
                                                 name={'androidDiscount'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}  >
                                                 <Input
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onDemandCourseConst.inputForDiscountedPricePlaceHolder}
                                                 />
                                             </FormItem>
                                         }
@@ -797,9 +799,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         {discountForOne &&
                                             <FormItem
                                                 name={'iosDiscountId'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}  >
                                                 <Select
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onDemandCourseConst.inputForDiscountedPricePlaceHolder}
                                                     OptionData={iosProductIdList}
                                                 />
                                             </FormItem>

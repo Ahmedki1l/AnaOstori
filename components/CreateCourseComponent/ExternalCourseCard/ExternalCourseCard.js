@@ -270,14 +270,14 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'icon']}
-                                                            rules={[{ required: true, message: 'Please Select Icon' }]} >
+                                                            rules={[{ required: true, message: externalCourseCardDetailsConst.selectIconInputErrorMsg }]} >
                                                             <SelectIcon
                                                                 onChange={(e) => handleCourseDetailDiscription(e, "icon", 'CourseCardMetaData', index)}
                                                             />
                                                         </FormItem>
                                                         <FormItem
                                                             name={[name, 'text']}
-                                                            rules={[{ required: true, message: 'Please Enter Text' }]} >
+                                                            rules={[{ required: true, message: externalCourseCardDetailsConst.addTitleInputErrorMsg }]} >
                                                             <Input
                                                                 height={47}
                                                                 width={216}
@@ -308,7 +308,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                         </FormItem>
                                                         <FormItem
                                                             name={[name, 'tailLink']}
-                                                            rules={[{ required: field?.tailLinkName ? true : false, message: 'Please Enter TailLink' }]}
                                                         >
                                                             <Input
                                                                 height={47}

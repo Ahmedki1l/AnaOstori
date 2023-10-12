@@ -1,5 +1,5 @@
 import { ConfigProvider, Drawer, Table, Tag } from "antd";
-import { createOrderAPI, managePurchaseOrdersAPI } from "../../../services/apisService";
+import { createOrderAPI, managePurchaseOrdersAPI, routeAPI } from "../../../services/apisService";
 import { useEffect, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";
@@ -189,13 +189,17 @@ const Index = () => {
         getPurchaseOrderList(1)
     }, [])
 
+
     const getPurchaseOrderList = async (pageNo) => {
         let data = {
-            pageNo: pageNo,
+            routeName: "orderList",
+            page: pageNo,
             limit: 10,
             order: "createdAt DESC"
         }
-        await managePurchaseOrdersAPI(data).then((res) => {
+        console.log(data);
+        await routeAPI(data).then((res) => {
+            console.log(res);
             setPaginationConfig({
                 ...paginationConfig,
                 total: res.data.totalItems,
@@ -223,6 +227,42 @@ const Index = () => {
             }
         })
     }
+
+    // const getPurchaseOrderList = async (pageNo) => {
+    //     let data = {
+    //         pageNo: pageNo,
+    //         limit: 10,
+    //         order: "createdAt DESC"
+    //     }
+    //     await managePurchaseOrdersAPI(data).then((res) => {
+    //         console.log(res);
+    //         setPaginationConfig({
+    //             ...paginationConfig,
+    //             total: res.data.totalItems,
+    //         })
+    //         const purchaseOrderList = res.data.data.map((item) => {
+    //             return {
+    //                 ...item,
+    //                 key: item.id
+    //             }
+    //         })
+    //         setPurchaseOrderList(purchaseOrderList)
+    //         setCurrentPage(res.data.currentPage)
+    //     }).catch(async (error) => {
+    //         if (error?.response?.status == 401) {
+    //             await getNewToken().then(async (token) => {
+    //                 await managePurchaseOrdersAPI(data).then((res) => {
+    //                     setPaginationConfig({
+    //                         ...paginationConfig,
+    //                         total: res.data.totalItems,
+    //                     })
+    //                 })
+    //             }).catch(error => {
+    //                 console.error("Error:", error);
+    //             });
+    //         }
+    //     })
+    // }
 
     const handleTableChange = (pagination, filter, sorter) => {
         getPurchaseOrderList(pagination.current)
