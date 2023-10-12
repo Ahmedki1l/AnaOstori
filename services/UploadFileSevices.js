@@ -11,7 +11,7 @@ const fileToBinary = (file) => {
 };
 
 
-export const uploadFileSevices = async (file) => {
+export const uploadFileSevices = async (file, onUploadProgress, cancelToken) => {
     return new Promise(async (resolve, reject) => {
         const binaryData = await fileToBinary(file);
         const fileType = file.type.split('/')[1]
@@ -19,12 +19,17 @@ export const uploadFileSevices = async (file) => {
             type: "signedUrl",
             extention: fileType
         }
-        await uploadFileAPI(body).then(async (res) => {
+        await uploadFileAPI(body, cancelToken).then(async (res) => {
             const signedUrl = res.data.signedUrl
             await axios.put(signedUrl, binaryData, {
                 headers: {
                     'Content-Type': 'application/octet-stream',
-                }
+                },
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    onUploadProgress(percentCompleted);
+                },
+                cancelToken: cancelToken
             }).then((res) => {
                 resolve(signedUrl)
             }).catch((err) => {

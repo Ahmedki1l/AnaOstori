@@ -47,6 +47,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             courseInfoForm.setFieldsValue(editCourseData)
         }
     }, [courseInfoForm, isCourseEdit, editCourseData])
+
     const catagoriesItem = catagories.map((obj) => {
         return {
             key: obj.id,
@@ -54,6 +55,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             value: obj.id
         };
     });
+
     const curriculum = curriculumIds.filter((obj) => obj.itemCount != 0).map((obj) => {
         return {
             key: obj.id,
