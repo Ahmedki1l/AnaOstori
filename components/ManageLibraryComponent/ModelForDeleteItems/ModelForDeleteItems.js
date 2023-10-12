@@ -33,8 +33,8 @@ const ModelForDeleteItems = ({
         },
         section: {
             title: curriculumConst.deleteSectionModelConst.deleteSectionPopUpTitle,
-            messageText: curriculumConst.deleteSectionModelConst.deletePopUpText,
-            btnText: curriculumConst.deleteSectionModelConst.deleteBtnText,
+            messageText: curriculumConst.deleteSectionModelConst.deleteSectionPopUpText,
+            btnText: curriculumConst.deleteSectionModelConst.deleteSectionBtnText,
         },
         // sectionItem: {
         //     title: "إزالة عنصر",
@@ -42,14 +42,14 @@ const ModelForDeleteItems = ({
         //     btnText: 'تأكيد الحذف',
         // },
         curriculum: {
-            title: curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg,
-            messageText: curriculumConst.curriculumToastMsgConst.deletePopUpText,
-            btnText: curriculumConst.curriculumToastMsgConst.deleteBtnText,
+            title: curriculumConst.curriculumDeleteModelConst.deleteCurriculumPopUpTitle,
+            messageText: curriculumConst.curriculumDeleteModelConst.deleteCurriculumPopUpText,
+            btnText: curriculumConst.curriculumDeleteModelConst.deleteCurriculumBtnText,
         },
         videoDelete: {
             title: curriculumConst.deleteVideoFromSectionModelConst.deleteVideoPopUpTitle,//'تأكيد عدم تضمين الفيديو',
             messageText: curriculumConst.deleteVideoFromSectionModelConst.deleteVideoPopUpText,// 'متأكد انك ما تبي تضم هذا الفيديو للمقرر؟',
-            btnText: curriculumConst.deleteVideoFromSectionModelConst.deleteBtnText,//'اي، ما بضمنه',
+            btnText: curriculumConst.deleteVideoFromSectionModelConst.deleteVideoBtnText,//'اي، ما بضمنه',
         },
         fileDelete: {
             title: curriculumConst.deletePdfFileFromSectionModelConst.deletePdfPopUpTitle, // 'تأكيد عدم تضمين الملف',

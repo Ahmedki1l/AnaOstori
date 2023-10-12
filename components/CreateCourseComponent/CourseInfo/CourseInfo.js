@@ -333,7 +333,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     }
 
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
-        console.log(name);
         setShowLoader(true)
         let data = { ...editCourseData }
         if ((deleteFieldName == 'courseMeta' && data.courseMetaData[index]?.id == undefined) || (deleteFieldName == 'courseDetails' && data.courseDetailsMetaData[index]?.id == undefined)) {
@@ -348,7 +347,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 },
             }
             await deleteCourseTypeAPI(body).then((res) => {
-                console.log(res.data);
                 data.courseMetaData.splice(index, 1)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })

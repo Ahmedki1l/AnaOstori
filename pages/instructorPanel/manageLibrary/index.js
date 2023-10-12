@@ -207,7 +207,7 @@ function Index() {
                                 />
                             }
                             {selectedItem == 'curriculum' &&
-                                <CoursePathLibrary />
+                                <CoursePathLibrary folderType={selectedItem} />
                             }
                         </div>
                     </div>

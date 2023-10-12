@@ -8,7 +8,7 @@
 .curriculimSectionHead {
     width: 60%;
     height: 60px;
-    background-color: #2D2E2D;
+    background-color: #F4F5F7;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,6 +17,8 @@
     margin: 20px 0 0 0;
     transition: all 0.5s;
     position: relative;
+    border: 0.5px solid #00000022;
+    border-bottom: none;
 }
 
 .showCurriculumSectionHead {
@@ -25,7 +27,7 @@
 
 .curriculimHeadText {
     display: flex;
-    color: #FFFFFF;
+    // color: #FFFFFF;
     align-items: center;
     margin-right: 30px;
 }
@@ -85,7 +87,7 @@
     border-top: none;
     border-radius: 0px 0px 3px 3px;
     margin-bottom: 20px;
-    transition: all 0.5s
+    transition: all 0.5s;
 }
 
 .tab:checked {
@@ -115,7 +117,7 @@
     display: grid;
     place-content: center;
     padding: 15px;
-    border: 2px dashed #F26722;
+    border: 2px solid #F26722;
     cursor: pointer;
 }
 
