@@ -23,6 +23,8 @@ export const addVideoModelConst = {
 export const commonLibraryConst = {
     addBtnText: 'إضافة',
     updateBtnText: 'حفظ',
+    nameErrorMsg: 'لازم تكتب العنوان',
+    discriptionErrorMsg: 'لازم تكتب وصف'
 }
 export const folderConst = {
     addAndEditFolderModelConst: {
@@ -53,7 +55,7 @@ export const videoFileConst = {
         videoTitleInputPlaceholder: 'عنوان الفيديو*',
         videoTitleInputError: 'لازم تكتب العنوان',
         videoDiscriptionInputPlaceholder: 'الوصف',
-        videoDiscriptionInputError: 'please enter description',
+        videoDiscriptionInputError: 'لازم تكتب وصف',
         videoFileInputPlaceholder: 'الفيديو*',
         videoFileInputError: 'please select video file',
         videoAttachedBtnText: 'ارفق الفيديو',
@@ -102,7 +104,7 @@ export const quizConst = {
     addExamModelConst: {
         addExamModelTitle: 'إضافة اختبار',
         editExamModelTitle: 'تعديل الاختبار',
-        examTitleInputPlaceholder: 'لازم تكتب العنوان',
+        examTitleInputPlaceholder: 'عنوان الاختبار',
         examTitleInputError: 'لازم تكتب العنوان',
         examDiscriptionInputPlaceholder: 'الوصف',
         examDiscriptionInputError: 'لازم تكتب وصف',

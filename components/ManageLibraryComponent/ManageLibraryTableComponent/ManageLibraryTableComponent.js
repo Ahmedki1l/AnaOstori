@@ -14,7 +14,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import { toast } from 'react-toastify'
-import { folderConst, manageLibraryConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
+import { folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 
 const ManageLibraryTableComponent = ({
@@ -26,7 +26,7 @@ const ManageLibraryTableComponent = ({
     getItemList,
     getFolderList,
     loading,
-    handleCreateFolder
+    handleCreateFolder,
 }) => {
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
@@ -38,7 +38,12 @@ const ManageLibraryTableComponent = ({
     const [fileSrc, setFileSrc] = useState()
     const [videoModalOpen, setVideoModalOpen] = useState(false)
     const [editFolder, setEditFolder] = useState(false)
-    console.log(editFolder);
+    const existingItemName = folderTableData?.map(item => item.name)
+    const { videoToastMsgConst } = videoFileConst
+    const { pdfToastMsgConst } = pdfFileConst
+    const { examToastMsgConst } = quizConst
+    const { folderToastMsgConst } = folderConst
+
 
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
@@ -60,14 +65,14 @@ const ManageLibraryTableComponent = ({
             data: editFolderBody
         }
         await updateFolderAPI(data).then((res) => {
-            toast.success(folderConst.folderToastMsgConst.updateFolderSuccessMsg)
+            toast.success(folderToastMsgConst.updateFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await updateFolderAPI(data).then(res => {
-                        toast.success(folderConst.folderToastMsgConst.updateFolderSuccessMsg)
+                        toast.success(folderToastMsgConst.updateFolderSuccessMsg)
                         setIsModelForAddFolderOpen(false)
                         getFolderList(folderType)
                     })
@@ -78,12 +83,17 @@ const ManageLibraryTableComponent = ({
         })
     }
 
+    const hendleCreateFolder = (name) => {
+        handleCreateFolder(name)
+        setIsModelForAddFolderOpen(false)
+    }
+
     const onCloseModal = () => {
         setIsmodelForDeleteItems(false)
     }
 
-    const onItemModelClose = (folderId) => {
-        getItemList(folderId)
+    const onItemModelClose = () => {
+        // getItemList(folderId)
         setSelectedItem()
         setIsModelForAddItemOpen(false)
     }
@@ -121,18 +131,17 @@ const ManageLibraryTableComponent = ({
                 data: deleteItemBody
             }
             await updateItemToFolderAPI(data).then((res) => {
-                if (folderType == "video") {
-                    toast.success(manageLibraryConst.deleteVideoSuccessMsg)
-                } else if (folderType == "quiz") {
-                    toast.success(manageLibraryConst.deleteQuizSuccessMsg)
-                } else if (folderType == "file") {
-                    toast.success(manageLibraryConst.deleteFileSuccessMsg)
-                }
+                toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
+                    folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
+                        examToastMsgConst.deleteExamSuccessMsg)
                 getItemList(selectedFolder.id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateItemToFolderAPI(data).then(res => {
+                            toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
+                                folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
+                                    examToastMsgConst.deleteExamSuccessMsg)
                             getItemList(selectedFolder.id)
                         })
                     }).catch(error => {
@@ -150,14 +159,14 @@ const ManageLibraryTableComponent = ({
                 data: deleteFolderBody
             }
             await updateFolderAPI(data).then((res) => {
-                toast.success(folderConst.folderToastMsgConst.deleteFolderSuccessMsg)
+                toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
                 getFolderList(folderType)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateFolderAPI(data).then(res => {
                             getFolderList(folderType)
-                            toast.success(folderConst.folderToastMsgConst.deleteFolderSuccessMsg)
+                            toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -276,7 +285,7 @@ const ManageLibraryTableComponent = ({
                 <ModelWithOneInput
                     open={isModelForAddFolderOpen}
                     setOpen={setIsModelForAddFolderOpen}
-                    onSave={editFolder ? handleEditFolder : handleCreateFolder}
+                    onSave={editFolder ? handleEditFolder : hendleCreateFolder}
                     isEdit={editFolder}
                     itemName={selectedFolder?.name}
                     onDelete={handleDeleteFolderData}
@@ -289,8 +298,10 @@ const ManageLibraryTableComponent = ({
                     selectedItem={selectedItem}
                     selectedFolder={selectedFolder}
                     folderType={folderType}
+                    getItemList={getItemList}
                     onCloseModal={onItemModelClose}
                     onDelete={handleDeleteFolderData}
+                    existingItemName={existingItemName}
                 />
             }
             {ismodelForDeleteItems &&

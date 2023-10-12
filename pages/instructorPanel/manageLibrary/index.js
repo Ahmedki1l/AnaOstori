@@ -11,7 +11,7 @@ import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/M
 import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput';
 import BackToPath from '../../../components/CommonComponents/BackToPath';
 import { toast } from 'react-toastify';
-import { commonLibraryConst, folderConst, manageLibraryConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
+import { commonLibraryConst, folderConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 
 
 
@@ -26,11 +26,16 @@ function Index() {
     const [folderList, setFolderList] = useState([])
     const [selectedFolderId, setSelectedFolderId] = useState()
     const [loading, setLoading] = useState(false)
+    const [existingItemName, setExistingItemName] = useState()
 
     useEffect(() => {
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
         getfolderList(router.query.folderType)
     }, [router.query.folderType])
+
+    useEffect(() => {
+        setExistingItemName(folderList.map(item => item.name))
+    }, [folderList])
 
     const handleItemSelect = async (selcetedItem) => {
         // getfolderList(selcetedItem)
@@ -135,7 +140,7 @@ function Index() {
     }
     const handleModelClose = (folderId) => {
         setIsModelForAddItemOpen(false)
-        getItemList(folderId)
+        // getItemList(folderId)
     }
 
     return (
@@ -223,6 +228,8 @@ function Index() {
                     folderType={selectedItem}
                     selectedFolderId={selectedFolderId}
                     onCloseModal={handleModelClose}
+                    getItemList={getItemList}
+                    existingItemName={existingItemName}
                 />}
         </>
     )

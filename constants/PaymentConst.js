@@ -209,13 +209,13 @@ const paymentStatusOther = [
     },
 
     {
-        key: 5,
+        key: 3,
         label: ' جديد',
         value: 'witing',
         color: 'yellow'
     },
     {
-        key: 5,
+        key: 4,
         label: 'تم استرجاع المبلغ',
         value: 'refund',
         color: 'red'

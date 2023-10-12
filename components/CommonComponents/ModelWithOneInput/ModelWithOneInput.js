@@ -15,10 +15,10 @@ const ModelWithOneInput = ({
     onDelete,
     itemName,
     curriCulumSection,
-    setSelectedSection
 }) => {
 
     useEffect(() => {
+        if (!isEdit) return
         inputForm.setFieldValue('name', itemName)
     }, [itemName])
 
@@ -26,13 +26,11 @@ const ModelWithOneInput = ({
 
     const handleCreateFolder = async (values) => {
         onSave(values)
-        setSelectedSection()
         inputForm.resetFields()
     }
 
     const onModalClose = () => {
         inputForm.resetFields()
-        setSelectedSection()
         setOpen(false)
     }
 

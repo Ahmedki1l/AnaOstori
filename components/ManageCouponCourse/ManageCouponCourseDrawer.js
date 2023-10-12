@@ -16,7 +16,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [selectedCouponType, setSelectedCouponType] = useState()
     const [selectedCourse, setSelectedCourse] = useState()
-
+    console.log(couponTypes);
     useEffect(() => {
         couponCourseForm.setFieldsValue({
             expires: selectedCoupon?.expires ? dayjs(selectedCoupon?.expires, 'YYYY-MM-DD') : undefined,
