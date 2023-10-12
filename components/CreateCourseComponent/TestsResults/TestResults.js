@@ -386,7 +386,7 @@ const TestResults = (props) => {
                             width={150}
                             height={40}
                             OptionData={examList}
-                            placeholder="اختر المدرب"
+                            placeholder='اختار الاختبار'
                             onChange={(e) => onParamsSelect(e, 'exam')}
                         />
                     </FormItem>

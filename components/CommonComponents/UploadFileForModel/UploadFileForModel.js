@@ -6,12 +6,11 @@ import { uploadFileSevices } from '../../../services/UploadFileSevices'
 import Spinner from '../spinner'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
 import { PDFDocument } from 'pdf-lib';
+import { pdfFileConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError, setVideoDuration, disabledInput }) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
-
-    console.log(accept);
 
     const getFileKey = async (e) => {
         let file = e.target.files[0];
@@ -34,10 +33,7 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
                 reader.readAsArrayBuffer(file);
             });
 
-            // Count the number of pages in the PDF file.
             const pageCount = await getPageCount(pdfBytes);
-            console.log(pageCount);
-            // Do something with the page count, such as display it to the user or store it in a database.
         }
         setUploadLoader(true)
         setShowBtnLoader(true)
@@ -95,7 +91,9 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
             </div>
             {(uploadfileError && !uploadedFileName) &&
                 <div>
-                    <p style={{ color: 'red' }}>{adminPanelCategoryConst.categoryPhotoErrorMsg}</p>
+                    <p style={{ color: 'red' }}>{accept == 'video' ? videoFileConst.addVideoModelConst.videoFileInputError
+                        : accept == 'file' ? pdfFileConst.addPdfModelConst.pdfFileInputError
+                            : adminPanelCategoryConst.categoryPhotoErrorMsg}</p>
                 </div>
             }
         </>

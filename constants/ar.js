@@ -30,7 +30,7 @@ export const toastErrorMessage = {
     seatsAvailableMsg: "رح نعلمك اول ما نضيف او نوسع المقاعد", //you will get notified once seats are available
     emailUsedErrorMsg: 'الايميل مستخدم مسبقًا', //'Email already used'
     uniqueNameError: 'إضافة وتعديل درجات الطلاب',// "name must be unique",
-    curriculumNameError: 'ما ينفع تستخدم نفس العنوان',// 'Curriculum name already in use',
+    // curriculumNameError: 'ما ينفع تستخدم نفس العنوان',// 'Curriculum name already in use',
     sameFileError: 'إضافة وتعديل الكوبونات',// "this item already exist in this section",
     tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
 }

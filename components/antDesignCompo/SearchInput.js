@@ -9,20 +9,20 @@ const SearchInputField = styled(Search)`
         border-color #7c7c7c7c !important;
     }
     .ant-input-group .ant-input {
-        height:40px;
+        height:30px;
         width: 100%;
         font-size: 16px;
         margin-bottom: 0;
         text-align: right;
         ::placeholder {
-            font-size: 20px;
+            font-size: 16px;
             font-family: 'Tajawal-Regular';
         } 
     }
 
     .ant-btn{
         height:40px;
-        border-left:none
+        // border-left:none
     }
 `
 

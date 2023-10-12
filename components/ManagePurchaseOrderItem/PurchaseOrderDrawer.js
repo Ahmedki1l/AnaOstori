@@ -13,6 +13,7 @@ import { dateRange, fullDate } from '../../constants/DateConverter'
 import CustomButton from '../CommonComponents/CustomButton'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import Input from '../antDesignCompo/Input'
+import { managePuchaseOrderDrawerConst, paymentTypeConst } from '../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst'
 
 
 const PurchaseOrderDrawer = (props) => {
@@ -20,6 +21,8 @@ const PurchaseOrderDrawer = (props) => {
     const [orderForm] = Form.useForm()
     const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [paymentStatus, setPaymentStatus] = useState(selectedOrder.status)
+
 
     const handleSaveOrder = async (value) => {
         setShowBtnLoader(true)
@@ -55,12 +58,14 @@ const PurchaseOrderDrawer = (props) => {
                     orderUpdate: true,
                     id: selectedOrder.id,
                     status: value.status,
-                    // failedReason: value.failedReason }
+                    failedReason: value.failedReason
                 }
             }
             await createOrderAPI(body).then((res) => {
+                setShowBtnLoader(false)
                 props.onClose(true)
             }).catch(async (error) => {
+                setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createOrderAPI(body).then((res) => {
@@ -70,170 +75,222 @@ const PurchaseOrderDrawer = (props) => {
                         console.error("Error:", error);
                     });
                 }
+                console.log(error);
             })
         }
     }
     useEffect(() => {
         orderForm.setFieldValue('status', selectedOrder.status)
         orderForm.setFieldValue('failedReason', selectedOrder.failedReason)
+    }, [])
+
+    const orderItems = selectedOrder.orderItems.map((item, index) => {
+        return item.course.type
     })
+
+    const handleStatusChange = (e) => {
+        setPaymentStatus(e)
+        orderForm.setFieldValue('status', e)
+    }
+
     return (
         <Form form={orderForm} onFinish={handleSaveOrder}>
-            <p className='fontBold py-2' style={{ fontSize: '18px' }}>تفاصيل الحجز</p>
-            <p style={{ fontSize: '18px' }}>عنوان الدورة</p>
+            <p className='fontBold py-2' style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.bookingDetailsTitle}</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.selectedOrderCourseTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.courseName}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>عدد المسجلين</p>
-            <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.qty}</p>
-            </div>
-            <p style={{ fontSize: '18px' }}>حالة الحجز</p>
+            {orderItems != 'on-demand' &&
+                <>
+                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.noOfRegisteredStudentsTitle}</p>
+                    <div className={styles.purchaseOrderBox}>
+                        <p>{selectedOrder.qty}</p>
+                    </div>
+                </>}
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.selectedOrderStatusTitle}</p>
             <FormItem
                 name={'status'}>
                 <Select
                     width={425}
                     height={47}
-                    OptionData={selectedOrder?.paymentMethod != 'bank_transfer' ? paymentStatusOther : paymentStatusBank}
-                    placeholder='حالة الحجز'
+                    OptionData={selectedOrder?.paymentMethod != 'bank_transfer' ? paymentStatusOther.filter(item => item.value != "failed") : paymentStatusBank}
+                    placeholder={managePuchaseOrderDrawerConst.selectedOrderStatusPlaceHolder}
+                    onChange={handleStatusChange}
                 />
             </FormItem>
-            {(selectedOrder.status == "rejected" || selectedOrder.status == "failed") &&
+            {/* {paymentStatus == 'refund' &&
+                <FormItem
+                    name={'refund'}>
+                    <Input
+                        width={425}
+                        height={47}
+                        placeholder='refund'
+                    />
+                </FormItem>
+            } */}
+            {paymentStatus == "rejected" &&
                 <>
-                    <p style={{ fontSize: '18px' }}>failedReason</p>
-                    {selectedOrder?.paymentMethod != 'bank_transfer' ?
-                        <div className={styles.failedReasonBox}>
-                            <p>{selectedOrder.failedReason}</p>
-                        </div>
-                        :
-                        <FormItem
-                            name={'failedReason'}>
-                            <Input
-                                width={425}
-                                height={47}
-                                placeholder='failedReason'
-                            />
-                        </FormItem>
-                    }
+                    <p style={{ fontSize: '18px' }}>توضيح السبب  </p>
+                    <FormItem
+                        name={'failedReason'}>
+                        <Input
+                            width={425}
+                            height={47}
+                            placeholder='توضيح السبب '
+                        />
+                    </FormItem>
                 </>
             }
-            <p style={{ fontSize: '18px' }}>طريقة الدفع</p>
+            {paymentStatus == "failed" &&
+                <>
+                    <p style={{ fontSize: '18px' }}>رسالة الرفض</p>
+                    <div className={styles.failedReasonBox}>
+                        <p>{selectedOrder.failedReason}</p>
+                    </div>
+                </>
+            }
+
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.selectedOrderPaymentMethodTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                {/* <p>{selectedOrder.paymentMethod}</p> */}
                 <p>
-                    {selectedOrder.paymentMethod == 'hyperpay' ? selectedOrder.cardType == 'credit' ? selectedOrder.cardBrand == 'visa' ? 'فيزا' : 'ماستر كارد' :
-                        selectedOrder.cardType == 'mada' ? 'مدى' : 'ابل باي' :
-                        (selectedOrder.paymentMethod == 'bank_transfer' ? 'تحويل بنكي' : 'مشتريات داخل التطبيق')}
+                    {selectedOrder.paymentMethod == 'hyperpay' ? selectedOrder.cardType == 'credit' ? selectedOrder.cardBrand == 'visa' ? paymentTypeConst.visaPayment : paymentTypeConst.masterCardPayment :
+                        selectedOrder.cardType == 'mada' ? paymentTypeConst.madaPaymet : paymentTypeConst.applePayment :
+                        (selectedOrder.paymentMethod == 'bank_transfer' ? paymentTypeConst.bankTransferPayment : paymentTypeConst.inAppPurchasePayment)}
                 </p>
             </div>
             {selectedOrder.reciptKey &&
                 <>
-                    <p style={{ fontSize: '18px' }}>معاينة الإيصال</p>
+                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.userReceiptTitle}</p>
                     <Link href={mediaUrl(selectedOrder.reciptBucket, selectedOrder.reciptKey)} target='_blank'>
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>
                                 <div className={styles.uploadInvoiceBtn}>
                                     <AllIconsComponenet iconName={'uploadIncvoice'} />
                                 </div>
-                                <p>تحميل الفاتورة</p>
+                                <p>{managePuchaseOrderDrawerConst.userReceiptBtnText}</p>
                             </div>
                         </div>
                     </Link>
                 </>
             }
-            <p style={{ fontSize: '18px' }}>سعر الدورة بدون ضريبة</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalPriceTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.totalPrice}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>قيمة الضريبة</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalVatTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.totalVat}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>قيمة خصم الكوبون</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalDiscountTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.totalDiscount}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>السعر المطلوب</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.askingPriceTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{(selectedOrder.totalPrice + selectedOrder.totalVat) - selectedOrder.totalDiscount}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>المبلغ المدفوع</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.amountPaidTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{(selectedOrder.totalPrice + selectedOrder.totalVat) - selectedOrder.totalDiscount}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>تاريخ الحجز</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.createdAddTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{fullDate(selectedOrder.createdAt)}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>تاريخ اخر تحديث</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.updatedAttTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{fullDate(selectedOrder.updatedAt)}</p>
             </div>
 
             <div className={styles.borderedDiv}></div>
 
-            <p className='fontBold py-2' style={{ fontSize: '18px' }}>بيانات الحاجز</p>
+            <p className='fontBold py-2' style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerDataTitle}</p>
 
-            <p style={{ fontSize: '18px' }}>اسم الحاجز</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerNameTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.buyerFullName}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>الجنس</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.userProfile.gender ? selectedOrder.userProfile.gender : '---'}</p>
+                <p>{selectedOrder.userProfile.gender ? selectedOrder.userProfile.gender == "male" ? "شاب" : "بنت" : '---'}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>رقم الجوال</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.buyerPhone.replace('+966', '0')}</p>
             </div>
-            <p style={{ fontSize: '18px' }}>الايميل</p>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerEmailTitle}</p>
             <div className={styles.purchaseOrderBox}>
                 <p>{selectedOrder.buyerEmail}</p>
             </div>
 
             <div className={styles.borderedDiv}></div>
 
-            <p className='fontBold py-2' style={{ fontSize: '18px' }}>بيانات المسجلين</p>
+            <p className='fontBold py-2' style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.registrationInfoTitle}</p>
 
             {selectedOrder.orderItems.map((item, index) => {
                 return (
                     <div key={`order${index}`}>
-                        <p style={{ fontSize: '18px' }}>الاسم الثلاثي</p>
+                        <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.userFullNameTitle}</p>
                         <div className={styles.purchaseOrderBox}>
                             <p>{item.fullName}</p>
                         </div>
-                        <p style={{ fontSize: '18px' }}>الجنس</p>
+                        <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
                         <div className={styles.purchaseOrderBox}>
                             <p> {item.gender}</p>
                         </div>
-                        <p style={{ fontSize: '18px' }}>رقم الجوال</p>
+                        <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
                         <div className={styles.purchaseOrderBox}>
                             <p> {item.phoneNumber.replace('+966', '0')}</p>
                         </div>
-                        <p style={{ fontSize: '18px' }}>الايميل</p>
+                        <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerEmailTitle}</p>
                         <div className={styles.purchaseOrderBox}>
                             <p> {item.email}</p>
                         </div>
-                        <p style={{ fontSize: '18px' }}>موعد الدورة</p>
-                        <div className={styles.purchaseOrderBox}>
-                            <p>{dateRange(item.createdAt, item.updatedAt
-                            )}</p>
-                        </div>
+                        {orderItems != 'on-demand' &&
+                            <>
+                                <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.availabilityTitle}</p>
+                                <div className={styles.purchaseOrderBox}>
+                                    <p>{dateRange(item.createdAt, item.updatedAt
+                                    )}</p>
+                                </div>
+                            </>
+                        }
                     </div>
                 )
-            })}
-
+            })
+            }
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
+            <div className={styles.purchaseOrderBox}>
+                <p> {item.gender == 'male' ? 'شاب' : 'بنت'}</p>
+            </div>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
+            <div className={styles.purchaseOrderBox}>
+                <p> {item.phoneNumber.replace('+966', '0')}</p>
+            </div>
+            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerEmailTitle}</p>
+            <div className={styles.purchaseOrderBox}>
+                <p> {item.email}</p>
+            </div>
+            {orderItems != 'on-demand' &&
+                <>
+                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.availabilityTitle}</p>
+                    <div className={styles.purchaseOrderBox}>
+                        <p>{dateRange(item.createdAt, item.updatedAt
+                        )}</p>
+                    </div>
+                </>
+            }
             {selectedOrder.invoiceKey &&
                 <>
                     <div className={styles.borderedDiv}></div>
-                    <p style={{ fontSize: '18px' }}>نسخة الفاتورة</p>
+                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.invoiceCopyTitle}</p>
                     <Link href={mediaUrl(selectedOrder.invoiceBucket, selectedOrder.invoiceKey)} target='_blank'>
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>
                                 <div className={styles.uploadInvoiceBtn}>
                                     <Icon iconName={'downloadIcon'} height={20} width={20} />
                                 </div>
-                                <p>تحميل الفاتورة</p>
+                                <p>{managePuchaseOrderDrawerConst.downloadInvoiceTitle}</p>
                             </div>
                         </div>
                     </Link>
@@ -247,7 +304,7 @@ const PurchaseOrderDrawer = (props) => {
                     fontSize={16}
                 />
             </div>
-        </Form>
+        </Form >
     )
 }
 

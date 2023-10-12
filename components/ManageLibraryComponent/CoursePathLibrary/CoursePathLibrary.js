@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../CommonComponents/Empty'
 import { noOfItemTag } from '../../../constants/adminPanelConst/commonConst'
+import { toast } from 'react-toastify'
+import { curriculumConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 const CoursePathLibrary = () => {
 
@@ -37,6 +39,7 @@ const CoursePathLibrary = () => {
             }
         }
         await updateCurriculumAPI(editBody).then(async (res) => {
+            toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg)
             await getCurriculumIdsAPI().then((res) => {
                 dispatch({
                     type: 'SET_CURRICULUMIDS',
@@ -48,6 +51,7 @@ const CoursePathLibrary = () => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await updateCurriculumAPI(editBody).then(async (res) => {
+                        toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg)
                         await getCurriculumIdsAPI().then((res) => {
                             dispatch({
                                 type: 'SET_CURRICULUMIDS',
@@ -119,11 +123,11 @@ const CoursePathLibrary = () => {
                                                 <td>
                                                     <div className={styles.videoeventButtons}>
                                                         <div className='cursor-pointer' onClick={() => onEdit(item)}>
-                                                            <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                            <AllIconsComponenet iconName={'newEditIcon'} height={22} width={22} color={'#000000'} />
                                                         </div>
                                                         {item?.courses?.length == 0 &&
                                                             <div className='cursor-pointer' onClick={() => openDeleteFolderItems(item)}>
-                                                                <AllIconsComponenet iconName={'deletecourse'} height={18} width={18} color={'#000000'} />
+                                                                <AllIconsComponenet iconName={'newDeleteIcon'} height={22} width={22} color={'#000000'} />
                                                             </div>}
                                                     </div>
                                                 </td>

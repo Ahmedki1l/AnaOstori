@@ -91,7 +91,7 @@ export default function Attendance(props) {
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
                         date: date,
-                        attendanceType: student.attendances[i].status,
+                        attendanceType: student?.attendances[i]?.status,
                         id: student.attendances[i].id
                     };
                     studentData.attendanceDetails.push(attendanceDetail);
@@ -146,7 +146,6 @@ export default function Attendance(props) {
             data: { data: [] }
         };
         updatedAttendanceData.map((attendance) => {
-            console.log(attendance);
             return (
                 attendance.attendanceDetails.map((data) => {
                     if (data.id == null) return
@@ -158,7 +157,6 @@ export default function Attendance(props) {
                 })
             )
         })
-        console.log(body);
         await updateAttendanceDataAPI(body).then((res) => {
             setShowBtnLoader(false)
             toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)

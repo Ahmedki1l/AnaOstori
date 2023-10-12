@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { createAndEditBtnText, toastErrorMessage } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import CustomButton from '../CommonComponents/CustomButton'
-import { adminPanelInstructorConst } from '../../constants/adminPanelConst/instructorConst/instructorConst'
+import { instructorConst } from '../../constants/adminPanelConst/instructorConst'
 
 const ModelForAddInstructor = ({
     isModelForAddInstructor,
@@ -82,12 +82,12 @@ const ModelForAddInstructor = ({
         deleteNullFromObj(values)
         await createInstroctorAPI(values).then((res) => {
             setShowBtnLoader(false)
-            apiSuccessRes(adminPanelInstructorConst.instuctorCreateSuccessMsg)
+            apiSuccessRes(instructorConst.successAddedNewInstructorToast)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await createInstroctorAPI(values).then(res => {
-                        apiSuccessRes(adminPanelInstructorConst.instuctorCreateSuccessMsg)
+                        apiSuccessRes(instructorConst.successAddedNewInstructorToast)
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -116,7 +116,7 @@ const ModelForAddInstructor = ({
         await editInstroctorAPI(values).then((res) => {
             setShowBtnLoader(false)
             setFileName()
-            apiSuccessRes(adminPanelInstructorConst.instuctorUpdateSuccessMsg)
+            apiSuccessRes(instructorConst.successNewInstructorUpdatedToast)
             instructorForm.resetFields()
         }).catch(async (error) => {
             setShowBtnLoader(false)
@@ -125,7 +125,7 @@ const ModelForAddInstructor = ({
                 await getNewToken().then(async (token) => {
                     await editInstroctorAPI(values).then(res => {
                         setFileName()
-                        apiSuccessRes(adminPanelInstructorConst.instuctorUpdateSuccessMsg)
+                        apiSuccessRes(instructorConst.successNewInstructorUpdatedToast)
                         setShowBtnLoader(false)
                     })
                 }).catch(error => {
@@ -157,34 +157,34 @@ const ModelForAddInstructor = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addInstructor}`}>{isEdit ? adminPanelInstructorConst.editInstructorTitle : adminPanelInstructorConst.addInstuctorTitle}</p>
+                    <p className={`fontBold ${styles.addInstructor}`}>{isEdit ? instructorConst.editInstuctorTitle : instructorConst.addInstuctorTitle}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={instructorForm} onFinish={onFinish}>
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: adminPanelInstructorConst.instructorNameErrorMsg }]}
+                                rules={[{ required: true, message: instructorConst.instructorNameErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder={adminPanelInstructorConst.instructorName}
+                                    placeholder={instructorConst.instructorName}
                                 />
                             </FormItem>
                             <FormItem
                                 name={'role'}
-                                rules={[{ required: true, message: adminPanelInstructorConst.instructorRoleErrorMsg }]}
+                                rules={[{ required: true, message: instructorConst.instructorRoleErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder={adminPanelInstructorConst.instructorRole}
+                                    placeholder={instructorConst.instructorRole}
                                 />
                             </FormItem>
-                            <p className={`my-2 ${styles.addInstructor}`} style={{ fontWeight: 'bold' }}>{adminPanelInstructorConst.instructorPhoto}</p>
+                            <p className={`my-2 ${styles.addInstructor}`} style={{ fontWeight: 'bold' }}>{instructorConst.instructorPhoto}</p>
                             <div className='mt-1'>
                                 <UploadFileForModel
                                     fileName={instructorDetails?.avatarKey}
@@ -192,11 +192,11 @@ const ModelForAddInstructor = ({
                                     uploadResData={setAvtarUploadResData}
                                     fileType={'.jpg , .png'}
                                     accept={"image"}
-                                    placeHolderName={adminPanelInstructorConst.instructorPhotoPlaceHolder}
+                                    placeHolderName={instructorConst.atachPhoto}
                                     setShowBtnLoader={setShowBtnLoader}
                                 />
                             </div>
-                            <p className={`my-3 ${styles.addInstructor}`} style={{ fontWeight: 'bold' }}>{adminPanelInstructorConst.instructorFile}</p>
+                            <p className={`my-3 ${styles.addInstructor}`} style={{ fontWeight: 'bold' }}>{instructorConst.instructorFileIntro}</p>
                             <div className='mb-5'>
                                 <UploadFileForModel
                                     fileName={instructorDetails?.ProfileFileKey}
@@ -204,7 +204,7 @@ const ModelForAddInstructor = ({
                                     uploadResData={setFileUploadResponceData}
                                     fileType={'.pdf , .doc , .docx'}
                                     accept={"file"}
-                                    placeHolderName={adminPanelInstructorConst.instructorFilePlaceHolder}
+                                    placeHolderName={instructorConst.attachFile}
                                     setShowBtnLoader={setShowBtnLoader}
                                 />
                             </div>

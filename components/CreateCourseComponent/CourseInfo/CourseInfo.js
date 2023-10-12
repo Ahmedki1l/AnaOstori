@@ -19,6 +19,7 @@ import Switch from '../../antDesignCompo/Switch';
 import UploadFile from '../../CommonComponents/UploadFileForCourse/UploadFile';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { useRouter } from 'next/router';
+import { courseToastSuccessMessage, createCoursePageConst, onDemandCourseConst, onlineCourseConst, physicalCourseConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
 
 
 const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) => {
@@ -332,7 +333,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     }
 
     const deleteCourseDetails = async (index, remove, name, deleteFieldName) => {
-        console.log(name);
         setShowLoader(true)
         let data = { ...editCourseData }
         if ((deleteFieldName == 'courseMeta' && data.courseMetaData[index]?.id == undefined) || (deleteFieldName == 'courseDetails' && data.courseDetailsMetaData[index]?.id == undefined)) {
@@ -347,7 +347,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 },
             }
             await deleteCourseTypeAPI(body).then((res) => {
-                console.log(res.data);
                 data.courseMetaData.splice(index, 1)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
@@ -397,15 +396,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         await updateCourseDetailsAPI(body).then((res) => {
             if (params == "published") {
                 if (e) {
-                    toast.success(`بنجاح ${editCourseData.name} تم نشر  `)
+                    toast.success(courseToastSuccessMessage.toMakeCoursePublished)
                 } else {
-                    toast.success(` بنجاح ${editCourseData.name} تم إخفاء `)
+                    toast.success(courseToastSuccessMessage.toMakeCourseNotPublished)
                 }
             } else {
                 if (e) {
-                    toast.success(`أصبحت الدورة قابلة للشراء`)
+                    toast.success(courseToastSuccessMessage.toMakeCoursePurchasable)
                 } else {
-                    toast.success(`أصبحت الدورة غير قابلة للشراء`)
+                    toast.success(courseToastSuccessMessage.toMakeCourseNotPurchasable)
                 }
             }
         }).catch(async (error) => {
@@ -428,25 +427,25 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 <div className='px-6'>
                     <FormItem
                         name={'name'}
-                        rules={[{ required: true, message: 'اكتب عنوان الدورة' }]}>
+                        rules={[{ required: true, message: createCoursePageConst.courseTitleInputErrorMsg }]}>
                         <Input
-                            placeholder="عنوان الدورة"
+                            placeholder={createCoursePageConst.courseTitleInputPlaceHolder}
                         />
                     </FormItem>
                     <FormItem
                         name={'catagoryId'}
-                        rules={[{ required: true, message: 'اختار المجال' }]} >
+                        rules={[{ required: true, message: createCoursePageConst.selectCatagoryInputErrorMsg }]} >
                         <Select
-                            placeholder='اختار المجال'
+                            placeholder={createCoursePageConst.selectCatagoryInputPlaceHolder}
                             OptionData={catagoriesItem}
                             filterOption={filterOption}
                         />
                     </FormItem>
                     <FormItem
                         name={'curriculumId'}
-                        rules={[{ required: true, message: 'اختار المقرر' }]}  >
+                        rules={[{ required: true, message: createCoursePageConst.selectCurriculumInputErrorMsg }]}  >
                         <Select
-                            placeholder='اختار مقرر الدورة'
+                            placeholder={createCoursePageConst.selectCurriculumInputPlaceHolder}
                             OptionData={curriculum}
                             filterOption={filterOption}
                         />
@@ -463,16 +462,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     </FormItem>
                     <FormItem
                         name={'shortDescription'}
-                        rules={[{ required: true, message: 'اكتب الوصف' }]}
+                        rules={[{ required: true, message: createCoursePageConst.addDiscriptionInputErrorMsg }]}
                     >
                         <InputTextArea
                             height={274}
                             width={549}
-                            placeholder="وصف الدورة"
+                            placeholder={createCoursePageConst.addDiscriptionInputPlaceHolder}
                         >
                         </InputTextArea>
                     </FormItem>
-                    <p className={styles.uploadImageHeader}>صورة الدورة</p>
+                    <p className={styles.uploadImageHeader}>{createCoursePageConst.attachPhotoHeadTitle}</p>
                     <div>
                         <UploadFile
                             coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
@@ -480,16 +479,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                             setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
                             type={'.jpg , .png'}
-                            label={'ارفق الصورة هنا'}
+                            label={createCoursePageConst.attachPhotoInputPlaceHolder}
                         />
                     </div>
-                    <p className={styles.uploadImageHeader}>فيديو الدورة</p>
+                    <p className={styles.uploadImageHeader}>{createCoursePageConst.attachVideoHeadTitle}</p>
                     <div>
                         <UploadFile
                             coursePictureUrl={isCourseEdit ? mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey) : mediaUrl(imageUploadResponceData?.bucket, imageUploadResponceData?.key)}
                             courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoKey)}
                             accept={"video"}
-                            label={'ارفق الفيديو هنا'}
+                            label={createCoursePageConst.attachVideoInputPlaceHolder}
                             type={'.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv '}
                             setUploadFileData={setVideooUploadResponceData}
                         />
@@ -497,24 +496,29 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     <div style={{ marginTop: '20px' }}>
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
-                                <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
-                                <div className='flex justify-center items-center h-100'> <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
+                                <div className={styles.dropDownArrowWrapper}>
+                                    <AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
+                                <div className='flex justify-center items-center h-100'>
+                                    <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? 'تقام الدورة في' : courseType == 'onDemand' ? 'تقدر تشوفها' : 'يتم بثها عبر'}</p>
+                                <p>{courseType == 'physical' ? physicalCourseConst.locationDisabledInputPlaceHolder :
+                                    courseType == 'onDemand' ? onDemandCourseConst.recordedVideoDisabledFirstInputPlaceHolder
+                                        : onlineCourseConst.locationDisabledInputPlaceHolder}
+                                </p>
                             </div>
                             {courseType == "onDemand" ?
                                 <div className={styles.detailDataWrapper} style={{ marginBottom: '20px' }}>
-                                    <p>{'بجودة عالية'}</p>
+                                    <p>{onDemandCourseConst.recordedVideoDisabledSecondInputPlaceHolder}</p>
                                 </div>
                                 :
                                 <FormItem
                                     name={'locationName'}
-                                    rules={[{ required: true, message: 'اكتب المدينة والمركز' }]} >
+                                    rules={[{ required: true, message: onlineCourseConst.addLocationInputErrorMsg }]} >
                                     <Input
                                         height={47}
                                         width={247}
-                                        placeholder='المدينة والمركز'
+                                        placeholder={onlineCourseConst.addLocationInputPlaceHolder}
                                     />
                                 </FormItem>}
                         </div>
@@ -524,15 +528,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{'تقييم الدورة'}</p>
+                                <p>{createCoursePageConst.reviewRateDisabeledInputPlaceHolder}</p>
                             </div>
                             <FormItem
                                 name={'reviewRate'}
-                                rules={[{ required: true, message: 'ادخل تقييم الدورة' }]} >
+                                rules={[{ required: true, message: createCoursePageConst.reviewRateInputErrorMsg }]} >
                                 <Input
                                     height={47}
                                     width={247}
-                                    placeholder="قيمة التقييم"
+                                    placeholder={createCoursePageConst.reviewRateInputPlaceHolder}
                                 />
                             </FormItem>
                         </div>
@@ -542,15 +546,19 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personegroup'} height={24} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'onDemand' ? 'عدد الاشتراكات' : ' عدد الخريجين'}</p>
+                                <p>{courseType == 'onDemand' ? onDemandCourseConst.numberOfGraduatedDisabledInputPlaceHolder
+                                    : courseType == 'physical' ? ''
+                                        : onlineCourseConst.numberOfRegisterddDisabledInputPlaceHolder}
+                                </p>
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}
-                                rules={[{ required: true, message: 'حط رقم تخميني' }]} >
+                                rules={[{ required: true, message: onDemandCourseConst.numberOfGraduatedInputErrorMsg }]} >
                                 <Input
+                                    type={'number'}
                                     height={47}
                                     width={247}
-                                    placeholder='عدد الاشتركات كرقم فقط'
+                                    placeholder={onDemandCourseConst.numberOfGraduatedInputPlaceHolder}
                                 />
                             </FormItem>
                         </div>
@@ -558,12 +566,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 </div>
                 <div className={styles.borderline}>
                     <div className="w-[95%] p-6">
-                        <p className={styles.secDetails}>تسعيرة الدورة</p>
+                        <p className={styles.secDetails}>{createCoursePageConst.priceSectionHeadTitle}</p>
                         <FormItem
                             name={'discount'}
                         >
                             <CheckBox
-                                label={'الدورة تحتوي على خصم'}
+                                label={createCoursePageConst.checkboxCourseDiscount}
                                 defaultChecked={discountForOne}
                                 onChange={(e) => onChangeCheckBox(e, 'discount')}
                             />
@@ -573,7 +581,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 name={'groupDiscountEligible'}
                             >
                                 <CheckBox
-                                    label='إمكانية التسجيل كمجموعة'
+                                    label={createCoursePageConst.checkboxCourseDiscountForGroup}
                                     defaultChecked={groupDiscountEligible}
                                     onChange={(e) => onChangeCheckBox(e, 'groupDiscountEligible')}
                                 />
@@ -591,22 +599,22 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                     <div >
                                         <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
                                     </div>
-                                    <p className={styles.chechBoxHeadText}>السعر</p>
+                                    <p className={styles.chechBoxHeadText}>{createCoursePageConst.priceLabelForAndroidIosWeb}</p>
                                 </div>
                                 <div className='flex'>
                                     <FormItem
                                         name={'price'}
-                                        rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                        rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}>
                                         <Input
-                                            placeholder='السعر'
+                                            placeholder={createCoursePageConst.priceForOneUserInputPlaceHolder}
                                         />
                                     </FormItem>
                                     {discountForOne &&
                                         <FormItem
                                             name={'discount'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة بعد الخصم' }]}  >
+                                            rules={[{ required: true, message: physicalCourseConst.inputForDiscountedPricePlaceHolder }]}  >
                                             <Input
-                                                placeholder='السعر بعد الخصم'
+                                                placeholder={physicalCourseConst.inputForDiscountedPricePlaceHolder}
                                             />
                                         </FormItem>
                                     }
@@ -616,16 +624,16 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         <div>
                                             <FormItem
                                                 name={'discountForTwo'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
+                                                rules={[{ required: true, message: physicalCourseConst.priceForTwoInputErrorMsg }]} >
                                                 <Input
-                                                    placeholder='شخصين (السعر على كل شخص)'
+                                                    placeholder={physicalCourseConst.priceForTwoInputPlaceHolder}
                                                 />
                                             </FormItem>
                                             <FormItem
                                                 name={'discountForThreeOrMore'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص او اكثر' }]} >
+                                                rules={[{ required: true, message: physicalCourseConst.priceForGroupInputErrorMsg }]} >
                                                 <Input
-                                                    placeholder='3 أو أكثر (السعر على كل شخص)'
+                                                    placeholder={physicalCourseConst.priceForGroupInputPlaceHolder}
                                                 />
                                             </FormItem>
                                         </div>
@@ -642,65 +650,63 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         <div>
                                             <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
                                         </div>
-                                        <p className={styles.chechBoxHeadText}>تسعيرة الموقع والاندرويد</p>
+                                        <p className={styles.chechBoxHeadText}>{onlineCourseConst.priceLabelForAdndroidAndWeb}</p>
                                     </div>
                                     <div className='flex'>
                                         <FormItem
                                             name={'price'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            rules={[{ required: true, message: onlineCourseConst.priceInputErrorMsg }]}>
                                             <Input
-                                                placeholder='السعر'
+                                                placeholder={onlineCourseConst.priceInputPlaceHolder}
                                             />
                                         </FormItem>
                                         {discountForOne &&
                                             <FormItem
                                                 name={'discount'}
-                                                rules={[{ required: true, message: 'ادخل سعر الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: onlineCourseConst.inputForDiscountedPriceErrorMsg }]}  >
                                                 <Input
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onlineCourseConst.inputForDiscountedPricePlaceHolder}
                                                 />
                                             </FormItem>
                                         }
                                     </div>
                                     {groupDiscountEligible &&
-                                        <div className='flex'>
-                                            <div>
-                                                <FormItem
-                                                    name={'discountForTwo'}
-                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]} >
-                                                    <Input
-                                                        placeholder='شخصين (السعر على كل شخص)'
-                                                    />
-                                                </FormItem>
-                                                <FormItem
-                                                    name={'discountForThreeOrMore'}
-                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص او اكثر' }]} >
-                                                    <Input
-                                                        placeholder='3 أو أكثر (السعر على كل شخص)'
-                                                    />
-                                                </FormItem>
-                                            </div>
+                                        <div>
+                                            <FormItem
+                                                name={'discountForTwo'}
+                                                rules={[{ required: true, message: onlineCourseConst.priceForTwoInputErrorMsg }]} >
+                                                <Input
+                                                    placeholder={onlineCourseConst.priceForTwoInputPlaceHolder}
+                                                />
+                                            </FormItem>
+                                            <FormItem
+                                                name={'discountForThreeOrMore'}
+                                                rules={[{ required: true, message: onlineCourseConst.priceForGroupInputErrorMsg }]} >
+                                                <Input
+                                                    placeholder={onlineCourseConst.priceForGroupInputPlaceHolder}
+                                                />
+                                            </FormItem>
                                         </div>
                                     }
                                     <div className={styles.checkBoxHead}>
                                         <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
-                                        <p className={styles.chechBoxHeadText}>تسعيرة الايفون</p>
+                                        <p className={styles.chechBoxHeadText}>{onlineCourseConst.pricelabelForAppleUser}</p>
                                     </div>
                                     <div className='flex'>
                                         <FormItem
                                             name={'iosPriceId'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}>
                                             <Select
-                                                placeholder='السعر لشخص واحد'
+                                                placeholder={createCoursePageConst.priceForOneUserInputPlaceHolder}
                                                 OptionData={iosProductIdList}
                                             />
                                         </FormItem>
                                         {discountForOne &&
                                             <FormItem
                                                 name={'iosDiscountId'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: onlineCourseConst.inputForDiscountedPriceErrorMsg }]}  >
                                                 <Select
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onlineCourseConst.inputForDiscountedPricePlaceHolder}
                                                     OptionData={iosProductIdList}
                                                 />
                                             </FormItem>
@@ -711,17 +717,17 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                             <div>
                                                 <FormItem
                                                     name={'iosDiscountForTwoId'}
-                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لشخصين' }]}  >
+                                                    rules={[{ required: true, message: onlineCourseConst.priceForTwoInputErrorMsg }]}  >
                                                     <Select
-                                                        placeholder='شخصين (السعر على كل شخص)'
+                                                        placeholder={onlineCourseConst.priceForTwoInputPlaceHolder}
                                                         OptionData={iosProductIdList}
                                                     />
                                                 </FormItem>
                                                 <FormItem
                                                     name={'iosDiscountForThreeOrMoreId'}
-                                                    rules={[{ required: true, message: 'ادخل سعر الدورة لـ3 اشخاص' }]}  >
+                                                    rules={[{ required: true, message: onlineCourseConst.priceForGroupInputErrorMsg }]}  >
                                                     <Select
-                                                        placeholder='3 أو أكثر (السعر على كل شخص)'
+                                                        placeholder={onlineCourseConst.priceForGroupInputPlaceHolder}
                                                         OptionData={iosProductIdList}
                                                     />
                                                 </FormItem>
@@ -733,67 +739,67 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <>
                                     <div className={styles.checkBoxHead}>
                                         <AllIconsComponenet iconName={'mobileWebDevice'} height={24} width={24} color={'#2D2E2D'} />
-                                        <p className={styles.chechBoxHeadText}>تسعيرة الموقع </p>
+                                        <p className={styles.chechBoxHeadText}>{createCoursePageConst.priceLabelForMobileWebUser}</p>
                                     </div>
                                     <div className='flex'>
                                         <FormItem
                                             name={'price'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}>
                                             <Input
-                                                placeholder='السعر لشخص واحد'
+                                                placeholder={createCoursePageConst.priceForOneUserInputPlaceHolder}
                                             />
                                         </FormItem>
                                         {discountForOne &&
                                             <FormItem
                                                 name={'discount'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}  >
                                                 <Input
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onDemandCourseConst.inputForDiscountedPricePlaceHolder}
                                                 />
                                             </FormItem>
                                         }
                                     </div>
                                     <div className={styles.checkBoxHead}>
                                         <AllIconsComponenet iconName={'androidStore'} height={24} width={24} color={'#2D2E2D'} />
-                                        <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                        <p className={styles.chechBoxHeadText}>{createCoursePageConst.priceLabelForAndroidUser}</p>
                                     </div>
                                     <div className='flex'>
                                         <FormItem
                                             name={'androidPrice'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}>
                                             <Input
-                                                placeholder='السعر لشخص واحد'
+                                                placeholder={createCoursePageConst.priceForOneUserInputPlaceHolder}
                                             />
                                         </FormItem>
                                         {discountForOne &&
                                             <FormItem
                                                 name={'androidDiscount'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}  >
                                                 <Input
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onDemandCourseConst.inputForDiscountedPricePlaceHolder}
                                                 />
                                             </FormItem>
                                         }
                                     </div>
                                     <div className={styles.checkBoxHead}>
                                         <AllIconsComponenet iconName={'appleStore'} height={24} width={24} color={'#2D2E2D'} />
-                                        <p className={styles.chechBoxHeadText}>تسعيرة الدورة</p>
+                                        <p className={styles.chechBoxHeadText}>{createCoursePageConst.priceLabelForIosUser}</p>
                                     </div>
                                     <div className='flex'>
                                         <FormItem
                                             name={'iosPriceId'}
-                                            rules={[{ required: true, message: 'ادخل سعر الدورة' }]}>
+                                            rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}>
                                             <Select
-                                                placeholder='السعر لشخص واحد'
+                                                placeholder={createCoursePageConst.priceForOneUserInputPlaceHolder}
                                                 OptionData={iosProductIdList}
                                             />
                                         </FormItem>
                                         {discountForOne &&
                                             <FormItem
                                                 name={'iosDiscountId'}
-                                                rules={[{ required: true, message: 'ادخل سعر   الدورة بعد الخصم' }]}  >
+                                                rules={[{ required: true, message: createCoursePageConst.priceForOneUserInputError }]}  >
                                                 <Select
-                                                    placeholder='السعر بعد الخصم'
+                                                    placeholder={onDemandCourseConst.inputForDiscountedPricePlaceHolder}
                                                     OptionData={iosProductIdList}
                                                 />
                                             </FormItem>
@@ -817,7 +823,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                         {(field, { add, remove }) => (
                                             <>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                                    <p className={styles.secDetails}>تفاصيل الدورة</p>
+                                                    <p className={styles.secDetails}>{createCoursePageConst.metaDataTitleForCourse}</p>
                                                     <p className={styles.addDetails} onClick={() => add()}>+ إضافة</p>
                                                 </div>
                                                 {field.map(({ name, key, ...restField }, index) => (
@@ -832,11 +838,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                             name={[name, 'title']}
                                                             rules={[{
                                                                 required: true,
-                                                                message: 'ادخل العنوان'
+                                                                message: createCoursePageConst.metadataCourseTitleErrorMsg
                                                             },
                                                             ]}
                                                         >
-                                                            <Input placeholder="العنوان" width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataCourseTitlePlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
@@ -844,35 +850,29 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: 'ادخل الوصف'
+                                                                    message: createCoursePageConst.metadataTextInputErrorMsg
                                                                 },
                                                             ]}
                                                         >
-                                                            <Input placeholder="النص" width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataTextInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'link']}
                                                         >
-                                                            <Input placeholder="رابط" width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataLinkInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'tailLinkName']}
                                                         >
-                                                            <Input placeholder="نص منفصل" width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataSeparateTextInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'tailLink']}
-                                                            rules={[
-                                                                {
-                                                                    required: field?.tailLinkName ? true : false,
-                                                                    message: 'ادخل الرابط المنصل'
-                                                                },
-                                                            ]}
                                                         >
-                                                            <Input placeholder='رابط للنص المنفصل' width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataLinkSeperatedTextInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <div className={`${styles.deleteIconWrapper} cursor-pointer`} onClick={() => { deleteCourseDetails(index, remove, name, "courseMeta") }}>
                                                             <div className='flex justify-center items-center h-100 cursor-pointer' >
@@ -922,29 +922,29 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: 'ادخل النص'
+                                                                    message: createCoursePageConst.metadataTextInputErrorMsg
                                                                 },
                                                             ]}
                                                         >
-                                                            <Input placeholder="النص" width={295} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataTextInputPlaceHolder} width={295} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'link']}
                                                         >
-                                                            <Input placeholder="رابط" width={284} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataLinkInputPlaceHolder} width={284} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'tailLinkName']}
                                                         >
-                                                            <Input placeholder="نص منفصل" width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataSeparateTextInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <FormItem
                                                             {...restField}
                                                             name={[name, 'tailLink']}
                                                         >
-                                                            <Input placeholder="رابط للنص المنفصل" width={216} height={47} />
+                                                            <Input placeholder={createCoursePageConst.metadataLinkSeperatedTextInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
                                                         <div className={`${styles.deleteIconWrapper} cursor-pointer`} onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }} >
                                                             <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }}>
@@ -959,11 +959,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 </div>
                                 <div className={styles.publishedCourseDetails}>
                                     <Switch defaultChecked={editCourseData?.published} onChange={handleToggleChange} params={'published'} />
-                                    <p style={{ marginRight: '3px' }}>نشر الدورة</p>
+                                    <p style={{ marginRight: '3px' }}>{createCoursePageConst.publishSwitchLabel}</p>
                                 </div>
                                 <div className={`pt-2 ${styles.publishedCourseDetails}`}>
                                     <Switch defaultChecked={editCourseData?.isPurchasable} onChange={handleToggleChange} params={'isPurchasable'} />
-                                    <p style={{ marginRight: '3px' }}>قابلة للشراء</p>
+                                    <p style={{ marginRight: '3px' }}>{createCoursePageConst.ableToPurchaseSwitchLabel}</p>
                                 </div>
                             </div>
                         </div>

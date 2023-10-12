@@ -14,6 +14,7 @@ import { toast } from 'react-toastify'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../../components/CommonComponents/Empty'
 import { adminPanelInstructorConst } from '../../../constants/adminPanelConst/instructorConst/instructorConst'
+import { instructorConst } from '../../../constants/adminPanelConst/instructorConst'
 
 const Index = () => {
 
@@ -70,7 +71,7 @@ const Index = () => {
             isDeleted: true
         }
         await editInstroctorAPI(body).then((res) => {
-            toast.success(adminPanelInstructorConst.instructorDeleteMsg)
+            toast.success(instructorConst.successConfirmDeleteInstructorToast)
             getInstructorListReq()
         }).catch((err) => {
             console.log(err);

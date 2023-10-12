@@ -257,7 +257,7 @@ const TheStudent = (props) => {
                                         fontSize={16}
                                         width={210}
                                         height={40}
-                                        placeholder="اختر الفترة"
+                                        placeholder='اختار الاختبار'
                                         OptionData={allavailability}
                                         onChange={(e) => getAllStudentList(e)}
                                     />

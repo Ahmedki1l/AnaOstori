@@ -14,7 +14,6 @@ import { useRouter } from 'next/router';
 import BackToPath from '../../CommonComponents/BackToPath';
 import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo';
 import { mediaUrl } from '../../../constants/DataManupulation';
-import { type } from 'jquery';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -98,15 +97,13 @@ const ModelForAddItemCurriculum = ({
     }
 
     const IconCell = ({ item, index, icontype }) => {
+        console.log(item);
         return (
             <div className='flex items-center cursor-pointer' onClick={() => handleClickOnIconCell(item, index)}>
-                {icontype == "folder" && <AllIconsComponenet iconName={'folderIcon'} height={24} width={24} />}
+                {icontype == "folder" && <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />}
                 {icontype == "item" &&
-                    <Icon
-                        height={24}
-                        width={24}
-                        iconName={item?.type == 'video' ? "videoIcon" : item?.type == 'file' ? 'pdfIcon' : 'quizNotAttemptIcon'}
-                        alt={'Quiz Logo'} />}
+                    <AllIconsComponenet iconName={item?.type == 'video' ? 'newVideoIcon' : item?.type == 'file' ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'} height={24} width={24} color={'#000000'} />
+                }
                 <p className='pr-2'>{item?.name}</p>
             </div>
         )
@@ -119,7 +116,6 @@ const ModelForAddItemCurriculum = ({
             folderId: selectedFolder.id
         }
         await getItemListAPI(body).then((res) => {
-            console.log("itemList", res);
             setTypeOfListData("item")
             let data = res?.data?.filter(item => item !== null).sort((a, b) =>
                 a.createdAt.localeCompare(b.createdAt)).map((item) => {
@@ -130,7 +126,6 @@ const ModelForAddItemCurriculum = ({
                         key: item.id
                     }
                 })
-            console.log(data);
             setSerchInput('')
             setTableData(data)
             setFolderList(data)

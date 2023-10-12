@@ -10,7 +10,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 import CustomButton from '../../CommonComponents/CustomButton'
 import { toast } from 'react-toastify';
-import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst';
+import { commonLibraryConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 
 const ModelForAddItemLibrary = ({
     isModelForAddItemOpen,
@@ -20,6 +20,8 @@ const ModelForAddItemLibrary = ({
     selectedItem,
     onCloseModal,
     onDelete,
+    getItemList,
+    existingItemName
 }) => {
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
@@ -28,8 +30,12 @@ const ModelForAddItemLibrary = ({
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [uploadfileError, setUploadFileError] = useState(false)
     const [videoDuration, setVideoDuration] = useState()
+    const { videoToastMsgConst, addVideoModelConst } = videoFileConst
+    const { pdfToastMsgConst, addPdfModelConst } = pdfFileConst
+    const { examToastMsgConst, addExamModelConst } = quizConst
 
     useEffect(() => {
+        if (!isEdit) return
         ItemDetailsForm.setFieldsValue(selectedItem)
         setFileName(selectedItem?.linkKey)
     }, [selectedItem])
@@ -41,12 +47,19 @@ const ModelForAddItemLibrary = ({
             addItemToFolder(values)
         }
     };
+
     const addItemToFolder = async (e) => {
-        if (!fileUploadResponceData) {
+        if (existingItemName.includes(e.name)) {
+            toast.error(folderType == "video" ? videoToastMsgConst.videoNameDuplicateErrorMsg :
+                folderType == "quiz" ? examToastMsgConst.examNameDuplicateErrorMsg :
+                    pdfToastMsgConst.pdfNameDuplicateErrorMsg)
+            return
+        }
+        if (!fileUploadResponceData && folderType !== "quiz") {
             setUploadFileError(true)
+            return
         }
         let body = {}
-
         if (folderType !== "quiz") {
             body.name = e.name
             body.description = e.description
@@ -63,7 +76,6 @@ const ModelForAddItemLibrary = ({
             body.type = folderType
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
-            body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
             body.quizLink = e.quizLink
         }
         const data = {
@@ -71,19 +83,20 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
-            if (folderType == "video") {
-                toast.success(manageLibraryConst.addVideoSuccessMsg)
-            } else if (folderType == "quiz") {
-                toast.success(manageLibraryConst.addQuizSuccessMsg)
-            } else if (folderType == "file") {
-                toast.success(manageLibraryConst.addFileSuccessMsg)
-            }
-            onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+            toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
+                folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
+                    pdfToastMsgConst.addPdfSuccessMsg)
+            getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+            onCloseModal()
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await addItemToFolderAPI(data).then(res => {
-                        onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+                        toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
+                            folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
+                                pdfToastMsgConst.addPdfSuccessMsg)
+                        getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+                        onCloseModal()
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -92,7 +105,14 @@ const ModelForAddItemLibrary = ({
         })
         ItemDetailsForm.resetFields()
     }
+
     const editFolderItems = async (e) => {
+        if (existingItemName.includes(e.name)) {
+            toast.error(folderType == "video" ? videoToastMsgConst.videoNameDuplicateErrorMsg :
+                folderType == "quiz" ? examToastMsgConst.examNameDuplicateErrorMsg :
+                    pdfToastMsgConst.pdfNameDuplicateErrorMsg)
+            return
+        }
         if (!fileUploadResponceData) {
             setUploadFileError(true)
         }
@@ -121,19 +141,20 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await updateItemToFolderAPI(data).then((res) => {
-            if (folderType == "video") {
-                toast.success(manageLibraryConst.updateVideoSuccessMsg)
-            } else if (folderType == "quiz") {
-                toast.success(manageLibraryConst.updateQuizSuccessMsg)
-            } else if (folderType == "file") {
-                toast.success(manageLibraryConst.updateFileSuccessMsg)
-            }
-            onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+            toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
+                folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
+                    pdfToastMsgConst.updatePdfSuccessMsg)
+            getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+            onCloseModal()
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await updateItemToFolderAPI(data).then(res => {
-                        onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+                        toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
+                            folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
+                                pdfToastMsgConst.updatePdfSuccessMsg)
+                        getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+                        onCloseModal()
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -145,7 +166,7 @@ const ModelForAddItemLibrary = ({
 
     const onModelClose = () => {
         ItemDetailsForm.resetFields()
-        onCloseModal(selectedFolderId ? selectedFolderId : selectedFolder?.id)
+        onCloseModal()
     }
 
     const handleDeleteItems = () => {
@@ -167,11 +188,15 @@ const ModelForAddItemLibrary = ({
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                     {!isEdit &&
                         <p className={`fontBold ${styles.createappointment}`}>
-                            {folderType == 'video' ? 'إضافة فيديو' : folderType == 'quiz' ? 'إضافة اختبار' : 'إضافة ملف'}
+                            {folderType == 'video' ? addVideoModelConst.addVideoModelTitle
+                                : folderType == 'quiz' ? addExamModelConst.addExamModelTitle
+                                    : addPdfModelConst.addPdfModelTitle}
                         </p>}
                     {isEdit &&
                         <p className={`fontBold ${styles.createappointment}`}>
-                            {folderType == 'video' ? 'تعديل الفيديو' : folderType == 'quiz' ? 'تعديل الاختبار' : 'تعديل الملف'}
+                            {folderType == 'video' ? addVideoModelConst.editVideoModelTitle
+                                : folderType == 'quiz' ? addExamModelConst.editExamModelTitle
+                                    : addPdfModelConst.editPdfModelTitle}
                         </p>}
                 </div>
                 <div dir='rtl'>
@@ -179,79 +204,61 @@ const ModelForAddItemLibrary = ({
                         <div className={styles.createAppointmentFields}>
                             <FormItem
                                 name={'name'}
-                                rules={[{ required: true, message: 'لازم تكتب العنوان' }]}
+                                rules={[{ required: true, message: commonLibraryConst.nameErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
                                     width={352}
                                     height={40}
-                                    placeholder={folderType == 'video' ? "عنوان الفيديو" : folderType == "quiz" ? 'عنوان الاختبار' : 'عنوان الملف'}
+                                    placeholder={folderType == 'video' ? addVideoModelConst.videoTitleInputPlaceholder
+                                        : folderType == "quiz" ? addExamModelConst.examTitleInputPlaceholder
+                                            : addPdfModelConst.pdfTitleInputPlaceholder}
                                 />
                             </FormItem>
-                            {folderType == "video" &&
-                                <FormItem
-                                    name={'description'}
-                                >
-                                    <InputTextArea
-                                        fontSize={16}
-                                        height={76}
-                                        width={352}
-                                        placeholder='الوصف'
-                                    />
-                                </FormItem>}
-                            {folderType == "file" &&
-                                <FormItem
-                                    name={'description'}
-                                    rules={[{ required: true, message: 'لازم تكتب وصف' }]}
-                                >
-                                    <InputTextArea
-                                        fontSize={16}
-                                        height={76}
-                                        width={352}
-                                        placeholder='الوصف'
-                                    />
-                                </FormItem>
-                            }
+
+                            <FormItem
+                                name={'description'}
+                                rules={[{ required: true, message: commonLibraryConst.discriptionErrorMsg }]}
+                            >
+                                <InputTextArea
+                                    fontSize={16}
+                                    height={76}
+                                    width={352}
+                                    placeholder={folderType == 'video' ? addVideoModelConst.videoDiscriptionInputPlaceholder
+                                        : folderType == "quiz" ? addExamModelConst.examDiscriptionInputPlaceholder
+                                            : addPdfModelConst.pdfDiscriptionInputPlaceholder}
+                                />
+                            </FormItem>
                             {folderType !== "quiz" &&
                                 <>
-                                    <p className={styles.uploadFileText}>{folderType == 'video' ? 'الفيديو*' : 'الملف*'}</p>
+                                    <p className={styles.uploadFileText}>{folderType == 'video' ? addVideoModelConst.videoFileInputPlaceholder : addPdfModelConst.pdfFileInputPlaceholder}</p>
                                     <UploadFileForModel
                                         fileName={selectedItem?.linkKey}
                                         setFileName={setFileName}
                                         uploadResData={setFileUploadResponceData}
                                         fileType={folderType == 'video' ? '.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv' : '.pdf , .doc , .docx'}
                                         accept={folderType == 'video' ? "video" : "file"}
-                                        placeHolderName={folderType == 'video' ? 'ارفق الفيديو' : 'ارفق الملف'}
+                                        placeHolderName={folderType == 'video' ? addVideoModelConst.videoAttachedBtnText : addPdfModelConst.pdfAttachedBtnText}
                                         setShowBtnLoader={setShowBtnLoader}
                                         setVideoDuration={setVideoDuration}
+                                        uploadfileError={uploadfileError}
                                     />
                                 </>
                             }
                             {folderType == "quiz" &&
                                 <>
                                     <FormItem
-                                        name={'description'}
-                                        rules={[{ required: true, message: 'لازم تكتب وصف' }]}
-                                    >
-                                        <InputTextArea
-                                            fontSize={16}
-                                            height={76}
-                                            width={352}
-                                            placeholder='الوصف'
-                                        />
-                                    </FormItem>
-                                    <FormItem
                                         name={'numberOfQuestions'}
-                                        rules={[{ required: true, message: 'لازم تكتب عددها' }]}
+                                        rules={[{ required: true, message: addExamModelConst.examNoOfQueInputError }]}
                                     >
                                         <Input
                                             fontSize={16}
                                             width={352}
                                             height={40}
-                                            placeholder='عدد الأسئلة (رقم فقط)'
+                                            placeholder={addExamModelConst.examNoOfQueInputPlaceholder}
                                         />
                                     </FormItem>
-                                    <p className={styles.uploadFileText}>رابط الاختبار*</p>
+                                    <p className={styles.uploadFileText}>{addExamModelConst.examLinkTitle}</p>
                                     <FormItem
                                         name={'quizLink'}
                                         rules={[{ required: true, message: 'exam link is required' }]}
@@ -260,7 +267,7 @@ const ModelForAddItemLibrary = ({
                                             fontSize={16}
                                             width={352}
                                             height={40}
-                                            placeholder='الرابط'
+                                            placeholder={addExamModelConst.examLinkInputPlaceholder}
                                         />
                                     </FormItem>
                                 </>
@@ -269,7 +276,7 @@ const ModelForAddItemLibrary = ({
                         <div className={styles.AppointmentFieldBorderBottom}>
                             <div className='pt-2'>
                                 <CustomButton
-                                    btnText={isEdit ? "حفظ" : "إضافة"}
+                                    btnText={isEdit ? commonLibraryConst.updateBtnText : commonLibraryConst.addBtnText}
                                     width={80}
                                     height={37}
                                     showLoader={showBtnLoader}

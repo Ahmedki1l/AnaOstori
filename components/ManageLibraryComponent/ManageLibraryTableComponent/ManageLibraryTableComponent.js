@@ -14,7 +14,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import { toast } from 'react-toastify'
-import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst'
+import { folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 
 const ManageLibraryTableComponent = ({
@@ -26,6 +26,7 @@ const ManageLibraryTableComponent = ({
     getItemList,
     getFolderList,
     loading,
+    handleCreateFolder,
 }) => {
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
@@ -36,14 +37,18 @@ const ManageLibraryTableComponent = ({
     const [deleteItemType, setDeleteItemType] = useState('folder')
     const [fileSrc, setFileSrc] = useState()
     const [videoModalOpen, setVideoModalOpen] = useState(false)
-
-    const [editCategory, setEditCategory] = useState(false)
+    const [editFolder, setEditFolder] = useState(false)
+    const existingItemName = folderTableData?.map(item => item.name)
+    const { videoToastMsgConst } = videoFileConst
+    const { pdfToastMsgConst } = pdfFileConst
+    const { examToastMsgConst } = quizConst
+    const { folderToastMsgConst } = folderConst
 
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
             setSelectedFolder(item)
-            setEditCategory(true)
+            setEditFolder(true)
         } else {
             setSelectedItem(item)
             setIsModelForAddItemOpen(true)
@@ -59,13 +64,14 @@ const ManageLibraryTableComponent = ({
             data: editFolderBody
         }
         await updateFolderAPI(data).then((res) => {
-            toast.success(manageLibraryConst.updateFolderSuccessMsg)
+            toast.success(folderToastMsgConst.updateFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await updateFolderAPI(data).then(res => {
+                        toast.success(folderToastMsgConst.updateFolderSuccessMsg)
                         setIsModelForAddFolderOpen(false)
                         getFolderList(folderType)
                     })
@@ -76,12 +82,17 @@ const ManageLibraryTableComponent = ({
         })
     }
 
+    const hendleCreateFolder = (name) => {
+        handleCreateFolder(name)
+        setIsModelForAddFolderOpen(false)
+    }
+
     const onCloseModal = () => {
         setIsmodelForDeleteItems(false)
     }
 
-    const onItemModelClose = (folderId) => {
-        getItemList(folderId)
+    const onItemModelClose = () => {
+        // getItemList(folderId)
         setSelectedItem()
         setIsModelForAddItemOpen(false)
     }
@@ -119,18 +130,17 @@ const ManageLibraryTableComponent = ({
                 data: deleteItemBody
             }
             await updateItemToFolderAPI(data).then((res) => {
-                if (folderType == "video") {
-                    toast.success(manageLibraryConst.deleteVideoSuccessMsg)
-                } else if (folderType == "quiz") {
-                    toast.success(manageLibraryConst.deleteQuizSuccessMsg)
-                } else if (folderType == "file") {
-                    toast.success(manageLibraryConst.deleteFileSuccessMsg)
-                }
+                toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
+                    folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
+                        examToastMsgConst.deleteExamSuccessMsg)
                 getItemList(selectedFolder.id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateItemToFolderAPI(data).then(res => {
+                            toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
+                                folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
+                                    examToastMsgConst.deleteExamSuccessMsg)
                             getItemList(selectedFolder.id)
                         })
                     }).catch(error => {
@@ -148,13 +158,14 @@ const ManageLibraryTableComponent = ({
                 data: deleteFolderBody
             }
             await updateFolderAPI(data).then((res) => {
-                toast.success(manageLibraryConst.deleteFolderSuccessMsg)
+                toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
                 getFolderList(folderType)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await updateFolderAPI(data).then(res => {
                             getFolderList(folderType)
+                            toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -269,28 +280,37 @@ const ManageLibraryTableComponent = ({
                     }
                 </div>
             </div>
-            {isModelForAddFolderOpen && <ModelWithOneInput
-                open={isModelForAddFolderOpen}
-                setOpen={setIsModelForAddFolderOpen}
-                onSave={handleEditFolder}
-                isEdit={editCategory}
-                itemName={selectedFolder?.name}
-                onDelete={handleDeleteFolderData}
-            />}
-            {isModelForAddItemOpen && <ModelForAddItemLibrary
-                isModelForAddItemOpen={isModelForAddItemOpen}
-                selectedItem={selectedItem}
-                selectedFolder={selectedFolder}
-                folderType={folderType}
-                onCloseModal={onItemModelClose}
-                onDelete={handleDeleteFolderData}
-            />}
-            {ismodelForDeleteItems && <ModelForDeleteItems
-                ismodelForDeleteItems={ismodelForDeleteItems}
-                onCloseModal={onCloseModal}
-                deleteItemType={deleteItemType}
-                onDelete={handleDeleteFolderData}
-            />}
+            {isModelForAddFolderOpen &&
+                <ModelWithOneInput
+                    open={isModelForAddFolderOpen}
+                    setOpen={setIsModelForAddFolderOpen}
+                    onSave={editFolder ? handleEditFolder : hendleCreateFolder}
+                    isEdit={editFolder}
+                    itemName={selectedFolder?.name}
+                    onDelete={handleDeleteFolderData}
+                    curriCulumSection={'folder'}
+                />
+            }
+            {isModelForAddItemOpen &&
+                <ModelForAddItemLibrary
+                    isModelForAddItemOpen={isModelForAddItemOpen}
+                    selectedItem={selectedItem}
+                    selectedFolder={selectedFolder}
+                    folderType={folderType}
+                    getItemList={getItemList}
+                    onCloseModal={onItemModelClose}
+                    onDelete={handleDeleteFolderData}
+                    existingItemName={existingItemName}
+                />
+            }
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={deleteItemType}
+                    onDelete={handleDeleteFolderData}
+                />
+            }
             {videoModalOpen &&
                 <ModalForVideo
                     videoModalOpen={videoModalOpen}

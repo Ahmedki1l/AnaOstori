@@ -11,7 +11,7 @@ import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/M
 import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput';
 import BackToPath from '../../../components/CommonComponents/BackToPath';
 import { toast } from 'react-toastify';
-import { manageLibraryConst } from '../../../constants/manageLibraryConst/manageLibraryConst';
+import { commonLibraryConst, folderConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 
 
 
@@ -26,11 +26,16 @@ function Index() {
     const [folderList, setFolderList] = useState([])
     const [selectedFolderId, setSelectedFolderId] = useState()
     const [loading, setLoading] = useState(false)
+    const [existingItemName, setExistingItemName] = useState()
 
     useEffect(() => {
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
         getfolderList(router.query.folderType)
     }, [router.query.folderType])
+
+    useEffect(() => {
+        setExistingItemName(folderList.map(item => item.name))
+    }, [folderList])
 
     const handleItemSelect = async (selcetedItem) => {
         // getfolderList(selcetedItem)
@@ -103,7 +108,6 @@ function Index() {
     const handleRoute = () => {
         router.push(`/instructorPanel/manageLibrary/createCoursePath`)
     }
-
     const handleCreateFolder = async ({ name }) => {
         let data = {
             data: {
@@ -111,15 +115,15 @@ function Index() {
                 type: selectedItem,
             }
         }
-        console.log(data);
         await createFolderAPI(data).then((res) => {
-            toast.success(manageLibraryConst.createFolderSuccessMsg)
+            toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await createFolderAPI(body).then(res => {
+                        toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
                         setIsModelForAddFolderOpen(false)
                         getfolderList(selectedItem)
                     })
@@ -136,7 +140,7 @@ function Index() {
     }
     const handleModelClose = (folderId) => {
         setIsModelForAddItemOpen(false)
-        getItemList(folderId)
+        // getItemList(folderId)
     }
 
     return (
@@ -199,10 +203,11 @@ function Index() {
                                     setTypeOfListData={setTypeOfListData}
                                     loading={loading}
                                     setLoading={setLoading}
+                                    handleCreateFolder={handleCreateFolder}
                                 />
                             }
                             {selectedItem == 'curriculum' &&
-                                <CoursePathLibrary />
+                                <CoursePathLibrary folderType={selectedItem} />
                             }
                         </div>
                     </div>
@@ -215,6 +220,7 @@ function Index() {
                     onSave={handleCreateFolder}
                     onDelete={handleDeleteSection}
                     isEdit={false}
+                    curriCulumSection={'folder'}
                 />}
             {isModelForAddItemOpen &&
                 <ModelForAddItemLibrary
@@ -222,6 +228,8 @@ function Index() {
                     folderType={selectedItem}
                     selectedFolderId={selectedFolderId}
                     onCloseModal={handleModelClose}
+                    getItemList={getItemList}
+                    existingItemName={existingItemName}
                 />}
         </>
     )

@@ -94,6 +94,12 @@
         text-align: center;
         border: 0.7px solid #c3c3c3;
         border-top: none;
+
+        .publishState {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     }
 }
 
