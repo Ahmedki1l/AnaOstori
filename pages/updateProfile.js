@@ -75,7 +75,7 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         if (firstName && (firstName.split(" ").length - 1) < 2) {
-			setFirstNameError(inputErrorMessages.firstNameErrorMsg);
+			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
 		else{
 			setFirstNameError(null)
@@ -94,8 +94,7 @@ const UpdateProfile = () => {
         event.preventDefault();
 
         if (!firstName) {
-            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
-            
+            setFirstNameError(inputErrorMessages.firstNameErrorMsg)   
         }
         else if ((firstName.split(" ").length - 1) < 2) {
             setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
@@ -109,7 +108,13 @@ const UpdateProfile = () => {
 
         const data = {
             firstName: firstName,
+            phoneNumber: phoneNumber,
+            gender: gender
             // lastName: lastName
+        }
+
+        if(!phoneNumber?.length){
+            delete data.phoneNumber;
         }
 
         const params = {
@@ -134,6 +139,8 @@ const UpdateProfile = () => {
         });
     }
     }
+
+  
 
 console.log("phoneNumberError : ",phoneNumberError, firstNameError);
 
@@ -168,8 +175,8 @@ console.log("phoneNumberError : ",phoneNumberError, firstNameError);
                                         <div className={`formInputIconDiv ${styles.iconDiv}`}>
                                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                                         </div>
-                                        <input className={`formInput ${styles.formFieldInput}`}name='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
-                                        <label className={`formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">رقم الجوال</label>
+                                        <input className={firstNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`}name='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
+                                        <label className={firstNameError ? `formLabel ${styles.formFieldLabelError}` :  `formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">الاسم الثلاثي</label>
                                     </div>
                                     {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                                 </div>
@@ -178,8 +185,8 @@ console.log("phoneNumberError : ",phoneNumberError, firstNameError);
                                         <div className={`formInputIconDiv ${styles.iconDiv}`}>
                                             <AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
                                         </div>
-                                        <input className={`formInput ${styles.formFieldInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-                                        <label className={`formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">رقم الجوال</label>
+                                        <input className={phoneNumberError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                                        <label className={phoneNumberError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">رقم الجوال</label>
                                     </div>
                                     {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>بصيغة 05xxxxxxxx</p>}
                                 </div>

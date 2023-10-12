@@ -56,26 +56,53 @@ export default function RegisterGoogleUser() {
         }
     }
 
+    // useEffect(() => {
+
+    //     if (firstName) {
+    //         setFirstNameError('')
+    //     } else {
+    //         setFirstNameError(inputErrorMessages.firstNameErrorMsg);
+    //     }
+
+    //     if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+    //         setShowPhoneError(true)
+    //         setPhoneNumberValidError(inputErrorMessages.mobileNumberFormatErrorMsg)
+    //     }
+
+    // }, [firstName, phoneNumber])
+
+
     useEffect(() => {
+        if (firstName && (firstName.split(" ").length - 1) < 2) {
+			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+		}
+		else{
+			setFirstNameError(null)
+		}
 
-        if (firstName) {
-            setFirstNameError('')
-        } else {
-            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
-        }
-
-        if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-            setShowPhoneError(true)
-            setPhoneNumberValidError(inputErrorMessages.mobileNumberFormatErrorMsg)
-        }
-
-    }, [firstName, phoneNumber])
+		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+		}
+		else {
+			setPhoneNumberError(null);
+		}
+    },[firstName,phoneNumber])
 
 
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
-        if (firstName && phoneNumber && gender) {
+        if (!firstName) {
+            setFirstNameError(inputErrorMessages.firstNameErrorMsg)   
+        }
+        else if ((firstName.split(" ").length - 1) < 2) {
+            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
+           
+        }
+        if(!phoneNumber){
+            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
+        }
+        else if (firstNameError == null && phoneNumberError == null){
             const body = {
                 firstName: firstName,
                 phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,
@@ -104,14 +131,14 @@ export default function RegisterGoogleUser() {
                 <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
                 <p className={`pb-2 ${styles.signUpPageSubText}`}>فضلا اكتب بياناتك بدقة، حيث ستٌعتمد وقت تسجيلك بالدورات</p>
                 <form onSubmit={handleUpdateProfile}>
-                    <div className={`formInputBox`}>
+                    <div className={`formInputBox ${styles.formInputField}`}>
                         <div className='formInputIconDiv'>
                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                         </div>
                         <input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
                         <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الثلاثي</label>
                     </div>
-                    {showFirstNameError && <p className={styles.errorText}>{firstNameError}</p>}
+                    {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                     <div className={`formInputBox ${styles.radioBtnDiv}`}>
                         <p className={`pl-4 ${styles.genderText}`}>الجنس</p>
                         <input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
@@ -119,16 +146,16 @@ export default function RegisterGoogleUser() {
                         <input type="radio" name="gender" className={styles.radioBtns} id="femaleGender" value="female" onChange={(e) => setGender(e.target.value)} />
                         <label className='pr-1' htmlFor="femaleGender">أنثى</label>
                     </div>
-                    <div className='formInputBox'>
+                    <div className={`formInputBox ${styles.formInputField}`}>
                         <div className='formInputIconDiv'>
                             <AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
                         </div>
                         <input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
                         <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
                     </div>
-                    {showPhoneError && <p className={styles.errorText}> {phoneNumberError ? phoneNumberError : phoneNumberValidError}</p>}
+                    {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>بصيغة 05xxxxxxxx</p>}
                     <div className={styles.loginBtnBox}>
-                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || phoneNumberError) ? true : false} >انشاء حساب</button>
+                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || phoneNumberError || !firstName || !phoneNumber) ? true : false} >انشاء حساب</button>
                     </div>
                 </form>
                 <p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink"> تسجيل الدخول</Link></p>

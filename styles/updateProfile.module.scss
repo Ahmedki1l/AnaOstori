@@ -35,7 +35,7 @@
 	font-size: 0.75rem;
 	line-height: 1.66;
 	letter-spacing: 0.03333em;
-	margin-bottom: 1rem;
+	// margin-bottom: 1rem;
 	margin-top: -0.5rem;
 }
 
@@ -65,8 +65,30 @@
 	padding-top: 1.5rem !important;
 }
 
+.formFieldInputError {
+	padding: 12px !important;
+	border-radius: 4px !important;
+	border: 0.3px solid #E5342F !important;
+	display: flex !important;
+	justify-content: flex-end !important;
+	align-items: center !important;
+	padding-right: 2.5rem !important;
+	padding-top: 1.5rem !important;
+}
+
 .formFieldLabel {
 	color: var(--grary-not-selected, #808080);
+	font-family: Tajawal;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin-right: 1.5rem;
+	padding-top: .3rem !important;
+}
+
+.formFieldLabelError {
+	color: #E5342F, ;
 	font-family: Tajawal;
 	font-size: 16px;
 	font-style: normal;
@@ -144,7 +166,7 @@
 	.maleBtn {
 		border-left: 1px solid #0000001a;
 	}
-	
+
 }
 
 
@@ -154,25 +176,26 @@
 }
 
 
-.titleLabel{
-color: #191919;
-font-family: Tajawal;
-font-size: 18px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-margin-top: 1rem;
+.titleLabel {
+	color: #191919;
+	font-family: Tajawal;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+	margin-top: 1rem;
 }
 
-.notePara{
-color: #191919;
-font-family: Tajawal;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-margin-bottom: 1rem;
-span{
-	color: #E5342F;
-}
+.notePara {
+	color: #191919;
+	font-family: Tajawal;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin-bottom: 1rem;
+
+	span {
+		color: #E5342F;
+	}
 }
