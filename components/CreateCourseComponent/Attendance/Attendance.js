@@ -87,9 +87,7 @@ export default function Attendance(props) {
             const existingDates = student.attendances.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
             for (let i = 0; i < datesArray.length; i++) {
                 const date = datesArray[i].date;
-                console.log(date);
                 if (existingDates.includes(dayjs(date).format('DD/MM/YYYY'))) {
-                    console.log(student, i);
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
                         date: date,
@@ -148,7 +146,6 @@ export default function Attendance(props) {
             data: { data: [] }
         };
         updatedAttendanceData.map((attendance) => {
-            console.log(attendance);
             return (
                 attendance.attendanceDetails.map((data) => {
                     if (data.id == null) return
@@ -160,7 +157,6 @@ export default function Attendance(props) {
                 })
             )
         })
-        console.log(body);
         await updateAttendanceDataAPI(body).then((res) => {
             setShowBtnLoader(false)
             toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)

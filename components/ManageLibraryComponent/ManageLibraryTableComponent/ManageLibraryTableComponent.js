@@ -44,7 +44,6 @@ const ManageLibraryTableComponent = ({
     const { examToastMsgConst } = quizConst
     const { folderToastMsgConst } = folderConst
 
-
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
