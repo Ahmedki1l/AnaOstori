@@ -133,19 +133,26 @@ export default function Register() {
 
 	const regexPhone = useMemo(() => /^(\+?\d{1,3}[- ]?)?\d{10}$/, []);
 
+	const namePattern = /^(?!.*  )\S+(?: \S+){0,2}$/;
+
 
 	useEffect(() => {
-		if (firstName) {
-			setFirstNameError(inputErrorMessages.firstNameErrorMsg)
+		if (firstName && (firstName.split(" ").length - 1) < 2) {
+			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+		}
+		else{
+			setFirstNameError(null)
 		}
 		if (email && !(regexEmail.test(email))) {
-			setIsEmailError(inputErrorMessages.noEmailErrorMsg)
+			
+			setEmailError(inputErrorMessages.noEmailErrorMsg)
 		}
 		else {
-			setIsEmailError(null)
+			setEmailError(null)
 		}
 
 		if (password && !(regexPassword.test(password))) {
+			
 			setIsPasswordError(inputErrorMessages.noPasswordMsg)
 		}
 		else {
@@ -153,24 +160,26 @@ export default function Register() {
 		}
 
 		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+			console.log("test1 : ",phoneNumber,(phoneNumber.startsWith("05")));
 			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
 		}
 		else {
-			setIsPhoneNumberError(null)
+			console.log("test2 : ",phoneNumber)
+			setPhoneNumberError(null);
 		}
 
 	}, [firstName, email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
 
 
 	const handleSignup = async () => {
-		setLoading(true)
+		setLoading(true);
 		if (!firstName) {
-			setFirstNameError(inputErrorMessages.firstNameErrorMsg)
+			setFirstNameError(inputErrorMessages.firstNameErrorMsg);
 		} else if (firstName && (firstName.split(" ").length - 1) < 2) {
-			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
+			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
 		if (!gender) {
-			setIsGenderError(inputErrorMessages.genderErrorMsg)
+			setIsGenderError(inputErrorMessages.genderErrorMsg);
 		}
 		if (!email) {
 			setEmailError(inputErrorMessages.noEmailErrorMsg)
@@ -179,7 +188,7 @@ export default function Register() {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
 		else if (firstNameError == null && emailError == null && passwordError == null) {
-			await signupWithEmailAndPassword(email, password, firstName, phoneNumber, gender)
+			await signupWithEmailAndPassword(email, password, firstName, phoneNumber, gender);
 		}
 	}
 
@@ -188,8 +197,6 @@ export default function Register() {
 			setUser(JSON.parse(router?.query?.user))
 		}
 	}, [router?.query?.user])
-
-
 
 
 
@@ -256,7 +263,7 @@ export default function Register() {
 						{!isPasswordError && <p className={styles.passwordHintText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p>}
 						{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
 						<div className={styles.loginBtnBox}>
-							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (firstNameError == null && emailError == null && passwordError == null) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
+							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (firstNameError !== null || emailError !== null || passwordError !== null || !firstName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
