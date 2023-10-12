@@ -67,6 +67,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             newSection.items = []
             sectionDetails.push(newSection)
             setIsModelForAddFolderOpen(false)
+            setSelectedSection()
         }).catch((error) => {
             console.log(error);
             if (error?.response?.data?.message == "section name already in use in this curriculum") {
@@ -85,6 +86,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         }
         await updateCurriculumSectionAPI(body).then((res) => {
             setIsModelForAddFolderOpen(false)
+            setSelectedSection()
             const newSections = sectionDetails?.map((item, index) => {
                 if (item.id == selectedSection.id) {
                     item.name = res.data.data.name
@@ -290,7 +292,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                     onSave={editSectionName ? handleEditSection : handleCreateSection}
                     itemName={selectedSection?.name}
                     curriCulumSection={'addSection'}
-                    setSelectedSection={setSelectedSection}
                 />}
             {ismodelForDeleteItems &&
                 <ModelForDeleteItems

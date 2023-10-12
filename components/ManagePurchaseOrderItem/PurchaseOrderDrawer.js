@@ -21,7 +21,7 @@ const PurchaseOrderDrawer = (props) => {
     const [orderForm] = Form.useForm()
     const { paymentStatusBank, paymentStatusOther } = paymentConst
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-    const [paymentStatus, setPaymentStatus] = useState()
+    const [paymentStatus, setPaymentStatus] = useState(selectedOrder.status)
 
 
     const handleSaveOrder = async (value) => {
@@ -58,7 +58,7 @@ const PurchaseOrderDrawer = (props) => {
                     orderUpdate: true,
                     id: selectedOrder.id,
                     status: value.status,
-                    // failedReason: value.failedReason }
+                    failedReason: value.failedReason
                 }
             }
             await createOrderAPI(body).then((res) => {
@@ -116,7 +116,7 @@ const PurchaseOrderDrawer = (props) => {
                     onChange={handleStatusChange}
                 />
             </FormItem>
-            {paymentStatus == 'refund' &&
+            {/* {paymentStatus == 'refund' &&
                 <FormItem
                     name={'refund'}>
                     <Input
@@ -125,8 +125,8 @@ const PurchaseOrderDrawer = (props) => {
                         placeholder='refund'
                     />
                 </FormItem>
-            }
-            {(selectedOrder.status == "rejected" || selectedOrder.status == "failed") &&
+            } */}
+            {(paymentStatus == "rejected" || paymentStatus == "failed") &&
                 <>
                     <p style={{ fontSize: '18px' }}>failedReason</p>
                     {selectedOrder?.paymentMethod != 'bank_transfer' ?
