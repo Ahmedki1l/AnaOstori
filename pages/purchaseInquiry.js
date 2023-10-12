@@ -10,8 +10,13 @@ import { getNewToken, signOutUser } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
 import { dateRange, fullDate } from "../constants/DateConverter";
+import { inqPaymentStateConst, inqTabelHeaderConst } from "../constants/purchaseInqConst";
+import { Tag } from "antd";
+import styled from "styled-components";
 
-
+const StyledTag = styled(Tag)`
+	font-family: 'Tajawal-Regular';
+`
 
 export default function PurchaseInquiry(props) {
 	const whatsAppLink = linkConst.WhatsApp_Link
@@ -29,6 +34,7 @@ export default function PurchaseInquiry(props) {
 	useEffect(() => {
 		const getMyOrder = async () => {
 			await getMyOrderAPI().then((res) => {
+				console.log(res.data);
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
@@ -57,18 +63,18 @@ export default function PurchaseInquiry(props) {
 					<table className={styles.tableArea}>
 						<thead className={styles.thead}>
 							<tr>
-								<th className={styles.theadOrder}>رقم الحجز</th>
-								<th className={styles.theadDate}>تاريخ الطلب</th>
-								<th className={styles.theadName}>التفاصيل</th>
-								<th className={styles.theadStatus}>الحالة</th>
-								<th className={styles.theadInvoice}>الفاتورة</th>
+								<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
+								<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
+								<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
+								<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
+								<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
 							</tr>
 						</thead>
 						<tbody className={styles.body}>
 							{searchData.map((data, i = index) => {
 								return (
 									<tr key={`order${i}`}>
-										{data?.status == "accepted" ? <td className={styles.tbodyOrder}>{data.id}</td> : "-"}
+										<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
 										<td >{fullDate(data.createdAt)}</td>
 										{/* <td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td> */}
 										<td className={styles.tbodyName}>
@@ -87,30 +93,36 @@ export default function PurchaseInquiry(props) {
 										</td>
 										<td className={styles.tbodyStatus}>
 											{data?.status == "accepted" ?
-												<p className={`${styles.greenBox} ${styles.colorBox}`}>مؤكد</p>
+												<p className={`${styles.greenBox} ${styles.colorBox}`}>{inqPaymentStateConst.accepted}</p>
 												: data?.status == "review" ?
 													<>
-														<p className={`${styles.yellowBox} ${styles.colorBox}`}>بنراجع طلبك</p>
-														<p className="py-2">استلمنا إيصالك بنراجعه قريب وتواصل معنا&nbsp;
-															<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو محتاج مساعدة
+														<p className={`${styles.yellowBox} ${styles.colorBox}`}>{inqPaymentStateConst.review}</p>
+														<p className="py-2">استلمنا إيصالك وبنراجعه بأقرب وقت، تواصل معنا&nbsp;
+															<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
 														</p>
 													</>
 													: data?.status == "witing" ?
 														<>
-															<p className={`${styles.redBox} ${styles.colorBox}`}>بانتظار الحوالة</p>
-															<p className="py-2">عندك مهلة 24 ساعة لتأكيد حجزك، تفضل حولنا المبلغ من&nbsp;
+															<StyledTag color="red">{inqPaymentStateConst.witing}</StyledTag>
+															<p className="py-2">عندك مهلة 24 ساعة تأكد فيها حجزك، تفضل حولنا المبلغ من&nbsp;
 																<Link className='link' href={`/uploadInvoice?orderId=${data.id}`}>صفحة تأكيد التحويل البنكي</Link>، وتواصل معنا&nbsp;
-																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو محتاج مساعدة
+																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو احتجت مساعدة
 															</p>
 														</>
-														:
-														<>
-															<p className={`${styles.redBox} ${styles.colorBox}`}>ملغى</p>
-															<p className="py-2">الحجز ملغى لعدم سدادك المبلغ في المدة المحددة</p>
-															<p> نرجو منك الحجز مرة أخرى وللمساعدة تواصل معنا واتساب
-																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>
-															</p>
-														</>
+														: data?.status == "review" ?
+															<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.review}</p>
+															: data?.status == "failed" ?
+																<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.failed}</p>
+																: data?.status == "rejected" ?
+																	<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.rejected}</p>
+																	:
+																	<>
+																		<p className={`${styles.redBox} ${styles.colorBox}`}>ملغى</p>
+																		<p className="py-2">الحجز ملغى لعدم سدادك المبلغ في المدة المحددة</p>
+																		<p> نرجو منك الحجز مرة أخرى وللمساعدة تواصل معنا واتساب
+																			<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>
+																		</p>
+																	</>
 											}
 										</td>
 										<td className={styles.tbodyInvoice}>
@@ -122,7 +134,7 @@ export default function PurchaseInquiry(props) {
 													<p className={`${styles.downloadSearchText} mr-2`}>تحميل الفاتورة</p>
 												</Link>
 												:
-												<div>Invoice not generated</div>
+												<div>الفاتورة تظهر بعد تأكيد الحوالة</div>
 											}
 										</td>
 									</tr>
@@ -137,14 +149,15 @@ export default function PurchaseInquiry(props) {
 								return (
 									<div className={styles.rowDiv} key={`order${i}`}>
 										<tr>
-											<th className={styles.theadOrder}>رقم الحجز</th>
-											<th className={styles.theadDate}>تاريخ الطلب</th>
-											<th className={styles.theadName}>التفاصيل</th>
-											<th className={styles.theadStatus}>الحالة</th>
-											<th className={styles.theadInvoice}>الفاتورة</th>
+											<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
+											<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
+											<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
+											<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
+											<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
 										</tr>
 										<tr>
-											{data?.status == "accepted" ? <td className={styles.tbodyOrder}>{data.id}</td> : "-"}
+											<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
+
 											<td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", year: 'numeric', day: 'numeric', month: 'long' })}</td>
 											<td className={styles.tbodyName}>
 												{data.orderItems?.map((student, j = index) => {

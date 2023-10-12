@@ -35,13 +35,12 @@ export default function Navbar() {
 
 	const storeData = useSelector((state) => state?.globalStore);
 
-	const userFullName = (storeData?.viewProfileData?.firstName && storeData?.viewProfileData?.lastName) ? `${storeData?.viewProfileData?.firstName} ${storeData?.viewProfileData?.lastName}` : storeData?.viewProfileData?.fullName
+	const userFullName = (storeData?.viewProfileData?.firstName) ? `${storeData?.viewProfileData?.firstName} ` : storeData?.viewProfileData?.fullName
 
 	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
 
 	const isUserInstructor = storeData?.isUserInstructor
 
-	console.log("storeData", storeData.catagories);
 	const [catagories, setCatagories] = useState()
 
 	useEffect(() => {
@@ -331,7 +330,6 @@ export default function Navbar() {
 										<Link href={'/'} className='normalLinkText'><p className={styles.homeText}>الرئيسية</p></Link>
 									</div>
 									<ul className={styles.navbarSubWrapper}>
-										{console.log("catagories", catagories)}
 										{catagories?.map((menu, i = index) => {
 											return (
 												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>

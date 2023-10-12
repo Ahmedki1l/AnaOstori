@@ -8,7 +8,7 @@ import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
 import Input from '../../antDesignCompo/Input';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import { createCourseAvailabilityAPI, editAvailabilityAPI } from '../../../services/apisService';
+import { createCourseAvailabilityAPI, editAvailabilityAPI, routeAPI } from '../../../services/apisService';
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
@@ -95,13 +95,16 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         } else {
             let body = {
                 data: values,
+                // routeName: "createAvailability"
             }
             await createCourseAvailabilityAPI(body).then((res) => {
+                // await routeAPI(body).then((res) => {
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createCourseAvailabilityAPI(body).then((res) => {
+                            // await routeAPI(body).then((res) => {
                             availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
                         })
                     }).catch(error => {
@@ -262,7 +265,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                 <p className='pr-2'>{appointment.published ? 'إظهار' : 'مخفي'}</p>
                                             </div>
                                         </td>
-                                        {console.log(instructor)}
                                         <td className='py-2'>{appointment.instructors.map((instructor, index) => {
                                             return (
                                                 <p key={`instructor${index}`} className='pb-3 text-right pr-20 '>
