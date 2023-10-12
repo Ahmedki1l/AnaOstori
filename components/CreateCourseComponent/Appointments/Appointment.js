@@ -120,7 +120,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     }
 
     const editAppointment = (appointment) => {
-        console.log(appointment);
         setIsModalOpen(true)
         setShowSwitchBtn(true)
         setIsAvailabilityEdit(true)

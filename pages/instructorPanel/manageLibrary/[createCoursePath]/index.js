@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../../constants/ar'
 import { toast } from 'react-toastify'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
+import { curriculumConst } from '../../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 
 export async function getServerSideProps(context) {
     const params = context.query
@@ -33,7 +34,6 @@ const CreateCoursePath = (props) => {
     const router = useRouter()
     const dispatch = useDispatch()
 
-
     useEffect(() => {
         courseForm.setFieldValue('pathTitle', curriculmName)
         getCurriculumDetails()
@@ -51,7 +51,6 @@ const CreateCoursePath = (props) => {
             console.log(error);
         })
     }
-
     const getSectionList = async () => {
         let body = {
             curriculumId: routeParams.coursePathId,
@@ -82,6 +81,7 @@ const CreateCoursePath = (props) => {
                 }
             }
             await createCurriculumAPI(createBody).then(async (res) => {
+                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
                 setCurriculumName(res.data.name)
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
@@ -91,11 +91,19 @@ const CreateCoursePath = (props) => {
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
-                    toast.error(toastErrorMessage.curriculumNameError)
+                    toast.error(curriculumConst.curriculumToastMsgConst.curriculumNameDuplicateErrorMsg)
                 }
             })
         }
         else {
+            if (item.pathTitle == curriculmName) {
+                router.push({
+                    pathname: `/instructorPanel/manageLibrary`,
+                    query: { folderType: 'curriculum' }
+                });
+                updateCurriculumList()
+                return
+            }
             let editBody = {
                 data: {
                     name: item.pathTitle,
@@ -103,13 +111,17 @@ const CreateCoursePath = (props) => {
                 }
             }
             await updateCurriculumAPI(editBody).then((res) => {
+                router.push({
+                    pathname: `/instructorPanel/manageLibrary`,
+                    query: { folderType: 'curriculum' }
+                });
                 courseForm.setFieldValue(item.pathTitle)
                 setCurriculumName(res.data.data.name)
                 updateCurriculumList()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
-                    toast.error(toastErrorMessage.curriculumNameError)
+                    toast.error(curriculumConst.curriculumToastMsgConst.curriculumNameDuplicateErrorMsg)
                 }
             })
         }
@@ -131,25 +143,27 @@ const CreateCoursePath = (props) => {
                             }
                         />
                         <div className={`${styles.headerWrapper}`}>
-                            <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : "إنشاء مقرر"}</h1>
+                            <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : 'إضافة مقرر'}</h1>
                         </div>
                     </div>
                 </div>
                 <div className={styles.bodyWrapper}>
                     <div className='maxWidthDefault p-4'>
                         <div className={styles.bodysubWrapper}>
+                            <h1 className={` py-4`}>{curriculumConst.addCurriculumConst.addCurriculumTitle}</h1>
                             <FormItem
                                 name={'pathTitle'}
-                                rules={[{ required: true, message: 'ادخل عنوان الدورة' }]}>
+                                rules={[{ required: true, message: curriculumConst.addCurriculumConst.curriculumTitleInputError }]}>
                                 <Input
-                                    placeholder="عنوان المقرر"
+                                    placeholder={curriculumConst.addCurriculumConst.curriculumTitleInputPlaceholder}
                                     value={curriculmName}
                                 />
                             </FormItem>
-                            {(curriculmName && sectionDetails) && <CurriculumSectionComponent
-                                onclose={onclose}
-                                sectionList={sectionDetails}
-                            />
+                            {(curriculmName && sectionDetails) &&
+                                <CurriculumSectionComponent
+                                    onclose={onclose}
+                                    sectionList={sectionDetails}
+                                />
                             }
                             <div className={`${styles.savePathTitle}`}>
                                 {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `} type='submit'>حفظ ومتابعة</button>}

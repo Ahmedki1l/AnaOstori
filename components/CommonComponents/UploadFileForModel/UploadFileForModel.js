@@ -12,8 +12,6 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
 
-    console.log(accept);
-
     const getFileKey = async (e) => {
         let file = e.target.files[0];
         if (accept == 'video') {

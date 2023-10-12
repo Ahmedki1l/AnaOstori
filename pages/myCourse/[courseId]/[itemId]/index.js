@@ -66,7 +66,6 @@ export default function Index() {
                 enrollmentId: selectedCourse?.id
             }
             await markCourseCompleteAPI(params).then((res) => {
-                console.log(res);
             }).catch((error) => {
                 console.log(error);
             })

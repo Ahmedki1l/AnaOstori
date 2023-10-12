@@ -55,12 +55,11 @@ const ModelForAddItemLibrary = ({
                     pdfToastMsgConst.pdfNameDuplicateErrorMsg)
             return
         }
-        if (!fileUploadResponceData) {
+        if (!fileUploadResponceData && folderType !== "quiz") {
             setUploadFileError(true)
             return
         }
         let body = {}
-
         if (folderType !== "quiz") {
             body.name = e.name
             body.description = e.description
@@ -77,7 +76,6 @@ const ModelForAddItemLibrary = ({
             body.type = folderType
             body.previewAvailable = true
             body.numberOfQuestions = e.numberOfQuestions
-            body.numberOfQuestionsToPass = e.numberOfQuestionsToPass
             body.quizLink = e.quizLink
         }
         const data = {
@@ -85,7 +83,7 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await addItemToFolderAPI(data).then((res) => {
-            toast.error(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
+            toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
                     pdfToastMsgConst.addPdfSuccessMsg)
             getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
@@ -94,7 +92,7 @@ const ModelForAddItemLibrary = ({
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await addItemToFolderAPI(data).then(res => {
-                        toast.error(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
+                        toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                             folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
                                 pdfToastMsgConst.addPdfSuccessMsg)
                         getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
@@ -143,7 +141,7 @@ const ModelForAddItemLibrary = ({
             data: body
         }
         await updateItemToFolderAPI(data).then((res) => {
-            toast.error(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
+            toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
                     pdfToastMsgConst.updatePdfSuccessMsg)
             getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
@@ -152,7 +150,7 @@ const ModelForAddItemLibrary = ({
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await updateItemToFolderAPI(data).then(res => {
-                        toast.error(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
+                        toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
                             folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
                                 pdfToastMsgConst.updatePdfSuccessMsg)
                         getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)

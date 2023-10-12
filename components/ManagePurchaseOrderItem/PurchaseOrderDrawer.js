@@ -62,8 +62,10 @@ const PurchaseOrderDrawer = (props) => {
                 }
             }
             await createOrderAPI(body).then((res) => {
+                setShowBtnLoader(false)
                 props.onClose(true)
             }).catch(async (error) => {
+                setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await createOrderAPI(body).then((res) => {
@@ -73,6 +75,7 @@ const PurchaseOrderDrawer = (props) => {
                         console.error("Error:", error);
                     });
                 }
+                console.log(error);
             })
         }
     }
@@ -86,7 +89,6 @@ const PurchaseOrderDrawer = (props) => {
     })
 
     const handleStatusChange = (e) => {
-        console.log(e);
         setPaymentStatus(e)
         orderForm.setFieldValue('status', e)
     }
@@ -207,7 +209,7 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.userProfile.gender ? selectedOrder.userProfile.gender : '---'}</p>
+                <p>{selectedOrder.userProfile.gender ? selectedOrder.userProfile.gender == "male" ? "شاب" : "بنت" : '---'}</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
             <div className={styles.purchaseOrderBox}>
@@ -231,7 +233,7 @@ const PurchaseOrderDrawer = (props) => {
                         </div>
                         <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
                         <div className={styles.purchaseOrderBox}>
-                            <p> {item.gender}</p>
+                            <p> {item.gender == 'male' ? 'شاب' : 'بنت'}</p>
                         </div>
                         <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
                         <div className={styles.purchaseOrderBox}>

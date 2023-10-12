@@ -23,7 +23,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
-    console.log("editCourseData", editCourseData);
     const [courseDetail, setCourseDetail] = useState(isCourseEdit ? editCourseData : createCourseApiRes)
     const [showLoader, setShowLoader] = useState(false);
     const [externalCourseForm] = Form.useForm();
@@ -218,7 +217,6 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
     }
     const handleCourseDetailDiscription = (e, fieldname, arrayName, index) => {
         let data = { ...courseDetail }
-        console.log("data", data);
         if (arrayName == null) {
             data[fieldname] = e
         } else {

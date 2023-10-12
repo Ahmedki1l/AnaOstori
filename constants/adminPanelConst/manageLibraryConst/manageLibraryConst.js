@@ -195,4 +195,11 @@ export const curriculumConst = {
         makeExamFreeSuccessMsg: 'تم تعيين الملف كعينة مجانية',
         makeExamLockSuccessMsg: 'تم تعيين الملف كعينة غير مجانية',
     },
+
+    curriculumDeleteModelConst: {
+        deleteCurriculumPopUpTitle: 'تأكيد حذف المقرر',
+        deleteCurriculumPopUpText: 'متأكد انك تبي تحذف المقرر؟',
+        deleteCurriculumBtnText: 'تأكيد الحذف',
+    }
+
 }
