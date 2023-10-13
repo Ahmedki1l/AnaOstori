@@ -5,7 +5,7 @@ import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 import { useDispatch } from 'react-redux'
-import { createCurriculumAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, routeAPI, updateCurriculumAPI } from '../../../../services/apisService'
+import { getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, postRouteAPI, updateCurriculumAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
@@ -66,6 +66,7 @@ const CreateCoursePath = (props) => {
 
     const updateCurriculumList = async () => {
         await getCurriculumIdsAPI().then((res) => {
+            console.log(res);
             dispatch({
                 type: 'SET_CURRICULUMIDS',
                 curriculumIds: res.data,
@@ -80,14 +81,14 @@ const CreateCoursePath = (props) => {
                 routeName: "createCurriculum",
                 name: item.pathTitle,
             }
-            await routeAPI(createBody).then(async (res) => {
+            await postRouteAPI(createBody).then(async (res) => {
                 toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg)
                 setCurriculumName(res.data.name)
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
                     query: { coursePathId: res.data.id },
                 });
-                // updateCurriculumList()
+                updateCurriculumList()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
@@ -111,15 +112,16 @@ const CreateCoursePath = (props) => {
                 id: routeParams.coursePathId,
             }
             console.log(editBody);
-            await routeAPI(editBody).then((res) => {
+            await postRouteAPI(editBody).then((res) => {
+                console.log(res);
+                updateCurriculumList()
                 router.push({
                     pathname: `/instructorPanel/manageLibrary`,
                     query: { folderType: 'curriculum' }
                 });
-                courseForm.setFieldValue(item.pathTitle)
-                setCurriculumName(res.data.data.name)
+                // courseForm.setFieldValue(item.pathTitle)
+                // setCurriculumName(res.data.data.name)
                 toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
-                updateCurriculumList()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {

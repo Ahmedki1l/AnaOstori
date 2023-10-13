@@ -8,7 +8,7 @@ import BackToPath from '../../../components/CommonComponents/BackToPath'
 import Empty from '../../../components/CommonComponents/Empty'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 import { getNewToken } from '../../../services/fireBaseAuthService'
-import { routeAPI } from '../../../services/apisService'
+import { postRouteAPI } from '../../../services/apisService'
 import { toast } from 'react-toastify'
 import { manageNewBarText } from '../../../constants/adminPanelConst/manageNewBarText/manageNewBarText'
 
@@ -30,7 +30,7 @@ const Index = () => {
         let body = {
             routeName: "listNewsBar",
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setNewsDataList(res.data);
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
@@ -69,7 +69,7 @@ const Index = () => {
             isDeleted: true
         }
         console.log(body);
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             toast.success(manageNewBarText.deleteNewsSuccessMsg)
             getNewsList()
         }).catch((err) => {

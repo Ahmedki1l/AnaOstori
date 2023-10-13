@@ -5,7 +5,7 @@ import Select from '../antDesignCompo/Select';
 import Input from '../../components/antDesignCompo/Input'
 import CustomButton from '../CommonComponents/CustomButton';
 import { couponTypes } from '../../constants/adminPanelConst/couponConst/couponConst';
-import { routeAPI } from '../../services/apisService';
+import { postRouteAPI } from '../../services/apisService';
 import DatePicker from '../antDesignCompo/Datepicker';
 import dayjs from 'dayjs';
 import styles from '../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
@@ -38,7 +38,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
             routeName: "createCoupon",
             ...values
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
         }).catch((err) => {
             console.log(err);

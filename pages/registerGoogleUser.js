@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { useRouter } from 'next/router'
-import { myCoursesAPI, updateProfile, viewProfileAPI } from '../services/apisService'
+import { getRouteAPI, myCoursesAPI, updateProfile } from '../services/apisService'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
@@ -32,7 +32,10 @@ export default function RegisterGoogleUser() {
     const storeData = useSelector((state) => state?.globalStore);
     const handleStoreUpdate = async () => {
         try {
-            const viewProfileReq = viewProfileAPI()
+            const data = {
+                routeName: "viewProfile"
+            }
+            const viewProfileReq = getRouteAPI(data)
             const getMyCourseReq = myCoursesAPI()
 
             const [viewProfileData, myCourseData] = await Promise.all([
@@ -74,35 +77,35 @@ export default function RegisterGoogleUser() {
 
     useEffect(() => {
         if (firstName && (firstName.split(" ").length - 1) < 2) {
-			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
-		}
-		else{
-			setFirstNameError(null)
-		}
+            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+        }
+        else {
+            setFirstNameError(null)
+        }
 
-		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-		}
-		else {
-			setPhoneNumberError(null);
-		}
-    },[firstName,phoneNumber])
+        if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+            setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+        }
+        else {
+            setPhoneNumberError(null);
+        }
+    }, [firstName, phoneNumber])
 
 
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
         if (!firstName) {
-            setFirstNameError(inputErrorMessages.firstNameErrorMsg)   
+            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
         }
         else if ((firstName.split(" ").length - 1) < 2) {
             setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
-           
+
         }
-        if(!phoneNumber){
+        if (!phoneNumber) {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
-        else if (firstNameError == null && phoneNumberError == null){
+        else if (firstNameError == null && phoneNumberError == null) {
             const body = {
                 firstName: firstName,
                 phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,

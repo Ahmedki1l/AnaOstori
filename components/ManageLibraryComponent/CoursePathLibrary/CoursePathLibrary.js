@@ -21,6 +21,10 @@ const CoursePathLibrary = () => {
     const dispatch = useDispatch();
     const router = useRouter()
 
+    useEffect(() => {
+        SetCurriculumList(storeData.curriculumIds)
+    }, [storeData.curriculumIds])
+
     const openDeleteFolderItems = (item) => {
         setIsmodelForDeleteItems(true)
         setSelectedCurriculum(item)
@@ -66,7 +70,6 @@ const CoursePathLibrary = () => {
             }
         })
     }
-
 
     const onEdit = (item) => {
         router.push({

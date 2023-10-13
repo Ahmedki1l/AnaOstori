@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './ModalComponent.module.scss'
 import { toast } from "react-toastify";
 import { useEffect, useState } from 'react';
-import { accountRecovery, viewProfileAPI } from '../../../services/apisService';
+import { accountRecovery, getRouteAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import { Modal } from 'antd';
 import styled from 'styled-components';
@@ -35,8 +35,11 @@ const ModalComponent = (props) => {
 
     const handleAccountRecovery = async () => {
         setShowLoader(true)
+        const data = {
+            routeName: "viewProfile"
+        }
         await accountRecovery().then(async (res) => {
-            await viewProfileAPI().then(res => {
+            await getRouteAPI(data).then(res => {
                 dispatch({
                     type: 'SET_PROFILE_DATA',
                     viewProfileData: res?.data,

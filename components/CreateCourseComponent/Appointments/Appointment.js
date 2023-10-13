@@ -8,7 +8,7 @@ import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
 import Input from '../../antDesignCompo/Input';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import { createCourseAvailabilityAPI, editAvailabilityAPI, routeAPI } from '../../../services/apisService';
+import { createCourseAvailabilityAPI, editAvailabilityAPI, postRouteAPI } from '../../../services/apisService';
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
@@ -75,14 +75,14 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 ...values,
                 availabilityId: editAvailability?.id
             }
-            await routeAPI(body).then((res) => {
+            await postRouteAPI(body).then((res) => {
                 setShowBtnLoader(false)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(body).then((res) => {
+                        await postRouteAPI(body).then((res) => {
                             availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
                         })
                     }).catch(error => {
@@ -95,12 +95,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             })
         } else {
             values.routeName = "createAvailability"
-            await routeAPI(values).then((res) => {
+            await postRouteAPI(values).then((res) => {
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(values).then((res) => {
+                        await postRouteAPI(values).then((res) => {
                             availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
                         })
                     }).catch(error => {

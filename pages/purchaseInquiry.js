@@ -4,8 +4,7 @@ import * as linkConst from '../constants/LinkConst';
 import Link from "next/link";
 import useWindowSize from "../hooks/useWindoSize";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { getMyOrderAPI } from "../services/apisService";
+import { getRouteAPI } from "../services/apisService";
 import { getNewToken, signOutUser } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
@@ -29,17 +28,18 @@ export default function PurchaseInquiry(props) {
 	const [isOrderFound, setIsOrderFound] = useState('hide')
 
 	const router = useRouter()
-	const storeData = useSelector((state) => state?.globalStore);
 
 	useEffect(() => {
 		const getMyOrder = async () => {
-			await getMyOrderAPI().then((res) => {
-				console.log(res.data);
+			const data = {
+				routeName: "orderQuery"
+			}
+			await getRouteAPI(data).then((res) => {
 				setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
-						await getMyOrderAPI().then((res) => {
+						await getRouteAPI(data).then((res) => {
 							setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 						})
 					}).catch(error => {

@@ -4,8 +4,7 @@ import loaderColor from '../public/icons/loaderColor.svg'
 import styles from '../styles/updateProfile.module.scss'
 import { toast } from "react-toastify";
 import { useEffect, useState } from 'react';
-import Icon from '../components/CommonComponents/Icon';
-import { updateProfile, uploadProfileImage, viewProfileAPI } from '../services/apisService';
+import { getRouteAPI, updateProfile, uploadProfileImage } from '../services/apisService';
 import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
@@ -116,13 +115,17 @@ const UpdateProfile = () => {
             }
 
             const params = {
-                data,
+                routeName: 'updateProfileHandler',
+                data: data,
             }
-
-            await updateProfile(params).then(async (res) => {
+            const body = {
+                routeName: "viewProfile"
+            }
+            await getRouteAPI(params).then(async (res) => {
+                console.log(res);
                 toast.success(toastSuccessMessage.profileUpdateMsg)
                 setShowLoader(false)
-                await viewProfileAPI().then(res => {
+                await getRouteAPI(body).then(res => {
                     dispatch({
                         type: 'SET_PROFILE_DATA',
                         viewProfileData: res?.data,

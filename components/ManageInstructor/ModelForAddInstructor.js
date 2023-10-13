@@ -5,7 +5,7 @@ import styles from './ModelForAddInstructor.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import { createInstroctorAPI, editInstroctorAPI, routeAPI } from '../../services/apisService'
+import { createInstroctorAPI, editInstroctorAPI, postRouteAPI } from '../../services/apisService'
 import { deleteNullFromObj } from '../../constants/DataManupulation'
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
 import { toast } from 'react-toastify'
@@ -84,13 +84,13 @@ const ModelForAddInstructor = ({
             routeName: "createInstructor",
             ...values
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
             apiSuccessRes(instructorConst.successAddedNewInstructorToast)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await routeAPI(body).then(res => {
+                    await postRouteAPI(body).then(res => {
                         apiSuccessRes(instructorConst.successAddedNewInstructorToast)
                     })
                 }).catch(error => {
@@ -121,7 +121,7 @@ const ModelForAddInstructor = ({
             routeName: "updateInstructorHandler",
             ...values
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
             setFileName()
             apiSuccessRes(instructorConst.successNewInstructorUpdatedToast)
@@ -131,7 +131,7 @@ const ModelForAddInstructor = ({
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await routeAPI(body).then(res => {
+                    await postRouteAPI(body).then(res => {
                         setFileName()
                         apiSuccessRes(instructorConst.successNewInstructorUpdatedToast)
                         setShowBtnLoader(false)

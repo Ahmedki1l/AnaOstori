@@ -5,7 +5,7 @@ import { useState } from 'react'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { addItemIntoSectionAPI, createCurriculumSectionAPI, removeItemFromSectionAPI, routeAPI, updateCurriculumSectionAPI, updateMultipleSectionOrderAPI } from '../../../services/apisService'
+import { addItemIntoSectionAPI, createCurriculumSectionAPI, removeItemFromSectionAPI, postRouteAPI, updateCurriculumSectionAPI, updateMultipleSectionOrderAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
@@ -65,7 +65,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             }
         }
         console.log(body);
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             let newSection = res.data
             newSection.items = []
             sectionDetails.push(newSection)

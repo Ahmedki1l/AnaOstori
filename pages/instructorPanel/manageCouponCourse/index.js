@@ -5,7 +5,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import styled from 'styled-components'
 import ManageCouponCourseDrawer from '../../../components/ManageCouponCourse/ManageCouponCourseDrawer'
-import { routeAPI } from '../../../services/apisService'
+import { postRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
 import Empty from '../../../components/CommonComponents/Empty'
@@ -137,13 +137,13 @@ const Index = () => {
         let body = {
             routeName: "listCoupon",
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setListOfCoupon(res.data);
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await routeAPI(data).then((res) => {
-                        setUserList(res.data.data)
+                    await postRouteAPI(body).then((res) => {
+                        setListOfCoupon(res.data);
                     })
                 }).catch(error => {
                     console.error("Error:", error);

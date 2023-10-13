@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import UserInfoForm from "../../../../components/PaymentPageComponents/UserInfoForm/UserInfoForm";
 import PaymentInfoForm from "../../../../components/PaymentPageComponents/PaymentInfoForm/PaymentInfoForm";
 import axios from 'axios';
-import { createOrderAPI } from '../../../../services/apisService'
+import { createOrderAPI, getRouteAPI, postAuthRouteAPI } from '../../../../services/apisService'
 import { useDispatch, useSelector } from 'react-redux';
 import { getNewToken, signOutUser } from '../../../../services/fireBaseAuthService';
 import Spinner from '../../../../components/CommonComponents/spinner';
@@ -75,6 +75,7 @@ export default function Index(props) {
 				setLoading(true)
 				fbq.event('Create Order', { courseId: courseDetails.id })
 				let orderData = {
+					routeName: 'createOrder',
 					courseId: courseDetails.id,
 					people: [
 						{
@@ -86,17 +87,19 @@ export default function Index(props) {
 						}
 					]
 				}
-				const params = {
-					orderData,
-				}
-				await createOrderAPI(params).then(res => {
+				// const params = {
+				// 	routeName: 'createOrder',
+				// 	...orderData,
+				// }
+				console.log(orderData);
+				await postAuthRouteAPI(orderData).then(res => {
 					setCreatedOrder(res.data)
 					generateCheckoutId(res.data.id)
 				}).catch(async (error) => {
 					console.log(error)
 					if (error?.response?.status == 401) {
 						await getNewToken().then(async (token) => {
-							await createOrderAPI(params).then(res => {
+							await postAuthRouteAPI(params).then(res => {
 								setCreatedOrder(res.data)
 								generateCheckoutId(res.data.id)
 							})
@@ -104,10 +107,6 @@ export default function Index(props) {
 							console.error("Error:", error);
 						});
 						setLoading(false)
-						// signOutUser()
-						// dispatch({
-						// 	type: 'EMPTY_STORE'
-						// });
 					}
 				})
 			}

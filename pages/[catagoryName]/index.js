@@ -4,7 +4,7 @@ import PhysicalCourseCard from '../../components/TypesOfCourseComponents/Physica
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCatagoriesAPI } from '../../services/apisService';
+import { getRouteAPI } from '../../services/apisService';
 import Spinner from '../../components/CommonComponents/spinner';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService';
 
@@ -44,7 +44,6 @@ export default function Index(props) {
 	const listDescription = catagory?.description?.split(':')[1]?.split('<list>').splice(1, catagory.description.length)
 	const storeData = useSelector((state) => state?.globalStore);
 	const isUserLogin = storeData?.accessToken ? true : false
-	const dispatch = useDispatch()
 	const [pageLoading, setPageLoading] = useState(true)
 
 	useEffect(() => {
@@ -63,9 +62,9 @@ export default function Index(props) {
 		} else {
 			const getCourseDetails = async () => {
 				let data = {
-					accessToken: storeData?.accessToken,
+					routeName: 'categories'
 				}
-				await getCatagoriesAPI(data).then((res) => {
+				await getRouteAPI(data).then((res) => {
 					res.data?.find((catagory) => {
 						if (catagory.name == catagoryName) {
 							setCoursesDetails(shortCourseOnType(catagory.courses))
@@ -75,7 +74,7 @@ export default function Index(props) {
 					console.log(error)
 					if (error?.response?.status == 401) {
 						await getNewToken().then(async (token) => {
-							await getCatagoriesAPI(data).then(res => {
+							await getRouteAPI(data).then(res => {
 								res.data?.find((catagory) => {
 									if (catagory.name == catagoryName) {
 										setCoursesDetails(shortCourseOnType(catagory.courses))
