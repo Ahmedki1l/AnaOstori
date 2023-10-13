@@ -71,17 +71,18 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 return
             }
             let body = {
-                data: values,
+                routeName: 'updateAvailability',
+                ...values,
                 availabilityId: editAvailability?.id
             }
-            await editAvailabilityAPI(body).then((res) => {
+            await routeAPI(body).then((res) => {
                 setShowBtnLoader(false)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await editAvailabilityAPI(body).then((res) => {
+                        await routeAPI(body).then((res) => {
                             availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
                         })
                     }).catch(error => {
@@ -94,13 +95,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             })
         } else {
             values.routeName = "createAvailability"
-            // await createCourseAvailabilityAPI(body).then((res) => {
             await routeAPI(values).then((res) => {
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        // await createCourseAvailabilityAPI(body).then((res) => {
                         await routeAPI(values).then((res) => {
                             availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
                         })

@@ -259,27 +259,6 @@ const PurchaseOrderDrawer = (props) => {
                 )
             })
             }
-            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
-            <div className={styles.purchaseOrderBox}>
-                <p> {item.gender == 'male' ? 'شاب' : 'بنت'}</p>
-            </div>
-            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
-            <div className={styles.purchaseOrderBox}>
-                <p> {item.phoneNumber.replace('+966', '0')}</p>
-            </div>
-            <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerEmailTitle}</p>
-            <div className={styles.purchaseOrderBox}>
-                <p> {item.email}</p>
-            </div>
-            {orderItems != 'on-demand' &&
-                <>
-                    <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.availabilityTitle}</p>
-                    <div className={styles.purchaseOrderBox}>
-                        <p>{dateRange(item.createdAt, item.updatedAt
-                        )}</p>
-                    </div>
-                </>
-            }
             {selectedOrder.invoiceKey &&
                 <>
                     <div className={styles.borderedDiv}></div>

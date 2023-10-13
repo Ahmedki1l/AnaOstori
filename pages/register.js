@@ -140,11 +140,11 @@ export default function Register() {
 		if (firstName && (firstName.split(" ").length - 1) < 2) {
 			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
-		else{
+		else {
 			setFirstNameError(null)
 		}
 		if (email && !(regexEmail.test(email))) {
-			
+
 			setEmailError(inputErrorMessages.noEmailErrorMsg)
 		}
 		else {
@@ -152,7 +152,7 @@ export default function Register() {
 		}
 
 		if (password && !(regexPassword.test(password))) {
-			
+
 			setIsPasswordError(inputErrorMessages.noPasswordMsg)
 		}
 		else {
@@ -160,11 +160,9 @@ export default function Register() {
 		}
 
 		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-			console.log("test1 : ",phoneNumber,(phoneNumber.startsWith("05")));
 			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
 		}
 		else {
-			console.log("test2 : ",phoneNumber)
 			setPhoneNumberError(null);
 		}
 

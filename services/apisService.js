@@ -87,8 +87,8 @@ export const getAttendanceListAPI = (data) => { return instance.get(`/attendance
 export const updateAttendanceDataAPI = (data) => { return instance.post(`/attendance/update`, data?.data) }
 export const getStudentListAPI = (data) => { return instance.get(`/students/course/${data?.courseId}/availability/${data?.availabilityId}`) }
 
-export const createStudentExamDataAPI = (data) => { return instance.post(`/course/courseTrackBulk/create`, data) }
-export const updateStudentExamDataAPI = (data) => { return instance.post(`/courseTrack/update`, data) }
+// export const createStudentExamDataAPI = (data) => { return instance.post(`/course/courseTrackBulk/create`, data) }
+// export const updateStudentExamDataAPI = (data) => { return instance.post(`/courseTrack/update`, data) }
 
 export const getExamListAPI = (data) => { return instance.get(`/item/${data?.courseId}?type=${data.type}`) }
 
@@ -148,3 +148,4 @@ export const createCouponsAPI = (data) => { return instance.get(`/createCoupon`,
 
 
 export const routeAPI = (data) => { return instance.post(`/route`, data) }
+export const getRouteAPI = (data) => { return instance.get(`/auth/route/fetch`, data) }

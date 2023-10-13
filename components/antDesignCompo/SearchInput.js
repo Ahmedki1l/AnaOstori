@@ -9,7 +9,8 @@ const SearchInputField = styled(Search)`
         border-color #7c7c7c7c !important;
     }
     .ant-input-group .ant-input {
-        height:30px;
+        height: ${props => (props.height ? props.height : '30')}px !important;
+        // height:30px;
         width: 100%;
         font-size: 16px;
         margin-bottom: 0;

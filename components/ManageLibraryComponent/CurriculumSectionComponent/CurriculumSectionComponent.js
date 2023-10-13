@@ -1,12 +1,11 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styles from './CurriculumSectionComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useState } from 'react'
-import Icon from '../../CommonComponents/Icon'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { addItemIntoSectionAPI, createCurriculumSectionAPI, removeItemFromSectionAPI, updateCurriculumSectionAPI, updateMultipleSectionOrderAPI } from '../../../services/apisService'
+import { addItemIntoSectionAPI, createCurriculumSectionAPI, removeItemFromSectionAPI, routeAPI, updateCurriculumSectionAPI, updateMultipleSectionOrderAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
@@ -57,14 +56,16 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     }
 
     const handleCreateSection = async ({ name }) => {
-        let data = {
+        let body = {
             data: {
+                routeName: 'createSection',
                 name: name,
                 curriculumId: router.query.coursePathId,
                 order: sectionDetails?.length + 1
             }
         }
-        await createCurriculumSectionAPI(data).then((res) => {
+        console.log(body);
+        await routeAPI(body).then((res) => {
             let newSection = res.data
             newSection.items = []
             sectionDetails.push(newSection)
