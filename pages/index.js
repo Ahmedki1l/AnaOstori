@@ -72,6 +72,7 @@ export default function Home(props) {
 	const catagories = props?.catagories ? props?.catagories : []
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
 	const [scrollSectionName, setScrollSectionName] = useState()
+	const videoObject = props.homeMetaData.find(obj => obj.key === "video");
 
 	const handleScrollToSection = (sectionName) => {
 		if (sectionName == 'refCourseSec') {
@@ -143,7 +144,7 @@ export default function Home(props) {
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
-					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(props.homeMetaData[4]?.fileBucket, props.homeMetaData[4]?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
+					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(videoObject?.fileBucket, videoObject?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
 				</div>
 			</div>
 			<div className={styles.analyticsBarWrapper}>
