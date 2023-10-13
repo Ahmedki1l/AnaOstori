@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
-import { getStudentListAPI, routeAPI } from '../../../services/apisService'
+import { getStudentListAPI, postRouteAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -122,14 +122,14 @@ const TheStudent = (props) => {
             routeName: "updateCourseTrackHandler"
         }
         if (createDataBody.length > 0) {
-            await routeAPI(createAPIBody).then((res) => {
+            await postRouteAPI(createAPIBody).then((res) => {
                 studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(createAPIBody).then((res) => {
+                        await postRouteAPI(createAPIBody).then((res) => {
                             studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                         })
                     }).catch(error => {
@@ -139,14 +139,14 @@ const TheStudent = (props) => {
             })
         }
         if (updateDataBody.length > 0) {
-            await routeAPI(updateAPIBody).then((res) => {
+            await postRouteAPI(updateAPIBody).then((res) => {
                 studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(updateAPIBody).then((res) => {
+                        await postRouteAPI(updateAPIBody).then((res) => {
                             studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                         })
                     }).catch(error => {

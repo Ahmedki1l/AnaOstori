@@ -4,7 +4,7 @@ import { ConfigProvider, Drawer, Table } from 'antd'
 import { fullDate } from '../../../constants/DateConverter'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import styled from 'styled-components'
-import { routeAPI } from '../../../services/apisService'
+import { postRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../../components/CommonComponents/Empty'
 import Link from 'next/link'
@@ -166,7 +166,7 @@ const Index = () => {
             limit: 10,
             order: "createdAt DESC"
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setPaginationConfig({
                 ...paginationConfig,
                 total: res.data.totalItems,
@@ -176,7 +176,7 @@ const Index = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await routeAPI(data).then((res) => {
+                    await postRouteAPI(data).then((res) => {
                         setUserList(res.data.data)
                     })
                 }).catch(error => {

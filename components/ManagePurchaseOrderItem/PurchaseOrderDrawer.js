@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, FormItem } from '../antDesignCompo/FormItem'
 import Select from '../antDesignCompo/Select'
 import * as paymentConst from '../../constants/PaymentConst'
-import { createOrderAPI } from '../../services/apisService'
+import { createOrderAPI, getRouteAPI } from '../../services/apisService'
 import styles from './purchaseOrderDrawer.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import Icon from '../CommonComponents/Icon'
@@ -54,21 +54,22 @@ const PurchaseOrderDrawer = (props) => {
         }
         else {
             let body = {
-                orderData: {
-                    orderUpdate: true,
-                    id: selectedOrder.id,
-                    status: value.status,
-                    failedReason: value.failedReason
-                }
+                routeName: 'createOrder',
+                orderUpdate: true,
+                id: selectedOrder.id,
+                status: value.status,
+                failedReason: value.failedReason
             }
-            await createOrderAPI(body).then((res) => {
+            console.log(body);
+            await getRouteAPI(body).then((res) => {
+                console.log(res);
                 setShowBtnLoader(false)
                 props.onClose(true)
             }).catch(async (error) => {
                 setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await createOrderAPI(body).then((res) => {
+                        await getRouteAPI(body).then((res) => {
                             props.onClose(true)
                         })
                     }).catch(error => {
@@ -132,7 +133,9 @@ const PurchaseOrderDrawer = (props) => {
                 <>
                     <p style={{ fontSize: '18px' }}>توضيح السبب  </p>
                     <FormItem
-                        name={'failedReason'}>
+                        name={'failedReason'}
+                        rules={[{ required: true, message: 'please enter failed reason' }]}
+                    >
                         <Input
                             width={425}
                             height={47}

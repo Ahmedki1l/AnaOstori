@@ -4,7 +4,7 @@ import styles from './ModelForAddNews.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import { routeAPI } from '../../services/apisService'
+import { postRouteAPI } from '../../services/apisService'
 import { toast } from 'react-toastify'
 import { createAndEditBtnText } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
@@ -47,14 +47,14 @@ const ModelForAddNews = ({
             routeName: "createNewsBar",
             content: values.content
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             getNewsList()
             isModelClose();
             apiSuccessMsg(manageNewBarText.createNewsSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await routeAPI(values).then((res) => {
+                    await postRouteAPI(values).then((res) => {
                         getNewsList()
                         isModelClose();
                         apiSuccessMsg(manageNewBarText.createNewsSuccessMsg)
@@ -72,14 +72,14 @@ const ModelForAddNews = ({
             id: editNews.id,
             content: values.content
         }
-        await routeAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             getNewsList()
             isModelClose()
             apiSuccessMsg(manageNewBarText.updatedNewsSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await routeAPI(values).then((res) => {
+                    await postRouteAPI(values).then((res) => {
                         getNewsList()
                         isModelClose()
                         apiSuccessMsg(manageNewBarText.updatedNewsSuccessMsg)

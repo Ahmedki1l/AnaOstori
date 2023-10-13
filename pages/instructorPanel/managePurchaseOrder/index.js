@@ -1,5 +1,5 @@
 import { ConfigProvider, Drawer, Table, Tag } from "antd";
-import { createOrderAPI, managePurchaseOrdersAPI, routeAPI } from "../../../services/apisService";
+import { createOrderAPI, managePurchaseOrdersAPI, postRouteAPI } from "../../../services/apisService";
 import { useEffect, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";
@@ -197,7 +197,7 @@ const Index = () => {
             order: "createdAt DESC"
         }
         console.log(data);
-        await routeAPI(data).then((res) => {
+        await postRouteAPI(data).then((res) => {
             console.log(res);
             setPaginationConfig({
                 ...paginationConfig,

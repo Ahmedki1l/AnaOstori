@@ -14,7 +14,7 @@ import useScrollEvent from '../../../hooks/useScrollEvent'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getCatagoriesAPI, getCourseByNameAPI } from '../../../services/apisService'
+import { getRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
 import { mediaUrl, secondsToMinutes } from '../../../constants/DataManupulation'
@@ -137,7 +137,10 @@ export default function Index(props) {
 				pathname: "/login",
 			})
 		} else {
-			await getCatagoriesAPI().then((res) => {
+			let data = {
+				routeName: 'categories'
+			}
+			await getRouteAPI(data).then((res) => {
 				router.push({
 					pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 					query: query ? query : "",
@@ -146,7 +149,7 @@ export default function Index(props) {
 				console.log(error);
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
-						await getCatagoriesAPI().then((res) => {
+						await getRouteAPI(data).then((res) => {
 							router.push({
 								pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 								query: query ? query : "",
@@ -199,9 +202,11 @@ export default function Index(props) {
 		if (!courseDetail) return
 		const getCourseByName = async () => {
 			let data = {
+				routeName: 'courseByName',
 				name: courseDetail?.name,
 			}
-			await getCourseByNameAPI(data).then((res) => {
+			await getRouteAPI(data).then((res) => {
+				console.log(res);
 				res.data?.subscriptions?.forEach((item) => {
 					if (item.type == 'male') {
 						setIsMaleSubscribed(true)
@@ -215,7 +220,7 @@ export default function Index(props) {
 				console.log("error", err);
 				if (err?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
-						await getCourseByNameAPI(data).then((res) => {
+						await getRouteAPI(data).then((res) => {
 							res.data?.subscriptions?.forEach((item) => {
 								if (item.type == 'male') {
 									setIsMaleSubscribed(true)

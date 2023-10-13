@@ -10,7 +10,7 @@ import Spinner from '../../../components/CommonComponents/spinner'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import Empty from '../../../components/CommonComponents/Empty'
 import Switch from '../../../components/antDesignCompo/Switch'
-import { editCatagoryAPI, getCatagoriesAPI } from '../../../services/apisService'
+import { editCatagoryAPI, getRouteAPI } from '../../../services/apisService'
 import { useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
@@ -45,7 +45,11 @@ const Index = () => {
     }
 
     const getCategoryListReq = async () => {
-        await getCatagoriesAPI().then((res) => {
+        let data = {
+            routeName: 'categories'
+        }
+        await getRouteAPI(data).then((res) => {
+            console.log(res);
             dispatch({
                 type: 'SET_CATAGORIES',
                 catagories: res.data
@@ -53,7 +57,7 @@ const Index = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getCatagoriesAPI().then(res => {
+                    await getRouteAPI().then(res => {
                         dispatch({
                             type: 'SET_CATAGORIES',
                             catagories: res.data

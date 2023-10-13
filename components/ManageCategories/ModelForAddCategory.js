@@ -8,7 +8,7 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { createCatagoryAPI, editCatagoryAPI, routeAPI } from '../../services/apisService';
+import { createCatagoryAPI, editCatagoryAPI, postRouteAPI } from '../../services/apisService';
 import { toast } from 'react-toastify';
 import { createAndEditBtnText } from '../../constants/ar';
 import { getNewToken } from '../../services/fireBaseAuthService';
@@ -63,14 +63,14 @@ const ModelForAddCategory = ({
                 values.pictureMime = fileUploadResponceData.mime
             }
             setUploadFileError(false)
-            await routeAPI(values).then((res) => {
+            await postRouteAPI(values).then((res) => {
                 setShowBtnLoader(false)
                 apiSuccessRes(adminPanelCategoryConst.addCategoryMsg)
             }).catch(async (error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(values).then(res => {
+                        await postRouteAPI(values).then(res => {
                             apiSuccessRes(adminPanelCategoryConst.addCategoryMsg)
                         })
                     }).catch(error => {
@@ -104,7 +104,7 @@ const ModelForAddCategory = ({
             }
             setUploadFileError(false)
             values.routeName = "updateCategory"
-            await routeAPI(values).then((res) => {
+            await postRouteAPI(values).then((res) => {
                 setShowBtnLoader(false)
                 setFileUploadResponceData()
                 // getCategoryListReq()

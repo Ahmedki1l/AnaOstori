@@ -8,7 +8,7 @@ import Input from '../../antDesignCompo/Input';
 import PhysicalCourseCard from '../../TypesOfCourseComponents/PhysicalCourseCard';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCourseTypeAPI, routeAPI } from '../../../services/apisService'
+import { deleteCourseTypeAPI, postRouteAPI } from '../../../services/apisService'
 import { updateCourseDetailsAPI } from '../../../services/apisService';
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 import { getNewToken } from '../../../services/fireBaseAuthService';
@@ -96,7 +96,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             courseId: courseDetail.id
         }
         try {
-            const updateCourseCardMetaDataReq = routeAPI(body)
+            const updateCourseCardMetaDataReq = postRouteAPI(body)
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
@@ -109,7 +109,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    const updateCourseCardMetaDataReq = routeAPI(body)
+                    const updateCourseCardMetaDataReq = postRouteAPI(body)
                     const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
                     const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])

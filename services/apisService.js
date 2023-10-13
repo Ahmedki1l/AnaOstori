@@ -43,7 +43,6 @@ export const uploadFileAPI = (data) => { return instance2.post('/file/upload', d
 export const createOrderAPI = (data) => { return instance.post(`/createOrder`, data?.orderData) }
 export const getMyOrderAPI = (data) => { return instance.get(`/order/query`) }
 export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment`, data) }
-export const getCourseDetailsAPI = (data) => { return instance.get(`/courseByName/${data?.courseName}`) }
 export const getCatagoriesAPI = () => { return instance.get(`/catagories`) }
 export const courseCurriculumAPI = (data) => { return instance.get(`/course/curriculum/${data?.courseID}`) }
 export const getCourseItemAPI = (data) => { return instance.get(`/course/${data?.courseID}/item/${data?.itemID}`) }
@@ -147,5 +146,15 @@ export const managePurchaseOrdersAPI = (data) => { return instance.get(`order/li
 export const createCouponsAPI = (data) => { return instance.get(`/createCoupon`, data) }
 
 
-export const routeAPI = (data) => { return instance.post(`/route`, data) }
-export const getRouteAPI = (data) => { return instance.get(`/auth/route/fetch`, data) }
+export const postRouteAPI = (data) => { return instance.post(`/route`, data) }
+
+export const getRouteAPI = (data) => {
+	console.log(data);
+	const queryParams = Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&');
+
+	return instance.get(`/auth/route/fetch?${queryParams}`)
+}
+
+export const postAuthRouteAPI = (data) => {
+	return instance.post(`/auth/route/post`, data)
+}

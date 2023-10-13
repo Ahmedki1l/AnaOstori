@@ -1,8 +1,8 @@
-import { accountRecovery, deleteAccount, viewProfileAPI } from '../../../services/apisService';
+import { accountRecovery, deleteAccount, getRouteAPI } from '../../../services/apisService';
 import styles from './DeleteAccount.module.scss';
 import { toast } from "react-toastify";
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { toastSuccessMessage } from '../../../constants/ar';
 import Image from 'next/legacy/image';
@@ -19,8 +19,11 @@ const DeleteAccount = ({ data }) => {
 
     const handleDeleteAccount = async () => {
         setShowLoader(true)
+        const data = {
+            routeName: "viewProfile"
+        }
         await deleteAccount().then(async (res) => {
-            await viewProfileAPI().then(res => {
+            await getRouteAPI(data).then(res => {
                 dispatch({
                     type: 'SET_PROFILE_DATA',
                     viewProfileData: res?.data,

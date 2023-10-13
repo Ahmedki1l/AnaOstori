@@ -3,7 +3,7 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, routeAPI } from '../../../services/apisService'
+import { getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, postRouteAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import styles from './TestResults.module.scss'
@@ -243,13 +243,13 @@ const TestResults = (props) => {
         }
 
         if (createDataBody.length > 0) {
-            await routeAPI(createAPIBody).then((res) => {
+            await postRouteAPI(createAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(createAPIBody).then((res) => {
+                        await postRouteAPI(createAPIBody).then((res) => {
                             toast.success(toastSuccessMessage.examCreateSuccessMsg)
                             setShowBtnLoader(false)
                         })
@@ -261,13 +261,13 @@ const TestResults = (props) => {
             })
         }
         else if (updateDataBody.length > 0) {
-            await routeAPI(updateAPIBody).then((res) => {
+            await postRouteAPI(updateAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await routeAPI(updateAPIBody).then((res) => {
+                        await postRouteAPI(updateAPIBody).then((res) => {
                             toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                             setShowBtnLoader(false)
                         })

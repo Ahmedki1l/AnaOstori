@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { GoogleLogin, signInWithApple, startEmailPasswordLogin } from '../services/fireBaseAuthService'
 import { useDispatch, useSelector } from 'react-redux';
-import { getRouteAPI, myCoursesAPI, viewProfileAPI } from '../services/apisService';
+import { getRouteAPI, myCoursesAPI } from '../services/apisService';
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
@@ -66,7 +66,6 @@ export default function Login() {
 
 	const handleStoreUpdate = async () => {
 		try {
-			// const viewProfileReq = viewProfileAPI()
 			const data = {
 				routeName: "viewProfile"
 			}

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService'
-import { getCatagoriesAPI, getCurriculumIdsAPI, getInstructorListAPI, myCoursesAPI, } from '../../services/apisService';
+import { getCurriculumIdsAPI, getInstructorListAPI, getRouteAPI, myCoursesAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
@@ -46,10 +46,8 @@ export default function Navbar() {
 	useEffect(() => {
 		if (storeData?.accessToken) {
 			catagoryAuth()
-			console.log("catagoryAuth");
 		} else {
 			catagoryNoAuth()
-			console.log("catagoryNoAuth");
 		}
 	}, [storeData?.accessToken])
 
@@ -71,7 +69,10 @@ export default function Navbar() {
 
 	const catagoryAuth = async () => {
 		try {
-			const getcatagoriReq = getCatagoriesAPI()
+			let data = {
+				routeName: 'categories'
+			}
+			const getcatagoriReq = getRouteAPI(data)
 			const getCurriculumIdsReq = getCurriculumIdsAPI()
 			const getInstructorListReq = getInstructorListAPI()
 			const getMyCourseReq = myCoursesAPI()
@@ -101,7 +102,10 @@ export default function Navbar() {
 			console.log("NavBarError", error);
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
-					const getcatagoriReq = getCatagoriesAPI()
+					let data = {
+						routeName: 'categories'
+					}
+					const getcatagoriReq = getRouteAPI(data)
 					const getCurriculumIdsReq = getCurriculumIdsAPI()
 					const getInstructorListReq = getInstructorListAPI()
 					const getMyCourseReq = myCoursesAPI()
