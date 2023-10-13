@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './UploadFileForModel.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { stringUpdation } from '../../../constants/DataManupulation'
@@ -7,12 +7,35 @@ import Spinner from '../spinner'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
 import { PDFDocument } from 'pdf-lib';
 import { pdfFileConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
+import axios from "axios";
 
-const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadResData, placeHolderName, setShowBtnLoader, uploadfileError, setVideoDuration, disabledInput }) => {
+const UploadFileForModel = ({
+    fileName,
+    setFileName,
+    fileType,
+    accept,
+    uploadResData,
+    placeHolderName,
+    setShowBtnLoader,
+    uploadfileError,
+    setVideoDuration,
+    disabledInput,
+    cancleUpload
+}) => {
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadedFileName, setUploadedFileName] = useState(fileName)
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const source = axios.CancelToken.source();
+
+    useEffect(() => {
+        console.log(cancleUpload);
+        if (cancleUpload) {
+            source.cancel('Upload cancelled by user');
+        }
+    }, [cancleUpload])
 
     const getFileKey = async (e) => {
+        setUploadedFileName()
         let file = e.target.files[0];
         if (accept == 'video') {
             const video = document.createElement('video');
@@ -37,7 +60,12 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
         }
         setUploadLoader(true)
         setShowBtnLoader(true)
-        await uploadFileSevices(file).then((res) => {
+
+        const onUploadProgress = (percentCompleted) => {
+            setUploadProgress(percentCompleted)
+        }
+
+        await uploadFileSevices(file, onUploadProgress, source.token).then((res) => {
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = file.type
@@ -46,6 +74,7 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
                 bucket: uploadFileBucket,
                 mime: uploadFileType,
             })
+            setUploadProgress(0)
             setUploadedFileName(file.name)
             setFileName(file.name)
             setUploadLoader(false)
@@ -56,6 +85,11 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
             setShowBtnLoader(false)
         })
     }
+
+    const cancelUpload = () => {
+        source.cancel('Upload cancelled by user');
+    }
+
     const handleRemoveFile = () => {
         setUploadedFileName()
         uploadResData()
@@ -86,7 +120,10 @@ const UploadFileForModel = ({ fileName, setFileName, fileType, accept, uploadRes
                     </div>
                 }
                 {uploadLoader &&
-                    <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
+                    <div className='flex items-center'>
+                        <p className='px-2'>% {uploadProgress}</p>
+                        <Spinner borderwidth={2.5} width={1.5} height={1.5} margin={0.5} />
+                    </div>
                 }
             </div>
             {(uploadfileError && !uploadedFileName) &&

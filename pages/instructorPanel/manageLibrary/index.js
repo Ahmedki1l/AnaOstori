@@ -27,6 +27,7 @@ function Index() {
     const [selectedFolderId, setSelectedFolderId] = useState()
     const [loading, setLoading] = useState(false)
     const [existingItemName, setExistingItemName] = useState()
+    const [cancleUpload, setCancleUpload] = useState(false)
 
     useEffect(() => {
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
@@ -100,6 +101,7 @@ function Index() {
     const handleAddItemsOrFolder = () => {
         if (typeOfListdata == 'item') {
             setIsModelForAddItemOpen(true);
+            setCancleUpload(false)
         }
         else {
             setIsModelForAddFolderOpen(true);
@@ -139,7 +141,9 @@ function Index() {
         // don't delete 
     }
     const handleModelClose = (folderId) => {
+        console.log('closed');
         setIsModelForAddItemOpen(false)
+        setCancleUpload(true)
         // getItemList(folderId)
     }
 
@@ -204,6 +208,8 @@ function Index() {
                                     loading={loading}
                                     setLoading={setLoading}
                                     handleCreateFolder={handleCreateFolder}
+                                    cancleUpload={cancleUpload}
+                                    setCancleUpload={setCancleUpload}
                                 />
                             }
                             {selectedItem == 'curriculum' &&
@@ -230,7 +236,9 @@ function Index() {
                     onCloseModal={handleModelClose}
                     getItemList={getItemList}
                     existingItemName={existingItemName}
-                />}
+                    cancleUpload={cancleUpload}
+                />
+            }
         </>
     )
 }

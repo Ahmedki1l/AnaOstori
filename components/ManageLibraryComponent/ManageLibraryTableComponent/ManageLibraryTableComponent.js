@@ -44,6 +44,7 @@ const ManageLibraryTableComponent = ({
     const { examToastMsgConst } = quizConst
     const { folderToastMsgConst } = folderConst
 
+
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
             setIsModelForAddFolderOpen(true);
@@ -52,6 +53,7 @@ const ManageLibraryTableComponent = ({
         } else {
             setSelectedItem(item)
             setIsModelForAddItemOpen(true)
+            setCancleUpload(false)
         }
     };
     const handleEditFolder = async ({ name }) => {
@@ -95,6 +97,7 @@ const ManageLibraryTableComponent = ({
         // getItemList(folderId)
         setSelectedItem()
         setIsModelForAddItemOpen(false)
+        setCancleUpload(true)
     }
 
     const showItemListOfSelectedFolder = async (item) => {
@@ -178,6 +181,7 @@ const ManageLibraryTableComponent = ({
     const handleAddModalOpen = () => {
         if (tableDataType == "item") {
             setIsModelForAddItemOpen(true)
+            setCancleUpload(false)
         } else {
             setIsModelForAddFolderOpen(true)
         }
@@ -301,6 +305,7 @@ const ManageLibraryTableComponent = ({
                     onCloseModal={onItemModelClose}
                     onDelete={handleDeleteFolderData}
                     existingItemName={existingItemName}
+                    cancleUpload={cancleUpload}
                 />
             }
             {ismodelForDeleteItems &&

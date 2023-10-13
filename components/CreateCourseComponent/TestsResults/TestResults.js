@@ -3,7 +3,7 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, updateStudentExamDataAPI } from '../../../services/apisService'
+import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, routeAPI, updateStudentExamDataAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form, message } from 'antd'
 import styles from './TestResults.module.scss'
@@ -234,20 +234,23 @@ const TestResults = (props) => {
         });
 
         let createAPIBody = {
-            data: createDataBody
+            data: createDataBody,
+            routeName: "createCourseTrackBulk"
         }
         let updateAPIBody = {
             data: updateDataBody
         }
 
         if (createDataBody.length > 0) {
-            await createStudentExamDataAPI(createAPIBody).then((res) => {
+            // await createStudentExamDataAPI(createAPIBody).then((res) => {
+            await routeAPI(createAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await createStudentExamDataAPI(createAPIBody).then((res) => {
+                        // await createStudentExamDataAPI(createAPIBody).then((res) => {
+                        await routeAPI(createAPIBody).then((res) => {
                             toast.success(toastSuccessMessage.examCreateSuccessMsg)
                             setShowBtnLoader(false)
                         })
