@@ -5,7 +5,7 @@ import styles from './ModelForAddInstructor.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
-import { createInstroctorAPI, editInstroctorAPI } from '../../services/apisService'
+import { createInstroctorAPI, editInstroctorAPI, routeAPI } from '../../services/apisService'
 import { deleteNullFromObj } from '../../constants/DataManupulation'
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
 import { toast } from 'react-toastify'
@@ -80,13 +80,17 @@ const ModelForAddInstructor = ({
             values.ProfileFileMime = fileUploadResponceData?.mime
         }
         deleteNullFromObj(values)
-        await createInstroctorAPI(values).then((res) => {
+        let body = {
+            routeName: "createInstructor",
+            ...values
+        }
+        await routeAPI(body).then((res) => {
             setShowBtnLoader(false)
             apiSuccessRes(instructorConst.successAddedNewInstructorToast)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await createInstroctorAPI(values).then(res => {
+                    await routeAPI(body).then(res => {
                         apiSuccessRes(instructorConst.successAddedNewInstructorToast)
                     })
                 }).catch(error => {
@@ -113,7 +117,11 @@ const ModelForAddInstructor = ({
         }
         deleteNullFromObj(values)
         values.id = instructorDetails.id
-        await editInstroctorAPI(values).then((res) => {
+        let body = {
+            routeName: "updateInstructorHandler",
+            ...values
+        }
+        await routeAPI(body).then((res) => {
             setShowBtnLoader(false)
             setFileName()
             apiSuccessRes(instructorConst.successNewInstructorUpdatedToast)
@@ -123,7 +131,7 @@ const ModelForAddInstructor = ({
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await editInstroctorAPI(values).then(res => {
+                    await routeAPI(body).then(res => {
                         setFileName()
                         apiSuccessRes(instructorConst.successNewInstructorUpdatedToast)
                         setShowBtnLoader(false)

@@ -8,7 +8,7 @@ import Input from '../../antDesignCompo/Input';
 import PhysicalCourseCard from '../../TypesOfCourseComponents/PhysicalCourseCard';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { useDispatch, useSelector } from 'react-redux';
-import { createCourseCardMetaDataAPI, deleteCourseTypeAPI, updateCourseCardMetaDataAPI } from '../../../services/apisService'
+import { deleteCourseTypeAPI, routeAPI } from '../../../services/apisService'
 import { updateCourseDetailsAPI } from '../../../services/apisService';
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 import { getNewToken } from '../../../services/fireBaseAuthService';
@@ -68,61 +68,8 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
         setShowLoader(true)
         if (isCourseEdit) {
             editCourseCardMetaData(values)
-        } else {
-            createCourseCardMetaData(values)
         }
     };
-
-    const createCourseCardMetaData = async (values) => {
-        const cardDescription = values.cardDescription
-        let courseCardMetadata = values.CourseCardMetaData.map((obj, index) => {
-            return {
-                order: (`${index + 1}`),
-                icon: obj.icon,
-                link: obj.link,
-                text: obj.text,
-                tailLinkName: obj.tailLinkName,
-                tailLink: obj.tailLink,
-                grayedText: obj.grayedText,
-            }
-        })
-        let body = {
-            data: {
-                data: courseCardMetadata,
-                courseId: courseDetail.id,
-            },
-        }
-        let body2 = {
-            data: {
-                cardDescription: cardDescription,
-                type: courseDetail.type
-            },
-            courseId: courseDetail.id
-        }
-        try {
-            const createCourseCardMetaDataReq = createCourseCardMetaDataAPI(body)
-            const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
-            const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
-            setShowLoader(false)
-            toast.success(toastSuccessMessage.externalCourseDetailCreateMsg)
-            setSelectedItem(3)
-            externalCourseForm.resetFields()
-        } catch (error) {
-            setShowLoader(false)
-            console.log(error);
-            await getNewToken().then(async (token) => {
-                const createCourseCardMetaDataReq = createCourseCardMetaDataAPI(body)
-                const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
-                const [createCourseCardMetaData, updateCardDiscription] = await Promise.all[createCourseCardMetaDataReq, updateCardDiscriptionReq]
-                setShowLoader(false)
-                toast.success(toastSuccessMessage.externalCourseDetailCreateMsg)
-                setSelectedItem(3)
-                externalCourseForm.resetFields()
-            }).catch(error => {
-                console.error("Error:", error);
-            });
-        }
-    }
 
     const editCourseCardMetaData = async (values) => {
         const cardDescription = values.cardDescription
@@ -138,9 +85,8 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             return obj
         })
         let body = {
-            data: {
-                data: CourseCardMetaData,
-            },
+            routeName: 'updateCourseCardMetaData',
+            data: CourseCardMetaData,
         }
         let body2 = {
             data: {
@@ -150,7 +96,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             courseId: courseDetail.id
         }
         try {
-            const updateCourseCardMetaDataReq = updateCourseCardMetaDataAPI(body)
+            const updateCourseCardMetaDataReq = routeAPI(body)
             const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
@@ -163,7 +109,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    const updateCourseCardMetaDataReq = updateCourseCardMetaDataAPI(body)
+                    const updateCourseCardMetaDataReq = routeAPI(body)
                     const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
 
                     const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
@@ -327,7 +273,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                                                         </FormItem>
                                                     </div>
                                                     <div className={styles.DeleteIconWrapper}>
-                                                        <div className='flex justify-center items-center h-100'
+                                                        <div className='flex justify-center cursor-pointer items-center h-100'
                                                             onClick={() => {
                                                                 if (courseDetail.CourseCardMetaData.length - 1 == 0) return
                                                                 deleteCourseDetails(index, remove, name)

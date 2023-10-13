@@ -103,7 +103,8 @@ const ModelForAddCategory = ({
                 values.pictureMime = fileUploadResponceData.mime
             }
             setUploadFileError(false)
-            await editCatagoryAPI(values).then((res) => {
+            values.routeName = "updateCategory"
+            await routeAPI(values).then((res) => {
                 setShowBtnLoader(false)
                 setFileUploadResponceData()
                 // getCategoryListReq()

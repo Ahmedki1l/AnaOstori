@@ -8,7 +8,7 @@ import styles from './CourseInfo.module.scss'
 import CheckBox from '../../antDesignCompo/CheckBox';
 import Input from '../../antDesignCompo/Input';
 import Select from '../../antDesignCompo/Select';
-import { createCourseByInstructorAPI, deleteCourseTypeAPI, updateCourseDetailsAPI, updateCourseDetailsMetaDataAPI, updateCourseMetaDataAPI } from '../../../services/apisService';
+import { createCourseByInstructorAPI, deleteCourseTypeAPI, routeAPI, updateCourseDetailsAPI, updateCourseDetailsMetaDataAPI, updateCourseMetaDataAPI } from '../../../services/apisService';
 import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
@@ -193,11 +193,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             return obj
         })
         const courseDetailsMetaDataBody = {
-            data: {
-                data: courseDetailsMetaData,
-            },
+            routeName: 'updateCourseDetailsMetaData',
+            data: courseDetailsMetaData,
         }
-
+        console.log(courseDetailsMetaDataBody);
         if (groupDiscountEligible == false) {
             values.discountForThreeOrMore = 0
             values.discountForTwo = 0
@@ -273,7 +272,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 promiseArray.push(updateCourseMetaDataAPI(courseMetaDataBody));
             }
             if (courseDetailsMetaDataBody.data.data.length > 0) {
-                promiseArray.push(updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody));
+                promiseArray.push(routeAPI(courseDetailsMetaDataBody));
             }
             const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all(promiseArray);
 
@@ -306,7 +305,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                             promiseArray.push(updateCourseMetaDataAPI(courseMetaDataBody));
                         }
                         if (courseDetailsMetaDataBody.data.data.length > 0) {
-                            promiseArray.push(updateCourseDetailsMetaDataAPI(courseDetailsMetaDataBody));
+                            promiseArray.push(routeAPI(courseDetailsMetaDataBody));
                         }
                         const [editCourse, editCourseMetaData, editCourseDetailsMetadata] = await Promise.all(promiseArray);
 

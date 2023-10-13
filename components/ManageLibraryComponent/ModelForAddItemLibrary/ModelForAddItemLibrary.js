@@ -5,7 +5,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
-import { addItemToFolderAPI, updateItemToFolderAPI } from '../../../services/apisService';
+import { addItemToFolderAPI, routeAPI, updateItemToFolderAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 import CustomButton from '../../CommonComponents/CustomButton'
@@ -81,10 +81,11 @@ const ModelForAddItemLibrary = ({
             body.quizLink = e.quizLink
         }
         const data = {
+            routeName: 'createItem',
             folderId: selectedFolderId ? selectedFolderId : selectedFolder?.id,
-            data: body
+            ...body
         }
-        await addItemToFolderAPI(data).then((res) => {
+        await routeAPI(data).then((res) => {
             toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
                     pdfToastMsgConst.addPdfSuccessMsg)
@@ -140,9 +141,10 @@ const ModelForAddItemLibrary = ({
             body.quizLink = e.quizLink
         }
         const data = {
-            data: body
+            routeName: 'updateItemHandler',
+            ...body
         }
-        await updateItemToFolderAPI(data).then((res) => {
+        await routeAPI(data).then((res) => {
             toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
                     pdfToastMsgConst.updatePdfSuccessMsg)

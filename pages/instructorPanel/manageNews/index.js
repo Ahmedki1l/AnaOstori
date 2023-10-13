@@ -10,7 +10,7 @@ import ModelForDeleteItems from '../../../components/ManageLibraryComponent/Mode
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import { routeAPI } from '../../../services/apisService'
 import { toast } from 'react-toastify'
-import { manageNewsConst } from '../../../constants/ar'
+import { manageNewBarText } from '../../../constants/adminPanelConst/manageNewBarText/manageNewBarText'
 
 
 
@@ -68,8 +68,9 @@ const Index = () => {
             id: editNews.id,
             isDeleted: true
         }
+        console.log(body);
         await routeAPI(body).then((res) => {
-            toast.success(manageNewsConst.deleteNewsSuccessMsg)
+            toast.success(manageNewBarText.deleteNewsSuccessMsg)
             getNewsList()
         }).catch((err) => {
             console.log(err);

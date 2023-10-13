@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
-import { createStudentExamDataAPI, getStudentListAPI, updateStudentExamDataAPI } from '../../../services/apisService'
+import { getStudentListAPI, routeAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -114,20 +114,22 @@ const TheStudent = (props) => {
             }
         });
         let createAPIBody = {
-            data: createDataBody
+            data: createDataBody,
+            routeName: 'createCourseTrackBulk'
         }
         let updateAPIBody = {
-            data: updateDataBody
+            data: updateDataBody,
+            routeName: "updateCourseTrackHandler"
         }
         if (createDataBody.length > 0) {
-            await createStudentExamDataAPI(createAPIBody).then((res) => {
+            await routeAPI(createAPIBody).then((res) => {
                 studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await createStudentExamDataAPI(createAPIBody).then((res) => {
+                        await routeAPI(createAPIBody).then((res) => {
                             studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                         })
                     }).catch(error => {
@@ -137,14 +139,14 @@ const TheStudent = (props) => {
             })
         }
         if (updateDataBody.length > 0) {
-            await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+            await routeAPI(updateAPIBody).then((res) => {
                 studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                        await routeAPI(updateAPIBody).then((res) => {
                             studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                         })
                     }).catch(error => {

@@ -13,14 +13,12 @@ import { signOutUser } from '../services/fireBaseAuthService';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
-// import { uploadFileSevices } from '../services/UploadFileSevices';
 
 
 const UpdateProfile = () => {
     const storeData = useSelector((state) => state?.globalStore);
     const [firstName, setFirstName] = useState(storeData?.viewProfileData?.firstName)
 
-    // const [lastName, setLastName] = useState(storeData?.viewProfileData?.lastName)
 
     const [showLoader, setShowLoader] = useState(false);
 
@@ -75,74 +73,72 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         if (firstName && (firstName.split(" ").length - 1) < 2) {
-			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
-		}
-		else{
-			setFirstNameError(null)
-		}
+            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+        }
+        else {
+            setFirstNameError(null)
+        }
 
-		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-		}
-		else {
-			setPhoneNumberError(null);
-		}
-    },[firstName,phoneNumber])
+        if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+            setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+        }
+        else {
+            setPhoneNumberError(null);
+        }
+    }, [firstName, phoneNumber])
 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (!firstName) {
-            setFirstNameError(inputErrorMessages.firstNameErrorMsg)   
+            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
         }
         else if ((firstName.split(" ").length - 1) < 2) {
             setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
-           
+
         }
-        if(!phoneNumber){
+        if (!phoneNumber) {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
-        else if (firstNameError == null && phoneNumberError == null){
-        setShowLoader(true)
+        else if (firstNameError == null && phoneNumberError == null) {
+            setShowLoader(true)
 
-        const data = {
-            firstName: firstName,
-            phoneNumber: phoneNumber,
-            gender: gender
-            // lastName: lastName
-        }
+            const data = {
+                firstName: firstName,
+                phoneNumber: phoneNumber,
+                gender: gender
+                // lastName: lastName
+            }
 
-        if(!phoneNumber?.length){
-            delete data.phoneNumber;
-        }
+            if (!phoneNumber?.length) {
+                delete data.phoneNumber;
+            }
 
-        const params = {
-            data,
-        }
+            const params = {
+                data,
+            }
 
-        await updateProfile(params).then(async (res) => {
-            toast.success(toastSuccessMessage.profileUpdateMsg)
-            setShowLoader(false)
-            await viewProfileAPI().then(res => {
-                dispatch({
-                    type: 'SET_PROFILE_DATA',
-                    viewProfileData: res?.data,
-                });
-                Router.push('/myProfile')
+            await updateProfile(params).then(async (res) => {
+                toast.success(toastSuccessMessage.profileUpdateMsg)
+                setShowLoader(false)
+                await viewProfileAPI().then(res => {
+                    dispatch({
+                        type: 'SET_PROFILE_DATA',
+                        viewProfileData: res?.data,
+                    });
+                    Router.push('/myProfile')
+                }).catch(error => {
+                    console.log(error);
+                })
             }).catch(error => {
-                console.log(error);
-            })
-        }).catch(error => {
-            toast.error(error)
-            setShowLoader(false)
-        });
-    }
+                toast.error(error)
+                setShowLoader(false)
+            });
+        }
     }
 
-  
 
-console.log("phoneNumberError : ",phoneNumberError, firstNameError);
 
     return (
         <>
@@ -175,8 +171,8 @@ console.log("phoneNumberError : ",phoneNumberError, firstNameError);
                                         <div className={`formInputIconDiv ${styles.iconDiv}`}>
                                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                                         </div>
-                                        <input className={firstNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`}name='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
-                                        <label className={firstNameError ? `formLabel ${styles.formFieldLabelError}` :  `formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">الاسم الثلاثي</label>
+                                        <input className={firstNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
+                                        <label className={firstNameError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">الاسم الثلاثي</label>
                                     </div>
                                     {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                                 </div>
@@ -193,11 +189,11 @@ console.log("phoneNumberError : ",phoneNumberError, firstNameError);
                                 <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
                                     <div className={styles.genderBtnBox}>
-                                        <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => {e.preventDefault(); setGender("male")}}>
+                                        <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
                                             <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#FFFFFF' : '#808080'} />
                                             <span>ذكر</span>
                                         </button>
-                                        <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => {e.preventDefault(); setGender('female')}}>
+                                        <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
                                             <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#FFFFFF' : '#808080'} />
                                             <span>أنثى</span>
                                         </button>

@@ -54,18 +54,9 @@ export const toastSuccessMessage = {
     appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
     examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',
     examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',    
-    createNewsSuccessMsg: 'تم إضافة النص التسويقي بنجاح',// 'newbar added successfully'
-    updatedNewsSuccessMsg: 'تم تحديث النص التسويقي بنجاح',// 'newbar updated successfully',
-    deleteNewsSuccessMsg: 'تم حذف النص التسويقي بنجاح',// 'newbar deleted successfully',
 }
 
 export const createAndEditBtnText = {
     addBtnText: 'إضافة',
     saveBtnText: 'حفظ'
-}
-
-export const manageNewsConst = {
-    addNewsTitle: 'إضافة نص تسويقي',
-    editNewsTitle: 'تعديل النص التسويقي',
-    addNewsErrorMsg: 'اكتب النص',
 }

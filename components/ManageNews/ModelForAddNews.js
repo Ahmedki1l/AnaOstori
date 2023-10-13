@@ -6,8 +6,9 @@ import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import { routeAPI } from '../../services/apisService'
 import { toast } from 'react-toastify'
-import { createAndEditBtnText, manageNewsConst, toastSuccessMessage } from '../../constants/ar'
+import { createAndEditBtnText } from '../../constants/ar'
 import { getNewToken } from '../../services/fireBaseAuthService'
+import { manageNewBarText } from '../../constants/adminPanelConst/manageNewBarText/manageNewBarText'
 
 const ModelForAddNews = ({
     isModelForNews,
@@ -49,14 +50,14 @@ const ModelForAddNews = ({
         await routeAPI(body).then((res) => {
             getNewsList()
             isModelClose();
-            apiSuccessMsg(toastSuccessMessage.createNewsSuccessMsg)
+            apiSuccessMsg(manageNewBarText.createNewsSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await routeAPI(values).then((res) => {
                         getNewsList()
                         isModelClose();
-                        apiSuccessMsg(toastSuccessMessage.createNewsSuccessMsg)
+                        apiSuccessMsg(manageNewBarText.createNewsSuccessMsg)
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -74,14 +75,14 @@ const ModelForAddNews = ({
         await routeAPI(body).then((res) => {
             getNewsList()
             isModelClose()
-            apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)
+            apiSuccessMsg(manageNewBarText.updatedNewsSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await routeAPI(values).then((res) => {
                         getNewsList()
                         isModelClose()
-                        apiSuccessMsg(toastSuccessMessage.updatedNewsSuccessMsg)
+                        apiSuccessMsg(manageNewBarText.updatedNewsSuccessMsg)
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -101,20 +102,20 @@ const ModelForAddNews = ({
             <div className={styles.modalHeader}>
                 <button onClick={isModelClose} className={styles.closebutton}>
                     <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                <p className={`fontBold ${styles.addNews}`}>{isEdit ? manageNewsConst.editNewsTitle : manageNewsConst.addNewsTitle}</p>
+                <p className={`fontBold ${styles.addNews}`}>{isEdit ? manageNewBarText.editNewsTitle : manageNewBarText.addNewsTitle}</p>
             </div>
             <div dir='rtl'>
                 <Form form={newsForm} onFinish={onFinish}>
                     <div className={styles.createNewsFields}>
                         <FormItem
                             name={'content'}
-                            rules={[{ required: true, message: manageNewsConst.addNewsErrorMsg }]}
+                            rules={[{ required: true, message: manageNewBarText.inputTextErrorMsg }]}
                         >
                             <Input
                                 fontSize={16}
                                 width={352}
                                 height={40}
-                                placeholder='النص'
+                                placeholder={manageNewBarText.inputText}
                             />
                         </FormItem>
                     </div>

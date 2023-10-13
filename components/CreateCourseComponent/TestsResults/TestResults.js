@@ -3,9 +3,9 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { createStudentExamDataAPI, getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, routeAPI, updateStudentExamDataAPI } from '../../../services/apisService'
+import { getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, routeAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
 import styles from './TestResults.module.scss'
 import ProfilePicture from '../../CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
@@ -238,18 +238,17 @@ const TestResults = (props) => {
             routeName: "createCourseTrackBulk"
         }
         let updateAPIBody = {
-            data: updateDataBody
+            data: updateDataBody,
+            routeName: "updateCourseTrackHandler"
         }
 
         if (createDataBody.length > 0) {
-            // await createStudentExamDataAPI(createAPIBody).then((res) => {
             await routeAPI(createAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        // await createStudentExamDataAPI(createAPIBody).then((res) => {
                         await routeAPI(createAPIBody).then((res) => {
                             toast.success(toastSuccessMessage.examCreateSuccessMsg)
                             setShowBtnLoader(false)
@@ -262,13 +261,13 @@ const TestResults = (props) => {
             })
         }
         else if (updateDataBody.length > 0) {
-            await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+            await routeAPI(updateAPIBody).then((res) => {
                 toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await updateStudentExamDataAPI(updateAPIBody).then((res) => {
+                        await routeAPI(updateAPIBody).then((res) => {
                             toast.success(toastSuccessMessage.examUpdateSuccessMsg)
                             setShowBtnLoader(false)
                         })

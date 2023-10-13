@@ -5,9 +5,8 @@ import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 import { useDispatch } from 'react-redux'
-import { createCurriculumAPI, createCurriculumSectionAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, updateCurriculumAPI } from '../../../../services/apisService'
+import { createCurriculumAPI, getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, routeAPI, updateCurriculumAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
-import { toastErrorMessage } from '../../../../constants/ar'
 import { toast } from 'react-toastify'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import { curriculumConst } from '../../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
@@ -35,9 +34,11 @@ const CreateCoursePath = (props) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        courseForm.setFieldValue('pathTitle', curriculmName)
-        getCurriculumDetails()
-        getSectionList()
+        if (routeParams.createCoursePath == 'editCoursePath') {
+            courseForm.setFieldValue('pathTitle', curriculmName)
+            getCurriculumDetails()
+            getSectionList()
+        }
     }, [curriculmName])
 
     const getCurriculumDetails = async () => {
@@ -76,18 +77,17 @@ const CreateCoursePath = (props) => {
     const onFinishCreateCoursepath = async (item) => {
         if (routeParams.createCoursePath == 'createCoursePath') {
             let createBody = {
-                data: {
-                    name: item.pathTitle,
-                }
+                routeName: "createCurriculum",
+                name: item.pathTitle,
             }
-            await createCurriculumAPI(createBody).then(async (res) => {
+            await routeAPI(createBody).then(async (res) => {
                 toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg)
                 setCurriculumName(res.data.name)
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
                     query: { coursePathId: res.data.id },
                 });
-                updateCurriculumList()
+                // updateCurriculumList()
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
@@ -102,21 +102,23 @@ const CreateCoursePath = (props) => {
                     query: { folderType: 'curriculum' }
                 });
                 updateCurriculumList()
+                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
                 return
             }
             let editBody = {
-                data: {
-                    name: item.pathTitle,
-                    id: routeParams.coursePathId,
-                }
+                routeName: "updateCurriculumHandler",
+                name: item.pathTitle,
+                id: routeParams.coursePathId,
             }
-            await updateCurriculumAPI(editBody).then((res) => {
+            console.log(editBody);
+            await routeAPI(editBody).then((res) => {
                 router.push({
                     pathname: `/instructorPanel/manageLibrary`,
                     query: { folderType: 'curriculum' }
                 });
                 courseForm.setFieldValue(item.pathTitle)
                 setCurriculumName(res.data.data.name)
+                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
                 updateCurriculumList()
             }).catch((error) => {
                 console.log(error);

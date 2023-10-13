@@ -97,7 +97,6 @@ const ModelForAddItemCurriculum = ({
     }
 
     const IconCell = ({ item, index, icontype }) => {
-        console.log(item);
         return (
             <div className='flex items-center cursor-pointer' onClick={() => handleClickOnIconCell(item, index)}>
                 {icontype == "folder" && <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />}
@@ -284,6 +283,7 @@ const ModelForAddItemCurriculum = ({
                     <div className={styles.curriculumBody}>
                         <div className={styles.searchWrapper}>
                             <SearchInput
+                                height={40}
                                 placeholder={'ابحث باسم العنصر'}
                                 onChange={(e) => handleSearchName(e)}
                                 value={serchInput}
