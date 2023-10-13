@@ -236,7 +236,7 @@ const PurchaseOrderDrawer = (props) => {
                         </div>
                         <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
                         <div className={styles.purchaseOrderBox}>
-                            <p> {item.gender}</p>
+                            <p> {item.gender == 'male' ? 'شاب' : 'بنت'}</p>
                         </div>
                         <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
                         <div className={styles.purchaseOrderBox}>
