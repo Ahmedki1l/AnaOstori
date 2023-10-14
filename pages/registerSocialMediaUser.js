@@ -11,10 +11,10 @@ import { inputErrorMessages } from '../constants/ar'
 
 
 
-export default function RegisterGoogleUser() {
+export default function RegisterSocialMediaUser() {
 
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [firstName, setFirstName] = useState("")
+    const [fullName, setFullName] = useState("")
     const [gender, setGender] = useState("")
 
 
@@ -56,24 +56,8 @@ export default function RegisterGoogleUser() {
         }
     }
 
-    // useEffect(() => {
-
-    //     if (firstName) {
-    //         setFirstNameError('')
-    //     } else {
-    //         setFirstNameError(inputErrorMessages.firstNameErrorMsg);
-    //     }
-
-    //     if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-    //         setShowPhoneError(true)
-    //         setPhoneNumberValidError(inputErrorMessages.mobileNumberFormatErrorMsg)
-    //     }
-
-    // }, [firstName, phoneNumber])
-
-
     useEffect(() => {
-        if (firstName && (firstName.split(" ").length - 1) < 2) {
+        if (fullName && (fullName.split(" ").length - 1) < 2) {
             setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
         }
         else {
@@ -86,16 +70,15 @@ export default function RegisterGoogleUser() {
         else {
             setPhoneNumberError(null);
         }
-    }, [firstName, phoneNumber])
-
+    }, [fullName, phoneNumber])
 
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
-        if (!firstName) {
+        if (!fullName) {
             setFirstNameError(inputErrorMessages.firstNameErrorMsg)
         }
-        else if ((firstName.split(" ").length - 1) < 2) {
+        else if ((fullName.split(" ").length - 1) < 2) {
             setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
 
         }
@@ -104,7 +87,7 @@ export default function RegisterGoogleUser() {
         }
         else if (firstNameError == null && phoneNumberError == null) {
             const body = {
-                firstName: firstName,
+                fullName: fullName,
                 phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,
                 gender: gender
             }
@@ -135,8 +118,8 @@ export default function RegisterGoogleUser() {
                         <div className='formInputIconDiv'>
                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                         </div>
-                        <input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
-                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الثلاثي</label>
+                        <input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
                     </div>
                     {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                     <div className={`formInputBox ${styles.radioBtnDiv}`}>
@@ -155,7 +138,7 @@ export default function RegisterGoogleUser() {
                     </div>
                     {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>بصيغة 05xxxxxxxx</p>}
                     <div className={styles.loginBtnBox}>
-                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || phoneNumberError || !firstName || !phoneNumber) ? true : false} >انشاء حساب</button>
+                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || phoneNumberError || !fullName || !phoneNumber) ? true : false} >انشاء حساب</button>
                     </div>
                 </form>
                 <p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink"> تسجيل الدخول</Link></p>

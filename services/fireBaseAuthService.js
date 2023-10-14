@@ -59,13 +59,13 @@ export const signupWithEmailAndPassword = async (email, password, firstName, pho
 			phone: phoneNumber.replace(/[0-9]/, "+966"),
 			gender: gender
 		}
-		if(!gender?.length){
+		if (!gender?.length) {
 			delete data?.gender
 		}
 		const params = {
 			data: body,
 		}
-		
+
 		await updateProfile(params).then(res => {
 			Router.push('/login')
 			fbq.event('Sign up', { email: email })

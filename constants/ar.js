@@ -24,7 +24,8 @@ export const inputSuccessMessages = {
     discountAppliedMsg: "تم تطبيق الخصم بنجاح", //The discount has been applied successfully
 }
 export const toastErrorMessage = {
-    emailPasswordErrorMsg: "يوجد خطأ بالايميل او كلمة السر ", //"There is an error with the email or password"
+    emailPasswordErrorMsg: "يوجد خطأ بالايميل او بكلمة السر ", //"There is an error with the email or password"
+    emailNotFoundMsg: "الايميل غير صحيح او انه الحساب محذوف", //"Email is incorrect or the account is deleted"
     imageUploadFailedMsg: " فشلت عملية رفع الصورة", //"image upload failed"
     passWordIncorrectErrorMsg: 'كلمة السر غير صحيحة', //'password is incorrect'
     seatsAvailableMsg: "رح نعلمك اول ما نضيف او نوسع المقاعد", //you will get notified once seats are available
@@ -37,6 +38,7 @@ export const toastErrorMessage = {
 
 export const toastSuccessMessage = {
     successLoginMsg: "تم تسجيل الدخول بنجاح", // "Successfully logged in",
+    successRegisterMsg: "لقد تم تسجيل حسابك بنجاح",//"Successfully registered",
     mobileNoUpdateMsg: "تم تحديث رقم الجوال بنجاح", //The mobile number has been updated successfully.
     profileUpdateMsg: "تم تحديث الملف الشخصي بنجاح", //"Profile updated successfully"
     profilePictureUpdateMsg: "تم تحديث صورة الملف الشخصي بنجاح", //Profile picture updated successfully.
