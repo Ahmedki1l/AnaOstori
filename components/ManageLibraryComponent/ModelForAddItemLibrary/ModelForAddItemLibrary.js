@@ -5,7 +5,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
-import { addItemToFolderAPI, postRouteAPI, updateItemToFolderAPI } from '../../../services/apisService';
+import { postRouteAPI, updateItemToFolderAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 import CustomButton from '../../CommonComponents/CustomButton'
@@ -52,9 +52,7 @@ const ModelForAddItemLibrary = ({
 
     const addItemToFolder = async (e) => {
         if (existingItemName.includes(e.name)) {
-            toast.error(folderType == "video" ? videoToastMsgConst.videoNameDuplicateErrorMsg :
-                folderType == "quiz" ? examToastMsgConst.examNameDuplicateErrorMsg :
-                    pdfToastMsgConst.pdfNameDuplicateErrorMsg)
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
             return
         }
         if (!fileUploadResponceData && folderType !== "quiz") {
@@ -94,7 +92,7 @@ const ModelForAddItemLibrary = ({
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await addItemToFolderAPI(data).then(res => {
+                    await postRouteAPI(data).then(res => {
                         toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                             folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
                                 pdfToastMsgConst.addPdfSuccessMsg)
@@ -111,9 +109,7 @@ const ModelForAddItemLibrary = ({
 
     const editFolderItems = async (e) => {
         if (existingItemName.includes(e.name)) {
-            toast.error(folderType == "video" ? videoToastMsgConst.videoNameDuplicateErrorMsg :
-                folderType == "quiz" ? examToastMsgConst.examNameDuplicateErrorMsg :
-                    pdfToastMsgConst.pdfNameDuplicateErrorMsg)
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
             return
         }
         if (!fileUploadResponceData) {

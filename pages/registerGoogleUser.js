@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { useRouter } from 'next/router'
-import { getRouteAPI, myCoursesAPI, updateProfile } from '../services/apisService'
+import { getAuthRouteAPI, updateProfile } from '../services/apisService'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
@@ -32,11 +32,8 @@ export default function RegisterGoogleUser() {
     const storeData = useSelector((state) => state?.globalStore);
     const handleStoreUpdate = async () => {
         try {
-            const data = {
-                routeName: "viewProfile"
-            }
-            const viewProfileReq = getRouteAPI(data)
-            const getMyCourseReq = myCoursesAPI()
+            const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
+            const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
             const [viewProfileData, myCourseData] = await Promise.all([
                 viewProfileReq, getMyCourseReq

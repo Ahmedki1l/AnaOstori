@@ -24,9 +24,9 @@ export async function getServerSideProps(context) {
 	const params = context.query
 	try {
 		const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
-		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`)
+		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`)
 		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
-		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/home/metadata`)
+		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=homeMetaData`)
 		const [news, catagories, homeMetaData] = await Promise.all([
 			// const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
 			newsReq,

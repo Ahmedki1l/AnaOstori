@@ -1,5 +1,5 @@
 import { ConfigProvider, Drawer, Table, Tag } from "antd";
-import { createOrderAPI, managePurchaseOrdersAPI, postRouteAPI } from "../../../services/apisService";
+import { postAuthRouteAPI, postRouteAPI } from "../../../services/apisService";
 import { useEffect, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";
@@ -39,12 +39,13 @@ const Index = () => {
                 const changeStatusForAssistantKey = async () => {
                     let body = {
                         orderData: {
+                            routeName: 'createOrder',
                             orderUpdate: true,
                             id: _record?.id,
                             assistanceAquired: !text
                         }
                     }
-                    await createOrderAPI(body).then((res) => {
+                    await postAuthRouteAPI(body).then((res) => {
                         getPurchaseOrderList(1)
                         if (text) {
                             toast.success(managePurchaseOrderConst.studentHasNotContacted)
@@ -55,9 +56,14 @@ const Index = () => {
                     }).catch(async (error) => {
                         if (error?.response?.status == 401) {
                             await getNewToken().then(async (token) => {
-                                await createOrderAPI(body).then((res) => {
+                                await postAuthRouteAPI(body).then((res) => {
                                     getPurchaseOrderList(1)
-                                    toast.success(' student contact successfully')
+                                    if (text) {
+                                        toast.success(managePurchaseOrderConst.studentHasNotContacted)
+                                    }
+                                    else {
+                                        toast.success(managePurchaseOrderConst.studentHasContacted)
+                                    }
                                 })
                             }).catch(error => {
                                 console.error("Error:", error);
@@ -196,7 +202,6 @@ const Index = () => {
             limit: 10,
             order: "createdAt DESC"
         }
-        console.log(data);
         await postRouteAPI(data).then((res) => {
             console.log(res);
             setPaginationConfig({
@@ -214,7 +219,7 @@ const Index = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await managePurchaseOrdersAPI(data).then((res) => {
+                    await postRouteAPI(data).then((res) => {
                         setPaginationConfig({
                             ...paginationConfig,
                             total: res.data.totalItems,
@@ -226,42 +231,6 @@ const Index = () => {
             }
         })
     }
-
-    // const getPurchaseOrderList = async (pageNo) => {
-    //     let data = {
-    //         pageNo: pageNo,
-    //         limit: 10,
-    //         order: "createdAt DESC"
-    //     }
-    //     await managePurchaseOrdersAPI(data).then((res) => {
-    //         console.log(res);
-    //         setPaginationConfig({
-    //             ...paginationConfig,
-    //             total: res.data.totalItems,
-    //         })
-    //         const purchaseOrderList = res.data.data.map((item) => {
-    //             return {
-    //                 ...item,
-    //                 key: item.id
-    //             }
-    //         })
-    //         setPurchaseOrderList(purchaseOrderList)
-    //         setCurrentPage(res.data.currentPage)
-    //     }).catch(async (error) => {
-    //         if (error?.response?.status == 401) {
-    //             await getNewToken().then(async (token) => {
-    //                 await managePurchaseOrdersAPI(data).then((res) => {
-    //                     setPaginationConfig({
-    //                         ...paginationConfig,
-    //                         total: res.data.totalItems,
-    //                     })
-    //                 })
-    //             }).catch(error => {
-    //                 console.error("Error:", error);
-    //             });
-    //         }
-    //     })
-    // }
 
     const handleTableChange = (pagination, filter, sorter) => {
         getPurchaseOrderList(pagination.current)

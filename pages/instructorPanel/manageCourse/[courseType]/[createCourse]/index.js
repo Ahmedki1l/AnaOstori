@@ -8,7 +8,7 @@ import TestsResults from '../../../../../components/CreateCourseComponent/TestsR
 import TheStudents from '../../../../../components/CreateCourseComponent/TheStudents/TheStudents';
 import Attendance from '../../../../../components/CreateCourseComponent/Attendance/Attendance';
 import { useSelector } from 'react-redux';
-import { getAllAvailabilityAPI } from '../../../../../services/apisService';
+import { getAuthRouteAPI } from '../../../../../services/apisService';
 import { useDispatch } from 'react-redux';
 import BackToPath from '../../../../../components/CommonComponents/BackToPath';
 import { getNewToken } from '../../../../../services/fireBaseAuthService';
@@ -34,9 +34,11 @@ export default function Index() {
             return;
         }
         let body = {
+            routeName: 'availabilityByCourse',
             courseId: courseId,
+            gender: "all"
         }
-        await getAllAvailabilityAPI(body).then((res) => {
+        await getAuthRouteAPI(body).then(res => {
             dispatch({
                 type: 'SET_AllAVAILABILITY',
                 availabilityList: res?.data,
@@ -44,7 +46,7 @@ export default function Index() {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getAllAvailabilityAPI(body).then(res => {
+                    await getAuthRouteAPI(body).then(res => {
                         dispatch({
                             type: 'SET_AllAVAILABILITY',
                             availabilityList: res?.data,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
-import { createFolderAPI, getFolderListAPI, getItemListAPI } from '../../../services/apisService';
+import { getFolderListAPI, getItemListAPI, postAuthRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
@@ -110,20 +110,23 @@ function Index() {
         router.push(`/instructorPanel/manageLibrary/createCoursePath`)
     }
     const handleCreateFolder = async ({ name }) => {
-        let data = {
-            data: {
-                name: name,
-                type: selectedItem,
-            }
+        if (existingItemName.includes(name)) {
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
+            return
         }
-        await createFolderAPI(data).then((res) => {
+        let data = {
+            routeName: 'createFolder',
+            name: name,
+            type: selectedItem,
+        }
+        await postAuthRouteAPI(data).then((res) => {
             toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await createFolderAPI(body).then(res => {
+                    await postAuthRouteAPI(data).then(res => {
                         toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
                         setIsModelForAddFolderOpen(false)
                         getfolderList(selectedItem)
@@ -140,7 +143,6 @@ function Index() {
         // don't delete 
     }
     const handleModelClose = (folderId) => {
-        console.log('closed');
         setIsModelForAddItemOpen(false)
         setCancleUpload(true)
         // getItemList(folderId)

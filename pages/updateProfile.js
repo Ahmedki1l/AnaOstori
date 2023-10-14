@@ -4,7 +4,7 @@ import loaderColor from '../public/icons/loaderColor.svg'
 import styles from '../styles/updateProfile.module.scss'
 import { toast } from "react-toastify";
 import { useEffect, useState } from 'react';
-import { getRouteAPI, updateProfile, uploadProfileImage } from '../services/apisService';
+import { getAuthRouteAPI, postAuthRouteAPI, updateProfile, uploadProfileImage } from '../services/apisService';
 import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,7 +35,10 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         setFirstName(storeData?.viewProfileData?.firstName);
-        // setLastName(storeData?.viewProfileData?.lastName)
+        if (storeData?.viewProfileData?.phone) {
+            setPhoneNumber(storeData?.viewProfileData?.phone.replace('966', '0'));
+        }
+        setGender(storeData?.viewProfileData?.gender)
         setProfileUrl(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
     }, [storeData?.viewProfileData])
 
@@ -105,9 +108,9 @@ const UpdateProfile = () => {
 
             const data = {
                 firstName: firstName,
-                phoneNumber: phoneNumber,
+                fullName: firstName,
+                phone: phoneNumber && phoneNumber.replace(/[0-9]/, '+966'),
                 gender: gender
-                // lastName: lastName
             }
 
             if (!phoneNumber?.length) {
@@ -118,22 +121,14 @@ const UpdateProfile = () => {
                 routeName: 'updateProfileHandler',
                 data: data,
             }
-            const body = {
-                routeName: "viewProfile"
-            }
-            await getRouteAPI(params).then(async (res) => {
-                console.log(res);
+            await postAuthRouteAPI(params).then(async (res) => {
                 toast.success(toastSuccessMessage.profileUpdateMsg)
                 setShowLoader(false)
-                await getRouteAPI(body).then(res => {
-                    dispatch({
-                        type: 'SET_PROFILE_DATA',
-                        viewProfileData: res?.data,
-                    });
-                    Router.push('/myProfile')
-                }).catch(error => {
-                    console.log(error);
-                })
+                dispatch({
+                    type: 'SET_PROFILE_DATA',
+                    viewProfileData: res?.data,
+                });
+                Router.push('/myProfile')
             }).catch(error => {
                 toast.error(error)
                 setShowLoader(false)
@@ -150,32 +145,22 @@ const UpdateProfile = () => {
                     <div>
                         <form onSubmit={handleSubmit}>
                             <div className={`maxWidthDefault ${styles.updateProfileWrapper}`}>
-                                <div>
-                                    <ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={profileUrl} />
-                                    <label className={styles.defaultText} style={uploadLoader ? { color: "#808080" } : { color: "#F26722" }} htmlFor="image">
-                                        <span>تغيير الصورة الشخصية</span> {uploadLoader ? <Image src={loaderColor} width={20} height={15} alt="Loder Picture" /> : ""}
-                                    </label>
-                                    <input style={{ display: "none" }} id="image" type="file" onChange={uploadPhoto}
-                                    />
-                                </div>
+                                <ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={profileUrl} />
+                                <label className={styles.defaultText} style={uploadLoader ? { color: "#808080" } : { color: "#F26722" }} htmlFor="image">
+                                    <span>تغيير الصورة الشخصية</span> {uploadLoader ? <Image src={loaderColor} width={20} height={15} alt="Loder Picture" /> : ""}
+                                </label>
+                                <input style={{ display: "none" }} id="image" type="file" onChange={uploadPhoto}
+                                />
                                 <div className='w-full'>
                                     <p className={styles.notePara}><span>ملاحظة:</span> جميع البيانات مطلوبة ما عدا الصورة الشخصية</p>
                                 </div>
-                                {/* <div className='w-full'>
-                                    <div className={`${styles.loginPageInputBox} ${styles.loginPageSmallInputBox}`}>
-                                        <div className={styles.loginPageIconDiv}>
-                                            <Icon height={19} width={16} iconName={'person'} alt={'Persone Icon'} />
-                                        </div>
-                                        <input className={styles.inputBox} type="text" name='firstName' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='الاسم الاول' />
-                                    </div> */}
-
                                 <div className='w-full'>
                                     <div className={`formInputBox ${styles.formFieldDiv}`}>
                                         <div className={`formInputIconDiv ${styles.iconDiv}`}>
                                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                                         </div>
-                                        <input className={firstNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
-                                        <label className={firstNameError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">الاسم الثلاثي</label>
+                                        <input className={firstNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='firstName' id='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
+                                        <label className={firstNameError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="firstName">الاسم الثلاثي</label>
                                     </div>
                                     {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                                 </div>

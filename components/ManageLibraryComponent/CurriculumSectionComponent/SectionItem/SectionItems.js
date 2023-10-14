@@ -57,29 +57,6 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
         })
     };
 
-    // const handleFreeUsage = async (e) => {
-    //     let body = {
-    //         data: [{
-    //             sectionId: sectionId,
-    //             itemId: e.id,
-    //             freeUsage: !e.sectionItem.freeUsage,
-    //             order: e.sectionItem.order + 1
-    //         }]
-    //     }
-    //     await updateItemOfSectionAPI(body).then((res) => {
-    //         const freeUsageItem = sectionItemList.map((item) => {
-    //             if (e.id === item.id) {
-    //                 item.sectionItem.freeUsage = !item.sectionItem.freeUsage
-    //                 return item
-    //             }
-    //             return item
-    //         })
-    //         setSectionItemList(freeUsageItem)
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     })
-    // }
-
     const handleFreeUsage = async (e, itemId) => {
         let body = {
             data: [{

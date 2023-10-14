@@ -4,7 +4,7 @@ import PhysicalCourseCard from '../../components/TypesOfCourseComponents/Physica
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRouteAPI } from '../../services/apisService';
+import { getAuthRouteAPI } from '../../services/apisService';
 import Spinner from '../../components/CommonComponents/spinner';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService';
 
@@ -12,7 +12,7 @@ import { getNewToken, signOutUser } from '../../services/fireBaseAuthService';
 
 export async function getServerSideProps(contex) {
 	const catagoryName = contex.query.catagoryName.replace(/-/g, ' ')
-	const catagories = await axios.get(`${process.env.API_BASE_URL}/catagoriesNoAuth`).then((response) => (response.data)).catch((error) => error);
+	const catagories = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then((response) => (response.data)).catch((error) => error);
 
 	const catagoryNamePresent = catagories.find((item) => item.name === catagoryName)
 	if (!catagoryNamePresent) {
@@ -64,7 +64,7 @@ export default function Index(props) {
 				let data = {
 					routeName: 'categories'
 				}
-				await getRouteAPI(data).then((res) => {
+				await getAuthRouteAPI(data).then((res) => {
 					res.data?.find((catagory) => {
 						if (catagory.name == catagoryName) {
 							setCoursesDetails(shortCourseOnType(catagory.courses))
@@ -74,7 +74,7 @@ export default function Index(props) {
 					console.log(error)
 					if (error?.response?.status == 401) {
 						await getNewToken().then(async (token) => {
-							await getRouteAPI(data).then(res => {
+							await getAuthRouteAPI(data).then(res => {
 								res.data?.find((catagory) => {
 									if (catagory.name == catagoryName) {
 										setCoursesDetails(shortCourseOnType(catagory.courses))

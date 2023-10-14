@@ -24,7 +24,8 @@ export const commonLibraryConst = {
     addBtnText: 'إضافة',
     updateBtnText: 'حفظ',
     nameErrorMsg: 'لازم تكتب العنوان',
-    discriptionErrorMsg: 'لازم تكتب وصف'
+    discriptionErrorMsg: 'لازم تكتب وصف',
+    nameDuplicateErrorMsg: 'ما ينفع تستخدم نفس العنوان',// name duplicate message
 }
 export const folderConst = {
     addAndEditFolderModelConst: {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import useWindowSize from '../../../../hooks/useWindoSize'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
-import { courseCurriculumAPI, getCompleteCourseItemIDAPI, getCourseItemAPI, getCourseProgressAPI, markCourseCompleteAPI, markItemCompleteAPI } from '../../../../services/apisService';
-import { signOutUser } from '../../../../services/fireBaseAuthService';
+import { getAuthRouteAPI, markCourseCompleteAPI, markItemCompleteAPI } from '../../../../services/apisService';
+import { getNewToken } from '../../../../services/fireBaseAuthService';
 import CCItemListComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemListComponent/CCItemListComponent'
 import CCItemVideoComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemVideoComponent/CCItemVideoComponent';
 import CCItemQuizComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemQuizComponent/CCItemQuizComponent';
@@ -41,14 +41,25 @@ export default function Index() {
 
     const chagenCourseItemHendler = async (itemID) => {
         if (itemID) {
-            const params = {
-                courseID,
-                itemID,
+            let currentItemParams = {
+                routeName: 'getItemById',
+                courseId: courseID,
+                itemId: itemID,
             }
-            await getCourseItemAPI(params).then((res) => {
+            await getAuthRouteAPI(currentItemParams).then((res) => {
                 setNewSelectedCourseItem(res.data)
                 router.push(`/myCourse/${courseID}/${itemID}`)
-            }).catch(error => console.log(error))
+            }).catch(async (error) => {
+                console.log(error)
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await getAuthRouteAPI(currentItemParams).then((res) => {
+                            setNewSelectedCourseItem(res.data)
+                            router.push(`/myCourse/${courseID}/${itemID}`)
+                        }).catch((error) => console.log(error))
+                    })
+                }
+            })
         }
     }
 
@@ -76,16 +87,31 @@ export default function Index() {
         if (courseID && currentItemId) {
             setLoading(true)
             const getPageProps = async () => {
+                let couresCurriculumParams = {
+                    routeName: 'getCourseCurriculum',
+                    courseId: courseID,
+                }
+                let courseProgressParams = {
+                    routeName: 'userCourseProgress',
+                    courseId: courseID,
+                    enrollmentId: selectedCourse.id,
+                }
+                let completedCourseItemParams = {
+                    routeName: 'CourseProgress',
+                    courseId: courseID,
+                    enrollmentId: selectedCourse.id,
+                }
+                let currentItemParams = {
+                    routeName: 'getItemById',
+                    courseId: courseID,
+                    itemId: currentItemId,
+                }
+
                 try {
-                    const params = {
-                        courseID: courseID,
-                        itemID: currentItemId,
-                        enrollmentId: selectedCourse.id
-                    }
-                    const courseCurriculumReq = courseCurriculumAPI(params)
-                    const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
-                    const courseProgressPrecentageReq = getCourseProgressAPI(params)
-                    const currentItemContentReq = getCourseItemAPI(params)
+                    const courseCurriculumReq = getAuthRouteAPI(couresCurriculumParams)
+                    const completedCourseItemReq = getAuthRouteAPI(completedCourseItemParams)
+                    const courseProgressPrecentageReq = getAuthRouteAPI(courseProgressParams)
+                    const currentItemContentReq = getAuthRouteAPI(currentItemParams)
 
                     const [courseCurriculum, completedCourseItem, courseProgressPrecentage, currentItemContent] = await Promise.all([
                         courseCurriculumReq,
@@ -110,7 +136,29 @@ export default function Index() {
                         setIsUserEnrolled(false)
                     }
                     if (error?.response?.status == 401) {
-                        getPageProps()
+                        await getNewToken().then(async (token) => {
+                            const courseCurriculumReq = getAuthRouteAPI(couresCurriculumParams)
+                            const completedCourseItemReq = getAuthRouteAPI(completedCourseItemParams)
+                            const courseProgressPrecentageReq = getAuthRouteAPI(courseProgressParams)
+                            const currentItemContentReq = getAuthRouteAPI(currentItemParams)
+
+                            const [courseCurriculum, completedCourseItem, courseProgressPrecentage, currentItemContent] = await Promise.all([
+                                courseCurriculumReq,
+                                completedCourseItemReq,
+                                courseProgressPrecentageReq,
+                                currentItemContentReq
+                            ])
+                            setCourseCurriculum(courseCurriculum.data)
+                            setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
+                            setCCSections(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+                            setCourseProgressPrecentage(courseProgressPrecentage.data)
+                            setCompletedCourseItem(completedCourseItem.data)
+                            setNewSelectedCourseItem(currentItemContent.data)
+                            getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+                            markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
+                            setLoading(false)
+                            setIsUserEnrolled(true)
+                        })
                     }
                 }
             }
@@ -190,9 +238,23 @@ export default function Index() {
 
     const downloadFileHandler = async (itemID) => {
         if (courseID) {
-            await getCourseItemAPI(courseID, itemID).then(async (item) => {
-                router.push(`${item.data.url}`)
-            }).catch((error) => console.log(error))
+            let currentItemParams = {
+                routeName: 'getItemById',
+                courseId: courseID,
+                itemId: itemID,
+            }
+            await getAuthRouteAPI(currentItemParams).then((res) => {
+                router.push(`${res.data.url}`)
+            }).catch(async (error) => {
+                console.log(error)
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await getAuthRouteAPI(currentItemParams).then((res) => {
+                            router.push(`${res.data.url}`)
+                        }).catch((error) => console.log(error))
+                    })
+                }
+            })
         }
     }
 

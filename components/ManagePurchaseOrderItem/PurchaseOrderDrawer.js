@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, FormItem } from '../antDesignCompo/FormItem'
 import Select from '../antDesignCompo/Select'
 import * as paymentConst from '../../constants/PaymentConst'
-import { createOrderAPI, getRouteAPI } from '../../services/apisService'
+import { postAuthRouteAPI } from '../../services/apisService'
 import styles from './purchaseOrderDrawer.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import Icon from '../CommonComponents/Icon'
@@ -60,8 +60,7 @@ const PurchaseOrderDrawer = (props) => {
                 status: value.status,
                 failedReason: value.failedReason
             }
-            console.log(body);
-            await getRouteAPI(body).then((res) => {
+            await postAuthRouteAPI(body).then((res) => {
                 console.log(res);
                 setShowBtnLoader(false)
                 props.onClose(true)
@@ -69,7 +68,7 @@ const PurchaseOrderDrawer = (props) => {
                 setShowBtnLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await getRouteAPI(body).then((res) => {
+                        await postAuthRouteAPI(body).then((res) => {
                             props.onClose(true)
                         })
                     }).catch(error => {
@@ -134,7 +133,7 @@ const PurchaseOrderDrawer = (props) => {
                     <p style={{ fontSize: '18px' }}>توضيح السبب  </p>
                     <FormItem
                         name={'failedReason'}
-                        rules={[{ required: true, message: 'please enter failed reason' }]}
+                        rules={[{ required: true, message: 'please enter reason for rejecting this order' }]}
                     >
                         <Input
                             width={425}

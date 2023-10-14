@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from '../styles/AccountInformation.module.scss'
 import loader from '../public/icons/loader.svg'
 import { toast } from "react-toastify";
-import { getRouteAPI, updateProfile } from '../services/apisService';
+import { getAuthRouteAPI, updateProfile } from '../services/apisService';
 import { changeEmail, signOutUser, verifyPassword } from '../services/fireBaseAuthService';
 import Image from 'next/image'
 import ChangePassword from '../components/AccountInformation/ChangePassword/ChangePassword';
@@ -107,7 +107,7 @@ export default function AccountInformation() {
         const data = {
             routeName: "viewProfile"
         }
-        await getRouteAPI(data).then(res => {
+        await getAuthRouteAPI(data).then(res => {
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,

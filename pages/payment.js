@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getPaymentInfoAPI, myCoursesAPI } from '../services/apisService';
+import { getPaymentInfoAPI } from '../services/apisService';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
@@ -35,7 +35,7 @@ export default function Payment(props) {
                 response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
                 setLoading(false)
                 setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
-                const getMyCourseReq = myCoursesAPI()
+                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
                 const [myCourseData] = await Promise.all([getMyCourseReq])
                 dispatch({
                     type: 'SET_ALL_MYCOURSE',

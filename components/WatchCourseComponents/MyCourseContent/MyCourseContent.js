@@ -4,7 +4,6 @@ import useWindowSize from '../../../hooks/useWindoSize'
 import TrainerIntroCard from '../../CommonComponents/TrainerIntroCard/TrainerIntroCard'
 import styles from './MyCourseContent.module.scss'
 import CompleteCourseIndicator from '../../CommonComponents/CompleteCourseIndicatior/CompleteCourseIndicator'
-import { getCourseItemAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { mediaUrl } from '../../../constants/DataManupulation'
@@ -33,12 +32,13 @@ export default function MyCourseContent(props) {
 
 	const downloadFileHandler = async (itemID) => {
 		if (courseID) {
-			const params = {
-				courseID,
-				itemID,
+			let currentItemParams = {
+				routeName: 'getItemById',
+				courseId: courseID,
+				itemId: itemID,
 			}
-			await getCourseItemAPI(params).then(async (item) => {
-				router.push(`${item.data.url}`)
+			await getAuthRouteAPI(currentItemParams).then((res) => {
+				router.push(`${res.data.url}`)
 			}).catch((error) => console.log(error))
 		}
 	}

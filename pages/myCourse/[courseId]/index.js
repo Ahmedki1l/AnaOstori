@@ -3,7 +3,7 @@ import styles from '../../../styles/MyCourse.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import useWindowSize from '../../../hooks/useWindoSize';
 import { useRouter } from 'next/router';
-import { courseCurriculumAPI, getCompleteCourseItemIDAPI, getCourseItemAPI, getCourseProgressAPI } from '../../../services/apisService';
+import { getAuthRouteAPI } from '../../../services/apisService';
 import { signOutUser } from '../../../services/fireBaseAuthService';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import Image from 'next/legacy/image';
@@ -33,14 +33,25 @@ export default function Index() {
     useEffect(() => {
         if (courseID) {
             const getPageProps = async () => {
+                let couresCurriculumParams = {
+                    routeName: 'getCourseCurriculum',
+                    courseId: courseID,
+                }
+                let courseProgressParams = {
+                    routeName: 'userCourseProgress',
+                    courseId: courseID,
+                    enrollmentId: selectedCourse.id,
+                }
+                let completedCourseItemParams = {
+                    routeName: 'CourseProgress',
+                    courseId: courseID,
+                    enrollmentId: selectedCourse.id,
+                }
                 try {
-                    const params = {
-                        courseID,
-                        enrollmentId: selectedCourse.id
-                    }
-                    const courseCurriculumReq = courseCurriculumAPI(params)
-                    const courseProgressReq = getCourseProgressAPI(params)
-                    const completedCourseItemReq = getCompleteCourseItemIDAPI(params)
+
+                    const courseCurriculumReq = getAuthRouteAPI(couresCurriculumParams)
+                    const courseProgressReq = getAuthRouteAPI(courseProgressParams)
+                    const completedCourseItemReq = getAuthRouteAPI(completedCourseItemParams)
 
                     const [courseCurriculum, courseProgress, completedCourseItem] = await Promise.all([
                         courseCurriculumReq,
@@ -54,10 +65,9 @@ export default function Index() {
                     getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
                 } catch (error) {
                     if (error?.response?.status == 401) {
-                        signOutUser()
-                        dispatch({
-                            type: 'EMPTY_STORE'
-                        });
+                        await getNewToken().then(async (token) => {
+                            getPageProps()
+                        })
                     }
                 }
             }
@@ -76,26 +86,27 @@ export default function Index() {
     }, [courseCurriculum])
 
     const downloadFileHandler = async (itemID) => {
-        if (courseID) {
-            const params = {
-                courseID,
-                itemID,
-            }
-            await getCourseItemAPI(params).then((item) => {
-                router.push(`${item?.data?.url}`)
-            }).catch((error) => {
-                console.log(error)
-                if (error?.response?.status == 401) {
-                    signOutUser()
-                    dispatch({
-                        type: 'EMPTY_STORE'
-                    });
-                }
-            })
-        }
+        // if (courseID) {
+        //     const params = {
+        //         courseID,
+        //         itemID,
+        //     }
+        //     await getCourseItemAPI(params).then((item) => {
+        //         router.push(`${item?.data?.url}`)
+        //     }).catch((error) => {
+        //         console.log(error)
+        //         if (error?.response?.status == 401) {
+        //             signOutUser()
+        //             dispatch({
+        //                 type: 'EMPTY_STORE'
+        //             });
+        //         }
+        //     })
+        // }
     }
 
     const getCurrentItemId = (watchedItems, ccSections) => {
+        console.log(watchedItems);
         if (watchedItems.length == 0) {
             setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id)
             router.push(`/myCourse/${courseID}/${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id}`)
