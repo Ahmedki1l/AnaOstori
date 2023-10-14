@@ -42,7 +42,6 @@
 .noteText {
 	color: var(--grary-not-selected, #808080);
 	text-align: right;
-	font-family: Tajawal;
 	font-size: 12px;
 	font-style: normal;
 	font-weight: 400;
@@ -78,7 +77,6 @@
 
 .formFieldLabel {
 	color: var(--grary-not-selected, #808080);
-	font-family: Tajawal;
 	font-size: 16px;
 	font-style: normal;
 	font-weight: 400;
@@ -89,7 +87,6 @@
 
 .formFieldLabelError {
 	color: #E5342F, ;
-	font-family: Tajawal;
 	font-size: 16px;
 	font-style: normal;
 	font-weight: 400;
@@ -178,7 +175,6 @@
 
 .titleLabel {
 	color: #191919;
-	font-family: Tajawal;
 	font-size: 18px;
 	font-style: normal;
 	font-weight: 500;
@@ -188,12 +184,10 @@
 
 .notePara {
 	color: #191919;
-	font-family: Tajawal;
 	font-size: 16px;
 	font-style: normal;
 	font-weight: 400;
 	line-height: normal;
-	margin-bottom: 1rem;
 
 	span {
 		color: #E5342F;

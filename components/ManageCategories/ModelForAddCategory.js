@@ -8,7 +8,7 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { createCatagoryAPI, editCatagoryAPI, postRouteAPI } from '../../services/apisService';
+import { editCatagoryAPI, postRouteAPI } from '../../services/apisService';
 import { toast } from 'react-toastify';
 import { createAndEditBtnText } from '../../constants/ar';
 import { getNewToken } from '../../services/fireBaseAuthService';

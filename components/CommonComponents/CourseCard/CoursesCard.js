@@ -2,9 +2,7 @@ import styles from './CoursesCard.module.scss'
 import Link from 'next/link';
 import CoverImg from '../CoverImg';
 import Router from 'next/router';
-import ProgressBar from '../progressBar';
 import { useEffect, useState } from 'react';
-import { getCourseProgressAPI } from '../../../services/apisService';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { mediaUrl } from '../../../constants/DataManupulation';
 import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
@@ -14,29 +12,12 @@ import ContentAccessModal from '../ContentAccessModal/ContentAccessModal';
 
 export default function CoursesCard(props) {
 	const courseDetails = props?.data?.course
-	const [courseProgress, setCourseProgress] = useState(0)
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
 	const contentAccess = props?.data?.availability?.contentAccess
 	const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
 	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/anaOstori.png'
 
 	const date = props?.data?.availability
-
-	useEffect(() => {
-		if (courseDetails.type == "on-demand") {
-			const getCourseProgress = async () => {
-				const params = {
-					courseID: courseDetails.id,
-				}
-				await getCourseProgressAPI(params).then((res) => {
-					setCourseProgress(Math.floor(res?.data?.overallProgress))
-				}).catch((error) => {
-					console.log(error);
-				})
-			}
-			getCourseProgress()
-		}
-	}, [courseDetails])
 
 	useEffect(() => {
 		const date = new Date(props?.data?.createdAt);
@@ -71,8 +52,6 @@ export default function CoursesCard(props) {
 
 					{courseDetails.type == "on-demand" ?
 						<>
-							{/* <h1 className={styles.progressText}>مستوى التقدم</h1>
-							<ProgressBar percentage={courseProgress} bgColor={'#2BB741'} fontSize={17} /> */}
 							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة التقدم</button>
 						</>
 						:

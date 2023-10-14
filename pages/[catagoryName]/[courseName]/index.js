@@ -14,7 +14,7 @@ import useScrollEvent from '../../../hooks/useScrollEvent'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRouteAPI } from '../../../services/apisService'
+import { getAuthRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
 import { mediaUrl, secondsToMinutes } from '../../../constants/DataManupulation'
@@ -26,7 +26,7 @@ import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/Mo
 export async function getServerSideProps(ctx) {
 	const lang = ctx?.resolvedUrl.split('/')[2].split('=')[1] == 'en' ? 'en' : 'ar'
 	const courseName = lang == 'en' ? ctx?.resolvedUrl.split('/')[2].split('?')[0].replace(/-/g, ' ') : ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ')
-	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/courseByNameWithoutAuth/${courseName}`)
+	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`)
 	// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 
 
@@ -38,11 +38,11 @@ export async function getServerSideProps(ctx) {
 		courseDetailsReq,
 	])
 
-	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/male`)
+	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.data.id}&gender=male`)
 
-	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/female`)
+	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.data.id}&gender=female`)
 
-	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.data.id}/mix`)
+	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.data.id}&gender=mix`)
 
 
 	const [maleDates, femaleDates, mixDates] = await Promise.all([
@@ -51,7 +51,7 @@ export async function getServerSideProps(ctx) {
 		mixDatesReq,
 	])
 
-	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/course/curriculumNOAuth/${courseDetails.data.id}`)
+	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.data.id}`)
 		.then((response) => (response.data))
 		.catch((error) => error);
 	if (courseDetails.data == null) {
@@ -140,7 +140,7 @@ export default function Index(props) {
 			let data = {
 				routeName: 'categories'
 			}
-			await getRouteAPI(data).then((res) => {
+			await getAuthRouteAPI(data).then((res) => {
 				router.push({
 					pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 					query: query ? query : "",
@@ -149,7 +149,7 @@ export default function Index(props) {
 				console.log(error);
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
-						await getRouteAPI(data).then((res) => {
+						await getAuthRouteAPI(data).then((res) => {
 							router.push({
 								pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 								query: query ? query : "",
@@ -205,8 +205,7 @@ export default function Index(props) {
 				routeName: 'courseByName',
 				name: courseDetail?.name,
 			}
-			await getRouteAPI(data).then((res) => {
-				console.log(res);
+			await getAuthRouteAPI(data).then((res) => {
 				res.data?.subscriptions?.forEach((item) => {
 					if (item.type == 'male') {
 						setIsMaleSubscribed(true)
@@ -220,7 +219,7 @@ export default function Index(props) {
 				console.log("error", err);
 				if (err?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
-						await getRouteAPI(data).then((res) => {
+						await getAuthRouteAPI(data).then((res) => {
 							res.data?.subscriptions?.forEach((item) => {
 								if (item.type == 'male') {
 									setIsMaleSubscribed(true)

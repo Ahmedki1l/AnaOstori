@@ -1,4 +1,4 @@
-import { accountRecovery, deleteAccount, getRouteAPI } from '../../../services/apisService';
+import { postAuthRouteAPI } from '../../../services/apisService';
 import styles from './DeleteAccount.module.scss';
 import { toast } from "react-toastify";
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { toastSuccessMessage } from '../../../constants/ar';
 import Image from 'next/legacy/image';
 import loader from '../../../public/icons/loader.svg'
+import { getNewToken } from '../../../services/fireBaseAuthService';
 
 
 
@@ -19,39 +20,52 @@ const DeleteAccount = ({ data }) => {
 
     const handleDeleteAccount = async () => {
         setShowLoader(true)
-        const data = {
-            routeName: "viewProfile"
-        }
-        await deleteAccount().then(async (res) => {
-            await getRouteAPI(data).then(res => {
-                dispatch({
-                    type: 'SET_PROFILE_DATA',
-                    viewProfileData: res?.data,
-                });
-                setShowLoader(false)
-            }).catch(error => {
-                console.log(error);
-                setShowLoader(false)
-            })
-            setAccountsSectionType('accountRecovery')
-        }).catch(error => {
+        await postAuthRouteAPI({ routeName: "deleteProfile" }).then(async (res) => {
+            dispatch({
+                type: 'SET_PROFILE_DATA',
+                viewProfileData: res?.data,
+            });
             setShowLoader(false)
+        }).catch(async (error) => {
             console.log(error);
-            toast.error(error)
+            setShowLoader(false)
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await postAuthRouteAPI({ routeName: "deleteProfile" }).then(async (res) => {
+                        dispatch({
+                            type: 'SET_PROFILE_DATA',
+                            viewProfileData: res?.data,
+                        });
+                        setShowLoader(false)
+                    })
+                })
+            }
         })
+        setAccountsSectionType('accountRecovery')
     }
 
     const handleAccountRecovery = async () => {
-        await accountRecovery().then(res => {
+        await postAuthRouteAPI({ routeName: "activateProfile" }).then(async (res) => {
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
             });
             setAccountsSectionType('default')
             toast.success(toastSuccessMessage.accountRestoredMsg)
-        }).catch(error => {
+        }).catch(async (error) => {
             console.log(error);
             toast.error(error)
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await postAuthRouteAPI({ routeName: "activateProfile" }).then(async (res) => {
+                        dispatch({
+                            type: 'SET_PROFILE_DATA',
+                            viewProfileData: res?.data,
+                        });
+                        setShowLoader(false)
+                    })
+                })
+            }
         })
     }
 

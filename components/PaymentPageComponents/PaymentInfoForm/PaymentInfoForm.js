@@ -15,6 +15,7 @@ import * as fbq from '../../../lib/fpixel'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
 import { mediaUrl } from '../../../constants/DataManupulation'
+import { getRouteAPI } from '../../../services/apisService'
 
 
 export default function PaymentInfoForm(props) {
@@ -72,10 +73,11 @@ export default function PaymentInfoForm(props) {
 
 	const handleCheckCouponIsValid = async () => {
 		let data = {
+			routeName: 'checkCouponValidity',
 			courseId: createdOrder.courseId,
 			coupon: couponCode
 		}
-		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/coupon/isValid`, data).then(res => {
+		await getRouteAPI(data).then(res => {
 			if (res.status != 200) { return }
 			setCouponAppliedData(res.data)
 			setCouponError(false)
@@ -221,7 +223,7 @@ export default function PaymentInfoForm(props) {
 						<label className={`formLabel ${styles.couponCodeLabel}`} htmlFor="couponCode">كود الخصم</label>
 						<div className={styles.applyCouponBtnBox}>
 							{couponCode?.length > 0 ?
-								<button className={`fontMedium ${styles.couponCodeBtn}`} onClick={() => handleCheckCouponIsValid()}>تطبيق</button>
+								<button className={`fontMedium cursor-pointer ${styles.couponCodeBtn}`} onClick={() => handleCheckCouponIsValid()}>تطبيق</button>
 								:
 								<button className={`${styles.couponCodeBtn} ${styles.DisCouponCodeBtn}`}>تطبيق</button>
 							}

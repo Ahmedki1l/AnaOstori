@@ -8,7 +8,7 @@ import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
-import { editInstroctorAPI, getInstructorListAPI } from '../../../services/apisService'
+import { getInstructorListAPI, postRouteAPI } from '../../../services/apisService'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -67,10 +67,11 @@ const Index = () => {
     }
     const handleDeleteFolderItems = async () => {
         let body = {
+            routeName: "updateInstructorHandler",
             id: editInstructor.id,
             isDeleted: true
         }
-        await editInstroctorAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             toast.success(instructorConst.successConfirmDeleteInstructorToast)
             getInstructorListReq()
         }).catch((err) => {

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import UserInfoForm from "../../../../components/PaymentPageComponents/UserInfoForm/UserInfoForm";
 import PaymentInfoForm from "../../../../components/PaymentPageComponents/PaymentInfoForm/PaymentInfoForm";
 import axios from 'axios';
-import { createOrderAPI, getRouteAPI, postAuthRouteAPI } from '../../../../services/apisService'
+import { postAuthRouteAPI } from '../../../../services/apisService'
 import { useDispatch, useSelector } from 'react-redux';
-import { getNewToken, signOutUser } from '../../../../services/fireBaseAuthService';
+import { getNewToken } from '../../../../services/fireBaseAuthService';
 import Spinner from '../../../../components/CommonComponents/spinner';
 import * as fbq from '../../../../lib/fpixel'
 import { inputErrorMessages } from '../../../../constants/ar';
@@ -13,15 +13,14 @@ import { toast } from 'react-toastify';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 	const courseName = resolvedUrl.split('/')[2].replace(/-/g, ' ')
-	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/courseByNameWithoutAuth/${courseName}`)
+	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`)
 		.then((response) => (response.data)).catch((error) => error);
 
-	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.id}/male`)
+	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.id}&gender=male`)
 
-	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.id}/female`)
+	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.id}&gender=female`)
 
-	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/availibiltyByCourseId/${courseDetails.id}/mix`)
-
+	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.id}&gender=mix`)
 
 	const [maleDates, femaleDates, mixDates] = await Promise.all([
 		maleDatesReq,
@@ -87,11 +86,6 @@ export default function Index(props) {
 						}
 					]
 				}
-				// const params = {
-				// 	routeName: 'createOrder',
-				// 	...orderData,
-				// }
-				console.log(orderData);
 				await postAuthRouteAPI(orderData).then(res => {
 					setCreatedOrder(res.data)
 					generateCheckoutId(res.data.id)
@@ -99,7 +93,7 @@ export default function Index(props) {
 					console.log(error)
 					if (error?.response?.status == 401) {
 						await getNewToken().then(async (token) => {
-							await postAuthRouteAPI(params).then(res => {
+							await postAuthRouteAPI(orderData).then(res => {
 								setCreatedOrder(res.data)
 								generateCheckoutId(res.data.id)
 							})
@@ -240,23 +234,24 @@ export default function Index(props) {
 				if (courseType == 'on-demand') data.availabilityId = null
 			})
 			let orderData = {
+				routeName: 'createOrder',
 				courseId: courseDetails.id,
 				people: createOrderData
 			}
-			const params = {
-				orderData,
-			}
+			// const params = {
+			// 	orderData,
+			// }
 
-			await createOrderAPI(params).then(res => {
+			await postAuthRouteAPI(orderData).then(res => {
 				setCreatedOrder(res.data)
 				generateCheckoutId(res.data.id)
 			}).catch(async (error) => {
 				console.log(error)
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
-						await createOrderAPI(params).then(res => {
+						await postAuthRouteAPI(orderData).then(res => {
 							setCreatedOrder(res.data)
-							// generateCheckoutId(res.data.id)
+							generateCheckoutId(res.data.id)
 						})
 					}).catch(error => {
 						console.error("Error:", error);

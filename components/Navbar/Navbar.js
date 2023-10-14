@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService'
-import { getCurriculumIdsAPI, getInstructorListAPI, getRouteAPI, myCoursesAPI, } from '../../services/apisService';
+import { getCurriculumIdsAPI, getInstructorListAPI, getAuthRouteAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
@@ -53,29 +53,20 @@ export default function Navbar() {
 
 
 	const catagoryNoAuth = async () => {
-		await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
+		await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then(res => {
 			setCatagories(res?.data)
 		}).catch(async (error) => {
-			if (error?.response?.status == 401) {
-				await getNewToken().then(async (token) => {
-					await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/catagoriesNoAuth`).then(res => {
-						setCatagories(res?.data)
-					})
-				})
-			}
 			console.log(error);
 		})
 	};
 
 	const catagoryAuth = async () => {
 		try {
-			let data = {
-				routeName: 'categories'
-			}
-			const getcatagoriReq = getRouteAPI(data)
+
+			const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
 			const getCurriculumIdsReq = getCurriculumIdsAPI()
 			const getInstructorListReq = getInstructorListAPI()
-			const getMyCourseReq = myCoursesAPI()
+			const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
 
 			const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
@@ -102,14 +93,10 @@ export default function Navbar() {
 			console.log("NavBarError", error);
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
-					let data = {
-						routeName: 'categories'
-					}
-					const getcatagoriReq = getRouteAPI(data)
+					const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
 					const getCurriculumIdsReq = getCurriculumIdsAPI()
 					const getInstructorListReq = getInstructorListAPI()
-					const getMyCourseReq = myCoursesAPI()
-
+					const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
 					const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
 						getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
