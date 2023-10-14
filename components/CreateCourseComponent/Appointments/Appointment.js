@@ -457,11 +457,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                 {showSwitchBtn &&
                                     <>
                                         <div className='flex items-center'>
-                                            <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
+                                            <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
                                             <p className={styles.recordedcourse}>إظهار المقرر للطلاب</p>
                                         </div>
                                         <div className='flex items-center'>
-                                            <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
+                                            <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
                                             <p className={styles.recordedcourse}>إخفاء الموعد</p>
                                         </div>
                                     </>

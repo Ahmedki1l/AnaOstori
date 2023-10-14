@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useWindowSize from '../../../../hooks/useWindoSize'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
-import { getAuthRouteAPI, markCourseCompleteAPI, markItemCompleteAPI } from '../../../../services/apisService';
+import { getAuthRouteAPI, postAuthRouteAPI } from '../../../../services/apisService';
 import { getNewToken } from '../../../../services/fireBaseAuthService';
 import CCItemListComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemListComponent/CCItemListComponent'
 import CCItemVideoComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemVideoComponent/CCItemVideoComponent';
@@ -72,11 +72,14 @@ export default function Index() {
         setIsAllItemsCompleted(allItemsCompleted)
         if (allItemsCompleted) {
             const params = {
-                courseID,
-                itemID: currentItemId,
-                enrollmentId: selectedCourse?.id
+                routeName: 'markItemComplete',
+                courseId: courseID,
+                itemId: currentItemId,
+                enrollmentId: selectedCourse.id,
+                type: 'markCourseComplete',
+                value: true
             }
-            await markCourseCompleteAPI(params).then((res) => {
+            await postAuthRouteAPI(params).then((res) => {
             }).catch((error) => {
                 console.log(error);
             })
@@ -202,11 +205,14 @@ export default function Index() {
     const markItemCompleteHendler = async (itemID) => {
         if (!completedCourseItem?.some(watchedItem => watchedItem.itemId == itemID)) {
             const params = {
-                courseID,
-                itemID,
-                enrollmentId: selectedCourse.id
+                routeName: 'markItemComplete',
+                courseId: courseID,
+                itemId: itemID,
+                enrollmentId: selectedCourse.id,
+                type: 'item',
+                value: false
             }
-            await markItemCompleteAPI(params).then((res) => {
+            await postAuthRouteAPI(params).then((res) => {
                 let data = { itemId: itemID, pass: null }
                 setCompletedCourseItem([...completedCourseItem, data])
             }).catch((error) => {

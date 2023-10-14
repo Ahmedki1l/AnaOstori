@@ -35,9 +35,9 @@ export default function Navbar() {
 
 	const storeData = useSelector((state) => state?.globalStore);
 
-	const userFullName = (storeData?.viewProfileData?.firstName) ? `${storeData?.viewProfileData?.firstName} ` : storeData?.viewProfileData?.fullName
+	const userFullName = (storeData?.viewProfileData?.fullName) ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName
 
-	const isRegisterGoogleUser = router.pathname == "/registerGoogleUser" ? true : false
+	const isRegisterSocialMediaUser = router.pathname == "/registerSocialMediaUser" ? true : false
 
 	const isUserInstructor = storeData?.isUserInstructor
 
@@ -312,10 +312,10 @@ export default function Navbar() {
 				<div className={styles.navbarWrapper} id="navBar" >
 					<div className='maxWidthDefault'>
 						<div className={styles.navbarInnerWrapper}>
-							<Link href={'/'} className={`pl-8 my-auto ${isRegisterGoogleUser && 'cursor-not-allowed'}`}>
+							<Link href={'/'} className={`pl-8 my-auto ${isRegisterSocialMediaUser && 'cursor-not-allowed'}`}>
 								<Logo height={38} width={68} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
 							</Link>
-							{!isRegisterGoogleUser &&
+							{!isRegisterSocialMediaUser &&
 								<>
 									<div className={`pl-6 my-auto`}>
 										<Link href={'/'} className='normalLinkText'><p className={styles.homeText}>الرئيسية</p></Link>

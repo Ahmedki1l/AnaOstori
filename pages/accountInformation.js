@@ -308,7 +308,7 @@ export default function AccountInformation() {
                                                         <p className={`font-medium ${styles.existingDetailText}`}>الايميل الحالي: {userProfileData?.email}</p>
                                                         <div className={`formInputBox ${styles.passwordInputBox}`}>
                                                             <div className={styles.IconDiv}>
-                                                                <AllIconsComponenet height={20} width={20} iconName={'email'} color={'#00000080'} />
+                                                                <AllIconsComponenet height={20} width={20} iconName={'email'} color={'#808080'} />
                                                             </div>
                                                             <input className={`formInput ${storeData.loginWithoutPassword == true && `${styles.disableFormInput}`}`} id="email" type="email" name="email" title="Email" placeholder=' '
                                                                 value={email}
@@ -331,7 +331,7 @@ export default function AccountInformation() {
                                                             <p>دخل كلمة السر عشان تقدر تعدل ايميلك</p>
                                                             <div className={`formInputBox ${styles.passwordInputBox}`}>
                                                                 <div className={styles.IconDiv}>
-                                                                    <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+                                                                    <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#808080'} />
                                                                 </div>
                                                                 <input className='formInput' id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} name="password" title="Password" placeholder=' ' />
                                                                 <label className={`formLabel ${styles.formInputLable}`} htmlFor="Password">كلمة السر</label>

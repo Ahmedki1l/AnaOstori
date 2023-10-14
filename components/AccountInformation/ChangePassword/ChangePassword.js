@@ -85,7 +85,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
 
                 <div className={`formInputBox ${styles.passwordInputBox}`}>
                     <div className={styles.IconDiv}>
-                        <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+                        <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#808080'} />
                     </div>
                     <input className='formInput'
                         id="oldPassword"
@@ -112,7 +112,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
 
                 <div className={`formInputBox ${styles.passwordInputBox}`}>
                     <div className={styles.IconDiv}>
-                        <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+                        <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#808080'} />
                     </div>
                     <input className='formInput'
                         id="newPassword"
@@ -140,7 +140,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
 
                 <div className={`formInputBox ${styles.passwordInputBox}`}>
                     <div className={styles.IconDiv}>
-                        <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+                        <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#808080'} />
                     </div>
                     <input className='formInput'
                         id="confirmPassword"

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useWindowSize from '../../../hooks/useWindoSize';
 import { useRouter } from 'next/router';
 import { getAuthRouteAPI } from '../../../services/apisService';
-import { signOutUser } from '../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import Image from 'next/legacy/image';
 import TrainerIntroCard from '../../../components/CommonComponents/TrainerIntroCard/TrainerIntroCard';

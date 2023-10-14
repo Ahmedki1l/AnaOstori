@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 
 import Spinner from '../components/CommonComponents/spinner'
-import { inputErrorMessages } from '../constants/ar'
+import { inputErrorMessages, toastErrorMessage } from '../constants/ar'
 
 
 
@@ -19,7 +19,7 @@ export default function Register() {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [phoneNumber, setPhoneNumber] = useState("");
-	const [firstName, setFirstName] = useState("")
+	const [fullName, setFullName] = useState("")
 	const [gender, setGender] = useState("")
 
 	const [isEmailError, setIsEmailError] = useState(false);
@@ -49,48 +49,49 @@ export default function Register() {
 		});
 	}
 
-	const handleStoreUpdate = async () => {
-		try {
-			const data = {
+	const handleStoreUpdate = async (isUserNew) => {
+		if (isUserNew) {
+			router.push('/registerSocialMediaUser')
+			toast.success(toastErrorMessage.successRegisterMsg)
+		} else {
+			try {
+				const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
+				const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
-			}
-			const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
-			const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
+				const [viewProfileData, myCourseData] = await Promise.all([
+					viewProfileReq, getMyCourseReq
+				])
+				dispatch({
+					type: 'SET_ALL_MYCOURSE',
+					myCourses: myCourseData?.data,
+				});
+				dispatch({
+					type: 'SET_PROFILE_DATA',
+					viewProfileData: viewProfileData?.data,
+				});
+				dispatch({
+					type: 'IS_USER_INSTRUCTOR',
+					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
+				});
 
-			const [viewProfileData, myCourseData] = await Promise.all([
-				viewProfileReq, getMyCourseReq
-			])
-			dispatch({
-				type: 'SET_ALL_MYCOURSE',
-				myCourses: myCourseData?.data,
-			});
-			dispatch({
-				type: 'SET_PROFILE_DATA',
-				viewProfileData: viewProfileData?.data,
-			});
-			dispatch({
-				type: 'IS_USER_INSTRUCTOR',
-				isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
-			});
-			let profileData = viewProfileData?.data
-			if (profileData.firstName == null || profileData.phone == null || profileData.gender == null) {
-				router.push('/registerGoogleUser')
-			} else {
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
+					toast.success(toastErrorMessage.successLoginMsg)
 				}
 				else {
 					router.push(storeData?.returnUrl)
 				}
 			}
-		} catch (error) {
-			console.log(error);
+			catch (error) {
+				console.log(error);
+			}
 		}
 	}
 
 	const hendelGoogleLogin = async () => {
 		setLoading(true)
 		await GoogleLogin().then(async (result) => {
+			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
 			dispatch({
@@ -101,7 +102,7 @@ export default function Register() {
 				type: 'IS_USER_FROM_GOOGLE',
 				loginWithoutPassword: true,
 			});
-			handleStoreUpdate()
+			handleStoreUpdate(isUserNew)
 
 		}).catch((error) => {
 			console.log(error);
@@ -112,8 +113,9 @@ export default function Register() {
 		setLoading(true)
 		await signInWithApple().then((result) => {
 			const user = result?.user;
+			const isUserNew = result._tokenResponse.isNewUser
 			localStorage.setItem("accessToken", user?.accessToken);
-			handleStoreUpdate()
+			handleStoreUpdate(isUserNew)
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -140,7 +142,7 @@ export default function Register() {
 
 
 	useEffect(() => {
-		if (firstName && (firstName.split(" ").length - 1) < 2) {
+		if (fullName && (fullName.split(" ").length - 1) < 2) {
 			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
 		else {
@@ -169,14 +171,14 @@ export default function Register() {
 			setPhoneNumberError(null);
 		}
 
-	}, [firstName, email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
+	}, [fullName, email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
 
 
 	const handleSignup = async () => {
 		setLoading(true);
-		if (!firstName) {
+		if (!fullName) {
 			setFirstNameError(inputErrorMessages.firstNameErrorMsg);
-		} else if (firstName && (firstName.split(" ").length - 1) < 2) {
+		} else if (fullName && (fullName.split(" ").length - 1) < 2) {
 			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
 		if (!gender) {
@@ -189,7 +191,7 @@ export default function Register() {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
 		else if (firstNameError == null && emailError == null && passwordError == null) {
-			await signupWithEmailAndPassword(email, password, firstName, phoneNumber, gender);
+			await signupWithEmailAndPassword(email, password, fullName, phoneNumber, gender);
 		}
 	}
 
@@ -216,8 +218,8 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} id='firstName' type="text" name='firstName' value={user?._tokenResponse?.firstName ? user?._tokenResponse?.firstName : firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="firstName">الاسم الثلاثي</label>
+							<input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={user?._tokenResponse?.fullName ? user?._tokenResponse?.fullName : fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
 						</div>
 						{firstNameError ? <p className={styles.errorText}>{firstNameError}</p> : ""}
 						<div className={`formInputBox ${styles.radioBtnDiv}`}>
@@ -237,7 +239,7 @@ export default function Register() {
 						{isPhoneNumberError ? <p className={styles.errorText}>الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={16} width={16} iconName={'email'} color={'#00000080'} />
+								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={user?._tokenResponse?.email ? user?._tokenResponse?.email : email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
@@ -245,7 +247,7 @@ export default function Register() {
 						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="password">كلمة السر</label>
@@ -264,7 +266,7 @@ export default function Register() {
 						{!isPasswordError && <p className={styles.passwordHintText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p>}
 						{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
 						<div className={styles.loginBtnBox}>
-							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (firstNameError !== null || emailError !== null || passwordError !== null || !firstName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
+							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (firstNameError !== null || emailError !== null || passwordError !== null || !fullName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>

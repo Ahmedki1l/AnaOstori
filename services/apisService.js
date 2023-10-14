@@ -52,8 +52,8 @@ export const updateProfile = (data) => { return instance.post('/updateProfile', 
 // export const deleteAccount = () => { return instance.post('/deleteProfile') }
 // export const getCourseByNameAPI = (data) => { return instance.get(`/courseByName/${data?.name}`) }
 // export const accountRecovery = () => { return instance.post('/activateProfile') }
-export const markItemCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}?type=item&value=false`) }
-export const markCourseCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}?type=markCourseComplete&value=true`) }
+// export const markItemCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}?type=item&value=false`) }
+// export const markCourseCompleteAPI = (data) => { return instance.get(`course/markItemComplete/${data?.itemID}/${data?.courseID}/enrollment/${data.enrollmentId}?type=markCourseComplete&value=true`) }
 // export const getCompleteCourseItemIDAPI = (data) => { return instance.get(`course/progress/${data?.courseID}/enrollment/${data.enrollmentId}`) }
 // export const getCourseProgressAPI = (data) => { return instance.get(`course/getUserCourseProgress/${data?.courseID}/enrollment/${data.enrollmentId}`) }
 // export const subcribeNotificationAPI = (data) => { return instance.post(`course/subscribe/${data?.courseId}`, data?.data) }

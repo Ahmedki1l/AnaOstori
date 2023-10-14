@@ -64,47 +64,51 @@ export default function Login() {
 	}, [email, password, regexEmail, regexPassword])
 
 
-	const handleStoreUpdate = async () => {
-		try {
-			const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
-			const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
-			const [viewProfileData, myCourseData] = await Promise.all([
-				viewProfileReq, getMyCourseReq
-			])
-			dispatch({
-				type: 'SET_ALL_MYCOURSE',
-				myCourses: myCourseData?.data,
-			});
-			dispatch({
-				type: 'SET_PROFILE_DATA',
-				viewProfileData: viewProfileData?.data,
-			});
-			dispatch({
-				type: 'IS_USER_INSTRUCTOR',
-				isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
-			});
-			let profileData = viewProfileData?.data
-			if (profileData.firstName == null || profileData.gender == null) {
-				router.push('/registerGoogleUser')
-			} else {
+	const handleStoreUpdate = async (isUserNew) => {
+		if (isUserNew) {
+			router.push('/registerSocialMediaUser')
+			toast.success(toastErrorMessage.successRegisterMsg)
+		} else {
+			try {
+				const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
+				const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
+				const [viewProfileData, myCourseData] = await Promise.all([
+					viewProfileReq, getMyCourseReq
+				])
+				dispatch({
+					type: 'SET_ALL_MYCOURSE',
+					myCourses: myCourseData?.data,
+				});
+				dispatch({
+					type: 'SET_PROFILE_DATA',
+					viewProfileData: viewProfileData?.data,
+				});
+				dispatch({
+					type: 'IS_USER_INSTRUCTOR',
+					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
+				});
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
+					toast.success(toastErrorMessage.successLoginMsg)
 				}
 				else {
 					router.push(storeData?.returnUrl)
 				}
+			} catch (error) {
+				console.log(error);
+				setLoading(false)
 			}
-		} catch (error) {
-			console.log(error);
-			setLoading(false)
 		}
+
 	}
 
 	const hendelGoogleLogin = async () => {
 		setLoading(true)
 		await GoogleLogin().then((result) => {
+			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
+			toast.success(toastSuccessMessage.successLoginMsg)
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -113,7 +117,7 @@ export default function Login() {
 				type: 'IS_USER_FROM_GOOGLE',
 				loginWithoutPassword: true,
 			});
-			handleStoreUpdate(user?.accessToken)
+			handleStoreUpdate(isUserNew)
 		}).catch((error) => {
 			console.log(error);
 			setLoading(false)
@@ -141,13 +145,19 @@ export default function Login() {
 					type: 'IS_USER_FROM_GOOGLE',
 					loginWithoutPassword: false,
 				});
-				handleStoreUpdate(user?.accessToken)
+				handleStoreUpdate()
 				toast.success(toastSuccessMessage.successLoginMsg)
 				router.push('/')
 			}).catch((error) => {
 				setLoading(false)
 				console.log(error);
-				toast.error(toastErrorMessage.emailPasswordErrorMsg);
+				if (error.code == 'auth/wrong-password') {
+					toast.error(toastErrorMessage.passWordIncorrectErrorMsg)
+				} else if (error.code == 'auth/user-not-found') {
+					toast.error(toastErrorMessage.emailNotFoundMsg)
+				} else {
+					toast.error(toastErrorMessage.emailPasswordErrorMsg)
+				}
 			});
 		}
 	}
@@ -155,8 +165,9 @@ export default function Login() {
 		setLoading(true)
 		await signInWithApple().then((result) => {
 			const user = result.user;
+			const isUserNew = result._tokenResponse.isNewUser
 			localStorage.setItem("accessToken", user?.accessToken);
-			handleStoreUpdate()
+			handleStoreUpdate(isUserNew)
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -183,9 +194,10 @@ export default function Login() {
 				<div className={`relative ${styles.mainPage}`}>
 					<div className={styles.loginFormDiv}>
 						<h1 className={`fontBold ${styles.loginPageHead}`}>تسجيل الدخول</h1>
+						<p>خلنا نكمل قصة نجاحك اللي بديناها سوا ✨</p>
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={16} width={18} iconName={'email'} color={'#00000080'} />
+								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
@@ -193,7 +205,7 @@ export default function Login() {
 						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#00000080'} />
+								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="password">كلمة السر</label>
