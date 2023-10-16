@@ -8,7 +8,7 @@ import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
 import Input from '../../antDesignCompo/Input';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import { editAvailabilityAPI, postRouteAPI } from '../../../services/apisService';
+import { postRouteAPI } from '../../../services/apisService';
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
@@ -151,10 +151,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
 
     const handlePublishedCategory = async (e, availabilityId) => {
         let body = {
-            data: { published: e },
+            routeName: 'updateAvailability',
+            published: e,
             availabilityId: availabilityId
         }
-        await editAvailabilityAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
             availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             getAllAvailability()
@@ -162,7 +163,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await editAvailabilityAPI(body).then((res) => {
+                    await postRouteAPI(body).then((res) => {
                         setShowBtnLoader(false)
                         availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
                         getAllAvailability()

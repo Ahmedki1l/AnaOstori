@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
-import { getStudentListAPI, postRouteAPI } from '../../../services/apisService'
+import { getAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -191,10 +191,11 @@ const TheStudent = (props) => {
 
     const getAllStudentList = async (e) => {
         let data = {
+            routeName: 'getStudentByAvailability',
             availabilityId: e,
             courseId: courseId,
         }
-        await getStudentListAPI(data).then((res) => {
+        await getAuthRouteAPI(data).then((res) => {
             setSelectedAvailabilityId(e)
             setShowStudentList(true)
             setAllStudentDetails(res?.data)
@@ -204,7 +205,7 @@ const TheStudent = (props) => {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getStudentListAPI(data).then((res) => {
+                    await getAuthRouteAPI(data).then((res) => {
                         setSelectedAvailabilityId(e)
                         setShowStudentList(true)
                         setAllStudentDetails(res?.data)

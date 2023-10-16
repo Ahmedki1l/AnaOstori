@@ -5,7 +5,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { FormItem } from '../../antDesignCompo/FormItem';
 import Input from '../../antDesignCompo/Input';
 import InputTextArea from '../../antDesignCompo/InputTextArea';
-import { postRouteAPI, updateItemToFolderAPI } from '../../../services/apisService';
+import { postRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import UploadFileForModel from '../../CommonComponents/UploadFileForModel/UploadFileForModel';
 import CustomButton from '../../CommonComponents/CustomButton'
@@ -148,7 +148,7 @@ const ModelForAddItemLibrary = ({
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await updateItemToFolderAPI(data).then(res => {
+                    await postRouteAPI(data).then(res => {
                         toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
                             folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
                                 pdfToastMsgConst.updatePdfSuccessMsg)

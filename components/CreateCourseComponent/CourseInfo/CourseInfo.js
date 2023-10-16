@@ -8,7 +8,7 @@ import styles from './CourseInfo.module.scss'
 import CheckBox from '../../antDesignCompo/CheckBox';
 import Input from '../../antDesignCompo/Input';
 import Select from '../../antDesignCompo/Select';
-import { createCourseByInstructorAPI, deleteCourseTypeAPI, postRouteAPI, updateCourseDetailsAPI } from '../../../services/apisService';
+import { postAuthRouteAPI, postRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { toast } from 'react-toastify';
@@ -102,6 +102,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             values.language = englishCourse ? "en" : "ar"
             values.isPurchasable = false
             values.published = false
+
             if (courseType != "physical") {
                 const iosPriceLabel = iosProductIdList.find((obj) => obj.value == values.iosPriceId ? obj.label : null)
                 const iosDiscountLabel = iosProductIdList.find((obj) => obj.value == values.iosDiscountId ? obj.label : null)
@@ -143,15 +144,19 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             }
 
             let body = {
-                data: values,
+                routeName: 'createCourseByInstructor',
+                type: courseType,
+                ...values
             }
-            await createCourseByInstructorAPI(body).then((res) => {
+            console.log(body);
+            await postAuthRouteAPI(body).then((res) => {
+                console.log(res);
                 createCourseApiSuccessRes(res)
             }).catch(async (error) => {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await createCourseByInstructorAPI(body).then((res) => {
+                        await postAuthRouteAPI(body).then((res) => {
                             createCourseApiSuccessRes(res)
                         })
                     }).catch(error => {
@@ -257,14 +262,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         }
 
         const courseBody = {
-            data: values,
-            courseId: editCourseData?.id,
+            ...values,
+            id: editCourseData?.id,
+            routeName: 'updateCourse'
         }
 
         try {
             const promiseArray = [];
 
-            promiseArray.push(updateCourseDetailsAPI(courseBody));
+            promiseArray.push(postAuthRouteAPI(courseBody));
 
             if (courseMetaDataBody.data.length > 0) {
                 promiseArray.push(postRouteAPI(courseMetaDataBody));
@@ -297,7 +303,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     await getNewToken().then(async (token) => {
                         const promiseArray = [];
 
-                        promiseArray.push(updateCourseDetailsAPI(courseBody));
+                        promiseArray.push(postAuthRouteAPI(courseBody));
 
                         if (courseMetaDataBody.data.length > 0) {
                             promiseArray.push(postRouteAPI(courseMetaDataBody));
@@ -339,13 +345,12 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             setShowLoader(false)
         } else {
             let body = {
-                data: {
-                    type: deleteFieldName,
-                    courseId: editCourseData.id,
-                    id: deleteFieldName == 'courseDetails' ? data.courseDetailsMetaData[index]?.id : data.courseMetaData[index]?.id
-                },
+                routeName: 'deleteCourse',
+                type: deleteFieldName,
+                courseId: editCourseData.id,
+                id: deleteFieldName == 'courseDetails' ? data.courseDetailsMetaData[index]?.id : data.courseMetaData[index]?.id
             }
-            await deleteCourseTypeAPI(body).then((res) => {
+            await postAuthRouteAPI(body).then((res) => {
                 data.courseMetaData.splice(index, 1)
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
@@ -355,7 +360,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await deleteCourseTypeAPI(body).then((res) => {
+                        await postAuthRouteAPI(body).then((res) => {
                             data.courseMetaData.splice(index, 1)
                             remove(name)
                             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
@@ -389,10 +394,11 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     }
     const handleToggleChange = async (e, params) => {
         let body = {
-            data: params == "published" ? { published: e } : { isPurchasable: e },
-            courseId: editCourseData.id,
+            id: editCourseData.id,
+            routeName: 'updateCourse'
         }
-        await updateCourseDetailsAPI(body).then((res) => {
+        params == "published" ? body.published = e : body.isPurchasable = e
+        await postAuthRouteAPI(body).then((res) => {
             if (params == "published") {
                 if (e) {
                     toast.success(courseToastSuccessMessage.toMakeCoursePublished)
@@ -409,7 +415,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await updateCourseDetailsAPI(body).then((res) => {
+                    await postAuthRouteAPI(body).then((res) => {
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -945,7 +951,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                                         >
                                                             <Input placeholder={createCoursePageConst.metadataLinkSeperatedTextInputPlaceHolder} width={216} height={47} />
                                                         </FormItem>
-                                                        <div className={`${styles.deleteIconWrapper} cursor-pointer`} onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }} >
+                                                        <div className={`${styles.deleteIconWrapper} cursor-pointer`} >
                                                             <div className='flex justify-center items-center h-100 cursor-pointer' onClick={() => { deleteCourseDetails(index, remove, name, "courseDetails") }}>
                                                                 <AllIconsComponenet iconName={'deletecourse'} height={18} width={14} color={'#2D2E2D'} />
                                                             </div>

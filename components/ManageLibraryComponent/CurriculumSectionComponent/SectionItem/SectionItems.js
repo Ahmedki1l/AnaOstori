@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './SectionItems.module.scss'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
-import Icon from '../../../CommonComponents/Icon'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { mediaUrl } from '../../../../constants/DataManupulation'
 import ModelForDeleteItems from '../../ModelForDeleteItems/ModelForDeleteItems'
-import { updateItemOfSectionAPI } from '../../../../services/apisService'
+import { postRouteAPI } from '../../../../services/apisService'
 import ModalForVideo from '../../../CommonComponents/ModalForVideo/ModalForVideo'
 import Switch from '../../../../components/antDesignCompo/Switch'
 import { secondsToMinutes } from '../../../../constants/DataManupulation'
@@ -49,9 +48,10 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
             }
         })
         let body = {
+            routeName: 'updateSectionItem',
             data: data
         }
-        await updateItemOfSectionAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
         }).catch((error) => {
             console.log(error);
         })
@@ -59,13 +59,14 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
 
     const handleFreeUsage = async (e, itemId) => {
         let body = {
+            routeName: 'updateSectionItem',
             data: [{
                 sectionId: sectionId,
                 itemId: itemId,
                 freeUsage: e,
             }]
         }
-        await updateItemOfSectionAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
         }).catch((error) => {
             console.log(error);
         })

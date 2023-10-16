@@ -3,7 +3,7 @@ import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import { useSelector } from 'react-redux'
 import { dateRange } from '../../../constants/DateConverter'
-import { getExamListAPI, getStudentListByExamAPI, getStudentListByExamOnDemandAPI, postRouteAPI } from '../../../services/apisService'
+import { getRouteAPI, postRouteAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import styles from './TestResults.module.scss'
@@ -44,10 +44,11 @@ const TestResults = (props) => {
 
     const getExamList = async () => {
         let body = {
+            routeName: 'getItemByCourseId',
             courseId: courseId,
             type: 'quiz'
         }
-        await getExamListAPI(body).then((res) => {
+        await getRouteAPI(body).then((res) => {
             const allExamList = res.data?.map((exam) => {
                 return {
                     key: exam.id,
@@ -59,7 +60,7 @@ const TestResults = (props) => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getExamListAPI(body).then((res) => {
+                    await getRouteAPI(body).then((res) => {
                         const allExamList = res.data?.map((exam) => {
                             return {
                                 key: exam.id,
@@ -137,17 +138,20 @@ const TestResults = (props) => {
         if (!examId || !availabilityId) return
         if (courseType == "onDemand") {
             let params = {
-                itemId: examId,
+                routeName: 'getStudentExamByItem',
                 availabilityId: availabilityId,
+                itemId: examId,
                 courseId: courseId
             }
-            await getStudentListByExamOnDemandAPI(params).then((res) => {
+            await getRouteAPI(params).then((res) => {
+                // await getStudentListByExamOnDemandAPI(params).then((res) => {
                 createUpdatedList(res.data)
                 setShowStudentList(true)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await getStudentListByExamOnDemandAPI(params).then((res) => {
+                        // await getStudentListByExamOnDemandAPI(params).then((res) => {
+                        await getRouteAPI(params).then((res) => {
                             createUpdatedList(res.data)
                             setShowStudentList(true)
                         })
@@ -158,16 +162,18 @@ const TestResults = (props) => {
             })
         } else {
             let params = {
+                routeName: 'getStudentExamByItem',
                 itemId: examId,
-                availabilityId: availabilityId
+                availabilityId: availabilityId,
+                courseId: courseId
             }
-            await getStudentListByExamAPI(params).then((res) => {
+            await getRouteAPI(params).then((res) => {
                 createUpdatedList(res.data)
                 setShowStudentList(true)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await getStudentListByExamAPI(params).then((res) => {
+                        await getRouteAPI(params).then((res) => {
                             createUpdatedList(res.data)
                             setShowStudentList(true)
                         })

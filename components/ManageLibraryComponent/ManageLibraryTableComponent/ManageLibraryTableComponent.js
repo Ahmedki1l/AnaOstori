@@ -2,12 +2,11 @@ import React, { useState } from 'react'
 import styles from './ManageLibraryTableComponent.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
-import Icon from '../../CommonComponents/Icon'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLibrary'
 import Spinner from '../../CommonComponents/spinner'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { updateFolderAPI, updateItemToFolderAPI } from '../../../services/apisService'
+import { postRouteAPI } from '../../../services/apisService'
 import Empty from '../../CommonComponents/Empty'
 import BackToPath from '../../CommonComponents/BackToPath'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -62,16 +61,17 @@ const ManageLibraryTableComponent = ({
             type: selectedFolder?.type,
         }
         let data = {
-            data: editFolderBody
+            routeName: 'updateFolderHandler',
+            ...editFolderBody
         }
-        await updateFolderAPI(data).then((res) => {
+        await postRouteAPI(data).then((res) => {
             toast.success(folderToastMsgConst.updateFolderSuccessMsg)
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await updateFolderAPI(data).then(res => {
+                    await postRouteAPI(data).then(res => {
                         toast.success(folderToastMsgConst.updateFolderSuccessMsg)
                         setIsModelForAddFolderOpen(false)
                         getFolderList(folderType)
@@ -128,9 +128,10 @@ const ManageLibraryTableComponent = ({
                 isDeleted: true
             }
             let data = {
-                data: deleteItemBody
+                routeName: 'updateItemHandler',
+                ...deleteItemBody
             }
-            await updateItemToFolderAPI(data).then((res) => {
+            await postRouteAPI(data).then((res) => {
                 toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
                     folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
                         examToastMsgConst.deleteExamSuccessMsg)
@@ -138,7 +139,7 @@ const ManageLibraryTableComponent = ({
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await updateItemToFolderAPI(data).then(res => {
+                        await postRouteAPI(data).then(res => {
                             toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
                                 folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
                                     examToastMsgConst.deleteExamSuccessMsg)
@@ -156,15 +157,16 @@ const ManageLibraryTableComponent = ({
                 isDeleted: true
             }
             let data = {
-                data: deleteFolderBody
+                routeName: 'updateFolderHandler',
+                ...deleteFolderBody
             }
-            await updateFolderAPI(data).then((res) => {
+            await postRouteAPI(data).then((res) => {
                 toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
                 getFolderList(folderType)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await updateFolderAPI(data).then(res => {
+                        await postRouteAPI(data).then(res => {
                             getFolderList(folderType)
                             toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
                         })

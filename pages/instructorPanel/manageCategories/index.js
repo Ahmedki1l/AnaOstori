@@ -10,7 +10,7 @@ import Spinner from '../../../components/CommonComponents/spinner'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import Empty from '../../../components/CommonComponents/Empty'
 import Switch from '../../../components/antDesignCompo/Switch'
-import { editCatagoryAPI, getAuthRouteAPI } from '../../../services/apisService'
+import { getAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import { useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import { adminPanelCategoryConst } from '../../../constants/adminPanelConst/categoryConst/categoryConst'
@@ -71,10 +71,11 @@ const Index = () => {
 
     const handlePublishedCategory = async (e, catagoryId) => {
         let body = {
+            routeName: 'updateCategory',
             id: catagoryId,
             published: e
         }
-        await editCatagoryAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             if (e == true) {
                 toast.success(adminPanelCategoryConst.showCategoryMsg)
             } else {
@@ -85,19 +86,6 @@ const Index = () => {
             console.log(error);
         })
     }
-
-    // const handleDeleteCatagory = async (item) => {
-    //     let body = {
-    //         id: item.id,
-    //         isDeleted: true
-    //     }
-    //     await editCatagoryAPI(body).then((res) => {
-    //         console.log(res);
-    //         getCategoryListReq()
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     })
-    // }
 
     return (
         <>

@@ -8,7 +8,7 @@ import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
-import { getInstructorListAPI, postRouteAPI } from '../../../services/apisService'
+import { getRouteAPI, postRouteAPI } from '../../../services/apisService'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -27,7 +27,7 @@ const Index = () => {
     const dispatch = useDispatch()
 
     const getInstructorListReq = async () => {
-        await getInstructorListAPI().then((res) => {
+        await getRouteAPI({ routeName: 'getAllInstructors' }).then((res) => {
             dispatch({
                 type: 'SET_INSTRUCTOR',
                 instructorList: res?.data,
@@ -35,7 +35,7 @@ const Index = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getInstructorListAPI().then(res => {
+                    await getRouteAPI({ routeName: 'getAllInstructors' }).then(res => {
                         dispatch({
                             type: 'SET_INSTRUCTOR',
                             instructorList: res?.data,

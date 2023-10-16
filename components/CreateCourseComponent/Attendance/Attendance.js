@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styles from './Attendance.module.scss'
-import { getAttendanceListAPI, getRouteAPI, updateAttendanceDataAPI } from '../../../services/apisService'
+import { getRouteAPI, postAuthRouteAPI } from '../../../services/apisService'
 import QRCode from '../../CommonComponents/QRCode/QRCode'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
@@ -23,7 +23,6 @@ export default function Attendance(props) {
     const [attendanceData, setAttendanceData] = useState([])
     const [updatedAttendanceData, setUpdatedAttendanceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-
     const dispatch = useDispatch();
 
     const storeData = useSelector((state) => state?.globalStore);
@@ -123,14 +122,10 @@ export default function Attendance(props) {
 
     }
     const handlSelectAvailability = async (e) => {
-        // let body = {
-        //     availabilityId: e,
-        // }
         let body = {
             routeName: "getAttendanceByAvailability",
             availabilityId: e,
         }
-        // await getAttendanceListAPI(body).then((res) => {
         await getRouteAPI(body).then((res) => {
             createAttendanceTableData(e, res.data)
             setShowAttendanceTable(res.data.length > 0 ? true : false)
@@ -138,7 +133,6 @@ export default function Attendance(props) {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    // await getAttendanceListAPI(body).then((res) => {
                     await getRouteAPI(body).then((res) => {
                         createAttendanceTableData(e, res.data)
                         setShowAttendanceTable(res.data.length > 0 ? true : false)
@@ -153,7 +147,8 @@ export default function Attendance(props) {
     const handleAttendanceSave = async () => {
         setShowBtnLoader(true)
         let body = {
-            data: { data: [] }
+            routeName: 'updateAttendance',
+            data: []
         };
         updatedAttendanceData.map((attendance) => {
             return (
@@ -163,17 +158,17 @@ export default function Attendance(props) {
                         id: data.id,
                         status: data.attendanceType
                     };
-                    body.data.data.push(newAttendance)
+                    body.data.push(newAttendance)
                 })
             )
         })
-        await updateAttendanceDataAPI(body).then((res) => {
+        await postAuthRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
             toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await updateAttendanceDataAPI(body).then((res) => {
+                    await postAuthRouteAPI(body).then((res) => {
                         setShowBtnLoader(false)
                         toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
                     })

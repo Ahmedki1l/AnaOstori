@@ -3,7 +3,7 @@ import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComp
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { useDispatch } from 'react-redux'
-import { getAuthRouteAPI, updateCourseDetailsAPI } from '../../../../services/apisService'
+import { getAuthRouteAPI, postAuthRouteAPI } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
 import { getNewToken } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
@@ -12,7 +12,6 @@ import { mediaUrl } from '../../../../constants/DataManupulation'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import Empty from '../../../../components/CommonComponents/Empty'
 import { toast } from 'react-toastify'
-import { toastSuccessMessage } from '../../../../constants/ar'
 import { coursePublishedFromMainPageConst } from '../../../../constants/adminPanelConst/courseConst/courseConst'
 
 export default function Index() {
@@ -41,7 +40,9 @@ export default function Index() {
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        getAllCourse()
+                        await getAuthRouteAPI(body).then(res => {
+                            setAllPhysicalCourses(res?.data)
+                        })
                     }).catch(error => {
                         console.error("Error:", error);
                     });
@@ -62,21 +63,20 @@ export default function Index() {
 
     const handleCoursePublished = async (checked, course) => {
         let body = {
-            data: { published: checked },
-            courseId: course.id,
+            published: checked,
+            id: course.id,
+            routeName: "updateCourse"
         }
-        await updateCourseDetailsAPI(body).then((res) => {
+        await postAuthRouteAPI(body).then((res) => {
             if (checked) {
                 toast.success(coursePublishedFromMainPageConst.toMakeCoursePublished)
-                // toast.success(`بنجاح ${course.name} تم نشر  `)
             } else {
                 toast.success(coursePublishedFromMainPageConst.toMakeCourseNotPublished)
-                // toast.success(` بنجاح ${course.name} تم إخفاء `)
             }
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await updateCourseDetailsAPI(body).then(res => {
+                    await postAuthRouteAPI(body).then(res => {
                     })
                 }).catch(error => {
                     console.error("Error:", error);
