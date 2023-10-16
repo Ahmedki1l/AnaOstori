@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
-import { getFolderListAPI, getItemListAPI, postAuthRouteAPI } from '../../../services/apisService';
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI, postRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
@@ -40,7 +40,6 @@ function Index() {
     }, [folderList])
 
     const handleItemSelect = async (selcetedItem) => {
-        // getfolderList(selcetedItem)
         setSelectedItem(selcetedItem)
         router.push({
             pathname: '/instructorPanel/manageLibrary',
@@ -54,15 +53,16 @@ function Index() {
         setFolderList([])
         setLoading(true)
         let data = {
-            folderType: selectedItem,
+            routeName: 'getFolderByType',
+            type: selectedItem
         }
-        await getFolderListAPI(data).then((res) => {
+        await getAuthRouteAPI(data).then((res) => {
             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getFolderListAPI(data).then(res => {
+                    await getAuthRouteAPI(data).then(res => {
                         setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
                         setLoading(false)
                     })
@@ -78,15 +78,16 @@ function Index() {
         setFolderList([])
         setLoading(true)
         let body = {
+            routeName: 'getItem',
             folderId: folderId
         }
-        await getItemListAPI(body).then((res) => {
+        await getRouteAPI(body).then((res) => {
             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getItemListAPI(body).then(res => {
+                    await getRouteAPI(body).then(res => {
                         setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
                         setLoading(false)
                     })

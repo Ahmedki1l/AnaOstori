@@ -5,11 +5,12 @@ import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 import { useDispatch } from 'react-redux'
-import { getCurriculumDetailsAPI, getCurriculumIdsAPI, getRouteAPI, getSectionListAPI, postRouteAPI } from '../../../../services/apisService'
+import { getRouteAPI, postRouteAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import { curriculumConst } from '../../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
+import { getNewToken } from '../../../../services/fireBaseAuthService'
 
 export async function getServerSideProps(context) {
     const params = context.query
@@ -39,39 +40,55 @@ const CreateCoursePath = (props) => {
             getCurriculumDetails()
             getSectionList()
         }
-    }, [curriculmName])
+    }, [])
 
     const getCurriculumDetails = async () => {
         let body = {
+            routeName: "getCurriculum",
             curriculumId: routeParams.coursePathId,
         }
-        await getCurriculumDetailsAPI(body).then((res) => {
+        await getRouteAPI(body).then((res) => {
             courseForm.setFieldValue('pathTitle', res.data.name)
             setCurriculumName(res.data.name)
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getRouteAPI(body).then((res) => {
+                        courseForm.setFieldValue('pathTitle', res.data.name)
+                        setCurriculumName(res.data.name)
+                    })
+                })
+            }
         })
     }
     const getSectionList = async () => {
         let body = {
+            routeName: 'getSection',
             curriculumId: routeParams.coursePathId,
         }
-        await getSectionListAPI(body).then((res) => {
+        await getRouteAPI(body).then((res) => {
             setSectionDetails(res.data)
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getRouteAPI(body).then((res) => {
+                        setSectionDetails(res.data)
+                    })
+                })
+            }
         })
     }
 
 
     const updateCurriculumList = async () => {
-        await getRouteAPI({ routeName: 'getCurriculum' }).then((res) => {
+        await getRouteAPI({ routeName: 'getAllCurriculum' }).then((res) => {
             dispatch({
                 type: 'SET_CURRICULUMIDS',
                 curriculumIds: res.data,
             });
         })
-
     }
 
     const onFinishCreateCoursepath = async (item) => {
@@ -80,7 +97,7 @@ const CreateCoursePath = (props) => {
                 routeName: "createCurriculum",
                 name: item.pathTitle,
             }
-            await postRouteAPI(createBody).then(async (res) => {
+            await postRouteAPI(createBody).then((res) => {
                 toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg)
                 setCurriculumName(res.data.name)
                 router.push({

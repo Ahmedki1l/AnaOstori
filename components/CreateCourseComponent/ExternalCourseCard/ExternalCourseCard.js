@@ -8,8 +8,7 @@ import Input from '../../antDesignCompo/Input';
 import PhysicalCourseCard from '../../TypesOfCourseComponents/PhysicalCourseCard';
 import SelectIcon from '../../antDesignCompo/SelectIcon';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCourseTypeAPI, postRouteAPI } from '../../../services/apisService'
-import { updateCourseDetailsAPI } from '../../../services/apisService';
+import { postAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import { deleteNullFromObj } from '../../../constants/DataManupulation';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import CustomButton from '../../CommonComponents/CustomButton';
@@ -89,15 +88,13 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             data: CourseCardMetaData,
         }
         let body2 = {
-            data: {
-                cardDescription: cardDescription,
-                type: courseDetail.type
-            },
-            courseId: courseDetail.id
+            cardDescription: cardDescription,
+            id: courseDetail.id,
+            routeName: 'updateCourse',
         }
         try {
             const updateCourseCardMetaDataReq = postRouteAPI(body)
-            const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
+            const updateCardDiscriptionReq = postAuthRouteAPI(body2)
 
             const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
             setCourseDetail(updateCourseCardMetaData.data)
@@ -110,7 +107,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     const updateCourseCardMetaDataReq = postRouteAPI(body)
-                    const updateCardDiscriptionReq = updateCourseDetailsAPI(body2)
+                    const updateCardDiscriptionReq = postAuthRouteAPI(body2)
 
                     const [updateCourseCardMetaData, updateCardDiscription] = await Promise.all([updateCourseCardMetaDataReq, updateCardDiscriptionReq])
                     setCourseDetail(updateCourseCardMetaData.data)
@@ -132,13 +129,12 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             setCourseDetail(data)
         } else {
             let body = {
-                data: {
-                    type: 'courseCard',
-                    courseId: editCourseData.id,
-                    id: data.CourseCardMetaData[index].id
-                },
+                routeName: 'deleteCourse',
+                type: 'courseCard',
+                courseId: editCourseData.id,
+                id: data.CourseCardMetaData[index].id
             }
-            await deleteCourseTypeAPI(body).then((res) => {
+            await postAuthRouteAPI(body).then((res) => {
                 remove(name)
                 dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
                 setCourseDetail(editCourseData)
@@ -146,7 +142,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await deleteCourseTypeAPI(body).then((res) => {
+                        await postAuthRouteAPI(body).then((res) => {
                             remove(name)
                             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: res.data })
                             setCourseDetail(editCourseData)

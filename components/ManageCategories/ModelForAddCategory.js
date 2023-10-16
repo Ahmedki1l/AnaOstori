@@ -8,7 +8,7 @@ import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import InputTextArea from '../antDesignCompo/InputTextArea';
 import Switch from '../antDesignCompo/Switch';
-import { editCatagoryAPI, postRouteAPI } from '../../services/apisService';
+import { postRouteAPI } from '../../services/apisService';
 import { toast } from 'react-toastify';
 import { createAndEditBtnText } from '../../constants/ar';
 import { getNewToken } from '../../services/fireBaseAuthService';
@@ -113,7 +113,7 @@ const ModelForAddCategory = ({
                 console.log(error);
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await editCatagoryAPI(values).then(res => {
+                        await postRouteAPI(values).then(res => {
                             apiSuccessRes(adminPanelCategoryConst.updateCategoryMsg)
                             setFileUploadResponceData()
                         })

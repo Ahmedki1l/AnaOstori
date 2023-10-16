@@ -5,7 +5,7 @@ import { useState } from 'react'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { addItemIntoSectionAPI, removeItemFromSectionAPI, postRouteAPI, updateCurriculumSectionAPI, updateMultipleSectionOrderAPI } from '../../../services/apisService'
+import { postRouteAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
@@ -14,6 +14,7 @@ import SectionItems from './SectionItem/SectionItems'
 import { noOfItemTag } from '../../../constants/adminPanelConst/commonConst'
 import { curriculumConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
 import Empty from '../../CommonComponents/Empty'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 
 
@@ -86,9 +87,10 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             id: selectedSection?.id,
         }
         let body = {
-            data: editSectionName
+            routeName: 'updateSection',
+            ...editSectionName,
         }
-        await updateCurriculumSectionAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setIsModelForAddFolderOpen(false)
             setSelectedSection()
             const newSections = sectionDetails?.map((item, index) => {
@@ -114,12 +116,11 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     const handleAddItemtoSection = async (itemList) => {
         let body = {
-            data: {
-                sectionId: selectedSection?.id,
-                items: itemList
-            }
+            routeName: 'addItemToSection',
+            sectionId: selectedSection?.id,
+            items: itemList
         }
-        await addItemIntoSectionAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             let newItems = res.data.items
             let newSectionDetails = sectionDetails.map((section) => {
                 if (section.id == selectedSection?.id) {
@@ -139,7 +140,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         let body = {
             sectionId: deleteItemSectionId,
             itemId: deleteItemId,
-            routeName: 'removeItemFromSection'
+            routeName: 'removeItemToSection'
         }
         await postRouteAPI(body).then((res) => {
             let newItems = res.data.items
@@ -157,22 +158,32 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     const handleDeleteSection = async () => {
         let body = {
-            data: {
-                name: selectedSection?.name,
-                isDeleted: true,
-                id: selectedSection?.id,
-            }
+            routeName: 'updateSection',
+            name: selectedSection?.name,
+            isDeleted: true,
+            id: selectedSection?.id,
         }
-        await updateCurriculumSectionAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             setIsModelForAddFolderOpen(false)
             const newSections = sectionDetails?.filter((item, index) => {
                 return item.id != selectedSection?.id
             })
             setSectionDetails(newSections)
-        }).catch((error) => {
+        }).catch(async (error) => {
             console.log(error);
             if (error?.response?.data?.message == "Curriculum name already in use") {
                 toast.error(toastErrorMessage.curriculumNameError)
+            }
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await postRouteAPI(body).then(async (res) => {
+                        setIsModelForAddFolderOpen(false)
+                        const newSections = sectionDetails?.filter((item, index) => {
+                            return item.id != selectedSection?.id
+                        })
+                        setSectionDetails(newSections)
+                    })
+                })
             }
         })
     }
@@ -193,9 +204,11 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             }
         })
         let body = {
-            data: data
+            routeName: 'updateSection',
+            data: data,
+            type: 'multipleOrder'
         }
-        await updateMultipleSectionOrderAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
         }).catch((error) => {
             console.log(error);
         })
@@ -217,7 +230,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             {sectionDetails?.length == 0 &&
                 <div className={styles.tableBodyArea}>
                     <Empty
-                        // onClick={handleAddSection}
+                        onClick={() => handleAddSection()}
                         containerhight={240}
                         buttonText={'+ إضافة قسم'}
                         emptyText={'باقي ما أضفت قسم'}
@@ -242,8 +255,9 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                         <div className={styles.updownSectionIcon}  {...provided.dragHandleProps}>
                                                             <AllIconsComponenet iconName={'dragIcon'} height={24} width={24} color={'#00000094'} />
                                                         </div>
+                                                        {console.log(section)}
                                                         <p className={styles.sectionTitle}>{section.name}</p>
-                                                        <p className={styles.numberOfItems}>({noOfItemTag(section.items.length)}) </p>
+                                                        <p className={styles.numberOfItems}>({noOfItemTag(section?.items?.length)}) </p>
                                                     </div>
                                                     <div className={styles.headerActionWrapper} >
                                                         <div style={{ height: '14px' }} onClick={() => handleAddItemInSection(section)}>
@@ -261,10 +275,10 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                     </div>
                                                 </label>
                                                 <div className={`${styles.curriculumSectionBody} ${section.showSectionList ? `${styles.showCurriculumSectionBody}` : ""}`}>
-                                                    {section.items.length == 0 &&
+                                                    {section?.items?.length == 0 &&
                                                         <div className='p-4'><p className={` ${styles.addItems} `} onClick={() => handleAddItemInSection(section)}>+ إضافة عنصر</p></div>
                                                     }
-                                                    {section.items.length > 0 &&
+                                                    {section?.items?.length > 0 &&
                                                         <SectionItems
                                                             sectionId={section.id}
                                                             itemList={section.items}

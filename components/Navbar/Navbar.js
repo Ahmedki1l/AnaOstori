@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService'
-import { getCurriculumIdsAPI, getInstructorListAPI, getAuthRouteAPI, getRouteAPI, } from '../../services/apisService';
+import { getAuthRouteAPI, getRouteAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
@@ -54,7 +54,7 @@ export default function Navbar() {
 
 	const catagoryNoAuth = async () => {
 		await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then(res => {
-			setCatagories(res?.data)
+			setCatagories(res?.data.filter((item) => item.published == true))
 		}).catch(async (error) => {
 			console.log(error);
 		})
@@ -64,8 +64,8 @@ export default function Navbar() {
 		try {
 
 			const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
-			const getCurriculumIdsReq = getRouteAPI({ routeName: 'getCurriculum' })
-			const getInstructorListReq = getInstructorListAPI()
+			const getCurriculumIdsReq = getRouteAPI({ routeName: 'getAllCurriculum' })
+			const getInstructorListReq = getRouteAPI({ routeName: 'getAllInstructors' })
 			const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
 
@@ -94,8 +94,8 @@ export default function Navbar() {
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
 					const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
-					const getCurriculumIdsReq = getRouteAPI({ routeName: 'getCurriculum' })
-					const getInstructorListReq = getInstructorListAPI()
+					const getCurriculumIdsReq = getRouteAPI({ routeName: 'getAllCurriculum' })
+					const getInstructorListReq = getRouteAPI({ routeName: 'getAllInstructors' })
 					const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
 					const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([

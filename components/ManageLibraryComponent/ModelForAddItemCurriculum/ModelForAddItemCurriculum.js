@@ -4,7 +4,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './ModelForAddItemCurriculum.module.scss'
 import styled from 'styled-components';
 import SearchInput from '../../antDesignCompo/SearchInput';
-import { getFolderListAPI, getItemListAPI } from '../../../services/apisService';
+import { getAuthRouteAPI, getRouteAPI } from '../../../services/apisService';
 import { useDispatch } from 'react-redux';
 import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import Table from '../../antDesignCompo/Table';
@@ -112,9 +112,10 @@ const ModelForAddItemCurriculum = ({
         setSelectedFolder(selectedFolder)
         setTableLoading(true)
         let body = {
+            routeName: 'getItem',
             folderId: selectedFolder.id
         }
-        await getItemListAPI(body).then((res) => {
+        await getRouteAPI(body).then((res) => {
             setTypeOfListData("item")
             let data = res?.data?.filter(item => item !== null).sort((a, b) =>
                 a.createdAt.localeCompare(b.createdAt)).map((item) => {
@@ -136,7 +137,7 @@ const ModelForAddItemCurriculum = ({
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getItemListAPI(data).then((res) => {
+                    await getRouteAPI(data).then((res) => {
                         setTypeOfListData("item")
                         let data = res?.data?.filter(item => item !== null).sort((a, b) =>
                             a.createdAt.localeCompare(b.createdAt)).map((item) => {
@@ -171,9 +172,10 @@ const ModelForAddItemCurriculum = ({
     const getfolderList = async (folderType) => {
         setTableLoading(true)
         let data = {
-            folderType: folderType,
+            routeName: 'getFolderByType',
+            type: folderType,
         }
-        await getFolderListAPI(data).then((res) => {
+        await getAuthRouteAPI(data).then((res) => {
             setTypeOfListData("folder")
             let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                 return {
@@ -195,7 +197,7 @@ const ModelForAddItemCurriculum = ({
             setTableData([])
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getFolderListAPI(data).then((res) => {
+                    await getAuthRouteAPI(data).then((res) => {
                         setTypeOfListData("folder")
                         let data = res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)).map((item) => {
                             return {

@@ -23,7 +23,9 @@ export const metadata = {
 export async function getServerSideProps(context) {
 	const params = context.query
 	try {
-		const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
+		// const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
+		const newsReq = axios.post(`${process.env.API_BASE_URL}/route`, { routeName: 'listNewsBar' })
+
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`)
 		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=homeMetaData`)
