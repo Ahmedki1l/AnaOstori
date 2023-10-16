@@ -203,7 +203,6 @@ const Index = () => {
             order: "createdAt DESC"
         }
         await postRouteAPI(data).then((res) => {
-            console.log(res);
             setPaginationConfig({
                 ...paginationConfig,
                 total: res.data.totalItems,

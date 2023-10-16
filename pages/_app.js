@@ -100,7 +100,7 @@ function MyApp({ Component, pageProps }) {
 				setPageTitle('الملف الشخصي ')
 				break;
 			case "/updateProfile":
-				setPageTitle('تعديل الملف الشخصي')
+				setPageTitle('تعديل البيانات الشخصية')
 				break;
 			case "/":
 				setPageTitle('الرئيسية')

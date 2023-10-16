@@ -18,6 +18,7 @@ export const inputErrorMessages = {
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
     mobileRequiredErrorMsg: "رقم جوالك لاهنت",
     // categoryDiscriptionAddMsg: 'please enter category discription',
+    enterEmailInputErrorMsg: 'فضلا ادخل ايميلك بطريقة صحيحة',//enter email
 }
 
 export const inputSuccessMessages = {
@@ -47,7 +48,7 @@ export const toastSuccessMessage = {
     passwordUpdateMsg: "تم تحديث كلمة السر بنجاح", //"Password updated successfully"
     accountRestoredMsg: 'تم استعادة الحساب بنجاح', //'Account restored successfully'
     copiedMsg: "تم النسخ", //"copied"
-    forgotPasswordLinkSend: " تم ارسال رابط الى ايميلك لتغيير كلمة السر", //A link has been sent to your email to change your password.
+    forgotPasswordLinkSend: 'ارسلنا لك رابط تغيير كلمة السر على ايميلك 👍🏼', //A link has been sent to your email to change your password.
     courseDetailUpdateMsg: "تم تحديث تفاصيل الدورة بنجاح", //Course details have been updated successfully.
     courseCreatedSuccessMsg: 'إضافة وتعديل المجالات',//"Course details created successfully.",
     externalCourseDetailCreateMsg: 'إضافة وتعديل الدورات', //'course details created successfully',
