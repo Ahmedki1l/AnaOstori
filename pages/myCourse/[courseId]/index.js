@@ -106,7 +106,6 @@ export default function Index() {
     }
 
     const getCurrentItemId = (watchedItems, ccSections) => {
-        console.log(watchedItems);
         if (watchedItems.length == 0) {
             setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id)
             router.push(`/myCourse/${courseID}/${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id}`)

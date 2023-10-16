@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styles from './Attendance.module.scss'
-import { generateAttendanceQRAPI, getAttendanceListAPI, updateAttendanceDataAPI } from '../../../services/apisService'
+import { getAttendanceListAPI, getRouteAPI, updateAttendanceDataAPI } from '../../../services/apisService'
 import QRCode from '../../CommonComponents/QRCode/QRCode'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
@@ -8,7 +8,7 @@ import AttendanceTable from './AttendanceTableComponent/AttendanceTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { dateRange, dateWithDay } from '../../../constants/DateConverter'
 import dayjs from 'dayjs'
-import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 import CustomButton from '../../CommonComponents/CustomButton'
 import Empty from '../../CommonComponents/Empty'
 import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
@@ -41,16 +41,19 @@ export default function Attendance(props) {
 
     const generateQR = async () => {
         setOpenQR(true)
-        await generateAttendanceQRAPI().then((res) => {
+        await getRouteAPI({ routeName: 'getAttendanceKey' }).then((res) => {
             setAttendanceKey(res?.data?.key)
-        }).catch((error) => {
+        }).catch(async (error) => {
             toast.error(toastErrorMessage.tryAgainErrorMsg)
             console.log(error);
             if (error?.response?.status == 401) {
-                signOutUser()
-                dispatch({
-                    type: 'EMPTY_STORE'
-                });
+                await getNewToken().then(async (token) => {
+                    await getRouteAPI({ routeName: 'getAttendanceKey' }).then((res) => {
+                        setAttendanceKey(res?.data?.key)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                })
             }
         })
     }
@@ -119,17 +122,23 @@ export default function Attendance(props) {
 
     }
     const handlSelectAvailability = async (e) => {
+        // let body = {
+        //     availabilityId: e,
+        // }
         let body = {
             availabilityId: e,
+            routeName: "getAttendanceByAvailability",
         }
-        await getAttendanceListAPI(body).then((res) => {
+        // await getAttendanceListAPI(body).then((res) => {
+        await getRouteAPI(body).then((res) => {
             createAttendanceTableData(e, res.data)
             setShowAttendanceTable(res.data.length > 0 ? true : false)
         }).catch(async (error) => {
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getAttendanceListAPI(body).then((res) => {
+                    // await getAttendanceListAPI(body).then((res) => {
+                    await getRouteAPI(body).then((res) => {
                         createAttendanceTableData(e, res.data)
                         setShowAttendanceTable(res.data.length > 0 ? true : false)
                     })

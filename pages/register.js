@@ -27,7 +27,7 @@ export default function Register() {
 	const [isPhoneNumberError, setIsPhoneNumberError] = useState(false);
 	const [isGenderError, setIsGenderError] = useState(false);
 
-	const [firstNameError, setFirstNameError] = useState(null);
+	const [fullNameError, setFullNameError] = useState(null);
 	const [phoneNumberError, setPhoneNumberError] = useState(false);
 	const [emailError, setEmailError] = useState(null);
 	const [passwordError, setPasswordError] = useState(null);
@@ -143,10 +143,10 @@ export default function Register() {
 
 	useEffect(() => {
 		if (fullName && (fullName.split(" ").length - 1) < 2) {
-			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+			setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
 		else {
-			setFirstNameError(null)
+			setFullNameError(null)
 		}
 		if (email && !(regexEmail.test(email))) {
 
@@ -177,9 +177,9 @@ export default function Register() {
 	const handleSignup = async () => {
 		setLoading(true);
 		if (!fullName) {
-			setFirstNameError(inputErrorMessages.firstNameErrorMsg);
+			setFullNameError(inputErrorMessages.fullNameErrorMsg);
 		} else if (fullName && (fullName.split(" ").length - 1) < 2) {
-			setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+			setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		}
 		if (!gender) {
 			setIsGenderError(inputErrorMessages.genderErrorMsg);
@@ -190,7 +190,7 @@ export default function Register() {
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
-		else if (firstNameError == null && emailError == null && passwordError == null) {
+		else if (fullNameError == null && emailError == null && passwordError == null) {
 			await signupWithEmailAndPassword(email, password, fullName, phoneNumber, gender);
 		}
 	}
@@ -221,7 +221,7 @@ export default function Register() {
 							<input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={user?._tokenResponse?.fullName ? user?._tokenResponse?.fullName : fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
 						</div>
-						{firstNameError ? <p className={styles.errorText}>{firstNameError}</p> : ""}
+						{fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
 						<div className={`formInputBox ${styles.radioBtnDiv}`}>
 							<p className={`pl-4 ${styles.genderText}`}>الجنس</p>
 							<input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
@@ -266,7 +266,7 @@ export default function Register() {
 						{!isPasswordError && <p className={styles.passwordHintText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p>}
 						{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
 						<div className={styles.loginBtnBox}>
-							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (firstNameError !== null || emailError !== null || passwordError !== null || !fullName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
+							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (fullNameError !== null || emailError !== null || passwordError !== null || !fullName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>

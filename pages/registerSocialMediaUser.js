@@ -18,13 +18,8 @@ export default function RegisterSocialMediaUser() {
     const [gender, setGender] = useState("")
 
 
-    const [firstNameError, setFirstNameError] = useState('');
+    const [fullNameError, setFullNameError] = useState('');
     const [phoneNumberError, setPhoneNumberError] = useState('');
-    const [phoneNumberValidError, setPhoneNumberValidError] = useState('')
-
-    const [showFirstNameError, setShowFirstNameError] = useState(false)
-    const [showPhoneError, setShowPhoneError] = useState(false)
-
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -58,10 +53,10 @@ export default function RegisterSocialMediaUser() {
 
     useEffect(() => {
         if (fullName && (fullName.split(" ").length - 1) < 2) {
-            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
         }
         else {
-            setFirstNameError(null)
+            setFullNameError(null)
         }
 
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
@@ -76,16 +71,16 @@ export default function RegisterSocialMediaUser() {
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
         if (!fullName) {
-            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
+            setFullNameError(inputErrorMessages.fullNameErrorMsg)
         }
         else if ((fullName.split(" ").length - 1) < 2) {
-            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
+            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg)
 
         }
         if (!phoneNumber) {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
-        else if (firstNameError == null && phoneNumberError == null) {
+        else if (fullNameError == null && phoneNumberError == null) {
             const body = {
                 fullName: fullName,
                 phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,
@@ -121,7 +116,7 @@ export default function RegisterSocialMediaUser() {
                         <input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
                         <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
                     </div>
-                    {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
+                    {fullNameError !== null ? <p className={styles.errorText}>{fullNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                     <div className={`formInputBox ${styles.radioBtnDiv}`}>
                         <p className={`pl-4 ${styles.genderText}`}>الجنس</p>
                         <input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
@@ -138,7 +133,7 @@ export default function RegisterSocialMediaUser() {
                     </div>
                     {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>بصيغة 05xxxxxxxx</p>}
                     <div className={styles.loginBtnBox}>
-                        <button className='primarySolidBtn' type='submit' disabled={(firstNameError || phoneNumberError || !fullName || !phoneNumber) ? true : false} >انشاء حساب</button>
+                        <button className='primarySolidBtn' type='submit' disabled={(fullNameError || phoneNumberError || !fullName || !phoneNumber) ? true : false} >انشاء حساب</button>
                     </div>
                 </form>
                 <p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink"> تسجيل الدخول</Link></p>

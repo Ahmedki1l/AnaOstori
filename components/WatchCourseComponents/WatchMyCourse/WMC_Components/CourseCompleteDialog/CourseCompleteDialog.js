@@ -30,7 +30,7 @@ function CourseCompleteDialog() {
                             <div className={styles.fireOmageDiv}>
                                 <Image src="/images/fire.png" alt='Gif Image' layout='fill' objectFit="cover" priority />
                             </div>
-                            <p className={`fontBold px-2 ${styles.headerText}`}>{storeData?.viewProfileData?.firstName} أسطوري يا </p>
+                            <p className={`fontBold px-2 ${styles.headerText}`}>{storeData?.viewProfileData?.fullName} أسطوري يا </p>
                         </div>
                         <p className='text-center'>بكذا قفلت على الدورة ومتأكدين انك رح تجلد الاختبار <br /> نتمنى منك تشاركنا تقييمك للدورة عشان نحسن الدورة للأفضل ونساعد دفع الأساطير الجاية</p>
                         <div className='flex justify-center items-center'>

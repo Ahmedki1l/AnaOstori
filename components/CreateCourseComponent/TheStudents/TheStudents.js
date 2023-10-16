@@ -302,7 +302,7 @@ const TheStudent = (props) => {
                                                             <div className={styles.StudentListImage}>
                                                                 <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
                                                             </div>
-                                                            <p className={styles.requesterName}>{student?.userProfile?.firstName ? student?.userProfile?.firstName : student?.userProfile?.fullName}</p>
+                                                            <p className={styles.requesterName}>{student?.userProfile?.fullName ? student?.userProfile?.fullName : student?.userProfile?.firstName}</p>
                                                         </div>
                                                     </div>
                                                 </td>

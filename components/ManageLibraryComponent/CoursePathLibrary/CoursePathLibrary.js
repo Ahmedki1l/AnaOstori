@@ -4,7 +4,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import { useRouter } from 'next/router'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
-import { getCurriculumIdsAPI, updateCurriculumAPI } from '../../../services/apisService'
+import { getCurriculumIdsAPI, getRouteAPI, postRouteAPI } from '../../../services/apisService'
 import { useSelector, useDispatch } from 'react-redux'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../CommonComponents/Empty'
@@ -36,15 +36,14 @@ const CoursePathLibrary = () => {
 
     const handleDeleteFolderItems = async () => {
         let editBody = {
-            data: {
-                isDeleted: true,
-                name: selectedCurriculum.name,
-                id: selectedCurriculum.id,
-            }
+            routeName: "updateCurriculumHandler",
+            isDeleted: true,
+            name: selectedCurriculum.name,
+            id: selectedCurriculum.id,
         }
-        await updateCurriculumAPI(editBody).then(async (res) => {
+        await postRouteAPI(editBody).then(async (res) => {
             toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg)
-            await getCurriculumIdsAPI().then((res) => {
+            await getRouteAPI({ routeName: 'getCurriculum' }).then((res) => {
                 dispatch({
                     type: 'SET_CURRICULUMIDS',
                     curriculumIds: res.data,
@@ -54,9 +53,9 @@ const CoursePathLibrary = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await updateCurriculumAPI(editBody).then(async (res) => {
+                    await postRouteAPI(editBody).then(async (res) => {
                         toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg)
-                        await getCurriculumIdsAPI().then((res) => {
+                        await getRouteAPI({ routeName: 'getCurriculum' }).then((res) => {
                             dispatch({
                                 type: 'SET_CURRICULUMIDS',
                                 curriculumIds: res.data,
@@ -157,7 +156,8 @@ const CoursePathLibrary = () => {
                     onCloseModal={onCloseModal}
                     deleteItemType={'curriculum'}
                     onDelete={handleDeleteFolderItems}
-                />}
+                />
+            }
         </>
     )
 }

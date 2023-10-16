@@ -1,7 +1,7 @@
 export const inputErrorMessages = {
     noEmailErrorMsg: "فضلا ادخل الايميل", //"Please enter your email",
     noPasswordMsg: "فضلا ادخل كلمة السر", //"Please enter your password",
-    firstNameErrorMsg: "فضلا ادخل اسمك الاول", //Please enter your first name.
+    // firstNameErrorMsg: "فضلا ادخل اسمك الاول", //Please enter your first name.
     lastNameErrorMsg: "فضلا ادخل اسم العائلة", //"Please enter your last name",
     fullNameErrorMsg: "فضلا ادخل الاسم الثلاثي",  //Please enter your full name
     genderErrorMsg: "فضلا اختر الجنس", //"Please select the gender",
@@ -37,7 +37,7 @@ export const toastErrorMessage = {
 }
 
 export const toastSuccessMessage = {
-    successLoginMsg: "تم تسجيل الدخول بنجاح", // "Successfully logged in",
+    successLoginMsg: "الله يحيك نورتنا برجعتك",// "تم تسجيل الدخول بنجاح", // "Successfully logged in",
     successRegisterMsg: "لقد تم تسجيل حسابك بنجاح",//"Successfully registered",
     mobileNoUpdateMsg: "تم تحديث رقم الجوال بنجاح", //The mobile number has been updated successfully.
     profileUpdateMsg: "تم تحديث الملف الشخصي بنجاح", //"Profile updated successfully"

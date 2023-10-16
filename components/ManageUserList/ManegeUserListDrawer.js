@@ -32,7 +32,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
             <Form form={userForm} onFinish={handleSaveUserDetails}>
                 <p className='fontBold py-2' style={{ fontSize: '18px' }}>اسم الطالب</p>
                 <FormItem
-                    name={'firstName'}>
+                    name={'fullName'}>
                     <Input
                         disabled={true}
                         width={350}

@@ -68,7 +68,6 @@ const Index = () => {
             id: editNews.id,
             isDeleted: true
         }
-        console.log(body);
         await postRouteAPI(body).then((res) => {
             toast.success(manageNewBarText.deleteNewsSuccessMsg)
             getNewsList()
