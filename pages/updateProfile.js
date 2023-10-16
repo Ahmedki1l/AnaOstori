@@ -102,6 +102,7 @@ const UpdateProfile = () => {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
         else if (fullNameError == null && phoneNumberError == null) {
+            if (!fullName) return
             setShowLoader(true)
 
             const data = {

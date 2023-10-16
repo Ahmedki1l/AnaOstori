@@ -166,6 +166,7 @@ export default function AttendanceTable(props) {
                                 <div className={styles.tableFirstColoumCell} >
                                     <div className='flex items-center px-3'>
                                         <div>
+                                            {console.log(student)}
                                             <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student.studentAvatarKey == null ? student.studentAvatar : `${mediaUrl(student.studentAvatarBucket, student.studentAvatarKey)}`} />
                                         </div>
                                         <div className='pr-3'><p>{student.studentName}</p></div>
