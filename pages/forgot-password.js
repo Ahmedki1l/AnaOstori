@@ -4,6 +4,7 @@ import Icon from '../components/CommonComponents/Icon'
 import styles from '../styles/ForgotPassword.module.scss'
 import { forgotPassword } from '../services/fireBaseAuthService'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
+import { inputErrorMessages } from '../constants/ar'
 
 export default function ForgotPassword() {
 
@@ -28,8 +29,6 @@ export default function ForgotPassword() {
 
 	}, [email, regexEmail])
 
-
-
 	return (
 		<>
 			<div className={`relative ${styles.mainPage}`}>
@@ -43,7 +42,7 @@ export default function ForgotPassword() {
 						<input className={`formInput ${styles.formInput}`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 						<label className={`formLabel ${styles.formLabel}`} htmlFor="email">الايميل</label>
 					</div>
-					{isEmailError && <p className={styles.errorText}>Email is not valid</p>}
+					{isEmailError && <p className={styles.errorText}>{inputErrorMessages.enterEmailInputErrorMsg}</p>}
 
 					<div className={styles.loginBtnBox}>
 						<button className='primarySolidBtn' type='submit' disabled={!email || isEmailError ? true : false} onClick={() => forgotPassword(email)}>إرسال</button>

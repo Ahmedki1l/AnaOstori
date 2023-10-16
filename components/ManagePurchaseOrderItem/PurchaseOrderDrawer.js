@@ -251,8 +251,7 @@ const PurchaseOrderDrawer = (props) => {
                             <>
                                 <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.availabilityTitle}</p>
                                 <div className={styles.purchaseOrderBox}>
-                                    <p>{dateRange(item.createdAt, item.updatedAt
-                                    )}</p>
+                                    <p>{dateRange(item.availability.dateFrom, item.availability.dateTo)}</p>
                                 </div>
                             </>
                         }
