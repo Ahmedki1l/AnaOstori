@@ -49,7 +49,6 @@ const Index = () => {
             routeName: 'categories'
         }
         await getAuthRouteAPI(data).then((res) => {
-            console.log(res);
             dispatch({
                 type: 'SET_CATAGORIES',
                 catagories: res.data

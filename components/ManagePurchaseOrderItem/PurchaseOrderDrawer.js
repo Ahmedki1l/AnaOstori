@@ -61,7 +61,6 @@ const PurchaseOrderDrawer = (props) => {
                 failedReason: value.failedReason
             }
             await postAuthRouteAPI(body).then((res) => {
-                console.log(res);
                 setShowBtnLoader(false)
                 props.onClose(true)
             }).catch(async (error) => {

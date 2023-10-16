@@ -24,7 +24,6 @@ const ModelForAddItemLibrary = ({
     existingItemName,
     cancleUpload
 }) => {
-    console.log(cancleUpload);
     const [ItemDetailsForm] = Form.useForm();
     const isEdit = selectedItem?.id ? true : false
     const [fileName, setFileName] = useState()
@@ -231,7 +230,6 @@ const ModelForAddItemLibrary = ({
                             </FormItem>
                             {folderType !== "quiz" &&
                                 <>
-                                    {console.log(cancleUpload)}
                                     <p className={styles.uploadFileText}>{folderType == 'video' ? addVideoModelConst.videoFileInputPlaceholder : addPdfModelConst.pdfFileInputPlaceholder}</p>
                                     <UploadFileForModel
                                         fileName={selectedItem?.linkKey}

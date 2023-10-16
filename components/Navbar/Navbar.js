@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService'
-import { getCurriculumIdsAPI, getInstructorListAPI, getAuthRouteAPI, } from '../../services/apisService';
+import { getCurriculumIdsAPI, getInstructorListAPI, getAuthRouteAPI, getRouteAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
@@ -64,7 +64,7 @@ export default function Navbar() {
 		try {
 
 			const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
-			const getCurriculumIdsReq = getCurriculumIdsAPI()
+			const getCurriculumIdsReq = getRouteAPI({ routeName: 'getCurriculum' })
 			const getInstructorListReq = getInstructorListAPI()
 			const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
@@ -94,7 +94,7 @@ export default function Navbar() {
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
 					const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
-					const getCurriculumIdsReq = getCurriculumIdsAPI()
+					const getCurriculumIdsReq = getRouteAPI({ routeName: 'getCurriculum' })
 					const getInstructorListReq = getInstructorListAPI()
 					const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 

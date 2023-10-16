@@ -59,13 +59,13 @@ export const updateProfile = (data) => { return instance.post('/updateProfile', 
 // export const subcribeNotificationAPI = (data) => { return instance.post(`course/subscribe/${data?.courseId}`, data?.data) }
 
 export const getCurriculumIdsAPI = () => { return instance.get('/curriculum/list') }
-export const generateAttendanceQRAPI = (data) => { return instance.get('/attendance/key') }
+// export const generateAttendanceQRAPI = (data) => { return instance.get('/attendance/key') }
 export const getInstructorListAPI = (data) => { return instance.get('/instructor/list') }
 
 // export const createCourseAvailabilityAPI = (data) => { return instance.post('/course/availability/create', data?.data) }
 // export const getAllAvailabilityAPI = (data) => { return instance.get(`/availibiltyByCourseId/${data?.courseId}/all`) }
 export const editAvailabilityAPI = (data) => { return instance.post(`/course/availability/update/${data?.availabilityId}`, data?.data) }
-export const getAllCourseByInstructor = (data) => { return instance.get(`/courseByInstructor?type=${data?.courseType}`) }
+// export const getAllCourseByInstructor = (data) => { return instance.get(`/courseByInstructor?type=${data?.courseType}`) }
 
 // **************** Create Course Apis **************//
 export const createCourseByInstructorAPI = (data) => { return instance.post('/course/createCourseByInstructor', data?.data) }
@@ -113,7 +113,7 @@ export const getItemListAPI = (data) => { return instance.get(`/item/list?folder
 // ********* Manage Curriculum APIs ***********//
 
 // export const createCurriculumAPI = (data) => { return instance.post(`/curriculum/create`, data?.data) }
-export const updateCurriculumAPI = (data) => { return instance.post(`/curriculum/update`, data?.data) }
+// export const updateCurriculumAPI = (data) => { return instance.post(`/curriculum/update`, data?.data) }
 export const getCurriculumDetailsAPI = (data) => { return instance.get(`/curriculum/${data?.curriculumId}`, data?.data) }
 
 

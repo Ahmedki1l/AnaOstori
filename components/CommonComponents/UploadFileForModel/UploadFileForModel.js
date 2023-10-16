@@ -28,7 +28,6 @@ const UploadFileForModel = ({
     const source = axios.CancelToken.source();
 
     useEffect(() => {
-        console.log(cancleUpload);
         if (cancleUpload) {
             source.cancel('Upload cancelled by user');
         }

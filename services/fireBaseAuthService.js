@@ -50,12 +50,11 @@ export const forgotPassword = async (email) => {
 }
 
 
-export const signupWithEmailAndPassword = async (email, password, firstName, phoneNumber, gender) => {
+export const signupWithEmailAndPassword = async (email, password, fullName, phoneNumber, gender) => {
 	await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
 		localStorage.setItem("accessToken", userCredential?.user?.accessToken);
 		const body = {
-			firstName: firstName,
-			fullName: firstName,
+			fullName: fullName,
 			phone: phoneNumber.replace(/[0-9]/, "+966"),
 			gender: gender
 		}

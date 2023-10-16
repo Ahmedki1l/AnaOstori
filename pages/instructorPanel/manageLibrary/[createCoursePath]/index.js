@@ -5,7 +5,7 @@ import Input from '../../../../components/antDesignCompo/Input'
 import { Form } from 'antd'
 import CurriculumSectionComponent from '../../../../components/ManageLibraryComponent/CurriculumSectionComponent/CurriculumSectionComponent'
 import { useDispatch } from 'react-redux'
-import { getCurriculumDetailsAPI, getCurriculumIdsAPI, getSectionListAPI, postRouteAPI, updateCurriculumAPI } from '../../../../services/apisService'
+import { getCurriculumDetailsAPI, getCurriculumIdsAPI, getRouteAPI, getSectionListAPI, postRouteAPI } from '../../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
@@ -65,8 +65,7 @@ const CreateCoursePath = (props) => {
 
 
     const updateCurriculumList = async () => {
-        await getCurriculumIdsAPI().then((res) => {
-            console.log(res);
+        await getRouteAPI({ routeName: 'getCurriculum' }).then((res) => {
             dispatch({
                 type: 'SET_CURRICULUMIDS',
                 curriculumIds: res.data,
@@ -97,6 +96,8 @@ const CreateCoursePath = (props) => {
             })
         }
         else {
+            console.log('update');
+            console.log(item.pathTitle);
             if (item.pathTitle == curriculmName) {
                 router.push({
                     pathname: `/instructorPanel/manageLibrary`,
@@ -111,9 +112,7 @@ const CreateCoursePath = (props) => {
                 name: item.pathTitle,
                 id: routeParams.coursePathId,
             }
-            console.log(editBody);
             await postRouteAPI(editBody).then((res) => {
-                console.log(res);
                 updateCurriculumList()
                 router.push({
                     pathname: `/instructorPanel/manageLibrary`,
@@ -133,7 +132,7 @@ const CreateCoursePath = (props) => {
 
     return (
         <div>
-            <Form form={courseForm} onFinish={onFinishCreateCoursepath} >
+            <Form form={courseForm} onFinish={onFinishCreateCoursepath}>
                 <div className={styles.borderBottomNavbar}>
                     <div className='maxWidthDefault px-4'>
                         <BackToPath
@@ -170,8 +169,8 @@ const CreateCoursePath = (props) => {
                                 />
                             }
                             <div className={`${styles.savePathTitle}`}>
-                                {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `} type='submit'>حفظ ومتابعة</button>}
-                                {curriculmName && <button className={`primarySolidBtn ${styles.btnText}`} type='submit'>حفظ</button>}
+                                {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `} type='submit' >حفظ ومتابعة</button>}
+                                {curriculmName && <button className={`primarySolidBtn ${styles.btnText}`} type='submit' >حفظ</button>}
                             </div>
                         </div>
                     </div>

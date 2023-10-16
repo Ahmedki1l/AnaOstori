@@ -30,7 +30,9 @@ function Index() {
 
     useEffect(() => {
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
-        getfolderList(router.query.folderType)
+        if (router.query.folderType !== 'curriculum') {
+            getfolderList(router.query.folderType)
+        }
     }, [router.query.folderType])
 
     useEffect(() => {

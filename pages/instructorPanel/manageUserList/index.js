@@ -34,12 +34,12 @@ const Index = () => {
     const tableColumns = [
         {
             title: 'اسم الطالب',
-            dataIndex: 'firstName',
+            dataIndex: 'fullName',
             render: (text, _record) => {
                 return (
                     <div className='flex items-center'>
                         <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={_record.avatarKey == null ? _record.avatar : ''} />
-                        <p className='pr-2'>{_record.firstName ? _record.firstName : _record.fullName}</p>
+                        <p className='pr-2'>{_record.fullName ? _record.fullName : _record.firstName}</p>
                     </div>
                 )
 
