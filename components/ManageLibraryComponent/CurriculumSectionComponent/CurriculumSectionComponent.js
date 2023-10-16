@@ -58,11 +58,9 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const handleCreateSection = async ({ name }) => {
         let body = {
             routeName: 'createSection',
-            data: {
-                name: name,
-                curriculumId: router.query.coursePathId,
-                order: sectionDetails?.length + 1
-            }
+            name: name,
+            curriculumId: router.query.coursePathId,
+            order: sectionDetails?.length + 1
         }
         await postRouteAPI(body).then((res) => {
             let newSection = res.data

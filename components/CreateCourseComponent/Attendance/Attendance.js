@@ -81,9 +81,10 @@ export default function Attendance(props) {
         const attendanceDetailsData = data.map((student, index) => {
             const studentData = {
                 key: `studentAttendance${index}`,
-                studentName: student.firstName,
+                studentName: student.fullName,
                 studentAvatar: student.avatar,
                 studentAvatarKey: student.avatarKey,
+                studentAvatarBucket: student.avatarBucket,
                 attendancePercentage: '10',
                 attendanceDetails: []
             }
@@ -126,8 +127,8 @@ export default function Attendance(props) {
         //     availabilityId: e,
         // }
         let body = {
-            availabilityId: e,
             routeName: "getAttendanceByAvailability",
+            availabilityId: e,
         }
         // await getAttendanceListAPI(body).then((res) => {
         await getRouteAPI(body).then((res) => {
