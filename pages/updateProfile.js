@@ -16,7 +16,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 
 const UpdateProfile = () => {
     const storeData = useSelector((state) => state?.globalStore);
-    const [firstName, setFirstName] = useState(storeData?.viewProfileData?.firstName)
+    const [fullName, setFullName] = useState(storeData?.viewProfileData?.fullName)
 
 
     const [showLoader, setShowLoader] = useState(false);
@@ -24,23 +24,21 @@ const UpdateProfile = () => {
     const [profileUrl, setProfileUrl] = useState(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
 
     const [uploadLoader, setUploadLoader] = useState(false)
-    const [gender, setGender] = useState();
+    const [gender, setGender] = useState(storeData?.viewProfileData?.gender);
 
-    const [firstNameError, setFirstNameError] = useState(null);
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const [fullNameError, setFullNameError] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState(storeData?.viewProfileData?.phone?.replace('966', '0'));
     const [phoneNumberError, setPhoneNumberError] = useState(null);
 
     const dispatch = useDispatch();
     const router = useRouter()
-
-    useEffect(() => {
-        setFirstName(storeData?.viewProfileData?.firstName);
-        if (storeData?.viewProfileData?.phone) {
-            setPhoneNumber(storeData?.viewProfileData?.phone.replace('966', '0'));
-        }
-        setGender(storeData?.viewProfileData?.gender)
-        setProfileUrl(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
-    }, [storeData?.viewProfileData])
+    // useEffect(() => {
+    //     setFullName(storeData?.viewProfileData?.fullName);
+    //     if (storeData?.viewProfileData?.phone) {
+    //         setPhoneNumber(storeData?.viewProfileData?.phone.replace('966', '0'));
+    //     }
+    //     setProfileUrl(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
+    // }, [storeData?.viewProfileData])
 
     const uploadPhoto = async (e) => {
         setUploadLoader(true)
@@ -74,11 +72,11 @@ const UpdateProfile = () => {
 
 
     useEffect(() => {
-        if (firstName && (firstName.split(" ").length - 1) < 2) {
-            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+        if (fullName && (fullName.split(" ").length - 1) < 2) {
+            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
         }
         else {
-            setFirstNameError(null)
+            setFullNameError(null)
         }
 
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
@@ -87,28 +85,27 @@ const UpdateProfile = () => {
         else {
             setPhoneNumberError(null);
         }
-    }, [firstName, phoneNumber])
+    }, [fullName, phoneNumber])
 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!firstName) {
-            setFirstNameError(inputErrorMessages.firstNameErrorMsg)
+        if (!fullName) {
+            setFullNameError(inputErrorMessages.fullNameErrorMsg)
         }
-        else if ((firstName.split(" ").length - 1) < 2) {
-            setFirstNameError(inputErrorMessages.nameThreeFoldErrorMsg)
+        else if ((fullName.split(" ").length - 1) < 2) {
+            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg)
 
         }
         if (!phoneNumber) {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
-        else if (firstNameError == null && phoneNumberError == null) {
+        else if (fullNameError == null && phoneNumberError == null) {
             setShowLoader(true)
 
             const data = {
-                firstName: firstName,
-                fullName: firstName,
+                fullName: fullName,
                 phone: phoneNumber && phoneNumber.replace(/[0-9]/, '+966'),
                 gender: gender
             }
@@ -119,7 +116,7 @@ const UpdateProfile = () => {
 
             const params = {
                 routeName: 'updateProfileHandler',
-                data: data,
+                ...data,
             }
             await postAuthRouteAPI(params).then(async (res) => {
                 toast.success(toastSuccessMessage.profileUpdateMsg)
@@ -159,10 +156,10 @@ const UpdateProfile = () => {
                                         <div className={`formInputIconDiv ${styles.iconDiv}`}>
                                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                                         </div>
-                                        <input className={firstNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='firstName' id='firstName' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} placeholder=' ' />
-                                        <label className={firstNameError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="firstName">الاسم الثلاثي</label>
+                                        <input className={fullNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='fullName' id='fullName' value={fullName} onChange={(e) => { setFullName(e.target.value) }} placeholder=' ' />
+                                        <label className={fullNameError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
                                     </div>
-                                    {firstNameError !== null ? <p className={styles.errorText}>{firstNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
+                                    {fullNameError !== null ? <p className={styles.errorText}>{fullNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
                                 </div>
                                 <div className='w-full'>
                                     <div className={`formInputBox ${styles.formFieldDiv}`}>

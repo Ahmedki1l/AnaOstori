@@ -7,7 +7,7 @@ import ManageAppVersionModel from '../../components/ManageAppVersion/ManageAppVe
 
 export default function Index() {
     const storeData = useSelector(state => state.globalStore)
-    const instructorName = storeData?.viewProfileData?.firstName
+    const instructorName = storeData?.viewProfileData?.fullName
 
     const [isModelForAppVersion, setIsModelforAppVersion] = useState(false)
 

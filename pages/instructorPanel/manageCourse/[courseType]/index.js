@@ -3,7 +3,7 @@ import styles from '../../../../styles/InstructorPanelStyleSheets/CourseListComp
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { useDispatch } from 'react-redux'
-import { getAllCourseByInstructor, updateCourseDetailsAPI } from '../../../../services/apisService'
+import { getAuthRouteAPI, updateCourseDetailsAPI } from '../../../../services/apisService'
 import { fullDate } from '../../../../constants/DateConverter'
 import { getNewToken } from '../../../../services/fireBaseAuthService'
 import Image from 'next/legacy/image'
@@ -32,9 +32,10 @@ export default function Index() {
     useEffect(() => {
         const getAllCourse = async () => {
             let body = {
-                courseType: courseType == "onDemand" ? "on-demand" : courseType,
+                routeName: "getCourseByInstructor",
+                type: courseType == "onDemand" ? "on-demand" : courseType,
             }
-            await getAllCourseByInstructor(body).then(res => {
+            await getAuthRouteAPI(body).then(res => {
                 setAllPhysicalCourses(res?.data)
             }).catch(async (error) => {
                 console.log(error);

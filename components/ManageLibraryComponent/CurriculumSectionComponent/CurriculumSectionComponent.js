@@ -11,9 +11,9 @@ import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import SectionItems from './SectionItem/SectionItems'
-import Empty from '../../CommonComponents/Empty'
 import { noOfItemTag } from '../../../constants/adminPanelConst/commonConst'
 import { curriculumConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
+import Empty from '../../CommonComponents/Empty'
 
 
 
@@ -57,14 +57,13 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
 
     const handleCreateSection = async ({ name }) => {
         let body = {
+            routeName: 'createSection',
             data: {
-                routeName: 'createSection',
                 name: name,
                 curriculumId: router.query.coursePathId,
                 order: sectionDetails?.length + 1
             }
         }
-        console.log(body);
         await postRouteAPI(body).then((res) => {
             let newSection = res.data
             newSection.items = []
@@ -141,9 +140,10 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     const handleDeleteSectionItem = async () => {
         let body = {
             sectionId: deleteItemSectionId,
-            itemId: deleteItemId
+            itemId: deleteItemId,
+            routeName: 'removeItemFromSection'
         }
-        await removeItemFromSectionAPI(body).then((res) => {
+        await postRouteAPI(body).then((res) => {
             let newItems = res.data.items
             let newSectionDetails = sectionDetails.map((section) => {
                 if (section.id == deleteItemSectionId) {
@@ -219,7 +219,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             {sectionDetails?.length == 0 &&
                 <div className={styles.tableBodyArea}>
                     <Empty
-                        onClick={handleAddSection}
+                        // onClick={handleAddSection}
                         containerhight={240}
                         buttonText={'+ إضافة قسم'}
                         emptyText={'باقي ما أضفت قسم'}

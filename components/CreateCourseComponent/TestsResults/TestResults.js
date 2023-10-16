@@ -321,9 +321,9 @@ const TestResults = (props) => {
     const handleSearchName = (e) => {
         const newStudentList = [...studentList]
         const filteredList = newStudentList.filter((student) => {
-            const firstName = student.userProfile.firstName.toLowerCase();
+            const fullName = student.userProfile.fullName.toLowerCase();
             const searchName = e.target.value.toLowerCase();
-            return firstName.includes(searchName);
+            return fullName.includes(searchName);
         });
         setUpdatedStudentList(filteredList)
     }
@@ -426,7 +426,7 @@ const TestResults = (props) => {
                                                         <div className={styles.StudentListImage}>
                                                             <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
                                                         </div>
-                                                        <p className={styles.studentName}>{student?.userProfile?.firstName == "" ? student?.userProfile?.fullName : student?.userProfile?.firstName}</p>
+                                                        <p className={styles.studentName}>{student?.userProfile?.fullName ? student?.userProfile?.fullName : student?.userProfile?.firstName}</p>
                                                     </div>
                                                 </div>
                                             </td>

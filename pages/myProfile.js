@@ -20,7 +20,7 @@ export default function MyProfile() {
 				<div className="maxWidthDefault sm:p-4 p-0">
 					<div className={`pt-8 ${styles.profileInfoWrapper}`}>
 						<ProfilePicture height={116} width={116} alt={'Profile Picture'} pictureKey={userDetails?.avatarKey == null ? userDetails?.avatar : mediaUrl(userDetails?.avatarBucket, userDetails?.avatarKey)} />
-						<p className={`font-bold ${styles.userNameText}`}>{userDetails?.firstName}</p>
+						<p className={`font-bold ${styles.userNameText}`}>{userDetails?.fullName}</p>
 						<div className={styles.updateProfileBtnBox}>
 							<button className='primaryStrockedBtn' onClick={() => Router.push('/updateProfile')}>تعديل البيانات الشخصية</button>
 						</div>

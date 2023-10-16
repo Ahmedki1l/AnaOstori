@@ -74,7 +74,7 @@ const DeleteAccount = ({ data }) => {
             {accountsSectionType == 'default' ?
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>حذف الحساب</h3>
-                    <p className={`fontMedium ${styles.paraText}`}>رح نفتدقك يا  <span className='fontBold'> {data?.firstName} </span> <br />
+                    <p className={`fontMedium ${styles.paraText}`}>رح نفتدقك يا  <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName} </span> <br />
                         تقدر تتراجع عن قرار حذف حسابك بمدة أقصاها <span style={{ color: "red" }}>30 يوم</span>  وبعدها رح يتم حذف حسابك بشكل كامل وراح تفقد وصولك إلى الدورات اللي اشتريتها وما بتقدر تسترجع فلوسك</p>
 
                     <div className={`${styles.buttonDiv} flex justify-center items-center`}>
