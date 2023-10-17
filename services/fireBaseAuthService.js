@@ -8,10 +8,6 @@ import {
 } from "firebase/auth";
 import Router from "next/router";
 import { toast } from "react-toastify";
-import { postAuthRouteAPI, updateProfile } from "./apisService";
-import * as fbq from '../lib/fpixel'
-import { toastErrorMessage, toastSuccessMessage } from "../constants/ar";
-import { data } from "jquery";
 
 
 

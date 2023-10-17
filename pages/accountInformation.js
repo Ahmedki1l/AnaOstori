@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from '../styles/AccountInformation.module.scss'
 import loader from '../public/icons/loader.svg'
 import { toast } from "react-toastify";
-import { getAuthRouteAPI, updateProfile } from '../services/apisService';
+import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService';
 import { changeEmail, signOutUser, verifyPassword } from '../services/fireBaseAuthService';
 import Image from 'next/image'
 import ChangePassword from '../components/AccountInformation/ChangePassword/ChangePassword';
@@ -139,10 +139,10 @@ export default function AccountInformation() {
             }
         }
         const params = {
-            data: body,
+            routeName: 'updateProfileHandler',
+            ...body,
         }
-
-        await updateProfile(params).then(async (res) => {
+        await postAuthRouteAPI(params).then(async (res) => {
             setShowLoader(false)
             getProfileData(type)
         }).catch(error => {
