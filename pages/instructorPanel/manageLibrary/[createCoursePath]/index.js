@@ -29,10 +29,11 @@ export async function getServerSideProps(context) {
 const CreateCoursePath = (props) => {
     const routeParams = props.params
     const [courseForm] = Form.useForm();
-    const [curriculmName, setCurriculumName] = useState(routeParams?.coursePathId ? routeParams?.coursePathId : "")
+    const [curriculmName, setCurriculumName] = useState('')
     const [sectionDetails, setSectionDetails] = useState([])
     const router = useRouter()
     const dispatch = useDispatch()
+    const [oldCurriculumName, setOldCurriculumName] = useState('')
 
     useEffect(() => {
         if (routeParams.createCoursePath == 'editCoursePath') {
@@ -41,7 +42,6 @@ const CreateCoursePath = (props) => {
             getSectionList()
         }
     }, [])
-
     const getCurriculumDetails = async () => {
         let body = {
             routeName: "getCurriculum",
@@ -50,6 +50,7 @@ const CreateCoursePath = (props) => {
         await getRouteAPI(body).then((res) => {
             courseForm.setFieldValue('pathTitle', res.data.name)
             setCurriculumName(res.data.name)
+            setOldCurriculumName(res.data.name)
         }).catch(async (error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -68,7 +69,6 @@ const CreateCoursePath = (props) => {
             curriculumId: routeParams.coursePathId,
         }
         await getRouteAPI(body).then((res) => {
-            console.log(res);
             setSectionDetails(res.data)
         }).catch(async (error) => {
             console.log(error);
@@ -91,16 +91,14 @@ const CreateCoursePath = (props) => {
             });
         })
     }
-
-    const onFinishCreateCoursepath = async (item) => {
+    const onFinishCreateCoursepath = async () => {
         if (routeParams.createCoursePath == 'createCoursePath') {
             let createBody = {
                 routeName: "createCurriculum",
-                name: item.pathTitle,
+                name: curriculmName,
             }
             await postRouteAPI(createBody).then((res) => {
                 toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg)
-                setCurriculumName(res.data.name)
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
                     query: { coursePathId: res.data.id },
@@ -114,9 +112,7 @@ const CreateCoursePath = (props) => {
             })
         }
         else {
-            console.log('update');
-            console.log(item.pathTitle);
-            if (item.pathTitle == curriculmName) {
+            if (oldCurriculumName == curriculmName) {
                 router.push({
                     pathname: `/instructorPanel/manageLibrary`,
                     query: { folderType: 'curriculum' }
@@ -127,10 +123,11 @@ const CreateCoursePath = (props) => {
             }
             let editBody = {
                 routeName: "updateCurriculumHandler",
-                name: item.pathTitle,
+                name: curriculmName,
                 id: routeParams.coursePathId,
             }
             await postRouteAPI(editBody).then((res) => {
+                setCurriculumName(res.data.name)
                 updateCurriculumList()
                 router.push({
                     pathname: `/instructorPanel/manageLibrary`,
@@ -162,7 +159,6 @@ const CreateCoursePath = (props) => {
                             ]
                         }
                     />
-                    <button > ADD</button>
                     <div className={`${styles.headerWrapper}`}>
                         <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : 'إضافة مقرر'}</h1>
                     </div>
@@ -172,24 +168,25 @@ const CreateCoursePath = (props) => {
                 <div className='maxWidthDefault p-4'>
                     <div className={styles.bodysubWrapper}>
                         <h1 className={` py-4`}>{curriculumConst.addCurriculumConst.addCurriculumTitle}</h1>
-                        <Form form={courseForm} onFinish={onFinishCreateCoursepath}>
+                        <Form form={courseForm}>
                             <FormItem
                                 name={'pathTitle'}
                                 rules={[{ required: true, message: curriculumConst.addCurriculumConst.curriculumTitleInputError }]}>
                                 <Input
                                     placeholder={curriculumConst.addCurriculumConst.curriculumTitleInputPlaceholder}
                                     value={curriculmName}
+                                    onChange={(e) => setCurriculumName(e.target.value)}
                                 />
                             </FormItem>
                         </Form>
-                        {(curriculmName && sectionDetails) &&
+                        {!(routeParams.createCoursePath == 'createCoursePath') &&
                             <CurriculumSectionComponent
                                 onclose={onclose}
                                 sectionList={sectionDetails}
                             />
                         }
                         <div className={`${styles.savePathTitle}`}>
-                            <button className={`primarySolidBtn ${styles.btnText} `} type='submit' form='courseForm' >{curriculmName ? 'حفظ' : 'حفظ ومتابعة'}</button>
+                            <button className={`primarySolidBtn ${styles.btnText} `} type='submit' form='courseForm' onClick={onFinishCreateCoursepath}>{curriculmName ? 'حفظ' : 'حفظ ومتابعة'}</button>
                         </div>
                     </div>
                 </div>
