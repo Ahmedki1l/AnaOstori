@@ -50,24 +50,35 @@ export async function getServerSideProps(ctx) {
 		femaleDatesReq,
 		mixDatesReq,
 	])
-
-	const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.data.id}`)
-		.then((response) => (response.data))
-		.catch((error) => error);
 	if (courseDetails.data == null) {
 		return {
 			notFound: true,
 		}
 	}
+	if (courseDetails.data.type == 'on-demand') {
+		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.data.id}`)
+			.then((response) => (response.data))
+			.catch((error) => error);
 
-	return {
-		props: {
-			courseDetails: courseDetails.data,
-			// homeReviews: homeReviews.data,
-			maleDates: maleDates.data,
-			femaleDates: femaleDates.data,
-			mixDates: mixDates.data,
-			courseCurriculum: courseCurriculumReq
+		return {
+			props: {
+				courseDetails: courseDetails.data,
+				// homeReviews: homeReviews.data,
+				maleDates: maleDates.data,
+				femaleDates: femaleDates.data,
+				mixDates: mixDates.data,
+				courseCurriculum: courseCurriculumReq
+			}
+		}
+	} else {
+		return {
+			props: {
+				courseDetails: courseDetails.data,
+				// homeReviews: homeReviews.data,
+				maleDates: maleDates.data,
+				femaleDates: femaleDates.data,
+				mixDates: mixDates.data,
+			}
 		}
 	}
 }

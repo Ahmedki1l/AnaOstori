@@ -29,7 +29,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
-    const allAppointments = storeData?.availabilityList;
+    const allAppointments = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)

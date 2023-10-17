@@ -41,7 +41,7 @@ export default function Index() {
         await getAuthRouteAPI(body).then(res => {
             dispatch({
                 type: 'SET_AllAVAILABILITY',
-                availabilityList: res?.data,
+                availabilityList: res?.data.sort((a, b) => a.createdAt - b.createdAt),
             })
         }).catch(async (error) => {
             if (error?.response?.status == 401) {

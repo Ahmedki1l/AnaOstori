@@ -7,11 +7,11 @@ export const inputErrorMessages = {
     genderErrorMsg: "فضلا اختر الجنس", //"Please select the gender",
     mobileNumberErrorMsg: "فضلا ادخل رقم الجوال", //Please enter your mobile number
     mobileNumberRequiredErrorMsg: "رقم الجوال مطلوب", //mobile number required
-    mobileNumberFormatErrorMsg: "الصيغة المدخلة غير صحيحة، فضلا اكتب الرقم بصيغة 05", //The entered format is incorrect, please type the number in the format 05"
+    mobileNumberFormatErrorMsg: 'بصيغة 05xxxxxxxx', //The entered format is incorrect, please type the number in the format 05"
     mobileNumberLengthErrorMsg: "يجب ان يتكون الجوال من ١٠ ارقام", //The mobile must consist of 10 digits.
     appropriateDateErrorMsg: "فضلا اختار الموعد المناسب", //Please choose the appropriate date.
     nameFormatErrorMsg: "يجب أن يتكون الاسم من ثلاث حروف او اكثر",  //The name must be three letters or more.
-    nameThreeFoldErrorMsg: "يجب ان يكون الاسم ثلاثي مثال : عبدالإله مدخلي", //The name should be threefold, for example: Abdul-Ilah Madkhali.
+    nameThreeFoldErrorMsg: 'شرفنا باسمك يا طويل العمر', //The name should be threefold, for example: Abdul-Ilah Madkhali.
     emailFormatMsg: "فضلا عيد كتابة ايميلك بالطريقة الصحيحة", //Please type your email correctly.
     allowedFilesTypeMsg: 'الملفات المسموحة هي pdf, png ,jpg', //'Allowed files are pdf, png and jpg'
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
