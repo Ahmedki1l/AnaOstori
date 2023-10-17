@@ -261,13 +261,14 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                             </div>
                                         </td>
                                         <td className='py-2'>{appointment.instructors.map((instructor, index) => {
+
                                             return (
-                                                <p key={`instructor${index}`} className='pb-3 text-right pr-20 '>
-                                                    {/* <div className={styles.StudentListImage}>
-                                                        <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={student?.userProfile?.avatarKey == null ? student?.userProfile?.avatar : `${mediaUrl(student?.userProfile?.avatarBucket, student?.userProfile?.avatarKey)}`} />
-                                                    </div> */}
-                                                    {instructor.name}
-                                                </p>
+                                                <div key={`instructor${index}`} className={styles.instructorDetailsArea}>
+                                                    <div>
+                                                        <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={(instructor.avatarKey == null || instructor.avatarBucket == null || instructor.avatarKey == '' || instructor.avatarBucket == '') ? '/images/anaOstori.png' : `${mediaUrl(instructor.avatarBucket, instructor.avatarKey)}`} />
+                                                    </div>
+                                                    <p className='pr-2'>{instructor.name}</p>
+                                                </div>
                                             )
                                         })}</td>
                                         <td>{fullDate(appointment?.createdAt)}</td>

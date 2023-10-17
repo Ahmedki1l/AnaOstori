@@ -57,7 +57,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     }
 
     const handleCreateSection = async ({ name }) => {
-        console.log("werwer");
         let body = {
             routeName: 'createSection',
             name: name,
@@ -256,7 +255,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                                                         <div className={styles.updownSectionIcon}  {...provided.dragHandleProps}>
                                                             <AllIconsComponenet iconName={'dragIcon'} height={24} width={24} color={'#00000094'} />
                                                         </div>
-                                                        {console.log(section)}
                                                         <p className={styles.sectionTitle}>{section.name}</p>
                                                         <p className={styles.numberOfItems}>({noOfItemTag(section?.items?.length)}) </p>
                                                     </div>

@@ -148,9 +148,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 type: courseType,
                 ...values
             }
-            console.log(body);
             await postAuthRouteAPI(body).then((res) => {
-                console.log(res);
                 createCourseApiSuccessRes(res)
             }).catch(async (error) => {
                 console.log(error);
