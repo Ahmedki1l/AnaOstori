@@ -116,7 +116,7 @@ const Index = () => {
                                         <tr key={`tableRow${index}`} className={styles.tableRow}>
                                             <td>
                                                 <div className={styles.StudentListImage}>
-                                                    <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={instructor.avatarKey == null ? '/images/anaOstori.png' : `${mediaUrl(instructor.avatarBucket, instructor.avatarKey)}`} />
+                                                    <ProfilePicture height={34} width={34} alt={'avatar image'} pictureKey={(instructor.avatarKey == null || instructor.avatarBucket == null || instructor.avatarKey == '' || instructor.avatarBucket == '') ? '/images/anaOstori.png' : `${mediaUrl(instructor.avatarBucket, instructor.avatarKey)}`} />
                                                     <p className='pr-4'>{instructor.name}</p>
                                                 </div>
                                             </td>

@@ -30,12 +30,16 @@ export const coursePublishedFromMainPageConst = {
 }
 
 export const onDemandCourseConst = {
-    recordedVideoDisabledFirstInputPlaceHolder: 'دروس مسجلة',
-    recordedVideoDisabledSecondInputPlaceHolder: 'بجودة عالية',
+    locationFixedText: 'دروس مسجلة',
+    locationInputPlaceHolder: 'بجودة عالية',
 
-    numberOfGraduatedDisabledInputPlaceHolder: 'عدد الاشتراكات',
-    numberOfGraduatedInputPlaceHolder: 'ادخل عدد فقط',
-    numberOfGraduatedInputErrorMsg: 'حط رقم تخميني',
+    rateFixedText: 'تقييم الدورة',
+    rateInputPlaceHolder: 'قيمة التقييم',
+    rateInputError: 'ادخل تقييم الدورة',
+
+    enrolledFixedText: 'عدد الاشتراكات',
+    enrolledInputPlaceHolder: 'ادخل عدد فقط',
+    enrolledInputErrorMsg: 'حط رقم تخميني',
 
     inputForDiscountedPricePlaceHolder: 'السعر بعد الخصم',
     inputForDiscountedPriceErrorMsg: 'ادخل سعر الدورة بعد الخصم',
@@ -43,11 +47,17 @@ export const onDemandCourseConst = {
 }
 
 export const onlineCourseConst = {
-    locationDisabledInputPlaceHolder: 'يتم بثها عبر',
-    addLocationInputPlaceHolder: 'المدينة والمركز',
-    addLocationInputErrorMsg: 'اذكر اسم البرنامج',
+    locationFixedText: 'يتم بثها عبر',
+    locationInputPlaceHolder: 'اذكر اسم البرنامج',
+    locationInputErrorMsg: 'اذكر اسم البرنامج',
 
-    numberOfRegisterddDisabledInputPlaceHolder: 'عدد المسجلين',
+    rateFixedText: 'تقييم الدورة',
+    rateInputPlaceHolder: 'قيمة التقييم',
+    rateInputError: 'ادخل تقييم الدورة',
+
+    enrolledFixedText: ' عدد المسجلين',
+    enrolledInputPlaceHolder: 'ادخل عدد فقط',
+    enrolledInputErrorMsg: 'حط رقم تخميني',
 
     priceLabelForAdndroidAndWeb: 'تسعيرة الموقع والاندرويد',
 
@@ -76,7 +86,17 @@ export const physicalCourseConst = {
     priceForGroupInputPlaceHolder: '3 أو أكثر (السعر على كل شخص)',
     priceForGroupInputErrorMsg: 'ادخل سعر الدورة لـ3 اشخاص او اكثر',
 
-    locationDisabledInputPlaceHolder: 'تقام الدورة في',
+    locationFixedText: ' تقام الدورة في',
+    locationInputPlaceHolder: 'المدينة والمركز',
+    locationInputErrorMsg: ' اكتب المدينة والمركز',
+
+    rateFixedText: 'تقييم الدورة',
+    rateInputPlaceHolder: 'قيمة التقييم',
+    rateInputError: 'ادخل تقييم الدورة',
+
+    enrolledFixedText: '  عدد المسجلين',
+    enrolledInputPlaceHolder: 'ادخل عدد فقط',
+    enrolledInputErrorMsg: 'حط رقم تخميني',
 
 }
 

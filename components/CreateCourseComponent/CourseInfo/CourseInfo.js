@@ -479,7 +479,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     <p className={styles.uploadImageHeader}>{createCoursePageConst.attachPhotoHeadTitle}</p>
                     <div>
                         <UploadFile
-                            coursePictureUrl={mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey)}
+                            pictureBucket={editCourseData?.pictureBucket}
+                            pictureKey={editCourseData?.pictureKey}
                             courseVideoUrl={''}
                             setUploadFileData={setImageUploadResponceData}
                             accept={"image"}
@@ -490,8 +491,10 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                     <p className={styles.uploadImageHeader}>{createCoursePageConst.attachVideoHeadTitle}</p>
                     <div>
                         <UploadFile
-                            coursePictureUrl={isCourseEdit ? mediaUrl(editCourseData?.pictureBucket, editCourseData?.pictureKey) : mediaUrl(imageUploadResponceData?.bucket, imageUploadResponceData?.key)}
-                            courseVideoUrl={mediaUrl(editCourseData?.videoBucket, editCourseData?.videoKey)}
+                            pictureBucket={isCourseEdit ? editCourseData?.pictureBucket : imageUploadResponceData?.bucket}
+                            pictureKey={isCourseEdit ? editCourseData?.pictureKey : imageUploadResponceData?.key}
+                            videoBucket={editCourseData?.videoBucket}
+                            videoKey={editCourseData?.videoKey}
                             accept={"video"}
                             label={createCoursePageConst.attachVideoInputPlaceHolder}
                             type={'.mp4, .mov, .avi, .wmv, .fly, .webm, .mkv '}
@@ -507,23 +510,23 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                     <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'physical' ? physicalCourseConst.locationDisabledInputPlaceHolder :
-                                    courseType == 'onDemand' ? onDemandCourseConst.recordedVideoDisabledFirstInputPlaceHolder
-                                        : onlineCourseConst.locationDisabledInputPlaceHolder}
+                                <p>{courseType == 'physical' ? physicalCourseConst.locationFixedText :
+                                    courseType == 'onDemand' ? onDemandCourseConst.locationFixedText
+                                        : onlineCourseConst.locationFixedText}
                                 </p>
                             </div>
                             {courseType == "onDemand" ?
                                 <div className={styles.detailDataWrapper} style={{ marginBottom: '20px' }}>
-                                    <p>{onDemandCourseConst.recordedVideoDisabledSecondInputPlaceHolder}</p>
+                                    <p>{onDemandCourseConst.locationInputPlaceHolder}</p>
                                 </div>
                                 :
                                 <FormItem
                                     name={'locationName'}
-                                    rules={[{ required: true, message: onlineCourseConst.addLocationInputErrorMsg }]} >
+                                    rules={[{ required: true, message: courseType == "physical" ? physicalCourseConst.locationInputErrorMsg : onlineCourseConst.locationInputErrorMsg }]} >
                                     <Input
                                         height={47}
                                         width={247}
-                                        placeholder={onlineCourseConst.addLocationInputPlaceHolder}
+                                        placeholder={courseType == "physical" ? physicalCourseConst.locationInputPlaceHolder : onlineCourseConst.locationInputPlaceHolder}
                                     />
                                 </FormItem>}
                         </div>
@@ -533,15 +536,23 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{createCoursePageConst.reviewRateDisabeledInputPlaceHolder}</p>
+                                <p>{courseType == 'physical' ? physicalCourseConst.rateFixedText :
+                                    courseType == 'onDemand' ? onDemandCourseConst.rateFixedText
+                                        : onlineCourseConst.rateFixedText}</p>
                             </div>
                             <FormItem
                                 name={'reviewRate'}
-                                rules={[{ required: true, message: createCoursePageConst.reviewRateInputErrorMsg }]} >
+                                rules={[{
+                                    required: true, message: courseType == 'physical' ? physicalCourseConst.rateInputError :
+                                        courseType == 'onDemand' ? onDemandCourseConst.rateInputError
+                                            : onlineCourseConst.rateInputError
+                                }]} >
                                 <Input
                                     height={47}
                                     width={247}
-                                    placeholder={createCoursePageConst.reviewRateInputPlaceHolder}
+                                    placeholder={courseType == 'physical' ? physicalCourseConst.rateInputPlaceHolder :
+                                        courseType == 'onDemand' ? onDemandCourseConst.rateInputPlaceHolder
+                                            : onlineCourseConst.rateInputPlaceHolder}
                                 />
                             </FormItem>
                         </div>
@@ -551,19 +562,25 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personegroup'} height={24} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
-                                <p>{courseType == 'onDemand' ? onDemandCourseConst.numberOfGraduatedDisabledInputPlaceHolder
-                                    : courseType == 'physical' ? ''
-                                        : onlineCourseConst.numberOfRegisterddDisabledInputPlaceHolder}
+                                <p>{courseType == 'physical' ? physicalCourseConst.enrolledFixedText :
+                                    courseType == 'onDemand' ? onDemandCourseConst.enrolledFixedText
+                                        : onlineCourseConst.enrolledFixedText}
                                 </p>
                             </div>
                             <FormItem
                                 name={'numberOfGrarduates'}
-                                rules={[{ required: true, message: onDemandCourseConst.numberOfGraduatedInputErrorMsg }]} >
+                                rules={[{
+                                    required: true, message: courseType == 'physical' ? physicalCourseConst.enrolledInputErrorMsg :
+                                        courseType == 'onDemand' ? onDemandCourseConst.enrolledInputErrorMsg
+                                            : onlineCourseConst.enrolledInputErrorMsg
+                                }]} >
                                 <Input
                                     type={'number'}
                                     height={47}
                                     width={247}
-                                    placeholder={onDemandCourseConst.numberOfGraduatedInputPlaceHolder}
+                                    placeholder={courseType == 'physical' ? physicalCourseConst.enrolledInputPlaceHolder :
+                                        courseType == 'onDemand' ? onDemandCourseConst.enrolledInputPlaceHolder
+                                            : onlineCourseConst.enrolledInputPlaceHolder}
                                 />
                             </FormItem>
                         </div>
