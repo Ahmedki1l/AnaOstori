@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import Router from "next/router";
 import { toast } from "react-toastify";
-import { updateProfile } from "./apisService";
+import { postAuthRouteAPI, updateProfile } from "./apisService";
 import * as fbq from '../lib/fpixel'
 import { toastErrorMessage, toastSuccessMessage } from "../constants/ar";
 import { data } from "jquery";
@@ -50,32 +50,49 @@ export const forgotPassword = async (email) => {
 }
 
 
-export const signupWithEmailAndPassword = async (email, password, fullName, phoneNumber, gender) => {
-	await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
-		localStorage.setItem("accessToken", userCredential?.user?.accessToken);
-		const body = {
-			fullName: fullName,
-			phone: phoneNumber.replace(/[0-9]/, "+966"),
-			gender: gender
-		}
-		if (!gender?.length) {
-			delete data?.gender
-		}
-		const params = {
-			data: body,
-		}
+// export const signupWithEmailAndPassword = async (email, password, fullName, phoneNumber, gender) => {
+// 	await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
+// 		localStorage.setItem("accessToken", userCredential?.user?.accessToken);
+// 		const data = {
+// 			fullName: fullName,
+// 			phone: phoneNumber.replace(/[0-9]/, "+966"),
+// 			gender: gender
+// 		}
+// 		if (!gender?.length) {
+// 			delete data?.gender
+// 		}
+// 		// const params = {
+// 		// 	data: body,
+// 		// }
+// 		const params = {
+// 			routeName: 'updateProfileHandler',
+// 			...data,
+// 		}
+// 		await postAuthRouteAPI(params).then(async (res) => {
+// 			Router.push('/login')
+// 			fbq.event('Sign up', { email: email })
+// 		}).catch(error => {
+// 			toast.error(error.message)
+// 			console.log(error)
+// 		});
+// 	}).catch((error) => {
+// 		console.log(error);
+// 		if (error.code == 'auth/email-already-in-use') {
+// 			toast.error(toastErrorMessage.emailUsedErrorMsg)
+// 		}
+// 	});
+// }
 
-		await updateProfile(params).then(res => {
-			Router.push('/login')
-			fbq.event('Sign up', { email: email })
-		}).catch(error => {
-			toast.error(error.message)
-			console.log(error)
-		});
-	}).catch((error) => {
-		console.log(error);
-		if (error.code == 'auth/email-already-in-use') {
-			toast.error(toastErrorMessage.emailUsedErrorMsg)
+export const signupWithEmailAndPassword = (email, password) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+			localStorage.setItem("accessToken", userCredential?.user?.accessToken);
+			resolve(userCredential);
+		} catch (error) {
+			console.log(error);
+
+			reject(error);
 		}
 	});
 }

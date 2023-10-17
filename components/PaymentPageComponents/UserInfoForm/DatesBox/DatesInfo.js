@@ -70,7 +70,7 @@ export default function DatesInfo(props) {
 					{date.instructors.map((instructor, index) => {
 						return (
 							<div className={styles.instructorWrapper} key={`instructor${index}`}>
-								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={instructor.avatarKey ? mediaUrl(instructor.avatarBucket, instructor.avatarKey) : '/images/anaOstori2.png'} />
+								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={(instructor.avatarBucket && instructor.avatarKey) ? mediaUrl(instructor.avatarBucket, instructor.avatarKey) : '/images/anaOstori2.png'} />
 								<div>
 									{instructor?.ProfileFileKey == null ?
 										<p className='px-2 fontMedium'>{instructor.name}</p>
@@ -78,7 +78,7 @@ export default function DatesInfo(props) {
 										// 'hi'
 										<Link href={mediaUrl(instructor.ProfileFileBucket, instructor.ProfileFileKey)} className='px-2 fontMedium link'>{instructor.name}</Link>
 									}
-									<p className='px-2 fontMedium'>Role</p>
+									<p className='px-2 fontMedium'>{instructor?.role}</p>
 								</div>
 							</div>
 						)

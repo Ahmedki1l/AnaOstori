@@ -238,25 +238,25 @@ export default function PaymentInfoForm(props) {
 					<div className={styles.priceDetailsBox}>
 						<div className='flex justify-between  py-2'>
 							<p>{numberOfUser[createdOrder.orderItems.length - 1]}سعر الدورة</p>
-							<p>{(createdOrder.totalPrice).toFixed(2)} ر.س</p>
+							<p>{Number(createdOrder.totalPrice).toFixed(2)} ر.س</p>
 						</div>
 						<div className='flex justify-between  py-2'>
 							<p>ضريبة القيمة المضافة</p>
-							<p>{(createdOrder.totalVat).toFixed(2)} ر.س</p>
+							<p>{Number(createdOrder.totalVat).toFixed(2)} ر.س</p>
 						</div>
 						<div className='flex justify-between py-2 '>
 							<p className='fontBold'>المبلغ الإجمالي</p>
-							<p className='fontBold pb-2'>{((createdOrder.totalPrice + createdOrder.totalVat).toFixed(2))} ر.س</p>
+							<p className='fontBold pb-2'>{(Number(Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)).toFixed(2))} ر.س</p>
 						</div>
 						{(couponAppliedData?.percentage) &&
 							<>
 								<div className='flex justify-between'>
 									<p style={{ color: '#00bd5d' }} className='fontBold  pb-2'>خصم كود ({couponAppliedData?.percentage} %) </p>
-									<p style={{ color: '#00bd5d' }}> {(couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)}- ر.س</p>
+									<p style={{ color: '#00bd5d' }}> {(couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)}- ر.س</p>
 								</div>
 								<div className='flex justify-between '>
 									<p style={{ color: '#F26722' }} className='fontBold'>المبلغ المطلوب</p>
-									<p className='fontBold pb-2'>{((((createdOrder.totalPrice + createdOrder.totalVat) - (couponAppliedData ? ((couponAppliedData?.percentage * (createdOrder.totalPrice + createdOrder.totalVat)) / 100) : 0)).toFixed(2)))} ر.س</p>
+									<p className='fontBold pb-2'>{((((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)).toFixed(2)))} ر.س</p>
 								</div>
 							</>
 						}

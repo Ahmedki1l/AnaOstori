@@ -221,7 +221,7 @@ export default function Login() {
 								}
 							</div>
 						</div>
-						{isPasswordError ? <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						{isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
 						<Link href={'/forgot-password'} className={`link ${styles.forgotPassText}`}>نسيت كلمة السر؟</Link>
 						<div className={styles.loginBtnBox}>
 							<button className='primarySolidBtn' type='submit' onClick={handleSignIn}>تسجيل الدخول</button>

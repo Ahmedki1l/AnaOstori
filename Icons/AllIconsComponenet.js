@@ -111,6 +111,8 @@ import CalenderDoubleColorIcon from './customeIcons/calenderDoubleColorIcon'
 import LinkDoubleColorIcon from './customeIcons/linkDoubleColorIcon'
 import OnlineDoubleColorIcon from './customeIcons/onlineDoubleColorIcon'
 import TelevisonDoubleColorIcon from './customeIcons/televisonDoubleColorIcon'
+import AlertIcon from './customeIcons/alertIcon'
+import CheckCircleIcon from './customeIcons/checkCircleIcon'
 
 
 
@@ -222,6 +224,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newFolderIcon' && <NewFolderIcon height={height} width={width} color={color} />}
 			{iconName == 'newVisibleIcon' && <NewVisibleIcon height={height} width={width} color={color} />}
 			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
+
+			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
+			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}
+
 
 			{iconName == 'clockDoubleColor' && <ClockDoubleColor height={height} width={width} color={color} />}
 			{iconName == 'locationDoubleColor' && <LocationDoubleColor height={height} width={width} color={color} />}

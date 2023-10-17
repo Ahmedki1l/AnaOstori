@@ -38,7 +38,7 @@
 	border: 1px solid #0000001a;
 }
 
-.formInputField{
+.formInputField {
 	margin-bottom: .5rem !important;
 }
 
@@ -170,4 +170,75 @@
 	font-weight: 400;
 	line-height: normal;
 	text-align: right;
+}
+
+.genderBtnBox {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	height: 47px;
+	margin: .5rem 0 1rem 0;
+	border: 1px solid #0000001a;
+	border-radius: 4px;
+	overflow: hidden;
+
+	button {
+		border: none;
+		background: #FFFFFF;
+		font-size: 16px;
+		line-height: 19px;
+		color: #000000;
+		width: 50%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+
+		span {
+			margin-right: 5px;
+		}
+	}
+
+	.maleBtn {
+		border-left: 1px solid #0000001a;
+	}
+
+}
+
+
+.genderActiveBtn {
+	background: #F06A25 !important;
+	color: #FFFFFF !important;
+}
+
+.titleLabel {
+	color: #191919;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+	margin-top: 1rem;
+}
+
+.circle {
+	height: 20px;
+	width: 20px;
+	border-radius: 50%;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B564;
+	margin: auto;
+	position: absolute;
+}
+
+.errorMsgWraper {
+	align-items: center;
+	display: flex;
+	padding: 5px;
+
+	p {
+		margin: 0 5px -4px;
+	}
 }
