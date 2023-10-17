@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { signupWithEmailAndPassword, signInWithApple, GoogleLogin } from '../services/fireBaseAuthService'
 import { useRouter } from 'next/router'
-import { getAuthRouteAPI, postAuthRouteAPI, updateProfile } from '../services/apisService'
+import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
@@ -43,15 +43,6 @@ export default function Register() {
 	const dispatch = useDispatch();
 
 	const storeData = useSelector((state) => state?.globalStore);
-
-	// const handleUpdateProfile = async (params) => {
-	// 	await updateProfile(params).then(res => {
-	// 		router.push('/')
-	// 	}).catch(error => {
-	// 		toast.error(error)
-	// 		console.log(error)
-	// 	});
-	// }
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {

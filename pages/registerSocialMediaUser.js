@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { useRouter } from 'next/router'
-import { getAuthRouteAPI, updateProfile } from '../services/apisService'
+import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
@@ -88,9 +88,10 @@ export default function RegisterSocialMediaUser() {
             }
 
             const params = {
-                data: body,
+                routeName: 'updateProfileHandler',
+                ...body,
             }
-            await updateProfile(params).then(res => {
+            await postAuthRouteAPI(params).then(async (res) => {
                 handleStoreUpdate()
                 fbq.event('Sign up', { email: storeData.viewProfileData.email, phone: phoneNumber })
                 router.push('/')
