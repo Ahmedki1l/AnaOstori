@@ -37,7 +37,6 @@ export default function Register() {
 	const [emailError, setEmailError] = useState(null);
 	const [passwordError, setPasswordError] = useState(null);
 
-	const [user, setUser] = useState();
 	const [loading, setLoading] = useState(false)
 
 	const router = useRouter();
@@ -45,14 +44,14 @@ export default function Register() {
 
 	const storeData = useSelector((state) => state?.globalStore);
 
-	const handleUpdateProfile = async (params) => {
-		await updateProfile(params).then(res => {
-			router.push('/')
-		}).catch(error => {
-			toast.error(error)
-			console.log(error)
-		});
-	}
+	// const handleUpdateProfile = async (params) => {
+	// 	await updateProfile(params).then(res => {
+	// 		router.push('/')
+	// 	}).catch(error => {
+	// 		toast.error(error)
+	// 		console.log(error)
+	// 	});
+	// }
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
@@ -197,7 +196,6 @@ export default function Register() {
 		}
 		else if (fullNameError == null && emailError == null && passwordError == null) {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
-				console.log(result)
 				const data = {
 					fullName: fullName,
 					phone: phoneNumber.replace(/[0-9]/, "+966"),
@@ -226,19 +224,12 @@ export default function Register() {
 		}
 	}
 
-	useEffect(() => {
-		if (router?.query?.user) {
-			setUser(JSON.parse(router?.query?.user))
-		}
-	}, [router?.query?.user])
-
 	const handleUpdatePassword = (password) => {
 		setPassword(password)
 		let data = { ...initPasswordError }
 		if (password.length > 8) {
 			data.minLength = false
 			setInitPasswordError(data)
-			console.log({ ...initPasswordError, minLength: false });
 		} else {
 			data.minLength = true
 			setInitPasswordError(data)
@@ -281,7 +272,7 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={user?._tokenResponse?.fullName ? user?._tokenResponse?.fullName : fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+							<input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
 						</div>
 						{fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
@@ -302,7 +293,7 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={user?._tokenResponse?.email ? user?._tokenResponse?.email : email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
 						</div>
 						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
@@ -310,7 +301,7 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={user?.user?.phoneNumber ? user?.user?.phoneNumber : phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+							<input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
 						</div>
 						{isPhoneNumberError ? <p className={styles.errorText}>بصيغة 05xxxxxxxx</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
@@ -375,7 +366,7 @@ export default function Register() {
 							</>
 						</div>
 						<div className={styles.loginBtnBox}>
-							<button className='primarySolidBtn' type='submit' disabled={!router?.query?.user && (fullNameError !== null || emailError !== null || passwordError !== null || !fullName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
+							<button className='primarySolidBtn' type='submit' disabled={(fullNameError !== null || emailError !== null || passwordError !== null || !fullName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
