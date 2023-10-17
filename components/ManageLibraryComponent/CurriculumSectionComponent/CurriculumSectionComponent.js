@@ -57,6 +57,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
     }
 
     const handleCreateSection = async ({ name }) => {
+        console.log("werwer");
         let body = {
             routeName: 'createSection',
             name: name,

@@ -68,6 +68,7 @@ const CreateCoursePath = (props) => {
             curriculumId: routeParams.coursePathId,
         }
         await getRouteAPI(body).then((res) => {
+            console.log(res);
             setSectionDetails(res.data)
         }).catch(async (error) => {
             console.log(error);
@@ -148,29 +149,30 @@ const CreateCoursePath = (props) => {
     }
 
     return (
-        <div>
-            <Form form={courseForm} onFinish={onFinishCreateCoursepath}>
-                <div className={styles.borderBottomNavbar}>
-                    <div className='maxWidthDefault px-4'>
-                        <BackToPath
-                            backpathForPage={true}
-                            backPathArray={
-                                [
-                                    { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                                    { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/manageLibrary?folderType=curriculum' },
-                                    { lable: 'إدارة المكتبة الرقمية', link: null },
-                                ]
-                            }
-                        />
-                        <div className={`${styles.headerWrapper}`}>
-                            <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : 'إضافة مقرر'}</h1>
-                        </div>
+        <>
+            <div className={styles.borderBottomNavbar}>
+                <div className='maxWidthDefault px-4'>
+                    <BackToPath
+                        backpathForPage={true}
+                        backPathArray={
+                            [
+                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                                { lable: 'إدارة المكتبة الرقمية', link: '/instructorPanel/manageLibrary?folderType=curriculum' },
+                                { lable: 'إدارة المكتبة الرقمية', link: null },
+                            ]
+                        }
+                    />
+                    <button > ADD</button>
+                    <div className={`${styles.headerWrapper}`}>
+                        <h1 className={`head2 py-8`}>{curriculmName ? curriculmName : 'إضافة مقرر'}</h1>
                     </div>
                 </div>
-                <div className={styles.bodyWrapper}>
-                    <div className='maxWidthDefault p-4'>
-                        <div className={styles.bodysubWrapper}>
-                            <h1 className={` py-4`}>{curriculumConst.addCurriculumConst.addCurriculumTitle}</h1>
+            </div>
+            <div className={styles.bodyWrapper}>
+                <div className='maxWidthDefault p-4'>
+                    <div className={styles.bodysubWrapper}>
+                        <h1 className={` py-4`}>{curriculumConst.addCurriculumConst.addCurriculumTitle}</h1>
+                        <Form form={courseForm} onFinish={onFinishCreateCoursepath}>
                             <FormItem
                                 name={'pathTitle'}
                                 rules={[{ required: true, message: curriculumConst.addCurriculumConst.curriculumTitleInputError }]}>
@@ -179,21 +181,20 @@ const CreateCoursePath = (props) => {
                                     value={curriculmName}
                                 />
                             </FormItem>
-                            {(curriculmName && sectionDetails) &&
-                                <CurriculumSectionComponent
-                                    onclose={onclose}
-                                    sectionList={sectionDetails}
-                                />
-                            }
-                            <div className={`${styles.savePathTitle}`}>
-                                {!curriculmName && <button className={`primarySolidBtn ${styles.btnText} `} type='submit' >حفظ ومتابعة</button>}
-                                {curriculmName && <button className={`primarySolidBtn ${styles.btnText}`} type='submit' >حفظ</button>}
-                            </div>
+                        </Form>
+                        {(curriculmName && sectionDetails) &&
+                            <CurriculumSectionComponent
+                                onclose={onclose}
+                                sectionList={sectionDetails}
+                            />
+                        }
+                        <div className={`${styles.savePathTitle}`}>
+                            <button className={`primarySolidBtn ${styles.btnText} `} type='submit' form='courseForm' >{curriculmName ? 'حفظ' : 'حفظ ومتابعة'}</button>
                         </div>
                     </div>
                 </div>
-            </Form>
-        </div>
+            </div>
+        </>
     )
 }
 
