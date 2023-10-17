@@ -4,8 +4,8 @@ import { Form, FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 import styles from './ManageAppVersion.module.scss'
-import axios from 'axios'
 import { appVersionConst } from '../../constants/adminPanelConst/appVersionConst/appVersionConst'
+import { getRouteAPI } from '../../services/apisService'
 
 
 const ManageAppVersionModel = ({ isModelForAppVersion,
@@ -22,7 +22,7 @@ const ManageAppVersionModel = ({ isModelForAppVersion,
 
 
     useState(async () => {
-        axios.get(`${process.env.API_BASE_URL}/home/metadata`).then((res) => {
+        await getRouteAPI({ routeName: 'homeMetaData' }).then((res) => {
             const updatedFormValues = {};
             res?.data.forEach(item => {
                 updatedFormValues[item.key] = item.value;
