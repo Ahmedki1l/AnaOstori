@@ -4,7 +4,7 @@ import loaderColor from '../public/icons/loaderColor.svg'
 import styles from '../styles/updateProfile.module.scss'
 import { toast } from "react-toastify";
 import { useEffect, useState } from 'react';
-import { getAuthRouteAPI, postAuthRouteAPI, updateProfile, uploadProfileImage } from '../services/apisService';
+import { postAuthRouteAPI, uploadProfileImage } from '../services/apisService';
 import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
