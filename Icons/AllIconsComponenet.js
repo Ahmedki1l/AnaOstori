@@ -113,6 +113,8 @@ import OnlineDoubleColorIcon from './customeIcons/onlineDoubleColorIcon'
 import TelevisonDoubleColorIcon from './customeIcons/televisonDoubleColorIcon'
 import AlertIcon from './customeIcons/alertIcon'
 import CheckCircleIcon from './customeIcons/checkCircleIcon'
+import NewPersonIcon from './customeIcons/newPersonIcon'
+import NewMobileIcon from './customeIcons/newMobileIcon'
 
 
 
@@ -224,6 +226,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newFolderIcon' && <NewFolderIcon height={height} width={width} color={color} />}
 			{iconName == 'newVisibleIcon' && <NewVisibleIcon height={height} width={width} color={color} />}
 			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
+			{iconName == 'newPersonIcon' && <NewPersonIcon height={height} width={width} color={color} />}
+			{iconName == 'newMobileIcon' && <NewMobileIcon height={height} width={width} color={color} />}
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
 			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}
