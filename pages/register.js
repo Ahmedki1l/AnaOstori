@@ -246,7 +246,7 @@ export default function Register() {
 			setInitPasswordError(data)
 		}
 	}
-
+	console.log(password);
 	return (
 		<>
 			{loading ?
@@ -317,41 +317,45 @@ export default function Register() {
 						{!isPasswordError && < p className={styles.passwordHintMsg}>لا تنسى تنتبه للشروط اللي تحت</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.minLength ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.minLength ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.minLength ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>8 أحرف كحد ادنى</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.capitalLetter ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.capitalLetter ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.capitalLetter ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>حرف واحد كبير على الأقل</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.number ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.number ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.number ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>رقم واحد على الأقل</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.specialCharacter ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.specialCharacter ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.specialCharacter ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>علامة مميزة واحدة على الأقل مثلا هاشتاق #</p>
 							</>
 						</div>

@@ -1,6 +1,6 @@
 export const inputErrorMessages = {
-    noEmailErrorMsg: 'فضلا ادخل ايميلك بطريقة صحيحة', //"Please enter your email",
-    noPasswordMsg: "فضلا ادخل كلمة السر", //"Please enter your password",
+    noEmailErrorMsg: 'الايميل يا غالي', //"Please enter your email",
+    noPasswordMsg: 'كلمة السر لاهنت', //"Please enter your password",
     // firstNameErrorMsg: "فضلا ادخل اسمك الاول", //Please enter your first name.
     lastNameErrorMsg: "فضلا ادخل اسم العائلة", //"Please enter your last name",
     fullNameErrorMsg: "فضلا ادخل الاسم الثلاثي",  //Please enter your full name
