@@ -573,7 +573,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                             : onlineCourseConst.enrolledInputErrorMsg
                                 }]} >
                                 <Input
-                                    type={'number'}
                                     height={47}
                                     width={247}
                                     placeholder={courseType == 'physical' ? physicalCourseConst.enrolledInputPlaceHolder :
