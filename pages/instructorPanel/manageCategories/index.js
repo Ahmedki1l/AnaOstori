@@ -77,9 +77,9 @@ const Index = () => {
         }
         await postRouteAPI(body).then((res) => {
             if (e == true) {
-                toast.success(adminPanelCategoryConst.showCategoryMsg)
+                toast.success(adminPanelCategoryConst.showCategoryMsg, { rtl: true, })
             } else {
-                toast.success(adminPanelCategoryConst.hideCategoryMsg)
+                toast.success(adminPanelCategoryConst.hideCategoryMsg, { rtl: true, })
             }
             getCategoryListReq()
         }).catch((error) => {

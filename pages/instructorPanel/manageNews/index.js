@@ -69,7 +69,7 @@ const Index = () => {
             isDeleted: true
         }
         await postRouteAPI(body).then((res) => {
-            toast.success(manageNewBarText.deleteNewsSuccessMsg)
+            toast.success(manageNewBarText.deleteNewsSuccessMsg, { rtl: true, })
             getNewsList()
         }).catch((err) => {
             console.log(err);

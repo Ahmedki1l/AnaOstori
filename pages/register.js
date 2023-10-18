@@ -46,7 +46,7 @@ export default function Register() {
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
 			router.push('/registerSocialMediaUser')
-			toast.success(toastErrorMessage.successRegisterMsg)
+			toast.success(toastErrorMessage.successRegisterMsg, { rtl: true, })
 		} else {
 			try {
 				const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
@@ -70,7 +70,7 @@ export default function Register() {
 
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
-					toast.success(toastErrorMessage.successLoginMsg)
+					toast.success(toastErrorMessage.successLoginMsg, { rtl: true })
 				}
 				else {
 					router.push(storeData?.returnUrl)
@@ -102,6 +102,8 @@ export default function Register() {
 			console.log(error);
 		});
 	}
+
+
 
 	const handleAppleLogin = async () => {
 		setLoading(true)
@@ -207,7 +209,7 @@ export default function Register() {
 			}).catch((error) => {
 				console.log(error)
 				if (error.code == 'auth/email-already-in-use') {
-					toast.error(toastErrorMessage.emailUsedErrorMsg);
+					toast.error(toastErrorMessage.emailUsedErrorMsg, { rtl: true, });
 				}
 				setLoading(false)
 			})
@@ -246,7 +248,7 @@ export default function Register() {
 			setInitPasswordError(data)
 		}
 	}
-	console.log(password);
+
 	return (
 		<>
 			{loading ?
@@ -304,11 +306,11 @@ export default function Register() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={24} width={30} iconName={'visibilityIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={24} width={30} iconName={'newVisibleIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={24} width={30} iconName={'visibilityOffIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={24} width={30} iconName={'newVisibleOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>
@@ -366,6 +368,7 @@ export default function Register() {
 							<div className={styles.middleLine}></div>
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
+						{/* <div className={styles.loginWithoutPasswordBtnBox} onClick={() => router.push('/registerWithGoogle')}> */}
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام قوقل</p>

@@ -114,7 +114,7 @@ function Index() {
     }
     const handleCreateFolder = async ({ name }) => {
         if (existingItemName.includes(name)) {
-            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg, { rtl: true, })
             return
         }
         let data = {
@@ -123,14 +123,14 @@ function Index() {
             type: selectedItem,
         }
         await postAuthRouteAPI(data).then((res) => {
-            toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
+            toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg, { rtl: true, })
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postAuthRouteAPI(data).then(res => {
-                        toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
+                        toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg, { rtl: true, })
                         setIsModelForAddFolderOpen(false)
                         getfolderList(selectedItem)
                     })

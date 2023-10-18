@@ -115,6 +115,7 @@ import AlertIcon from './customeIcons/alertIcon'
 import CheckCircleIcon from './customeIcons/checkCircleIcon'
 import NewPersonIcon from './customeIcons/newPersonIcon'
 import NewMobileIcon from './customeIcons/newMobileIcon'
+import NewVisibleOffIcon from './customeIcons/newVisibleOffIcon'
 
 
 
@@ -225,6 +226,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newLiveTVIcon' && <NewLiveTVIcon height={height} width={width} color={color} />}
 			{iconName == 'newFolderIcon' && <NewFolderIcon height={height} width={width} color={color} />}
 			{iconName == 'newVisibleIcon' && <NewVisibleIcon height={height} width={width} color={color} />}
+			{iconName == 'newVisibleOffIcon' && <NewVisibleOffIcon height={height} width={width} color={color} />}
 			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
 			{iconName == 'newPersonIcon' && <NewPersonIcon height={height} width={width} color={color} />}
 			{iconName == 'newMobileIcon' && <NewMobileIcon height={height} width={width} color={color} />}

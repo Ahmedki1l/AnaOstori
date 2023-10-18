@@ -72,14 +72,14 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         }).catch((error) => {
             console.log(error);
             if (error?.response?.data?.message == "section name already in use in this curriculum") {
-                toast.error(curriculumConst.curriculumToastMsgConst.sectionNameDuplicateErrorMsg)
+                toast.error(curriculumConst.curriculumToastMsgConst.sectionNameDuplicateErrorMsg, { rtl: true, })
             }
         })
     }
 
     const handleEditSection = async (section) => {
         if (existingItemName.includes(section.name)) {
-            toast.error(curriculumConst.curriculumToastMsgConst.sectionNameDuplicateErrorMsg)
+            toast.error(curriculumConst.curriculumToastMsgConst.sectionNameDuplicateErrorMsg, { rtl: true, })
             return
         }
         let editSectionName = {
@@ -103,7 +103,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         }).catch((error) => {
             console.log(error);
             if (error?.response?.data?.message == "section name already in use in this curriculum") {
-                toast.error(curriculumConst.curriculumToastMsgConst.sectionNameDuplicateErrorMsg)
+                toast.error(curriculumConst.curriculumToastMsgConst.sectionNameDuplicateErrorMsg, { rtl: true, })
             }
         })
     }
@@ -131,7 +131,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
             setSectionDetails(newSectionDetails)
         }).catch((error) => {
             console.log(error);
-            toast.error(toastErrorMessage.sameFileError);
+            toast.error(toastErrorMessage.sameFileError, { rtl: true, });
         })
     }
 
@@ -172,7 +172,7 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
         }).catch(async (error) => {
             console.log(error);
             if (error?.response?.data?.message == "Curriculum name already in use") {
-                toast.error(toastErrorMessage.curriculumNameError)
+                toast.error(toastErrorMessage.curriculumNameError, { rtl: true, })
             }
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {

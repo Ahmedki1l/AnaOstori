@@ -100,7 +100,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
             setCourseDetail(updateCourseCardMetaData.data)
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
             setShowLoader(false)
-            toast.success(toastSuccessMessage.externalCourseDetailUpdateMsg)
+            toast.success(toastSuccessMessage.externalCourseDetailUpdateMsg, { rtl: true, })
         } catch (error) {
             setShowLoader(false)
             console.log(error);
@@ -113,7 +113,7 @@ const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
                     setCourseDetail(updateCourseCardMetaData.data)
                     dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData: updateCourseCardMetaData.data })
                     setShowLoader(false)
-                    toast.success(toastSuccessMessage.externalCourseDetailUpdateMsg)
+                    toast.success(toastSuccessMessage.externalCourseDetailUpdateMsg, { rtl: true, })
                 }).catch(error => {
                     console.error("Error:", error);
                 });

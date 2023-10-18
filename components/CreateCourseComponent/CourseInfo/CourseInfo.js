@@ -74,7 +74,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     }
 
     const createCourseApiSuccessRes = (res) => {
-        toast.success(toastSuccessMessage.courseCreatedSuccessMsg)
+        toast.success(toastSuccessMessage.courseCreatedSuccessMsg, { rtl: true, })
         setShowExtraNavItem(true)
         setShowCourseMetaDataFields(true)
         setCreateCourseApiRes(res.data)
@@ -291,7 +291,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
             }
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
-            toast.success(toastSuccessMessage.courseDetailUpdateMsg);
+            toast.success(toastSuccessMessage.courseDetailUpdateMsg, { rtl: true, });
             setShowLoader(false);
         } catch (error) {
             setShowLoader(false);
@@ -324,13 +324,13 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                             editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
                         }
                         dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
-                        toast.success(toastSuccessMessage.courseDetailUpdateMsg);
+                        toast.success(toastSuccessMessage.courseDetailUpdateMsg, { rtl: true, });
                         setShowLoader(false);
                     })
                 }
 
             } else {
-                toast.error(toastErrorMessage.tryAgainErrorMsg);
+                toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, });
             }
         }
     }
@@ -399,15 +399,15 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         await postAuthRouteAPI(body).then((res) => {
             if (params == "published") {
                 if (e) {
-                    toast.success(courseToastSuccessMessage.toMakeCoursePublished)
+                    toast.success(courseToastSuccessMessage.toMakeCoursePublished, { rtl: true, })
                 } else {
-                    toast.success(courseToastSuccessMessage.toMakeCourseNotPublished)
+                    toast.success(courseToastSuccessMessage.toMakeCourseNotPublished, { rtl: true, })
                 }
             } else {
                 if (e) {
-                    toast.success(courseToastSuccessMessage.toMakeCoursePurchasable)
+                    toast.success(courseToastSuccessMessage.toMakeCoursePurchasable, { rtl: true, })
                 } else {
-                    toast.success(courseToastSuccessMessage.toMakeCourseNotPurchasable)
+                    toast.success(courseToastSuccessMessage.toMakeCourseNotPurchasable, { rtl: true, })
                 }
             }
         }).catch(async (error) => {

@@ -51,7 +51,7 @@ const ModelForAddItemLibrary = ({
 
     const addItemToFolder = async (e) => {
         if (existingItemName.includes(e.name)) {
-            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg, { rtl: true, })
             return
         }
         if (!fileUploadResponceData && folderType !== "quiz") {
@@ -85,7 +85,7 @@ const ModelForAddItemLibrary = ({
         await postRouteAPI(data).then((res) => {
             toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
-                    pdfToastMsgConst.addPdfSuccessMsg)
+                    pdfToastMsgConst.addPdfSuccessMsg, { rtl: true, })
             getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
             onCloseModal()
         }).catch(async (error) => {
@@ -94,7 +94,7 @@ const ModelForAddItemLibrary = ({
                     await postRouteAPI(data).then(res => {
                         toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                             folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
-                                pdfToastMsgConst.addPdfSuccessMsg)
+                                pdfToastMsgConst.addPdfSuccessMsg, { rtl: true, })
                         getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
                         onCloseModal()
                     })
@@ -108,7 +108,7 @@ const ModelForAddItemLibrary = ({
 
     const editFolderItems = async (e) => {
         if (existingItemName.includes(e.name)) {
-            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg, { rtl: true, })
             return
         }
         if (!fileUploadResponceData) {
@@ -142,7 +142,7 @@ const ModelForAddItemLibrary = ({
         await postRouteAPI(data).then((res) => {
             toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
-                    pdfToastMsgConst.updatePdfSuccessMsg)
+                    pdfToastMsgConst.updatePdfSuccessMsg, { rtl: true, })
             getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
             onCloseModal()
         }).catch(async (error) => {
@@ -151,7 +151,7 @@ const ModelForAddItemLibrary = ({
                     await postRouteAPI(data).then(res => {
                         toast.success(folderType == "video" ? videoToastMsgConst.updateVideoSuccessMsg :
                             folderType == "quiz" ? examToastMsgConst.updateExamSuccessMsg :
-                                pdfToastMsgConst.updatePdfSuccessMsg)
+                                pdfToastMsgConst.updatePdfSuccessMsg, { rtl: true, })
                         getItemList(selectedFolderId ? selectedFolderId : selectedFolder?.id)
                         onCloseModal()
                     })

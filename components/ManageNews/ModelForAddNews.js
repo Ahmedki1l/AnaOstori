@@ -39,7 +39,7 @@ const ModelForAddNews = ({
     };
 
     const apiSuccessMsg = (msg) => {
-        toast.success(msg)
+        toast.success(msg, { rtl: true, })
     }
 
     const addNews = async (values) => {
