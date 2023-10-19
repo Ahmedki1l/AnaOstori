@@ -88,14 +88,14 @@ export default function Index(props) {
 				}
 				await postAuthRouteAPI(orderData).then(res => {
 					setCreatedOrder(res.data)
-					generateCheckoutId(res.data.id)
+					// generateCheckoutId(res.data.id)
 				}).catch(async (error) => {
 					console.log(error)
 					if (error?.response?.status == 401) {
 						await getNewToken().then(async (token) => {
 							await postAuthRouteAPI(orderData).then(res => {
 								setCreatedOrder(res.data)
-								generateCheckoutId(res.data.id)
+								// generateCheckoutId(res.data.id)
 							})
 						}).catch(error => {
 							console.error("Error:", error);
@@ -195,23 +195,23 @@ export default function Index(props) {
 		return isError
 	}
 
-	const generateCheckoutId = async (orderId) => {
-		fbq.event('Initiate checkout', { courseId: courseDetails.id, paymentMode: 'mada' })
-		let data = {
-			orderId: orderId,
-			withcoupon: false,
-			couponId: null,
-			type: 'mada'
-		}
-		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data).then(res => {
-			if (res.status != 200) { return }
-			setCheckoutId(res.data[0].id)
-			setChangePage(true)
-			setLoading(false)
-		}).catch(error => {
-			console.log(error)
-		});
-	}
+	// const generateCheckoutId = async (orderId) => {
+	// 	fbq.event('Initiate checkout', { courseId: courseDetails.id, paymentMode: 'mada' })
+	// 	let data = {
+	// 		orderId: orderId,
+	// 		withcoupon: false,
+	// 		couponId: null,
+	// 		type: 'mada'
+	// 	}
+	// 	await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data).then(res => {
+	// 		if (res.status != 200) { return }
+	// 		setCheckoutId(res.data[0].id)
+	// 		setChangePage(true)
+	// 		setLoading(false)
+	// 	}).catch(error => {
+	// 		console.log(error)
+	// 	});
+	// }
 
 	const changePageFunction = async (studentsData, courseType, userAgree) => {
 		let isError = validation(studentsData, courseType, userAgree)
@@ -244,14 +244,18 @@ export default function Index(props) {
 
 			await postAuthRouteAPI(orderData).then(res => {
 				setCreatedOrder(res.data)
-				generateCheckoutId(res.data.id)
+				setChangePage(true)
+				setLoading(false)
+				// generateCheckoutId(res.data.id)
 			}).catch(async (error) => {
 				console.log(error)
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						await postAuthRouteAPI(orderData).then(res => {
 							setCreatedOrder(res.data)
-							generateCheckoutId(res.data.id)
+							setChangePage(true)
+							setLoading(false)
+							// generateCheckoutId(res.data.id)
 						})
 					}).catch(error => {
 						console.error("Error:", error);
