@@ -44,7 +44,7 @@ const Index = () => {
                             assistanceAquired: !text
                     }
                     await postAuthRouteAPI(body).then((res) => {
-                        getPurchaseOrderList(1)
+                        getPurchaseOrderList(currentPage)
                         if (text) {
                             toast.success(managePurchaseOrderConst.studentHasNotContacted)
                         }
@@ -231,6 +231,7 @@ const Index = () => {
 
     const handleTableChange = (pagination, filter, sorter) => {
         getPurchaseOrderList(pagination.current)
+        setCurrentPage(pagination.current)
     }
 
     const onDrawerClose = (apiCall) => {
