@@ -222,7 +222,6 @@ export default function Login() {
 							</div>
 						</div>
 						{passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>كلمة السر غير صحيحة</p>}
-						{/* {isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>} */}
 						<Link href={'/forgot-password'} className={`link ${styles.forgotPassText}`}>نسيت كلمة السر؟</Link>
 						<div className={styles.loginBtnBox}>
 							<button className='primarySolidBtn' type='submit' onClick={handleSignIn}>تسجيل الدخول</button>
@@ -239,7 +238,10 @@ export default function Login() {
 							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام ابل</p>
 						</div>
-						<p className={`fontMedium ${styles.gotoPageText}`} > مستخدم جديد؟ <Link href={'/register'} className="primarylink">إنشاء حساب</Link></p>
+						<div className={styles.gotoPageText} onClick={() => router.push('/register')}>
+							<p className='pl-2'> مستخدم جديد؟ </p>
+							<p className="primarylink"> إنشاء حساب</p>
+						</div>
 					</div>
 					<div className={`absolute ${styles.rightImgDiv}`}>
 						<Image src="/images/squarePattern2.svg" alt='Squre Pattern Image' layout='fill' objectFit="cover" priority />
