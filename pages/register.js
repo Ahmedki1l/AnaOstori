@@ -111,7 +111,6 @@ export default function Register() {
 			const user = result?.user;
 			const isUserNew = result._tokenResponse.isNewUser
 			localStorage.setItem("accessToken", user?.accessToken);
-			handleStoreUpdate(isUserNew)
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -120,6 +119,7 @@ export default function Register() {
 				type: 'LOGIN_WITHOUT_PASSWORD',
 				loginWithoutPassword: true,
 			});
+			handleStoreUpdate(isUserNew)
 		}).catch((error) => {
 			console.log(error);
 			if (error.code == 'auth/popup-closed-by-user') {

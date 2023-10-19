@@ -54,7 +54,7 @@ const ModelForAddNews = ({
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await postRouteAPI(values).then((res) => {
+                    await postRouteAPI(body).then((res) => {
                         getNewsList()
                         isModelClose();
                         apiSuccessMsg(manageNewBarText.createNewsSuccessMsg)
@@ -79,7 +79,7 @@ const ModelForAddNews = ({
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await postRouteAPI(values).then((res) => {
+                    await postRouteAPI(body).then((res) => {
                         getNewsList()
                         isModelClose()
                         apiSuccessMsg(manageNewBarText.updatedNewsSuccessMsg)

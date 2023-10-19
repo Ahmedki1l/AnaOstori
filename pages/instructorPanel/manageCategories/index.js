@@ -56,7 +56,7 @@ const Index = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getAuthRouteAPI().then(res => {
+                    await getAuthRouteAPI(data).then(res => {
                         dispatch({
                             type: 'SET_CATAGORIES',
                             catagories: res.data

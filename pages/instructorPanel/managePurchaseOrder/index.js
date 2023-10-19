@@ -38,15 +38,13 @@ const Index = () => {
             render: (text, _record) => {
                 const changeStatusForAssistantKey = async () => {
                     let body = {
-                        orderData: {
-                            routeName: 'createOrder',
-                            orderUpdate: true,
-                            id: _record?.id,
-                            assistanceAquired: !text
-                        }
+                        routeName: 'createOrder',
+                        orderUpdate: true,
+                        id: _record?.id,
+                        assistanceAquired: !text
                     }
                     await postAuthRouteAPI(body).then((res) => {
-                        getPurchaseOrderList(1)
+                        getPurchaseOrderList(currentPage)
                         if (text) {
                             toast.success(managePurchaseOrderConst.studentHasNotContacted, { rtl: true, })
                         }
@@ -146,7 +144,7 @@ const Index = () => {
             dataIndex: 'priceWithVat',
             sorter: (a, b) => a.totalPrice - b.totalPrice,
             render: (text, _record) => {
-                return (_record.totalPrice + _record.totalVat)
+                return (Number(_record.totalPrice + _record.totalVat).toFixed(2))
             }
         },
         {
@@ -231,8 +229,10 @@ const Index = () => {
         })
     }
 
+
     const handleTableChange = (pagination, filter, sorter) => {
         getPurchaseOrderList(pagination.current)
+        setCurrentPage(pagination.current)
     }
 
     const onDrawerClose = (apiCall) => {
