@@ -31,7 +31,7 @@ const PurchaseOrderDrawer = (props) => {
             return
         }
         if (value.status == 'accepted') {
-            await axios.post("https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com/order/checkAcceptPayment/" + (selectedOrder.id).toString(), {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/checkAcceptPayment/` + (selectedOrder.id).toString(), {
                 secretKey: "EAATuzkf5IYoBAN7fkM0ZAuCTiYWOf1nFZAjKScRJTdYEQHHzOZCRxFqD2MvmdYbrUBmZAH3YydU3Q2hWce0ycRBJhwqlykGbyIrbHtt0rjd8HSPKaYAoqE25iwDZAmSBihukFLdB5"
             }).then((res) => {
                 setShowBtnLoader(false)
@@ -39,7 +39,7 @@ const PurchaseOrderDrawer = (props) => {
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await axios.post("https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com/order/checkAcceptPayment/" + (selectedOrder.id).toString(), {
+                        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/checkAcceptPayment/` + (selectedOrder.id).toString(), {
                             secretKey: "EAATuzkf5IYoBAN7fkM0ZAuCTiYWOf1nFZAjKScRJTdYEQHHzOZCRxFqD2MvmdYbrUBmZAH3YydU3Q2hWce0ycRBJhwqlykGbyIrbHtt0rjd8HSPKaYAoqE25iwDZAmSBihukFLdB5"
                         }).then((res) => {
                             setShowBtnLoader(false)
