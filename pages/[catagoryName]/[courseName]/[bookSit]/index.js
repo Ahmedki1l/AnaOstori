@@ -261,7 +261,7 @@ export default function Index(props) {
 						console.error("Error:", error);
 					});
 				}
-				toast.error(error.response.data.message)
+				toast.error(error.response.data.message, { rtl: true, })
 			})
 		}
 		setStudentsData(studentsData)

@@ -176,7 +176,7 @@ const Index = () => {
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await postRouteAPI(data).then((res) => {
+                    await postRouteAPI(body).then((res) => {
                         setUserList(res.data.data)
                     })
                 }).catch(error => {

@@ -1,30 +1,45 @@
-import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
-import styles from '../styles/Login.module.scss'
-import { useRouter } from 'next/router'
-import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService'
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from 'react-redux'
+import styles from '../styles/RegisterWithGoogle.module.scss'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
-import * as fbq from '../lib/fpixel'
 import { inputErrorMessages } from '../constants/ar'
+import { useSelector } from 'react-redux'
+import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService'
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import * as fbq from '../lib/fpixel'
+import { useRouter } from 'next/router'
 
+export default function RegisterWithGoogleAndApple() {
 
-
-export default function RegisterSocialMediaUser() {
-
-    const [phoneNumber, setPhoneNumber] = useState("");
     const [fullName, setFullName] = useState("")
     const [gender, setGender] = useState("")
-
-
-    const [fullNameError, setFullNameError] = useState('');
-    const [phoneNumberError, setPhoneNumberError] = useState('');
-
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [fullNameError, setFullNameError] = useState("");
+    const [genderError, setGenderError] = useState("");
+    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [loading, setLoading] = useState(false)
     const router = useRouter();
     const dispatch = useDispatch();
+    const regexPhone = useMemo(() => /^(\+?\d{1,3}[- ]?)?\d{10}$/, []);
+
+    useEffect(() => {
+        if (fullName && (fullName.split(" ").length - 1) < 2) {
+            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+        }
+        else {
+            setFullNameError(null)
+        }
+        if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+            setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+        }
+        else {
+            setPhoneNumberError(null);
+        }
+
+    }, [fullName, phoneNumber, regexPhone])
 
     const storeData = useSelector((state) => state?.globalStore);
+
     const handleStoreUpdate = async () => {
         try {
             const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
@@ -51,93 +66,85 @@ export default function RegisterSocialMediaUser() {
         }
     }
 
-    useEffect(() => {
-        if (fullName && (fullName.split(" ").length - 1) < 2) {
+    const handleSignIn = async (e) => {
+        e.preventDefault();
+        if (!fullName) {
+            setFullNameError('شرفنا باسمك يا طويل العمر')
+        } else if (fullName && (fullName.split(" ").length - 1) < 2) {
             setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
         }
-        else {
-            setFullNameError(null)
+        if (!gender) {
+            setGenderError('فضلا اختار الجنس');
         }
-
-        if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-            setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-        }
-        else {
-            setPhoneNumberError(null);
-        }
-    }, [fullName, phoneNumber])
-
-
-    const handleUpdateProfile = async (e) => {
-        e.preventDefault()
-        if (!fullName) {
-            setFullNameError(inputErrorMessages.fullNameErrorMsg)
-        }
-        else if ((fullName.split(" ").length - 1) < 2) {
-            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg)
-
-        }
-        if (!phoneNumber) {
-            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
-        }
-        else if (fullNameError == null && phoneNumberError == null) {
-            const body = {
+        if (!fullNameError && !genderError && !phoneNumberError) {
+            setLoading(true)
+            let data = {
                 fullName: fullName,
-                phone: phoneNumber ? phoneNumber.replace(/[0-9]/, "+966") : null,
-                gender: gender
+                gender: gender,
+                phoneNumber: phoneNumber
             }
-
             const params = {
                 routeName: 'updateProfileHandler',
-                ...body,
+                ...data,
             }
             await postAuthRouteAPI(params).then(async (res) => {
                 handleStoreUpdate()
                 fbq.event('Sign up', { email: storeData.viewProfileData.email, phone: phoneNumber })
                 router.push('/')
-            }).catch(error => {
-                toast.error(error)
+                setLoading(false)
+            }).catch(async (error) => {
+                toast.error(error, { rtl: true, })
                 console.log(error)
+                setLoading(false)
             });
         }
     }
-
-
 
     return (
         <div className={`relative ${styles.mainPage}`}>
             <div className={styles.loginFormDiv}>
                 <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
-                <p className={`pb-2 ${styles.signUpPageSubText}`}>فضلا اكتب بياناتك بدقة، حيث ستٌعتمد وقت تسجيلك بالدورات</p>
-                <form onSubmit={handleUpdateProfile}>
-                    <div className={`formInputBox ${styles.formInputField}`}>
-                        <div className='formInputIconDiv'>
-                            <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
-                        </div>
-                        <input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
-                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
+                <p className={`p-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
+                <div className='flex'>
+                    <p style={{ color: 'red' }} >ملاحظة :</p>
+                    <p className='mr-2'> جميع البيانات مطلوبة ما عدا رقم الجوال  </p>
+                </div>
+                <div className={`formInputBox`}>
+                    <div className='formInputIconDiv'>
+                        <AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
                     </div>
-                    {fullNameError !== null ? <p className={styles.errorText}>{fullNameError}</p> : <p className={styles.noteText}>مثال: هشام محمود خضر</p>}
-                    <div className={`formInputBox ${styles.radioBtnDiv}`}>
-                        <p className={`pl-4 ${styles.genderText}`}>الجنس</p>
-                        <input type="radio" name="gender" className={styles.radioBtns} id="maleGender" value="male" onChange={(e) => setGender(e.target.value)} />
-                        <label className='pr-1 pl-4' htmlFor='maleGender'>ذكر</label>
-                        <input type="radio" name="gender" className={styles.radioBtns} id="femaleGender" value="female" onChange={(e) => setGender(e.target.value)} />
-                        <label className='pr-1' htmlFor="femaleGender">أنثى</label>
+                    <input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+                    <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
+                </div>
+                {fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
+                <div>
+                    <p className={styles.titleLabel}>الجنس</p>
+                    <div className={styles.genderBtnBox}>
+                        <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
+                            <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
+                            <span>ذكر</span>
+                        </button>
+                        <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
+                            <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F26722 ' : '#808080'} />
+                            <span>أنثى</span>
+                        </button>
                     </div>
-                    <div className={`formInputBox ${styles.formInputField}`}>
-                        <div className='formInputIconDiv'>
-                            <AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
-                        </div>
-                        <input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
+                </div>
+                {gender == '' ? <p className={styles.errorText}>{genderError}</p> : ""}
+                <div className='formInputBox'>
+                    <div className='formInputIconDiv'>
+                        <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
                     </div>
-                    {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>بصيغة 05xxxxxxxx</p>}
-                    <div className={styles.loginBtnBox}>
-                        <button className='primarySolidBtn' type='submit' disabled={(fullNameError || phoneNumberError || !fullName || !phoneNumber) ? true : false} >انشاء حساب</button>
-                    </div>
-                </form>
-                <p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink"> تسجيل الدخول</Link></p>
+                    <input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                    <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
+                </div>
+                {phoneNumberError ?
+                    <p className={styles.errorText}>{phoneNumberError}</p>
+                    :
+                    <p className={styles.passwordHintMsg}>بصيغة 05xxxxxxxx</p>}
+                <div className={styles.loginBtnBox}>
+                    <button className='primarySolidBtn' type='submit' onClick={handleSignIn} disabled={loading}>تسجيل الدخول</button>
+                </div>
             </div>
         </div>
     )

@@ -49,7 +49,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
     const availabilitySuccessRes = (msg) => {
-        toast.success(msg)
+        toast.success(msg, { rtl: true, })
         setIsModalOpen(false)
         getAllAvailability()
         setShowBtnLoader(false)
@@ -66,7 +66,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         if (!values.gender) values.gender = 'mix'
         if (isAvailabilityEdit) {
             if (values.maxNumberOfSeats < (editAvailability.maxNumberOfSeats - editAvailability?.numberOfSeats)) {
-                toast.error('max number of seates are not less then number of enrolled students')
+                toast.error('max number of seates are not less then number of enrolled students', { rtl: true, })
                 setShowBtnLoader(false)
                 return
             }
@@ -89,7 +89,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         console.error("Error:", error);
                     });
                 }
-                toast.error(toastErrorMessage.tryAgainErrorMsg)
+                toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
                 setShowBtnLoader(false)
                 console.log(error);
             })
@@ -107,7 +107,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         console.error("Error:", error);
                     });
                 }
-                toast.error(toastErrorMessage.tryAgainErrorMsg)
+                toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
                 console.log(error);
                 setShowBtnLoader(false)
             })
@@ -173,7 +173,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                     console.error("Error:", error);
                 });
             }
-            toast.error(toastErrorMessage.tryAgainErrorMsg)
+            toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             setShowBtnLoader(false)
             console.log(error);
         })
@@ -458,14 +458,14 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                 </FormItem>
                                 {showSwitchBtn &&
                                     <>
-                                        {/* <div className='flex items-center'>
+                                        <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
                                             <p className={styles.recordedcourse}>إظهار المقرر للطلاب</p>
-                                        </div> */}
-                                        <div className='flex items-center'>
+                                        </div>
+                                        {/* <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
                                             <p className={styles.recordedcourse}>إخفاء الموعد</p>
-                                        </div>
+                                        </div> */}
                                     </>
                                 }
                             </div>

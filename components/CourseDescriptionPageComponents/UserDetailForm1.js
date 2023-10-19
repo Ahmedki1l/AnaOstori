@@ -25,14 +25,14 @@ export default function UserDetailForm1(props) {
 			type: gender
 		}
 		await postAuthRouteAPI(params).then((res) => {
-			toast.success(toastErrorMessage.seatsAvailableMsg)
+			toast.success(toastErrorMessage.seatsAvailableMsg, { rtl: true, })
 			setIsSubscribed(true)
 		}).catch(async (error) => {
 			console.log(error);
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
 					await postAuthRouteAPI(params).then((res) => {
-						toast.success(toastErrorMessage.seatsAvailableMsg)
+						toast.success(toastErrorMessage.seatsAvailableMsg, { rtl: true, })
 						setIsSubscribed(true)
 					}).catch((error) => {
 						console.log(error);

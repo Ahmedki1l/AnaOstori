@@ -42,7 +42,7 @@ const CoursePathLibrary = () => {
             id: selectedCurriculum.id,
         }
         await postRouteAPI(editBody).then(async (res) => {
-            toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg)
+            toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg, { rtl: true, })
             await getRouteAPI({ routeName: 'getAllCurriculum' }).then((res) => {
                 dispatch({
                     type: 'SET_CURRICULUMIDS',
@@ -54,7 +54,7 @@ const CoursePathLibrary = () => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(editBody).then(async (res) => {
-                        toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg)
+                        toast.success(curriculumConst.curriculumToastMsgConst.deleteCurriculumSuccessMsg, { rtl: true, })
                         await getRouteAPI({ routeName: 'getAllCurriculum' }).then((res) => {
                             dispatch({
                                 type: 'SET_CURRICULUMIDS',

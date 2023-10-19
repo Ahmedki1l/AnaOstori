@@ -43,7 +43,7 @@ export default function Attendance(props) {
         await getRouteAPI({ routeName: 'getAttendanceKey' }).then((res) => {
             setAttendanceKey(res?.data?.key)
         }).catch(async (error) => {
-            toast.error(toastErrorMessage.tryAgainErrorMsg)
+            toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -164,19 +164,19 @@ export default function Attendance(props) {
         })
         await postAuthRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
-            toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+            toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg, { rtl: true, })
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postAuthRouteAPI(body).then((res) => {
                         setShowBtnLoader(false)
-                        toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+                        toast.success(toastSuccessMessage.appoitmentUpdateSuccessMsg, { rtl: true, })
                     })
                 }).catch(error => {
                     console.error("Error:", error);
                 });
             }
-            toast.error(toastErrorMessage.tryAgainErrorMsg)
+            toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             setShowBtnLoader(false)
             console.log(error);
         })

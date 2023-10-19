@@ -98,7 +98,7 @@ const CreateCoursePath = (props) => {
                 name: curriculmName,
             }
             await postRouteAPI(createBody).then((res) => {
-                toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg)
+                toast.success(curriculumConst.curriculumToastMsgConst.addCurriCulumSuccessMsg, { rtl: true, })
                 router.push({
                     pathname: `/instructorPanel/manageLibrary/editCoursePath`,
                     query: { coursePathId: res.data.id },
@@ -107,7 +107,7 @@ const CreateCoursePath = (props) => {
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
-                    toast.error(curriculumConst.curriculumToastMsgConst.curriculumNameDuplicateErrorMsg)
+                    toast.error(curriculumConst.curriculumToastMsgConst.curriculumNameDuplicateErrorMsg, { rtl: true, })
                 }
             })
         }
@@ -118,7 +118,7 @@ const CreateCoursePath = (props) => {
                     query: { folderType: 'curriculum' }
                 });
                 updateCurriculumList()
-                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
+                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg, { rtl: true, })
                 return
             }
             let editBody = {
@@ -135,11 +135,11 @@ const CreateCoursePath = (props) => {
                 });
                 // courseForm.setFieldValue(item.pathTitle)
                 // setCurriculumName(res.data.data.name)
-                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg)
+                toast.success(curriculumConst.curriculumToastMsgConst.editCurriculumSuccessMsg, { rtl: true, })
             }).catch((error) => {
                 console.log(error);
                 if (error.response.data.message == "Curriculum name already in use") {
-                    toast.error(curriculumConst.curriculumToastMsgConst.curriculumNameDuplicateErrorMsg)
+                    toast.error(curriculumConst.curriculumToastMsgConst.curriculumNameDuplicateErrorMsg, { rtl: true, })
                 }
             })
         }

@@ -7,7 +7,7 @@ export default function ApplePayForm(props) {
 	useEffect(() => {
 
 		const applePayCardForm = document.createElement('script');
-		applePayCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
+		applePayCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
 		applePayCardForm.async = true;
 		document.head.appendChild(applePayCardForm);
 
@@ -40,7 +40,7 @@ export default function ApplePayForm(props) {
 
 	return (
 		<div>
-			<form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="APPLEPAY"></form>
+			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="APPLEPAY"></form>
 		</div>
 	)
 }

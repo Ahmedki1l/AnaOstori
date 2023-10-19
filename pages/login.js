@@ -67,7 +67,7 @@ export default function Login() {
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
 			router.push('/registerSocialMediaUser')
-			toast.success(toastErrorMessage.successRegisterMsg)
+			toast.success(toastSuccessMessage.successRegisterMsg, { rtl: true, })
 		} else {
 			try {
 				const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
@@ -89,7 +89,7 @@ export default function Login() {
 				});
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
-					toast.success(toastErrorMessage.successLoginMsg)
+					toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
 				}
 				else {
 					router.push(storeData?.returnUrl)
@@ -108,7 +108,7 @@ export default function Login() {
 			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
-			toast.success(toastSuccessMessage.successLoginMsg)
+			toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -146,17 +146,16 @@ export default function Login() {
 					loginWithoutPassword: false,
 				});
 				handleStoreUpdate()
-				toast.success(toastSuccessMessage.successLoginMsg)
-				router.push('/')
+				// router.push('/')
 			}).catch((error) => {
 				setLoading(false)
 				console.log(error);
 				if (error.code == 'auth/wrong-password') {
-					toast.error(toastErrorMessage.passWordIncorrectErrorMsg)
+					toast.error(toastErrorMessage.passWordIncorrectErrorMsg, { rtl: true, })
 				} else if (error.code == 'auth/user-not-found') {
-					toast.error(toastErrorMessage.emailNotFoundMsg)
+					toast.error(toastErrorMessage.emailNotFoundMsg, { rtl: true, })
 				} else {
-					toast.error(toastErrorMessage.emailPasswordErrorMsg)
+					toast.error(toastErrorMessage.emailPasswordErrorMsg, { rtl: true, })
 				}
 			});
 		}

@@ -44,7 +44,7 @@ const ModelForAddCategory = ({
         }
     };
     const apiSuccessRes = (msg) => {
-        toast.success(msg)
+        toast.success(msg, { rtl: true, })
         categoryForm.resetFields()
         setIsModelForAddCategory(false)
         getCategoryListReq()
@@ -78,7 +78,7 @@ const ModelForAddCategory = ({
                     });
                 }
                 else {
-                    toast.error(error.response.data.errors[0].message == "order must be unique" && adminPanelCategoryConst.sameOrderIdErrorMsg)
+                    toast.error(error.response.data.errors[0].message == "order must be unique" && adminPanelCategoryConst.sameOrderIdErrorMsg, { rtl: true, })
                 }
                 setShowBtnLoader(false)
             })
@@ -122,7 +122,7 @@ const ModelForAddCategory = ({
                     });
                 }
                 else if (error?.response?.data?.errors?.length > 0) {
-                    toast.error(error?.response?.data?.errors[0]?.message)
+                    toast.error(error?.response?.data?.errors[0]?.message, { rtl: true, })
                 }
                 setShowBtnLoader(false)
             })

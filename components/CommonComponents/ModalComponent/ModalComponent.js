@@ -48,11 +48,11 @@ const ModalComponent = (props) => {
                 console.log(error);
             })
             handleClose();
-            toast.success(toastSuccessMessage.accountRestoredMsg)
+            toast.success(toastSuccessMessage.accountRestoredMsg, { rtl: true, })
         }).catch(error => {
             setShowLoader(false)
             console.log(error);
-            toast.error(error)
+            toast.error(error, { rtl: true, })
             if (error?.response?.status == 401) {
                 signOutUser()
                 dispatch({
