@@ -7,7 +7,6 @@ import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
-
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage } from '../constants/ar'
 
@@ -247,7 +246,7 @@ export default function Register() {
 			setInitPasswordError(data)
 		}
 	}
-
+	console.log(password);
 	return (
 		<>
 			{loading ?
@@ -261,7 +260,7 @@ export default function Register() {
 						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات ملاحظة: جميع البيانات مطلوبة ما عدا رقم الجوال</p>
 						<div className={`formInputBox`}>
 							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+								<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
@@ -270,12 +269,12 @@ export default function Register() {
 						<div className={` ${styles.radioBtnDiv}`}>
 							<p className={styles.titleLabel}>الجنس</p>
 							<div className={styles.genderBtnBox}>
-								<button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
-									<AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#FFFFFF' : '#808080'} />
+								<button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
+									<AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
 									<span>ذكر</span>
 								</button>
-								<button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : ''}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
-									<AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#FFFFFF' : '#808080'} />
+								<button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
+									<AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F26722 ' : '#808080'} />
 									<span>أنثى</span>
 								</button>
 							</div>
@@ -290,7 +289,7 @@ export default function Register() {
 						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
-								<AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
+								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
@@ -315,44 +314,48 @@ export default function Register() {
 							</div>
 						</div>
 						{isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
-						<p>لا تنسى تنتبه للشروط اللي تحت</p>
+						{!isPasswordError && < p className={styles.passwordHintMsg}>لا تنسى تنتبه للشروط اللي تحت</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.minLength ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.minLength ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.minLength ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>8 أحرف كحد ادنى</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.capitalLetter ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.capitalLetter ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.capitalLetter ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>حرف واحد كبير على الأقل</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.number ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.number ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.number ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>رقم واحد على الأقل</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
-								{!initPasswordError?.specialCharacter ?
-									<AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />
-									:
-									<AllIconsComponenet iconName={'alertIcon'} height={20} width={20} color={"#E5342F"} />
-								}
+								<AllIconsComponenet
+									iconName={!password ? "checkCircleIcon" : initPasswordError?.specialCharacter ? 'alertIcon' : 'checkCircleIcon'}
+									height={20}
+									width={20}
+									color={!password ? "#808080" : initPasswordError?.specialCharacter ? "#E5342F" : '#7FDF4B'}
+								/>
 								<p className='p-1'>علامة مميزة واحدة على الأقل مثلا هاشتاق #</p>
 							</>
 						</div>
@@ -372,7 +375,7 @@ export default function Register() {
 							<p className='mx-2'>تسجيل الدخول باستخدام ابل</p>
 						</div>
 						<p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink">سجل دخولك</Link></p>
-					</div>
+					</div >
 				</div >
 			}
 		</>

@@ -22,6 +22,7 @@ import Empty from '../../CommonComponents/Empty';
 import Image from 'next/legacy/image';
 import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
+import { mediaUrl } from '../../../constants/DataManupulation'
 
 const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -457,10 +458,10 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                 </FormItem>
                                 {showSwitchBtn &&
                                     <>
-                                        <div className='flex items-center'>
+                                        {/* <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.contentAccess} onChange={onChangeContentAccess}></Switch>
                                             <p className={styles.recordedcourse}>إظهار المقرر للطلاب</p>
-                                        </div>
+                                        </div> */}
                                         <div className='flex items-center'>
                                             <Switch defaultChecked={editAvailability.published} onChange={onChangePublish}></Switch>
                                             <p className={styles.recordedcourse}>إخفاء الموعد</p>

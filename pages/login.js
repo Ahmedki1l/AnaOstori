@@ -202,7 +202,8 @@ export default function Login() {
 							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
 						</div>
-						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
+						{/* {isEmailError ? <p className={styles.errorText}>الايميل يا غالي</p> : emailError && <p className={styles.errorText}>{emailError}</p>} */}
+						{emailError ? <p className={styles.errorText}>الايميل يا غالي</p> : isEmailError && <p className={styles.errorText}>فضلا ادخل ايميلك بطريقة صحيحة</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
@@ -221,7 +222,8 @@ export default function Login() {
 								}
 							</div>
 						</div>
-						{isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						{passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>كلمة السر غير صحيحة</p>}
+						{/* {isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>} */}
 						<Link href={'/forgot-password'} className={`link ${styles.forgotPassText}`}>نسيت كلمة السر؟</Link>
 						<div className={styles.loginBtnBox}>
 							<button className='primarySolidBtn' type='submit' onClick={handleSignIn}>تسجيل الدخول</button>

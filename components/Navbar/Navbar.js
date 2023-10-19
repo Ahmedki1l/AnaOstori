@@ -124,7 +124,6 @@ export default function Navbar() {
 		}
 	}
 
-
 	useEffect(() => {
 		prevSubMenu.current = showSubMenu;
 	}, [showSubMenu]);
@@ -166,8 +165,7 @@ export default function Navbar() {
 		const element = document.getElementById('navBar');
 		if (offset > 100) {
 			element?.classList.add('top80');
-		}
-		else {
+		} else {
 			element?.classList.remove('top80');
 		}
 	}, [offset])
