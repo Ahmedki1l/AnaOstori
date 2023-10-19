@@ -144,7 +144,7 @@ const Index = () => {
             dataIndex: 'priceWithVat',
             sorter: (a, b) => a.totalPrice - b.totalPrice,
             render: (text, _record) => {
-                return (_record.totalPrice + _record.totalVat)
+                return (Number(_record.totalPrice + _record.totalVat).toFixed(2))
             }
         },
         {
