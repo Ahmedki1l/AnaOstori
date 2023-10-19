@@ -137,7 +137,7 @@ const ModelForAddItemCurriculum = ({
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getRouteAPI(data).then((res) => {
+                    await getRouteAPI(body).then((res) => {
                         setTypeOfListData("item")
                         let data = res?.data?.filter(item => item !== null).sort((a, b) =>
                             a.createdAt.localeCompare(b.createdAt)).map((item) => {

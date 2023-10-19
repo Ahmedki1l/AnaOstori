@@ -72,7 +72,7 @@ const Index = () => {
             isDeleted: true
         }
         await postRouteAPI(body).then((res) => {
-            toast.success(instructorConst.successConfirmDeleteInstructorToast)
+            toast.success(instructorConst.successConfirmDeleteInstructorToast, { rtl: true, })
             getInstructorListReq()
         }).catch((err) => {
             console.log(err);

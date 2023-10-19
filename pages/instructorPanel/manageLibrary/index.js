@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageLibrary.module.scss'
-import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI, postRouteAPI } from '../../../services/apisService';
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
@@ -114,7 +114,7 @@ function Index() {
     }
     const handleCreateFolder = async ({ name }) => {
         if (existingItemName.includes(name)) {
-            toast.error(commonLibraryConst.nameDuplicateErrorMsg)
+            toast.error(commonLibraryConst.nameDuplicateErrorMsg, { rtl: true, })
             return
         }
         let data = {
@@ -123,14 +123,14 @@ function Index() {
             type: selectedItem,
         }
         await postAuthRouteAPI(data).then((res) => {
-            toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
+            toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg, { rtl: true, })
             setIsModelForAddFolderOpen(false)
             getfolderList(selectedItem)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postAuthRouteAPI(data).then(res => {
-                        toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg)
+                        toast.success(folderConst.folderToastMsgConst.createFolderSuccessMsg, { rtl: true, })
                         setIsModelForAddFolderOpen(false)
                         getfolderList(selectedItem)
                     })

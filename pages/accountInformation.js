@@ -112,7 +112,7 @@ export default function AccountInformation() {
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
             });
-            toast.success(type == 'phone' ? toastSuccessMessage.mobileNoUpdateMsg : type == 'email' ? toastSuccessMessage.emailUpdateMsg : toastSuccessMessage.genderUpdateMsg)
+            toast.success(type == 'phone' ? toastSuccessMessage.mobileNoUpdateMsg : type == 'email' ? toastSuccessMessage.emailUpdateMsg : toastSuccessMessage.genderUpdateMsg, { rtl: true, })
             setSectionType('default')
         }).catch(error => {
             console.log(error);
@@ -176,7 +176,7 @@ export default function AccountInformation() {
         }).catch(error => {
             setShowLoader(false)
             if (error.code == 'auth/wrong-password') {
-                toast.error(toastErrorMessage.passWordIncorrectErrorMsg)
+                toast.error(toastErrorMessage.passWordIncorrectErrorMsg, { rtl: true, })
             }
             console.log(error);
         })

@@ -69,9 +69,9 @@ export default function Index() {
         }
         await postAuthRouteAPI(body).then((res) => {
             if (checked) {
-                toast.success(coursePublishedFromMainPageConst.toMakeCoursePublished)
+                toast.success(coursePublishedFromMainPageConst.toMakeCoursePublished, { rtl: true, })
             } else {
-                toast.success(coursePublishedFromMainPageConst.toMakeCourseNotPublished)
+                toast.success(coursePublishedFromMainPageConst.toMakeCourseNotPublished, { rtl: true, })
             }
         }).catch(async (error) => {
             if (error?.response?.status == 401) {

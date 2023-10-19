@@ -13,7 +13,7 @@ export default function BankDetailsCard(props) {
     function handleCopyText(text) {
         navigator.clipboard.writeText(text)
             .then(() => {
-                toast.success(toastSuccessMessage.copiedMsg);
+                toast.success(toastSuccessMessage.copiedMsg, { rtl: true, });
             })
             .catch((error) => {
                 console.error(`Failed to copy ${text} to clipboard: ${error}`);

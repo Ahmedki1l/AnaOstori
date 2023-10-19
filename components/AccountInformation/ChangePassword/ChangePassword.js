@@ -57,18 +57,18 @@ const ChangePassword = ({ data, setActiveTab }) => {
         await verifyPassword(data?.email, oldPassword).then(async (res) => {
             await handleUpdatePassword(newPassword).then(res => {
                 setActiveTab(0)
-                toast.success(toastSuccessMessage.passwordUpdateMsg)
+                toast.success(toastSuccessMessage.passwordUpdateMsg, { rtl: true, })
                 setOldPassword('')
                 setNewPassword('')
                 setConfirmPassword('')
             }).catch(error => {
                 console.log(error);
-                toast.error(error?.message)
+                toast.error(error?.message, { rtl: true, })
             })
             setShowLoader(false)
         }).catch(error => {
             if (error.code == 'auth/wrong-password') {
-                toast.error(toastErrorMessage.passWordIncorrectErrorMsg)
+                toast.error(toastErrorMessage.passWordIncorrectErrorMsg, { rtl: true, })
             }
             setShowLoader(false)
         })

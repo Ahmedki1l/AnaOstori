@@ -66,7 +66,7 @@ const TheStudent = (props) => {
     }
 
     const studentDetailsSuccessRes = (msg) => {
-        toast.success(studentsExamsConst?.toastSuccess)
+        toast.success(studentsExamsConst?.toastSuccess, { rtl: true, })
         setShowBtnLoader(false)
     }
 

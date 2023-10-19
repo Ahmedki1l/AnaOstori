@@ -250,13 +250,13 @@ const TestResults = (props) => {
 
         if (createDataBody.length > 0) {
             await postRouteAPI(createAPIBody).then((res) => {
-                toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                toast.success(toastSuccessMessage.examCreateSuccessMsg, { rtl: true, })
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(createAPIBody).then((res) => {
-                            toast.success(toastSuccessMessage.examCreateSuccessMsg)
+                            toast.success(toastSuccessMessage.examCreateSuccessMsg, { rtl: true, })
                             setShowBtnLoader(false)
                         })
                     }).catch(error => {
@@ -268,13 +268,13 @@ const TestResults = (props) => {
         }
         else if (updateDataBody.length > 0) {
             await postRouteAPI(updateAPIBody).then((res) => {
-                toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                toast.success(toastSuccessMessage.examUpdateSuccessMsg, { rtl: true, })
                 setShowBtnLoader(false)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(updateAPIBody).then((res) => {
-                            toast.success(toastSuccessMessage.examUpdateSuccessMsg)
+                            toast.success(toastSuccessMessage.examUpdateSuccessMsg, { rtl: true, })
                             setShowBtnLoader(false)
                         })
                     }).catch(error => {

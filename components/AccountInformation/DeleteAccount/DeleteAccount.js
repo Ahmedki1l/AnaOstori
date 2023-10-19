@@ -51,10 +51,10 @@ const DeleteAccount = ({ data }) => {
                 viewProfileData: res?.data,
             });
             setAccountsSectionType('default')
-            toast.success(toastSuccessMessage.accountRestoredMsg)
+            toast.success(toastSuccessMessage.accountRestoredMsg, { rtl: true, })
         }).catch(async (error) => {
             console.log(error);
-            toast.error(error)
+            toast.error(error, { rtl: true, })
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postAuthRouteAPI({ routeName: "activateProfile" }).then(async (res) => {

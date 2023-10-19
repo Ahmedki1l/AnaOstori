@@ -56,7 +56,7 @@ const UpdateProfile = () => {
         }).catch((error) => {
             console.error("Error:", error)
             setUploadLoader(false)
-            toast.success(toastErrorMessage.imageUploadFailedMsg)
+            toast.success(toastErrorMessage.imageUploadFailedMsg, { rtl: true, })
             if (error?.response?.status == 401) {
                 signOutUser()
                 dispatch({
@@ -120,7 +120,7 @@ const UpdateProfile = () => {
                 ...data,
             }
             await postAuthRouteAPI(params).then(async (res) => {
-                toast.success(toastSuccessMessage.profileUpdateMsg)
+                toast.success(toastSuccessMessage.profileUpdateMsg, { rtl: true, })
                 setShowLoader(false)
                 dispatch({
                     type: 'SET_PROFILE_DATA',
@@ -128,7 +128,7 @@ const UpdateProfile = () => {
                 });
                 Router.push('/myProfile')
             }).catch(error => {
-                toast.error(error)
+                toast.error(error, { rtl: true, })
                 setShowLoader(false)
             });
         }

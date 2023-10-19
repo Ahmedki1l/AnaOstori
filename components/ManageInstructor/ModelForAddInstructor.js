@@ -61,7 +61,7 @@ const ModelForAddInstructor = ({
     };
 
     const apiSuccessRes = (msg) => {
-        toast.success(msg)
+        toast.success(msg, { rtl: true, })
         instructorForm.resetFields()
         getInstructorListReq()
         setIsModelForAddInstructor(false)
@@ -97,7 +97,7 @@ const ModelForAddInstructor = ({
                     console.error("Error:", error);
                 });
             }
-            toast.error(toastErrorMessage.tryAgainErrorMsg)
+            toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             console.log(error);
             setShowBtnLoader(false)
         })
@@ -141,7 +141,7 @@ const ModelForAddInstructor = ({
                 });
             }
             else {
-                toast.error(toastErrorMessage.tryAgainErrorMsg)
+                toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             }
         })
     }

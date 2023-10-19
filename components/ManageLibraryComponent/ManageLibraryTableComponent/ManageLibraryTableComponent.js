@@ -65,14 +65,14 @@ const ManageLibraryTableComponent = ({
             ...editFolderBody
         }
         await postRouteAPI(data).then((res) => {
-            toast.success(folderToastMsgConst.updateFolderSuccessMsg)
+            toast.success(folderToastMsgConst.updateFolderSuccessMsg, { rtl: true, })
             setIsModelForAddFolderOpen(false)
             getFolderList(folderType)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(data).then(res => {
-                        toast.success(folderToastMsgConst.updateFolderSuccessMsg)
+                        toast.success(folderToastMsgConst.updateFolderSuccessMsg, { rtl: true, })
                         setIsModelForAddFolderOpen(false)
                         getFolderList(folderType)
                     })
@@ -134,7 +134,7 @@ const ManageLibraryTableComponent = ({
             await postRouteAPI(data).then((res) => {
                 toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
                     folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
-                        examToastMsgConst.deleteExamSuccessMsg)
+                        examToastMsgConst.deleteExamSuccessMsg, { rtl: true, })
                 getItemList(selectedFolder.id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
@@ -142,7 +142,7 @@ const ManageLibraryTableComponent = ({
                         await postRouteAPI(data).then(res => {
                             toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
                                 folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
-                                    examToastMsgConst.deleteExamSuccessMsg)
+                                    examToastMsgConst.deleteExamSuccessMsg, { rtl: true, })
                             getItemList(selectedFolder.id)
                         })
                     }).catch(error => {
@@ -161,14 +161,14 @@ const ManageLibraryTableComponent = ({
                 ...deleteFolderBody
             }
             await postRouteAPI(data).then((res) => {
-                toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
+                toast.success(folderToastMsgConst.deleteFolderSuccessMsg, { rtl: true, })
                 getFolderList(folderType)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(data).then(res => {
                             getFolderList(folderType)
-                            toast.success(folderToastMsgConst.deleteFolderSuccessMsg)
+                            toast.success(folderToastMsgConst.deleteFolderSuccessMsg, { rtl: true, })
                         })
                     }).catch(error => {
                         console.error("Error:", error);

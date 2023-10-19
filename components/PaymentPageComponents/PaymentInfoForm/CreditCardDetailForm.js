@@ -8,8 +8,8 @@ export default function CreditCardDetailForm(props) {
 	useEffect(() => {
 
 		const creditCardForm = document.createElement('script');
-		creditCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
-		// creditCardForm.src = `https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`
+		// creditCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
+		creditCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`
 		creditCardForm.async = true;
 		document.head.appendChild(creditCardForm);
 
@@ -85,8 +85,8 @@ export default function CreditCardDetailForm(props) {
 
 	return (
 		<div>
-			<form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
-			{/* <form action={`http://localhost:3000/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form> */}
+			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form> */}
+			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
 		</div>
 	)
 }

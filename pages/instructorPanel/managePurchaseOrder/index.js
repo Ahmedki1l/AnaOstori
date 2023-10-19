@@ -38,18 +38,18 @@ const Index = () => {
             render: (text, _record) => {
                 const changeStatusForAssistantKey = async () => {
                     let body = {
-                            routeName: 'createOrder',
-                            orderUpdate: true,
-                            id: _record?.id,
-                            assistanceAquired: !text
+                        routeName: 'createOrder',
+                        orderUpdate: true,
+                        id: _record?.id,
+                        assistanceAquired: !text
                     }
                     await postAuthRouteAPI(body).then((res) => {
                         getPurchaseOrderList(currentPage)
                         if (text) {
-                            toast.success(managePurchaseOrderConst.studentHasNotContacted)
+                            toast.success(managePurchaseOrderConst.studentHasNotContacted, { rtl: true, })
                         }
                         else {
-                            toast.success(managePurchaseOrderConst.studentHasContacted)
+                            toast.success(managePurchaseOrderConst.studentHasContacted, { rtl: true, })
                         }
                     }).catch(async (error) => {
                         if (error?.response?.status == 401) {
@@ -57,10 +57,10 @@ const Index = () => {
                                 await postAuthRouteAPI(body).then((res) => {
                                     getPurchaseOrderList(1)
                                     if (text) {
-                                        toast.success(managePurchaseOrderConst.studentHasNotContacted)
+                                        toast.success(managePurchaseOrderConst.studentHasNotContacted, { rtl: true, })
                                     }
                                     else {
-                                        toast.success(managePurchaseOrderConst.studentHasContacted)
+                                        toast.success(managePurchaseOrderConst.studentHasContacted, { rtl: true, })
                                     }
                                 })
                             }).catch(error => {
@@ -228,6 +228,7 @@ const Index = () => {
             }
         })
     }
+
 
     const handleTableChange = (pagination, filter, sorter) => {
         getPurchaseOrderList(pagination.current)
