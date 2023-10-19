@@ -38,12 +38,10 @@ const Index = () => {
             render: (text, _record) => {
                 const changeStatusForAssistantKey = async () => {
                     let body = {
-                        orderData: {
                             routeName: 'createOrder',
                             orderUpdate: true,
                             id: _record?.id,
                             assistanceAquired: !text
-                        }
                     }
                     await postAuthRouteAPI(body).then((res) => {
                         getPurchaseOrderList(1)
