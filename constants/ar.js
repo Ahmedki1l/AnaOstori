@@ -4,7 +4,7 @@ export const inputErrorMessages = {
     // firstNameErrorMsg: "فضلا ادخل اسمك الاول", //Please enter your first name.
     lastNameErrorMsg: "فضلا ادخل اسم العائلة", //"Please enter your last name",
     fullNameErrorMsg: "فضلا ادخل الاسم الثلاثي",  //Please enter your full name
-    genderErrorMsg: "فضلا اختر الجنس", //"Please select the gender",
+    genderErrorMsg: 'فضلا اختار الجنس', //"Please select the gender",
     mobileNumberErrorMsg: "فضلا ادخل رقم الجوال", //Please enter your mobile number
     mobileNumberRequiredErrorMsg: "رقم الجوال مطلوب", //mobile number required
     mobileNumberFormatErrorMsg: 'لازم يبدأ بـ05', //The entered format is incorrect, please type the number in the format 05"

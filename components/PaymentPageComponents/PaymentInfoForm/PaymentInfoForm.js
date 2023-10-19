@@ -32,7 +32,7 @@ export default function PaymentInfoForm(props) {
 	const [couponError, setCouponError] = useState(false)
 	const [couponAppliedData, setCouponAppliedData] = useState()
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
-	const [paymentType, setPaymentType] = useState(window.ApplePaySession ? 'applepay' : 'mada')
+	const [paymentType, setPaymentType] = useState('')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
 
@@ -134,7 +134,7 @@ export default function PaymentInfoForm(props) {
 								</label>
 							</>
 						}
-						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} defaultChecked />
+						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
 						<label htmlFor="madaCardDetails" className='relative'>
 							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
 								<div className='flex items-center'>

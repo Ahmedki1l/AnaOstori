@@ -35,7 +35,7 @@ export default function Register() {
 	const [phoneNumberError, setPhoneNumberError] = useState(false);
 	const [emailError, setEmailError] = useState(null);
 	const [passwordError, setPasswordError] = useState(null);
-
+	const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
 	const [loading, setLoading] = useState(false)
 
 	const router = useRouter();
@@ -168,8 +168,8 @@ export default function Register() {
 	}, [fullName, email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
 
 
-	const handleSignup = async () => {
-		setLoading(true);
+	const handleSignup = async (e) => {
+		e.preventDefault()
 		if (!fullName) {
 			setFullNameError(inputErrorMessages.fullNameErrorMsg);
 		} else if (fullName && (fullName.split(" ").length - 1) < 2) {
@@ -184,8 +184,10 @@ export default function Register() {
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
-		else if (fullNameError == null && emailError == null && passwordError == null) {
+		if (fullNameError != null && emailError != null && passwordError != null) {
+			setSubmitBtnDisabled(true)
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
+
 				const data = {
 					fullName: fullName,
 					phone: phoneNumber.replace(/[0-9]/, "+966"),
@@ -206,6 +208,7 @@ export default function Register() {
 				});
 			}).catch((error) => {
 				console.log(error)
+				setSubmitBtnDisabled(false)
 				if (error.code == 'auth/email-already-in-use') {
 					toast.error(toastErrorMessage.emailUsedErrorMsg);
 				}
@@ -246,7 +249,7 @@ export default function Register() {
 			setInitPasswordError(data)
 		}
 	}
-	console.log(password);
+
 	return (
 		<>
 			{loading ?
@@ -257,7 +260,11 @@ export default function Register() {
 				<div className={`relative ${styles.mainPage}`}>
 					<div className={styles.loginFormDiv}>
 						<h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
-						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات ملاحظة: جميع البيانات مطلوبة ما عدا رقم الجوال</p>
+						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
+						<div className='flex'>
+							<p style={{ color: 'red' }}> ملاحظة : </p>
+							<p> جميع البيانات مطلوبة ما عدا رقم الجوال</p>
+						</div>
 						<div className={`formInputBox`}>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
@@ -266,7 +273,7 @@ export default function Register() {
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
 						</div>
 						{fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
-						<div className={` ${styles.radioBtnDiv}`}>
+						<div>
 							<p className={styles.titleLabel}>الجنس</p>
 							<div className={styles.genderBtnBox}>
 								<button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
@@ -279,6 +286,7 @@ export default function Register() {
 								</button>
 							</div>
 						</div>
+						{isGenderError && <p className={styles.errorText}>{isGenderError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
@@ -323,7 +331,7 @@ export default function Register() {
 									width={20}
 									color={!password ? "#808080" : initPasswordError?.minLength ? "#E5342F" : '#7FDF4B'}
 								/>
-								<p className='p-1'>8 أحرف كحد ادنى</p>
+								<p className='p-1'>8 خانات كحد أدنى (حروف أو ارقام)</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
@@ -334,7 +342,7 @@ export default function Register() {
 									width={20}
 									color={!password ? "#808080" : initPasswordError?.capitalLetter ? "#E5342F" : '#7FDF4B'}
 								/>
-								<p className='p-1'>حرف واحد كبير على الأقل</p>
+								<p className='p-1'>من بينها حرف واحد كبير على الأقل</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
@@ -360,7 +368,7 @@ export default function Register() {
 							</>
 						</div>
 						<div className={styles.loginBtnBox}>
-							<button className='primarySolidBtn' type='submit' disabled={(fullNameError !== null || emailError !== null || passwordError !== null || !fullName.length || !email.length || !password.length || isPasswordError || phoneNumberError) ? true : false} onClick={handleSignup}>إنشاء حساب</button>
+							<button className='primarySolidBtn' type='submit' disabled={submitBtnDisabled ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
@@ -374,8 +382,11 @@ export default function Register() {
 							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام ابل</p>
 						</div>
-						<p className={`fontMedium ${styles.gotoPageText}`} > عندك حساب؟ <Link href={'/login'} className="primarylink">سجل دخولك</Link></p>
-					</div >
+						<div className={styles.gotoPageText} onClick={() => router.push('/login')}>
+							<p className='pl-2'> عندك حساب؟ </p>
+							<p className="primarylink"> سجل دخولك</p>
+						</div>
+					</div>
 				</div >
 			}
 		</>

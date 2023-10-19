@@ -52,6 +52,7 @@
 	padding-right: 1.5rem;
 	font-size: 16px;
 	color: #00000080;
+	top: 1.2rem
 }
 
 .loginPageIconDiv {
@@ -122,13 +123,11 @@
 	}
 }
 
-.radioBtnDiv {
-	margin-top: .5rem !important;
-}
-
 .gotoPageText {
 	font-size: 16px;
-	text-align: center;
+	display: flex;
+	place-content: center;
+	cursor: pointer;
 	margin: 1.5rem 0 0 0;
 }
 
@@ -156,26 +155,6 @@
 .visibilityIcon {
 	font-size: 1.3rem !important;
 	color: #00000080;
-}
-
-@media(max-width: 550px) {
-	.loginFormDiv {
-		width: 100%;
-		border: none;
-		padding: 1rem;
-	}
-}
-
-
-.noteText {
-	color: var(--grary-not-selected, #808080);
-	text-align: right;
-	font-family: Tajawal;
-	font-size: 12px;
-	font-style: normal;
-	font-weight: 400;
-	line-height: normal;
-	text-align: right;
 }
 
 .genderBtnBox {
@@ -254,5 +233,23 @@
 
 	p {
 		margin: 0 5px -4px;
+	}
+}
+
+@media(max-width: 550px) {
+	.loginFormDiv {
+		width: 100%;
+		border: none;
+		padding: 1rem;
+	}
+
+	.loginPageHead,
+	.signUpPageHead {
+		font-size: 24px;
+		text-align: right;
+	}
+
+	.loginFormDiv {
+		top: 1rem;
 	}
 }
