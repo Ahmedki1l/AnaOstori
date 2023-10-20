@@ -116,6 +116,7 @@ import CheckCircleIcon from './customeIcons/checkCircleIcon'
 import NewPersonIcon from './customeIcons/newPersonIcon'
 import NewMobileIcon from './customeIcons/newMobileIcon'
 import NewVisibleOffIcon from './customeIcons/newVisibleOffIcon'
+import GoToNextArrow from './customeIcons/goToNextArrow'
 
 
 
@@ -233,6 +234,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
 			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}
+			{iconName == 'goToNextArrow' && <GoToNextArrow height={height} width={width} color={color} />}
 
 
 			{iconName == 'clockDoubleColor' && <ClockDoubleColor height={height} width={width} color={color} />}

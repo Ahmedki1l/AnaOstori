@@ -38,6 +38,19 @@
 	border: 1px solid #0000001a;
 }
 
+.inputError {
+	width: 100%;
+	padding-right: 2.2rem;
+	border: 1px solid red;
+}
+
+.inputPlaceHoldererror {
+	padding-right: 1.5rem;
+	font-size: 16px;
+	color: red;
+	top: 1.2rem
+}
+
 .formInputField {
 	margin-bottom: .5rem !important;
 }
@@ -162,7 +175,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	height: 47px;
-	margin: .5rem 0 1rem 0;
+	margin: .5rem 0 2rem 0;
 	border: 1px solid #0000001a;
 	border-radius: 4px;
 	overflow: hidden;
@@ -186,15 +199,45 @@
 	}
 }
 
+.inputErrorBox {
+	border: 1px solid red;
+	justify-content: flex-start;
+	align-items: center;
+	height: 47px;
+	margin: .5rem 0 1.5rem 0;
+	border-radius: 4px;
+	overflow: hidden;
+	border-left: none;
+
+	button {
+		background: #FFFFFF;
+		font-size: 16px;
+		line-height: 19px;
+		color: #000000;
+		width: 50%;
+		border-left: 1px solid red;
+		height: 100%;
+		cursor: pointer;
+
+		:first-child {
+			border-left: none;
+		}
+
+		span {
+			margin-right: 5px;
+		}
+	}
+}
+
 .genderNotActiveBtn {
 	border: none;
 	border-left: 1px solid #00000023;
 }
 
 .genderActiveBtn {
-	color: #F06A25 !important;
+	color: #F26722 !important;
 	background: #FEF7F4 !important;
-	border: 0.5px solid #F06A25;
+	border: 0.5px solid #F26722;
 }
 
 .maleBtn {

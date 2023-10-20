@@ -88,6 +88,8 @@ export default function Index(props) {
 				}
 				await postAuthRouteAPI(orderData).then(res => {
 					setCreatedOrder(res.data)
+					setChangePage(true)
+					setLoading(false)
 					// generateCheckoutId(res.data.id)
 				}).catch(async (error) => {
 					console.log(error)
@@ -95,6 +97,8 @@ export default function Index(props) {
 						await getNewToken().then(async (token) => {
 							await postAuthRouteAPI(orderData).then(res => {
 								setCreatedOrder(res.data)
+								setChangePage(true)
+								setLoading(false)
 								// generateCheckoutId(res.data.id)
 							})
 						}).catch(error => {
