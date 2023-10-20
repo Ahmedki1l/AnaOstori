@@ -117,6 +117,11 @@ import NewPersonIcon from './customeIcons/newPersonIcon'
 import NewMobileIcon from './customeIcons/newMobileIcon'
 import NewVisibleOffIcon from './customeIcons/newVisibleOffIcon'
 import GoToNextArrow from './customeIcons/goToNextArrow'
+import ColoredInstaIcon from './customeIcons/coloredInstaIcon'
+import ColoredYoutubeIcon from './customeIcons/coloredYoutubeIcon'
+import ColoredTwittericon from './customeIcons/coloredTwittericon'
+import ColoredGoogleMapIcon from './customeIcons/coloredGoogleMapIcon'
+import ColoredEmailIcon from './customeIcons/coloredEmailIcon'
 
 
 
@@ -251,6 +256,13 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'studentOneIcon' && <StudentOneIcon height={height} width={width} color={color} strockColor={strockColor} />}
 			{iconName == 'studentTwoIcon' && <StudentTwoIcon height={height} width={width} color={color} strockColor={strockColor} />}
 			{iconName == 'studentThreeIcon' && <StudentThreeIcon height={height} width={width} color={color} strockColor={strockColor} />}
+
+			{iconName == 'coloredInstaIcon' && <ColoredInstaIcon height={height} width={width} />}
+			{iconName == 'coloredYoutubeIcon' && <ColoredYoutubeIcon height={height} width={width} color={color} />}
+			{iconName == 'coloredTwittericon' && <ColoredTwittericon height={height} width={width} color={color} />}
+			{iconName == 'coloredGoogleMapIcon' && <ColoredGoogleMapIcon height={height} width={width} />}
+			{iconName == 'coloredEmailIcon' && <ColoredEmailIcon height={height} width={width} color={color} />}
+
 
 		</>
 	)

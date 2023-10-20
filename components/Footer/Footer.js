@@ -12,13 +12,6 @@ export default function Footer() {
 	const isMediumScreen = useWindowSize().mediumScreen
 	const isSmallScreen = useWindowSize().smallScreen
 
-	const [locationIconColor, setLocationIconColor] = useState("#000000")
-	const [phoneIconColor, setPhoneIconColor] = useState("#000000")
-	const [instaIconColor, setInstaIconColor] = useState("#2D2E2D")
-	const [youtubeIconColor, setYoutubeIconColor] = useState("#2D2E2D")
-	const [twitterIconColor, setTwitterIconColor] = useState("#2D2E2D")
-	const [tiktokIconColor, setTiktokIconColor] = useState("#2D2E2D")
-
 
 	return (
 		<div className={styles.footerWrapper}>
@@ -28,25 +21,31 @@ export default function Footer() {
 						<Logo height={isSmallScreen ? 49 : 98} width={isSmallScreen ? 89 : 177} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
 						<p className={styles.footerSubText}>نقدم دورات القدرات والتحصيلي للجنسين بروح شبابية، عندنا طاقم متكامل من المدربين والمدربات والمشرفين والمشرفات</p>
 						<div className='pb-4'>
+							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText'>
+								<li className={styles.locationLinkBox} >
+									<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredGoogleMapIcon'} />
+									<p className='pr-2'>المقر الرئيسي، الرياض، حي الياسمين</p>
+								</li>
+							</Link>
 							<div className={styles.socialMediaIconWraper}>
-								<Link href={`${linkConst.Youtube_Link}`} target='_blank' className={styles.youtubeWrapper} onMouseEnter={() => setYoutubeIconColor('#F26722')} onMouseLeave={() => setYoutubeIconColor('#000000')}>
+								<Link href={`${linkConst.Youtube_Link}`} target='_blank' className={styles.youtubeWrapper}>
 									<div className={styles.youtubeBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 26} width={isMediumScreen ? 29 : 31} iconName={'youtubeIcon'} color={youtubeIconColor} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 26} width={isMediumScreen ? 29 : 31} iconName={'coloredYoutubeIcon'} color={'#CE1312'} />
 									</div>
 								</Link>
-								<Link href={`${linkConst.Twitter_Link}`} target='_blank' className={styles.twitterWrapper} onMouseEnter={() => setTwitterIconColor('#F26722')} onMouseLeave={() => setTwitterIconColor('#000000')}>
+								<Link href={`${linkConst.Twitter_Link}`} target='_blank' className={styles.twitterWrapper}>
 									<div className={styles.twitterBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'twitterIcon'} color={twitterIconColor} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'coloredTwittericon'} color={'#03A9F4'} />
 									</div>
 								</Link>
-								<Link href={`${linkConst.Instagram_Link}`} target='_blank' className={styles.instaWrapper} onMouseEnter={() => setInstaIconColor('#F26722')} onMouseLeave={() => setInstaIconColor('#000000')}>
+								<Link href={`${linkConst.Instagram_Link}`} target='_blank' className={styles.instaWrapper}>
 									<div className={styles.instaBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'instaIcon'} color={instaIconColor} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'coloredInstaIcon'} />
 									</div>
 								</Link>
-								<Link href={`${linkConst.TikTok_Link}`} target='_blank' className={styles.tiktokWrapper} onMouseEnter={() => setTiktokIconColor('#F26722')} onMouseLeave={() => setTiktokIconColor('#000000')}>
+								<Link href={`${linkConst.TikTok_Link}`} target='_blank' className={styles.tiktokWrapper}>
 									<div className={styles.tiktokBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'tiktokIcon'} color={tiktokIconColor} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'tiktokIcon'} color={'#000000'} />
 									</div>
 								</Link>
 							</div>
@@ -92,54 +91,38 @@ export default function Footer() {
 						<h3>خلنا على تواصل</h3>
 						<ul>
 							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText inline-block'>
-								<li className={styles.whatsAppWrapper} onMouseEnter={() => setPhoneIconColor('#F26722')} onMouseLeave={() => setPhoneIconColor('#000000')}>
+								<li className={styles.whatsAppWrapper} >
 									<div className={styles.whatsAppBlack}>
-										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'whatsappFill'} color={phoneIconColor} />
+										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'whatsappFill'} color={'#40C351'} />
 									</div>
 									<p>0502413980</p>
 								</li>
 							</Link>
-							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText '>
-								<li className={styles.locationWrapper} onMouseEnter={() => setLocationIconColor('#F26722')} onMouseLeave={() => setLocationIconColor('#000000')}>
+							<Link href={`mailto:${'anaostori@scbs.sa'}`} target='_blank' className='normalLinkText '>
+								<li className={styles.locationWrapper}>
 									<div className={styles.locationBlack}>
-										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'location'} color={locationIconColor} />
+										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredEmailIcon'} color={"#F8B84E"} />
 									</div>
-									<p style={{ color: locationIconColor }}>الرياض، حي الياسمين</p>
+									<p>anaostori@scbs.sa</p>
 								</li>
 							</Link>
 						</ul>
 					</div>
-					<div className={styles.section5}>
-						<h3>حمل التطبيق الان</h3>
-						<div className='flex pt-4'>
-							<Link href={`${linkConst.Ios_APP_URL}`} target='_blank' className='normalLinkText'>
-								<li className={styles.appLogoWrapper}>
-									<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#000000'} />
-									<div className='pr-2'>
-										<p className={styles.subHeadding}>تنزيل من</p>
-										<p className={`font-bold ${styles.storeNameText}`}>App Store</p>
-									</div>
-								</li>
-							</Link>
-							<Link href={`${linkConst.Android_APP_URL}`} className='normalLinkText' target='_blank'>
-								<li className={styles.appLogoWrapper}>
-									<Logo height={26} width={22} logoName={'googlePlayLogo'} alt={'Google Play Logo'} />
-									<div className='pr-2'>
-										<p className={styles.subHeadding}>تنزيل من</p>
-										<p className={`font-bold ${styles.storeNameText}`}>Google Play</p>
-									</div>
-								</li>
-							</Link>
-						</div>
-					</div>
 				</div>
 				<div className={styles.footerBottom}>
-					<p>جميع الحقوق محفوظة لشركة سنام لخدمات الأعمال © 2023</p>
+					<div className={styles.footerLink}>
+						<p className='ml-2'>جميع الحقوق محفوظة </p>
+						<Link style={{ color: '#0075FF' }} target={'_blank'} href={`https://www.linkedin.com/company/scbs-sa/`}> لشركة سنام لخدمات الأعمال © 2023</Link>
+					</div>
 					<div className={styles.bankLogoDiv}>
 						<Logo height={isMediumScreen ? 30 : 35} width={isMediumScreen ? 270 : 280} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
 					</div>
+					{/* <p>جميع الحقوق محفوظة لشركة سنام لخدمات الأعمال © 2023</p>
+					<div className={styles.bankLogoDiv}>
+						<Logo height={isMediumScreen ? 30 : 35} width={isMediumScreen ? 270 : 280} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
+					</div> */}
 				</div>
 			</div>
-		</div>
+		</div >
 	)
 }
