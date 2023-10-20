@@ -369,7 +369,7 @@ export default function Navbar() {
 												<div className={styles.viewProfile}>
 													<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
 													<p>
-														{stringUpdation(userFullName, 15)}
+														{stringUpdation(userFullName, 10)}
 													</p>
 													<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
 												</div>
