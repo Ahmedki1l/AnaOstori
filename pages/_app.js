@@ -130,7 +130,7 @@ function MyApp({ Component, pageProps }) {
 				setPageTitle('إدارة المكتبة الرقمية')
 				break;
 			case "/forgot-password":
-				setPageTitle('نسيت كلمة السر ')
+				setPageTitle(' نسيت كلمة السر')
 				break
 		}
 	}, [router.asPath, pathName, router.query.catagoryName]);

@@ -70,12 +70,12 @@ export default function RegisterWithGoogleAndApple() {
     const handleSignIn = async (e) => {
         e.preventDefault();
         if (!fullName) {
-            setFullNameError('شرفنا باسمك يا طويل العمر')
+            setFullNameError(inputErrorMessages.fullNameErrorMsgForRegister)
         } else if (fullName && (fullName.split(" ").length - 1) < 2) {
             setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
         }
         if (!gender) {
-            setGenderError('فضلا اختار الجنس');
+            setGenderError(inputErrorMessages.genderErrorMsg);
         }
         if (!fullNameError && !genderError && !phoneNumberError) {
             setLoading(true)
