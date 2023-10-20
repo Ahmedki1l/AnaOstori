@@ -19,7 +19,6 @@ const DrawerTiitle = styled.p`
 `
 
 const Index = () => {
-
     const [purchaseOrderOpen, setPurchaseOrderOpen] = useState(false);
     const [purchaseOrderList, setPurchaseOrderList] = useState()
     const [paginationConfig, setPaginationConfig] = useState({
@@ -144,7 +143,7 @@ const Index = () => {
             dataIndex: 'priceWithVat',
             sorter: (a, b) => a.totalPrice - b.totalPrice,
             render: (text, _record) => {
-                return (Number(_record.totalPrice + _record.totalVat).toFixed(2))
+                return (Number(Number(_record.totalPrice) + Number(_record.totalVat)).toFixed(2))
             }
         },
         {

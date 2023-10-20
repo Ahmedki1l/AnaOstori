@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import styles from '../styles/RegisterWithGoogle.module.scss'
+import styles from '../styles/Login.module.scss'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import { inputErrorMessages } from '../constants/ar'
 import { useSelector } from 'react-redux'
@@ -25,18 +25,19 @@ export default function RegisterWithGoogleAndApple() {
     useEffect(() => {
         if (fullName && (fullName.split(" ").length - 1) < 2) {
             setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
-        }
-        else {
+        } else {
             setFullNameError(null)
         }
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-        }
-        else {
+        } else {
             setPhoneNumberError(null);
         }
+        if (gender) {
+            setGenderError(null)
+        }
 
-    }, [fullName, phoneNumber, regexPhone])
+    }, [fullName, phoneNumber, gender, regexPhone])
 
     const storeData = useSelector((state) => state?.globalStore);
 
@@ -113,13 +114,13 @@ export default function RegisterWithGoogleAndApple() {
                     <div className='formInputIconDiv'>
                         <AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
                     </div>
-                    <input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
-                    <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
+                    <input className={`formInput ${fullNameError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+                    <label className={`formLabel ${fullNameError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="fullName">الاسم الثلاثي</label>
                 </div>
                 {fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
                 <div>
                     <p className={styles.titleLabel}>الجنس</p>
-                    <div className={styles.genderBtnBox}>
+                    <div className={genderError ? `${styles.inputErrorBox}` : `${styles.genderBtnBox}`} >
                         <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
                             <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
                             <span>ذكر</span>
