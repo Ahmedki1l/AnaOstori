@@ -7,22 +7,21 @@ import { inputErrorMessages } from '../constants/ar'
 export default function ForgotPassword() {
 
 	const [email, setEmail] = useState("");
-	const [isEmailError, setIsEmailError] = useState(false);
-	const [emailError, setEmailError] = useState(false)
+	const [emailError, setEmailError] = useState(null)
 	const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
 
 
 	useEffect(() => {
 		if (email && !(regexEmail.test(email))) {
-			setIsEmailError(true)
+			setEmailError(inputErrorMessages.emailFormatMsg)
 		} else {
-			setIsEmailError(false)
+			setEmailError(null)
 		}
 	}, [email, regexEmail])
 
 	const handleForgotPassword = async (email) => {
 		if (!email) {
-			setEmailError(true)
+			setEmailError(inputErrorMessages.enterEmailInputErrorMsg)
 		}
 		forgotPassword(email)
 	}
@@ -37,13 +36,10 @@ export default function ForgotPassword() {
 						<div className='formInputIconDiv'>
 							<AllIconsComponenet height={20} width={20} iconName={'email'} color={'#808080'} />
 						</div>
-						<input className={`formInput ${isEmailError ? `${styles.inputError}` : `${styles.formInput}`}`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-						<label className={`formLabel ${isEmailError ? `${styles.inputPlaceHoldererror}` : `${styles.formLabel}`}`} htmlFor="email">الايميل</label>
+						<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.formInput}`}`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+						<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.formLabel}`}`} htmlFor="email">الايميل</label>
 					</div>
-					{emailError ?
-						<p className={styles.errorText}>{inputErrorMessages.enterEmailInputErrorMsg}</p>
-						:
-						isEmailError && <p className={styles.errorText}>{inputErrorMessages.enterEmailCorrectInputErrorMsg}</p>}
+					<p className={styles.errorText}>{emailError}</p>
 					<button className={`primarySolidBtn ${styles.loginBtnBox}`} type='submit' onClick={() => handleForgotPassword(email)}>
 						<AllIconsComponenet height={24} width={24} iconName={'goToNextArrow'} color={'#FFFFFF'} />
 						<span className='pr-2'>إرسال</span>
