@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getPaymentInfoAPI } from '../services/apisService';
+import { getAuthRouteAPI, getPaymentInfoAPI } from '../services/apisService';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
@@ -22,6 +22,23 @@ export default function Payment(props) {
     const [loading, setLoading] = useState(true)
     const [invoiceUrl, setInvoiceUrl] = useState('')
     const dispatch = useDispatch()
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if (isLoading) {
+                event.preventDefault();
+                alert('Please wait for the payment to complete');
+                event.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [isLoading]);
 
     useEffect(() => {
         const getPaymentData = async () => {
@@ -44,7 +61,7 @@ export default function Payment(props) {
             }).catch((error) => {
                 console.log(error)
                 setLoading(false)
-            });
+            })
         }
         getPaymentData()
     }, [orderID, transactionID])
