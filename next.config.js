@@ -9,7 +9,7 @@ const nextConfig = {
       'lh3.googleusercontent.com',
       'phase2anaostori.s3.eu-central-1.amazonaws.com',
       'anaostori-dev.s3.eu-central-1.amazonaws.com'
-    ], npm
+    ],
   },
   // env: {
   //   API_BASE_URL: "https://fxhu44o7ua.execute-api.eu-central-1.amazonaws.com",
