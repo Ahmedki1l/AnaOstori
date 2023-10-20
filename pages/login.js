@@ -65,7 +65,6 @@ export default function Login() {
 
 
 	const handleStoreUpdate = async (isUserNew) => {
-		console.log(isUserNew);
 		if (isUserNew) {
 			router.push('/registerSocialMediaUser')
 			toast.success(toastSuccessMessage.successRegisterMsg, { rtl: true, })

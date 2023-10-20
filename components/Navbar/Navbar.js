@@ -90,7 +90,6 @@ export default function Navbar() {
 				myCourses: myCourseData?.data,
 			});
 		} catch (error) {
-			console.log("NavBarError", error);
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
 					const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
