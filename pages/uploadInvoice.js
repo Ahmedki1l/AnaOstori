@@ -37,7 +37,7 @@ export async function getServerSideProps(context) {
     return {
         props: {
             courseDetail,
-            token: token ?? null
+            token: token ?? ''
         }
     }
 
