@@ -11,9 +11,20 @@ import { inputErrorMessages } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
 
 
-export async function getServerSideProps({ req, res, resolvedUrl }) {
-    const orderId = resolvedUrl.split('=')[1].split('%2F')[0]
-    const token = resolvedUrl.split('=')[1].split('%2F')[1]
+export async function getServerSideProps(context) {
+    const { query } = context;
+    let orderId
+    let token
+    if (query.orderId.includes('/')) {
+        orderId = query.orderId.split('/')[0]
+        token = query.orderId.split('/')[1]
+    } else if (query.token && query.orderId) {
+        orderId = query.orderId
+        token = query.token
+    } else {
+        orderId = query.orderId
+        token = ''
+    }
     const courseDetail = await axios.get(`${process.env.API_BASE_URL}/order/displayUploadInfo/${orderId}`)
         .then((response) => (response.data)).catch((error) => error);
 
