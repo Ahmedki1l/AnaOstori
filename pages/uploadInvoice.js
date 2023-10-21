@@ -128,19 +128,19 @@ export default function ApproveTrans(props) {
                 <div>
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>سعر الدورة</p>
-                        <p className={styles.paymentInfoText}>{courseDetail?.totalPrice.toFixed(2)} ر.س</p>
+                        <p className={styles.paymentInfoText}>{Number(courseDetail?.totalPrice).toFixed(2)} ر.س</p>
                     </div>
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>ضريبة القيمة المضافة</p>
-                        <p className={styles.paymentInfoText}>{courseDetail?.totalVat.toFixed(2)} ر.س</p>
+                        <p className={styles.paymentInfoText}>{Number(courseDetail?.totalVat).toFixed(2)} ر.س</p>
                     </div>
                     {courseDetail?.couponUsed && <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>خصم الكود ({courseDetail.couponName})</p>
-                        <p className={styles.paymentInfoText}>  {totalDiscount}- ر.س</p>
+                        <p className={styles.paymentInfoText}>  {Number(totalDiscount)}- ر.س</p>
                     </div>}
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={`fontBold ${styles.paymentInfoText}`}>الإجمالي المطلوب</p>
-                        <p className={`fontBold ${styles.paymentInfoText}`}>{((courseDetail?.totalPrice + courseDetail?.totalVat)).toFixed(2)} ر.س</p>
+                        <p className={`fontBold ${styles.paymentInfoText}`}>{((Number(courseDetail?.totalPrice) + Number(courseDetail?.totalVat))).toFixed(2)} ر.س</p>
                     </div>
                 </div>
                 <div>
