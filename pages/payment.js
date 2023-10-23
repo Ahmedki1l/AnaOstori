@@ -74,7 +74,8 @@ export default function Payment(props) {
                 <div>
                     <div className={`relative ${styles.mainArea}`}>
                         <Spinner borderwidth={7} width={6} height={6} />
-                        <h1 style={{ textAlign: 'center' }}>انتظر الله يسعدك، بنتحقق من عملية الدفع</h1>
+                        <h1 style={{ textAlign: 'center' }}>بنتحقق من عملية الدفع</h1>
+                        <h3 style={{ textAlign: 'center', padding: '0 1rem' }}>بنتحقق من عملية الدفع، لا تقفل أو تحدث الصفحة عشان ما تفشل العملية</h3>
                     </div>
                 </div>
                 :

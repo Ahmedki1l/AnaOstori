@@ -11,12 +11,22 @@ import { inputErrorMessages } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
 
 
-export async function getServerSideProps({ req, res, resolvedUrl }) {
-    const orderId = resolvedUrl.split('=')[1].split('%2F')[0]
-    const token = resolvedUrl.split('=')[1].split('%2F')[1]
+export async function getServerSideProps(context) {
+    const { query } = context;
+    let orderId
+    let token
+    if (query.orderId.includes('/')) {
+        orderId = query.orderId.split('/')[0]
+        token = query.orderId.split('/')[1]
+    } else if (query.token && query.orderId) {
+        orderId = query.orderId
+        token = query.token
+    } else {
+        orderId = query.orderId
+        token = ''
+    }
     const courseDetail = await axios.get(`${process.env.API_BASE_URL}/order/displayUploadInfo/${orderId}`)
         .then((response) => (response.data)).catch((error) => error);
-
     if (courseDetail == null) {
         return {
             notFound: true,
@@ -26,7 +36,7 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
     return {
         props: {
             courseDetail,
-            token: token ?? null
+            token: token ?? ''
         }
     }
 
@@ -117,19 +127,19 @@ export default function ApproveTrans(props) {
                 <div>
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>سعر الدورة</p>
-                        <p className={styles.paymentInfoText}>{courseDetail?.totalPrice.toFixed(2)} ر.س</p>
+                        <p className={styles.paymentInfoText}>{Number(courseDetail?.totalPrice).toFixed(2)} ر.س</p>
                     </div>
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>ضريبة القيمة المضافة</p>
-                        <p className={styles.paymentInfoText}>{courseDetail?.totalVat.toFixed(2)} ر.س</p>
+                        <p className={styles.paymentInfoText}>{Number(courseDetail?.totalVat).toFixed(2)} ر.س</p>
                     </div>
                     {courseDetail?.couponUsed && <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>خصم الكود ({courseDetail.couponName})</p>
-                        <p className={styles.paymentInfoText}>  {totalDiscount}- ر.س</p>
+                        <p className={styles.paymentInfoText}>  {Number(totalDiscount)}- ر.س</p>
                     </div>}
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={`fontBold ${styles.paymentInfoText}`}>الإجمالي المطلوب</p>
-                        <p className={`fontBold ${styles.paymentInfoText}`}>{((courseDetail?.totalPrice + courseDetail?.totalVat)).toFixed(2)} ر.س</p>
+                        <p className={`fontBold ${styles.paymentInfoText}`}>{((Number(courseDetail?.totalPrice) + Number(courseDetail?.totalVat))).toFixed(2)} ر.س</p>
                     </div>
                 </div>
                 <div>

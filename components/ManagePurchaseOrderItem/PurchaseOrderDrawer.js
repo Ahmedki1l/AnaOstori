@@ -176,23 +176,23 @@ const PurchaseOrderDrawer = (props) => {
             }
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalPriceTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.totalPrice}</p>
+                <p>{Number(selectedOrder.totalPrice)}</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalVatTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.totalVat}</p>
+                <p>{Number(selectedOrder.totalVat)}</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalDiscountTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.totalDiscount}</p>
+                <p>{Number(selectedOrder.totalDiscount)}</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.askingPriceTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{(selectedOrder.totalPrice + selectedOrder.totalVat) - selectedOrder.totalDiscount}</p>
+                <p>{(Number(selectedOrder.totalPrice) + Number(selectedOrder.totalVat)) - Number(selectedOrder.totalDiscount)}</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.amountPaidTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{(selectedOrder.totalPrice + selectedOrder.totalVat) - selectedOrder.totalDiscount}</p>
+                <p>{(Number(selectedOrder.totalPrice) + Number(selectedOrder.totalVat)) - Number(selectedOrder.totalDiscount)}</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.createdAddTitle}</p>
             <div className={styles.purchaseOrderBox}>
