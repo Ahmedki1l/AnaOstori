@@ -36,7 +36,7 @@ export default function PurchaseInquiry(props) {
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						await getAuthRouteAPI(data).then((res) => {
-							setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+							setSearchData(res.data.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing")).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 						})
 					}).catch(error => {
 						console.error("Error:", error);
