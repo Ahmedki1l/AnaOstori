@@ -20,11 +20,7 @@ const StyledTag = styled(Tag)`
 export default function PurchaseInquiry(props) {
 	const whatsAppLink = linkConst.WhatsApp_Link
 	const [searchData, setSearchData] = useState([])
-	// const [queryData, setQueryData] = useState(props.orderId ? `0${props.orderId.slice(3)}` : '')
-	// const [searchData, setSearchData] = useState(props.searchData ? props.searchData.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : [])
-
 	const isMediumScreen = useWindowSize().mediumScreen
-
 	const [isOrderFound, setIsOrderFound] = useState('hide')
 
 	const router = useRouter()
@@ -75,17 +71,13 @@ export default function PurchaseInquiry(props) {
 								return (
 									<tr key={`order${i}`}>
 										<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
-										<td >{fullDate(data.createdAt)}</td>
-										{/* <td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td> */}
+										<td>{fullDate(data.createdAt)}</td>
 										<td className={styles.tbodyName}>
 											{data.orderItems?.map((student, j = index) => {
 												return (
 													<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
 														<p>{student.fullName}</p>
-														<p>{data.courseName}
-															{/* - {new Date(student?.availability?.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp; */}
-															{/* {new Date(student?.availability?.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} */}
-														</p>
+														<p>{data.courseName}</p>
 														{data.course.type != "on-demand" && <p>{dateRange(student?.availability?.dateFrom, student?.availability?.dateTo)}</p>}
 													</div>
 												)
@@ -244,7 +236,6 @@ export default function PurchaseInquiry(props) {
 							<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 							<div className={` pt-4 ${styles.btnWrapper}`}>
 								<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
-								{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
 							</div>
 						</div>
 					</div>
