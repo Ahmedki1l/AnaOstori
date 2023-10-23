@@ -261,7 +261,7 @@ export default function Register() {
 					<Spinner borderwidth={7} width={6} height={6} />
 				</div>
 				:
-				<div className={`relative ${styles.mainPage}`}>
+				<div className={`relative ${styles.registerMainPage}`}>
 					<div className={styles.loginFormDiv}>
 						<h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
 						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
