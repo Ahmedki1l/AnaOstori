@@ -1,5 +1,13 @@
-.mainPage {
+.loginMainPage {
+	height: calc(100vh - 430px);
+}
+
+.registerMainPage {
 	height: calc(100vh - 65px);
+}
+
+.socialMediaMainPage {
+	height: calc(100vh - 470px);
 }
 
 .mainLoadingPage {
@@ -19,7 +27,7 @@
 
 .loginPageHead,
 .signUpPageHead {
-	font-size: 24px;
+	font-size: 23px;
 	text-align: center;
 }
 
@@ -280,6 +288,18 @@
 }
 
 @media(max-width: 550px) {
+	.loginMainPage {
+		height: calc(100vh - 520px);
+	}
+
+	.registerMainPage {
+		height: calc(100vh - 145px);
+	}
+
+	.socialMediaMainPage {
+		height: calc(100vh - 570px);
+	}
+
 	.loginFormDiv {
 		width: 100%;
 		border: none;

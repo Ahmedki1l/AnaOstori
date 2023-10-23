@@ -20,11 +20,7 @@ const StyledTag = styled(Tag)`
 export default function PurchaseInquiry(props) {
 	const whatsAppLink = linkConst.WhatsApp_Link
 	const [searchData, setSearchData] = useState([])
-	// const [queryData, setQueryData] = useState(props.orderId ? `0${props.orderId.slice(3)}` : '')
-	// const [searchData, setSearchData] = useState(props.searchData ? props.searchData.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : [])
-
 	const isMediumScreen = useWindowSize().mediumScreen
-
 	const [isOrderFound, setIsOrderFound] = useState('hide')
 
 	const router = useRouter()
@@ -75,17 +71,13 @@ export default function PurchaseInquiry(props) {
 								return (
 									<tr key={`order${i}`}>
 										<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
-										<td >{fullDate(data.createdAt)}</td>
-										{/* <td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td> */}
+										<td>{fullDate(data.createdAt)}</td>
 										<td className={styles.tbodyName}>
 											{data.orderItems?.map((student, j = index) => {
 												return (
 													<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
 														<p>{student.fullName}</p>
-														<p>{data.courseName}
-															{/* - {new Date(student?.availability?.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp; */}
-															{/* {new Date(student?.availability?.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} */}
-														</p>
+														<p>{data.courseName}</p>
 														{data.course.type != "on-demand" && <p>{dateRange(student?.availability?.dateFrom, student?.availability?.dateTo)}</p>}
 													</div>
 												)
@@ -113,7 +105,7 @@ export default function PurchaseInquiry(props) {
 														</>
 
 														: data?.status == "failed" ?
-															<p className={`${styles.redBox} ${styles.colorBox}`}>{inqPaymentStateConst.failed}</p>
+															<StyledTag color="red">{inqPaymentStateConst.failed}</StyledTag>
 															: data?.status == "rejected" ?
 																<>
 																	<StyledTag color="red">{inqPaymentStateConst.rejected}</StyledTag>
@@ -167,8 +159,7 @@ export default function PurchaseInquiry(props) {
 														<div className={styles.userInfoBox} key={`student${j}`}>
 															<p>{student.fullName}</p>
 															<p>{data.courseName}</p>
-															<p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}
-															</p>
+															{data.course.type != 'on-demand' && <p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}</p>}
 														</div>
 													)
 												})}
@@ -178,37 +169,46 @@ export default function PurchaseInquiry(props) {
 											<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
 											<td className={styles.tbodyStatus}>
 												{data?.status == "accepted" ?
-													<p className={`${styles.greenBox} ${styles.colorBox}`}>مؤكد</p>
+													<StyledTag color="green">{inqPaymentStateConst.accepted}</StyledTag>
+
 													: data?.status == "review" ?
 														<>
-															<p className={`${styles.yellowBox} ${styles.colorBox}`}>بنراجع طلبك</p>
-															<p className="py-2">استلمنا إيصالك بنراجعه قريب وتواصل معنا&nbsp;
-																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو محتاج مساعدة
+															<StyledTag color="gold">{inqPaymentStateConst.review}</StyledTag>
+															<p className="py-2">استلمنا إيصالك وبنراجعه بأقرب وقت، تواصل معنا&nbsp;
+																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
 															</p>
 														</>
+
 														: data?.status == "witing" ?
 															<>
-																<p className={`${styles.redBox} ${styles.colorBox}`}>بانتظار الحوالة</p>
-																<p className="py-2">عندك مهلة 24 ساعة لتأكيد حجزك، تفضل حولنا المبلغ من&nbsp;
-																	<Link className='link' href={'/bankDetails'}>صفحة تأكيد التحويل البنكي</Link>، وتواصل معنا&nbsp;
-																	<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو محتاج مساعدة
+																<StyledTag color="red">{inqPaymentStateConst.witing}</StyledTag>
+																<p className="py-2">عندك مهلة 24 ساعة تأكد فيها حجزك، تفضل حولنا المبلغ من&nbsp;
+																	<Link className='link' href={`/uploadInvoice?orderId=${data.id}`}>صفحة تأكيد التحويل البنكي</Link>، وتواصل معنا&nbsp;
+																	<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو احتجت مساعدة
 																</p>
 															</>
-															:
-															<>
-																<p className={`${styles.redBox} ${styles.colorBox}`}>ملغى</p>
-																<p className="py-2">الحجز ملغى لعدم سدادك المبلغ في المدة المحددة</p>
-																<p> نرجو منك الحجز مرة أخرى وللمساعدة تواصل معنا واتساب
-																	<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>
-																</p>
-															</>
+
+															: data?.status == "failed" ?
+																<StyledTag color="red">{inqPaymentStateConst.failed}</StyledTag>
+																: data?.status == "rejected" ?
+																	<>
+																		<StyledTag color="red">{inqPaymentStateConst.rejected}</StyledTag>
+																		<p className="py-2">ملّغى لعدم سدادك المبلغ في المدة المحددة، احجز مرة ثانية وتواصل معنا&nbsp;
+																			<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
+																		</p>
+																	</>
+
+																	:
+																	<>
+																		<StyledTag color="gray">{inqPaymentStateConst.refund}</StyledTag>
+																	</>
 												}
 											</td>
 										</tr>
 										<tr>
 											<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
 											<td className={styles.tbodyInvoice}>
-												{data?.status == "accepted" ?
+												{(data?.status == "accepted" && data?.invoiceKey) ?
 													<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center justify-center normalLinkText">
 														<div style={{ height: '30px' }}>
 															<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
@@ -236,7 +236,6 @@ export default function PurchaseInquiry(props) {
 							<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 							<div className={` pt-4 ${styles.btnWrapper}`}>
 								<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
-								{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
 							</div>
 						</div>
 					</div>
