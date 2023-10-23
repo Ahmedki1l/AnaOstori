@@ -27,7 +27,6 @@ export async function getServerSideProps(context) {
     }
     const courseDetail = await axios.get(`${process.env.API_BASE_URL}/order/displayUploadInfo/${orderId}`)
         .then((response) => (response.data)).catch((error) => error);
-
     if (courseDetail == null) {
         return {
             notFound: true,

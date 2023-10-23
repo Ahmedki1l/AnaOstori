@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import Router from "next/router";
 import { toast } from "react-toastify";
+import { toastErrorMessage } from "../constants/ar";
 
 
 
@@ -39,9 +40,8 @@ export const forgotPassword = async (email) => {
 		toast.success(toastSuccessMessage.forgotPasswordLinkSend, { rtl: true, })
 		Router.push('/login')
 	}).catch((error) => {
-		const errorCode = error.code;
-		const errorMessage = error.message;
-		console.error(`Error creating new user: ${errorCode} - ${errorMessage}`);
+		console.log(error);
+		toast.error(error.code == 'auth/user-not-found' && toastErrorMessage.emailNotFoundMsg)
 	});
 }
 

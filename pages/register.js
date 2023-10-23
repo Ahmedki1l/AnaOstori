@@ -23,21 +23,20 @@ export default function Register() {
 	const [isEmailError, setIsEmailError] = useState(false);
 	const [isPasswordError, setIsPasswordError] = useState(false);
 	const [isPhoneNumberError, setIsPhoneNumberError] = useState(false);
-	const [isGenderError, setIsGenderError] = useState(false);
 	const [initPasswordError, setInitPasswordError] = useState({
 		minLength: true,
 		capitalLetter: true,
 		number: true,
 		specialCharacter: true,
 	});
-
 	const [fullNameError, setFullNameError] = useState(null);
-	const [phoneNumberError, setPhoneNumberError] = useState(false);
+	const [phoneNumberError, setPhoneNumberError] = useState(null);
 	const [emailError, setEmailError] = useState(null);
+	const [isGenderError, setIsGenderError] = useState(null);
 	const [passwordError, setPasswordError] = useState(null);
 	const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
 	const [loading, setLoading] = useState(false)
-
+	const [isDataSubmit, setIsDataSubmit] = useState(false)
 	const router = useRouter();
 	const dispatch = useDispatch();
 
@@ -97,13 +96,10 @@ export default function Register() {
 				loginWithoutPassword: true,
 			});
 			handleStoreUpdate(isUserNew)
-
 		}).catch((error) => {
 			console.log(error);
 		});
 	}
-
-
 
 	const handleAppleLogin = async () => {
 		setLoading(true)
@@ -140,35 +136,27 @@ export default function Register() {
 	useEffect(() => {
 		if (fullName && (fullName.split(" ").length - 1) < 2) {
 			setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
-		}
-		else {
+		} else {
 			setFullNameError(null)
 		}
 		if (email && !(regexEmail.test(email))) {
-
-			setEmailError(inputErrorMessages.noEmailErrorMsg)
-		}
-		else {
+			setEmailError(inputErrorMessages.emailFormatMsg)
+		} else {
 			setEmailError(null)
 		}
-
-		if (password && !(regexPassword.test(password))) {
-
-			setIsPasswordError(inputErrorMessages.noPasswordMsg)
-		}
-		else {
-			setIsPasswordError(null)
-		}
-
 		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
 			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-		}
-		else {
+		} else {
 			setPhoneNumberError(null);
 		}
+		if (gender) {
+			setIsGenderError(null)
+		}
+		if (!password) {
+			setPasswordError(null)
+		}
 
-	}, [fullName, email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
-
+	}, [fullName, email, phoneNumber, password, gender, regexEmail, regexPhone])
 
 	const handleSignup = async (e) => {
 		e.preventDefault()
@@ -176,20 +164,29 @@ export default function Register() {
 			setFullNameError(inputErrorMessages.fullNameErrorMsg);
 		} else if (fullName && (fullName.split(" ").length - 1) < 2) {
 			setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+		} else {
+			setFullNameError(null)
 		}
 		if (!gender) {
 			setIsGenderError(inputErrorMessages.genderErrorMsg);
+		} else {
+			setIsGenderError(null)
 		}
 		if (!email) {
 			setEmailError(inputErrorMessages.noEmailErrorMsg)
+		} else {
+			setEmailError(null)
 		}
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
+		} else {
+			setPasswordError(null)
 		}
-		if (fullNameError != null && emailError != null && passwordError != null) {
-			setSubmitBtnDisabled(true)
+		if (!fullName || (fullName && (fullName.split(" ").length - 1) < 2) || !gender || !email || !password) {
+			return
+		} else {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
-
+				setLoading(true)
 				const data = {
 					fullName: fullName,
 					phone: phoneNumber.replace(/[0-9]/, "+966"),
@@ -204,13 +201,14 @@ export default function Register() {
 				}
 				await postAuthRouteAPI(params).then(async (res) => {
 					router.push('/login');
+					setLoading(false)
 					fbq.event('Sign up', { email: email });
 				}).catch(error => {
+					setSubmitBtnDisabled(false)
 					console.log(error)
 				});
 			}).catch((error) => {
 				console.log(error)
-				setSubmitBtnDisabled(false)
 				if (error.code == 'auth/email-already-in-use') {
 					toast.error(toastErrorMessage.emailUsedErrorMsg, { rtl: true, });
 				}
@@ -218,7 +216,6 @@ export default function Register() {
 			})
 		}
 	}
-
 	const handleUpdatePassword = (password) => {
 		setPassword(password)
 		let data = { ...initPasswordError }
@@ -250,6 +247,11 @@ export default function Register() {
 			data.specialCharacter = true
 			setInitPasswordError(data)
 		}
+		if (password.length > 8 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
+			setPasswordError(null)
+		} else {
+			setPasswordError(inputErrorMessages.passwordFormateMsg)
+		}
 	}
 
 	return (
@@ -271,13 +273,13 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="fullName">الاسم الثلاثي</label>
+							<input className={`formInput ${fullNameError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${fullNameError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="fullName">الاسم الثلاثي</label>
 						</div>
 						{fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
 						<div>
 							<p className={styles.titleLabel}>الجنس</p>
-							<div className={styles.genderBtnBox}>
+							<div className={isGenderError ? `${styles.inputErrorBox}` : `${styles.genderBtnBox}`} >
 								<button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
 									<AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
 									<span>ذكر</span>
@@ -293,24 +295,24 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
+							<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="email">الايميل</label>
 						</div>
-						{isEmailError ? <p className={styles.errorText}>فضلا عيد كتابة ايميلك بالطريقة الصحيحة</p> : emailError && <p className={styles.errorText}>{emailError}</p>}
+						<p className={styles.errorText}>{emailError}</p>
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
+							<input className={`formInput ${styles.loginFormInput}`} name='phone' id='phone' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phone">رقم الجوال (اختياري)</label>
 						</div>
 						{isPhoneNumberError ? <p className={styles.errorText}>بصيغة 05xxxxxxxx</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => handleUpdatePassword(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="password">كلمة السر</label>
+							<input className={`formInput ${passwordError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => handleUpdatePassword(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${passwordError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="password">كلمة السر</label>
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
@@ -323,8 +325,8 @@ export default function Register() {
 								}
 							</div>
 						</div>
-						{isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>}
-						{!isPasswordError && < p className={styles.passwordHintMsg}>لا تنسى تنتبه للشروط اللي تحت</p>}
+						<p className={styles.errorText}>{passwordError}</p>
+						{/* {isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>} */}
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
@@ -376,7 +378,6 @@ export default function Register() {
 							<div className={styles.middleLine}></div>
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
-						{/* <div className={styles.loginWithoutPasswordBtnBox} onClick={() => router.push('/registerWithGoogle')}> */}
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام قوقل</p>

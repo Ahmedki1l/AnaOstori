@@ -90,7 +90,6 @@ export default function Navbar() {
 				myCourses: myCourseData?.data,
 			});
 		} catch (error) {
-			console.log("NavBarError", error);
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
 					const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
@@ -204,7 +203,7 @@ export default function Navbar() {
 		<>
 			{isMediumScreen ?
 				<div className={styles.mobileLogoBar} id="navBar">
-					{storeData?.accessToken &&
+					{(storeData?.accessToken && !isRegisterSocialMediaUser) &&
 						<div className={styles.navLeftDivMO}>
 							<div className={styles.navLeftDiv}>
 								<div className={styles.viewProfile}>
@@ -365,37 +364,41 @@ export default function Navbar() {
 										<button className={`primaryStrockedBtn`} onClick={() => handleInstructorBtnClick()}>لوحة التحكم</button>
 									</div>}
 									<div className={styles.navLeftDiv}>
-										<div className={styles.viewProfile}>
-											<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
-											<p>
-												{stringUpdation(userFullName, 15)}
-											</p>
-											<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
-										</div>
-										<div className={styles.profileMenuWrapper}>
-											<div className={styles.profileMenuSubWrapper}>
-												<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
-													<AllIconsComponenet height={18} width={18} iconName={'persone1'} color={'#000000'} />
-													<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
-												</Link>
-												<div className={styles.inqBtnBox}>
-													<Link href={'/purchaseInquiry'} className='no-underline'>
-														<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
-															<AllIconsComponenet height={20} width={20} iconName={'history'} color={'#ffffff'} /> &nbsp;
-															استعلام الحجوزات
-														</button>
-													</Link>
+										{!isRegisterSocialMediaUser &&
+											<>
+												<div className={styles.viewProfile}>
+													<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
+													<p>
+														{stringUpdation(userFullName, 10)}
+													</p>
+													<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
 												</div>
-												<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
-													<AllIconsComponenet height={18} width={18} iconName={'setting'} color={'#000000'} />
-													<p className={styles.profileMenuItemsText}>الإعدادات</p>
-												</Link>
-												<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
-													<AllIconsComponenet height={18} width={18} iconName={'logout'} color={'#FF0000'} />
-													<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
+												<div className={styles.profileMenuWrapper}>
+													<div className={styles.profileMenuSubWrapper}>
+														<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
+															<AllIconsComponenet height={18} width={18} iconName={'persone1'} color={'#000000'} />
+															<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
+														</Link>
+														<div className={styles.inqBtnBox}>
+															<Link href={'/purchaseInquiry'} className='no-underline'>
+																<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
+																	<AllIconsComponenet height={20} width={20} iconName={'history'} color={'#ffffff'} /> &nbsp;
+																	استعلام الحجوزات
+																</button>
+															</Link>
+														</div>
+														<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
+															<AllIconsComponenet height={18} width={18} iconName={'setting'} color={'#000000'} />
+															<p className={styles.profileMenuItemsText}>الإعدادات</p>
+														</Link>
+														<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
+															<AllIconsComponenet height={18} width={18} iconName={'logout'} color={'#FF0000'} />
+															<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
+														</div>
+													</div>
 												</div>
-											</div>
-										</div>
+											</>
+										}
 									</div>
 								</div>
 							}

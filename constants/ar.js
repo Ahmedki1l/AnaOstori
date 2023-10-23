@@ -1,7 +1,9 @@
 export const inputErrorMessages = {
     noEmailErrorMsg: 'الايميل يا غالي', //"Please enter your email",
     noPasswordMsg: 'كلمة السر لاهنت', //"Please enter your password",
+
     // firstNameErrorMsg: "فضلا ادخل اسمك الاول", //Please enter your first name.
+    fullNameErrorMsgForRegister: 'شرفنا باسمك يا طويل العمر',//Honor us with your name, O long-lived one
     lastNameErrorMsg: "فضلا ادخل اسم العائلة", //"Please enter your last name",
     fullNameErrorMsg: "فضلا ادخل الاسم الثلاثي",  //Please enter your full name
     genderErrorMsg: 'فضلا اختار الجنس', //"Please select the gender",
@@ -18,7 +20,9 @@ export const inputErrorMessages = {
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
     mobileRequiredErrorMsg: "رقم جوالك لاهنت",
     // categoryDiscriptionAddMsg: 'please enter category discription',
-    enterEmailInputErrorMsg: 'فضلا ادخل ايميلك بطريقة صحيحة',//enter email
+    enterEmailInputErrorMsg: 'الايميل يا غالي',//enter email
+    enterEmailCorrectInputErrorMsg: 'فضلا ادخل ايميلك بطريقة صحيحة',//enter correct email
+    passwordFormateMsg: 'لا تنسى تنتبه للشروط اللي تحت'
 }
 
 export const inputSuccessMessages = {
@@ -62,4 +66,14 @@ export const toastSuccessMessage = {
 export const createAndEditBtnText = {
     addBtnText: 'إضافة',
     saveBtnText: 'حفظ'
+}
+
+export const updateProfileConst = {
+    fullnamePlaceHolder: 'الاسم الثلاثي',
+    fullNameHintMsg: 'مثال: هشام محمود خضر',
+
+    phoneNumberPlaceHolder: 'رقم الجوال',
+    phoneNumberHintMsg: 'مثال: 0500000000',
+
+    profileUpdateMsg: 'انحفظت بياناتك الجديدة 👍🏼',
 }

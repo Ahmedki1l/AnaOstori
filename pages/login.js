@@ -123,7 +123,6 @@ export default function Login() {
 			setLoading(false)
 		});
 	}
-
 	const handleSignIn = async (e) => {
 		e.preventDefault();
 		if (!email) {
@@ -145,7 +144,7 @@ export default function Login() {
 					type: 'IS_USER_FROM_GOOGLE',
 					loginWithoutPassword: false,
 				});
-				handleStoreUpdate()
+				handleStoreUpdate(false)
 				// router.push('/')
 			}).catch((error) => {
 				setLoading(false)
@@ -198,17 +197,16 @@ export default function Login() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="email">الايميل</label>
+							<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="email">الايميل</label>
 						</div>
-						{/* {isEmailError ? <p className={styles.errorText}>الايميل يا غالي</p> : emailError && <p className={styles.errorText}>{emailError}</p>} */}
 						{emailError ? <p className={styles.errorText}>الايميل يا غالي</p> : isEmailError && <p className={styles.errorText}>فضلا ادخل ايميلك بطريقة صحيحة</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="password">كلمة السر</label>
+							<input className={`formInput ${passwordError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${passwordError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="password">كلمة السر</label>
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>

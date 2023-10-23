@@ -55,6 +55,11 @@ export async function getServerSideProps(ctx) {
 			notFound: true,
 		}
 	}
+	if (courseDetails.data.isPurchasable == false) {
+		return {
+			notFound: true,
+		}
+	}
 	if (courseDetails.data.type == 'on-demand') {
 		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.data.id}`)
 			.then((response) => (response.data))
@@ -96,7 +101,6 @@ export default function Index(props) {
 	const storeData = useSelector((state) => state?.globalStore);
 	const isUserLogin = storeData?.accessToken ? true : false;
 	const lang = courseDetail.language
-
 	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
 	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
 	const isSeatFullForFemale = femaleDates.length > 0 ? femaleDates.every(obj => obj.numberOfSeats === 0) : false;

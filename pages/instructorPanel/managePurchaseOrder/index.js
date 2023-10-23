@@ -19,7 +19,6 @@ const DrawerTiitle = styled.p`
 `
 
 const Index = () => {
-
     const [purchaseOrderOpen, setPurchaseOrderOpen] = useState(false);
     const [purchaseOrderList, setPurchaseOrderList] = useState()
     const [paginationConfig, setPaginationConfig] = useState({

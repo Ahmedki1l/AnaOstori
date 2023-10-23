@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getPaymentInfoAPI } from '../services/apisService';
+import { getAuthRouteAPI, getPaymentInfoAPI } from '../services/apisService';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
@@ -23,6 +23,23 @@ export default function Payment(props) {
     const [invoiceUrl, setInvoiceUrl] = useState('')
     const dispatch = useDispatch()
 
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if (isLoading) {
+                event.preventDefault();
+                alert('Please wait for the payment to complete');
+                event.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [isLoading]);
+
     useEffect(() => {
         const getPaymentData = async () => {
             let data = {
@@ -30,9 +47,9 @@ export default function Payment(props) {
                 transactionId: transactionID,
             }
             await getPaymentInfoAPI(data).then(async (response) => {
+                ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
                 setTransactionDetails(response.data)
                 setIsPaymentSuccess(response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false)
-                response.data[0].result.code == "000.000.000" ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID }))
                 setLoading(false)
                 setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
                 const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
@@ -44,7 +61,7 @@ export default function Payment(props) {
             }).catch((error) => {
                 console.log(error)
                 setLoading(false)
-            });
+            })
         }
         getPaymentData()
     }, [orderID, transactionID])
@@ -57,7 +74,8 @@ export default function Payment(props) {
                 <div>
                     <div className={`relative ${styles.mainArea}`}>
                         <Spinner borderwidth={7} width={6} height={6} />
-                        <h1 style={{ textAlign: 'center' }}>انتظر الله يسعدك، بنتحقق من عملية الدفع</h1>
+                        <h1 style={{ textAlign: 'center' }}>بنتحقق من عملية الدفع</h1>
+                        <h3 style={{ textAlign: 'center', padding: '0 1rem' }}>بنتحقق من عملية الدفع، لا تقفل أو تحدث الصفحة عشان ما تفشل العملية</h3>
                     </div>
                 </div>
                 :
