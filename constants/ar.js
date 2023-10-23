@@ -67,3 +67,13 @@ export const createAndEditBtnText = {
     addBtnText: 'إضافة',
     saveBtnText: 'حفظ'
 }
+
+export const updateProfileConst = {
+    fullnamePlaceHolder: 'الاسم الثلاثي',
+    fullNameHintMsg: 'مثال: هشام محمود خضر',
+
+    phoneNumberPlaceHolder: 'رقم الجوال',
+    phoneNumberHintMsg: 'مثال: 0500000000',
+
+    profileUpdateMsg: 'انحفظت بياناتك الجديدة 👍🏼',
+}

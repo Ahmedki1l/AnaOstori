@@ -146,34 +146,36 @@ export default function PurchaseInquiry(props) {
 						</tbody>
 					</table>
 					:
-					<table className={styles.tableArea} >
-						<tbody className={styles.body}>
-							{searchData?.map((data, i = index) => {
-								return (
-									<div className={styles.rowDiv} key={`order${i}`}>
+					<>
+						{searchData?.map((data, i = index) => {
+							return (
+								<div className={styles.tableAreaDiv}>
+									<table className={styles.rowDiv} key={`order${i}`}>
 										<tr>
 											<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
-											<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
-											<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
-											<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
-											<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
+											<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
 										</tr>
 										<tr>
-											<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
-
-											<td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", year: 'numeric', day: 'numeric', month: 'long' })}</td>
+											<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
+											<td className={styles.tbodyDate}>{fullDate(data.createdAt)}</td>
+										</tr>
+										<tr>
+											<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
 											<td className={styles.tbodyName}>
 												{data.orderItems?.map((student, j = index) => {
 													return (
-														<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
+														<div className={styles.userInfoBox} key={`student${j}`}>
 															<p>{student.fullName}</p>
-															<p>{data.courseName} - {new Date(student.availability.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", day: 'numeric', month: 'long' })}  الى&nbsp;
-																{new Date(student.availability.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", day: 'numeric', month: 'long' })}
+															<p>{data.courseName}</p>
+															<p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}
 															</p>
 														</div>
 													)
 												})}
 											</td>
+										</tr>
+										<tr>
+											<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
 											<td className={styles.tbodyStatus}>
 												{data?.status == "accepted" ?
 													<p className={`${styles.greenBox} ${styles.colorBox}`}>مؤكد</p>
@@ -202,24 +204,94 @@ export default function PurchaseInquiry(props) {
 															</>
 												}
 											</td>
+										</tr>
+										<tr>
+											<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
 											<td className={styles.tbodyInvoice}>
 												{data?.status == "accepted" ?
-													<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center justify-center">
-														<div>
+													<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center justify-center normalLinkText">
+														<div style={{ height: '30px' }}>
 															<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
 														</div>
-														<p className={styles.downloadSearchText}>تحميل الفاتورة</p>
+														<p className={` mr-2 ${styles.downloadSearchText}`}>تحميل الفاتورة</p>
 													</Link>
 													:
 													<div>Invoice not generated</div>
 												}
 											</td>
 										</tr>
-									</div>
-								)
-							})}
-						</tbody>
-					</table>
+									</table>
+								</div>
+								// <div className={styles.rowDiv} key={`order${i}`}>
+								// 	<tr>
+								// 		<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
+								// 		<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
+								// 		<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
+								// 		<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
+								// 		<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
+								// 	</tr>
+								// 	<tr>
+								// 		<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
+								// 		<td className={styles.tbodyDate}>{fullDate(data.createdAt)}</td>
+								// 		<td className={styles.tbodyName}>
+								// 			{data.orderItems?.map((student, j = index) => {
+								// 				return (
+								// 					<div className={styles.userInfoBox} key={`student${j}`}>
+								// 						<p>{student.fullName}</p>
+								// 						<p>{data.courseName}</p>
+								// 						<p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}
+								// 						</p>
+								// 					</div>
+								// 				)
+								// 			})}
+								// 		</td>
+								// 		<td className={styles.tbodyStatus}>
+								// 			{data?.status == "accepted" ?
+								// 				<p className={`${styles.greenBox} ${styles.colorBox}`}>مؤكد</p>
+								// 				: data?.status == "review" ?
+								// 					<>
+								// 						<p className={`${styles.yellowBox} ${styles.colorBox}`}>بنراجع طلبك</p>
+								// 						<p className="py-2">استلمنا إيصالك بنراجعه قريب وتواصل معنا&nbsp;
+								// 							<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو محتاج مساعدة
+								// 						</p>
+								// 					</>
+								// 					: data?.status == "witing" ?
+								// 						<>
+								// 							<p className={`${styles.redBox} ${styles.colorBox}`}>بانتظار الحوالة</p>
+								// 							<p className="py-2">عندك مهلة 24 ساعة لتأكيد حجزك، تفضل حولنا المبلغ من&nbsp;
+								// 								<Link className='link' href={'/bankDetails'}>صفحة تأكيد التحويل البنكي</Link>، وتواصل معنا&nbsp;
+								// 								<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو محتاج مساعدة
+								// 							</p>
+								// 						</>
+								// 						:
+								// 						<>
+								// 							<p className={`${styles.redBox} ${styles.colorBox}`}>ملغى</p>
+								// 							<p className="py-2">الحجز ملغى لعدم سدادك المبلغ في المدة المحددة</p>
+								// 							<p> نرجو منك الحجز مرة أخرى وللمساعدة تواصل معنا واتساب
+								// 								<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>
+								// 							</p>
+								// 						</>
+								// 			}
+								// 		</td>
+								// 		<td className={styles.tbodyInvoice}>
+								// 			{data?.status == "accepted" ?
+								// 				<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center justify-center normalLinkText">
+								// 					<div style={{ height: '30px' }}>
+								// 						<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
+								// 					</div>
+								// 					<p className={` mr-2 ${styles.downloadSearchText}`}>تحميل الفاتورة</p>
+								// 				</Link>
+								// 				:
+								// 				<div>Invoice not generated</div>
+								// 			}
+								// 		</td>
+								// 	</tr>
+								// </div>
+							)
+						})}
+					</>
+					// 	</tbody>
+					// </table>
 				}
 				{searchData?.length == 0 &&
 					<div className={`maxWidthDefault`}>
