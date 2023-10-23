@@ -102,7 +102,7 @@ export default function RegisterWithGoogleAndApple() {
     }
 
     return (
-        <div className={`relative ${styles.mainPage}`}>
+        <div className={`relative ${styles.socialMediaMainPage}`}>
             <div className={styles.loginFormDiv}>
                 <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
                 <p className={`p-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>

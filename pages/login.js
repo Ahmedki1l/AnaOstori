@@ -189,7 +189,7 @@ export default function Login() {
 					<Spinner borderwidth={7} width={6} height={6} />
 				</div>
 				:
-				<div className={`relative ${styles.mainPage}`}>
+				<div className={`relative ${styles.loginMainPage}`}>
 					<div className={styles.loginFormDiv}>
 						<h1 className={`fontBold ${styles.loginPageHead}`}>تسجيل الدخول</h1>
 						<p>خلنا نكمل قصة نجاحك اللي بديناها سوا ✨</p>
@@ -210,11 +210,11 @@ export default function Login() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={22} width={27} iconName={'visibilityIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={22} width={27} iconName={'newVisibleIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={22} width={27} iconName={'visibilityOffIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={22} width={27} iconName={'newVisibleOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>
@@ -229,16 +229,16 @@ export default function Login() {
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
-							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
+							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام قوقل</p>
 						</div>
 						<div className={`${styles.loginWithoutPasswordBtnBox} ${styles.appleLoginBtn}`} onClick={() => handleAppleLogin()}>
-							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
+							<AllIconsComponenet height={20} width={20} iconName={'appleStore'} color={'#FFFFFF'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام ابل</p>
 						</div>
 						<div className={styles.gotoPageText} onClick={() => router.push('/register')}>
 							<p className='pl-2'> مستخدم جديد؟ </p>
-							<p className="primarylink"> إنشاء حساب</p>
+							<p className="primarylink">  أنشئ حساب</p>
 						</div>
 					</div>
 					<div className={`absolute ${styles.rightImgDiv}`}>
