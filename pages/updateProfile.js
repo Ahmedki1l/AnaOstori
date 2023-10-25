@@ -80,9 +80,8 @@ const UpdateProfile = () => {
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
         } else if (phoneNumber && phoneNumber.length < 10) {
-            setPhoneNumberError('لازم يتكون من 10 أرقام')
-        }
-        else {
+            setPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
+        } else {
             setPhoneNumberError(null);
         }
     }, [fullName, phoneNumber])
@@ -90,6 +89,7 @@ const UpdateProfile = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (showLoader) return
         if (!fullName) {
             setFullNameError(inputErrorMessages.fullNameErrorMsgForRegister)
         }
@@ -149,34 +149,34 @@ const UpdateProfile = () => {
                                     <p className={styles.notePara}><span>ملاحظة:</span> جميع البيانات مطلوبة ما عدا الصورة الشخصية</p>
                                 </div>
                                 <div className='w-full'>
-                                    <div className={`formInputBox ${styles.formFieldDiv}`}>
-                                        <div className={`formInputIconDiv ${styles.iconDiv}`}>
+                                    <div className={`formInputBox `}>
+                                        <div className={`formInputIconDiv `}>
                                             <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
                                         </div>
-                                        <input className={fullNameError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='fullName' id='fullName' value={fullName} onChange={(e) => { setFullName(e.target.value) }} placeholder=' ' />
-                                        <label className={fullNameError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="fullName">{updateProfileConst.fullnamePlaceHolder}</label>
+                                        <input className={`formInput  ${styles.loginFormInput}  ${fullNameError && `${styles.inputError}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+                                        <label className={`formLabel  ${styles.loginFormLabel} ${fullNameError && `${styles.inputPlaceHoldererror}`}`} htmlFor="fullName">{updateProfileConst.fullnamePlaceHolder}</label>
                                     </div>
                                     {fullNameError !== null ? <p className={styles.errorText}>{fullNameError}</p> : <p className={styles.noteText}>{updateProfileConst.fullNameHintMsg}</p>}
                                 </div>
                                 <div className='w-full'>
-                                    <div className={`formInputBox ${styles.formFieldDiv}`}>
-                                        <div className={`formInputIconDiv ${styles.iconDiv}`}>
-                                            <AllIconsComponenet height={19} width={16} iconName={'mobile'} color={'#00000080'} />
+                                    <div className={`formInputBox`}>
+                                        <div className={`formInputIconDiv`}>
+                                            <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#00000080'} />
                                         </div>
-                                        <input className={phoneNumberError ? `formInput ${styles.formFieldInputError}` : `formInput ${styles.formFieldInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-                                        <label className={phoneNumberError ? `formLabel ${styles.formFieldLabelError}` : `formLabel ${styles.formFieldLabel}`} htmlFor="phoneNo">{updateProfileConst.phoneNumberPlaceHolder}</label>
+                                        <input className={`formInput ${styles.loginFormInput}  ${phoneNumberError && styles.inputError}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                                        <label className={`formLabel  ${styles.loginFormLabel} ${phoneNumberError && styles.inputPlaceHoldererror}`} htmlFor="phoneNo">{updateProfileConst.phoneNumberPlaceHolder}</label>
                                     </div>
-                                    {phoneNumberError !== null ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>{updateProfileConst.phoneNumberHintMsg}</p>}
+                                    {!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
                                 </div>
                                 <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
                                     <div className={styles.genderBtnBox} >
                                         <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
-                                            <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
+                                            <AllIconsComponenet height={24} width={24} iconName={'newMaleIcon'} color={gender == "male" ? '#F26722 ' : '#808080'} />
                                             <span>ذكر</span>
                                         </button>
                                         <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
-                                            <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F26722 ' : '#808080'} />
+                                            <AllIconsComponenet height={24} width={24} iconName={'newFemaleIcon'} color={gender == "female" ? '#F26722 ' : '#808080'} />
                                             <span>أنثى</span>
                                         </button>
                                     </div>
@@ -187,8 +187,8 @@ const UpdateProfile = () => {
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }

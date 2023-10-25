@@ -47,16 +47,7 @@
 }
 
 .inputError {
-	width: 100%;
-	padding-right: 2.2rem;
 	border: 1px solid red;
-}
-
-.inputPlaceHoldererror {
-	padding-right: 1.5rem;
-	font-size: 16px;
-	color: red;
-	top: 1.2rem
 }
 
 .formInputField {
@@ -74,6 +65,10 @@
 	font-size: 16px;
 	color: #00000080;
 	top: 1.2rem
+}
+
+.inputPlaceHoldererror {
+	color: red;
 }
 
 .loginPageIconDiv {

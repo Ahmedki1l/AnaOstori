@@ -462,14 +462,14 @@
 }
 
 .formInput:focus+.formLabel {
-	font-size: 14px;
-	top: 0.1rem;
+	font-size: 10px;
+	top: 0.5rem;
 	z-index: 0;
 }
 
 .formInput:not(:placeholder-shown).formInput:not(:focus)+.formLabel {
-	font-size: 14px;
-	top: 0.1rem;
+	font-size: 10px;
+	top: 0.5rem;
 	z-index: 0;
 }
 
