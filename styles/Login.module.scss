@@ -1,13 +1,19 @@
 .loginMainPage {
-	height: calc(100vh - 440px);
+	<<<<<<< HEAD height: calc(100vh - 440px);
 }
 
 .registerMainPage {
 	height: 100vh;
+	=======height: 42rem;
+}
+
+.registerMainPage {
+	height: 65rem;
+	>>>>>>>428af351d500f4b9ec979a6d592a6bca350aea4f
 }
 
 .socialMediaMainPage {
-	height: calc(100vh - 470px);
+	height: 38rem;
 }
 
 .mainLoadingPage {
@@ -268,15 +274,15 @@
 
 @media(max-width: 550px) {
 	.loginMainPage {
-		height: calc(100vh - 520px);
+		height: 38rem;
 	}
 
 	.registerMainPage {
-		height: calc(100vh - 100px);
+		height: 61rem;
 	}
 
 	.socialMediaMainPage {
-		height: calc(100vh - 570px);
+		height: 34rem;
 	}
 
 	.loginFormDiv {
