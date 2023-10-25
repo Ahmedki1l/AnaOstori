@@ -20,9 +20,6 @@ export default function Register() {
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [fullName, setFullName] = useState("")
 	const [gender, setGender] = useState("")
-	const [isEmailError, setIsEmailError] = useState(false);
-	const [isPasswordError, setIsPasswordError] = useState(false);
-	const [isPhoneNumberError, setIsPhoneNumberError] = useState(false);
 	const [initPasswordError, setInitPasswordError] = useState({
 		minLength: true,
 		capitalLetter: true,
@@ -36,10 +33,8 @@ export default function Register() {
 	const [passwordError, setPasswordError] = useState(null);
 	const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
 	const [loading, setLoading] = useState(false)
-	const [isDataSubmit, setIsDataSubmit] = useState(false)
 	const router = useRouter();
 	const dispatch = useDispatch();
-
 	const storeData = useSelector((state) => state?.globalStore);
 
 	const handleStoreUpdate = async (isUserNew) => {
@@ -140,12 +135,19 @@ export default function Register() {
 			setFullNameError(null)
 		}
 		if (email && !(regexEmail.test(email))) {
-			setEmailError(inputErrorMessages.emailFormatMsg)
+			setEmailError(inputErrorMessages.enterEmailCorrectInputErrorMsg)
 		} else {
 			setEmailError(null)
 		}
+		// if (phoneNumber && !(phoneNumber.startsWith("05"))) {
+		// 	setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+		// } else {
+		// 	setPhoneNumberError(null);
+		// }
 		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
 			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+		} else if (phoneNumber && phoneNumber.length < 10) {
+			setPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
 		} else {
 			setPhoneNumberError(null);
 		}
@@ -161,7 +163,7 @@ export default function Register() {
 	const handleSignup = async (e) => {
 		e.preventDefault()
 		if (!fullName) {
-			setFullNameError(inputErrorMessages.fullNameErrorMsg);
+			setFullNameError(inputErrorMessages.fullNameErrorMsgForRegister);
 		} else if (fullName && (fullName.split(" ").length - 1) < 2) {
 			setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
 		} else {
@@ -179,10 +181,12 @@ export default function Register() {
 		}
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
+		} else if (password && (password.length < 8 || !password.match(/[A-Z]/g) || !password.match(/[0-9]/g) || !password.match(/[!@#$%^&*]/g))) {
+			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		} else {
 			setPasswordError(null)
 		}
-		if (!fullName || (fullName && (fullName.split(" ").length - 1) < 2) || !gender || !email || !password) {
+		if (!fullName || (fullName && (fullName.split(" ").length - 1) < 2) || !gender || !email || !password || (password.length < 8 || !password.match(/[A-Z]/g) || !password.match(/[0-9]/g) || !password.match(/[!@#$%^&*]/g))) {
 			return
 		} else {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
@@ -253,7 +257,6 @@ export default function Register() {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		}
 	}
-
 	return (
 		<>
 			{loading ?
@@ -266,8 +269,8 @@ export default function Register() {
 						<h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
 						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
 						<div className='flex'>
-							<p style={{ color: 'red' }}> ملاحظة : </p>
-							<p> جميع البيانات مطلوبة ما عدا رقم الجوال</p>
+							<p style={{ color: 'red' }}> ملاحظة: </p>
+							<p className='pr-1'> جميع البيانات مطلوبة ما عدا رقم الجوال</p>
 						</div>
 						<div className={`formInputBox`}>
 							<div className='formInputIconDiv'>
@@ -279,13 +282,13 @@ export default function Register() {
 						{fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
 						<div>
 							<p className={styles.titleLabel}>الجنس</p>
-							<div className={isGenderError ? `${styles.inputErrorBox}` : `${styles.genderBtnBox}`} >
+							<div className={`${styles.genderBtnBox} ${isGenderError && `${styles.inputErrorBox}`}`} >
 								<button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
-									<AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
+									<AllIconsComponenet height={24} width={24} iconName={'newMaleIcon'} color={gender == "male" ? '#F26722 ' : '#808080'} />
 									<span>ذكر</span>
 								</button>
 								<button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
-									<AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F26722 ' : '#808080'} />
+									<AllIconsComponenet height={24} width={24} iconName={'newFemaleIcon'} color={gender == "female" ? '#F26722 ' : '#808080'} />
 									<span>أنثى</span>
 								</button>
 							</div>
@@ -298,7 +301,7 @@ export default function Register() {
 							<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 							<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="email">الايميل</label>
 						</div>
-						<p className={styles.errorText}>{emailError}</p>
+						{emailError && <p className={styles.errorText}>{emailError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
@@ -306,7 +309,7 @@ export default function Register() {
 							<input className={`formInput ${styles.loginFormInput}`} name='phone' id='phone' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phone">رقم الجوال (اختياري)</label>
 						</div>
-						{isPhoneNumberError ? <p className={styles.errorText}>بصيغة 05xxxxxxxx</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : ""}
+						{!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : !phoneNumberError || phoneNumber.length < 10 && passwordError}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
@@ -325,50 +328,49 @@ export default function Register() {
 								}
 							</div>
 						</div>
-						<p className={styles.errorText}>{passwordError}</p>
-						{/* {isPasswordError ? <p className={styles.errorText}>لا تنسى تنتبه للشروط اللي تحت</p> : passwordError && <p className={styles.errorText}>{passwordError}</p>} */}
+						{passwordError && <p className={styles.errorText}>{passwordError}</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
-									iconName={!password ? "checkCircleIcon" : initPasswordError?.minLength ? 'alertIcon' : 'checkCircleIcon'}
+									iconName={(!password && !passwordError) ? "checkCircleIcon" : (!password && passwordError) ? 'alertIcon' : (password && initPasswordError?.minLength) ? 'alertIcon' : 'checkCircleIcon'}
+									color={(!password && !passwordError) ? "#808080" : (!password && passwordError) ? "#E5342F" : (password && initPasswordError?.minLength) ? '#E5342F' : '#7FDF4B'}
 									height={20}
 									width={20}
-									color={!password ? "#808080" : initPasswordError?.minLength ? "#E5342F" : '#7FDF4B'}
 								/>
-								<p className='p-1'>8 خانات كحد أدنى (حروف أو ارقام)</p>
+								<p className='p-1'>{inputErrorMessages.passwordMinLengthMsg}</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
-									iconName={!password ? "checkCircleIcon" : initPasswordError?.capitalLetter ? 'alertIcon' : 'checkCircleIcon'}
+									iconName={(!password && !passwordError) ? "checkCircleIcon" : (!password && passwordError) ? 'alertIcon' : (password && initPasswordError?.capitalLetter) ? 'alertIcon' : 'checkCircleIcon'}
+									color={(!password && !passwordError) ? "#808080" : (!password && passwordError) ? "#E5342F" : (password && initPasswordError?.capitalLetter) ? '#E5342F' : '#7FDF4B'}
 									height={20}
 									width={20}
-									color={!password ? "#808080" : initPasswordError?.capitalLetter ? "#E5342F" : '#7FDF4B'}
 								/>
-								<p className='p-1'>من بينها حرف واحد كبير على الأقل</p>
+								<p className='p-1'>{inputErrorMessages.passwordIncludeCapitalMsg}</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
-									iconName={!password ? "checkCircleIcon" : initPasswordError?.number ? 'alertIcon' : 'checkCircleIcon'}
+									iconName={(!password && !passwordError) ? "checkCircleIcon" : (!password && passwordError) ? 'alertIcon' : (password && initPasswordError?.number) ? 'alertIcon' : 'checkCircleIcon'}
+									color={(!password && !passwordError) ? "#808080" : (!password && passwordError) ? "#E5342F" : (password && initPasswordError?.number) ? '#E5342F' : '#7FDF4B'}
 									height={20}
 									width={20}
-									color={!password ? "#808080" : initPasswordError?.number ? "#E5342F" : '#7FDF4B'}
 								/>
-								<p className='p-1'>رقم واحد على الأقل</p>
+								<p className='p-1'>{inputErrorMessages.passwordIncludeNumberMsg}</p>
 							</>
 						</div>
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
-									iconName={!password ? "checkCircleIcon" : initPasswordError?.specialCharacter ? 'alertIcon' : 'checkCircleIcon'}
+									iconName={(!password && !passwordError) ? "checkCircleIcon" : (!password && passwordError) ? 'alertIcon' : (password && initPasswordError?.specialCharacter) ? 'alertIcon' : 'checkCircleIcon'}
+									color={(!password && !passwordError) ? "#808080" : (!password && passwordError) ? "#E5342F" : (password && initPasswordError?.specialCharacter) ? '#E5342F' : '#7FDF4B'}
 									height={20}
 									width={20}
-									color={!password ? "#808080" : initPasswordError?.specialCharacter ? "#E5342F" : '#7FDF4B'}
 								/>
-								<p className='p-1'>علامة مميزة واحدة على الأقل مثلا هاشتاق #</p>
+								<p className='p-1'>{inputErrorMessages.passwordIncludeSpecialCharMsg}</p>
 							</>
 						</div>
 						<div className={styles.loginBtnBox}>
@@ -379,11 +381,11 @@ export default function Register() {
 							<p className={`fontBold ${styles.andText}`}>او</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
-							<AllIconsComponenet height={30} width={30} iconName={'googleIcon'} />
+							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام قوقل</p>
 						</div>
 						<div className={`${styles.loginWithoutPasswordBtnBox} ${styles.appleLoginBtn}`} onClick={() => handleAppleLogin()}>
-							<AllIconsComponenet height={30} width={30} iconName={'appleStore'} color={'#FFFFFF'} />
+							<AllIconsComponenet height={20} width={20} iconName={'appleStore'} color={'#FFFFFF'} />
 							<p className='mx-2'>تسجيل الدخول باستخدام ابل</p>
 						</div>
 						<div className={styles.gotoPageText} onClick={() => router.push('/login')}>

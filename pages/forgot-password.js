@@ -13,7 +13,7 @@ export default function ForgotPassword() {
 
 	useEffect(() => {
 		if (email && !(regexEmail.test(email))) {
-			setEmailError(inputErrorMessages.emailFormatMsg)
+			setEmailError(inputErrorMessages.enterEmailCorrectInputErrorMsg)
 		} else {
 			setEmailError(null)
 		}
@@ -39,7 +39,7 @@ export default function ForgotPassword() {
 						<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.formInput}`}`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
 						<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.formLabel}`}`} htmlFor="email">الايميل</label>
 					</div>
-					<p className={styles.errorText}>{emailError}</p>
+					{emailError && <p className={styles.errorText}>{emailError}</p>}
 					<button className={`primarySolidBtn ${styles.loginBtnBox}`} type='submit' onClick={() => handleForgotPassword(email)}>
 						<AllIconsComponenet height={24} width={24} iconName={'goToNextArrow'} color={'#FFFFFF'} />
 						<span className='pr-2'>إرسال</span>
