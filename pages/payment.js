@@ -66,8 +66,7 @@ export default function Payment(props) {
         getPaymentData()
     }, [orderID, transactionID])
 
-
-
+    console.log(orderID);
     return (
         <>
             {loading ?

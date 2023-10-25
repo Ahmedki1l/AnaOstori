@@ -17,7 +17,7 @@
 
 .footerMainBox {
 	display: grid;
-	grid-template-columns: auto 15rem 16rem 17.5rem;
+	grid-template-columns: 49rem 13rem 31rem;
 	grid-template-rows: 18rem auto;
 	padding: 1rem 1rem 0 1rem;
 }
@@ -31,8 +31,9 @@
 }
 
 .footerSubText {
-	margin: 1rem 0 1rem 0;
-	width: 23rem;
+	margin: 2rem 0 1rem 0;
+	width: auto;
+	margin-left: 6px;
 }
 
 .footerMainSections {
@@ -72,6 +73,7 @@
 }
 
 .socialMediaIconWraper {
+	margin-top: 15px;
 	display: flex;
 	align-items: center;
 }
@@ -104,7 +106,7 @@
 
 	p {
 		margin: 0.3rem 0;
-		font-size: 16px
+		font-size: 14px
 	}
 }
 
@@ -172,7 +174,7 @@
 	}
 
 	.footerMainBox {
-		grid-template-columns: auto 14rem 15rem 16.5rem;
+		grid-template-columns: auto 16rem 15rem;
 	}
 }
 
@@ -183,10 +185,6 @@
 
 	.section5 {
 		grid-area: 2/2/3/3;
-	}
-
-	.socialMediaIconWraper {
-		margin-top: 1rem;
 	}
 }
 
@@ -258,15 +256,11 @@
 @media (max-width: 640px) {
 	.footerMainBox {
 		grid-template-columns: auto;
-		grid-template-rows: 14rem 10.5rem 7.5rem auto;
-	}
-
-	.section5 {
-		grid-area: 2/1/3/2;
+		grid-template-rows: 14rem 10.5rem 6.5rem auto;
 	}
 
 	.section2 {
-		grid-area: 7/1/7/2;
+		grid-area: 4/1/5/1;
 	}
 
 	.footerMainSections {
@@ -280,7 +274,7 @@
 
 	.footerSubWrapper {
 		li {
-			font-size: 15px;
+			font-size: 16px;
 		}
 
 		h3 {
@@ -290,7 +284,7 @@
 	}
 
 	.footerSubText {
-		font-size: 15px;
+		font-size: 16px;
 		width: fit-content;
 	}
 
@@ -298,20 +292,26 @@
 		height: 120px;
 
 		p {
+			font-size: 14px;
 			padding: 0.7rem 0.5rem;
 		}
 	}
 
 	.bankLogoDiv {
-		top: 3.7rem;
+		top: 2.7rem;
 		left: 50%;
 		transform: translate(-50%, 0);
 	}
+}
 
-	// .contactSections {
-	// 	ul {
-	// 		display: flex;
-	// 		justify-content: space-between;
-	// 	}
-	// }
+@media(max-width: 436px) {
+	.footerMainBox {
+		grid-template-rows: 15rem 10.5rem 6.5rem auto;
+	}
+}
+
+@media(max-width: 320px) {
+	.footerMainBox {
+		grid-template-rows: 16rem 10.5rem 6.5rem auto;
+	}
 }

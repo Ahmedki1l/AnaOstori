@@ -19,10 +19,16 @@ export const inputErrorMessages = {
     fileSizeMsg: 'حجم الملف يجب ان يكون اقل من 6 ميجا', //The file size must be less than 6MB.
     incorrectCodeErrorMsg: "الكود غير صحيح", //The code is incorrect
     mobileRequiredErrorMsg: "رقم جوالك لاهنت",
-    // categoryDiscriptionAddMsg: 'please enter category discription',
     enterEmailInputErrorMsg: 'الايميل يا غالي',//enter email
     enterEmailCorrectInputErrorMsg: 'فضلا ادخل ايميلك بطريقة صحيحة',//enter correct email
-    passwordFormateMsg: 'لا تنسى تنتبه للشروط اللي تحت'
+    passwordFormateMsg: 'لا تنسى تنتبه للشروط اللي تحت',
+    newEmailToastMsg: 'مافي حساب بهذا الايميل او انه انحذف',
+    phoneNumberLengthMsg: 'لازم يتكون من 10 أرقام',//It must consist of 10 numbers
+    passwordMinLengthMsg: '8 خانات كحد أدنى (حروف أو ارقام)',//It must be more than 8 letters
+    passwordIncludeCapitalMsg: 'من بينها حرف واحد كبير على الأقل',//It must contain at least one capital letter
+    passwordIncludeNumberMsg: 'رقم واحد على الأقل',//It must contain at least one number
+    passwordIncludeSpecialCharMsg: 'علامة مميزة واحدة على الأقل مثلا هاشتاق #',//It must contain at least one special character
+    phoneNoFormateMsg: 'بصيغة 05xxxxxxxx',//It must start with 05
 }
 
 export const inputSuccessMessages = {
@@ -39,6 +45,8 @@ export const toastErrorMessage = {
     // curriculumNameError: 'ما ينفع تستخدم نفس العنوان',// 'Curriculum name already in use',
     sameFileError: 'إضافة وتعديل الكوبونات',// "this item already exist in this section",
     tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
+    newEmailToastMsg: 'مافي حساب بهذا الايميل او انه انحذف',// 'There is no account with this email or it has been deleted',
+
 }
 
 export const toastSuccessMessage = {
