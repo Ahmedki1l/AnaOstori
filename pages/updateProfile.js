@@ -80,7 +80,7 @@ const UpdateProfile = () => {
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
         } else if (phoneNumber && phoneNumber.length < 10) {
-            setPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
+            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         } else {
             setPhoneNumberError(null);
         }
@@ -99,7 +99,10 @@ const UpdateProfile = () => {
         if (!phoneNumber) {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
-        else if (fullNameError == null && phoneNumberError == null) {
+        else {
+            setPhoneNumberError(null)
+        }
+        if (fullNameError == null && phoneNumberError == null) {
             if (!fullName) return
             setShowLoader(true)
             const data = {
