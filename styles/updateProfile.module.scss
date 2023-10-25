@@ -64,50 +64,35 @@
 	padding-top: 1.5rem !important;
 }
 
-.formFieldInputError {
-	padding: 12px !important;
-	border-radius: 4px !important;
-	border: 0.3px solid #E5342F !important;
-	display: flex !important;
-	justify-content: flex-end !important;
-	align-items: center !important;
-	padding-right: 2.5rem !important;
-	padding-top: 1.5rem !important;
+.loginFormInput {
+	width: 100%;
+	padding-right: 2.2rem;
+	border: 1px solid #0000001a;
 }
 
-.formFieldLabel {
-	color: var(--grary-not-selected, #808080);
+.loginFormLabel {
+	padding-right: 1.2rem;
 	font-size: 16px;
-	font-style: normal;
-	font-weight: 400;
-	line-height: normal;
-	margin-right: 1.5rem;
-	padding-top: .3rem !important;
+	color: #00000080;
+	top: 1.2rem
 }
 
-.formFieldLabelError {
-	color: #E5342F, ;
-	font-size: 16px;
-	font-style: normal;
-	font-weight: 400;
-	line-height: normal;
-	margin-right: 1.5rem;
-	padding-top: .3rem !important;
+.passwordHintMsg {
+	font-size: 12px;
+	color: #808080;
+	// margin: -0.7rem 2px -0.5rem 0;
+}
+
+.inputError {
+	border: 1px solid red;
+}
+
+.inputPlaceHoldererror {
+	color: red;
 }
 
 .iconDiv {
 	margin-right: 5px;
-}
-
-.loginPageInputBox {
-	height: 46px;
-	width: 100%;
-	border: 0.5px solid rgba(0, 0, 0, 0.5);
-	border-radius: 4px;
-	margin: 0 auto .5rem auto;
-	display: flex;
-	align-items: center;
-	padding: 12px;
 }
 
 .loginBtnBox {
