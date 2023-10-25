@@ -151,7 +151,7 @@ const UpdateProfile = () => {
                                 <div className='w-full'>
                                     <div className={`formInputBox `}>
                                         <div className={`formInputIconDiv `}>
-                                            <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+                                            <AllIconsComponenet height={19} width={16} iconName={'newPersonIcon'} color={'#00000080'} />
                                         </div>
                                         <input className={`formInput  ${styles.loginFormInput}  ${fullNameError && `${styles.inputError}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
                                         <label className={`formLabel  ${styles.loginFormLabel} ${fullNameError && `${styles.inputPlaceHoldererror}`}`} htmlFor="fullName">{updateProfileConst.fullnamePlaceHolder}</label>
