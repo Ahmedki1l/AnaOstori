@@ -85,3 +85,9 @@ export const updateProfileConst = {
 
     profileUpdateMsg: 'انحفظت بياناتك الجديدة 👍🏼',
 }
+
+export const contentAccessPopUPConst = {
+    modalHeaderText: 'المحتوى مقفل حاليًا 🔒',
+    modalDetailText: ' شيّك عليها بوقت ثاني',
+    ctaBtnText: 'تمام',
+}

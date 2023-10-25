@@ -11,12 +11,15 @@
 }
 
 .headeText {
-    font-size: 18px;
+    font-size: 20px;
+    text-align: center;
+    direction: rtl;
 }
 
 .modalParaText {
     font-size: 16px;
-    direction: rtl;
+    text-align: center;
+    margin: 10px;
 }
 
 .buttonModalDiv {
@@ -26,5 +29,5 @@
 }
 
 .cancelBtn {
-    font-size: 16px;
+    font-size: 18px;
 }
