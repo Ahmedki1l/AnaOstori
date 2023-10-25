@@ -5,13 +5,14 @@ import Link from "next/link";
 import useWindowSize from "../hooks/useWindoSize";
 import { useRouter } from "next/router";
 import { getAuthRouteAPI } from "../services/apisService";
-import { getNewToken, signOutUser } from "../services/fireBaseAuthService";
+import { getNewToken } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
 import { dateRange, fullDate } from "../constants/DateConverter";
 import { inqPaymentStateConst, inqTabelHeaderConst } from "../constants/purchaseInqConst";
 import { Tag } from "antd";
 import styled from "styled-components";
+import Spinner from "../components/CommonComponents/spinner";
 
 const StyledTag = styled(Tag)`
 	font-family: 'Tajawal-Regular';
@@ -22,27 +23,30 @@ export default function PurchaseInquiry(props) {
 	const [searchData, setSearchData] = useState([])
 	const isMediumScreen = useWindowSize().mediumScreen
 	const [isOrderFound, setIsOrderFound] = useState('hide')
-
 	const router = useRouter()
+	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		const getMyOrder = async () => {
+			setLoading(true)
 			const data = {
 				routeName: "orderQuery"
 			}
 			await getAuthRouteAPI(data).then((res) => {
+				setLoading(false)
 				setSearchData(res.data.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing")).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 			}).catch(async (error) => {
 				if (error?.response?.status == 401) {
 					await getNewToken().then(async (token) => {
 						await getAuthRouteAPI(data).then((res) => {
-							setSearchData(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+							setSearchData(res.data.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing")).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
 						})
 					}).catch(error => {
 						console.error("Error:", error);
 					});
 				}
 				console.log(error)
+				setLoading(false)
 			})
 		}
 		getMyOrder()
@@ -71,13 +75,17 @@ export default function PurchaseInquiry(props) {
 								return (
 									<tr key={`order${i}`}>
 										<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
-										<td>{fullDate(data.createdAt)}</td>
+										<td >{fullDate(data.createdAt)}</td>
+										{/* <td className={styles.tbodyDate}>{new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(data.createdAt).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} {new Date(data.createdAt).toLocaleDateString('en-US', { timeZone: "UTC", year: 'numeric' })}</td> */}
 										<td className={styles.tbodyName}>
 											{data.orderItems?.map((student, j = index) => {
 												return (
 													<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
 														<p>{student.fullName}</p>
-														<p>{data.courseName}</p>
+														<p>{data.courseName}
+															{/* - {new Date(student?.availability?.dateFrom).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateFrom).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })}  الى&nbsp; */}
+															{/* {new Date(student?.availability?.dateTo).toLocaleDateString('en-US', { timeZone: "UTC", day: 'numeric' })} {new Date(student?.availability?.dateTo).toLocaleDateString('ar-AE', { timeZone: "UTC", month: 'long' })} */}
+														</p>
 														{data.course.type != "on-demand" && <p>{dateRange(student?.availability?.dateFrom, student?.availability?.dateTo)}</p>}
 													</div>
 												)
@@ -236,6 +244,7 @@ export default function PurchaseInquiry(props) {
 							<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 							<div className={` pt-4 ${styles.btnWrapper}`}>
 								<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
+								{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
 							</div>
 						</div>
 					</div>

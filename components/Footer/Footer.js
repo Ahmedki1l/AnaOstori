@@ -53,21 +53,21 @@ export default function Footer() {
 					</div>
 					<div className={`${styles.section2} ${styles.section}`}>
 						<Link href={`${linkConst.VAT_Link}`} target='_blank' className={styles.regiDetailsBox1}>
-							<Logo height={isMediumScreen ? 57 : 50} width={isMediumScreen ? 40 : 38} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
+							<Logo height={isMediumScreen ? 24 : 32} width={isMediumScreen ? 24 : 32} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
 							<div className={styles.regiDetailsTextBox}>
 								<p>رقم التسجيل الضريبي 310646534500003</p>
 								<p>رقم السجل التجاري 1010644475</p>
 							</div>
 						</Link>
 						<div className={styles.regiDetailsBox2}>
-							<Logo height={isMediumScreen ? 53 : 50} width={isMediumScreen ? 40 : 38} logoName={'tvtcLogo'} alt={'TVTC Logo'} />
+							<Logo height={isMediumScreen ? 30 : 40} width={isMediumScreen ? 24 : 32} logoName={'tvtcLogo'} alt={'TVTC Logo'} />
 							<div className={styles.regiDetailsTextBox}>
 								<p>مرخص من المؤسسة العامة للتدريب المهني والتقني</p>
 								<p>رخصة رقم 4174536814</p>
 							</div>
 						</div>
 					</div>
-					<div className={`${styles.section3} ${styles.section}`}>
+					<div className={styles.section}>
 						<h3>الروابط المهمة</h3>
 						<ul>
 							<Link href={'/privacyAndPolicy'} target='_blank' className='normalLinkText'>
@@ -90,10 +90,10 @@ export default function Footer() {
 					<div className={`${styles.section} ${styles.contactSections}`}>
 						<h3>خلنا على تواصل</h3>
 						<ul>
-							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText inline-block'>
+							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText '>
 								<li className={styles.whatsAppWrapper} >
 									<div className={styles.whatsAppBlack}>
-										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'whatsappFill'} color={'#40C351'} />
+										<AllIconsComponenet height={isSmallScreen ? 20 : 32} width={isSmallScreen ? 20 : 32} iconName={'whatsappFill'} color={'#40C351'} />
 									</div>
 									<p>0502413980</p>
 								</li>

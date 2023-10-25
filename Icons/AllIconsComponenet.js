@@ -122,6 +122,8 @@ import ColoredYoutubeIcon from './customeIcons/coloredYoutubeIcon'
 import ColoredTwittericon from './customeIcons/coloredTwittericon'
 import ColoredGoogleMapIcon from './customeIcons/coloredGoogleMapIcon'
 import ColoredEmailIcon from './customeIcons/coloredEmailIcon'
+import NewMaleIcon from './customeIcons/newMaleIcon'
+import NewFemaleIcon from './customeIcons/newFemaleIcon'
 
 
 
@@ -236,6 +238,9 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newVideoIcon' && <NewVideoIcon height={height} width={width} color={color} />}
 			{iconName == 'newPersonIcon' && <NewPersonIcon height={height} width={width} color={color} />}
 			{iconName == 'newMobileIcon' && <NewMobileIcon height={height} width={width} color={color} />}
+			{iconName == 'newMaleIcon' && <NewMaleIcon height={height} width={width} color={color} />}
+			{iconName == 'newFemaleIcon' && <NewFemaleIcon height={height} width={width} color={color} />}
+
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
 			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}

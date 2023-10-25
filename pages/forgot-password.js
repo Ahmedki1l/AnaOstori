@@ -13,7 +13,7 @@ export default function ForgotPassword() {
 
 	useEffect(() => {
 		if (email && !(regexEmail.test(email))) {
-			setEmailError(inputErrorMessages.emailFormatMsg)
+			setEmailError(inputErrorMessages.enterEmailCorrectInputErrorMsg)
 		} else {
 			setEmailError(null)
 		}
