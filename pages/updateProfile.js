@@ -80,7 +80,7 @@ const UpdateProfile = () => {
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
         } else if (phoneNumber && phoneNumber.length < 10) {
-            setPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
+            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         } else {
             setPhoneNumberError(null);
         }
@@ -99,7 +99,10 @@ const UpdateProfile = () => {
         if (!phoneNumber) {
             setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
         }
-        else if (fullNameError == null && phoneNumberError == null) {
+        else {
+            setPhoneNumberError(null)
+        }
+        if (fullNameError == null && phoneNumberError == null) {
             if (!fullName) return
             setShowLoader(true)
             const data = {
@@ -151,7 +154,7 @@ const UpdateProfile = () => {
                                 <div className='w-full'>
                                     <div className={`formInputBox `}>
                                         <div className={`formInputIconDiv `}>
-                                            <AllIconsComponenet height={19} width={16} iconName={'persone1'} color={'#00000080'} />
+                                            <AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#00000080'} />
                                         </div>
                                         <input className={`formInput  ${styles.loginFormInput}  ${fullNameError && `${styles.inputError}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
                                         <label className={`formLabel  ${styles.loginFormLabel} ${fullNameError && `${styles.inputPlaceHoldererror}`}`} htmlFor="fullName">{updateProfileConst.fullnamePlaceHolder}</label>
