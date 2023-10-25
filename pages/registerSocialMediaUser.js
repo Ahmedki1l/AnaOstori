@@ -120,7 +120,7 @@ export default function RegisterWithGoogleAndApple() {
                 {fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
                 <div>
                     <p className={styles.titleLabel}>الجنس</p>
-                    <div className={genderError ? `${styles.inputErrorBox}` : `${styles.genderBtnBox}`} >
+                    <div className={`${styles.genderBtnBox} ${genderError && `${styles.inputErrorBox}`}`} >
                         <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
                             <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
                             <span>ذكر</span>
@@ -131,7 +131,7 @@ export default function RegisterWithGoogleAndApple() {
                         </button>
                     </div>
                 </div>
-                {gender == '' ? <p className={styles.errorText}>{genderError}</p> : ""}
+                {genderError && gender == '' ? <p className={styles.errorText}>{genderError}</p> : ""}
                 <div className='formInputBox'>
                     <div className='formInputIconDiv'>
                         <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
