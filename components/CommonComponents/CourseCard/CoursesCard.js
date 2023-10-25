@@ -29,7 +29,7 @@ export default function CoursesCard(props) {
 	}, [props])
 
 	const handleClick = () => {
-		if (contentAccess == false) {
+		if (courseDetails.type != "on-demand" && contentAccess == false) {
 			setIsModelforcontentAccess(true)
 			return
 		} else {
