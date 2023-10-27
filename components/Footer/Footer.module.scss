@@ -17,9 +17,14 @@
 
 .footerMainBox {
 	display: grid;
-	grid-template-columns: auto 24rem 15rem;
-	grid-template-rows: 18rem auto;
-	padding: 1rem 1rem 0 1rem;
+	grid-template-columns: auto 20rem 13rem;
+	grid-template-rows: 13rem auto;
+	padding: 1rem 1rem 0;
+}
+
+.locationLinkText {
+	font-size: 20px;
+	padding-right: 5px;
 }
 
 .section1 {
@@ -31,7 +36,7 @@
 }
 
 .footerSubText {
-	margin: 2rem 0 1rem 0;
+	margin: 2rem 0 1rem 60px;
 	width: auto;
 	margin-left: 6px;
 }
@@ -46,7 +51,7 @@
 		list-style-type: none;
 
 		li {
-			margin: 0.5rem 0;
+			// margin: 0.5rem 0;
 			display: flex;
 			align-items: center;
 
@@ -106,7 +111,8 @@
 
 	p {
 		margin: 0.3rem 0;
-		font-size: 14px
+		font-size: 16px;
+		line-height: 16px;
 	}
 }
 
@@ -119,7 +125,7 @@
 	p {
 		color: #00000080;
 		text-align: center;
-		padding: 0.6rem 0;
+		padding: 1rem 0;
 	}
 }
 
@@ -256,7 +262,31 @@
 @media (max-width: 640px) {
 	.footerMainBox {
 		grid-template-columns: auto;
-		grid-template-rows: 14rem 10.5rem 6.5rem auto;
+		grid-template-rows: 13rem 9.5rem 7.5rem auto;
+	}
+
+	.sectionWrapper {
+
+		// margin-top: -15px;
+		ul {
+			margin-top: -15px;
+
+			li {
+				line-height: 20px;
+			}
+		}
+	}
+
+	.regiDetailsTextBox {
+
+		p {
+			font-size: 14px;
+		}
+	}
+
+	.locationLinkText {
+		font-size: 16px;
+		padding-right: 5px;
 	}
 
 	.section2 {
@@ -275,11 +305,11 @@
 	.footerSubWrapper {
 		li {
 			font-size: 16px;
+			line-height: 20px;
 		}
 
 		h3 {
 			font-size: 18px;
-			line-height: 20px;
 		}
 	}
 
@@ -289,7 +319,7 @@
 	}
 
 	.footerBottom {
-		height: 120px;
+		height: 100px;
 
 		p {
 			font-size: 14px;
@@ -306,12 +336,6 @@
 
 @media(max-width: 436px) {
 	.footerMainBox {
-		grid-template-rows: 15rem 10.5rem 6.5rem auto;
-	}
-}
-
-@media(max-width: 320px) {
-	.footerMainBox {
-		grid-template-rows: 16rem 10.5rem 6.5rem auto;
+		grid-template-rows: 14rem 9.5rem 7.5rem auto;
 	}
 }

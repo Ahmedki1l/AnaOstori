@@ -213,7 +213,7 @@ export default function Login() {
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
-							<p className={`fontBold ${styles.andText}`}>او</p>
+							<p className={`fontBold ${styles.andText}`}>أو</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />

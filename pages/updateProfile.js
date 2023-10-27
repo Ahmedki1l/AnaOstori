@@ -80,7 +80,7 @@ const UpdateProfile = () => {
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
         } else if (phoneNumber && phoneNumber.length < 10) {
-            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
+            setPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
         } else {
             setPhoneNumberError(null);
         }
@@ -102,8 +102,9 @@ const UpdateProfile = () => {
         else {
             setPhoneNumberError(null)
         }
-        if (fullNameError == null && phoneNumberError == null) {
-            if (!fullName) return
+        if (fullName && (fullName.split(" ").length - 1) < 2 || !phoneNumber || phoneNumber && phoneNumber.length < 10 || phoneNumber && !(phoneNumber.startsWith("05"))) {
+            return
+        } else {
             setShowLoader(true)
             const data = {
                 fullName: fullName,
@@ -169,7 +170,7 @@ const UpdateProfile = () => {
                                         <input className={`formInput ${styles.loginFormInput}  ${phoneNumberError && styles.inputError}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
                                         <label className={`formLabel  ${styles.loginFormLabel} ${phoneNumberError && styles.inputPlaceHoldererror}`} htmlFor="phoneNo">{updateProfileConst.phoneNumberPlaceHolder}</label>
                                     </div>
-                                    {!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
+                                    {phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p>}
                                 </div>
                                 <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
