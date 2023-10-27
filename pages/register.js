@@ -224,7 +224,7 @@ export default function Register() {
 	const handleUpdatePassword = (password) => {
 		setPassword(password)
 		let data = { ...initPasswordError }
-		if (password.length > 8) {
+		if (password.length > 7) {
 			data.minLength = false
 			setInitPasswordError(data)
 		} else {
@@ -252,12 +252,13 @@ export default function Register() {
 			data.specialCharacter = true
 			setInitPasswordError(data)
 		}
-		if (password.length > 8 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
+		if (password.length > 7 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
 			setPasswordError(null)
 		} else {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		}
 	}
+
 	return (
 		<>
 			{loading ?
@@ -329,7 +330,7 @@ export default function Register() {
 								}
 							</div>
 						</div>
-						{passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						{passwordError ? <p className={styles.errorText}>{passwordError}</p> : <p className={styles.passwordHintMsg}> {inputErrorMessages.passwordFormateMsg}</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet

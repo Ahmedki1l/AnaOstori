@@ -76,7 +76,12 @@ const ModelForDeleteItems = ({
             title: 'تأكيد حذف نص تسويقي',
             messageText: 'متأكد انك تبي تحذف النص التسويقي؟',
             btnText: 'تأكيد الحذف',
-        }
+        },
+        coupon: {
+            title: 'تأكيد حذف الكوبون',
+            messageText: 'متأكد انك تبي تحذف الكوبون؟',
+            btnText: 'تأكيد الحذف'
+        },
     }
 
     const handleDeleteItems = () => {

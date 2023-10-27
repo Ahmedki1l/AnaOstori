@@ -1,7 +1,8 @@
 @import "../../styles/variables.module.scss";
 
 .footerWrapper {
-	border-top: 0.5px solid rgba(0, 0, 0, 0.25)
+	border-top: 0.5px solid rgba(0, 0, 0, 0.25);
+	background-color: #F8F8F8;
 }
 
 .footerSubWrapper {
@@ -11,7 +12,8 @@
 	h3 {
 		font-family: 'Tajawal-Bold';
 		font-size: 22px;
-		line-height: 37px;
+		// line-height: 37px;
+		margin: 12px 0;
 	}
 }
 
@@ -37,7 +39,7 @@
 
 .footerSubText {
 	margin: 2rem 0 1rem 60px;
-	width: auto;
+	width: 780px;
 	margin-left: 6px;
 }
 
@@ -78,9 +80,11 @@
 }
 
 .socialMediaIconWraper {
-	margin-top: 15px;
+	margin: 12px 0;
 	display: flex;
 	align-items: center;
+	height: 32px;
+	padding: 24px 0;
 }
 
 .youtubeWrapper,
@@ -166,6 +170,10 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	p {
+		padding-left: 5px;
+	}
 }
 
 @media (max-width: 1280px) {
@@ -176,6 +184,7 @@
 	}
 
 	.footerSubText {
+		width: auto;
 		font-size: 16px;
 	}
 
@@ -262,7 +271,8 @@
 @media (max-width: 640px) {
 	.footerMainBox {
 		grid-template-columns: auto;
-		grid-template-rows: 13rem 9.5rem 7.5rem auto;
+		grid-template-rows: 12.5rem 10.5rem 6rem auto;
+		grid-gap: 16px;
 	}
 
 	.sectionWrapper {
@@ -305,7 +315,7 @@
 	.footerSubWrapper {
 		li {
 			font-size: 16px;
-			line-height: 20px;
+			line-height: 27px;
 		}
 
 		h3 {
@@ -314,6 +324,7 @@
 	}
 
 	.footerSubText {
+		margin: 16px 0 14.5px 0;
 		font-size: 16px;
 		width: fit-content;
 	}
@@ -332,10 +343,14 @@
 		left: 50%;
 		transform: translate(-50%, 0);
 	}
+
+	.footerLink {
+		font-size: 14px;
+	}
 }
 
 @media(max-width: 436px) {
 	.footerMainBox {
-		grid-template-rows: 14rem 9.5rem 7.5rem auto;
+		grid-template-rows: 12.5rem 10.5rem 6.5rem auto;
 	}
 }

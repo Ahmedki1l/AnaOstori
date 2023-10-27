@@ -10,7 +10,7 @@ import DatePicker from '../antDesignCompo/Datepicker';
 import dayjs from 'dayjs';
 import styles from '../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
 
-const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
+const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, setDrawerForCouponCourse }) => {
 
     const [couponCourseForm] = Form.useForm()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
@@ -25,21 +25,27 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
             percentage: selectedCoupon?.percentage,
             type: selectedCoupon?.type,
             limit: selectedCoupon?.limit,
-            courseIds: selectedCoupon?.courseIds,
         }
         )
+        setSelectedCourse(selectedCoupon?.couponCourses.map((item) => {
+            return item.course.id
+        }))
     }, [])
 
     const handleSaveCouponDetails = async (values) => {
         setShowBtnLoader(true)
         values.expires = dayjs(values?.expires?.$d).format('YYYY-MM-DD HH:mm:ss');
         values.global = true
-        let body = {
-            routeName: "createCoupon",
+        values.id = selectedCoupon?.id
+        let data = {
+            routeName: selectedCoupon?.id ? "updateCoupon" : "createCoupon",
             ...values
         }
-        await postRouteAPI(body).then((res) => {
+        await postRouteAPI(data).then((res) => {
             setShowBtnLoader(false)
+            setDrawerForCouponCourse(false)
+            couponCourseForm.resetFields()
+            getCouponList()
         }).catch((err) => {
             console.log(err);
             setShowBtnLoader(false)
@@ -48,25 +54,14 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
     const handleSelectCouponChange = (value) => {
         setSelectedCouponType(value);
     }
-
-    const multipleCourse = category.map((item, index) => {
-        return item.courses.map((subItem, index) => {
-            return { value: subItem.id, label: subItem.name }
-        })
-    })
-
-    const course = multipleCourse.flat().map((course, index) => {
-        return course
-    })
+    const course = category.flatMap((item) => {
+        return item.courses.map((subItem) => {
+            return { value: subItem.id, label: subItem.name };
+        });
+    });
     const handleSelectCourse = (value) => {
         setSelectedCourse(value);
     }
-    const selectedCourseName = course.filter((item) => {
-        return selectedCourse?.includes(item.value)
-    })
-    const courseName = selectedCourseName.map((item, index) => {
-        return item.label
-    })
 
     return (
         <div>
@@ -96,6 +91,8 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
                         width={425}
                         height={47}
                         placeholder='Number%'
+                        type={'number'}
+                        maxValue={100}
                     />
                 </FormItem>
                 <p className='fontBold py-2' style={{ fontSize: '18px' }}>نوع الخصم*</p>
@@ -126,7 +123,6 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
                 <p className='fontBold py-2' style={{ fontSize: '18px' }}>تاريخ الانتهاء*</p>
                 <FormItem
                     name={'expires'}
-                    rules={[{ required: true, message: "ادخل ساعة البداية " }]}
                 >
                     <DatePicker
                         format={'YYYY-MM-DD'}
@@ -147,17 +143,18 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category }) => {
                         mode='multiple'
                         maxTagCount='responsive'
                         onChange={handleSelectCourse}
+                        defaultValue={selectedCoupon?.couponCourses.map((item) => {
+                            return item.course.id
+                        })}
                     />
                 </FormItem>
-                <FormItem
-                    name={'couponCourses'}
-                >
-                    <div className={styles.courseNames}>
-                        {courseName.map((item, index) => {
-                            return <p key={`courseName${index}`}>{item}</p>
-                        })}
-                    </div>
-                </FormItem>
+                <div className={styles.courseNames}>
+                    {
+                        course.filter((item) => selectedCourse?.includes(item.value)).map((item, index) => {
+                            return <p key={item.value}>{item.label}</p>
+                        })
+                    }
+                </div>
 
                 <div className='pt-5'>
                     <CustomButton

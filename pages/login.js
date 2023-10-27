@@ -94,7 +94,7 @@ export default function Login() {
 			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
-			toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+			// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -196,11 +196,11 @@ export default function Login() {
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={22} width={27} iconName={'newVisibleIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={24} width={27} iconName={'newVisibleIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={22} width={27} iconName={'newVisibleOffIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={24} width={27} iconName={'newVisibleOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>

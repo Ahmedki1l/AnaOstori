@@ -10,7 +10,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
 import Empty from '../../../components/CommonComponents/Empty'
 import { useSelector } from 'react-redux'
-import * as paymentConst from '../../../constants/PaymentConst'
+import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 
 const DrawerTiitle = styled.p`
     font-size:20px
@@ -21,23 +21,26 @@ const Index = () => {
     const [drawerForCouponCourse, setDrawerForCouponCourse] = useState(false)
     const [listOfCoupon, setListOfCoupon] = useState()
     const [selectedCoupon, setSelectedCoupon] = useState()
+    const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
+    const [deleteCoupon, setDeleteCoupon] = useState()
     const storeData = useSelector((state) => state?.globalStore);
     const category = storeData.catagories
-    // const couponStatus = [
-    //     {
-    //         key: 1,
-    //         value: 'active',
-    //         label: 'مفعل',
-    //         color: 'green'
-    //     },
-    //     {
-    //         key: 2,
-    //         value: 'inActive',
-    //         label: 'منتهي',
-    //         color: 'red'
-    //     }
-    // ]
-
+    console.log(deleteCoupon);
+    const onCloseModal = () => {
+        setIsmodelForDeleteItems(false)
+    }
+    const handledeleteCoupon = async () => {
+        let data = {
+            routeName: "updateCoupon",
+            id: deleteCoupon.id,
+            isDeleted: true,
+        }
+        await postRouteAPI(data).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     const tableColumns = [
         {
             title: 'عنوان الكوبون',
@@ -120,9 +123,18 @@ const Index = () => {
                     setSelectedCoupon(_record);
                     setDrawerForCouponCourse(true)
                 }
+                const handleDeleteModalOpen = () => {
+                    setDeleteCoupon(_record);
+                    setIsmodelForDeleteItems(true)
+                }
                 return (
-                    <div className='cursor-pointer' onClick={handleEditCoupon}>
-                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                    <div className={styles.couponActionWrapper}>
+                        <div className='cursor-pointer' onClick={handleEditCoupon}>
+                            <AllIconsComponenet iconName={'newEditIcon'} height={18} width={18} color={'#000000'} />
+                        </div>
+                        <div className='cursor-pointer' onClick={handleDeleteModalOpen}>
+                            <AllIconsComponenet iconName={'newDeleteIcon'} height={18} width={18} color={'#000000'} />
+                        </div>
                     </div>
                 )
             }
@@ -138,7 +150,13 @@ const Index = () => {
             routeName: "listCoupon",
         }
         await postRouteAPI(body).then((res) => {
-            setListOfCoupon(res.data);
+            const newList = res.data.map((item) => {
+                return {
+                    ...item,
+                    key: item.id
+                }
+            })
+            setListOfCoupon(newList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -161,21 +179,25 @@ const Index = () => {
     const customEmptyComponent = (
         <Empty emptyText={'ما أضفت كوبون'} containerhight={400} buttonText={'إضافة كوبون'} onClick={() => handleAddCouponCourse()} />
     )
+
+    const selectedCouponStatusLable = selectedCoupon?.status == true ? { label: 'مفعل', color: 'green' } : { label: 'منتهي', color: 'red' }
+
     return (
         <div>
             <div className='maxWidthDefault px-4'>
-                <div className={'flex justify-between items-center'}>
-                    <div style={{ height: 70 }}>
-                        <BackToPath
-                            backpathForPage={true}
-                            backPathArray={
-                                [
-                                    { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
-                                    { lable: 'إضافة وتعديل كوبونات الخصم', link: null },
-                                ]
-                            }
-                        />
-                    </div>
+                <div style={{ height: 30 }}>
+                    <BackToPath
+                        backpathForPage={true}
+                        backPathArray={
+                            [
+                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                                { lable: 'إضافة وتعديل كوبونات الخصم', link: null },
+                            ]
+                        }
+                    />
+                </div>
+                <div className={styles.couponHeadeArea}>
+                    <h1 className={`head2`}>إضافة وتعديل كوبونات الخصم</h1>
                     <div className={`${styles.createCourseBtnBox}`}>
                         <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة مجال</button>
                     </div>
@@ -196,13 +218,28 @@ const Index = () => {
                             placement={'right'}
                             title={
                                 <>
-                                    <DrawerTiitle className="foneBold">DisplayCouponTitle</DrawerTiitle>
+                                    <DrawerTiitle className="foneBold">{selectedCoupon ? 'تعديل الكوبون' : 'إضافة كوبون'}</DrawerTiitle>
                                 </>
                             }
+                            extra={
+                                <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable.color}>{selectedCouponStatusLable?.label}</Tag>
+                            }
                         >
-                            <ManageCouponCourseDrawer selectedCoupon={selectedCoupon} category={category} />
+                            <ManageCouponCourseDrawer
+                                selectedCoupon={selectedCoupon}
+                                getCouponList={getCouponList}
+                                setDrawerForCouponCourse={setDrawerForCouponCourse}
+                                category={category}
+                            />
                         </Drawer>}
                 </ConfigProvider>
+                {ismodelForDeleteItems &&
+                    <ModelForDeleteItems
+                        ismodelForDeleteItems={ismodelForDeleteItems}
+                        onCloseModal={onCloseModal}
+                        deleteItemType={'coupon'}
+                        onDelete={handledeleteCoupon}
+                    />}
             </div>
         </div>
     )

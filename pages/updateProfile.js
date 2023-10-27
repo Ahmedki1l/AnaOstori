@@ -8,7 +8,7 @@ import { postAuthRouteAPI, uploadProfileImage } from '../services/apisService';
 import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
-import { signOutUser } from '../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../services/fireBaseAuthService';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage, updateProfileConst } from '../constants/ar';
 import { mediaUrl } from '../constants/DataManupulation';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
@@ -17,28 +17,20 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 const UpdateProfile = () => {
     const storeData = useSelector((state) => state?.globalStore);
     const [fullName, setFullName] = useState(storeData?.viewProfileData?.fullName)
-
-
     const [showLoader, setShowLoader] = useState(false);
-
     const [profileUrl, setProfileUrl] = useState(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey));
-
     const [uploadLoader, setUploadLoader] = useState(false)
     const [gender, setGender] = useState(storeData?.viewProfileData?.gender);
-
     const [fullNameError, setFullNameError] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(storeData?.viewProfileData?.phone?.replace('966', '0'));
     const [phoneNumberError, setPhoneNumberError] = useState(null);
-
+    const initialState = {
+        fullName: storeData?.viewProfileData?.fullName,
+        phoneNumber: storeData?.viewProfileData?.phone?.replace('966', '0'),
+        gender: storeData?.viewProfileData?.gender
+    }
     const dispatch = useDispatch();
     const router = useRouter()
-    // useEffect(() => {
-    //     setFullName(storeData?.viewProfileData?.fullName);
-    //     if (storeData?.viewProfileData?.phone) {
-    //         setPhoneNumber(storeData?.viewProfileData?.phone.replace('966', '0'));
-    //     }
-    //     setProfileUrl(storeData?.viewProfileData?.avatarKey == null ? storeData?.viewProfileData?.avatar : mediaUrl(storeData?.viewProfileData?.avatarBucket, storeData?.viewProfileData?.avatarKey))
-    // }, [storeData?.viewProfileData])
 
     const uploadPhoto = async (e) => {
         setUploadLoader(true)
@@ -91,19 +83,24 @@ const UpdateProfile = () => {
         event.preventDefault();
         if (showLoader) return
         if (!fullName) {
-            setFullNameError(inputErrorMessages.fullNameErrorMsgForRegister)
-        }
-        else if ((fullName.split(" ").length - 1) < 2) {
-            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg)
+            setFullNameError(inputErrorMessages.fullNameErrorMsgForRegister);
+        } else if ((fullName.split(" ").length - 1) < 2) {
+            setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
+        } else {
+            setFullNameError(null);
         }
         if (!phoneNumber) {
-            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg)
+            setPhoneNumberError(inputErrorMessages.mobileRequiredErrorMsg);
+        } else if (phoneNumber && phoneNumber.length < 10 || phoneNumber && !(phoneNumber.startsWith("05"))) {
+            setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg);
+        } else {
+            setPhoneNumberError(null);
         }
-        else {
-            setPhoneNumberError(null)
-        }
-        if (fullName && (fullName.split(" ").length - 1) < 2 || !phoneNumber || phoneNumber && phoneNumber.length < 10 || phoneNumber && !(phoneNumber.startsWith("05"))) {
+        if ((!phoneNumber || phoneNumberError) || (!fullName || fullNameError)) {
             return
+        }
+        if (JSON.stringify(initialState) === JSON.stringify({ fullName, phoneNumber, gender })) {
+            router.push('/myProfile')
         } else {
             setShowLoader(true)
             const data = {
@@ -111,11 +108,9 @@ const UpdateProfile = () => {
                 phone: phoneNumber && phoneNumber.replace(/[0-9]/, '+966'),
                 gender: gender
             }
-
             if (!phoneNumber?.length) {
                 delete data.phoneNumber;
             }
-
             const params = {
                 routeName: 'updateProfileHandler',
                 ...data,
@@ -128,13 +123,25 @@ const UpdateProfile = () => {
                     viewProfileData: res?.data,
                 });
                 Router.push('/myProfile')
-            }).catch(error => {
+            }).catch(async (error) => {
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await postAuthRouteAPI(params).then(async (res) => {
+                            toast.success(updateProfileConst.profileUpdateMsg, { rtl: true, })
+                            setShowLoader(false)
+                            dispatch({
+                                type: 'SET_PROFILE_DATA',
+                                viewProfileData: res?.data,
+                            });
+                            Router.push('/myProfile')
+                        })
+                    })
+                }
                 toast.error(error, { rtl: true, })
                 setShowLoader(false)
             });
         }
     }
-
 
     return (
         <>
@@ -170,7 +177,7 @@ const UpdateProfile = () => {
                                         <input className={`formInput ${styles.loginFormInput}  ${phoneNumberError && styles.inputError}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
                                         <label className={`formLabel  ${styles.loginFormLabel} ${phoneNumberError && styles.inputPlaceHoldererror}`} htmlFor="phoneNo">{updateProfileConst.phoneNumberPlaceHolder}</label>
                                     </div>
-                                    {phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p>}
+                                    {phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>{inputErrorMessages.phoneNoFormateMsg}</p>}
                                 </div>
                                 <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
@@ -186,13 +193,13 @@ const UpdateProfile = () => {
                                     </div>
                                 </div>
                                 <div className={styles.loginBtnBox}>
-                                    <button className={`primarySolidBtn ${styles.updateProfileBtn}`} name="submit" type='submit'>{showLoader ? <Image src={loader} width={50} height={30} alt="Loder Picture" /> : ""} حفظ</button>
+                                    <button className={`primarySolidBtn ${styles.updateProfileBtn}`} name="submit" type='submit'>{showLoader ? <Image src={loader} width={40} height={25} alt="Loder Picture" /> : ""} حفظ</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                </div >
-            </div >
+                </div>
+            </div>
         </>
     )
 }
