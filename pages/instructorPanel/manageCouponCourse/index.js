@@ -25,7 +25,7 @@ const Index = () => {
     const [deleteCoupon, setDeleteCoupon] = useState()
     const storeData = useSelector((state) => state?.globalStore);
     const category = storeData.catagories
-    console.log(deleteCoupon);
+
     const onCloseModal = () => {
         setIsmodelForDeleteItems(false)
     }
