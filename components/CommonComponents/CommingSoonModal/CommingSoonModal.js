@@ -37,14 +37,16 @@ function CommingSoonModal(props) {
                     <CloseIcon style={{ position: 'inherit' }} className={`cursor-pointer ${styles.closeIconWrapper}`} onClick={() => setCommingSoonModalOpen(false)} />
                 </div>
                 <div className='flex flex-col items-center'>
-                    <AllIconsComponenet height={46} width={46} iconName={'lock3'} color={''} />
+                    <div className={styles.lockIconWrapper}>
+                        <AllIconsComponenet height={30} width={30} iconName={'lock2'} color={'#FFFFFF'} />
+                    </div>
                     <p className={`fontBold pt-2 ${styles.modalTitleText}`}> التسجيل غير متاح حاليًا </p>
                 </div>
                 <p className={styles.modalParaText}>
-                    شكرًا لإهتمامك، قاعدين نطبخ المنهج على نار هادية 👨‍🍳، تفضل تصفح باقي دوراتنا إلى ما تجهز الطبخة
+                    شكرًا لإهتمامك، قاعدين نطبخ المنهج على نار هادية 👨‍🍳، تفضل تصفح باقي المجالات والدورات إلى ما نجهز الطبخة
                 </p>
                 <div className={`${styles.buttonModalDiv} flex justify-center items-center`}>
-                    <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={closeCommingSoonModal}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تصفح دوراتنا </button>
+                    <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={closeCommingSoonModal}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تصفح المجالات</button>
                 </div>
             </DialogContent>
         </Dialog>

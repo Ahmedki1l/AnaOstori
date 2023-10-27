@@ -480,8 +480,10 @@
 .formInputIconDiv {
 	margin: auto 0;
 	position: absolute;
-	top: 1rem;
-	right: 0.5rem;
+	// top: 1rem;
+	// right: 0.5rem;
+	display: grid;
+	right: 1rem;
 }
 
 

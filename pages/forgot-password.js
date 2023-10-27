@@ -36,8 +36,8 @@ export default function ForgotPassword() {
 						<div className='formInputIconDiv'>
 							<AllIconsComponenet height={20} width={20} iconName={'email'} color={'#808080'} />
 						</div>
-						<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.formInput}`}`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-						<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.formLabel}`}`} htmlFor="email">الايميل</label>
+						<input className={`formInput ${styles.formInput} ${emailError && `${styles.inputError}`}`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+						<label className={`formLabel ${styles.formLabel} ${emailError && `${styles.inputPlaceHoldererror}`}`} htmlFor="email">الايميل</label>
 					</div>
 					{emailError && <p className={styles.errorText}>{emailError}</p>}
 					<button className={`primarySolidBtn ${styles.loginBtnBox}`} type='submit' onClick={() => handleForgotPassword(email)}>

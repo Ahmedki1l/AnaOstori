@@ -190,6 +190,7 @@ export default function Register() {
 			return
 		} else {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
+				console.log(email, password);
 				setLoading(true)
 				const data = {
 					fullName: fullName,
@@ -223,7 +224,7 @@ export default function Register() {
 	const handleUpdatePassword = (password) => {
 		setPassword(password)
 		let data = { ...initPasswordError }
-		if (password.length > 8) {
+		if (password.length > 7) {
 			data.minLength = false
 			setInitPasswordError(data)
 		} else {
@@ -251,12 +252,13 @@ export default function Register() {
 			data.specialCharacter = true
 			setInitPasswordError(data)
 		}
-		if (password.length > 8 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
+		if (password.length > 7 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
 			setPasswordError(null)
 		} else {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		}
 	}
+
 	return (
 		<>
 			{loading ?
@@ -318,17 +320,17 @@ export default function Register() {
 							<label className={`formLabel ${styles.loginFormLabel} ${passwordError && `${styles.inputPlaceHoldererror}`}`} htmlFor="password">كلمة السر</label>
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
-									<div onClick={() => setShowPassword(true)}>
+									<div className='cursor-pointer' onClick={() => setShowPassword(true)}>
 										<AllIconsComponenet height={24} width={30} iconName={'newVisibleIcon'} color={'#00000080'} />
 									</div>
 									:
-									<div onClick={() => setShowPassword(false)}>
+									<div className='cursor-pointer' onClick={() => setShowPassword(false)}>
 										<AllIconsComponenet height={24} width={30} iconName={'newVisibleOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>
 						</div>
-						{passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						{passwordError ? <p className={styles.errorText}>{passwordError}</p> : <p className={styles.passwordHintMsg}> {inputErrorMessages.passwordFormateMsg}</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
@@ -378,7 +380,7 @@ export default function Register() {
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
-							<p className={`fontBold ${styles.andText}`}>او</p>
+							<p className={`fontBold ${styles.andText}`}>أو</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />

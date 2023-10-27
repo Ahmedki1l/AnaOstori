@@ -36,7 +36,6 @@ export const signInWithApple = async () => {
 
 
 export const forgotPassword = async (email) => {
-	console.log(email);
 	await sendPasswordResetEmail(auth, email).then((res) => {
 		toast.success(toastSuccessMessage.forgotPasswordLinkSend, { rtl: true, })
 		Router.push('/login')

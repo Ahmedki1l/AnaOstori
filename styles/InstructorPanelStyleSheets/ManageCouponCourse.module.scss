@@ -21,3 +21,17 @@
     border-radius: 4px;
     min-height: 50px;
 }
+
+.couponHeadeArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.couponActionWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}

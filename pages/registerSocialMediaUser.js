@@ -111,7 +111,7 @@ export default function RegisterWithGoogleAndApple() {
                 <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
                 <p className={`p-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
                 <div className='flex'>
-                    <p style={{ color: 'red' }} >ملاحظة :</p>
+                    <p style={{ color: 'red' }} >ملاحظة:</p>
                     <p className='mr-2'> جميع البيانات مطلوبة ما عدا رقم الجوال  </p>
                 </div>
                 <div className={`formInputBox`}>
@@ -145,7 +145,7 @@ export default function RegisterWithGoogleAndApple() {
                 </div>
                 {!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
                 <div className={styles.loginBtnBox}>
-                    <button className='primarySolidBtn' type='submit' onClick={handleSignIn} disabled={loading}>تسجيل الدخول</button>
+                    <button className='primarySolidBtn' type='submit' onClick={handleSignIn} disabled={loading}>إنشاء حساب</button>
                 </div>
             </div>
         </div>
