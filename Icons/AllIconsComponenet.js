@@ -124,7 +124,7 @@ import ColoredGoogleMapIcon from './customeIcons/coloredGoogleMapIcon'
 import ColoredEmailIcon from './customeIcons/coloredEmailIcon'
 import NewMaleIcon from './customeIcons/newMaleIcon'
 import NewFemaleIcon from './customeIcons/newFemaleIcon'
-import InAppPurchaseIcon from './customeIcons/InAppPurchaseIcon'
+import InAppPurchaseIcon from './customeIcons/inAppPurchaseIcon'
 
 
 
