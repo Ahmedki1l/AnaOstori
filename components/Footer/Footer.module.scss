@@ -19,14 +19,9 @@
 
 .footerMainBox {
 	display: grid;
-	grid-template-columns: auto 20rem 13rem;
-	grid-template-rows: 13rem auto;
-	padding: 1rem 1rem 0;
-}
-
-.locationLinkText {
-	font-size: 20px;
-	padding-right: 5px;
+	grid-template-columns: auto 24rem 15rem;
+	grid-template-rows: 18rem auto;
+	padding: 1rem 1rem 0 1rem;
 }
 
 .section1 {
