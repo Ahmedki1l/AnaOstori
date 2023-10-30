@@ -1,7 +1,8 @@
 @import "../../styles/variables.module.scss";
 
 .footerWrapper {
-	border-top: 0.5px solid rgba(0, 0, 0, 0.25)
+	border-top: 0.5px solid rgba(0, 0, 0, 0.25);
+	background-color: #F8F8F8;
 }
 
 .footerSubWrapper {
@@ -11,7 +12,8 @@
 	h3 {
 		font-family: 'Tajawal-Bold';
 		font-size: 22px;
-		line-height: 37px;
+		// line-height: 37px;
+		margin: 12px 0;
 	}
 }
 
@@ -31,8 +33,8 @@
 }
 
 .footerSubText {
-	margin: 2rem 0 1rem 0;
-	width: auto;
+	margin: 2rem 0 1rem 60px;
+	width: 780px;
 	margin-left: 6px;
 }
 
@@ -46,7 +48,7 @@
 		list-style-type: none;
 
 		li {
-			margin: 0.5rem 0;
+			// margin: 0.5rem 0;
 			display: flex;
 			align-items: center;
 
@@ -73,9 +75,11 @@
 }
 
 .socialMediaIconWraper {
-	margin-top: 15px;
+	margin: 12px 0;
 	display: flex;
 	align-items: center;
+	height: 32px;
+	padding: 24px 0;
 }
 
 .youtubeWrapper,
@@ -106,7 +110,8 @@
 
 	p {
 		margin: 0.3rem 0;
-		font-size: 14px
+		font-size: 16px;
+		line-height: 16px;
 	}
 }
 
@@ -119,7 +124,7 @@
 	p {
 		color: #00000080;
 		text-align: center;
-		padding: 0.6rem 0;
+		padding: 1rem 0;
 	}
 }
 
@@ -160,6 +165,10 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	p {
+		padding-left: 5px;
+	}
 }
 
 @media (max-width: 1280px) {
@@ -170,6 +179,7 @@
 	}
 
 	.footerSubText {
+		width: auto;
 		font-size: 16px;
 	}
 
@@ -256,7 +266,32 @@
 @media (max-width: 640px) {
 	.footerMainBox {
 		grid-template-columns: auto;
-		grid-template-rows: 14rem 10.5rem 6.5rem auto;
+		grid-template-rows: 12.5rem 10.5rem 6rem auto;
+		grid-gap: 16px;
+	}
+
+	.sectionWrapper {
+
+		// margin-top: -15px;
+		ul {
+			margin-top: -15px;
+
+			li {
+				line-height: 20px;
+			}
+		}
+	}
+
+	.regiDetailsTextBox {
+
+		p {
+			font-size: 14px;
+		}
+	}
+
+	.locationLinkText {
+		font-size: 16px;
+		padding-right: 5px;
 	}
 
 	.section2 {
@@ -275,21 +310,22 @@
 	.footerSubWrapper {
 		li {
 			font-size: 16px;
+			line-height: 27px;
 		}
 
 		h3 {
 			font-size: 18px;
-			line-height: 20px;
 		}
 	}
 
 	.footerSubText {
+		margin: 16px 0 14.5px 0;
 		font-size: 16px;
 		width: fit-content;
 	}
 
 	.footerBottom {
-		height: 120px;
+		height: 100px;
 
 		p {
 			font-size: 14px;
@@ -302,16 +338,14 @@
 		left: 50%;
 		transform: translate(-50%, 0);
 	}
+
+	.footerLink {
+		font-size: 14px;
+	}
 }
 
 @media(max-width: 436px) {
 	.footerMainBox {
-		grid-template-rows: 15rem 10.5rem 6.5rem auto;
-	}
-}
-
-@media(max-width: 320px) {
-	.footerMainBox {
-		grid-template-rows: 16rem 10.5rem 6.5rem auto;
+		grid-template-rows: 12.5rem 10.5rem 6.5rem auto;
 	}
 }

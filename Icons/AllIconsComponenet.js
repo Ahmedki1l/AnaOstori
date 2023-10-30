@@ -124,6 +124,7 @@ import ColoredGoogleMapIcon from './customeIcons/coloredGoogleMapIcon'
 import ColoredEmailIcon from './customeIcons/coloredEmailIcon'
 import NewMaleIcon from './customeIcons/newMaleIcon'
 import NewFemaleIcon from './customeIcons/newFemaleIcon'
+import InAppPurchaseIcon from './customeIcons/InAppPurchaseIcon'
 
 
 
@@ -215,6 +216,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'madaPayment' && <MadaPayment height={height} width={width} color={color} />}
 			{iconName == 'bankTransfer' && <BankTransfer height={height} width={width} color={color} />}
 			{iconName == 'applePayment' && <ApplePayment height={height} width={width} color={color} />}
+			{iconName == 'inAppPurchaseIcon' && <InAppPurchaseIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'manageCatagory' && <ManageCatagory height={height} width={width} color={color} />}

@@ -24,43 +24,43 @@ export default function Footer() {
 							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText'>
 								<li className={styles.locationLinkBox} >
 									<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredGoogleMapIcon'} />
-									<p className='pr-2'>المقر الرئيسي، الرياض، حي الياسمين</p>
+									<p className={styles.locationLinkText}>المقر الرئيسي، الرياض، حي الياسمين</p>
 								</li>
 							</Link>
 							<div className={styles.socialMediaIconWraper}>
 								<Link href={`${linkConst.Youtube_Link}`} target='_blank' className={styles.youtubeWrapper}>
 									<div className={styles.youtubeBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 26} width={isMediumScreen ? 29 : 31} iconName={'coloredYoutubeIcon'} color={'#CE1312'} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 32} width={isMediumScreen ? 24 : 32} iconName={'coloredYoutubeIcon'} color={'#CE1312'} />
 									</div>
 								</Link>
 								<Link href={`${linkConst.Twitter_Link}`} target='_blank' className={styles.twitterWrapper}>
 									<div className={styles.twitterBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'coloredTwittericon'} color={'#03A9F4'} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 32} width={isMediumScreen ? 24 : 32} iconName={'coloredTwittericon'} color={'#03A9F4'} />
 									</div>
 								</Link>
 								<Link href={`${linkConst.Instagram_Link}`} target='_blank' className={styles.instaWrapper}>
 									<div className={styles.instaBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'coloredInstaIcon'} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 32} width={isMediumScreen ? 24 : 32} iconName={'coloredInstaIcon'} />
 									</div>
 								</Link>
 								<Link href={`${linkConst.TikTok_Link}`} target='_blank' className={styles.tiktokWrapper}>
 									<div className={styles.tiktokBlack}>
-										<AllIconsComponenet height={isMediumScreen ? 24 : 27} width={isMediumScreen ? 24 : 27} iconName={'tiktokIcon'} color={'#000000'} />
+										<AllIconsComponenet height={isMediumScreen ? 24 : 32} width={isMediumScreen ? 24 : 32} iconName={'tiktokIcon'} color={'#000000'} />
 									</div>
 								</Link>
 							</div>
 						</div>
 					</div>
-					<div className={`${styles.section2} ${styles.section}`}>
+					<div className={`mt-20 ${styles.section2} ${styles.section}`}>
 						<Link href={`${linkConst.VAT_Link}`} target='_blank' className={styles.regiDetailsBox1}>
-							<Logo height={isMediumScreen ? 24 : 32} width={isMediumScreen ? 24 : 32} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
+							<Logo height={isMediumScreen ? 25 : 32} width={isMediumScreen ? 20 : 32} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
 							<div className={styles.regiDetailsTextBox}>
 								<p>رقم التسجيل الضريبي 310646534500003</p>
 								<p>رقم السجل التجاري 1010644475</p>
 							</div>
 						</Link>
 						<div className={styles.regiDetailsBox2}>
-							<Logo height={isMediumScreen ? 30 : 40} width={isMediumScreen ? 24 : 32} logoName={'tvtcLogo'} alt={'TVTC Logo'} />
+							<Logo height={isMediumScreen ? 25 : 40} width={isMediumScreen ? 20 : 32} logoName={'tvtcLogo'} alt={'TVTC Logo'} />
 							<div className={styles.regiDetailsTextBox}>
 								<p>مرخص من المؤسسة العامة للتدريب المهني والتقني</p>
 								<p>رخصة رقم 4174536814</p>
@@ -68,7 +68,7 @@ export default function Footer() {
 						</div>
 					</div>
 					<div className={styles.section}>
-						<h3>الروابط المهمة</h3>
+						<h3 className={isSmallScreen ? `${styles.sectionWrapper}` : ''}>الروابط المهمة</h3>
 						<ul>
 							<Link href={'/privacyAndPolicy'} target='_blank' className='normalLinkText'>
 								<li>سياسة الخصوصية</li>
@@ -111,16 +111,12 @@ export default function Footer() {
 				</div>
 				<div className={styles.footerBottom}>
 					<div className={styles.footerLink}>
-						<p className='ml-2'>جميع الحقوق محفوظة </p>
+						<p>جميع الحقوق محفوظة </p>
 						<Link style={{ color: '#0075FF' }} target={'_blank'} href={`https://www.linkedin.com/company/scbs-sa/`}> لشركة سنام لخدمات الأعمال © 2023</Link>
 					</div>
 					<div className={styles.bankLogoDiv}>
 						<Logo height={isMediumScreen ? 30 : 35} width={isMediumScreen ? 270 : 280} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
 					</div>
-					{/* <p>جميع الحقوق محفوظة لشركة سنام لخدمات الأعمال © 2023</p>
-					<div className={styles.bankLogoDiv}>
-						<Logo height={isMediumScreen ? 30 : 35} width={isMediumScreen ? 270 : 280} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
-					</div> */}
 				</div>
 			</div>
 		</div >

@@ -18,7 +18,6 @@ export default function CoursesCard(props) {
 	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/anaOstori.png'
 
 	const date = props?.data?.availability
-
 	useEffect(() => {
 		const date = new Date(props?.data?.createdAt);
 		date.setMonth(date.getMonth() + 6);

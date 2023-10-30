@@ -52,6 +52,7 @@ export default function PurchaseInquiry(props) {
 	}, [])
 
 
+
 	return (
 		<>
 			<div className={styles.searchHeader}>

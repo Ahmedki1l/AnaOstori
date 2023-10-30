@@ -190,6 +190,7 @@ export default function Register() {
 			return
 		} else {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
+				console.log(email, password);
 				setLoading(true)
 				const data = {
 					fullName: fullName,
@@ -223,7 +224,7 @@ export default function Register() {
 	const handleUpdatePassword = (password) => {
 		setPassword(password)
 		let data = { ...initPasswordError }
-		if (password.length > 8) {
+		if (password.length > 7) {
 			data.minLength = false
 			setInitPasswordError(data)
 		} else {
@@ -251,12 +252,13 @@ export default function Register() {
 			data.specialCharacter = true
 			setInitPasswordError(data)
 		}
-		if (password.length > 8 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
+		if (password.length > 7 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
 			setPasswordError(null)
 		} else {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		}
 	}
+
 	return (
 		<>
 			{loading ?
@@ -276,8 +278,8 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${fullNameError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${fullNameError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="fullName">الاسم الثلاثي</label>
+							<input className={`formInput  ${styles.loginFormInput}  ${fullNameError && `${styles.inputError}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+							<label className={`formLabel  ${styles.loginFormLabel} ${fullNameError && `${styles.inputPlaceHoldererror}`}`} htmlFor="fullName">الاسم الثلاثي</label>
 						</div>
 						{fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
 						<div>
@@ -298,37 +300,37 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="email">الايميل</label>
+							<input className={`formInput ${styles.loginFormInput} ${emailError && `${styles.inputError}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel} ${emailError && `${styles.inputPlaceHoldererror}`}`} htmlFor="email">الايميل</label>
 						</div>
 						{emailError && <p className={styles.errorText}>{emailError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput}`} name='phone' id='phone' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phone">رقم الجوال (اختياري)</label>
+							<input className={`formInput ${styles.loginFormInput} ${phoneNumberError && `${styles.inputError}`}`} name='phone' id='phone' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel} ${phoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="phone">رقم الجوال (اختياري)</label>
 						</div>
-						{!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : !phoneNumberError || phoneNumber.length < 10 && passwordError}
+						{!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${passwordError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => handleUpdatePassword(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${passwordError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="password">كلمة السر</label>
+							<input className={`formInput ${styles.loginFormInput} ${passwordError && `${styles.inputError}`}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => handleUpdatePassword(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel} ${passwordError && `${styles.inputPlaceHoldererror}`}`} htmlFor="password">كلمة السر</label>
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
-									<div onClick={() => setShowPassword(true)}>
+									<div className='cursor-pointer' onClick={() => setShowPassword(true)}>
 										<AllIconsComponenet height={24} width={30} iconName={'newVisibleIcon'} color={'#00000080'} />
 									</div>
 									:
-									<div onClick={() => setShowPassword(false)}>
+									<div className='cursor-pointer' onClick={() => setShowPassword(false)}>
 										<AllIconsComponenet height={24} width={30} iconName={'newVisibleOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>
 						</div>
-						{passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						{passwordError ? <p className={styles.errorText}>{passwordError}</p> : <p className={styles.passwordHintMsg}> {inputErrorMessages.passwordFormateMsg}</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
@@ -378,7 +380,7 @@ export default function Register() {
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
-							<p className={`fontBold ${styles.andText}`}>او</p>
+							<p className={`fontBold ${styles.andText}`}>أو</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />

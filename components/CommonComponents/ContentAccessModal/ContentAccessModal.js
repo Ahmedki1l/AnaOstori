@@ -2,6 +2,7 @@ import { Modal } from 'antd'
 import React from 'react'
 import styles from './ContentAccessModal.module.scss'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import { contentAccessPopUPConst } from '../../../constants/ar'
 
 const ContentAccessModal = ({
     isModelForcontentAccess,
@@ -21,16 +22,10 @@ const ContentAccessModal = ({
                 closeIcon={false}
                 footer={false}>
                 <div style={{ padding: '15px' }}>
-                    <div className={styles.modalHeader}>
-                        <button onClick={isModelClose} className={styles.closebutton}>
-                            <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                        <p className={`fontBold ${styles.headeText}`}>توضيح</p>
-                    </div>
-                    <p className={styles.modalParaText}>
-                        حاليًا محتوى الدورة مخفي، وراح يجيك اشعار اول ما نفعل المحتوى
-                    </p>
+                    <p className={`fontBold ${styles.headeText}`}>{contentAccessPopUPConst.modalHeaderText}</p>
+                    <p className={styles.modalParaText}>{contentAccessPopUPConst.modalDetailText}</p>
                     <div className={`${styles.buttonModalDiv} flex justify-center items-center`}>
-                        <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={isModelClose}>تمام</button>
+                        <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={isModelClose}>{contentAccessPopUPConst.ctaBtnText}</button>
                     </div>
                 </div>
             </Modal>

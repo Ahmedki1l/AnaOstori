@@ -8,6 +8,7 @@ import { toastSuccessMessage } from '../../../constants/ar';
 import Image from 'next/legacy/image';
 import loader from '../../../public/icons/loader.svg'
 import { getNewToken } from '../../../services/fireBaseAuthService';
+import { countRemainingDays } from '../../../constants/DataManupulation';
 
 
 
@@ -17,10 +18,12 @@ const DeleteAccount = ({ data }) => {
     const dispatch = useDispatch();
     const router = useRouter()
     const [showLoader, setShowLoader] = useState(false);
+    const [deleteProfileRes, setDelteProfileRes] = useState()
 
     const handleDeleteAccount = async () => {
         setShowLoader(true)
         await postAuthRouteAPI({ routeName: "deleteProfile" }).then(async (res) => {
+            setDelteProfileRes(res.data)
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
@@ -85,7 +88,7 @@ const DeleteAccount = ({ data }) => {
                 :
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>استعادة الحساب</h3>
-                    <p className={styles.paraText}>حسابك راح ينحذف خلال x يوم، بإمكانك استعادة حسابك بالنقر على زر استعادة الحساب</p>
+                    <p className={styles.paraText}>حسابك راح ينحذف خلال {countRemainingDays(data?.inActiveAt)} يوم، بإمكانك استعادة حسابك بالنقر على زر استعادة الحساب</p>
                     <div className={styles.accountRecoveryBtnBox}>
                         <button className={`primarySolidBtn ${styles.accountRecoveryBtn}`} onClick={() => handleAccountRecovery()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} color='#FF0000' /> : ""} استعادة الحساب</button>
                     </div>

@@ -42,21 +42,12 @@
 
 .loginFormInput {
 	width: 100%;
-	padding-right: 2.2rem;
+	padding-right: 2.9rem;
 	border: 1px solid #0000001a;
 }
 
 .inputError {
-	width: 100%;
-	padding-right: 2.2rem;
 	border: 1px solid red;
-}
-
-.inputPlaceHoldererror {
-	padding-right: 1.5rem;
-	font-size: 16px;
-	color: red;
-	top: 1.2rem
 }
 
 .formInputField {
@@ -70,10 +61,14 @@
 }
 
 .loginFormLabel {
-	padding-right: 1.5rem;
+	padding-right: 2rem;
 	font-size: 16px;
 	color: #00000080;
 	top: 1.2rem
+}
+
+.inputPlaceHoldererror {
+	color: red;
 }
 
 .loginPageIconDiv {
@@ -159,7 +154,7 @@
 }
 
 .errorText {
-	color: rgb(211, 47, 47);
+	color: #E5342F;
 	font-size: 12px;
 	line-height: 1.66;
 	letter-spacing: 0.03333em;
@@ -213,6 +208,10 @@
 
 	button {
 		border-left: 1px solid red;
+	}
+
+	:last-child {
+		border-left: none;
 	}
 }
 
@@ -276,7 +275,7 @@
 	}
 
 	.socialMediaMainPage {
-		height: 34rem;
+		height: 32rem;
 	}
 
 	.loginFormDiv {
