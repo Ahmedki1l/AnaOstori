@@ -132,7 +132,7 @@ const Index = () => {
             render: (text, _record) => {
                 const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
                     _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
-                    (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'applePayment')
+                    (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'inAppPurchaseIcon')
                 return (
                     <AllIconsComponenet iconName={paymentMode} height={18} width={18} />
                 )
