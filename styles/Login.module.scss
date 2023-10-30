@@ -29,6 +29,8 @@
 .signUpPageHead {
 	font-size: 23px;
 	text-align: center;
+	margin-bottom: 8px;
+	font-weight: 500;
 }
 
 .signUpPageSubText {
@@ -109,9 +111,10 @@
 .andText {
 	background-color: #FFFFFF;
 	margin: 0 auto;
-	width: 6rem;
+	width: 2rem;
 	text-align: center;
 	color: #00000080;
+	font-size: 14px;
 }
 
 .loginWithoutPasswordBtnBox {
@@ -271,7 +274,7 @@
 	}
 
 	.registerMainPage {
-		height: 65rem;
+		height: 66rem;
 	}
 
 	.socialMediaMainPage {
@@ -286,7 +289,6 @@
 
 	.loginPageHead,
 	.signUpPageHead {
-		font-size: 24px;
 		text-align: right;
 	}
 

@@ -11,10 +11,9 @@ import Link from 'next/link'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import ManegeUserListDrawer from '../../../components/ManageUserList/ManegeUserListDrawer'
-import styles from '../../../styles/InstructorPanelStyleSheets/ManageUserList.module.scss'
 
 const DrawerTiitle = styled.p`
-    font-size:20px
+    font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
 `
 
 const Index = () => {
@@ -172,7 +171,13 @@ const Index = () => {
                 total: res.data.totalItems,
             })
             setCurrentPage(res.data.currentPage)
-            setUserList(res.data.data)
+            const userList = res.data.data.map((item) => {
+                return {
+                    ...item,
+                    key: item.id
+                }
+            })
+            setUserList(userList)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -211,14 +216,6 @@ const Index = () => {
             </div>
             <h1 className={`head2 py-8`}>بيانات المستخدمين</h1>
 
-            {/* <div className={styles.backBtnBox}>
-                <button className='fontBold primaryStrockedBtn'>
-                    <div className={styles.arrowIcon}>
-                        <AllIconsComponenet height={20} width={20} iconName={'rightArrowIcon'} color={'#F26722'} />
-                    </div>
-                    الصفحة السابقة </button>
-            </div> */}
-
             <ConfigProvider direction="rtl">
                 <Table
                     columns={tableColumns}
@@ -238,7 +235,7 @@ const Index = () => {
                         placement={'right'}
                         title={
                             <>
-                                <DrawerTiitle className="foneBold">تحديث بيانات المستخدم</DrawerTiitle>
+                                <DrawerTiitle className="fontBold">تحديث بيانات المستخدم</DrawerTiitle>
                             </>
                         }
                     >

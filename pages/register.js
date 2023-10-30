@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { signupWithEmailAndPassword, signInWithApple, GoogleLogin } from '../services/fireBaseAuthService'
@@ -268,7 +267,7 @@ export default function Register() {
 				:
 				<div className={`relative ${styles.registerMainPage}`}>
 					<div className={styles.loginFormDiv}>
-						<h1 className={`fontBold ${styles.signUpPageHead}`}>إنشاء حساب</h1>
+						<h1 className={`fontMedium ${styles.signUpPageHead}`}>إنشاء حساب</h1>
 						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
 						<div className='flex'>
 							<p style={{ color: 'red' }}> ملاحظة: </p>
@@ -308,7 +307,7 @@ export default function Register() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput} ${phoneNumberError && `${styles.inputError}`}`} name='phone' id='phone' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+							<input className={`formInput ${styles.loginFormInput} ${phoneNumberError && `${styles.inputError}`}`} name='phone' id='phone' type="number" inputMode='tel' value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel} ${phoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="phone">رقم الجوال (اختياري)</label>
 						</div>
 						{!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
@@ -380,7 +379,7 @@ export default function Register() {
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
-							<p className={`fontBold ${styles.andText}`}>أو</p>
+							<p className={`${styles.andText}`}>أو</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />

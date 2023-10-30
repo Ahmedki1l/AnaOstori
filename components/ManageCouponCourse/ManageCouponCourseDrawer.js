@@ -1,14 +1,14 @@
-import { Form } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { FormItem } from '../antDesignCompo/FormItem';
+import { Form, FormItem } from '../antDesignCompo/FormItem';
 import Select from '../antDesignCompo/Select';
 import Input from '../../components/antDesignCompo/Input'
 import CustomButton from '../CommonComponents/CustomButton';
-import { couponTypes } from '../../constants/adminPanelConst/couponConst/couponConst';
+import { couponTypes, manageCouponConst } from '../../constants/adminPanelConst/couponConst/couponConst';
 import { postRouteAPI } from '../../services/apisService';
 import DatePicker from '../antDesignCompo/Datepicker';
 import dayjs from 'dayjs';
 import styles from '../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
+import { toast } from 'react-toastify';
 
 const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, setDrawerForCouponCourse }) => {
 
@@ -25,8 +25,8 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             percentage: selectedCoupon?.percentage,
             type: selectedCoupon?.type,
             limit: selectedCoupon?.limit,
-        }
-        )
+            courseIds: selectedCoupon?.couponCourses.map((item) => { return item.course.id }),
+        })
         setSelectedCourse(selectedCoupon?.couponCourses.map((item) => {
             return item.course.id
         }))
@@ -43,6 +43,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         }
         await postRouteAPI(data).then((res) => {
             setShowBtnLoader(false)
+            toast.success(selectedCoupon?.id ? manageCouponConst.couponUpdateSuccessMsg : manageCouponConst.couponCreateSuccessMsg)
             setDrawerForCouponCourse(false)
             couponCourseForm.resetFields()
             getCouponList()
@@ -63,82 +64,104 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         setSelectedCourse(value);
     }
 
+
     return (
-        <div>
+        <div >
             <Form form={couponCourseForm} onFinish={handleSaveCouponDetails}>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>عنوان الكوبون*</p>
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponNameHead}</p>
                 <FormItem
-                    name={'name'}>
+                    name={'name'}
+                    rules={[{ required: true, message: manageCouponConst.couponNameError }]}
+                >
                     <Input
                         width={425}
                         height={47}
-                        placeholder='حالة الحجز'
+                        fontSize={16}
+                        placeholder={manageCouponConst.couponNamePlaceHolder}
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الكود*</p>
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponCodeHead}</p>
                 <FormItem
-                    name={'couponCode'}>
+                    name={'couponCode'}
+                    rules={[{ required: true, message: manageCouponConst.couponCodeError }]}
+                >
                     <Input
                         width={425}
                         height={47}
-                        placeholder='coupon code'
+                        fontSize={16}
+                        placeholder={manageCouponConst.couponCodePlaceHolder}
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>نسبة الخصم*</p>
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponPercantageHead}</p>
                 <FormItem
-                    name={'percentage'}>
+                    name={'percentage'}
+                    rules={[{ required: true, message: manageCouponConst.couponPercantageError }]}
+                >
                     <Input
                         width={425}
                         height={47}
-                        placeholder='Number%'
+                        fontSize={16}
+                        placeholder={manageCouponConst.couponPercantagePlaceHolder}
                         type={'number'}
                         maxValue={100}
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>نوع الخصم*</p>
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponDiscountType}</p>
                 <FormItem
-                    name={'type'}>
+                    name={'type'}
+                    rules={[{ required: true, message: manageCouponConst.couponDiscountTypeError }]}
+                >
                     <Select
                         width={425}
                         height={47}
-                        placeholder='coupon Type'
+                        fontSize={16}
+                        placeholder={manageCouponConst.couponDiscountTypePlaceHolder}
                         OptionData={couponTypes}
                         onChange={handleSelectCouponChange}
                     />
                 </FormItem>
-
                 {selectedCouponType == 'limited' &&
                     <>
-                        <p className='fontBold py-2' style={{ fontSize: '18px' }}>number</p>
+                        <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponLimitHead}</p>
                         <FormItem
-                            name={'limit'}>
+                            name={'limit'}
+                            rules={[{ required: true, message: manageCouponConst.couponLimitError }]}
+                        >
                             <Input
                                 width={425}
                                 height={47}
-                                placeholder='number'
+                                fontSize={16}
+                                placeholder={manageCouponConst.couponLimitPlaceHolder}
                             />
                         </FormItem>
-                    </>}
-
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>تاريخ الانتهاء*</p>
+                    </>
+                }
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponExpiryDate}</p>
                 <FormItem
                     name={'expires'}
+                    rules={[{ required: true, message: manageCouponConst.couponExpiryDateError }]}
                 >
-                    <DatePicker
-                        format={'YYYY-MM-DD'}
-                        width={425}
-                        height={40}
-                        placeholder="تاريخ النهاية"
-                        suFFixIconName="calander"
-                    />
+                    <>
+                        <DatePicker
+                            format={'YYYY-MM-DD'}
+                            width={425}
+                            height={40}
+                            fontSize={16}
+                            placeholder={manageCouponConst.couponExpiryDatePlaceHolder}
+                            suFFixIconName="calander"
+                        />
+                    </>
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>تطبق على هذه الدورات*</p>
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponAppliedCourseHead}</p>
                 <FormItem
-                    name={'courseIds'}>
+                    name={'courseIds'}
+                    rules={[{ required: true, message: manageCouponConst.couponAppliedCourseError }]}
+                >
                     <Select
                         width={425}
                         height={47}
-                        placeholder='SelectCoursesAsMulti'
+                        fontSize={16}
+                        placeholder={manageCouponConst.couponAppliedCoursePlaceHolder}
                         OptionData={course}
                         mode='multiple'
                         maxTagCount='responsive'
@@ -151,21 +174,20 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                 <div className={styles.courseNames}>
                     {
                         course.filter((item) => selectedCourse?.includes(item.value)).map((item, index) => {
-                            return <p key={item.value}>{item.label}</p>
+                            return <p style={{ fontSize: '16px' }} key={item.value}>{item.label}</p>
                         })
                     }
                 </div>
-
-                <div className='pt-5'>
+                <div className={styles.couponBtnBox}>
                     <CustomButton
-                        btnText='حفظ'
+                        btnText={manageCouponConst.submitBtnText}
                         height={37}
                         showLoader={showBtnLoader}
                         fontSize={16}
                     />
                 </div>
             </Form>
-        </div >
+        </div>
     )
 }
 
