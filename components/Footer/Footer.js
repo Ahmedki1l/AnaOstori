@@ -90,19 +90,15 @@ export default function Footer() {
 					<div className={`${styles.section} ${styles.contactSections}`}>
 						<h3>خلنا على تواصل</h3>
 						<ul>
-							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText '>
+							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 								<li className={styles.whatsAppWrapper} >
-									<div className={styles.whatsAppBlack}>
-										<AllIconsComponenet height={isSmallScreen ? 20 : 32} width={isSmallScreen ? 20 : 32} iconName={'whatsappFill'} color={'#40C351'} />
-									</div>
+									<AllIconsComponenet height={isSmallScreen ? 20 : 32} width={isSmallScreen ? 20 : 32} iconName={'whatsappFill'} color={'#40C351'} />
 									<p>0502413980</p>
 								</li>
 							</Link>
-							<Link href={`mailto:${'anaostori@scbs.sa'}`} target='_blank' className='normalLinkText '>
+							<Link href={`mailto:${'anaostori@scbs.sa'}`} target='_blank' className='normalLinkText'>
 								<li className={styles.locationWrapper}>
-									<div className={styles.locationBlack}>
-										<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredEmailIcon'} color={"#F8B84E"} />
-									</div>
+									<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredEmailIcon'} color={"#F8B84E"} />
 									<p>anaostori@scbs.sa</p>
 								</li>
 							</Link>

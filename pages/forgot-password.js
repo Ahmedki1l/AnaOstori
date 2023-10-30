@@ -30,7 +30,7 @@ export default function ForgotPassword() {
 		<>
 			<div className={`relative ${styles.mainPage}`}>
 				<div className={styles.forgotFormDiv}>
-					<h1 className={`fontBold ${styles.pageHeader}`}>نسيت كلمة السر؟</h1>
+					<h1 className={`fontMedium ${styles.pageHeader}`}>نسيت كلمة السر؟</h1>
 					<p className={styles.forgotPasswordPara}>ازهلها، دخل ايميلك عشان نرسلك رابط من خلاله تغير كلمة السر</p>
 					<div className='formInputBox'>
 						<div className='formInputIconDiv'>
