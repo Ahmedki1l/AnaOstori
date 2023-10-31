@@ -42,18 +42,15 @@ export default function Login() {
 		if (email) {
 			setEmailError(false)
 		}
-
 		if (password) {
 			setPasswordError(false)
 		}
-
 		if (email && !(regexEmail.test(email))) {
 			setIsEmailError(true)
 		}
 		else {
 			setIsEmailError(false)
 		}
-
 		if (password && !(regexPassword.test(password))) {
 			setIsPasswordError(true)
 		}

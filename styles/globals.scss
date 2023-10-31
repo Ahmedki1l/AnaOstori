@@ -434,12 +434,15 @@
 }
 
 .formInput {
-	width: 19.8rem;
-	height: 3.2rem;
+	// width: 19.8rem;
+	width: 22.25rem;
+	height: 2.75rem;
+	// height: 3.2rem;
 	border: 1px solid #000000;
 	border-radius: 4px;
 	outline: none;
-	padding: 1rem 1rem 0 1rem;
+	// padding: 1rem 1rem 0 1rem;
+	padding: 0.75rem;
 	font-size: 18px;
 	font-family: 'Tajawal-Regular';
 	background-color: transparent !important;
@@ -461,6 +464,22 @@
 	z-index: 0;
 }
 
+.formLabelAccountInfo{
+color: var(--grary-not-selected, #808080) !important;
+position: absolute;
+top: 0.5rem;
+right: 1rem;
+transition: all 0.5s;
+z-index: 0;
+color: var(--Black_Used, #191919);
+text-align: right;
+font-family: Tajawal;
+font-size: 10px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
 .formInput:focus+.formLabel {
 	font-size: 14px;
 	top: 0.1rem;
@@ -480,10 +499,40 @@
 .formInputIconDiv {
 	margin: auto 0;
 	position: absolute;
-	top: 1rem;
+	top: 0.6rem;
 	right: 0.5rem;
 }
 
+.formInputText {
+	width: 22.25rem;
+    height: 2.75rem;
+	padding-top: 1.4rem;
+	padding-right: 2.2rem;
+	border: 1px solid #0000001a;
+}
+
+.formInputLabel {
+	padding-right: 1.5rem;
+	font-size: 16px;
+	color: #00000080;
+	top: 0.9rem
+}
+
+
+.formInputError {
+	width: 22.25rem;
+    height: 2.75rem;
+	padding-top: 1.4rem;
+	padding-right: 2.2rem;
+	border: 1px solid red;
+}
+
+.formInputPlaceHolderError {
+	padding-right: 1.5rem;
+	font-size: 16px;
+	color: red;
+	top: 0.9rem
+}
 
 
 // ********************************************* Dialog design *************************************************** //

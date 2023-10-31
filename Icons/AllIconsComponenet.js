@@ -122,6 +122,7 @@ import ColoredYoutubeIcon from './customeIcons/coloredYoutubeIcon'
 import ColoredTwittericon from './customeIcons/coloredTwittericon'
 import ColoredGoogleMapIcon from './customeIcons/coloredGoogleMapIcon'
 import ColoredEmailIcon from './customeIcons/coloredEmailIcon'
+import PasswordAlert from './customeIcons/passwordAlert'
 
 
 
@@ -262,6 +263,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'coloredTwittericon' && <ColoredTwittericon height={height} width={width} color={color} />}
 			{iconName == 'coloredGoogleMapIcon' && <ColoredGoogleMapIcon height={height} width={width} />}
 			{iconName == 'coloredEmailIcon' && <ColoredEmailIcon height={height} width={width} color={color} />}
+
+			{iconName == 'passwordAlertIcon' && <PasswordAlert height={height} width={width} color={color} />}
 
 
 		</>

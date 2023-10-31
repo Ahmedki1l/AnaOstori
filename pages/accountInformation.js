@@ -10,24 +10,28 @@ import DeleteAccount from '../components/AccountInformation/DeleteAccount/Delete
 import { useDispatch, useSelector } from 'react-redux';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import useWindowSize from '../hooks/useWindoSize';
-import { toastErrorMessage, toastSuccessMessage } from '../constants/ar';
+import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar';
+import { AccountInformationConst } from '../constants/AccountInformationConst';
 
 
 export default function AccountInformation() {
     const storeData = useSelector((state) => state?.globalStore);
-    const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = useState(storeData.loginWithoutPassword == true ? 2 : 0);
     const [showLoader, setShowLoader] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState("");
     const [userProfileData, setUserProfileData] = useState({});
     const [gender, setGender] = useState();
     const [sectionType, setSectionType] = useState('default');
     const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isPhoneNumberError, setIsPhoneNumberError] = useState(false);
     const [email, setEmail] = useState()
+    const [emailError, setEmailError] = useState(false);
     const [isEmailError, setIsEmailError] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
-    const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
+    // const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
+    const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, [])
     const regexPassword = useMemo(() => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, []);
     const regexPhone = useMemo(() => /^(\+?\d{1,3}[- ]?)?\d{10}$/, []);
     const isSmallScreen = useWindowSize().smallScreen
@@ -46,17 +50,27 @@ export default function AccountInformation() {
 
 
     useEffect(() => {
-        if (!email?.length) {
-            setIsEmailError(true)
+
+        // if (!email?.length && !userProfileData?.email) {
+        //     setIsEmailError(true)
+        // }
+
+
+        if (password) {
+			setPasswordError(false)
+		}
+
+        if (email && !(regexEmail.test(email))) {
+            setEmailError(true)
         }
-        else if (email && !(regexEmail.test(email))) {
-            setIsEmailError(true)
-        }
-        else if (password && !(regexPassword.test(password))) {
+        else {
+            setEmailError(false)
+		}
+        
+         if (password && !(regexPassword.test(password))) {
             setIsPasswordError(true)
         }
         else {
-            setIsEmailError(false)
             setIsPasswordError(false)
         }
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
@@ -68,21 +82,21 @@ export default function AccountInformation() {
     }, [email, password, phoneNumber, regexEmail, regexPassword, regexPhone])
 
     const subContentData = [
-        {
-            subTitle: 'رقم الجوال',
-            subContentvalue: userProfileData?.phone?.replace("966", "0"),
-            type: 'phone'
-        },
+        // {
+        //     subTitle: 'رقم الجوال',
+        //     subContentvalue: userProfileData?.phone?.replace("966", "0"),
+        //     type: 'phone'
+        // },
         {
             subTitle: 'الايميل',
             subContentvalue: userProfileData?.email,
             type: 'email'
         },
-        {
-            subTitle: 'الجنس',
-            subContentvalue: userProfileData?.gender == 'male' ? 'ذكر' : userProfileData?.gender == 'female' ? 'أنثى' : ' ',
-            type: 'gender'
-        }
+        // {
+        //     subTitle: 'الجنس',
+        //     subContentvalue: userProfileData?.gender == 'male' ? 'ذكر' : userProfileData?.gender == 'female' ? 'أنثى' : ' ',
+        //     type: 'gender'
+        // }
     ]
     useEffect(() => {
         if (isSmallScreen) {
@@ -93,6 +107,7 @@ export default function AccountInformation() {
             setIsTabContentShown(true)
         }
     }, [isSmallScreen])
+
     const handleTabClick = (tabData) => {
         if (tabData == 1 && storeData.loginWithoutPassword == true) return
         setActiveTab(tabData);
@@ -155,6 +170,10 @@ export default function AccountInformation() {
     }
 
     const handleCheckPassword = async () => {
+        if (!password) {
+			setPasswordError(inputErrorMessages.noPasswordMsg)
+		}
+        else{
         setShowLoader(true)
         await verifyPassword(userProfileData?.email, password).then(async (res) => {
             if (res?.user?.accessToken) {
@@ -181,13 +200,17 @@ export default function AccountInformation() {
             console.log(error);
         })
     }
+    }
 
     const handleEmailNextBtn = (e) => {
         if (!email?.length) {
-            setEmail("")
-            setSectionType('الايميل')
+            setIsEmailError(true)
+            // setEmail("")
+            // setSectionType('الايميل')
         } else {
+            setIsEmailError(false)
             setSectionType('password')
+            
         }
     }
 
@@ -196,11 +219,16 @@ export default function AccountInformation() {
         setIsTabContentShown(false)
     }
 
+
+  
+
     return (
         <>
             <div className={`${styles.verticalTabsContainer}`}>
                 {(isTabListShown) &&
                     <div className={styles.tabsList}>
+                        {storeData.loginWithoutPassword == false &&
+                        <>
                         <div className={`${styles.tab} ${activeTab == 0 && `${styles.active}`}`} onClick={() => handleTabClick(0)}>
                             <div className={styles.tabDiv}>
                                 <AllIconsComponenet height={25} width={25} iconName={'persone2'} color={'#000000'} />
@@ -219,6 +247,8 @@ export default function AccountInformation() {
                                 </div>
                             </div>
                         </div>
+                        </>
+                        }
                         <div className={`${styles.tab} ${activeTab == 2 && `${styles.active}`}`} onClick={() => handleTabClick(2)}>
                             <div className={styles.tabDiv}>
                                 <AllIconsComponenet height={25} width={25} iconName={`${userProfileData?.inActiveAt == null ? 'accountDelet' : 'accountRestore'}`} color={'#000000'} />
@@ -303,23 +333,35 @@ export default function AccountInformation() {
                                                     <div className={styles.phoneContainer}>
                                                         <div className={styles.phoneTitleDiv} onClick={() => setSectionType('default')}>
                                                             <AllIconsComponenet height={17} width={10} iconName={'arrowRight'} color={'#000000'} />
-                                                            <h3>تحديث الايميل</h3>
+                                                            <h3>{AccountInformationConst?.emailUpdateHeading}</h3>
                                                         </div>
-                                                        <p className={`font-medium ${styles.existingDetailText}`}>الايميل الحالي: {userProfileData?.email}</p>
-                                                        <div className={`formInputBox ${styles.passwordInputBox}`}>
+                                                        <p className={`font-medium ${styles.existingDetailText}`}>{AccountInformationConst?.currentEmailText} : {email ? email : userProfileData?.email}</p>
+                                                        {/* <div className={`formInputBox ${styles.passwordInputBox}`}>
                                                             <div className={styles.IconDiv}>
                                                                 <AllIconsComponenet height={20} width={20} iconName={'email'} color={'#808080'} />
                                                             </div>
-                                                            <input className={`formInput ${storeData.loginWithoutPassword == true && `${styles.disableFormInput}`}`} id="email" type="email" name="email" title="Email" placeholder=' '
+                                                            <input className={`formInput`} id="email" type="email" name="email" title="Email" placeholder=' '
                                                                 value={email}
                                                                 onChange={(e) => setEmail(e.target.value)}
-                                                                disabled={storeData.loginWithoutPassword == true}
+                                                                // disabled={storeData.loginWithoutPassword == true}
                                                             />
-                                                            <label className='formLabel' htmlFor="Phone">الايميل الجديد</label>
+                                                            <label className='formLabelAccountInfo' htmlFor="Phone">الايميل الجديد</label>
+                                                        </div> */}
+
+                                                    <div className='formInputBox'>
+                                                        <div className='formInputIconDiv'>
+                                                            <AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
                                                         </div>
-                                                        {isEmailError && <p className={styles.errorText}>Email is not valid</p>}
+                                                        <input className={`formInput ${emailError || isEmailError ? `formInputError` : `formInputText`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+                                                        <label className={`formLabel ${emailError || isEmailError ? `formInputPlaceHolderError` : `formInputLabel`}`} htmlFor="email">{AccountInformationConst.emailLabel}</label>
+                                                    </div>
+
+                                                        {emailError ? <p className={styles.errorText}>{AccountInformationConst.emailError}</p> : isEmailError == true && <p className={styles.errorText}>{AccountInformationConst.emptyEmailError}</p>}
                                                         <div className={styles.submitBtnBox}>
-                                                            <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} disabled={isEmailError || storeData.loginWithoutPassword == true}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ</button>
+                                                            <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} disabled={emailError || storeData.loginWithoutPassword == true}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} {AccountInformationConst.submitBtn}</button>
+                                                        </div>
+                                                        <div className={styles.submitBtnBox}>
+                                                            <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => setSectionType('default')}>{AccountInformationConst.cancelBtn}</button>
                                                         </div>
                                                     </div>
                                                     : sectionType == 'password' ?
@@ -329,25 +371,26 @@ export default function AccountInformation() {
                                                                 <h3>تأكيد كلمة السر</h3>
                                                             </div>
                                                             <p>دخل كلمة السر عشان تقدر تعدل ايميلك</p>
-                                                            <div className={`formInputBox ${styles.passwordInputBox}`}>
+                                                            <div className={`formInputBox`}>
                                                                 <div className={styles.IconDiv}>
-                                                                    <AllIconsComponenet height={18} width={16} iconName={'lock'} color={'#808080'} />
+                                                                    <AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
                                                                 </div>
-                                                                <input className='formInput' id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} name="password" title="Password" placeholder=' ' />
-                                                                <label className={`formLabel ${styles.formInputLable}`} htmlFor="Password">كلمة السر</label>
+                                                                <input className={`formInput ${passwordError || isPasswordError ? `formInputError` : `formInputText`}`} id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} name="password" title="Password" placeholder=' ' />
+                                                                <label className={`formLabel ${passwordError || isPasswordError ? `formInputPlaceHolderError` : `formInputLabel`}`} htmlFor="Password">كلمة السر</label>
                                                                 <div className={styles.passwordIconDiv}>
                                                                     {!showPassword ?
                                                                         <div onClick={() => setShowPassword(true)}>
-                                                                            <AllIconsComponenet height={14} width={17} iconName={'visibilityIcon'} color={'##00008a'} />
+                                                                            <AllIconsComponenet height={24} width={24} iconName={'visibilityIcon'} color={'#808080'} />
                                                                         </div>
                                                                         :
                                                                         <div onClick={() => setShowPassword(false)}>
-                                                                            <AllIconsComponenet height={14} width={17} iconName={'visibilityOffIcon'} color={'##00008a'} />
+                                                                            <AllIconsComponenet height={24} width={24} iconName={'visibilityOffIcon'} color={'#808080'} />
                                                                         </div>
                                                                     }
                                                                 </div>
                                                             </div>
-                                                            {isPasswordError && <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة </p>}
+                                                            {/* {isPasswordError && <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة </p>} */}
+                                                            {passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة </p>}
                                                             <div className={styles.submitBtnBox}>
                                                                 <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleCheckPassword()}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ </button>
                                                             </div>

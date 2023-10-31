@@ -91,15 +91,21 @@
 }
 
 .existingDetailText {
-	font-size: 15px;
-	color: #00000080;
+	// font-size: 15px;
+	// color: #00000080;
 	margin-bottom: -0.5rem;
+	color: var(--Black_Used, #191919); 
+font-family: Tajawal;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: normal; 
 }
 
 .IconDiv {
 	margin: auto 0;
 	position: absolute;
-	top: 0.8rem;
+	top: 0.6rem;
 	right: 0.5rem;
 }
 
@@ -131,11 +137,14 @@
 }
 
 .submitBtnBox {
-	width: 19.8rem;
-	height: 47px;
-
+	// width: 19.8rem;
+	// height: 47px;
+	width: 22.25rem;
+	height: 2.75rem;
+	
 	button {
-		font-size: 16px;
+		font-size: 18px;
+		font-weight: 500; 
 	}
 }
 
@@ -203,8 +212,8 @@
 .passwordIconDiv {
 	margin: auto 0;
 	position: absolute;
-	top: 0.8rem;
-	right: 17.5rem;
+	top: 0.6rem;
+	right: 20rem;
 	cursor: pointer;
 }
 
@@ -213,11 +222,29 @@
 }
 
 .errorText {
-	color: rgb(211, 47, 47);
+	color: var(--Red, #E5342F);
 	font-size: 0.75rem;
 	line-height: 1.66;
 	letter-spacing: 0.03333em;
-	margin-top: -1rem;
+	margin-top: -0.5rem;
+	margin-bottom: 1.1rem;
+}
+
+
+.cancelBtn{
+background: var(--White_Used, #FFF);
+color: var(--Black_Used, #191919);
+text-align: center;
+font-size: 16px;
+width: 22.25rem;
+height: 2.63rem;
+padding: 12px; 
+border: none;
+display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18px;
+  cursor: pointer;
 }
 
 
@@ -263,3 +290,6 @@
 		border-right: 0px solid #F26722;
 	}
 }
+
+
+

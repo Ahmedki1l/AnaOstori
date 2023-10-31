@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const paymentStateConst = {
 
 }
@@ -18,3 +20,15 @@ export const inqPaymentStateConst = {
     rejected: 'ملغي',
     failed: 'مرفوضة',
 }
+
+
+export const generateLink = (link, text, additionalText) => {
+    return (
+      <div>
+        <Link className='link' href={link} target='_blank'>
+          {text}
+        </Link>
+        &nbsp; {additionalText}
+      </div>
+    );
+  };
