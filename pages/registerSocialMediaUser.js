@@ -147,7 +147,7 @@ export default function RegisterWithGoogleAndApple() {
                 </div>
                 {!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
                 <div className={styles.loginBtnBox}>
-                    <button className='primarySolidBtn' name="submit" type='submit' onClick={handleSignIn} >{loading ? <Image src={loader} width={40} height={25} alt="Loder Picture" /> : ""} حفظ</button>
+                    <button className='primarySolidBtn' name="submit" type='submit' onClick={handleSignIn} >{loading ? <Image src={loader} width={40} height={25} alt="Loder Picture" /> : ""}إنشاء حساب</button>
                 </div>
             </div>
         </div>

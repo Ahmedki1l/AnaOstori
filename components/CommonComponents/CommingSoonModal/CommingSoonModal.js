@@ -40,7 +40,7 @@ function CommingSoonModal(props) {
                     <div className={styles.lockIconWrapper}>
                         <AllIconsComponenet height={30} width={30} iconName={'lock2'} color={'#FFFFFF'} />
                     </div>
-                    <p className={`fontBold pt-2 ${styles.modalTitleText}`}> التسجيل غير متاح حاليًا </p>
+                    <p className={`fontBold pt-3 ${styles.modalTitleText}`}> التسجيل غير متاح حاليًا </p>
                 </div>
                 <p className={styles.modalParaText}>
                     شكرًا لإهتمامك، قاعدين نطبخ المنهج على نار هادية 👨‍🍳، تفضل تصفح باقي المجالات والدورات إلى ما نجهز الطبخة

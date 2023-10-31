@@ -480,8 +480,6 @@
 .formInputIconDiv {
 	margin: auto 0;
 	position: absolute;
-	// top: 1rem;
-	// right: 0.5rem;
 	display: grid;
 	right: 1rem;
 }
@@ -631,7 +629,13 @@
 	}
 }
 
-
+@media(max-width: 410px) {
+	.addAppoinmentModal {
+		.ant-modal-content {
+			width: 100%;
+		}
+	}
+}
 
 
 @media (max-width: 1350px) {

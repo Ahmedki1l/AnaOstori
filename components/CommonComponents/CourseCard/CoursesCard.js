@@ -16,6 +16,7 @@ export default function CoursesCard(props) {
 	const contentAccess = props?.data?.availability?.contentAccess
 	const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
 	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/anaOstori.png'
+	const daysLeft = props?.data?.daysLeft
 
 	const date = props?.data?.availability
 	useEffect(() => {
@@ -46,7 +47,7 @@ export default function CoursesCard(props) {
 					<h1 className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</h1>
 					<div className={styles.subscriptionText}>
 						<AllIconsComponenet height={14} width={14} iconName={'calander'} color={'#000000'} />
-						<p className='px-2'>{courseDetails.type == "on-demand" ? `ينتهي اشتراكك بعد ${subscriptionDaysLeft} يوم` : `من ${dateWithDay(date?.dateFrom)}إلى ${dateWithDay(date?.dateTo)}`}</p>
+						<p className='px-2'>{courseDetails.type == "on-demand" ? `ينتهي اشتراكك بعد ${daysLeft} يوم` : `من ${dateWithDay(date?.dateFrom)}إلى ${dateWithDay(date?.dateTo)}`}</p>
 					</div>
 
 					{courseDetails.type == "on-demand" ?
