@@ -40,9 +40,9 @@ export default function CourseDates(props) {
 				<li>
 					<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderStroked'} color={'#000000'} />
 					{lang == 'en' ?
-						<p className={`fontMedium ${styles.listItemText}`}>{enDateWithDay(date?.dateFrom)} - {enDateWithDay(date?.dateTo)} </p>
+						<p className={`fontMedium ${styles.listItemText}`}>From {enDateWithDay(date?.dateFrom)}  To  &nbsp;{enDateWithDay(date?.dateTo)} </p>
 						:
-						<p className={`fontMedium ${styles.listItemText}`}> {dateWithDay(date?.dateFrom)} - {dateWithDay(date?.dateTo)} </p>
+						<p className={`fontMedium ${styles.listItemText}`}>من {dateWithDay(date?.dateFrom)} &nbsp; إلى  {dateWithDay(date?.dateTo)} </p>
 					}
 				</li>
 				<li>
@@ -50,7 +50,7 @@ export default function CourseDates(props) {
 					{lang == 'en' ?
 						<p className={`fontMedium ${styles.listItemText}`}>{enTimeDuration(date.timeFrom, date.timeTo)}</p>
 						:
-						<p className={`fontMedium ${styles.listItemText}`}> {timeDuration(date.timeFrom, date.timeTo)}</p>
+						<p className={`fontMedium ${styles.listItemText}`}> من {timeDuration(date.timeFrom, date.timeTo)}</p>
 					}
 				</li>
 				<li>
@@ -91,7 +91,7 @@ export default function CourseDates(props) {
 					{date.instructors.map((instructor, index) => {
 						return (
 							<div className={styles.instructorWrapper} key={`instructor${index}`}>
-								<ProfilePicture height={isSmallScreen ? 20 : 40} width={isSmallScreen ? 20 : 40} alt={'Profile Picture'} pictureKey={(instructor.avatarBucket && instructor.avatarKey) ? mediaUrl(instructor.avatarBucket, instructor.avatarKey) : '/images/anaOstori2.png'} />
+								<ProfilePicture height={isSmallScreen ? 20 : 38} width={isSmallScreen ? 20 : 38} alt={'Profile Picture'} pictureKey={(instructor.avatarBucket && instructor.avatarKey) ? mediaUrl(instructor.avatarBucket, instructor.avatarKey) : '/images/anaOstori2.png'} />
 								< div >
 									{instructor?.ProfileFileKey == null ?
 										<p className='px-2 fontMedium'>{instructor.name}</p>

@@ -37,5 +37,5 @@ export const enDateWithDay = (date) => {
 export const enTimeDuration = (timeFrom, timeTo) => {
     const enStartTime = new Date('1970-01-01T' + timeFrom + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
     const enEndTime = new Date('1970-01-01T' + timeTo + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })
-    return `${enStartTime} - ${enEndTime}`
+    return `From ${enStartTime} to ${enEndTime}`
 }

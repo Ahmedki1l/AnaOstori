@@ -53,6 +53,7 @@ const DatePicker = ({
       picker={picker}
       disabledDate={disabledDate}
       disabled={disabled}
+      placement={'bottomRight'}
       suffixIcon={<AllIconsComponenet height={16} width={16} iconName={suFFixIconName} color={'#00000080'} />}
       placement={'bottomRight'}
       {...rest}
