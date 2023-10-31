@@ -14,8 +14,21 @@ import { getAuthRouteAPI, getRouteAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
+import { ConfigProvider, Drawer } from 'antd';
+import styled from 'styled-components';
 
-
+const StyledDrawer = styled(Drawer)`
+   width: 305px !important;
+   
+  .ant-drawer-body{
+	padding: 0px !important;
+  }
+  .ant-drawer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+`
 
 export default function Navbar() {
 
@@ -242,41 +255,53 @@ export default function Navbar() {
 					<Link href={'/'} className='pt-1'>
 						<Logo height={34} width={62} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
 					</Link>
-					<div className={`p-1 ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
+					<div className={`p-1 cursor-pointer ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
 						<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />
 					</div>
 					{isMenuShow &&
-						<div className={styles.slideBarBg}>
-							<div className={styles.slideBarBg}>
+						<ConfigProvider direction='rtl'>
+							<StyledDrawer
+								open={isMenuShow}
+								closable={false}
+								onClose={() => setIsMenuShow(false)}
+								title={
+									<div className={styles.mobileMemuHead}>
+										<div className='cursor-pointer' onClick={() => setIsMenuShow(!isMenuShow)}>
+											<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />
+										</div>
+										<p className=' text-xl '>القائمة</p>
+									</div>
+								}
+							>
 								<div className={styles.sildeBarMenu}>
-									<p className='fontBold text-center py-3 border-b border-inherit'>القائمة</p>
-									<div className='border-b border-inherit'></div>
+									<div className='border-b border-inherit mb-2'></div>
 									{!storeData?.accessToken &&
 										<div className={styles.loginBtnsBox}>
 											<div className={styles.loginBtnBox} onClick={() => handleClickOnLink()}>
-												<Link href={"/login"} className='normalLinkText' >
+												<Link href={"/register"} className='normalLinkText' >
 													<button className={`primaryStrockedBtn ${styles.loginBtn}`}>تسجيل الدخول</button>
 												</Link>
 											</div>
 											<div className={styles.signupBtnBox} onClick={() => handleClickOnLink()}>
-												<Link href={"/register"} className='normalLinkText'>
+												<Link href={"/login"} className='normalLinkText'>
 													<button className={`primarySolidBtn ${styles.signupBtn}`}>إنشاء حساب</button>
 												</Link>
 											</div>
 										</div>}
 									<div className={`p-4 ${styles.mainMenuWrapper}`}>
-										<Link href={'/'} onClick={() => handleClickOnLink()} className={styles.homeText}>الرئيسية </Link>
+										<p onClick={() => handleClickOnLink()} className={`cursor-pointer ${styles.homeText}`}>الرئيسية</p>
+										{/* <Link href={'/'} onClick={() => handleClickOnLink()} className={styles.homeText}>الرئيسية </Link> */}
 									</div>
 									<div className='border-b border-inherit'></div>
 									<ul className={styles.navbarSubWrapper}>
 										{catagories?.map((menu, i = index) => {
 											return (
 												<li className={`border-b border-inherit w-full list-none`} key={`navMenu${i}`}>
-													<div className={`flex items-center ${styles.mainMenuWrapper}`} onClick={() => handleshowSubMenu(i)}>
-														<p className={`py-4 pr-4  ${catagoryName == menu.name ? 'fontBold' : 'fontRegular'}`}>
+													<div className={`flex items-center cursor-pointer ${styles.mainMenuWrapper}`} onClick={() => handleshowSubMenu(i)}>
+														<p className={`p-4 text-lg ${catagoryName == menu.name ? 'fontBold' : 'fontRegular'}`}>
 															{stringUpdation(menu.name, 35)}
 														</p>
-														<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
+														<AllIconsComponenet height={24} width={24} iconName={showSubMenu == i ? 'newUpArrowIcon' : 'newDownArrowIcon'} color={'#000000'} />
 													</div>
 													{showSubMenu == i &&
 														<div className={styles.slideSubMenuBox}>
@@ -301,8 +326,8 @@ export default function Navbar() {
 										})}
 									</ul>
 								</div>
-							</div>
-						</div>
+							</StyledDrawer>
+						</ConfigProvider>
 					}
 				</div>
 				:

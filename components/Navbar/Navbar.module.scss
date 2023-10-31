@@ -70,7 +70,9 @@
 }
 
 .arrowIcon {
-	font-size: 19px;
+	cursor: pointer;
+	height: 22px;
+	transition: all 0.5s;
 }
 
 .navItem {
@@ -225,10 +227,6 @@
 		font-size: 15px;
 	}
 
-	.homeText {
-		font-size: 15px;
-	}
-
 	.menuItem {
 		margin: 0 0 0 0.7rem;
 		min-width: 130px;
@@ -277,12 +275,21 @@
 		top: 11px;
 	}
 
+	.mobileMemuHead {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 60%;
+		height: 20px;
+		margin-right: -8px;
+	}
+
 	.menuBtn {
 		position: absolute;
-		right: 10px;
-		top: 8px;
+		top: 3px;
 		font-size: 2rem !important;
 		z-index: 100;
+		right: 12px;
 	}
 
 	.slideBarBg {
@@ -291,12 +298,6 @@
 		width: 100vw;
 		height: 100vh;
 		z-index: 99;
-	}
-
-	.sildeBarMenu {
-		background-color: #ffffff;
-		width: 300px;
-		height: 100vh;
 	}
 
 	.inqBtnBox {
@@ -337,7 +338,7 @@
 	}
 
 	.subMenuText {
-		padding: 1rem 2rem 1rem 1rem;
+		padding: 1rem 2rem;
 		text-decoration: none;
 		color: #000000;
 		cursor: pointer;
@@ -353,7 +354,6 @@
 	.loginBtnBox,
 	.signupBtnBox {
 		width: 100%;
-		margin: 0 0 1rem 0;
+		margin: 0 0 1rem;
 	}
-
 }
