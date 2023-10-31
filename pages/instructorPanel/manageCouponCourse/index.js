@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { ConfigProvider, Drawer, Form, Table, Tag } from 'antd'
+import { ConfigProvider, Drawer, Table, Tag } from 'antd'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import styled from 'styled-components'
@@ -11,10 +11,8 @@ import styles from '../../../styles/InstructorPanelStyleSheets/ManageCouponCours
 import Empty from '../../../components/CommonComponents/Empty'
 import { useSelector } from 'react-redux'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
+import { couponTypes, manageCouponConst } from '../../../constants/adminPanelConst/couponConst/couponConst'
 
-const DrawerTiitle = styled.p`
-    font-size:20px
-`
 
 const Index = () => {
 
@@ -36,7 +34,7 @@ const Index = () => {
             isDeleted: true,
         }
         await postRouteAPI(data).then((res) => {
-            console.log(res);
+            getCouponList()
         }).catch((err) => {
             console.log(err);
         })
@@ -57,6 +55,14 @@ const Index = () => {
         {
             title: 'نوع الخصم',
             dataIndex: 'type',
+            render: (text) => {
+                const couponType = couponTypes.find((item) => {
+                    return item.value == text
+                })
+                return (
+                    <p>{couponType.label}</p>
+                )
+            }
         },
         {
             title: 'تاريخ الانتهاء',
@@ -181,7 +187,6 @@ const Index = () => {
     )
 
     const selectedCouponStatusLable = selectedCoupon?.status == true ? { label: 'مفعل', color: 'green' } : { label: 'منتهي', color: 'red' }
-
     return (
         <div>
             <div className='maxWidthDefault px-4'>
@@ -202,37 +207,35 @@ const Index = () => {
                         <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة مجال</button>
                     </div>
                 </div>
-                <ConfigProvider direction="rtl">
-                    <Table
-                        columns={tableColumns}
-                        minheight={400}
-                        dataSource={listOfCoupon}
-                        locale={{ emptyText: customEmptyComponent }}
-                    />
-                    {drawerForCouponCourse &&
-                        <Drawer
-                            closable={false}
-                            open={drawerForCouponCourse}
-                            onClose={onClose}
-                            width={480}
-                            placement={'right'}
-                            title={
-                                <>
-                                    <DrawerTiitle className="foneBold">{selectedCoupon ? 'تعديل الكوبون' : 'إضافة كوبون'}</DrawerTiitle>
-                                </>
-                            }
-                            extra={
-                                <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable.color}>{selectedCouponStatusLable?.label}</Tag>
-                            }
-                        >
-                            <ManageCouponCourseDrawer
-                                selectedCoupon={selectedCoupon}
-                                getCouponList={getCouponList}
-                                setDrawerForCouponCourse={setDrawerForCouponCourse}
-                                category={category}
-                            />
-                        </Drawer>}
-                </ConfigProvider>
+                <Table
+                    columns={tableColumns}
+                    minheight={400}
+                    dataSource={listOfCoupon}
+                    locale={{ emptyText: customEmptyComponent }}
+                />
+                {drawerForCouponCourse &&
+                    <Drawer
+                        closable={false}
+                        open={drawerForCouponCourse}
+                        onClose={onClose}
+                        width={480}
+                        placement={'right'}
+                        title={
+                            <div className={styles.drawerHeadingArea}>
+                                <p className={`fontBold ${styles.drawerTitle}`}>{selectedCoupon ? manageCouponConst.updateCouponHead : manageCouponConst.createCouponHead}</p>
+                                {selectedCoupon && <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable.color}>{selectedCouponStatusLable?.label}</Tag>}
+                            </div>
+                        }
+
+                    >
+                        <ManageCouponCourseDrawer
+                            selectedCoupon={selectedCoupon}
+                            getCouponList={getCouponList}
+                            setDrawerForCouponCourse={setDrawerForCouponCourse}
+                            category={category}
+                        />
+                    </Drawer>
+                }
                 {ismodelForDeleteItems &&
                     <ModelForDeleteItems
                         ismodelForDeleteItems={ismodelForDeleteItems}

@@ -39,28 +39,12 @@
 
 @media(max-width: 664px) {
     .commingSoonModalBox {
-        width: 390px;
+        width: 358px;
     }
 }
 
-@media(max-width: 450px) {
+@media (max-width :450px) {
     .commingSoonModalBox {
-        width: 360px;
-    }
-}
-
-@media(max-width: 400px) {
-    .commingSoonModalBox {
-        width: 300px;
-    }
-}
-
-@media(max-width: 320px) {
-    .modalTitleText {
-        font-size: 21px;
-    }
-
-    .commingSoonModalBox {
-        width: 260px;
+        width: 100%;
     }
 }

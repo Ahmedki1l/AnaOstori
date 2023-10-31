@@ -3,6 +3,17 @@
     justify-content: space-between;
 }
 
+.drawerHeadingArea {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drawerTitle {
+    font-size: 18px;
+}
+
 .createCourseBtnBox {
     width: 105px;
     height: 36px;
@@ -34,4 +45,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 5px;
+}
+
+.couponBtnBox {
+    height: 19px;
+    width: 425px;
+    margin-top: 15px;
 }

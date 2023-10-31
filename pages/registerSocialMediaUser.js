@@ -8,6 +8,8 @@ import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import * as fbq from '../lib/fpixel'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
+import loader from '../public/icons/loader.svg'
 
 export default function RegisterWithGoogleAndApple() {
 
@@ -108,7 +110,7 @@ export default function RegisterWithGoogleAndApple() {
     return (
         <div className={`relative ${styles.socialMediaMainPage}`}>
             <div className={styles.loginFormDiv}>
-                <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
+                <h1 className={`fontMedium ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
                 <p className={`p-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
                 <div className='flex'>
                     <p style={{ color: 'red' }} >ملاحظة:</p>
@@ -140,12 +142,12 @@ export default function RegisterWithGoogleAndApple() {
                     <div className='formInputIconDiv'>
                         <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
                     </div>
-                    <input className={`formInput ${styles.loginFormInput} ${phoneNumberError && `${styles.inputError}`}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                    <input className={`formInput ${styles.loginFormInput} ${phoneNumberError && `${styles.inputError}`}`} name='phoneNo' id='phoneNo' type="number" inputMode='tel' value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
                     <label className={`formLabel ${styles.loginFormLabel} ${phoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
                 </div>
                 {!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
                 <div className={styles.loginBtnBox}>
-                    <button className='primarySolidBtn' type='submit' onClick={handleSignIn} disabled={loading}>إنشاء حساب</button>
+                    <button className='primarySolidBtn' name="submit" type='submit' onClick={handleSignIn} >{loading ? <Image src={loader} width={40} height={25} alt="Loder Picture" /> : ""}إنشاء حساب</button>
                 </div>
             </div>
         </div>

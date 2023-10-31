@@ -174,7 +174,7 @@ const UpdateProfile = () => {
                                         <div className={`formInputIconDiv`}>
                                             <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#00000080'} />
                                         </div>
-                                        <input className={`formInput ${styles.loginFormInput}  ${phoneNumberError && styles.inputError}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                                        <input className={`formInput ${styles.loginFormInput}  ${phoneNumberError && styles.inputError}`} name='phoneNo' inputMode='tel' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
                                         <label className={`formLabel  ${styles.loginFormLabel} ${phoneNumberError && styles.inputPlaceHoldererror}`} htmlFor="phoneNo">{updateProfileConst.phoneNumberPlaceHolder}</label>
                                     </div>
                                     {phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>{inputErrorMessages.phoneNoFormateMsg}</p>}

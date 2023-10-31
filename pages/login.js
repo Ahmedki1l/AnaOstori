@@ -177,7 +177,7 @@ export default function Login() {
 				:
 				<div className={`relative ${styles.loginMainPage}`}>
 					<div className={styles.loginFormDiv}>
-						<h1 className={`fontBold ${styles.loginPageHead}`}>تسجيل الدخول</h1>
+						<h1 className={`fontMedium ${styles.loginPageHead}`}>تسجيل الدخول</h1>
 						<p>خلنا نكمل قصة نجاحك اللي بديناها سوا ✨</p>
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
@@ -213,7 +213,7 @@ export default function Login() {
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
-							<p className={`fontBold ${styles.andText}`}>أو</p>
+							<p className={styles.andText}>أو</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />
