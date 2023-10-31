@@ -17,9 +17,15 @@
     border: 0.5px solid rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     overflow: hidden;
-    margin: 0 1rem 0 0;
 }
 
+.englishDateBox {
+    margin-right: 15px;
+}
+
+.arDateBox {
+    margin-left: 15px;
+}
 
 .dateBoxHeader {
     height: 80px;
@@ -165,14 +171,19 @@
 }
 
 .instructorWrapper {
-    width: 188px;
+    width: 90%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+}
+
+.instructorRoleText {
+    font-size: 14px;
 }
 
 @media (max-width: 640px) {
     .dateBox {
-        width: 350px;
+        width: 326px;
     }
 
     .dateBoxHeaderText {
@@ -180,7 +191,7 @@
     }
 
     .listItemText {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .icons {
@@ -203,5 +214,13 @@
         p {
             font-size: 13px;
         }
+    }
+
+    .instructorName {
+        font-size: 14px;
+    }
+
+    .instructorRoleText {
+        font-size: 12px;
     }
 }
