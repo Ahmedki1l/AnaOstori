@@ -132,8 +132,12 @@
 }
 
 .detailsText {
-	font-size: 20px;
+	font-size: 18px;
 	text-align: center;
+}
+
+.peragraph {
+	width: 360px;
 }
 
 .btnWrapper {
@@ -144,7 +148,7 @@
 .submitBtnBox,
 .cancleBtnBox {
 	height: 45px;
-	width: 245px;
+	width: 360px;
 
 	button {
 		font-size: 16px;
@@ -312,15 +316,6 @@
 
 		th {
 			width: 112px;
-		}
-	}
-
-	.btnWrapper {
-		width: 100%;
-
-		.submitBtnBox,
-		.cancleBtnBox {
-			width: 49%;
 		}
 	}
 }
