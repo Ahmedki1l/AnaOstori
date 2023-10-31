@@ -614,24 +614,30 @@
 // ******************************************** add Appoinment Modal SCSS**************************************************** //
  
 .addAppoinmentModal {
-    .ant-modal-content {
-        padding: 0;
-        width: 388px;
-        border-radius: 3px;
-    }
- 
-    .ant-modal-close {
-        display: none;
-    }
- 
-    .ant-modal-footer {
-        margin-top: 2px;
-    }
+	.ant-modal-content {
+		padding: 0;
+		width: 388px;
+		border-radius: 3px;
+	}
+
+	.ant-modal-close {
+		display: none;
+	}
+
+	.ant-modal-footer {
+		margin-top: 2px;
+	}
 }
- 
- 
- 
- 
+
+@media(max-width: 410px) {
+	.addAppoinmentModal {
+		.ant-modal-content {
+			width: 100%;
+		}
+	}
+}
+
+
 @media (max-width: 1350px) {
     .head1 {
         font-size: 32px;

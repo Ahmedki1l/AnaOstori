@@ -132,8 +132,12 @@
 }
 
 .detailsText {
-	font-size: 20px;
+	font-size: 18px;
 	text-align: center;
+}
+
+.peragraph {
+	width: 360px;
 }
 
 .btnWrapper {
@@ -144,7 +148,7 @@
 .submitBtnBox,
 .cancleBtnBox {
 	height: 45px;
-	width: 245px;
+	width: 360px;
 
 	button {
 		font-size: 16px;
@@ -183,11 +187,12 @@
 	}
 
 	.tableAreaDiv {
-		border-radius: 10px;
+		border-radius: 4px;
 		overflow: hidden;
-		width: 380px;
+		width: 358px;
 		margin: 1rem auto;
-		border: 1px solid black;
+		border: 0.5px solid #808080;
+
 	}
 
 	.rowDiv {
@@ -196,16 +201,39 @@
 		border-collapse: collapse;
 		border-right: hidden;
 
+		tr {
+			height: 66px;
+		}
+
 		th {
 			width: 127px;
-			border: 1px solid black;
+			border: 0.5px solid #808080;
 			border-top: none;
+			background-color: #F7F7F7;
+			padding: 5px;
+			font-weight: 500;
+			font-size: 14px;
 		}
 
 		td {
-			border: 1px solid black;
+			width: 231px;
+			border: 0.5px solid #808080;
 			border-top: none;
-			padding: 0 1rem;
+			padding: 5px 1rem;
+			font-weight: 400;
+			font-size: 14px;
+
+			p {
+				line-height: 1.2;
+			}
+		}
+
+		tr:last-child {
+
+			td,
+			th {
+				border-bottom: none;
+			}
 		}
 	}
 }
@@ -236,6 +264,10 @@
 }
 
 @media (max-width: 640px) {
+	.headText {
+		padding: 2.2rem 0;
+	}
+
 	.noSearchdataContainer {
 		padding: 9rem 0 0 0;
 
@@ -284,15 +316,6 @@
 
 		th {
 			width: 112px;
-		}
-	}
-
-	.btnWrapper {
-		width: 100%;
-
-		.submitBtnBox,
-		.cancleBtnBox {
-			width: 49%;
 		}
 	}
 }

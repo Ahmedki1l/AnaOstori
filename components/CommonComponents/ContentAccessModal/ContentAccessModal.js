@@ -1,7 +1,6 @@
 import { Modal } from 'antd'
 import React from 'react'
 import styles from './ContentAccessModal.module.scss'
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { contentAccessPopUPConst } from '../../../constants/ar'
 
 const ContentAccessModal = ({
@@ -16,7 +15,7 @@ const ContentAccessModal = ({
     return (
         <div>
             <Modal
-                className='addAppoinmentModal'
+                className={'addAppoinmentModal'}
                 open={isModelForcontentAccess}
                 onCancel={isModelClose}
                 closeIcon={false}
