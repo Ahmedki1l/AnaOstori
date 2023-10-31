@@ -41,17 +41,6 @@ const Input = ({
   ...rest
 }) => {
 
-  const [inputValue, setInputValue] = useState()
-  const handleInputChange = (e) => {
-    if ((e > maxValue) || (Number(e).toString().split('.')[1]?.length > 2)) {
-      return
-    }
-    setInputValue(e)
-  }
-
-  useEffect(() => {
-    setInputValue(value)
-  }, [value])
 
   return (
     <AntdInputStyle
@@ -63,8 +52,7 @@ const Input = ({
       width={width}
       padding={padding}
       fontSize={fontSize}
-      value={inputValue}
-      onChange={e => handleInputChange(e.target.value)}
+      value={value}
     />
   )
 }
