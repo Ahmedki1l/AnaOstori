@@ -16,6 +16,10 @@ import Spinner from "../components/CommonComponents/spinner";
 
 const StyledTag = styled(Tag)`
 	font-family: 'Tajawal-Regular';
+	height: 37px;
+	align-items: center;
+    display: flex;
+    width: max-content;
 `
 
 export default function PurchaseInquiry(props) {
@@ -66,7 +70,7 @@ export default function PurchaseInquiry(props) {
 				<div className={`maxWidthDefault`}>
 					{(searchData.length > 0 && !isMediumScreen) ?
 						<table className={styles.tableArea}>
-							<thead className={styles.thead}>
+							<thead className={styles.tableHead}>
 								<tr>
 									<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
 									<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
@@ -219,14 +223,14 @@ export default function PurchaseInquiry(props) {
 													<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
 													<td className={styles.tbodyInvoice}>
 														{(data?.status == "accepted" && data?.invoiceKey) ?
-															<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center justify-center normalLinkText">
-																<div style={{ height: '30px' }}>
-																	<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
+															<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center normalLinkText">
+																<div style={{ height: '34px' }}>
+																	<AllIconsComponenet height={14} width={14} iconName={'downloadIcon'} color={'#0075FF'} />
 																</div>
 																<p className={` mr-2 ${styles.downloadSearchText}`}>تحميل الفاتورة</p>
 															</Link>
 															:
-															<div>Invoice not generated</div>
+															<div>الفاتورة تظهر بعد تأكيد الحوالة</div>
 														}
 													</td>
 												</tr>
