@@ -51,10 +51,9 @@ export default function AccountInformation() {
 
     useEffect(() => {
 
-        // if (!email?.length && !userProfileData?.email) {
-        //     setIsEmailError(true)
-        // }
-
+        if (email) {
+            setIsEmailError(false)
+        }
 
         if (password) {
 			setPasswordError(false)
@@ -352,8 +351,8 @@ export default function AccountInformation() {
                                                         <div className='formInputIconDiv'>
                                                             <AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
                                                         </div>
-                                                        <input className={`formInput ${emailError || isEmailError ? `formInputError` : `formInputText`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-                                                        <label className={`formLabel ${emailError || isEmailError ? `formInputPlaceHolderError` : `formInputLabel`}`} htmlFor="email">{AccountInformationConst.emailLabel}</label>
+                                                        <input className={`formInput ${emailError || isEmailError ? `${styles.formInputError}` : `${styles.formInputText}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+                                                        <label className={`formLabel ${emailError || isEmailError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="email">{AccountInformationConst.emailLabel}</label>
                                                     </div>
 
                                                         {emailError ? <p className={styles.errorText}>{AccountInformationConst.emailError}</p> : isEmailError == true && <p className={styles.errorText}>{AccountInformationConst.emptyEmailError}</p>}
@@ -375,8 +374,8 @@ export default function AccountInformation() {
                                                                 <div className={styles.IconDiv}>
                                                                     <AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
                                                                 </div>
-                                                                <input className={`formInput ${passwordError || isPasswordError ? `formInputError` : `formInputText`}`} id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} name="password" title="Password" placeholder=' ' />
-                                                                <label className={`formLabel ${passwordError || isPasswordError ? `formInputPlaceHolderError` : `formInputLabel`}`} htmlFor="Password">كلمة السر</label>
+                                                                <input className={`formInput ${passwordError || isPasswordError ? `${styles.formInputError}` : `${styles.formInputText}`}`} id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} name="password" title="Password" placeholder=' ' />
+                                                                <label className={`formLabel ${passwordError || isPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="Password">كلمة السر</label>
                                                                 <div className={styles.passwordIconDiv}>
                                                                     {!showPassword ?
                                                                         <div onClick={() => setShowPassword(true)}>

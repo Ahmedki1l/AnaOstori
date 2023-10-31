@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { managePurchaseOrderConst } from "../../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst";
 
 const DrawerTiitle = styled.p`
-    font-size:20px
+font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
 `
 
 const Index = () => {
@@ -132,7 +132,7 @@ const Index = () => {
             render: (text, _record) => {
                 const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
                     _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
-                    (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'applePayment')
+                    (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'inAppPurchaseIcon')
                 return (
                     <AllIconsComponenet iconName={paymentMode} height={18} width={18} />
                 )
@@ -277,8 +277,8 @@ const Index = () => {
                     <Drawer
                         title={
                             <>
-                                <DrawerTiitle className="foneBold">{managePurchaseOrderConst.purchaseOrderDrawerTitle}</DrawerTiitle>
-                                <DrawerTiitle className="foneBold">#{selectedOrder.id}</DrawerTiitle>
+                                <DrawerTiitle className="fontBold">{managePurchaseOrderConst.purchaseOrderDrawerTitle}</DrawerTiitle>
+                                <DrawerTiitle className="fontBold">#{selectedOrder.id}</DrawerTiitle>
                             </>
                         }
                         closable={false}

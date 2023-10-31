@@ -27,3 +27,19 @@ export const secondsToMinutes = (seconds) => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
+
+export const countRemainingDays = (date) => {
+    const days = Math.floor((new Date(date) - new Date()) / (1000 * 60 * 60 * 24));
+    if (days <= 30 && days > 10) {
+        return ` ${days} يوم`
+    }
+    else if (days <= 10 && days >= 3) {
+        return ` ${days} أيام`
+    }
+    else if (days == 2) {
+        return ` يومين`
+    }
+    else if (days == 1) {
+        return 'يوم'
+    }
+}

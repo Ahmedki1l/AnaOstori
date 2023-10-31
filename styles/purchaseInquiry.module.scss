@@ -9,6 +9,10 @@
 	padding: 5rem 0;
 }
 
+.mainLoadingPage {
+	height: 200px;
+}
+
 .searchBoxWrapper {
 	position: absolute;
 	display: flex;
@@ -50,7 +54,7 @@
 	width: 100%;
 	padding: 2rem;
 	max-width: 60rem;
-	margin: 5rem auto;
+	margin: 5rem auto 24px;
 	border-collapse: collapse;
 
 	th,
@@ -58,10 +62,6 @@
 		border: 1px solid #000000;
 		max-width: 15rem;
 		padding: 1rem;
-	}
-
-	td {
-		padding: 1rem 1rem 0 1rem;
 	}
 
 	th {
@@ -162,8 +162,8 @@
 
 @media (max-width: 1024px) {
 	.tbodyName {
-		justify-content: flex-start !important;
 		padding: 1rem !important;
+		line-height: 25px;
 	}
 
 	.theadStatus,
@@ -223,7 +223,8 @@
 	}
 
 	.tableArea {
-		font-size: 15px;
+		font-size: 14px;
+		line-height: 16.8px;
 	}
 
 	.noSearchdataContainer {
@@ -284,10 +285,6 @@
 		th {
 			width: 112px;
 		}
-	}
-
-	.rowDiv {
-		width: 320px;
 	}
 
 	.btnWrapper {

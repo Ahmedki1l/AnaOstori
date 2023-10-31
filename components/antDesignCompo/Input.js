@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input as AntdInput } from 'antd'
 import styled from 'styled-components'
 
@@ -37,9 +37,10 @@ const Input = ({
   padding,
   fontSize,
   value,
-  fieldvalue,
+  maxValue,
   ...rest
 }) => {
+
   return (
     <AntdInputStyle
       {...rest}
@@ -50,7 +51,7 @@ const Input = ({
       width={width}
       padding={padding}
       fontSize={fontSize}
-      value={fieldvalue || value}
+      value={value}
     />
   )
 }

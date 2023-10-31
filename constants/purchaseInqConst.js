@@ -15,9 +15,9 @@ export const inqTabelHeaderConst = {
 export const inqPaymentStateConst = {
     accepted: 'مؤكد',
     witing: 'بانتظار الحوالة',
-    review: 'بنراجع طلبك',
+    review: 'تحت المراجعة',
     refund: 'تم استرجاع المبلغ',
-    rejected: 'ملغي',
+    rejected: 'ملّغى',
     failed: 'مرفوضة',
 }
 

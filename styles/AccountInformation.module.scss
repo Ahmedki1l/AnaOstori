@@ -95,11 +95,7 @@
 	// color: #00000080;
 	margin-bottom: -0.5rem;
 	color: var(--Black_Used, #191919); 
-font-family: Tajawal;
 font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: normal; 
 }
 
 .IconDiv {
@@ -208,6 +204,45 @@ line-height: normal;
 	margin-right: 10px;
 }
 
+.formInputIconDiv {
+    margin: auto 0;
+    position: absolute;
+    display: grid;
+    right: 1rem;
+}
+
+.formInputText {
+	// width: 22.25rem;
+    // height: 2.75rem;
+	// padding-top: 1.4rem;
+	// padding-right: 2.2rem;
+	width: 22.25rem;
+	padding-right: 2.9rem;
+	border: 1px solid #0000001a;
+}
+
+.formInputLabel {
+	padding-right: 2rem;
+	font-size: 16px;
+	color: #00000080;
+	top: 0.9rem
+}
+
+
+.formInputError {
+	width: 22.25rem;
+    height: 2.75rem;
+	// padding-top: 1.4rem;
+	padding-right: 2.9rem;
+	border: 1px solid red;
+}
+
+.formInputPlaceHolderError {
+	padding-right: 2rem;
+	font-size: 16px;
+	color: red;
+	top: 0.9rem
+}
 
 .passwordIconDiv {
 	margin: auto 0;

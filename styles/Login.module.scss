@@ -3,7 +3,7 @@
 }
 
 .registerMainPage {
-	height: 65rem;
+	height: 70rem;
 }
 
 .socialMediaMainPage {
@@ -29,6 +29,8 @@
 .signUpPageHead {
 	font-size: 23px;
 	text-align: center;
+	margin-bottom: 8px;
+	font-weight: 500;
 }
 
 .signUpPageSubText {
@@ -42,21 +44,12 @@
 
 .loginFormInput {
 	width: 100%;
-	padding-right: 2.2rem;
+	padding-right: 2.9rem;
 	border: 1px solid #0000001a;
 }
 
 .inputError {
-	width: 100%;
-	padding-right: 2.2rem;
 	border: 1px solid red;
-}
-
-.inputPlaceHoldererror {
-	padding-right: 1.5rem;
-	font-size: 16px;
-	color: red;
-	top: 1.2rem
 }
 
 .formInputField {
@@ -66,14 +59,18 @@
 .passwordHintMsg {
 	font-size: 12px;
 	color: #808080;
-	margin-right: 2px;
+	margin: -0.7rem 2px 1rem 0;
 }
 
 .loginFormLabel {
-	padding-right: 1.5rem;
+	padding-right: 2rem;
 	font-size: 16px;
 	color: #00000080;
 	top: 1rem
+}
+
+.inputPlaceHoldererror {
+	color: red;
 }
 
 .loginPageIconDiv {
@@ -114,9 +111,10 @@
 .andText {
 	background-color: #FFFFFF;
 	margin: 0 auto;
-	width: 6rem;
+	width: 2rem;
 	text-align: center;
 	color: #00000080;
+	font-size: 14px;
 }
 
 .loginWithoutPasswordBtnBox {
@@ -159,11 +157,12 @@
 }
 
 .errorText {
-	color: rgb(211, 47, 47);
+	color: #E5342F;
 	font-size: 12px;
 	line-height: 1.66;
 	letter-spacing: 0.03333em;
 	margin-top: -0.7rem;
+	margin-bottom: 1rem;
 }
 
 .passwordIconDiv {
@@ -183,7 +182,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	height: 47px;
-	margin: .5rem 0 2rem 0;
+	margin: 0.5rem 0 1rem 0;
 	border: 1px solid #0000001a;
 	border-radius: 4px;
 	overflow: hidden;
@@ -209,31 +208,13 @@
 
 .inputErrorBox {
 	border: 1px solid red;
-	justify-content: flex-start;
-	align-items: center;
-	height: 47px;
-	margin: .5rem 0 1.5rem 0;
-	border-radius: 4px;
-	overflow: hidden;
-	border-left: none;
 
 	button {
-		background: #FFFFFF;
-		font-size: 16px;
-		line-height: 19px;
-		color: #000000;
-		width: 50%;
 		border-left: 1px solid red;
-		height: 100%;
-		cursor: pointer;
+	}
 
-		:first-child {
-			border-left: none;
-		}
-
-		span {
-			margin-right: 5px;
-		}
+	:last-child {
+		border-left: none;
 	}
 }
 
@@ -293,11 +274,11 @@
 	}
 
 	.registerMainPage {
-		height: 61rem;
+		height: 66rem;
 	}
 
 	.socialMediaMainPage {
-		height: 34rem;
+		height: 32rem;
 	}
 
 	.loginFormDiv {
@@ -308,7 +289,6 @@
 
 	.loginPageHead,
 	.signUpPageHead {
-		font-size: 24px;
 		text-align: right;
 	}
 

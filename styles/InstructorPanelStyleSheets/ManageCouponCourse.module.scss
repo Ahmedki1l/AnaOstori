@@ -3,6 +3,17 @@
     justify-content: space-between;
 }
 
+.drawerHeadingArea {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drawerTitle {
+    font-size: 18px;
+}
+
 .createCourseBtnBox {
     width: 105px;
     height: 36px;
@@ -20,4 +31,24 @@
     border: 0.5px solid #00000081;
     border-radius: 4px;
     min-height: 50px;
+}
+
+.couponHeadeArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.couponActionWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.couponBtnBox {
+    height: 19px;
+    width: 425px;
+    margin-top: 15px;
 }

@@ -18,12 +18,8 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 
-	const [emailError, setEmailError] = useState(false);
+	const [emailError, setEmailError] = useState(null);
 	const [passwordError, setPasswordError] = useState(false);
-
-	const [isEmailError, setIsEmailError] = useState(false);
-
-	const [isPasswordError, setIsPasswordError] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -40,22 +36,20 @@ export default function Login() {
 	useEffect(() => {
 
 		if (email) {
-			setEmailError(false)
+			setEmailError(null)
 		}
 		if (password) {
-			setPasswordError(false)
+			setPasswordError(null)
 		}
 		if (email && !(regexEmail.test(email))) {
-			setIsEmailError(true)
-		}
-		else {
-			setIsEmailError(false)
+			setEmailError(inputErrorMessages.enterEmailCorrectInputErrorMsg)
+		} else {
+			setEmailError(null)
 		}
 		if (password && !(regexPassword.test(password))) {
-			setIsPasswordError(true)
-		}
-		else {
-			setIsPasswordError(false)
+			setPasswordError(inputErrorMessages.passwordFormateMsg)
+		} else {
+			setPasswordError(null)
 		}
 
 	}, [email, password, regexEmail, regexPassword])
@@ -105,7 +99,7 @@ export default function Login() {
 			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
-			toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+			// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -128,7 +122,7 @@ export default function Login() {
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
 		}
-		if (email && password && !isEmailError && !isPasswordError) {
+		if (email && password) {
 			setLoading(true)
 			await startEmailPasswordLogin(email, password).then((result) => {
 				const user = result.user;
@@ -188,42 +182,43 @@ export default function Login() {
 				:
 				<div className={`relative ${styles.loginMainPage}`}>
 					<div className={styles.loginFormDiv}>
-						<h1 className={`fontBold ${styles.loginPageHead}`}>تسجيل الدخول</h1>
+						<h1 className={`fontMedium ${styles.loginPageHead}`}>تسجيل الدخول</h1>
 						<p>خلنا نكمل قصة نجاحك اللي بديناها سوا ✨</p>
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${emailError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${emailError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="email">الايميل</label>
+							<input className={`formInput ${styles.loginFormInput} ${emailError && `${styles.inputError}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel} ${emailError && `${styles.inputPlaceHoldererror}`}`} htmlFor="email">الايميل</label>
 						</div>
-						{emailError ? <p className={styles.errorText}>الايميل يا غالي</p> : isEmailError && <p className={styles.errorText}>فضلا ادخل ايميلك بطريقة صحيحة</p>}
+						{emailError && <p className={styles.errorText}>{emailError}</p>}
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${passwordError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
-							<label className={`formLabel ${passwordError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="password">كلمة السر</label>
+							<input className={`formInput ${styles.loginFormInput} ${passwordError && `${styles.inputError}`}`} name='password' id='password' type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel} ${passwordError && `${styles.inputPlaceHoldererror}`}`} htmlFor="password">كلمة السر</label>
 							<div className={styles.passwordIconDiv}>
 								{!showPassword ?
 									<div onClick={() => setShowPassword(true)}>
-										<AllIconsComponenet height={22} width={27} iconName={'newVisibleIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={24} width={27} iconName={'newVisibleIcon'} color={'#00000080'} />
 									</div>
 									:
 									<div onClick={() => setShowPassword(false)}>
-										<AllIconsComponenet height={22} width={27} iconName={'newVisibleOffIcon'} color={'#00000080'} />
+										<AllIconsComponenet height={24} width={27} iconName={'newVisibleOffIcon'} color={'#00000080'} />
 									</div>
 								}
 							</div>
 						</div>
-						{passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>كلمة السر غير صحيحة</p>}
+						{passwordError && <p className={styles.errorText}>{passwordError}</p>}
+						{/* {passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>كلمة السر غير صحيحة</p>} */}
 						<Link href={'/forgot-password'} className={`link ${styles.forgotPassText}`}>نسيت كلمة السر؟</Link>
 						<div className={styles.loginBtnBox}>
 							<button className='primarySolidBtn' type='submit' onClick={handleSignIn}>تسجيل الدخول</button>
 						</div>
 						<div className='relative'>
 							<div className={styles.middleLine}></div>
-							<p className={`fontBold ${styles.andText}`}>او</p>
+							<p className={styles.andText}>أو</p>
 						</div>
 						<div className={styles.loginWithoutPasswordBtnBox} onClick={() => hendelGoogleLogin()}>
 							<AllIconsComponenet height={20} width={20} iconName={'googleIcon'} />

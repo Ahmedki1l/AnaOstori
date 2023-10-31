@@ -8,6 +8,8 @@ import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import * as fbq from '../lib/fpixel'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
+import loader from '../public/icons/loader.svg'
 
 export default function RegisterWithGoogleAndApple() {
 
@@ -30,6 +32,8 @@ export default function RegisterWithGoogleAndApple() {
         }
         if (phoneNumber && !(phoneNumber.startsWith("05"))) {
             setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+        } else if (phoneNumber && phoneNumber.length < 10) {
+            setPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
         } else {
             setPhoneNumberError(null);
         }
@@ -77,7 +81,9 @@ export default function RegisterWithGoogleAndApple() {
         if (!gender) {
             setGenderError(inputErrorMessages.genderErrorMsg);
         }
-        if (!fullNameError && !genderError && !phoneNumberError) {
+        if (!fullName || (fullName && (fullName.split(" ").length - 1) < 2) || !gender || (phoneNumber && phoneNumber.length < 10) || (phoneNumber && !(phoneNumber.startsWith("05")))) {
+            return
+        } else {
             setLoading(true)
             let data = {
                 fullName: fullName,
@@ -104,47 +110,44 @@ export default function RegisterWithGoogleAndApple() {
     return (
         <div className={`relative ${styles.socialMediaMainPage}`}>
             <div className={styles.loginFormDiv}>
-                <h1 className={`fontBold ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
+                <h1 className={`fontMedium ${styles.signUpPageHead}`}>خطوات بسيطة ويجهز حسابك 🥳</h1>
                 <p className={`p-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
                 <div className='flex'>
-                    <p style={{ color: 'red' }} >ملاحظة :</p>
+                    <p style={{ color: 'red' }} >ملاحظة:</p>
                     <p className='mr-2'> جميع البيانات مطلوبة ما عدا رقم الجوال  </p>
                 </div>
                 <div className={`formInputBox`}>
                     <div className='formInputIconDiv'>
                         <AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
                     </div>
-                    <input className={`formInput ${fullNameError ? `${styles.inputError}` : `${styles.loginFormInput}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
-                    <label className={`formLabel ${fullNameError ? `${styles.inputPlaceHoldererror}` : `${styles.loginFormLabel}`}`} htmlFor="fullName">الاسم الثلاثي</label>
+                    <input className={`formInput ${styles.loginFormInput} ${fullNameError && `${styles.inputError}`}`} id='fullName' type="text" name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder=' ' />
+                    <label className={`formLabel  ${styles.loginFormLabel} ${fullNameError && `${styles.inputPlaceHoldererror}`}`} htmlFor="fullName">الاسم الثلاثي</label>
                 </div>
                 {fullNameError ? <p className={styles.errorText}>{fullNameError}</p> : ""}
                 <div>
                     <p className={styles.titleLabel}>الجنس</p>
-                    <div className={genderError ? `${styles.inputErrorBox}` : `${styles.genderBtnBox}`} >
+                    <div className={`${styles.genderBtnBox} ${genderError && `${styles.inputErrorBox}`}`} >
                         <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
-                            <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F26722 ' : '#808080'} />
+                            <AllIconsComponenet height={24} width={24} iconName={'newMaleIcon'} color={gender == "male" ? '#F26722 ' : '#808080'} />
                             <span>ذكر</span>
                         </button>
                         <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
-                            <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F26722 ' : '#808080'} />
+                            <AllIconsComponenet height={24} width={24} iconName={'newFemaleIcon'} color={gender == "female" ? '#F26722 ' : '#808080'} />
                             <span>أنثى</span>
                         </button>
                     </div>
                 </div>
-                {gender == '' ? <p className={styles.errorText}>{genderError}</p> : ""}
+                {genderError && gender == '' ? <p className={styles.errorText}>{genderError}</p> : ""}
                 <div className='formInputBox'>
                     <div className='formInputIconDiv'>
                         <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
                     </div>
-                    <input className={`formInput ${styles.loginFormInput}`} name='phoneNo' id='phoneNo' type="number" value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
-                    <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
+                    <input className={`formInput ${styles.loginFormInput} ${phoneNumberError && `${styles.inputError}`}`} name='phoneNo' id='phoneNo' type="number" inputMode='tel' value={phoneNumber} onChange={(e) => { if (e.target.value.length > 10) return; setPhoneNumber(e.target.value) }} placeholder=' ' />
+                    <label className={`formLabel ${styles.loginFormLabel} ${phoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="phoneNo">رقم الجوال (اختياري)</label>
                 </div>
-                {phoneNumberError ?
-                    <p className={styles.errorText}>{phoneNumberError}</p>
-                    :
-                    <p className={styles.passwordHintMsg}>بصيغة 05xxxxxxxx</p>}
+                {!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
                 <div className={styles.loginBtnBox}>
-                    <button className='primarySolidBtn' type='submit' onClick={handleSignIn} disabled={loading}>تسجيل الدخول</button>
+                    <button className='primarySolidBtn' name="submit" type='submit' onClick={handleSignIn} >{loading ? <Image src={loader} width={40} height={25} alt="Loder Picture" /> : ""} حفظ</button>
                 </div>
             </div>
         </div>

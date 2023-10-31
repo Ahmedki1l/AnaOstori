@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { toastSuccessMessage } from '../../../constants/ar';
 import Image from 'next/image';
 import loader from '../../../public/icons/loader.svg'
+import { countRemainingDays } from '../../../constants/DataManupulation';
 
 const StylesModal = styled(Modal)`
     .ant-modal-close{
@@ -18,7 +19,7 @@ const StylesModal = styled(Modal)`
         direction:rtl
     }
     .ant-modal-content{
-        width:420px;
+        width:358px;
         border-radius: 5px;
         padding: 1.5rem;
 		overflow:hidden;
@@ -91,11 +92,11 @@ const ModalComponent = (props) => {
             >
                 <p className={`fontBold ${styles.modalTitleText}`}> تنبيه </p>
                 <p className={styles.modalParaText}>
-                    حسابك راح ينحذف خلال x يوم/ أيام وراح تفقد الوصول إلى جميع الدورات المشترك بها
+                    حسابك بينحذف بعد {countRemainingDays(storeData?.viewProfileData?.inActiveAt)} وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه
                 </p>
-                <div className={`${styles.buttonModalDiv} flex justify-center items-center`}>
-                    <button className={`primarySolidBtn ml-2 ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}استعادة الحساب</button>
-                    <button className={`secondryStrockedBtn ${styles.cancelBtn}`} onClick={handleCancel} >تجاهل </button>
+                <div className={`${styles.buttonModalDiv}`}>
+                    <button className={`primarySolidBtn mb-2 ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}بسترجع الحساب</button>
+                    <button className={`primaryStrockedBtn ${styles.cancelBtn}`} onClick={handleCancel} >تجاهل </button>
                 </div>
             </StylesModal>
         </>

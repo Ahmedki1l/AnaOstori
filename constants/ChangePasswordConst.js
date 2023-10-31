@@ -12,6 +12,7 @@ hint4:'علامة مميزة واحدة على الأقل مثلا هاشتاق 
 saveBtn:'حفظ',
 oldPasswordError: 'كلمة السر لاهنت',
 newPasswordError: 'اكتب كلمة السر الجديدة لاهنت، ولازم تنتبه للشروط اللي تحت',
-confirmPasswordError:'أكد كلمة السر الجديدة لاهنت'
+confirmPasswordError:'أكد كلمة السر الجديدة لاهنت',
+passwordFormateMsg: 'لا تنسى تنتبه للشروط اللي تحت',
 
 }
