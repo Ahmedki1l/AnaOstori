@@ -12,11 +12,11 @@
 }
 
 .updateProfileBtnBox {
-	height: 39px;
+	height: 46px;
 	width: 317px;
 
 	button {
-		font-size: 16px;
+		font-size: 18px;
 	}
 }
 
@@ -24,7 +24,7 @@
 	width: 254px;
 
 	button {
-		font-size: 16px;
+		font-size: 18px;
 	}
 }
 
@@ -37,7 +37,6 @@
 .myCourseHeadingText {
 	display: inline-flex;
 	font-size: 20px;
-	color: $primary-color;
 	border-bottom: 3px solid $primary-color;
 	padding: 3px;
 }
@@ -64,10 +63,25 @@
 
 	.courseHeading {
 		width: 100%;
-		margin: 10px 0 25px 0;
+		margin: 16px 0 25px 0;
 	}
 
 	.myCourseHeadingText {
 		padding: 5px 1rem;
+		font-size: 18px;
+	}
+
+	.paregraphText {
+		font-size: 16px;
+		text-align: center;
+	}
+
+	.noCourseText {
+		font-size: 18px;
+	}
+
+	.homeBtnBox {
+		height: 46px;
+		width: 100%;
 	}
 }
