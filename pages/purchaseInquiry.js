@@ -151,108 +151,108 @@ export default function PurchaseInquiry(props) {
 							</tbody>
 						</table>
 						:
-						// (searchData.length > 0 && isMediumScreen) ?
-						// <>
-						// 	{searchData?.map((data, i = index) => {
-						// 		return (
-						// 			<div className={styles.tableAreaDiv} key={`order${i}`}>
-						// 				<table className={styles.rowDiv} >
-						// 					<tr>
-						// 						<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
-						// 						<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
-						// 					</tr>
-						// 					<tr>
-						// 						<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
-						// 						<td className={styles.tbodyDate}>{fullDate(data.createdAt)}</td>
-						// 					</tr>
-						// 					<tr>
-						// 						<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
-						// 						<td className={styles.tbodyName}>
-						// 							{data.orderItems?.map((student, j = index) => {
-						// 								return (
-						// 									<div className={styles.userInfoBox} key={`student${j}`}>
-						// 										<p>{student.fullName}</p>
-						// 										<p>{data.courseName}</p>
-						// 										{data.course.type != 'on-demand' && <p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}</p>}
-						// 									</div>
-						// 								)
-						// 							})}
-						// 						</td>
-						// 					</tr>
-						// 					<tr>
-						// 						<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
-						// 						<td className={styles.tbodyStatus}>
-						// 							{data?.status == "accepted" ?
-						// 								<StyledTag color="green">{inqPaymentStateConst.accepted}</StyledTag>
+						(searchData.length > 0 && isMediumScreen) ?
+							<>
+								{searchData?.map((data, i = index) => {
+									return (
+										<div className={styles.tableAreaDiv} key={`order${i}`}>
+											<table className={styles.rowDiv} >
+												<tr>
+													<th className={styles.theadOrder}>{inqTabelHeaderConst.header1}</th>
+													<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
+												</tr>
+												<tr>
+													<th className={styles.theadDate}>{inqTabelHeaderConst.header2}</th>
+													<td className={styles.tbodyDate}>{fullDate(data.createdAt)}</td>
+												</tr>
+												<tr>
+													<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
+													<td className={styles.tbodyName}>
+														{data.orderItems?.map((student, j = index) => {
+															return (
+																<div className={styles.userInfoBox} key={`student${j}`}>
+																	<p>{student.fullName}</p>
+																	<p>{data.courseName}</p>
+																	{data.course.type != 'on-demand' && <p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}</p>}
+																</div>
+															)
+														})}
+													</td>
+												</tr>
+												<tr>
+													<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
+													<td className={styles.tbodyStatus}>
+														{data?.status == "accepted" ?
+															<StyledTag color="green">{inqPaymentStateConst.accepted}</StyledTag>
 
-						// 								: data?.status == "review" ?
-						// 									<>
-						// 										<StyledTag color="gold">{inqPaymentStateConst.review}</StyledTag>
-						// 										<p className="py-2">استلمنا إيصالك وبنراجعه بأقرب وقت، تواصل معنا&nbsp;
-						// 											<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
-						// 										</p>
-						// 									</>
+															: data?.status == "review" ?
+																<>
+																	<StyledTag color="gold">{inqPaymentStateConst.review}</StyledTag>
+																	<p className="py-2">استلمنا إيصالك وبنراجعه بأقرب وقت، تواصل معنا&nbsp;
+																		<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
+																	</p>
+																</>
 
-						// 									: data?.status == "witing" ?
-						// 										<>
-						// 											<StyledTag color="red">{inqPaymentStateConst.witing}</StyledTag>
-						// 											<p className="py-2">عندك مهلة 24 ساعة تأكد فيها حجزك، تفضل حولنا المبلغ من&nbsp;
-						// 												<Link className='link' href={`/uploadInvoice?orderId=${data.id}`}>صفحة تأكيد التحويل البنكي</Link>، وتواصل معنا&nbsp;
-						// 												<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو احتجت مساعدة
-						// 											</p>
-						// 										</>
+																: data?.status == "witing" ?
+																	<>
+																		<StyledTag color="red">{inqPaymentStateConst.witing}</StyledTag>
+																		<p className="py-2">عندك مهلة 24 ساعة تأكد فيها حجزك، تفضل حولنا المبلغ من&nbsp;
+																			<Link className='link' href={`/uploadInvoice?orderId=${data.id}`}>صفحة تأكيد التحويل البنكي</Link>، وتواصل معنا&nbsp;
+																			<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link>&nbsp; لو احتجت مساعدة
+																		</p>
+																	</>
 
-						// 										: data?.status == "failed" ?
-						// 											<StyledTag color="red">{inqPaymentStateConst.failed}</StyledTag>
-						// 											: data?.status == "rejected" ?
-						// 												<>
-						// 													<StyledTag color="red">{inqPaymentStateConst.rejected}</StyledTag>
-						// 													<p className="py-2">ملّغى لعدم سدادك المبلغ في المدة المحددة، احجز مرة ثانية وتواصل معنا&nbsp;
-						// 														<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
-						// 													</p>
-						// 												</>
+																	: data?.status == "failed" ?
+																		<StyledTag color="red">{inqPaymentStateConst.failed}</StyledTag>
+																		: data?.status == "rejected" ?
+																			<>
+																				<StyledTag color="red">{inqPaymentStateConst.rejected}</StyledTag>
+																				<p className="py-2">ملّغى لعدم سدادك المبلغ في المدة المحددة، احجز مرة ثانية وتواصل معنا&nbsp;
+																					<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
+																				</p>
+																			</>
 
-						// 												:
-						// 												<>
-						// 													<StyledTag color="gray">{inqPaymentStateConst.refund}</StyledTag>
-						// 												</>
-						// 							}
-						// 						</td>
-						// 					</tr>
-						// 					<tr>
-						// 						<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
-						// 						<td className={styles.tbodyInvoice}>
-						// 							{(data?.status == "accepted" && data?.invoiceKey) ?
-						// 								<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center normalLinkText">
-						// 									<div style={{ height: '34px' }}>
-						// 										<AllIconsComponenet height={14} width={14} iconName={'downloadIcon'} color={'#0075FF'} />
-						// 									</div>
-						// 									<p className={` mr-2 ${styles.downloadSearchText}`}>تحميل الفاتورة</p>
-						// 								</Link>
-						// 								:
-						// 								<div>الفاتورة تظهر بعد تأكيد الحوالة</div>
-						// 							}
-						// 						</td>
-						// 					</tr>
-						// 				</table>
-						// 			</div>
-						// 		)
-						// 	})}
-						// </>
-						// :
-						<div className={`maxWidthDefault`}>
-							<div className={styles.noDataManiArea} >
-								<div className={styles.noDataiconWrapper}>
-									<AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-								</div>
-								<p className={`fontMedium py-2 ${styles.detailsText}`} >ما حجزت بأي دورة</p>
-								<p className={styles.peragraph}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
-								<div className={` pt-4 ${styles.btnWrapper}`}>
-									<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
-									{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
+																			:
+																			<>
+																				<StyledTag color="gray">{inqPaymentStateConst.refund}</StyledTag>
+																			</>
+														}
+													</td>
+												</tr>
+												<tr>
+													<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
+													<td className={styles.tbodyInvoice}>
+														{(data?.status == "accepted" && data?.invoiceKey) ?
+															<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center normalLinkText">
+																<div style={{ height: '34px' }}>
+																	<AllIconsComponenet height={14} width={14} iconName={'downloadIcon'} color={'#0075FF'} />
+																</div>
+																<p className={` mr-2 ${styles.downloadSearchText}`}>تحميل الفاتورة</p>
+															</Link>
+															:
+															<div>الفاتورة تظهر بعد تأكيد الحوالة</div>
+														}
+													</td>
+												</tr>
+											</table>
+										</div>
+									)
+								})}
+							</>
+							:
+							<div className={`maxWidthDefault`}>
+								<div className={styles.noDataManiArea} >
+									<div className={styles.noDataiconWrapper}>
+										<AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+									</div>
+									<p className={`fontMedium py-2 ${styles.detailsText}`} >ما حجزت بأي دورة</p>
+									<p className={styles.peragraph}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
+									<div className={` pt-4 ${styles.btnWrapper}`}>
+										<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
+										{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
+									</div>
 								</div>
 							</div>
-						</div>
 					}
 				</div>
 			}
