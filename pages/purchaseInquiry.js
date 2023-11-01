@@ -60,7 +60,7 @@ export default function PurchaseInquiry(props) {
 	return (
 		<>
 			<div className={styles.searchHeader}>
-				<h1 className={`head2 text-white text-center ${styles.headText}`}>استعلام الحجوزات</h1>
+				<h1 className={`text-white text-center ${styles.headText}`}>استعلام الحجوزات</h1>
 			</div>
 			{loading ?
 				<div className={`relative ${styles.mainLoadingPage}`}>
