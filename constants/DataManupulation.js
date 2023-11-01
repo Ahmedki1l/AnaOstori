@@ -1,3 +1,5 @@
+import { dateWithDay } from "./DateConverter"
+
 export const deleteNullFromObj = (obj) => {
     for (const key in obj) {
         if (obj[key] == null || obj[key] == undefined || obj[key] == "") {
@@ -43,3 +45,24 @@ export const countRemainingDays = (date) => {
         return 'يوم'
     }
 }
+
+export const subscriptionDays = (data) => {
+    console.log(data);
+    const days = data.daysLeft;
+    if (days <= 200 && days > 10) {
+        return `ينتهي اشتراكك بعد ${days} يوم، يوم ${dateWithDay(data.createdAt)}`
+    }
+    else if (days <= 10 && days >= 3) {
+        return `ينتهي اشتراكك بعد ${days} أيام، يوم ${dateWithDay(data.createdAt)}`
+    }
+    else if (days == 2) {
+        return `ينتهي اشتراكك بعد يومين`
+    }
+    else if (days == 1) {
+        return `ينتهي اشتراكك بكرة`
+    }
+    else if (days == 0) {
+        return `ينتهي اشتراكك اليوم`
+    }
+}
+
