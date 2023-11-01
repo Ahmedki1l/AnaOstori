@@ -33,6 +33,7 @@ export default function MyProfile() {
 					{myCourses.length > 0 ?
 						<div className={`flex flex-wrap ${styles.courseCardsWrapper}`}>
 							{myCourses?.map((items, index) => {
+								console.log(items);
 								return <CoursesCard data={items} key={index} />
 							})
 							}
@@ -41,8 +42,8 @@ export default function MyProfile() {
 						<div className={styles.noCourseWrapper}>
 							<AllIconsComponenet height={150} width={150} iconName={'noData'} color={''} />
 							<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
-							<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
-							<div className={`pt-4 ${styles.homeBtnBox}`}>
+							<p className={styles.paregraphText}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
+							<div className={`mt-4 ${styles.homeBtnBox}`}>
 								<button className="primarySolidBtn" onClick={() => Router.push('/')}>تصفح المجالات</button>
 							</div>
 						</div>

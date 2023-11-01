@@ -3,14 +3,24 @@
 .searchHeader {
 	background-color: $secondary-color;
 	position: relative;
+	height: 89px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .headText {
-	padding: 5rem 0;
+	font-size: 20px;
 }
 
 .mainLoadingPage {
 	height: 200px;
+}
+
+.userInfoBox {
+	p {
+		line-height: 22px;
+	}
 }
 
 .searchBoxWrapper {
@@ -132,8 +142,12 @@
 }
 
 .detailsText {
-	font-size: 20px;
+	font-size: 18px;
 	text-align: center;
+}
+
+.peragraph {
+	width: 360px;
 }
 
 .btnWrapper {
@@ -143,11 +157,11 @@
 
 .submitBtnBox,
 .cancleBtnBox {
-	height: 45px;
-	width: 245px;
+	height: 46px;
+	width: 358px;
 
 	button {
-		font-size: 16px;
+		font-size: 18px;
 	}
 }
 
@@ -186,7 +200,7 @@
 		border-radius: 4px;
 		overflow: hidden;
 		width: 358px;
-		margin: 1rem auto;
+		margin: 24px auto;
 		border: 0.5px solid #808080;
 
 	}
@@ -312,15 +326,6 @@
 
 		th {
 			width: 112px;
-		}
-	}
-
-	.btnWrapper {
-		width: 100%;
-
-		.submitBtnBox,
-		.cancleBtnBox {
-			width: 49%;
 		}
 	}
 }

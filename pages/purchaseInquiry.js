@@ -60,7 +60,7 @@ export default function PurchaseInquiry(props) {
 	return (
 		<>
 			<div className={styles.searchHeader}>
-				<h1 className={`head2 text-white text-center ${styles.headText}`}>استعلام الحجوزات</h1>
+				<h1 className={`text-white text-center ${styles.headText}`}>استعلام الحجوزات</h1>
 			</div>
 			{loading ?
 				<div className={`relative ${styles.mainLoadingPage}`}>
@@ -245,8 +245,8 @@ export default function PurchaseInquiry(props) {
 									<div className={styles.noDataiconWrapper}>
 										<AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
 									</div>
-									<p className={`fontBold py-2 ${styles.detailsText}`} >ما حجزت بأي دورة</p>
-									<p style={{ fontSize: '14px' }}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
+									<p className={`fontMedium py-2 ${styles.detailsText}`} >ما حجزت بأي دورة</p>
+									<p className={styles.peragraph}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 									<div className={` pt-4 ${styles.btnWrapper}`}>
 										<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
 										{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
