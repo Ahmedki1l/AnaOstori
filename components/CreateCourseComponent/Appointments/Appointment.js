@@ -55,7 +55,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setShowBtnLoader(false)
     }
     const onFinish = async (values) => {
-        console.log(values);
         values.dateFrom = dayjs(values?.dateFrom?.$d).startOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).endOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')

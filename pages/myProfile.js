@@ -33,7 +33,6 @@ export default function MyProfile() {
 					{myCourses.length > 0 ?
 						<div className={`flex flex-wrap ${styles.courseCardsWrapper}`}>
 							{myCourses?.map((items, index) => {
-								console.log(items);
 								return <CoursesCard data={items} key={index} />
 							})
 							}

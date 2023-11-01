@@ -57,7 +57,7 @@ export const toastSuccessMessage = {
     profilePictureUpdateMsg: "تم تحديث صورة الملف الشخصي بنجاح", //Profile picture updated successfully.
     emailUpdateMsg: "تم تحديث الايميل بنجاح", //Email has been updated successfully.
     genderUpdateMsg: "تم تحديث الجنس بنجاح", //"Gender updated successfully"
-    passwordUpdateMsg: "تم تحديث كلمة السر بنجاح", //"Password updated successfully"
+    passwordUpdateMsg: 'الآن تقدر تستخدم كلمة السر الجديدة 👍🏼', //"Password updated successfully"
     accountRestoredMsg: 'تم استعادة الحساب بنجاح', //'Account restored successfully'
     copiedMsg: "تم النسخ", //"copied"
     forgotPasswordLinkSend: 'ارسلنا لك رابط تغيير كلمة السر على ايميلك 👍🏼', //A link has been sent to your email to change your password.

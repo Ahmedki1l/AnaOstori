@@ -20,16 +20,16 @@ const ChangePassword = ({ data, setActiveTab }) => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const [isOldPasswordError, setIsOldPasswordError] = useState(false);
-    const [isNewPasswordError, setIsNewPasswordError] = useState(false);
-    const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(false);
+    const [isOldPasswordError, setIsOldPasswordError] = useState(null);
+    const [isNewPasswordError, setIsNewPasswordError] = useState(null);
+    const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(null);
 
     const [initPasswordError, setInitPasswordError] = useState({
-		minLength: true,
-		capitalLetter: true,
-		number: true,
-		specialCharacter: true,
-	});
+        minLength: true,
+        capitalLetter: true,
+        number: true,
+        specialCharacter: true,
+    });
 
     const [showLoader, setShowLoader] = useState(false);
     const regexPassword = useMemo(() => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, []);
@@ -37,22 +37,19 @@ const ChangePassword = ({ data, setActiveTab }) => {
     const validateInputs = () => {
         if (!oldPassword) {
             setIsOldPasswordError(ChangePasswordConst.oldPasswordError);
-            // return false
         }
         if (!newPassword) {
             setIsNewPasswordError(ChangePasswordConst.newPasswordError);
-            // return false
         }
         if (newPassword && (!regexPassword.test(newPassword))) {
-            setIsNewPasswordError('New password must be at least 8 characters');
+            setIsNewPasswordError(ChangePasswordConst.newPasswordError);
             return false
         }
         if (!confirmPassword) {
             setIsConfirmPasswordError(ChangePasswordConst.confirmPasswordError);
-            // return false
         }
         if (confirmPassword && confirmPassword !== newPassword) {
-            setIsConfirmPasswordError('Passwords do not match');
+            setIsConfirmPasswordError(ChangePasswordConst.passWordNotMatchErrorMsg);
             return false
         }
         return true
@@ -60,45 +57,49 @@ const ChangePassword = ({ data, setActiveTab }) => {
 
 
     useEffect(() => {
-        
-		let data = { ...initPasswordError }
-        if(newPassword?.length){
-		if (newPassword.length > 7) {
-			data.minLength = false
-			setInitPasswordError(data)
-		} else {
-			data.minLength = true
-			setInitPasswordError(data)
-		}
-		if (newPassword.match(/[A-Z]/g)) {
-			data.capitalLetter = false
-			setInitPasswordError(data)
-		} else {
-			data.capitalLetter = true
-			setInitPasswordError(data)
-		}
-		if (newPassword.match(/[0-9]/g)) {
-			data.number = false
-			setInitPasswordError(data)
-		} else {
-			data.number = true
-			setInitPasswordError(data)
-		}
-		if (newPassword.match(/[!@#$%^&*]/g)) {
-			data.specialCharacter = false
-			setInitPasswordError(data)
-		} else {
-			data.specialCharacter = true
-			setInitPasswordError(data)
-		}
-		if (newPassword.length > 7 && newPassword.match(/[A-Z]/g) && newPassword.match(/[0-9]/g) && newPassword.match(/[!@#$%^&*]/g)) {
-			setIsNewPasswordError(null)
-		} else {
-			setIsNewPasswordError(ChangePasswordConst.passwordFormateMsg)
-		}
-    }
-    },[newPassword])
 
+        let data = { ...initPasswordError }
+        if (newPassword?.length) {
+            if (newPassword.length > 7) {
+                data.minLength = false
+                setInitPasswordError(data)
+            } else {
+                data.minLength = true
+                setInitPasswordError(data)
+            }
+            if (newPassword.match(/[A-Z]/g)) {
+                data.capitalLetter = false
+                setInitPasswordError(data)
+            } else {
+                data.capitalLetter = true
+                setInitPasswordError(data)
+            }
+            if (newPassword.match(/[0-9]/g)) {
+                data.number = false
+                setInitPasswordError(data)
+            } else {
+                data.number = true
+                setInitPasswordError(data)
+            }
+            if (newPassword.match(/[!@#$%^&*]/g)) {
+                data.specialCharacter = false
+                setInitPasswordError(data)
+            } else {
+                data.specialCharacter = true
+                setInitPasswordError(data)
+            }
+            if (newPassword.length > 7 && newPassword.match(/[A-Z]/g) && newPassword.match(/[0-9]/g) && newPassword.match(/[!@#$%^&*]/g)) {
+                setIsNewPasswordError(null)
+            } else {
+                setIsNewPasswordError(ChangePasswordConst.passwordFormateMsg)
+            }
+            if (newPassword == oldPassword) {
+                setIsNewPasswordError(ChangePasswordConst.passWordMatchErrorMsg)
+            } else {
+                setIsNewPasswordError(null)
+            }
+        }
+    }, [newPassword])
 
     const handleSubmit = async (e) => {
         setShowLoader(true)
@@ -128,10 +129,9 @@ const ChangePassword = ({ data, setActiveTab }) => {
     return (
         <form onSubmit={handleSubmit}>
             <div className={styles.changePasswordContainer}>
-                <div className={styles.phoneTitleDiv} >
+                {/* <div className={styles.phoneTitleDiv} >
                     <h3>{ChangePasswordConst?.heading}</h3>
-                </div>
-
+                </div> */}
                 <div className={`formInputBox ${styles.passwordInputBox}`}>
                     <div className={styles.IconDiv}>
                         <AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
@@ -145,17 +145,17 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     />
                     <label className={`formLabel ${isOldPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="oldPassword">{ChangePasswordConst?.oldPasswordLabel}</label>
                     {oldPassword &&
-                    <div className={styles.passwordIconDiv}>
-                        {!showOldPassword ?
-                            <div onClick={() => setShowOldPassword(true)}>
-                                <AllIconsComponenet height={24} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
-                            </div>
-                            :
-                            <div onClick={() => setShowOldPassword(false)}>
-                                <AllIconsComponenet height={24} width={24} iconName={'visibilityOffIcon'} color={'#00000080'} />
-                            </div>
-                        }
-                    </div>
+                        <div className={styles.passwordIconDiv}>
+                            {!showOldPassword ?
+                                <div style={{ height: '20px' }} onClick={() => setShowOldPassword(true)}>
+                                    <AllIconsComponenet height={24} width={24} iconName={'newVisibleIcon'} color={'#00000080'} />
+                                </div>
+                                :
+                                <div style={{ height: '20px' }} onClick={() => setShowOldPassword(false)}>
+                                    <AllIconsComponenet height={24} width={24} iconName={'newVisibleOffIcon'} color={'#00000080'} />
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
                 {isOldPasswordError && <p className={styles.errorText}>{isOldPasswordError}</p>}
@@ -173,17 +173,17 @@ const ChangePassword = ({ data, setActiveTab }) => {
                     />
                     <label className={`formLabel ${isNewPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="newPassword">{ChangePasswordConst?.newPasswordLabel}</label>
                     {newPassword &&
-                    <div className={styles.passwordIconDiv}>
-                        {!showNewPassword ?
-                            <div onClick={() => setShowNewPassword(true)}>
-                                <AllIconsComponenet height={24} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
-                            </div>
-                            :
-                            <div onClick={() => setShowNewPassword(false)}>
-                                <AllIconsComponenet height={24} width={24} iconName={'visibilityOffIcon'} color={'#00000080'} />
-                            </div>
-                        }
-                    </div>
+                        <div className={styles.passwordIconDiv}>
+                            {!showNewPassword ?
+                                <div onClick={() => setShowNewPassword(true)}>
+                                    <AllIconsComponenet height={24} width={24} iconName={'newVisibleIcon'} color={'#00000080'} />
+                                </div>
+                                :
+                                <div onClick={() => setShowNewPassword(false)}>
+                                    <AllIconsComponenet height={24} width={24} iconName={'newVisibleOffIcon'} color={'#00000080'} />
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
                 {!isNewPasswordError && <p className={styles.passwordHintText}>{ChangePasswordConst?.passwordHintHeading}</p>}
@@ -197,49 +197,49 @@ const ChangePassword = ({ data, setActiveTab }) => {
                 </div>         */}
 
                 <div className={styles.errorMsgWraper}>
-							<>
-								<AllIconsComponenet
-									iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.minLength) ? 'alertIcon' : 'checkCircleIcon'}
-									color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.minLength) ? '#E5342F' : '#7FDF4B'}
-									height={20}
-									width={20}
-								/>
-								<p className='p-1'>{ChangePasswordConst.hint1}</p>
-							</>
-						</div>
-						<div className={styles.errorMsgWraper}>
-							<>
-								<AllIconsComponenet
-									iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.capitalLetter) ? 'alertIcon' : 'checkCircleIcon'}
-									color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.capitalLetter) ? '#E5342F' : '#7FDF4B'}
-									height={20}
-									width={20}
-								/>
-								<p className='p-1'>{ChangePasswordConst.hint2}</p>
-							</>
-						</div>
-						<div className={styles.errorMsgWraper}>
-							<>
-								<AllIconsComponenet
-									iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.number) ? 'alertIcon' : 'checkCircleIcon'}
-									color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.number) ? '#E5342F' : '#7FDF4B'}
-									height={20}
-									width={20}
-								/>
-								<p className='p-1'>{ChangePasswordConst.hint3}</p>
-							</>
-						</div>
-						<div className={styles.errorMsgWraper}>
-							<>
-								<AllIconsComponenet
-									iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.specialCharacter) ? 'alertIcon' : 'checkCircleIcon'}
-									color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.specialCharacter) ? '#E5342F' : '#7FDF4B'}
-									height={20}
-									width={20}
-								/>
-								<p className='p-1'>{ChangePasswordConst.hint4}</p>
-							</>
-						</div>
+                    <>
+                        <AllIconsComponenet
+                            iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.minLength) ? 'alertIcon' : 'checkCircleIcon'}
+                            color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.minLength) ? '#E5342F' : '#7FDF4B'}
+                            height={20}
+                            width={20}
+                        />
+                        <p className='p-1'>{ChangePasswordConst.hint1}</p>
+                    </>
+                </div>
+                <div className={styles.errorMsgWraper}>
+                    <>
+                        <AllIconsComponenet
+                            iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.capitalLetter) ? 'alertIcon' : 'checkCircleIcon'}
+                            color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.capitalLetter) ? '#E5342F' : '#7FDF4B'}
+                            height={20}
+                            width={20}
+                        />
+                        <p className='p-1'>{ChangePasswordConst.hint2}</p>
+                    </>
+                </div>
+                <div className={styles.errorMsgWraper}>
+                    <>
+                        <AllIconsComponenet
+                            iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.number) ? 'alertIcon' : 'checkCircleIcon'}
+                            color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.number) ? '#E5342F' : '#7FDF4B'}
+                            height={20}
+                            width={20}
+                        />
+                        <p className='p-1'>{ChangePasswordConst.hint3}</p>
+                    </>
+                </div>
+                <div className={styles.errorMsgWraper}>
+                    <>
+                        <AllIconsComponenet
+                            iconName={(!newPassword && !isNewPasswordError) ? "checkCircleIcon" : (!newPassword && isNewPasswordError) ? 'alertIcon' : (newPassword && initPasswordError?.specialCharacter) ? 'alertIcon' : 'checkCircleIcon'}
+                            color={(!newPassword && !isNewPasswordError) ? "#808080" : (!newPassword && isNewPasswordError) ? "#E5342F" : (newPassword && initPasswordError?.specialCharacter) ? '#E5342F' : '#7FDF4B'}
+                            height={20}
+                            width={20}
+                        />
+                        <p className='p-1'>{ChangePasswordConst.hint4}</p>
+                    </>
+                </div>
 
                 <div className={`formInputBox ${styles.passwordInputBox}`}>
                     <div className={styles.IconDiv}>
@@ -253,23 +253,23 @@ const ChangePassword = ({ data, setActiveTab }) => {
                         placeholder=' '
                     />
                     <label className={`formLabel ${isConfirmPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="confirmPassword">{ChangePasswordConst?.confirmPasswordLabel}</label>
-                   {confirmPassword &&
-                    <div className={styles.passwordIconDiv}>
-                        {!showConfirmPassword ?
-                            <div onClick={() => setShowConfirmPassword(true)}>
-                                <AllIconsComponenet height={24} width={24} iconName={'visibilityIcon'} color={'#00000080'} />
-                            </div>
-                            :
-                            <div onClick={() => setShowConfirmPassword(false)}>
-                                <AllIconsComponenet height={24} width={24} iconName={'visibilityOffIcon'} color={'#00000080'} />
-                            </div>
-                        }
-                    </div>
+                    {confirmPassword &&
+                        <div className={styles.passwordIconDiv}>
+                            {!showConfirmPassword ?
+                                <div onClick={() => setShowConfirmPassword(true)}>
+                                    <AllIconsComponenet height={24} width={24} iconName={'newVisibleIcon'} color={'#00000080'} />
+                                </div>
+                                :
+                                <div onClick={() => setShowConfirmPassword(false)}>
+                                    <AllIconsComponenet height={24} width={24} iconName={'newVisibleOffIcon'} color={'#00000080'} />
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
                 {isConfirmPasswordError && <p className={styles.errorText}>{isConfirmPasswordError}</p>}
                 <div className={styles.changePasswordBtnBox}>
-                    <button className='primarySolidBtn' type='submit' disabled={isOldPasswordError || isNewPasswordError || isConfirmPasswordError}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} {ChangePasswordConst?.saveBtn}</button>
+                    <button className='primarySolidBtn' type='submit' >{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} {ChangePasswordConst?.saveBtn}</button>
                 </div>
             </div>
         </form>
