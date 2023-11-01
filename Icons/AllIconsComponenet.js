@@ -122,11 +122,14 @@ import ColoredYoutubeIcon from './customeIcons/coloredYoutubeIcon'
 import ColoredTwittericon from './customeIcons/coloredTwittericon'
 import ColoredGoogleMapIcon from './customeIcons/coloredGoogleMapIcon'
 import ColoredEmailIcon from './customeIcons/coloredEmailIcon'
+import PasswordAlert from './customeIcons/passwordAlert'
 import NewMaleIcon from './customeIcons/newMaleIcon'
 import NewFemaleIcon from './customeIcons/newFemaleIcon'
 import InAppPurchaseIcon from './customeIcons/inAppPurchaseIcon'
 import NewUpArrowIcon from './customeIcons/newUpArrowIcon'
 import NewDownArrowIcon from './customeIcons/newDownArrowIcon'
+import NewEmailIcon from './customeIcons/newEmailIcon'
+import NewLockIcon from './customeIcons/newLockIcon'
 
 
 
@@ -246,6 +249,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newFemaleIcon' && <NewFemaleIcon height={height} width={width} color={color} />}
 			{iconName == 'newUpArrowIcon' && <NewUpArrowIcon height={height} width={width} color={color} />}
 			{iconName == 'newDownArrowIcon' && <NewDownArrowIcon height={height} width={width} color={color} />}
+			{iconName == 'newEmailIcon' && <NewEmailIcon height={height} width={width} color={color} />}
+			{iconName == 'newLockIcon' && <NewLockIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
@@ -273,6 +278,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'coloredTwittericon' && <ColoredTwittericon height={height} width={width} color={color} />}
 			{iconName == 'coloredGoogleMapIcon' && <ColoredGoogleMapIcon height={height} width={width} />}
 			{iconName == 'coloredEmailIcon' && <ColoredEmailIcon height={height} width={width} color={color} />}
+
+			{iconName == 'passwordAlertIcon' && <PasswordAlert height={height} width={width} color={color} />}
 
 
 		</>

@@ -34,13 +34,16 @@
 	align-items: center;
 }
 
-.tabTitleDiv {
-	padding-right: 0.5rem;
+.smallScreenTabTitleDiv {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem 1rem;
 }
 
 .tabTitle {
+	margin-top: 3px;
 	font-size: 18px;
-	line-height: 22px;
 }
 
 .tab1SubTitle {
@@ -91,15 +94,18 @@
 }
 
 .existingDetailText {
-	font-size: 15px;
-	color: #00000080;
-	margin-bottom: -0.5rem;
+	// font-size: 15px;
+	// color: #00000080;
+	// margin-bottom: -0.5rem;
+	margin-top: 1rem;
+	color: var(--Black_Used, #191919);
+	font-size: 16px;
 }
 
 .IconDiv {
 	margin: auto 0;
 	position: absolute;
-	top: 0.8rem;
+	top: 0.6rem;
 	right: 0.5rem;
 }
 
@@ -131,11 +137,14 @@
 }
 
 .submitBtnBox {
-	width: 19.8rem;
-	height: 47px;
+	// width: 19.8rem;
+	// height: 47px;
+	width: 22.25rem;
+	height: 2.75rem;
 
 	button {
-		font-size: 16px;
+		font-size: 18px;
+		font-weight: 500;
 	}
 }
 
@@ -199,12 +208,51 @@
 	margin-right: 10px;
 }
 
+.formInputIconDiv {
+	margin: auto 0;
+	position: absolute;
+	display: grid;
+	right: 1rem;
+}
+
+.formInputText {
+	// width: 22.25rem;
+	// height: 2.75rem;
+	// padding-top: 1.4rem;
+	// padding-right: 2.2rem;
+	width: 22.25rem;
+	padding-right: 2.9rem;
+	border: 1px solid #0000001a;
+}
+
+.formInputLabel {
+	padding-right: 2rem;
+	font-size: 16px;
+	color: #00000080;
+	top: 0.9rem
+}
+
+
+.formInputError {
+	width: 22.25rem;
+	height: 2.75rem;
+	// padding-top: 1.4rem;
+	padding-right: 2.9rem;
+	border: 1px solid red;
+}
+
+.formInputPlaceHolderError {
+	padding-right: 2rem;
+	font-size: 16px;
+	color: red;
+	top: 0.9rem
+}
 
 .passwordIconDiv {
 	margin: auto 0;
 	position: absolute;
-	top: 0.8rem;
-	right: 17.5rem;
+	top: 0.6rem;
+	right: 20rem;
 	cursor: pointer;
 }
 
@@ -213,11 +261,30 @@
 }
 
 .errorText {
-	color: rgb(211, 47, 47);
+	color: var(--Red, #E5342F);
 	font-size: 0.75rem;
 	line-height: 1.66;
 	letter-spacing: 0.03333em;
-	margin-top: -1rem;
+	margin-top: -0.5rem;
+	margin-bottom: 1.1rem;
+	width: 358px;
+}
+
+
+.cancelBtn {
+	background: var(--White_Used, #FFF);
+	color: var(--Black_Used, #191919);
+	text-align: center;
+	font-size: 16px;
+	width: 22.25rem;
+	height: 2.63rem;
+	padding: 12px;
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 18px;
+	cursor: pointer;
 }
 
 
@@ -228,11 +295,6 @@
 		margin: 0 auto;
 		grid-template-columns: 250px auto;
 	}
-
-	.tabTitle {
-		font-size: 16px;
-		line-height: 18px;
-	}
 }
 
 @media (max-width: 640px) {
@@ -241,8 +303,9 @@
 		display: block;
 	}
 
-	.rightArrowDiv {
-		margin-bottom: 1rem;
+	.tabTitleDiv {
+		display: flex;
+		align-items: center;
 	}
 
 	.tabsList {
@@ -252,6 +315,7 @@
 
 	.tabContent {
 		border-width: 0;
+		padding: 0 1rem;
 	}
 
 	.tab {
@@ -261,5 +325,11 @@
 
 	.tab.active {
 		border-right: 0px solid #F26722;
+	}
+}
+
+@media(max-width:390px) {
+	.submitBtnBox {
+		width: 100%;
 	}
 }

@@ -189,7 +189,6 @@ export default function Register() {
 			return
 		} else {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
-				console.log(email, password);
 				setLoading(true)
 				const data = {
 					fullName: fullName,

@@ -35,16 +35,21 @@ export default function Login() {
 
 	useEffect(() => {
 
+		if (email) {
+			setEmailError(null)
+		}
+		if (password) {
+			setPasswordError(null)
+		}
 		if (email && !(regexEmail.test(email))) {
 			setEmailError(inputErrorMessages.enterEmailCorrectInputErrorMsg)
 		} else {
-			setEmailError(false)
+			setEmailError(null)
 		}
-
 		if (password && !(regexPassword.test(password))) {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		} else {
-			setPasswordError(false)
+			setPasswordError(null)
 		}
 
 	}, [email, password, regexEmail, regexPassword])

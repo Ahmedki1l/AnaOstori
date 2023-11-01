@@ -17,8 +17,11 @@
 }
 
 .buttonModalDiv {
-    height: 46px;
     display: contents;
+
+    button {
+        height: 46px;
+    }
 }
 
 .accountRecoveryModalBtn {

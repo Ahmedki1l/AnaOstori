@@ -47,13 +47,12 @@ export const countRemainingDays = (date) => {
 }
 
 export const subscriptionDays = (data) => {
-    console.log(data);
     const days = data.daysLeft;
     if (days <= 200 && days > 10) {
-        return `ينتهي اشتراكك بعد ${days} يوم، يوم ${dateWithDay(data.createdAt)}`
+        return `ينتهي اشتراكك بعد ${days} يوم، يوم ${dateWithDay(data.expireDate)}`
     }
     else if (days <= 10 && days >= 3) {
-        return `ينتهي اشتراكك بعد ${days} أيام، يوم ${dateWithDay(data.createdAt)}`
+        return `ينتهي اشتراكك بعد ${days} أيام، يوم ${dateWithDay(data.expireDate)}`
     }
     else if (days == 2) {
         return `ينتهي اشتراكك بعد يومين`
