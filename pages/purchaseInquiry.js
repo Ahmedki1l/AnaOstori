@@ -9,7 +9,7 @@ import { getNewToken } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
 import { dateRange, fullDate } from "../constants/DateConverter";
-import { inqPaymentStateConst, inqTabelHeaderConst } from "../constants/purchaseInqConst";
+import { generateLink, inqPaymentStateConst, inqTabelHeaderConst } from "../constants/purchaseInqConst";
 import { Tag } from "antd";
 import styled from "styled-components";
 import Spinner from "../components/CommonComponents/spinner";
@@ -104,7 +104,8 @@ export default function PurchaseInquiry(props) {
 														<>
 															<StyledTag color="gold">{inqPaymentStateConst.review}</StyledTag>
 															<p className="py-2">استلمنا إيصالك وبنراجعه بأقرب وقت، تواصل معنا&nbsp;
-																<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
+																{/* <Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة */}
+																{generateLink(whatsAppLink, 'واتساب', 'لو احتجت مساعدة')}
 															</p>
 														</>
 
@@ -123,7 +124,8 @@ export default function PurchaseInquiry(props) {
 																	<>
 																		<StyledTag color="red">{inqPaymentStateConst.rejected}</StyledTag>
 																		<p className="py-2">ملّغى لعدم سدادك المبلغ في المدة المحددة، احجز مرة ثانية وتواصل معنا&nbsp;
-																			<Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة
+																			{/* <Link className='link' href={whatsAppLink} target='_blank'>واتساب</Link> لو احتجت مساعدة */}
+																			{generateLink(whatsAppLink, 'واتساب', 'لو احتجت مساعدة')}
 																		</p>
 																	</>
 
