@@ -4,7 +4,7 @@ import CoverImg from '../CoverImg';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
-import { mediaUrl } from '../../../constants/DataManupulation';
+import { mediaUrl, subscriptionDays } from '../../../constants/DataManupulation';
 import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
 import ContentAccessModal from '../ContentAccessModal/ContentAccessModal';
 
@@ -15,7 +15,7 @@ export default function CoursesCard(props) {
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
 	const contentAccess = props?.data?.availability?.contentAccess
 	const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
-	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/anaOstori.png'
+	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/previewImage.png'
 	const daysLeft = props?.data?.daysLeft
 
 	const date = props?.data?.availability
@@ -36,7 +36,7 @@ export default function CoursesCard(props) {
 			Router.push(`myCourse/${courseDetails.id}`)
 		}
 	}
-
+	console.log(props?.data);
 	return (
 		<>
 			<div className={styles.cardMainDiv}>
@@ -46,17 +46,18 @@ export default function CoursesCard(props) {
 				<div className={styles.cardContentDiv}>
 					<h1 className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</h1>
 					<div className={styles.subscriptionText}>
-						<AllIconsComponenet height={14} width={14} iconName={'calander'} color={'#000000'} />
-						<p className='px-2'>{courseDetails.type == "on-demand" ? `ينتهي اشتراكك بعد ${daysLeft} يوم` : `من ${dateWithDay(date?.dateFrom)}إلى ${dateWithDay(date?.dateTo)}`}</p>
+						<AllIconsComponenet height={20} width={20} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
+						<p className='px-2 text-sm'>{subscriptionDays(props.data)}</p>
+						{/* <p className='px-2 text-sm'>{courseDetails.type == "on-demand" ? `ينتهي اشتراكك بعد ${daysLeft} يوم` : `من ${dateWithDay(date?.dateFrom)}إلى ${dateWithDay(date?.dateTo)}`}</p> */}
 					</div>
 
 					{courseDetails.type == "on-demand" ?
 						<>
-							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة التقدم</button>
+							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة الدروس</button>
 						</>
 						:
 						<>
-							<div className={styles.subscriptionText}>
+							{/* <div className={styles.subscriptionText}>
 								<AllIconsComponenet height={14} width={14} iconName={'clock'} color={'#000000'} />
 								<p className='px-2'>{timeDuration(date.timeFrom, date.timeTo)}</p>
 							</div>
@@ -67,9 +68,9 @@ export default function CoursesCard(props) {
 									<AllIconsComponenet height={14} width={14} iconName={'live'} color={'#000000'} />
 								}
 								{courseDetails.type == "physical" ? <Link href="/" className='link px-2'>{date?.locationName}</Link> : <p className='px-2'>{date?.locationName}</p>}
-							</div>
+							</div> */}
 							{/* <button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة الدورة المسجلة</button> */}
-							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة الدورة المسجلة</button>
+							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة محتوى الدورة المسجلة</button>
 						</>
 					}
 				</div>

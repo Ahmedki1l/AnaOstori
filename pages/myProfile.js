@@ -30,23 +30,24 @@ export default function MyProfile() {
 						<p className={`font-bold ${styles.myCourseHeadingText}`}>اشتراكات الدورات</p>
 					</div>
 
-					{/* {myCourses.length > 0 ?
+					{myCourses.length > 0 ?
 						<div className={`flex flex-wrap ${styles.courseCardsWrapper}`}>
 							{myCourses?.map((items, index) => {
+								console.log(items);
 								return <CoursesCard data={items} key={index} />
 							})
 							}
 						</div>
-						: */}
-					<div className={styles.noCourseWrapper}>
-						<AllIconsComponenet height={150} width={150} iconName={'noData'} color={''} />
-						<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
-						<p className={styles.paregraphText}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
-						<div className={`mt-4 ${styles.homeBtnBox}`}>
-							<button className="primarySolidBtn" onClick={() => Router.push('/')}>تصفح المجالات</button>
+						:
+						<div className={styles.noCourseWrapper}>
+							<AllIconsComponenet height={150} width={150} iconName={'noData'} color={''} />
+							<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
+							<p className={styles.paregraphText}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
+							<div className={`mt-4 ${styles.homeBtnBox}`}>
+								<button className="primarySolidBtn" onClick={() => Router.push('/')}>تصفح المجالات</button>
+							</div>
 						</div>
-					</div>
-					{/* } */}
+					}
 				</div>
 			}
 
