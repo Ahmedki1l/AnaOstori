@@ -270,21 +270,23 @@
 
 @media(max-width: 550px) {
 	.loginMainPage {
-		height: 38rem;
+		height: auto;
 	}
 
 	.registerMainPage {
-		height: 66rem;
+		height: auto;
 	}
 
 	.socialMediaMainPage {
-		height: 32rem;
+		height: auto;
 	}
 
 	.loginFormDiv {
 		width: 100%;
 		border: none;
-		padding: 1rem;
+		padding: 1.5rem 1rem;
+		position: static;
+		transform: none;
 	}
 
 	.loginPageHead,
@@ -292,7 +294,4 @@
 		text-align: right;
 	}
 
-	.loginFormDiv {
-		top: 1rem;
-	}
 }
