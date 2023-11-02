@@ -11,19 +11,22 @@
 	margin-bottom: 15px;
 }
 
-.paraPoints{
+.paraPoints {
 	font-size: 17px;
 	line-height: 22px;
 	margin-bottom: 0.7rem;
 }
 
 .buttonDiv {
+	height: 46px;
 	width: 300px;
-	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .updateRetreat {
-	font-size: 16px;
+	font-size: 18px;
 }
 
 .updateDeleteBtn {
@@ -31,8 +34,8 @@
 	height: 100%;
 	font-size: 16px;
 	line-height: 19px;
-	color: #FF0000;
-	background: #FEE8EA;
+	color: #E5342F;
+	background: rgba(229, 52, 47, 0.05);
 	border-radius: 4px;
 	border: none;
 	outline: none;
@@ -42,6 +45,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	border: 1px solid #E5342F;
 
 	&:disabled {
 		background-color: #BFBFBF;
@@ -52,14 +56,14 @@
 }
 
 .accountRecoveryBtnBox {
-	width: 151px;
-	height: 40px;
-}
+	width: 160px;
+	height: 46px;
 
-.accountRecoveryBtn {
-	font-size: 16px !important;
-}
+	button {
+		font-size: 18px !important;
 
+	}
+}
 
 .buttonModalDiv {
 	width: 100%;
@@ -98,4 +102,30 @@
 	color: #2D2E2D;
 	height: 40px;
 	margin-right: 10px;
+}
+
+@media(max-width:640px) {
+	.accountRecoveryBtnBox {
+		width: 100%;
+	}
+
+	.buttonDiv {
+		flex-direction: column;
+		margin-top: 10px;
+		width: 100%;
+		height: auto;
+
+		button {
+			height: 46px;
+			font-size: 16px;
+		}
+
+		.updateRetreat {
+			margin-bottom: 10px;
+		}
+
+		.updateDeleteBtn {
+			margin: 0;
+		}
+	}
 }

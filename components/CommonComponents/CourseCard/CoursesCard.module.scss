@@ -1,7 +1,8 @@
 .cardMainDiv {
 	min-width: 317px;
-	border: 1px solid #0000002c ;
+	border: 1px solid #0000002c;
 	border-radius: 4px;
+	overflow: hidden;
 	margin: 1.5rem 0 1.5rem 2rem;
 }
 
@@ -24,10 +25,10 @@
 }
 
 .followUpBtn {
-	font-size: 16px;
+	font-size: 18px;
 	width: 100%;
-	height: 40px;
-	margin: 10px 0 8px 0;
+	height: 46px;
+	// margin: 10px 0 8px 0;
 }
 
 .courseTitle {
@@ -45,6 +46,6 @@
 
 @media (max-width: 1024px) {
 	.cardMainDiv {
-		margin: 1.5rem 0;
+		margin: 0.5rem;
 	}
 }

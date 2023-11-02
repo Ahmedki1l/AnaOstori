@@ -128,6 +128,8 @@ import NewFemaleIcon from './customeIcons/newFemaleIcon'
 import InAppPurchaseIcon from './customeIcons/inAppPurchaseIcon'
 import NewUpArrowIcon from './customeIcons/newUpArrowIcon'
 import NewDownArrowIcon from './customeIcons/newDownArrowIcon'
+import NewEmailIcon from './customeIcons/newEmailIcon'
+import NewLockIcon from './customeIcons/newLockIcon'
 
 
 
@@ -247,6 +249,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newFemaleIcon' && <NewFemaleIcon height={height} width={width} color={color} />}
 			{iconName == 'newUpArrowIcon' && <NewUpArrowIcon height={height} width={width} color={color} />}
 			{iconName == 'newDownArrowIcon' && <NewDownArrowIcon height={height} width={width} color={color} />}
+			{iconName == 'newEmailIcon' && <NewEmailIcon height={height} width={width} color={color} />}
+			{iconName == 'newLockIcon' && <NewLockIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}

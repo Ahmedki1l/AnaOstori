@@ -78,24 +78,24 @@ const DeleteAccount = ({ data }) => {
             {accountsSectionType == 'default' ?
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>حذف الحساب</h3>
-                    <p className={`fontMedium ${styles.paraText}`}>{DeleteAccoutConst.nameText} <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName} </span></p>
-                    <p className={`fontMedium ${styles.paraText}`}>{DeleteAccoutConst.deleteAccountText1}</p>
-                    <p className={styles.paraPoints}>1. {DeleteAccoutConst.point11} <span style={{color:'red'}}>{DeleteAccoutConst.point12}</span> {DeleteAccoutConst.point13} {DeleteAccoutConst.point14}</p>
+                    <p className={` ${styles.paraText}`}>{DeleteAccoutConst.nameText} <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName} </span></p>
+                    <p className={` ${styles.paraText}`}>{DeleteAccoutConst.deleteAccountText1}</p>
+                    <p className={styles.paraPoints}>1. {DeleteAccoutConst.point11} <span style={{ color: 'red' }}>{DeleteAccoutConst.point12}</span> {DeleteAccoutConst.point13} {DeleteAccoutConst.point14}</p>
                     <p className={styles.paraPoints}>2. {DeleteAccoutConst.point2} </p>
                     <p className={styles.paraPoints}>3. {DeleteAccoutConst.point3} </p>
 
-                    <div className={`${styles.buttonDiv} flex justify-center items-center`}>
-                        <button className={`primaryStrockedBtn ${styles.updateRetreat}`} onClick={() => router.push('/')}  >تراجع </button>
-                        <button className={styles.updateDeleteBtn} onClick={() => handleDeleteAccount()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}  حذف الحساب  </button>
+                    <div className={`${styles.buttonDiv}`}>
+                        <button className={`primarySolidBtn ${styles.updateRetreat}`} onClick={() => router.push('/')}  >غيرت رأيي</button>
+                        <button className={styles.updateDeleteBtn} onClick={() => handleDeleteAccount()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}تأكيد حذف الحساب</button>
                     </div>
                 </>
                 :
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>استعادة الحساب</h3>
-                    <p className={styles.paraText}>{DeleteAccoutConst.recoveryText11} <span style={{color:'#E5342F'}}>{countRemainingDays(data?.inActiveAt)}</span> {DeleteAccoutConst.recoveryText12}</p>
+                    <p className={styles.paraText}>{DeleteAccoutConst.recoveryText11} <span style={{ color: '#E5342F' }}>{countRemainingDays(data?.inActiveAt)}</span> {DeleteAccoutConst.recoveryText12}</p>
                     <p className={styles.paraText}>{DeleteAccoutConst.recoveryText2}</p>
                     <div className={styles.accountRecoveryBtnBox}>
-                        <button className={`primarySolidBtn ${styles.accountRecoveryBtn}`} onClick={() => handleAccountRecovery()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} color='#FF0000' /> : ""} استعادة الحساب</button>
+                        <button className={`primarySolidBtn`} onClick={() => handleAccountRecovery()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} color='#FF0000' /> : ""} استعادة الحساب</button>
                     </div>
                 </>
             }

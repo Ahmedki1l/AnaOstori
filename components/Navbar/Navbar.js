@@ -18,8 +18,6 @@ import { ConfigProvider, Drawer } from 'antd';
 import styled from 'styled-components';
 
 const StyledDrawer = styled(Drawer)`
-   width: 305px !important;
-   
   .ant-drawer-body{
 	padding: 0px !important;
   }
@@ -263,6 +261,7 @@ export default function Navbar() {
 							<StyledDrawer
 								open={isMenuShow}
 								closable={false}
+								width={305}
 								onClose={() => setIsMenuShow(false)}
 								title={
 									<div className={styles.mobileMemuHead}>
