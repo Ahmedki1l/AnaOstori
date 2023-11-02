@@ -139,11 +139,11 @@ export default function Home(props) {
 					<p className='fontMedium'>{HomeConst.pfontMedium2}</p>
 					<div className={styles.btnBox}>
 						<div className={styles.firstBtnBox}>
-							<button className={`secondrySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
 						</div>
-						{/* <div className={styles.secondBtnBox}>
-							<button className={`secondryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>تجارب الأساطير</button>
-						</div> */}
+					</div>
+					<div className={styles.secondBtnBox}>
+							<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
