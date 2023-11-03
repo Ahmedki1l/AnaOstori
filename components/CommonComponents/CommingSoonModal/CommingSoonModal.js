@@ -6,8 +6,11 @@ import loader from '../../../public/icons/loader.svg'
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import CloseIcon from '@mui/icons-material/Close';
+import styled from 'styled-components';
 
-
+const StyledDialogContent = styled(DialogContent)`
+    padding: 14px !important;
+`
 
 
 function CommingSoonModal(props) {
@@ -31,8 +34,8 @@ function CommingSoonModal(props) {
     };
 
     return (
-        <Dialog className='breniusDialogWrapper' open={open} onClick={() => setCommingSoonModalOpen(false)} dir='rtl' >
-            <DialogContent className={styles.commingSoonModalBox} onClick={handleContentClick}>
+        <Dialog open={open} onClick={() => setCommingSoonModalOpen(false)} dir='rtl' >
+            <StyledDialogContent className={styles.commingSoonModalBox} onClick={handleContentClick}>
                 <div style={{ direction: 'ltr' }}>
                     <CloseIcon style={{ position: 'inherit' }} className={`cursor-pointer ${styles.closeIconWrapper}`} onClick={() => setCommingSoonModalOpen(false)} />
                 </div>
@@ -48,7 +51,7 @@ function CommingSoonModal(props) {
                 <div className={`${styles.buttonModalDiv} flex justify-center items-center`}>
                     <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={closeCommingSoonModal}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تصفح المجالات</button>
                 </div>
-            </DialogContent>
+            </StyledDialogContent>
         </Dialog>
     )
 }

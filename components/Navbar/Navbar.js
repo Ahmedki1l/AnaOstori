@@ -224,25 +224,25 @@ export default function Navbar() {
 								<div className={`${styles.profileMenuWrapperMo} ${styles.profileMenuWrapper}`}>
 									<div className={styles.profileMenuSubWrapper}>
 										<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
-											<AllIconsComponenet height={18} width={18} iconName={'persone1'} color={'#000000'} />
+											<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
 											<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
 										</Link>
 										<div className={styles.inqBtnBox}>
 											<Link href={'/purchaseInquiry'} className='no-underline'>
 												<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
-													<div className='p-2'>
-														<AllIconsComponenet height={20} width={20} iconName={'history'} color={'#ffffff'} /> &nbsp;
+													<div style={{ height: '40px' }} className='p-2'>
+														<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} /> &nbsp;
 													</div>
 													استعلام الحجوزات
 												</button>
 											</Link>
 										</div>
 										<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
-											<AllIconsComponenet height={18} width={18} iconName={'setting'} color={'#000000'} />
+											<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
 											<p className={styles.profileMenuItemsText}>الإعدادات</p>
 										</Link>
 										<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
-											<AllIconsComponenet height={18} width={18} iconName={'logout'} color={'#FF0000'} />
+											<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
 											<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
 										</div>
 									</div>
@@ -278,18 +278,18 @@ export default function Navbar() {
 										<div className={styles.loginBtnsBox}>
 											<div className={styles.loginBtnBox} onClick={() => handleClickOnLink()}>
 												<Link href={"/register"} className='normalLinkText' >
-													<button className={`primaryStrockedBtn ${styles.loginBtn}`}>تسجيل الدخول</button>
+													<button className={`primaryStrockedBtn ${styles.loginBtn}`}>إنشاء حساب</button>
 												</Link>
 											</div>
 											<div className={styles.signupBtnBox} onClick={() => handleClickOnLink()}>
 												<Link href={"/login"} className='normalLinkText'>
-													<button className={`primarySolidBtn ${styles.signupBtn}`}>إنشاء حساب</button>
+													<button className={`primarySolidBtn ${styles.signupBtn}`}>تسجيل الدخول</button>
 												</Link>
 											</div>
 										</div>}
 									<div className={`p-4 ${styles.mainMenuWrapper}`}>
-										<p onClick={() => handleClickOnLink()} className={`cursor-pointer ${styles.homeText}`}>الرئيسية</p>
-										{/* <Link href={'/'} onClick={() => handleClickOnLink()} className={styles.homeText}>الرئيسية </Link> */}
+										{/* <p onClick={() => handleClickOnLink()} className={`cursor-pointer ${styles.homeText}`}>الرئيسية</p> */}
+										<Link href={'/'} onClick={() => handleClickOnLink()} className={styles.homeText}>الرئيسية </Link>
 									</div>
 									<div className='border-b border-inherit'></div>
 									<ul className={styles.navbarSubWrapper}>
@@ -400,23 +400,25 @@ export default function Navbar() {
 												<div className={styles.profileMenuWrapper}>
 													<div className={styles.profileMenuSubWrapper}>
 														<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
-															<AllIconsComponenet height={18} width={18} iconName={'persone1'} color={'#000000'} />
+															<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
 															<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
 														</Link>
 														<div className={styles.inqBtnBox}>
 															<Link href={'/purchaseInquiry'} className='no-underline'>
 																<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
-																	<AllIconsComponenet height={20} width={20} iconName={'history'} color={'#ffffff'} /> &nbsp;
+																	<div style={{ height: '25px' }}>
+																		<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} />
+																	</div> &nbsp;
 																	استعلام الحجوزات
 																</button>
 															</Link>
 														</div>
 														<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
-															<AllIconsComponenet height={18} width={18} iconName={'setting'} color={'#000000'} />
+															<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
 															<p className={styles.profileMenuItemsText}>الإعدادات</p>
 														</Link>
 														<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
-															<AllIconsComponenet height={18} width={18} iconName={'logout'} color={'#FF0000'} />
+															<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
 															<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
 														</div>
 													</div>
