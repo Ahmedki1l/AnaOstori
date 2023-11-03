@@ -153,7 +153,7 @@ export default function PurchaseInquiry(props) {
 							</tbody>
 						</table>
 						:
-						(searchData.length < 0 && isMediumScreen) ?
+						(searchData.length > 0 && isMediumScreen) ?
 							<>
 								{searchData?.map((data, i = index) => {
 									return (
