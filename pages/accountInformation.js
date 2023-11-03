@@ -179,26 +179,25 @@ export default function AccountInformation() {
                     <div className={styles.tabsList}>
                         {storeData.loginWithoutPassword == false &&
                             <>
-                                {
-                                    isSmallScreen ?
-                                        <div className={styles.smallScreenTabTitleDiv} onClick={() => handleTabClick(0)}>
+                                {isSmallScreen ?
+                                    <div className={styles.smallScreenTabTitleDiv} onClick={() => handleTabClick(0)}>
+                                        <div className={styles.tabTitleDiv}>
+                                            <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
+                                            <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
+                                        </div>
+                                        <div style={{ height: '17px', cursor: 'pointer' }}>
+                                            <AllIconsComponenet height={17} width={10} iconName={'arrowLeft'} color={'#000000'} />
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className={`${styles.tab} ${activeTab == 0 && `${styles.active}`}`} onClick={() => handleTabClick(0)}>
+                                        <div className={styles.tabDiv}>
+                                            <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
                                             <div className={styles.tabTitleDiv}>
-                                                <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
                                                 <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
                                             </div>
-                                            <div style={{ height: '17px', cursor: 'pointer' }}>
-                                                <AllIconsComponenet height={17} width={10} iconName={'arrowLeft'} color={'#000000'} />
-                                            </div>
                                         </div>
-                                        :
-                                        <div className={`${styles.tab} ${activeTab == 0 && `${styles.active}`}`} onClick={() => handleTabClick(0)}>
-                                            <div className={styles.tabDiv}>
-                                                <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
-                                                <div className={styles.tabTitleDiv}>
-                                                    <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    </div>
                                 }
                                 {isSmallScreen ?
                                     <div className={styles.smallScreenTabTitleDiv} onClick={() => handleTabClick(1)}>
@@ -246,11 +245,6 @@ export default function AccountInformation() {
                 <div className={styles.tabContent}>
                     {isTabContentShown &&
                         <>
-                            {/* {sectionType == 'default' && isSmallScreen &&
-                                <div style={{ width: '10px', cursor: 'pointer' }} onClick={() => handleArraowClick()}>
-                                    <AllIconsComponenet height={17} width={10} iconName={'arrowRight'} color={'#000000'} />
-                                </div>
-                            } */}
                             {activeTab == 0 ?
                                 <>
                                     {sectionType == 'default' ?
@@ -274,10 +268,6 @@ export default function AccountInformation() {
                                         </div>
                                         : sectionType == 'password' ?
                                             <div className={styles.phoneContainer}>
-                                                {/* <div className={styles.phoneTitleDiv} onClick={() => setSectionType('default')}>
-                                                    <AllIconsComponenet height={17} width={10} iconName={'arrowRight'} color={'#000000'} />
-                                                    <h3>تأكيد كلمة السر</h3>
-                                                </div> */}
                                                 <h3 className='py-4'>تأكيد كلمة السر</h3>
                                                 <p>دخل كلمة السر عشان تقدر تعدل ايميلك</p>
                                                 <div className={`formInputBox`}>
@@ -289,11 +279,11 @@ export default function AccountInformation() {
                                                     <div className={styles.passwordIconDiv}>
                                                         {!showPassword ?
                                                             <div onClick={() => setShowPassword(true)}>
-                                                                <AllIconsComponenet height={24} width={24} iconName={'visibilityIcon'} color={'#808080'} />
+                                                                <AllIconsComponenet height={24} width={24} iconName={'newVisibleIcon'} color={'#808080'} />
                                                             </div>
                                                             :
                                                             <div onClick={() => setShowPassword(false)}>
-                                                                <AllIconsComponenet height={24} width={24} iconName={'visibilityOffIcon'} color={'#808080'} />
+                                                                <AllIconsComponenet height={24} width={24} iconName={'newVisibleOffIcon'} color={'#808080'} />
                                                             </div>
                                                         }
                                                     </div>

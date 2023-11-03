@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ChangePassword.module.scss'
 import loader from '../../../public/icons/loader.svg'
 import { toast } from "react-toastify";
 import Image from 'next/image'
-import { verifyPassword } from '../../../services/fireBaseAuthService';
+import { handleUpdatePassword, verifyPassword } from '../../../services/fireBaseAuthService';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { toastErrorMessage, toastSuccessMessage } from '../../../constants/ar';
 import { ChangePasswordConst } from '../../../constants/ChangePasswordConst';
-
 
 
 const ChangePassword = ({ data, setActiveTab }) => {
@@ -23,127 +22,64 @@ const ChangePassword = ({ data, setActiveTab }) => {
     const [isOldPasswordError, setIsOldPasswordError] = useState(null);
     const [isNewPasswordError, setIsNewPasswordError] = useState(null);
     const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(null);
-
+    const [showLoader, setShowLoader] = useState(false);
     const [initPasswordError, setInitPasswordError] = useState({
         minLength: true,
         capitalLetter: true,
         number: true,
         specialCharacter: true,
     });
-
-    const [showLoader, setShowLoader] = useState(false);
-    const regexPassword = useMemo(() => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, []);
-
-    const validateInputs = () => {
-        // if (!oldPassword) {
-        //     setIsOldPasswordError(ChangePasswordConst.oldPasswordError);
-        // } else {
-        //     setIsOldPasswordError(null);
-        // }
-        // if (!newPassword) {
-        //     setIsNewPasswordError(ChangePasswordConst.newPasswordError);
-        // } else {
-        //     setIsNewPasswordError(null);
-        // }
-        // if (newPassword && (!regexPassword.test(newPassword))) {
-        //     setIsNewPasswordError(ChangePasswordConst.newPasswordError);
-        //     // return false
-        // } else {
-        //     setIsNewPasswordError(null);
-        // }
-        // if (!confirmPassword) {
-        //     setIsConfirmPasswordError(ChangePasswordConst.confirmPasswordError);
-        // } else {
-        //     setIsConfirmPasswordError(null);
-        // }
-        // if (confirmPassword && confirmPassword !== newPassword) {
-        //     setIsConfirmPasswordError(ChangePasswordConst.passWordNotMatchErrorMsg);
-        //     // return false
-        // } else {
-        //     setIsConfirmPasswordError(null);
-        // }
-        // return true
-    }
-
-
-    // useEffect(() => {
-    //     let data = { ...initPasswordError }
-    //     if (newPassword?.length) {
-    //         if (newPassword.length > 7) {
-    //             data.minLength = false
-    //             setInitPasswordError(data)
-    //         } else {
-    //             data.minLength = true
-    //             setInitPasswordError(data)
-    //         }
-    //         if (newPassword.match(/[A-Z]/g)) {
-    //             data.capitalLetter = false
-    //             setInitPasswordError(data)
-    //         } else {
-    //             data.capitalLetter = true
-    //             setInitPasswordError(data)
-    //         }
-    //         if (newPassword.match(/[0-9]/g)) {
-    //             data.number = false
-    //             setInitPasswordError(data)
-    //         } else {
-    //             data.number = true
-    //             setInitPasswordError(data)
-    //         }
-    //         if (newPassword.match(/[!@#$%^&*]/g)) {
-    //             data.specialCharacter = false
-    //             setInitPasswordError(data)
-    //         } else {
-    //             data.specialCharacter = true
-    //             setInitPasswordError(data)
-    //         }
-    //         if (newPassword.length > 7 && newPassword.match(/[A-Z]/g) && newPassword.match(/[0-9]/g) && newPassword.match(/[!@#$%^&*]/g)) {
-    //             setIsNewPasswordError(null)
-    //         } else {
-    //             setIsNewPasswordError(ChangePasswordConst.passwordFormateMsg)
-    //         }
-    //         if (newPassword == oldPassword) {
-    //             setIsNewPasswordError(ChangePasswordConst.passWordMatchErrorMsg)
-    //         } else {
-    //             setIsNewPasswordError(null)
-    //         }
-    //     }
-    // }, [newPassword])
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    useEffect(() => {
         if (!oldPassword) {
-            setIsOldPasswordError(ChangePasswordConst.oldPasswordError);
-        } else if (oldPassword && (oldPassword.length < 8 || !oldPassword.match(/[A-Z]/g) || !oldPassword.match(/[0-9]/g) || !oldPassword.match(/[!@#$%^&*]/g))) {
-            setIsOldPasswordError(ChangePasswordConst.passwordFormateMsg)
+            setIsOldPasswordError(null);
         } else {
             setIsOldPasswordError(null);
         }
         if (!newPassword) {
-            setIsNewPasswordError(ChangePasswordConst.newPasswordError);
+            setIsNewPasswordError(null);
+        } else if (newPassword && oldPassword == newPassword) {
+            setIsNewPasswordError(ChangePasswordConst.passWordMatchErrorMsg);
         } else {
             setIsNewPasswordError(null);
         }
-        if (newPassword && (!regexPassword.test(newPassword))) {
-            setIsNewPasswordError(ChangePasswordConst.newPasswordError);
+        if (!confirmPassword) {
+            setIsConfirmPasswordError(null);
+        } else if (confirmPassword && newPassword !== confirmPassword) {
+            setIsConfirmPasswordError(ChangePasswordConst.passWordNotMatchErrorMsg);
+        } else {
+            setIsConfirmPasswordError(null);
+        }
+    }, [oldPassword, newPassword, confirmPassword])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!oldPassword) {
+            setIsOldPasswordError(ChangePasswordConst.noPasswordErrorMsg);
+        } else {
+            setIsOldPasswordError(null);
+        }
+        if (!newPassword) {
+            setIsNewPasswordError(ChangePasswordConst.noPasswordErrorMsg);
+        } else if (newPassword && oldPassword == newPassword) {
+            setIsNewPasswordError(ChangePasswordConst.passWordMatchErrorMsg);
         } else {
             setIsNewPasswordError(null);
         }
         if (!confirmPassword) {
             setIsConfirmPasswordError(ChangePasswordConst.confirmPasswordError);
-        } else if (confirmPassword && confirmPassword !== newPassword) {
+        } else if (confirmPassword && newPassword !== confirmPassword) {
             setIsConfirmPasswordError(ChangePasswordConst.passWordNotMatchErrorMsg);
         } else {
             setIsConfirmPasswordError(null);
         }
-        if (!oldPassword || !newPassword || !confirmPassword || !regexPassword.test(newPassword) || confirmPassword !== newPassword) {
+        if ((!oldPassword) || (!newPassword || newPassword == oldPassword) || (!confirmPassword || confirmPassword != newPassword)) {
             return
         } else {
             setShowLoader(true)
             await verifyPassword(data?.email, oldPassword).then(async (res) => {
                 await handleUpdatePassword(newPassword).then(res => {
+                    toast.success(ChangePasswordConst.UpdatedNewPassWordToastMsg, { rtl: true, })
                     setActiveTab(0)
-                    toast.success(toastSuccessMessage.passwordUpdateMsg, { rtl: true, })
                     setOldPassword('')
                     setNewPassword('')
                     setConfirmPassword('')
@@ -160,7 +96,8 @@ const ChangePassword = ({ data, setActiveTab }) => {
             })
         }
     }
-    const handleUpdatePassword = (newPassword) => {
+
+    const handleUpdatePasswordInput = (newPassword) => {
         setNewPassword(newPassword)
         let data = { ...initPasswordError }
         if (newPassword.length > 7) {
@@ -194,7 +131,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
         if (newPassword.length > 7 && newPassword.match(/[A-Z]/g) && newPassword.match(/[0-9]/g) && newPassword.match(/[!@#$%^&*]/g)) {
             setIsNewPasswordError(null)
         } else {
-            setIsNewPasswordError(ChangePasswordConst.passwordFormateMsg)
+            setIsNewPasswordError(ChangePasswordConst.passwordNotValidFormateMsg)
         }
     }
 
@@ -209,7 +146,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
                         id="oldPassword"
                         type={showOldPassword ? "text" : "password"}
                         value={oldPassword}
-                        onChange={(e) => { setOldPassword(e.target.value); setIsOldPasswordError('') }}
+                        onChange={(e) => setOldPassword(e.target.value)}
                         placeholder=' '
                     />
                     <label className={`formLabel ${isOldPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="oldPassword">{ChangePasswordConst?.oldPasswordLabel}</label>
@@ -230,28 +167,20 @@ const ChangePassword = ({ data, setActiveTab }) => {
                         id="newPassword"
                         type={showNewPassword ? "text" : "password"}
                         value={newPassword}
-                        onChange={(e) => handleUpdatePassword(e.target.value)}
+                        onChange={(e) => handleUpdatePasswordInput(e.target.value)}
                         placeholder=' '
                     />
                     <label className={`formLabel ${isNewPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="newPassword">{ChangePasswordConst?.newPasswordLabel}</label>
                     {newPassword &&
                         <div className={styles.passwordIconDiv}>
-                            <div style={{ height: '20px' }} onClick={() => setShowNewPassword(!showOldPassword ? true : false)}>
-                                <AllIconsComponenet height={24} width={24} iconName={!showOldPassword ? 'newVisibleIcon' : 'newVisibleOffIcon'} color={'#00000080'} />
+                            <div style={{ height: '20px' }} onClick={() => setShowNewPassword(!showNewPassword ? true : false)}>
+                                <AllIconsComponenet height={24} width={24} iconName={!showNewPassword ? 'newVisibleIcon' : 'newVisibleOffIcon'} color={'#00000080'} />
                             </div>
                         </div>
                     }
                 </div>
                 {!isNewPasswordError && <p className={styles.passwordHintText}>{ChangePasswordConst?.passwordHintHeading}</p>}
                 {isNewPasswordError && <p className={styles.errorText}>{isNewPasswordError}</p>}
-
-                {/* <div>        
-                <p className={styles.notes}>{!oldPassword && !newPassword && !confirmPassword ? <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#808080'} /> : !regexPassword.test(newPassword) ? <AllIconsComponenet iconName={'passwordAlertIcon'} height={20} width={20} color={'#808080'} /> : <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />}<span>{ChangePasswordConst?.hint1}</span></p>
-                <p className={styles.notes}>{!oldPassword && !newPassword && !confirmPassword ? <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#808080'} /> : !regexPassword.test(newPassword) ? <AllIconsComponenet iconName={'passwordAlertIcon'} height={20} width={20} color={'#808080'} /> : <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />}<span>{ChangePasswordConst?.hint2}</span></p>
-                <p className={styles.notes}>{!oldPassword && !newPassword && !confirmPassword ? <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#808080'} /> : !regexPassword.test(newPassword) ? <AllIconsComponenet iconName={'passwordAlertIcon'} height={20} width={20} color={'#808080'} /> : <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />}<span>{ChangePasswordConst?.hint3}</span></p>
-                <p className={styles.notes}>{!oldPassword && !newPassword && !confirmPassword ? <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#808080'} /> : !regexPassword.test(newPassword) ? <AllIconsComponenet iconName={'passwordAlertIcon'} height={20} width={20} color={'#808080'} /> : <AllIconsComponenet iconName={'checkCircleIcon'} height={20} width={20} color={'#7FDF4B'} />}<span>{ChangePasswordConst?.hint4}</span></p>
-                </div>         */}
-
                 <div className={styles.errorMsgWraper}>
                     <>
                         <AllIconsComponenet
@@ -306,14 +235,13 @@ const ChangePassword = ({ data, setActiveTab }) => {
                         type={showConfirmPassword ? "text" : "password"}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        // onChange={(e) => { setConfirmPassword(e.target.value), setIsConfirmPasswordError("") }}
                         placeholder=' '
                     />
                     <label className={`formLabel ${isConfirmPasswordError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="confirmPassword">{ChangePasswordConst?.confirmPasswordLabel}</label>
                     {confirmPassword &&
                         <div className={styles.passwordIconDiv}>
-                            <div style={{ height: '20px' }} onClick={() => setShowConfirmPassword(!showOldPassword ? true : false)}>
-                                <AllIconsComponenet height={24} width={24} iconName={!showOldPassword ? 'newVisibleIcon' : 'newVisibleOffIcon'} color={'#00000080'} />
+                            <div style={{ height: '20px' }} onClick={() => setShowConfirmPassword(!showConfirmPassword ? true : false)}>
+                                <AllIconsComponenet height={24} width={24} iconName={!showConfirmPassword ? 'newVisibleIcon' : 'newVisibleOffIcon'} color={'#00000080'} />
                             </div>
                         </div>
                     }

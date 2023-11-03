@@ -138,11 +138,6 @@ export default function Register() {
 		} else {
 			setEmailError(null)
 		}
-		// if (phoneNumber && !(phoneNumber.startsWith("05"))) {
-		// 	setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-		// } else {
-		// 	setPhoneNumberError(null);
-		// }
 		if (phoneNumber && !(phoneNumber.startsWith("05"))) {
 			setPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
 		} else if (phoneNumber && phoneNumber.length < 10) {

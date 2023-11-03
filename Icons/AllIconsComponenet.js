@@ -132,6 +132,7 @@ import NewEmailIcon from './customeIcons/newEmailIcon'
 import NewLockIcon from './customeIcons/newLockIcon'
 import NewSettingIcon from './customeIcons/newSettingIcon'
 import NewLogOutIcon from './customeIcons/newLogOutIcon'
+import WhatsApp_whiteBorder from './customeIcons/whatsApp_whiteBorder'
 
 
 
@@ -285,6 +286,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'coloredEmailIcon' && <ColoredEmailIcon height={height} width={width} color={color} />}
 
 			{iconName == 'passwordAlertIcon' && <PasswordAlert height={height} width={width} color={color} />}
+			{iconName == 'whatsApp_whiteBorder' && <WhatsApp_whiteBorder height={height} width={width} color={color} />}
 
 
 		</>
