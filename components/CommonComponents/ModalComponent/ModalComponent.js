@@ -19,17 +19,19 @@ const StylesModal = styled(Modal)`
         direction:rtl
     }
     .ant-modal-content{
-        width:358px;
+        width:100%;
         border-radius: 5px;
-        padding: 1.5rem;
+        padding:14px;
 		overflow:hidden;
+    }
+    .ant-modal-footer{
+        display:none;
     }
 `
 
 const ModalComponent = (props) => {
 
     const { handleClose, setAccountsSectionType, open, modalType } = props;
-
     const storeData = useSelector((state) => state?.globalStore);
     const [showLoader, setShowLoader] = useState(false);
     const dispatch = useDispatch();
@@ -82,24 +84,24 @@ const ModalComponent = (props) => {
     }, [storeData?.viewProfileData?.inActiveAt])
 
     return (
-        <>
-            <StylesModal
-                closeIcon={false}
-                footer={false}
-                open={open}
-                onClose={handleClose}
-                centered
-            >
-                <p className={`fontBold ${styles.modalTitleText}`}> تنبيه </p>
-                <p className={styles.modalParaText}>
-                    حسابك بينحذف بعد <span style={{ color: 'red' }}>{countRemainingDays(storeData?.viewProfileData?.inActiveAt)}</span> وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه
-                </p>
-                <div className={`${styles.buttonModalDiv}`}>
-                    <button className={`primarySolidBtn mb-2 ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}بسترجع الحساب</button>
-                    <button className={`primaryStrockedBtn ${styles.cancelBtn}`} onClick={handleCancel} >تجاهل </button>
-                </div>
-            </StylesModal>
-        </>
+        <StylesModal
+            closeIcon={false}
+            footer={false}
+            open={open}
+            onCancel={handleClose}
+            centered
+            width={'360px'}
+        >
+            <p className={`fontBold ${styles.modalTitleText}`}>تذكير</p>
+            <p className={styles.modalParaText}>
+                حسابك بينحذف بعد {countRemainingDays(storeData?.viewProfileData?.inActiveAt)} وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه
+                {/* حسابك بينحذف بعد <span style={{ color: 'red' }}>{countRemainingDays(storeData?.viewProfileData?.inActiveAt)}</span> وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه */}
+            </p>
+            <div className={`${styles.buttonModalDiv}`}>
+                <button className={`primarySolidBtn mb-2 ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}بسترجع الحساب</button>
+                <button className={`primaryStrockedBtn ${styles.cancelBtn}`} onClick={handleCancel} >تجاهل </button>
+            </div>
+        </StylesModal>
     )
 
 }

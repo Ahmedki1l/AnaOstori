@@ -12,7 +12,6 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import useWindowSize from '../hooks/useWindoSize';
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar';
 import { AccountInformationConst } from '../constants/AccountInformationConst';
-import is from 'sharp/lib/is';
 
 
 export default function AccountInformation() {
@@ -24,11 +23,11 @@ export default function AccountInformation() {
     const [gender, setGender] = useState();
     const [sectionType, setSectionType] = useState('default');
     const [password, setPassword] = useState("");
-    const [passwordError, setPasswordError] = useState(false);
+    const [passwordError, setPasswordError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const [isPhoneNumberError, setIsPhoneNumberError] = useState(false);
     const [email, setEmail] = useState()
-    const [emailError, setEmailError] = useState(false);
+    const [emailError, setEmailError] = useState(null);
     const [isEmailError, setIsEmailError] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
     // const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
@@ -52,11 +51,11 @@ export default function AccountInformation() {
     useEffect(() => {
 
         if (email) {
-            setIsEmailError(false)
+            setIsEmailError(null)
         }
 
         if (password) {
-            setPasswordError(false)
+            setPasswordError(null)
         }
 
         if (email && !(regexEmail.test(email))) {
@@ -109,7 +108,6 @@ export default function AccountInformation() {
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
             });
-            toast.success(type == 'phone' ? toastSuccessMessage.mobileNoUpdateMsg : type == 'email' ? toastSuccessMessage.emailUpdateMsg : toastSuccessMessage.genderUpdateMsg, { rtl: true, })
             setSectionType('default')
         }).catch(error => {
             console.log(error);
@@ -122,44 +120,19 @@ export default function AccountInformation() {
         })
     }
 
-    const handleUpdateDetails = async (type) => {
-        if (isPhoneNumberError) return
-        setShowLoader(true)
-        let body = {};
-        if (type == 'phone') {
-            body = {
-                phone: phoneNumber.replace(/[0-9]/, "+966")
-            }
-        } else {
-            body = {
-                gender: gender
-            }
-        }
-        const params = {
-            routeName: 'updateProfileHandler',
-            ...body,
-        }
-        await postAuthRouteAPI(params).then(async (res) => {
-            setShowLoader(false)
-            getProfileData(type)
-        }).catch(error => {
-            setShowLoader(false)
-            console.log(error)
-            if (error?.response?.status == 401) {
-                signOutUser()
-            }
-        });
-    }
-
     const handleCheckPassword = async () => {
         if (!password) {
             setPasswordError(inputErrorMessages.noPasswordMsg)
+            return
         }
+        if (!password || passwordError) return
         else {
             setShowLoader(true)
             await verifyPassword(userProfileData?.email, password).then(async (res) => {
+                toast.success(AccountInformationConst.passwordUpdateSuccessToastMsg, { rtl: true, })
                 if (res?.user?.accessToken) {
                     await changeEmail(email).then(res => {
+                        toast.success(AccountInformationConst.emailUpdateSuccessToastMsg, { rtl: true, })
                         setShowLoader(false)
                         setEmail(email)
                         setPassword("")
@@ -187,12 +160,9 @@ export default function AccountInformation() {
     const handleEmailNextBtn = (e) => {
         if (!email?.length) {
             setIsEmailError(true)
-            // setEmail("")
-            // setSectionType('الايميل')
         } else {
             setIsEmailError(false)
             setSectionType('password')
-
         }
     }
 
@@ -201,9 +171,6 @@ export default function AccountInformation() {
         setIsTabContentShown(false)
     }
 
-
-
-
     return (
         <>
             <div className={`${styles.verticalTabsContainer}`}>
@@ -211,34 +178,33 @@ export default function AccountInformation() {
                     <div className={styles.tabsList}>
                         {storeData.loginWithoutPassword == false &&
                             <>
-                                {
-                                    isSmallScreen ?
-                                        <div className={styles.smallScreenTabTitleDiv}>
-                                            <div className={styles.tabTitleDiv}>
-                                                <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
-                                                <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
-                                            </div>
-                                            <div style={{ height: '17px', cursor: 'pointer' }} onClick={() => handleTabClick(0)}>
-                                                <AllIconsComponenet height={17} width={10} iconName={'arrowLeft'} color={'#000000'} />
-                                            </div>
-                                        </div>
-                                        :
-                                        <div className={`${styles.tab} ${activeTab == 0 && `${styles.active}`}`} onClick={() => handleTabClick(0)}>
-                                            <div className={styles.tabDiv}>
-                                                <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
-                                                <div className={styles.tabTitleDiv}>
-                                                    <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                }
                                 {isSmallScreen ?
-                                    <div className={styles.smallScreenTabTitleDiv}>
+                                    <div className={styles.smallScreenTabTitleDiv} onClick={() => handleTabClick(0)}>
                                         <div className={styles.tabTitleDiv}>
-                                            <AllIconsComponenet height={25} width={25} iconName={'newLockIcon'} color={'#000000'} />
+                                            <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
                                             <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
                                         </div>
-                                        <div style={{ height: '17px', cursor: 'pointer' }} onClick={() => handleTabClick(1)}>
+                                        <div style={{ height: '17px', cursor: 'pointer' }}>
+                                            <AllIconsComponenet height={17} width={10} iconName={'arrowLeft'} color={'#000000'} />
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className={`${styles.tab} ${activeTab == 0 && `${styles.active}`}`} onClick={() => handleTabClick(0)}>
+                                        <div className={styles.tabDiv}>
+                                            <AllIconsComponenet height={25} width={25} iconName={'newEmailIcon'} color={'#000000'} />
+                                            <div className={styles.tabTitleDiv}>
+                                                <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                {isSmallScreen ?
+                                    <div className={styles.smallScreenTabTitleDiv} onClick={() => handleTabClick(1)}>
+                                        <div className={styles.tabTitleDiv}>
+                                            <AllIconsComponenet height={25} width={25} iconName={'newLockIcon'} color={'#000000'} />
+                                            <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تغيير كلمة السر</p>
+                                        </div>
+                                        <div style={{ height: '17px', cursor: 'pointer' }}>
                                             <AllIconsComponenet height={17} width={10} iconName={'arrowLeft'} color={'#000000'} />
                                         </div>
                                     </div>
@@ -255,12 +221,12 @@ export default function AccountInformation() {
                             </>
                         }
                         {isSmallScreen ?
-                            <div className={styles.smallScreenTabTitleDiv}>
+                            <div className={styles.smallScreenTabTitleDiv} onClick={() => handleTabClick(2)}>
                                 <div className={styles.tabTitleDiv}>
                                     <AllIconsComponenet height={25} width={25} iconName={`${userProfileData?.inActiveAt == null ? 'accountDelet' : 'accountRestore'}`} color={'#000000'} />
-                                    <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تعديل الايميل</p>
+                                    <p className={`fontMedium pr-2 ${styles.tabTitle}`}>{`${userProfileData?.inActiveAt == null ? 'حذف الحساب' : 'استرجاع الحساب'}`}</p>
                                 </div>
-                                <div style={{ height: '17px', cursor: 'pointer' }} onClick={() => handleTabClick(2)}>
+                                <div style={{ height: '17px', cursor: 'pointer' }}>
                                     <AllIconsComponenet height={17} width={10} iconName={'arrowLeft'} color={'#000000'} />
                                 </div>
                             </div>
@@ -278,11 +244,6 @@ export default function AccountInformation() {
                 <div className={styles.tabContent}>
                     {isTabContentShown &&
                         <>
-                            {sectionType == 'default' && isSmallScreen &&
-                                <div style={{ width: '10px', cursor: 'pointer' }} onClick={() => handleArraowClick()}>
-                                    <AllIconsComponenet height={17} width={10} iconName={'arrowRight'} color={'#000000'} />
-                                </div>
-                            }
                             {activeTab == 0 ?
                                 <>
                                     {sectionType == 'default' ?
@@ -298,18 +259,15 @@ export default function AccountInformation() {
 
                                             {emailError ? <p className={styles.errorText}>{AccountInformationConst.emptyEmailError}</p> : isEmailError == true && <p className={styles.errorText}>{AccountInformationConst.emailError}</p>}
                                             <div className={styles.submitBtnBox}>
-                                                <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} disabled={emailError || storeData.loginWithoutPassword == true}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} {AccountInformationConst.submitBtn}</button>
+                                                <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} >{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} {AccountInformationConst.submitBtn}</button>
                                             </div>
                                             <div className={styles.submitBtnBox}>
-                                                <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => setSectionType('default')}>{AccountInformationConst.cancelBtn}</button>
+                                                <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => handleArraowClick()}>{AccountInformationConst.cancelBtn}</button>
                                             </div>
                                         </div>
                                         : sectionType == 'password' ?
                                             <div className={styles.phoneContainer}>
-                                                <div className={styles.phoneTitleDiv} onClick={() => setSectionType('default')}>
-                                                    <AllIconsComponenet height={17} width={10} iconName={'arrowRight'} color={'#000000'} />
-                                                    <h3>تأكيد كلمة السر</h3>
-                                                </div>
+                                                <h3 className='py-4'>تأكيد كلمة السر</h3>
                                                 <p>دخل كلمة السر عشان تقدر تعدل ايميلك</p>
                                                 <div className={`formInputBox`}>
                                                     <div className={styles.IconDiv}>
@@ -320,11 +278,11 @@ export default function AccountInformation() {
                                                     <div className={styles.passwordIconDiv}>
                                                         {!showPassword ?
                                                             <div onClick={() => setShowPassword(true)}>
-                                                                <AllIconsComponenet height={24} width={24} iconName={'visibilityIcon'} color={'#808080'} />
+                                                                <AllIconsComponenet height={24} width={24} iconName={'newVisibleIcon'} color={'#808080'} />
                                                             </div>
                                                             :
                                                             <div onClick={() => setShowPassword(false)}>
-                                                                <AllIconsComponenet height={24} width={24} iconName={'visibilityOffIcon'} color={'#808080'} />
+                                                                <AllIconsComponenet height={24} width={24} iconName={'newVisibleOffIcon'} color={'#808080'} />
                                                             </div>
                                                         }
                                                     </div>
@@ -332,6 +290,9 @@ export default function AccountInformation() {
                                                 {passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة </p>}
                                                 <div className={styles.submitBtnBox}>
                                                     <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleCheckPassword()}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ </button>
+                                                </div>
+                                                <div className={styles.submitBtnBox}>
+                                                    <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => setSectionType('default')}>{AccountInformationConst.cancelBtn}</button>
                                                 </div>
                                             </div>
                                             : ""

@@ -10,8 +10,13 @@ export const DeleteAccoutConst = {
     point3: 'تبي تسترجع حسابك؟ أبد، ارجع ادخل بنفس حسابك و اضغط على زر “بسترجع الحساب”.',
 
 
-    recoveryText11:'حسابك بينحذف بعد',
-    recoveryText12:'وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه',
-    recoveryText2:'تبي تسترجع حسابك؟ أبد، اضغط على زر “بسترجع الحساب”.',
+    recoveryText11: 'حسابك بينحذف بعد',
+    recoveryText12: 'وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه',
+    recoveryText2: 'تبي تسترجع حسابك؟ أبد، اضغط على زر “بسترجع الحساب”.',
 
+    noteText: 'ملاحظة:',
+    confirmDeleteAccountText: 'بعد ما تأكد حذف حسابك، راح يتم تسجيل خروجك تلقائيًا',
+    confirmAccountDeleteBtnText: 'تأكيد حذف الحساب',
+    accountRecoverBtnText: 'بسترجع الحساب',
+    AccountNotDeleteBtnText: 'غيرت رأيي'
 }

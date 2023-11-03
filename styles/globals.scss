@@ -1,100 +1,100 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
- 
+
+
 @import "./variables.module.scss";
- 
- 
+
+
 @font-face {
     font-family: 'Tajawal-ExtraLight';
     src: url('../public/fonts/Tajawal-ExtraLight.ttf');
 }
- 
+
 @font-face {
     font-family: 'Tajawal-Light';
     src: url('../public/fonts/Tajawal-Light.ttf');
 }
- 
+
 @font-face {
     font-family: 'Tajawal-Regular';
     src: url('../public/fonts/Tajawal-Regular.ttf');
 }
- 
+
 @font-face {
     font-family: 'Tajawal-Medium';
     src: url('../public/fonts/Tajawal-Medium.ttf');
 }
- 
+
 @font-face {
     font-family: 'Tajawal-Black';
     src: url('../public/fonts/Tajawal-Black.ttf');
 }
- 
+
 @font-face {
     font-family: 'Tajawal-Bold';
     src: url('../public/fonts/Tajawal-Bold.ttf');
 }
- 
+
 @font-face {
     font-family: 'Tajawal-ExtraBold';
     src: url('../public/fonts/Tajawal-ExtraBold.ttf');
 }
- 
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Tajawal-Regular';
 }
- 
+
 .maxWidthDefault {
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
 }
- 
+
 .maxWidthDefault2 {
     width: 100%;
     max-width: 850px;
     margin: 0 auto;
 }
- 
+
 .fontBold {
     font-family: 'Tajawal-Bold';
 }
- 
+
 .fontMedium {
     font-family: 'Tajawal-Medium';
 }
- 
+
 .fontRegular {
     font-family: 'Tajawal-Regular';
 }
- 
+
 .fontPrimarycolor {
     color: $primary-color;
 }
- 
+
 .bg-secondary {
     background-color: $secondary-color;
 }
- 
- 
+
+
 /* ****************************************************** Header css start ******************************************************  */
 .head1 {
     font-family: 'Tajawal-Bold';
     font-size: 35px;
 }
- 
+
 .head2 {
     font-family: 'Tajawal-Bold';
     font-size: 22px;
 }
- 
- 
+
+
 /* ****************************************************** Button css start ******************************************************  */
- 
+
 .primarySolidBtn {
     height: 100%;
     width: 100%;
@@ -110,19 +110,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
- 
+
     &:hover {
         background-color: $primary-hover-color;
         border-color: $primary-hover-color;
     }
- 
+
     &:disabled {
         background-color: #BFBFBF;
         border-color: #BFBFBF;
         cursor: not-allowed;
     }
 }
- 
+
 .secondrySolidBtn {
     height: 100%;
     width: 100%;
@@ -138,13 +138,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
- 
+
     &:hover {
         background-color: #000000;
         border-color: #000000;
     }
 }
- 
+
 .primaryStrockedBtn {
     height: 100%;
     width: 100%;
@@ -159,13 +159,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
- 
+
     &:hover {
         border-color: $primary-hover-color;
         color: $primary-hover-color;
     }
 }
- 
+
 .secondryStrockedBtn {
     height: 100%;
     width: 100%;
@@ -181,13 +181,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
- 
+
     &:hover {
         border-color: #000000;
         color: #000000;
     }
 }
- 
+
 .deleteBtn {
     height: 100%;
     width: 100%;
@@ -201,7 +201,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
- 
+
     &:disabled {
         background-color: #BFBFBF;
         border-color: #BFBFBF;
@@ -209,28 +209,28 @@
         cursor: not-allowed;
     }
 }
- 
+
 .iconButton {
     display: flex;
     justify-content: center;
     align-items: center;
- 
+
     .btnIcon {
         margin: 0 0.5rem;
     }
 }
- 
- 
+
+
 /* ****************************************************** check Box ******************************************************  */
- 
+
 .checkBoxDiv {
     display: flex;
     align-items: center;
- 
+
     p {
         padding: 0 0.5rem;
     }
- 
+
     input[type='checkbox'] {
         width: 24px !important;
         height: 24px !important;
@@ -245,7 +245,7 @@
         position: relative;
         overflow: hidden;
     }
- 
+
     input[type='checkbox']:after {
         content: '✔';
         color: transparent;
@@ -254,27 +254,27 @@
         top: -2px;
         left: 3px;
     }
- 
+
     input[type='checkbox']:checked {
         background-color: $primary-color;
     }
- 
+
     input[type='checkbox']:checked:after {
         color: #ffffff;
     }
- 
+
 }
- 
+
 /* ****************************************************** WhatsApp Logo Wrapper ******************************************************  */
- 
+
 .whatsAppLogoWrapper {
     position: fixed;
     bottom: 30px;
     right: 20px;
-    z-index: 100;
+    z-index: 10000;
     height: 80px;
 }
- 
+
 .whatsAppMessageWrapper {
     background-color: #ffffff;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -284,56 +284,51 @@
     visibility: hidden;
     width: 0;
     transition: opacity 0.2s;
+
+    p {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+    }
 }
- 
+
 .whatsAppLogo {
- 
     &:hover .whatsAppMessageWrapper {
         opacity: 1;
         visibility: visible;
         width: auto;
-        padding: 1rem;
+        padding: 12px;
         margin-right: 5px;
     }
- 
 }
- 
-.whatsAppLogoRoundWrapper {
-    height: 80px;
-    width: 80px;
-    border-radius: 50%;
-    background-color: #25D366;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
- 
+
+
 /* ****************************************************** text Link design ****************************************************** */
 .link {
     text-decoration: underline;
     color: #0075FF;
     cursor: pointer;
 }
- 
+
 .primarylink {
     text-decoration: underline;
     color: $primary-color;
     cursor: pointer;
 }
- 
+
 .noUnderlineLink {
     text-decoration: none;
     color: #0075FF;
     cursor: pointer;
 }
- 
+
 .normalLinkText {
     text-decoration: none;
     color: #000000;
 }
- 
+
 /* ********************************************* Video Thumnail and Dialog ********************************************** */
- 
+
 .playIconDiv {
     position: absolute;
     z-index: 10;
@@ -346,7 +341,7 @@
     height: 65px;
     width: 65px;
 }
- 
+
 .playIcon {
     color: #ffffff;
     font-size: 4rem !important;
@@ -356,7 +351,7 @@
     height: 100%;
     width: 100%;
 }
- 
+
 .videoCloseIcon {
     position: absolute;
     top: 10px;
@@ -369,7 +364,7 @@
     height: 30px;
     width: 30px;
 }
- 
+
 .pdfCloseIcon {
     position: relative;
     top: 5px;
@@ -378,7 +373,7 @@
     z-index: 100;
     cursor: pointer;
 }
- 
+
 .blurBgForVideo {
     position: absolute;
     height: 100%;
@@ -386,9 +381,9 @@
     background-color: #00000080;
     z-index: 8;
 }
- 
+
 // ********************************************* Spinner design  *************************************************** //
- 
+
 .spinner-container {
     display: flex;
     justify-content: center;
@@ -396,7 +391,7 @@
     height: 100%;
     margin: 1rem
 }
- 
+
 .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-top-color: #F26722;
@@ -405,34 +400,34 @@
     height: 3rem;
     animation: spin 1s ease-in-out infinite;
 }
- 
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
- 
- 
+
+
 // ********************************************* input box design  *************************************************** //
 .formInputBox {
     margin: 1rem 0;
     position: relative;
     display: flex;
     align-items: center;
- 
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
- 
+
     input[type=number] {
         -moz-appearance: textfield;
     }
- 
- 
+
+
 }
- 
+
 .formInput {
     width: 19.8rem;
     height: 3.2rem;
@@ -443,15 +438,15 @@
     font-size: 18px;
     font-family: 'Tajawal-Regular';
     background-color: transparent !important;
- 
+
     &:disabled {
         background-color: #F8F8F8 !important;
         border: 1px solid #CED4DA;
         cursor: not-allowed;
     }
- 
+
 }
- 
+
 .formLabel {
     position: absolute;
     top: 0.7rem;
@@ -460,128 +455,132 @@
     transition: all 0.5s;
     z-index: 0;
 }
- 
+
 .formInput:focus+.formLabel {
     font-size: 10px;
     top: 0.5rem;
     z-index: 0;
 }
- 
+
 .formInput:not(:placeholder-shown).formInput:not(:focus)+.formLabel {
     font-size: 10px;
     top: 0.5rem;
     z-index: 0;
 }
- 
+
 .formInput:disabled+.formLable {
     color: #939BA2;
 }
- 
+
 .formInputIconDiv {
     margin: auto 0;
     position: absolute;
     display: grid;
     right: 1rem;
 }
- 
- 
- 
+
+
+
 // ********************************************* Dialog design *************************************************** //
- 
+
 .dialogWrapper {
     margin: 0.5rem;
 }
- 
+
 .padding0-important {
     padding: 0 !important;
 }
- 
+
 .courseCompeletDialog {
     .css-1fu2e3p-MuiPaper-root-MuiDialog-paper {
         margin: 5px !important;
     }
- 
+
     .MuiDialogContent-root.css-ypiqx9-MuiDialogContent-root {
         padding: 1rem 0.5rem !important;
     }
+
+    .css-ypiqx9-MuiDialogContent-root {
+        padding: 15px;
+    }
 }
- 
+
 // ******************************************** payment Form Design **************************************************** //
 .wpwl-group {
     padding: 0 1rem;
 }
- 
+
 .wpwl-form {
     display: flex !important;
     flex-direction: column !important;
     margin: 2rem;
 }
- 
+
 .wpwl-label {
     display: none !important;
 }
- 
+
 .wpwl-control {
     font-family: 'Times New Roman', Times, serif;
- 
+
     &::placeholder {
         color: #ccc;
         opacity: 1;
         /* Firefox */
     }
 }
- 
+
 .wpwl-control-brand {
     display: none !important;
 }
- 
+
 .wpwl-brand {
     position: absolute;
     top: 4.9rem;
     left: 1.7rem;
     z-index: 1;
 }
- 
+
 .wpwl-brand-MADA {
     top: 5.2rem !important;
     background-position: 0px -5433px;
     height: 24px;
 }
- 
+
 .wpwl-wrapper-cardNumber {
     width: 100%;
 }
- 
+
 .wpwl-wrapper-expiry {
     width: 100%;
 }
- 
+
 .wpwl-wrapper-cardHolder {
     width: 100%;
 }
- 
+
 .wpwl-wrapper-cvv {
     width: 100%;
 }
- 
+
 .wpwl-button-pay {
     width: 100%;
     outline: none;
     background-color: $primary-color;
     border: 1px solid $primary-color;
     border-radius: 4px;
- 
+
     &:hover {
         background-color: $primary-hover-color;
         border-color: $primary-hover-color;
     }
- 
+
     &:focus {
         background-color: $primary-hover-color;
         border-color: $primary-hover-color;
     }
 }
- 
+
 .wpwl-control-cardHolder,
 .wpwl-control-expiry,
 .wpwl-control-cardNumber,
@@ -590,7 +589,7 @@
     border-radius: 4px;
     padding-right: 1rem;
 }
- 
+
 .wpwl-button-pay[disabled],
 .wpwl-button-pay[disabled]:hover,
 .wpwl-button-pay[disabled]:focus,
@@ -598,43 +597,43 @@
     background-color: #72757E;
     border-color: #72757E;
 }
- 
+
 .wpwl-apple-pay-button-black {
     width: 100%;
 }
- 
- 
+
+
 .iconSelectDropDownMenuWrapper {
     padding: 5px !important;
     width: 68px;
     margin: 0 -3px;
 }
- 
- 
+
+
 // ******************************************** add Appoinment Modal SCSS**************************************************** //
- 
+
 .addAppoinmentModal {
-	.ant-modal-content {
-		padding: 0;
-		width: 388px;
-		border-radius: 3px;
-	}
+    .ant-modal-content {
+        padding: 0;
+        width: 388px;
+        border-radius: 3px;
+    }
 
-	.ant-modal-close {
-		display: none;
-	}
+    .ant-modal-close {
+        display: none;
+    }
 
-	.ant-modal-footer {
-		margin-top: 2px;
-	}
+    .ant-modal-footer {
+        margin-top: 2px;
+    }
 }
 
 @media(max-width: 410px) {
-	.addAppoinmentModal {
-		.ant-modal-content {
-			width: 100%;
-		}
-	}
+    .addAppoinmentModal {
+        .ant-modal-content {
+            width: 100%;
+        }
+    }
 }
 
 
@@ -642,42 +641,42 @@
     .head1 {
         font-size: 32px;
     }
- 
+
     .head2 {
         font-size: 21px;
     }
- 
+
     .primarySolidBtn,
     .secondrySolidBtn,
     .primaryStrockedBtn,
     .secondryStrockedBtn {
         padding: 0.4rem 0.8rem;
     }
- 
+
     .wpwl-form {
         margin: 2rem auto;
     }
 }
- 
+
 @media (max-width: 1280px) {
     .head1 {
         font-size: 30px;
     }
- 
+
     .head2 {
         font-size: 20px;
     }
 }
- 
+
 @media (max-width: 1024px) {
     .head1 {
         font-size: 27px;
     }
- 
+
     .head2 {
         font-size: 19px;
     }
- 
+
     .primarySolidBtn,
     .secondrySolidBtn,
     .primaryStrockedBtn,
@@ -686,54 +685,53 @@
         padding: 0.3rem 0.6rem;
     }
 }
- 
+
 @media (max-width: 768px) {
     .head1 {
         font-size: 25px;
     }
- 
+
     .head2 {
         font-size: 17px;
     }
- 
+
     .whatsAppLogoWrapper {
         bottom: -16px;
         left: 20px;
-        z-index: 100;
         height: 80px;
     }
- 
+
     .whatsAppLogoRoundWrapper {
         height: 55px;
         width: 55px;
     }
- 
+
     .whatsAppLogoWrapperUp {
         bottom: 9.5rem;
     }
- 
+
     .discountShowWrapperUp {
         bottom: 16rem;
     }
- 
+
     .whatsAppLogoWrapperDown {
         bottom: 0;
     }
- 
+
     .notShowWrapperUP {
         bottom: 7rem;
     }
- 
+
     .pageChangeLogoWrapper {
         bottom: 7rem;
     }
 }
- 
+
 @media (max-width: 640px) {
     .head1 {
         font-size: 22px;
     }
- 
+
     .primarySolidBtn,
     .secondrySolidBtn,
     .primaryStrockedBtn,
@@ -741,7 +739,7 @@
         font-size: 16px;
     }
 }
- 
+
 @media (max-width: 450px) {
     .head1 {
         font-size: 24px;

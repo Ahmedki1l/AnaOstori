@@ -211,6 +211,8 @@
 	display: flex;
 	flex-wrap: wrap;
 	padding: 1rem 0 0 0;
+	justify-content: space-between;
+	margin: auto;
 }
 
 .courseCardWraper {
@@ -220,8 +222,7 @@
 	border-radius: 4px;
 	cursor: pointer;
 	overflow: hidden;
-	margin: 1rem;
-	margin-right: 0;
+	margin: 1rem 0 1rem 3rem;
 }
 
 .courseImgBox {
@@ -245,11 +246,6 @@
 	padding-top: 4rem;
 }
 
-@media (max-width: 1350px) {
-	.courseCardWraper {
-		width: 290px;
-	}
-}
 
 @media (max-width: 1280px) {
 	.textSection {
@@ -265,8 +261,8 @@
 		width: 450px;
 	}
 
+
 	.courseCardWraper {
-		margin: 0 0 1rem 1rem;
 		width: 270px;
 		height: 210px;
 	}
@@ -289,7 +285,8 @@
 
 @media (max-width: 1180px) {
 	.courseCardsWraper {
-		justify-content: center;
+		// justify-content: center;
+		width: auto;
 	}
 
 	.courseCardWraper {
@@ -382,10 +379,6 @@
 		padding: 3rem 1rem 2rem 1rem;
 	}
 
-	.courseCardsWraper {
-		justify-content: center;
-	}
-
 	.btnBox {
 		justify-content: center;
 	}
@@ -395,6 +388,12 @@
 		font-size: 17px;
 	}
 
+}
+
+@media(max-width :890px) {
+	.courseCardsWraper {
+		justify-content: center;
+	}
 }
 
 @media (max-width: 640px) {

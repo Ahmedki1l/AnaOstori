@@ -6,7 +6,6 @@ import Icon from '../components/CommonComponents/Icon';
 import useWindowSize from '../hooks/useWindoSize';
 import Image from 'next/legacy/image';
 import axios from 'axios';
-import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewComponent';
 import VideoThumnail from '../components/CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
@@ -24,9 +23,7 @@ export const metadata = {
 export async function getServerSideProps(context) {
 	const params = context.query
 	try {
-		// const newsReq = axios.get(`${process.env.API_BASE_URL}/news`)
 		const newsReq = axios.post(`${process.env.API_BASE_URL}/route`, { routeName: 'listNewsBar' })
-
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`)
 		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
 		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=homeMetaData`)
@@ -43,6 +40,7 @@ export async function getServerSideProps(context) {
 				catagories: catagories.data,
 				homeMetaData: homeMetaData.data,
 				news: news.data,
+				params: params
 			}
 
 			// props: {
@@ -56,7 +54,7 @@ export async function getServerSideProps(context) {
 	} catch (error) {
 		console.log(error);
 		return {
-			// notFound: true,
+			notFound: true,
 		};
 	}
 
@@ -86,10 +84,11 @@ export default function Home(props) {
 		}
 		setScrollSectionName(sectionName)
 	}
-
+	console.log(props);
 	useEffect(() => {
 		if (props.params?.دوراتنا == '') {
 			const scrollToCourse = handleScrollToSection("refCourseSec")
+			console.log(scrollToCourse);
 		}
 	}, [props.params?.دوراتنا]);
 
@@ -207,7 +206,6 @@ export default function Home(props) {
 					}
 				</div>
 			</div>
-			<hr />
 			{/* <div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
 				<div className={`flex justify-between items-center px-4`}>
 					<h1 className='head1'>{HomeConst.studentSectionHead1}</h1>

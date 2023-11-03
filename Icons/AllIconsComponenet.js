@@ -130,6 +130,9 @@ import NewUpArrowIcon from './customeIcons/newUpArrowIcon'
 import NewDownArrowIcon from './customeIcons/newDownArrowIcon'
 import NewEmailIcon from './customeIcons/newEmailIcon'
 import NewLockIcon from './customeIcons/newLockIcon'
+import NewSettingIcon from './customeIcons/newSettingIcon'
+import NewLogOutIcon from './customeIcons/newLogOutIcon'
+import WhatsApp_whiteBorder from './customeIcons/whatsApp_whiteBorder'
 
 
 
@@ -251,6 +254,9 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newDownArrowIcon' && <NewDownArrowIcon height={height} width={width} color={color} />}
 			{iconName == 'newEmailIcon' && <NewEmailIcon height={height} width={width} color={color} />}
 			{iconName == 'newLockIcon' && <NewLockIcon height={height} width={width} color={color} />}
+			{iconName == 'newSettingIcon' && <NewSettingIcon height={height} width={width} color={color} />}
+			{iconName == 'newLogOutIcon' && <NewLogOutIcon height={height} width={width} color={color} />}
+
 
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
@@ -280,6 +286,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'coloredEmailIcon' && <ColoredEmailIcon height={height} width={width} color={color} />}
 
 			{iconName == 'passwordAlertIcon' && <PasswordAlert height={height} width={width} color={color} />}
+			{iconName == 'whatsApp_whiteBorder' && <WhatsApp_whiteBorder height={height} width={width} color={color} />}
 
 
 		</>
