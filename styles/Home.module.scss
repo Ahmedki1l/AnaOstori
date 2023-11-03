@@ -211,7 +211,6 @@
 	display: flex;
 	flex-wrap: wrap;
 	padding: 1rem 0 0 0;
-	width: 83rem;
 	justify-content: space-between;
 	margin: auto;
 }
@@ -223,8 +222,7 @@
 	border-radius: 4px;
 	cursor: pointer;
 	overflow: hidden;
-	margin: 1rem;
-	margin-right: 0;
+	margin: 1rem 0 1rem 3rem;
 }
 
 .courseImgBox {
@@ -248,15 +246,6 @@
 	padding-top: 4rem;
 }
 
-@media (max-width: 1350px) {
-	.courseCardWraper {
-		width: 290px;
-	}
-
-	.courseCardsWraper {
-		width: 76rem;
-	}
-}
 
 @media (max-width: 1280px) {
 	.textSection {
@@ -272,12 +261,8 @@
 		width: 450px;
 	}
 
-	.courseCardsWraper {
-		width: 70rem;
-	}
 
 	.courseCardWraper {
-		margin: 0 0 1rem 1rem;
 		width: 270px;
 		height: 210px;
 	}
