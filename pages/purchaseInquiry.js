@@ -153,7 +153,7 @@ export default function PurchaseInquiry(props) {
 							</tbody>
 						</table>
 						:
-						(searchData.length > 0 && isMediumScreen) ?
+						(searchData.length < 0 && isMediumScreen) ?
 							<>
 								{searchData?.map((data, i = index) => {
 									return (
@@ -250,7 +250,7 @@ export default function PurchaseInquiry(props) {
 									<p className={`fontMedium py-2 ${styles.detailsText}`} >ما حجزت بأي دورة</p>
 									<p className={styles.peragraph}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 									<div className={` pt-4 ${styles.btnWrapper}`}>
-										<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/')}>تصفح المجالات</button></div>
+										<div className={styles.submitBtnBox}><button className='primarySolidBtn ml-4' onClick={() => router.push('/?دوراتنا')}>تصفح المجالات</button></div>
 										{/* <div className={styles.cancleBtnBox}><button className='primaryStrockedBtn' >مشاهدة تجارب الأساطير</button></div> */}
 									</div>
 								</div>

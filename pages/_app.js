@@ -69,6 +69,9 @@ function MyApp({ Component, pageProps }) {
 				break;
 			case "/[catagoryName]/[courseName]/[bookSit]": setPageTitle('تعبئة البيانات')
 				break;
+			case "/accountInformation":
+				setPageTitle('إعدادات الحساب')
+				break;
 			case "/purchaseInquiry":
 				setPageTitle('استعلام الحجوزات')
 				break;
