@@ -59,7 +59,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
             setIsOldPasswordError(null);
         }
         if (!newPassword) {
-            setIsNewPasswordError(ChangePasswordConst.noPasswordErrorMsg);
+            setIsNewPasswordError(ChangePasswordConst.passwordNotValidFormateMsg);
         } else if (newPassword && oldPassword == newPassword) {
             setIsNewPasswordError(ChangePasswordConst.passWordMatchErrorMsg);
         } else {

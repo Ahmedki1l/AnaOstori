@@ -108,7 +108,6 @@ export default function AccountInformation() {
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
             });
-            // toast.success(type == 'email' ? AccountInformationConst.emailUpdateSuccessToastMsg : AccountInformationConst.passwordUpdateSuccessToastMsg , { rtl: true, })
             setSectionType('default')
         }).catch(error => {
             console.log(error);
@@ -133,6 +132,7 @@ export default function AccountInformation() {
                 toast.success(AccountInformationConst.passwordUpdateSuccessToastMsg, { rtl: true, })
                 if (res?.user?.accessToken) {
                     await changeEmail(email).then(res => {
+                        toast.success(AccountInformationConst.emailUpdateSuccessToastMsg, { rtl: true, })
                         setShowLoader(false)
                         setEmail(email)
                         setPassword("")
@@ -162,7 +162,6 @@ export default function AccountInformation() {
             setIsEmailError(true)
         } else {
             setIsEmailError(false)
-            toast.success(AccountInformationConst.emailUpdateSuccessToastMsg, { rtl: true, })
             setSectionType('password')
         }
     }

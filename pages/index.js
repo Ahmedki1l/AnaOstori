@@ -194,7 +194,7 @@ export default function Home(props) {
 				</div>
 			</div>
 			<div ref={refCourseSec} className={`maxWidthDefault ${styles.courseSection} ${scrollSectionName == 'refCourseSec' ? `${styles.paddingTop}` : ''}`}>
-				<h1 className='head1'></h1>
+				<h1 className='head1'>تصفح مجالاتنا</h1>
 				<div className={styles.courseCardsWraper}>
 					{catagories.length > 0 && catagories.map((catagory, index) => {
 						return (
