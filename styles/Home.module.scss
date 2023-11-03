@@ -212,7 +212,7 @@
 	flex-wrap: wrap;
 	padding: 1rem 0 0 0;
 	width: 83rem;
-	// justify-content: right;
+	justify-content: space-between;
 	margin: auto;
 }
 
@@ -405,6 +405,12 @@
 
 }
 
+@media(max-width :890px) {
+	.courseCardsWraper {
+		justify-content: center;
+	}
+}
+
 @media (max-width: 640px) {
 	.textSection {
 		width: 100%;
@@ -412,10 +418,6 @@
 
 	.discriptionText {
 		width: 100%;
-	}
-
-	.courseCardsWraper {
-		justify-content: center;
 	}
 
 	.videoThumnail {
