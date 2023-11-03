@@ -139,7 +139,7 @@
 
 .badgeDiv {
 	display: flex;
-	align-items: center;
+	// align-items: center;
 	padding-bottom: 3rem;
 	width: 65%;
 }
@@ -496,12 +496,25 @@
 	.textSection {
 		width: 100%;
 		text-align: right;
+		p{
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 21.6px;
+		}
 	}
 
+
+	.discriptionText a{
+		color: #ffffff;
+	}
+
+	.text2FontMedium{
+		margin-top: 20px;
+	}
 	.animatedTextBox {
 		position: absolute;
-		top: 27px;
-		left: 185px;
+		top: 1.25rem;
+		// left: 5rem;
 	}
 
 	.discriptionText {
@@ -518,6 +531,12 @@
 	.firstBtnBox,
 	.secondBtnBox {
 	margin: 0;
+}
+
+.userFeedbackDiscription {
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 21.6px;
 }
 }
 
