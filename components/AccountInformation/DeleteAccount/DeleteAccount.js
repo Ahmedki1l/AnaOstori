@@ -77,12 +77,8 @@ const DeleteAccount = ({ data }) => {
         <>
             {accountsSectionType == 'default' ?
                 <>
-                    <h3 className={`fontBold ${styles.sectionHeader}`}>حذف الحساب</h3>
-                    <p className={` ${styles.paraText}`}>{DeleteAccoutConst.nameText} <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName} </span></p>
+                    <p className={` ${styles.paraText}`}>{DeleteAccoutConst.nameText} <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName}  🙏</span></p>
                     <p className={` ${styles.paraText}`}>{DeleteAccoutConst.deleteAccountText1}</p>
-                    {/* <p className={styles.paraPoints}>1. {DeleteAccoutConst.point11} <span style={{ color: 'red' }}>30 {DeleteAccoutConst.point12}</span> {DeleteAccoutConst.point13} {DeleteAccoutConst.point14}</p> */}
-                    {/* <p className={styles.paraPoints}>2. {DeleteAccoutConst.point2} </p> */}
-                    {/* <p className={styles.paraPoints}>3. {DeleteAccoutConst.point3} </p> */}
                     <div className='flex items-baseline'>
                         <p className='pr-2'>1.</p>
                         <p className={styles.paraPoints}>{DeleteAccoutConst.point11} <span style={{ color: 'red' }}>30 {DeleteAccoutConst.point12}</span> {DeleteAccoutConst.point13} {DeleteAccoutConst.point14}</p>
@@ -104,7 +100,6 @@ const DeleteAccount = ({ data }) => {
                 :
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>{data?.fullName ? data?.fullName : data?.firstName}</h3>
-                    {/* <h3 className={`fontBold ${styles.sectionHeader}`}>استعادة الحساب</h3> */}
                     <p className={styles.paraText}>{DeleteAccoutConst.recoveryText11} <span style={{ color: '#E5342F' }}>{countRemainingDays(data?.inActiveAt)}</span> {DeleteAccoutConst.recoveryText12}</p>
                     <p className={styles.paraText}>{DeleteAccoutConst.recoveryText2}</p>
                     <div className={styles.accountRecoveryBtnBox}>
