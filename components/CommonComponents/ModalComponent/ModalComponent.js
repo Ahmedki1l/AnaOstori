@@ -51,7 +51,7 @@ const ModalComponent = (props) => {
                 console.log(error);
             })
             handleClose();
-            toast.success(toastSuccessMessage.accountRestoredMsg, { rtl: true, })
+            toast.success(toastSuccessMessage.accountRestoreSuccessMsg, { rtl: true, })
         }).catch(error => {
             setShowLoader(false)
             console.log(error);
@@ -95,7 +95,6 @@ const ModalComponent = (props) => {
             <p className={`fontBold ${styles.modalTitleText}`}>تذكير</p>
             <p className={styles.modalParaText}>
                 حسابك بينحذف بعد {countRemainingDays(storeData?.viewProfileData?.inActiveAt)} وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه
-                {/* حسابك بينحذف بعد <span style={{ color: 'red' }}>{countRemainingDays(storeData?.viewProfileData?.inActiveAt)}</span> وراح تفقد وصولك بجميع الدورات والمحتوى الرقمي اللي مسجل فيه */}
             </p>
             <div className={`${styles.buttonModalDiv}`}>
                 <button className={`primarySolidBtn mb-2 ${styles.accountRecoveryModalBtn}`} onClick={handleAccountRecovery} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}بسترجع الحساب</button>

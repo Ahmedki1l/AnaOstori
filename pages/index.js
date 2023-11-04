@@ -198,12 +198,11 @@ export default function Home(props) {
 				<div className={styles.courseCardsWraper}>
 					{catagories.length > 0 && catagories.map((catagory, index) => {
 						return (
-							<div key={`catagory${index}`} onClick={() => handleNavigation(catagory.name)}>
+							<div className={styles.courseCardWraper} key={`catagory${index}`} onClick={() => handleNavigation(catagory.name)}>
 								<CourseCard pictureUrl={mediaUrl(catagory.pictureBucket, catagory.pictureKey)} courseType={catagory.name} imgHeight={windowScreen > 1280 ? 164 : 145} />
 							</div>
 						)
-					})
-					}
+					})}
 				</div>
 			</div>
 			{/* <div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
