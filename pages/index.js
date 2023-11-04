@@ -128,22 +128,22 @@ export default function Home(props) {
 				<div className={styles.textSection}>
 					<h1 className='head1'>{HomeConst.head1}</h1>
 					<div className='flex relative'>
-						<p className='fontMedium'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
+						<p className='fontMedium'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p> 
 						<div className={styles.animatedTextBox}>
 							<p id={styles.animatedText1} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText1}</p>
 							<p id={styles.animatedText2} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText2}</p>
 							<p id={styles.animatedText3} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
 						</div>
 					</div>
-					<p className='fontMedium'>{HomeConst.pfontMedium2}</p>
+					<p className={`fontMedium ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
 					<div className={styles.btnBox}>
 						<div className={styles.firstBtnBox}>
-							<button className={`secondrySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
 						</div>
-						{/* <div className={styles.secondBtnBox}>
-							<button className={`secondryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>تجارب الأساطير</button>
-						</div> */}
 					</div>
+					{/* <div className={styles.secondBtnBox}>
+							<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+					</div> */}
 				</div>
 				<div className={`${styles.videoThumnail}`}>
 					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(videoObject?.fileBucket, videoObject?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
@@ -194,7 +194,7 @@ export default function Home(props) {
 				</div>
 			</div>
 			<div ref={refCourseSec} className={`maxWidthDefault ${styles.courseSection} ${scrollSectionName == 'refCourseSec' ? `${styles.paddingTop}` : ''}`}>
-				<h1 className='head1'>تصفح مجالاتنا</h1>
+				<h1 className='head1'>{HomeConst.refCourseSecHead1}</h1>
 				<div className={styles.courseCardsWraper}>
 					{catagories.length > 0 && catagories.map((catagory, index) => {
 						return (
@@ -207,10 +207,10 @@ export default function Home(props) {
 			</div>
 			{/* <div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
 				<div className={`flex justify-between items-center px-4`}>
-					<h1 className='head1'>تجارب الأساطير</h1>
-					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>مشاهدة الكل</p>
+					<h1 className='head1'>{HomeConst.studentSectionHead1}</h1>
+					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>{HomeConst.studentSectionLink}</p>
 				</div>
-				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>+25,000 طالب وطالبة ساعدناهم يحققون أهدافهم، <span className='fontPrimarycolor'>وعقبالك</span> تكون منهم 🧡</p>
+				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1} <br /> {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
 				<ReviewComponent homeReviews={homeReviews} />
 			</div> */}
 		</div>
