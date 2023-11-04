@@ -92,7 +92,7 @@ export default function Footer() {
 						<ul>
 							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 								<li className={styles.whatsAppWrapper} >
-									<AllIconsComponenet height={isSmallScreen ? 20 : 32} width={isSmallScreen ? 20 : 32} iconName={'whatsappFill'} color={'#40C351'} />
+									<AllIconsComponenet height={isSmallScreen ? 28 : 36} width={isSmallScreen ? 28 : 36} iconName={'whatsApp_whiteBorder'} color={'#40C351'} />
 									<p>0502413980</p>
 								</li>
 							</Link>

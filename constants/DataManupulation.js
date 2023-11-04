@@ -48,7 +48,7 @@ export const countRemainingDays = (date) => {
 
 export const subscriptionDays = (data) => {
     const days = data.daysLeft;
-    if (days <= 200 && days > 10) {
+    if (days > 10) {
         return `ينتهي اشتراكك بعد ${days} يوم، يوم ${dateWithDay(data.expireDate)}`
     }
     else if (days <= 10 && days >= 3) {

@@ -19,7 +19,7 @@
 
 .userInfoBox {
 	p {
-		line-height: 22px;
+		line-height: 20px;
 	}
 }
 
@@ -206,7 +206,7 @@
 	}
 
 	.rowDiv {
-		width: 380px;
+		width: 100%;
 		line-height: 40px;
 		border-collapse: collapse;
 		border-right: hidden;
@@ -216,7 +216,7 @@
 		}
 
 		th {
-			width: 127px;
+			// width: 127px;
 			border: 0.5px solid #808080;
 			border-top: none;
 			background-color: #F7F7F7;
@@ -229,12 +229,12 @@
 			width: 231px;
 			border: 0.5px solid #808080;
 			border-top: none;
-			padding: 5px 1rem;
+			padding: 24PX 12px;
 			font-weight: 400;
 			font-size: 14px;
 
 			p {
-				line-height: 1.2;
+				line-height: 20px;
 			}
 		}
 

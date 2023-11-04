@@ -36,7 +36,6 @@ export default function CoursesCard(props) {
 			Router.push(`myCourse/${courseDetails.id}`)
 		}
 	}
-	console.log(props?.data);
 	return (
 		<>
 			<div className={styles.cardMainDiv}>
