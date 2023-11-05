@@ -128,7 +128,7 @@
 
 .analyticsBarWrapper {
 	background-color: #2d2e2dcc;
-	padding: 0.5rem;
+	padding: 0.5rem 1rem;
 	position: relative;
 }
 
@@ -155,11 +155,20 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	p {
+		font-size: 23px;
+	}
 }
 
 .discriptionText,
 .userFeedbackDiscription {
+	padding-top: 8px;
 	font-size: 22px;
+}
+
+.discriptionLink {
+	color: #ffffff;
 }
 
 .imagesWrapper {
@@ -201,8 +210,6 @@
 	width: 167px;
 }
 
-
-
 .courseSection {
 	padding: 2rem 1rem;
 }
@@ -211,8 +218,6 @@
 	display: flex;
 	flex-wrap: wrap;
 	padding: 1rem 0 0 0;
-	// justify-content: space-between;
-	// margin: auto;
 }
 
 .courseCardWraper {
@@ -244,6 +249,40 @@
 
 .paddingTop {
 	padding-top: 4rem;
+}
+
+.displayAdminText {
+	font-size: 18px;
+	color: #2d2e2d80;
+	padding: 3px 5px;
+	display: inline;
+}
+
+.displayLinkText {
+	font-size: 18px;
+	color: #2d2e2d80;
+	padding: 3px 5px;
+	display: inline;
+
+	&:hover {
+		cursor: pointer;
+		color: #000000;
+		background-color: #7c7c7c18;
+		border-radius: 3px;
+	}
+}
+
+.categoryDetailsName {
+	font-size: 18px;
+	margin-right: 5px;
+	color: #2d2e2d80;
+	display: inline;
+}
+
+.categoryDetailsTable {
+	display: flex;
+	margin: 27px 0px -15px;
+	align-items: center;
 }
 
 
@@ -373,10 +412,6 @@
 		width: 100%;
 	}
 
-	.typeOfCourseHeader {
-		text-align: center;
-	}
-
 	.courseSection {
 		padding: 3rem 1rem 2rem 1rem;
 	}
@@ -387,7 +422,7 @@
 
 	.discriptionText,
 	.userFeedbackDiscription {
-		font-size: 17px;
+		font-size: 16px;
 	}
 
 }
@@ -491,7 +526,8 @@
 	.textSection {
 		width: 100%;
 		text-align: right;
-		p{
+
+		p {
 			font-size: 18px;
 			font-weight: 500;
 			line-height: 21.6px;
@@ -499,17 +535,17 @@
 	}
 
 
-	.discriptionText a{
+	.discriptionText a {
 		color: #ffffff;
 	}
 
-	.text2FontMedium{
-		margin-top: 20px;
+	.text2FontMedium {
+		margin-top: 25px;
 	}
+
 	.animatedTextBox {
 		position: absolute;
-		top: 1.25rem;
-		// left: 5rem;
+		top: 1.6rem;
 	}
 
 	.discriptionText {
@@ -525,46 +561,38 @@
 
 	.firstBtnBox,
 	.secondBtnBox {
-	margin: 0;
-}
+		margin: 0;
+	}
 
-.userFeedbackDiscription {
-	font-size: 18px;
-	font-weight: 400;
-	line-height: 21.6px;
-}
-}
+	.userFeedbackDiscription {
+		font-size: 18px;
+		font-weight: 400;
+		line-height: 21.6px;
+	}
 
-.displayAdminText {
-	font-size: 18px;
-	color: #2d2e2d80;
-	padding: 3px 5px;
-	display: inline;
-}
+	.courseTypeCard {
 
-.displayLinkText {
-	font-size: 18px;
-	color: #2d2e2d80;
-	padding: 3px 5px;
-	display: inline;
-
-	&:hover {
-		cursor: pointer;
-		color: #000000;
-		background-color: #7c7c7c18;
-		border-radius: 3px;
+		p {
+			font-size: 14px;
+		}
 	}
 }
 
-.categoryDetailsName {
-	font-size: 18px;
-	margin-right: 5px;
-	color: #2d2e2d80;
-	display: inline;
-}
+@media (max-width: 370px) {
+	.animatedTextBox {
+		right: 1.7rem;
+		top: 2rem
+	}
 
-.categoryDetailsTable {
-	display: flex;
-	margin: 27px 0px -15px;
-	align-items: center;
+	.text2FontMedium {
+		margin-top: 0px;
+	}
+
+	.textSection {
+
+		p {
+			line-height: 27.6px;
+		}
+	}
+
 }
