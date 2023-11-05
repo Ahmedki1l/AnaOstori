@@ -239,7 +239,7 @@ export default function Navbar() {
 										</div>
 										<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
 											<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
-											<p className={styles.profileMenuItemsText}>الإعدادات</p>
+											<p className={styles.profileMenuItemsText}>إعدادات الحساب</p>
 										</Link>
 										<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
 											<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />

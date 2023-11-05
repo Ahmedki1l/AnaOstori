@@ -29,6 +29,7 @@ const ChangePassword = ({ data, setActiveTab }) => {
         number: true,
         specialCharacter: true,
     });
+
     useEffect(() => {
         if (!oldPassword) {
             setIsOldPasswordError(null);

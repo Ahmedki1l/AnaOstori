@@ -101,9 +101,9 @@ export default function Home(props) {
 
 
 	const typeOfCourse = [
-		{ courseTypeHead: HomeConst.courseTypeHead1, iconName: 'physicalCourseIcon', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
-		{ courseTypeHead: HomeConst.courseTypeHead2, iconName: 'live', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 33 : 54) : 70 },
-		{ courseTypeHead: HomeConst.courseTypeHead3, iconName: 'onlineCourseIcon', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 64) : 82 },
+		{ courseTypeHead: HomeConst.courseTypeHead1, iconName: 'locationDoubleColor', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
+		{ courseTypeHead: HomeConst.courseTypeHead2, iconName: 'onlineDoubleColorIcon', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
+		{ courseTypeHead: HomeConst.courseTypeHead3, iconName: 'televisonDoubleColorIcon', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 64) : 82 },
 	]
 
 	return (
@@ -128,8 +128,8 @@ export default function Home(props) {
 				<div className={styles.textSection}>
 					<h1 className='head1'>{HomeConst.head1}</h1>
 					<div className='flex relative'>
-						<p className='fontMedium'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p> 
-						<div className={styles.animatedTextBox}>
+						<p className='fontMedium pt-2'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
+						<div className={`${styles.animatedTextBox} pt-2`}>
 							<p id={styles.animatedText1} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText1}</p>
 							<p id={styles.animatedText2} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText2}</p>
 							<p id={styles.animatedText3} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
@@ -154,15 +154,15 @@ export default function Home(props) {
 					<div className={`${styles.badgeDiv} pt-4`}>
 						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
 						<div className='px-4'>
-							<p className='head2' style={{ fontSize: '20px' }}>{HomeConst.p1Head2}</p>
+							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p1Head2}</p>
 							<p className={styles.discriptionText}>{HomeConst.pDescriptionText1}</p>
 						</div>
 					</div>
 					<div className={`${styles.badgeDiv} pt-4`}>
 						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
 						<div className='px-4'>
-							<p className='head2' style={{ fontSize: '20px' }}>{HomeConst.p2Head2}</p>
-							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className='link' href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
+							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p2Head2}</p>
+							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
 						</div>
 					</div>
 					<div className={styles.imagesWrapper}>
@@ -179,13 +179,13 @@ export default function Home(props) {
 						</div>
 					</div>
 					<div className='pt-8'>
-						<p className={`head2 ${styles.typeOfCourseHeader}`}>{HomeConst.p3Head2TypeOfCourseHeader}</p>
+						<p className={`fontMedium`} style={{ fontSize: '20px' }} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
 						<div className={styles.courseTypesWrapper}>
 							{typeOfCourse.map((data, index) => {
 								return (
 									<div className={styles.courseTypeCard} key={`courseType${index}`}>
 										<AllIconsComponenet height={data.height} width={data.width} iconName={data.iconName} color={'#FFFFFF'} />
-										<p className='head2 py-2'>{data.courseTypeHead}</p>
+										<p className='fontMedium py-2'>{data.courseTypeHead}</p>
 									</div>
 								)
 							})}
