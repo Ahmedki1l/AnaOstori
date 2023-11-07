@@ -29,13 +29,15 @@ export default function CourseDates(props) {
 						<AllIconsComponenet height={193} width={193} iconName={'fullSeatsIcon'} color={'#000000'} />
 					</div>
 				}
-				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
-
+				{/* <div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
 					{lang == 'en' ?
 						<p className={`fontMedium ${styles.dateBoxHeaderText}`}>{enDateWithDay(date?.dateFrom)}</p>
 						:
 						<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
 					}
+				</div> */}
+				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
+					<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{date?.name ? date?.name : dateWithDay(date?.dateFrom)}</p>
 				</div>
 				<ul className={styles.list}>
 					<li>
