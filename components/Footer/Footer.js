@@ -24,7 +24,7 @@ export default function Footer() {
 							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText'>
 								<li className={styles.locationLinkBox} >
 									<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredGoogleMapIcon'} />
-									<p className={styles.locationLinkText}>المقر الرئيسي، الرياض، حي الياسمين</p>
+									<p className={`pr-2 ${styles.locationLinkText}`}>المقر الرئيسي، الرياض، حي الياسمين</p>
 								</li>
 							</Link>
 							<div className={styles.socialMediaIconWraper}>

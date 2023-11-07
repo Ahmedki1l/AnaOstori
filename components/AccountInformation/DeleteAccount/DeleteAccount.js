@@ -76,7 +76,7 @@ const DeleteAccount = ({ data }) => {
     return (
         <>
             {accountsSectionType == 'default' ?
-                <>
+                <div className='mt-4'>
                     <p className={` ${styles.paraText}`}>{DeleteAccoutConst.nameText} <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName}  🙏</span></p>
                     <p className={` ${styles.paraText}`}>{DeleteAccoutConst.deleteAccountText1}</p>
                     <div className='flex items-baseline'>
@@ -95,7 +95,7 @@ const DeleteAccount = ({ data }) => {
                         <button className={`primarySolidBtn ${styles.updateRetreat}`} onClick={() => router.push('/')}>{DeleteAccoutConst.AccountNotDeleteBtnText}</button>
                         <button className={styles.updateDeleteBtn} onClick={() => handleDeleteAccount()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}{DeleteAccoutConst.confirmAccountDeleteBtnText}</button>
                     </div>
-                </>
+                </div>
                 :
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>{data?.fullName ? data?.fullName : data?.firstName}</h3>

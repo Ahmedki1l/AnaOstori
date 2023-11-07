@@ -44,6 +44,10 @@
 	}
 }
 
+.offerText {
+	font-size: 20px;
+}
+
 .animatedText {
 	position: absolute;
 	color: $primary-color;
@@ -95,16 +99,15 @@
 	animation-delay: 6s;
 }
 
-.btnBox {
-	width: 32rem;
-	display: flex;
-}
-
 .firstBtnBox,
 .secondBtnBox {
 	width: 210px;
 	height: 46px;
-	margin: 1rem 0 0 1rem;
+	margin: 1rem 0 0;
+
+	button {
+		font-size: 18px;
+	}
 }
 
 .firstBtn,
@@ -127,7 +130,7 @@
 
 
 .analyticsBarWrapper {
-	background-color: #2d2e2dcc;
+	background-color: #2D2E2D;
 	padding: 0.5rem 1rem;
 	position: relative;
 }
@@ -139,7 +142,6 @@
 
 .badgeDiv {
 	display: flex;
-	// align-items: center;
 	padding-bottom: 3rem;
 	width: 65%;
 }
@@ -151,7 +153,7 @@
 
 .courseTypeCard {
 	width: 250px;
-	margin: 2rem 0;
+	margin: 12px 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -186,6 +188,8 @@
 .image2,
 .image3 {
 	position: absolute;
+	border-radius: 4px;
+	overflow: auto;
 }
 
 .image1 {
@@ -215,9 +219,8 @@
 }
 
 .courseCardsWraper {
-	display: flex;
-	flex-wrap: wrap;
-	padding: 1rem 0 0 0;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .courseCardWraper {
@@ -227,7 +230,18 @@
 	border-radius: 4px;
 	cursor: pointer;
 	overflow: hidden;
-	margin: 1rem 0 1rem 4rem;
+}
+
+.courseCardWraper:nth-child(3n + 1) {
+	margin: 1rem 0 1rem auto;
+}
+
+.courseCardWraper:nth-child(3n + 2) {
+	margin: 1rem auto;
+}
+
+.courseCardWraper:nth-child(3n + 3) {
+	margin: 1rem auto 1rem 0;
 }
 
 .courseImgBox {
@@ -311,11 +325,6 @@
 		font-size: 19px;
 	}
 
-	.firstBtnBox,
-	.secondBtnBox {
-		height: auto;
-	}
-
 	.firstBtn,
 	.secondBtn {
 		padding: 0.5rem 1rem;
@@ -323,10 +332,6 @@
 }
 
 @media (max-width: 1180px) {
-	.courseCardsWraper {
-		// justify-content: center;
-		width: auto;
-	}
 
 	.discriptionText {
 		width: 470px;
@@ -382,6 +387,23 @@
 }
 
 @media (max-width: 962px) {
+	.courseCardsWraper {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.firstBtnBox,
+	.secondBtnBox {
+		width: 100%;
+	}
+
+	.courseCardWraper:nth-child(2n + 1) {
+		margin: 1rem 0 1rem auto;
+	}
+
+	.courseCardWraper:nth-child(2n + 2) {
+		margin: 1rem auto;
+	}
+
 	.mainSection {
 		display: flex;
 		flex-direction: column-reverse;
@@ -408,7 +430,7 @@
 
 	.badgeDiv {
 		justify-content: center;
-		padding-bottom: 2rem;
+		padding-bottom: 20px;
 		width: 100%;
 	}
 
@@ -430,6 +452,14 @@
 @media (max-width: 640px) {
 	.textSection {
 		width: 100%;
+	}
+
+	.courseCardsWraper {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
+
+	.courseCardWraper:nth-child(1n + 1) {
+		margin: 1rem 0;
 	}
 
 	.discriptionText {
@@ -454,8 +484,11 @@
 	}
 
 	.btnBox {
-		width: 100%;
-		padding: 1rem 0;
+		padding: 0;
+	}
+
+	.offerText {
+		margin-right: 1rem;
 	}
 
 	.analyticsBarSubWrapper {
@@ -464,7 +497,6 @@
 
 	.badgeDiv {
 		justify-content: right;
-		padding-bottom: 2rem;
 		width: 100%;
 
 		div {
@@ -473,8 +505,9 @@
 	}
 
 	.imagesSubWrapper {
-		width: 340px;
+		width: 390px;
 		height: 220px;
+		margin: 0 auto 20px;
 	}
 
 	.image1 {
@@ -483,8 +516,10 @@
 	}
 
 	.image2 {
-		top: 4rem;
+		top: 3.5rem;
 		left: 5.5rem;
+		height: 119px;
+		width: 192px;
 	}
 
 	.image3 {
@@ -504,12 +539,6 @@
 
 	.closeIcon {
 		font-size: 20px;
-	}
-
-
-	.firstBtnBox,
-	.secondBtnBox {
-		width: 100%;
 	}
 
 	.firstBtn,
@@ -534,6 +563,9 @@
 		}
 	}
 
+	.btnBox {
+		padding: 1rem 0 12px;
+	}
 
 	.discriptionText a {
 		color: #ffffff;
@@ -575,6 +607,20 @@
 		p {
 			font-size: 14px;
 		}
+	}
+}
+
+@media(max-width :470px) {
+	.imagesSubWrapper {
+		width: 100%;
+	}
+
+	.image1 {
+		left: 0;
+	}
+
+	.image3 {
+		right: 0;
 	}
 }
 

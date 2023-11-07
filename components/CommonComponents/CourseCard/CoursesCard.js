@@ -7,8 +7,13 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { mediaUrl, subscriptionDays } from '../../../constants/DataManupulation';
 import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
 import ContentAccessModal from '../ContentAccessModal/ContentAccessModal';
+import { Dropdown, Space } from 'antd';
+import { WhatsApp_Link } from '../../../constants/LinkConst';
+import styled from 'styled-components';
 
+const StyledDropDown = styled(Dropdown)`
 
+`
 
 export default function CoursesCard(props) {
 	const courseDetails = props?.data?.course
@@ -36,6 +41,14 @@ export default function CoursesCard(props) {
 			Router.push(`myCourse/${courseDetails.id}`)
 		}
 	}
+
+	const items = [
+		{
+			label: <Link href={WhatsApp_Link} target='_blank'> طلب استرجاع مبلغ الدورة</Link>,
+			key: '1',
+		}
+	];
+
 	return (
 		<>
 			<div className={styles.cardMainDiv}>
@@ -43,11 +56,24 @@ export default function CoursesCard(props) {
 					<CoverImg height={140} url={coverImgUrl} />
 				</div>
 				<div className={styles.cardContentDiv}>
-					<h1 className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</h1>
+					<div className={styles.DropMenuBtnBox}>
+						<h1 className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</h1>
+						<StyledDropDown
+							overlayClassName='dropDownMenu'
+							menu={{
+								items,
+							}}
+							renderTitle={() => ''}
+							trigger={['click']}
+						>
+							<div className='cursor-pointer ' onClick={(e) => e.preventDefault()}>
+								<AllIconsComponenet height={20} width={3} iconName={'dropMenuIcon'} color={'#000000'} />
+							</div>
+						</StyledDropDown>
+					</div>
 					<div className={styles.subscriptionText}>
 						<AllIconsComponenet height={20} width={20} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
 						<p className='px-2 text-sm'>{subscriptionDays(props.data)}</p>
-						{/* <p className='px-2 text-sm'>{courseDetails.type == "on-demand" ? `ينتهي اشتراكك بعد ${daysLeft} يوم` : `من ${dateWithDay(date?.dateFrom)}إلى ${dateWithDay(date?.dateTo)}`}</p> */}
 					</div>
 
 					{courseDetails.type == "on-demand" ?
