@@ -24,7 +24,7 @@ export default function WhatsAppLinkComponent(props) {
 			<div className='whatsAppLogo'>
 				<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 					<div className='flex'>
-						<AllIconsComponenet height={screenWidth < 769 ? 45 : 54} width={screenWidth < 769 ? 45 : 54} iconName={'whatsApp_whiteBorder'} color={'#ffffff'} />
+						<AllIconsComponenet height={screenWidth < 769 ? 54 : 60} width={screenWidth < 769 ? 54 : 60} iconName={'whatsApp_whiteBorder'} color={'#ffffff'} />
 						<div className='whatsAppMessageWrapper'>
 							<p>محتاج مساعدة؟</p>
 							<p>تفضل تواصل معنا</p>

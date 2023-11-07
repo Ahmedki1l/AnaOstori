@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import styles from '../../../styles/PhysicalCourse.module.scss'
 import CourseDetailsHeader from '../../../components/CourseDescriptionPageComponents/DetailsHeader/CourseDetailsHeader'
 import Icon from '../../../components/CommonComponents/Icon'
@@ -424,48 +424,44 @@ export default function Index(props) {
 									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
 									{courseDetail?.type == 'physical' ?
 										<>
-											<div>
-												<div className='flex items-center py-4'>
-													<AllIconsComponenet height={36} width={18} iconName={'male'} color={'#0C5D96'} />
-													<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#0C5D96' }}>{lang == "en" ? "Male Appointments" : "مواعيد الشباب"}</p>
-												</div>
-												{maleDates?.length > 0 && !isSeatFullForMale ?
-													<ScrollContainer className='flex'>
-														{maleDates?.map((maleDate, index) => {
-															return (
-																<div key={`maleDate${index}`}>
-																	<CourseDates date={maleDate} handleBookSit={handleBookSit} lang={lang} />
-																</div>
-															)
-														})}
-													</ScrollContainer>
-													:
-													<div>
-														<UserDetailForm1 gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} lang={lang} />
-													</div>
-												}
+											<div className='flex items-center py-4'>
+												<AllIconsComponenet height={36} width={18} iconName={'male'} color={'#0C5D96'} />
+												<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#0C5D96' }}>{lang == "en" ? "Male Appointments" : "مواعيد الشباب"}</p>
 											</div>
-											<div>
-												<div className='flex items-center pb-4 pt-6'>
-													<AllIconsComponenet height={36} width={18} iconName={'female'} color={'#E10768'} />
-													<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#E10768' }}>{lang == 'en' ? 'Female Appointments' : 'مواعيد البنات'}</p>
+											{maleDates?.length > 0 && !isSeatFullForMale ?
+												<ScrollContainer className='flex'>
+													{maleDates?.map((maleDate, index) => {
+														return (
+															<Fragment key={`maleDate${index}`}>
+																<CourseDates date={maleDate} handleBookSit={handleBookSit} lang={lang} />
+															</Fragment>
+														)
+													})}
+												</ScrollContainer>
+												:
+												<div>
+													<UserDetailForm1 gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} lang={lang} />
 												</div>
-												{femaleDates?.length > 0 && !isSeatFullForFemale ?
-													<ScrollContainer className='flex'>
-														{femaleDates?.map((femaleDate, index) => {
-															return (
-																<div key={`femaleDate${index}`}>
-																	<CourseDates date={femaleDate} handleBookSit={handleBookSit} lang={lang} />
-																</div>
-															)
-														})}
-													</ScrollContainer>
-													:
-													<div>
-														<UserDetailForm1 gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} lang={lang} />
-													</div>
-												}
+											}
+											<div className='flex items-center pb-4 pt-6'>
+												<AllIconsComponenet height={36} width={18} iconName={'female'} color={'#E10768'} />
+												<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#E10768' }}>{lang == 'en' ? 'Female Appointments' : 'مواعيد البنات'}</p>
 											</div>
+											{femaleDates?.length > 0 && !isSeatFullForFemale ?
+												<ScrollContainer className='flex'>
+													{femaleDates?.map((femaleDate, index) => {
+														return (
+															<Fragment key={`femaleDate${index}`}>
+																<CourseDates date={femaleDate} handleBookSit={handleBookSit} lang={lang} />
+															</Fragment>
+														)
+													})}
+												</ScrollContainer>
+												:
+												<div>
+													<UserDetailForm1 gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} lang={lang} />
+												</div>
+											}
 										</>
 										:
 										<>
@@ -473,9 +469,9 @@ export default function Index(props) {
 												<ScrollContainer className='flex pt-4'>
 													{mixDates?.map((mixDate, index) => {
 														return (
-															<div key={`mixDate${index}`}>
+															<Fragment key={`mixDate${index}`}>
 																<CourseDates date={mixDate} handleBookSit={handleBookSit} lang={lang} />
-															</div>
+															</Fragment>
 														)
 													})}
 												</ScrollContainer>
