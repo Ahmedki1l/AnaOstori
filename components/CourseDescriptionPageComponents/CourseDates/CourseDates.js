@@ -29,40 +29,40 @@ export default function CourseDates(props) {
 						<AllIconsComponenet height={193} width={193} iconName={'fullSeatsIcon'} color={'#000000'} />
 					</div>
 				}
-				<div className={`fontBold relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
+				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
 
 					{lang == 'en' ?
-						<p className={`fontBold ${styles.dateBoxHeaderText}`}>{enDateWithDay(date?.dateFrom)}</p>
+						<p className={`fontMedium ${styles.dateBoxHeaderText}`}>{enDateWithDay(date?.dateFrom)}</p>
 						:
-						<p className={`fontBold ${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
+						<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
 					}
 				</div>
 				<ul className={styles.list}>
 					<li>
-						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderStroked'} color={'#000000'} />
+						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
 						{lang == 'en' ?
-							<p className={`fontMedium ${styles.listItemText}`}>From {enDateWithDay(date?.dateFrom)}  To  &nbsp;{enDateWithDay(date?.dateTo)} </p>
+							<p className={` ${styles.listItemText}`}>From {enDateWithDay(date?.dateFrom)}  To  &nbsp;{enDateWithDay(date?.dateTo)} </p>
 							:
-							<p className={`fontMedium ${styles.listItemText}`}>من {dateWithDay(date?.dateFrom)} &nbsp; إلى  {dateWithDay(date?.dateTo)} </p>
+							<p className={` ${styles.listItemText}`}>من {dateWithDay(date?.dateFrom)} &nbsp; إلى  {dateWithDay(date?.dateTo)} </p>
 						}
 					</li>
 					<li>
-						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockStroked'} color={'#000000'} />
+						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockDoubleColor'} color={'#000000'} />
 						{lang == 'en' ?
-							<p className={`fontMedium ${styles.listItemText}`}>{enTimeDuration(date.timeFrom, date.timeTo)}</p>
+							<p className={` ${styles.listItemText}`}>{enTimeDuration(date.timeFrom, date.timeTo)}</p>
 							:
-							<p className={`fontMedium ${styles.listItemText}`}> من {timeDuration(date.timeFrom, date.timeTo)}</p>
+							<p className={` ${styles.listItemText}`}> من {timeDuration(date.timeFrom, date.timeTo)}</p>
 						}
 					</li>
 					<li>
 						{date.gender == 'mix' ?
 							<>
-								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'live'} color={'#000000'} />
-								<p className={`fontMedium link ${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
+								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'linkDoubleColorIcon'} color={'#000000'} />
+								<p className={` link ${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
 							</>
 							:
 							<>
-								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'locationStroked'} color={'#000000'} />
+								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'locationDoubleColor'} color={'#000000'} />
 								{date.location ?
 									<Link href={date.location ?? ''} target='_blank' className='noUnderlineLink'>
 										<p className={`fontMedium ${styles.listItemText}`}>{date.locationName}</p>
@@ -82,12 +82,12 @@ export default function CourseDates(props) {
 									<Image src={`/images/alert-blink.gif`} alt={'alert gif'} layout="fill" objectFit="cover" />
 								</div>
 							}
-							<p className={`fontMedium ${styles.listItemText}`}>{noOfSeatRemainingText}</p>
+							<p className={`pt-1 ${styles.listItemText}`}>{noOfSeatRemainingText}</p>
 						</>
 					</li>
 				</ul>
 				<div className={styles.bottomDiv}>
-					<p className={`fontBold ${styles.coachName}`}>المدربين</p>
+					<p className={`fontMedium ${styles.coachName}`}>المدربين</p>
 					<div className={styles.instructorWrapper}>
 						{date.instructors.map((instructor, index) => {
 							return (
@@ -95,11 +95,11 @@ export default function CourseDates(props) {
 									<ProfilePicture height={isSmallScreen ? 36 : 40} width={isSmallScreen ? 36 : 40} alt={'Profile Picture'} pictureKey={(instructor.avatarBucket && instructor.avatarKey) ? mediaUrl(instructor.avatarBucket, instructor.avatarKey) : '/images/anaOstori2.png'} />
 									<div>
 										{instructor?.ProfileFileKey == null ?
-											<p className={`px-2 fontMedium ${styles.instructorName}`}>{instructor.name}</p>
+											<p className={`px-2  ${styles.instructorName}`}>{instructor.name}</p>
 											:
-											<Link href={mediaUrl(instructor?.ProfileFileBucket, instructor?.ProfileFileKey)} className={`px-2 fontMedium link ${styles.instructorName}`}>{instructor.name}</Link>
+											<Link href={mediaUrl(instructor?.ProfileFileBucket, instructor?.ProfileFileKey)} className={`px-2  link ${styles.instructorName}`}>{instructor.name}</Link>
 										}
-										<p className={`px-2 fontMedium ${styles.instructorRoleText}`}>{instructor.role}</p>
+										<p className={`px-2  ${styles.instructorRoleText}`}>{instructor.role}</p>
 									</div>
 								</div>
 							)
