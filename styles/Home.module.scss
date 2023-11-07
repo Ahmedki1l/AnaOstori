@@ -65,6 +65,10 @@
 	width: 165px;
 }
 
+.typesOfCourses {
+	padding-top: 3rem;
+}
+
 @keyframes textAnimation {
 	0% {
 		top: 31px
@@ -369,8 +373,8 @@
 
 	.image1,
 	.image3 {
-		height: 82px;
-		width: 151px;
+		height: 98px;
+		width: 159px;
 	}
 
 	.image2 {
@@ -487,9 +491,9 @@
 		padding: 0;
 	}
 
-	.offerText {
-		margin-right: 1rem;
-	}
+	// .offerText {
+	// 	margin-right: 1rem;
+	// }
 
 	.analyticsBarSubWrapper {
 		padding: 0;
@@ -511,8 +515,8 @@
 	}
 
 	.image1 {
-		top: 0.5rem;
-		left: 0.5rem;
+		top: 0.4rem;
+		left: 0rem;
 	}
 
 	.image2 {
@@ -523,8 +527,8 @@
 	}
 
 	.image3 {
-		top: 9rem;
-		right: 0.5rem;
+		top: 9.9rem;
+		right: 1.9rem;
 	}
 
 	.courseCardWraper {
@@ -619,8 +623,25 @@
 		left: 0;
 	}
 
+	.image2 {
+		left: 27%;
+		top: 4rem;
+	}
+
 	.image3 {
 		right: 0;
+	}
+}
+
+@media(max-width :430px) {
+	.image2 {
+		left: 25%;
+	}
+}
+
+@media(max-width :400px) {
+	.image2 {
+		left: 23%;
 	}
 }
 
@@ -632,6 +653,18 @@
 
 	.text2FontMedium {
 		margin-top: 0px;
+	}
+
+	.image1 {
+		top: 0;
+	}
+
+	.image2 {
+		left: 21%;
+	}
+
+	.image3 {
+		top: 10rem;
 	}
 
 	.textSection {

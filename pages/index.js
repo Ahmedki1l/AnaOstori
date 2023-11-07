@@ -85,7 +85,6 @@ export default function Home(props) {
 		}
 		setScrollSectionName(sectionName)
 	}
-	console.log(props);
 	useEffect(() => {
 		if (props.params?.دوراتنا == '') {
 			const scrollToCourse = handleScrollToSection("refCourseSec")
@@ -179,7 +178,7 @@ export default function Home(props) {
 							</div>
 						</div>
 					</div>
-					<div className='pt-4'>
+					<div className={styles.typesOfCourses}>
 						<p className={`fontMedium ${styles.offerText}`} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
 						<div className={styles.courseTypesWrapper}>
 							{typeOfCourse.map((data, index) => {
