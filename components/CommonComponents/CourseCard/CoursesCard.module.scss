@@ -22,7 +22,7 @@
 	display: flex;
 	justify-content: right;
 	align-items: center;
-	margin-bottom: 8px;
+	// margin-bottom: 8px;
 }
 
 .followUpBtn {
@@ -43,6 +43,13 @@
 	line-height: 14px;
 	color: #000000;
 	margin-bottom: 4px;
+}
+
+.DropMenuBtnBox {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
 }
 
 @media (max-width: 1024px) {

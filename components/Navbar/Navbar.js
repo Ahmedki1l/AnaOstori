@@ -16,6 +16,7 @@ import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
 import { ConfigProvider, Drawer } from 'antd';
 import styled from 'styled-components';
+import Image from 'next/legacy/image';
 
 const StyledDrawer = styled(Drawer)`
   .ant-drawer-body{
@@ -41,7 +42,6 @@ export default function Navbar() {
 	const router = useRouter();
 	const offset = useScrollEvent().offset
 	const dispatch = useDispatch();
-
 	const catagoryName = (router.query.catagoryName)?.replace(/-/g, ' ')
 
 	const storeData = useSelector((state) => state?.globalStore);
@@ -209,6 +209,13 @@ export default function Navbar() {
 	const handleInstructorBtnClick = () => {
 		router.push('/instructorPanel')
 	}
+	const handleTabChange = () => {
+		if (router.pathname == "/accountInformation") {
+			window.location.reload()
+		} else {
+			router.push('/accountInformation')
+		}
+	}
 
 	return (
 		<>
@@ -218,8 +225,8 @@ export default function Navbar() {
 						<div className={styles.navLeftDivMO}>
 							<div className={styles.navLeftDiv}>
 								<div className={styles.viewProfile}>
-									<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
-									<AllIconsComponenet height={isSmallScreen ? 30 : 35} width={isSmallScreen ? 30 : 35} iconName={'profileIcon'} color={'#ffffff'} />
+									<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={30} width={30} />
+									<div style={{ height: '15px', marginRight: '8px' }}><AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} /></div>
 								</div>
 								<div className={`${styles.profileMenuWrapperMo} ${styles.profileMenuWrapper}`}>
 									<div className={styles.profileMenuSubWrapper}>
@@ -237,10 +244,10 @@ export default function Navbar() {
 												</button>
 											</Link>
 										</div>
-										<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
+										<div onClick={() => handleTabChange()} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
 											<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
 											<p className={styles.profileMenuItemsText}>إعدادات الحساب</p>
-										</Link>
+										</div>
 										<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
 											<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
 											<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
@@ -391,7 +398,8 @@ export default function Navbar() {
 										{!isRegisterSocialMediaUser &&
 											<>
 												<div className={styles.viewProfile}>
-													<AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} />
+													<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={35} width={35} />
+													{/* <AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} /> */}
 													<p>
 														{stringUpdation(userFullName, 10)}
 													</p>
@@ -413,10 +421,10 @@ export default function Navbar() {
 																</button>
 															</Link>
 														</div>
-														<Link href={'/accountInformation'} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
+														<div onClick={() => handleTabChange()} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
 															<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
-															<p className={styles.profileMenuItemsText}>الإعدادات</p>
-														</Link>
+															<p className={styles.profileMenuItemsText}>إعدادات الحساب</p>
+														</div>
 														<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
 															<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
 															<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>

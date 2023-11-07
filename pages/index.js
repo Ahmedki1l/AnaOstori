@@ -11,6 +11,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
 import { HomeConst } from '../constants/HomeConst';
+// import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewCard/ReviewCard';
 
 export const metadata = {
 	title: 'Anaostori',
@@ -84,7 +85,6 @@ export default function Home(props) {
 		}
 		setScrollSectionName(sectionName)
 	}
-	console.log(props);
 	useEffect(() => {
 		if (props.params?.دوراتنا == '') {
 			const scrollToCourse = handleScrollToSection("refCourseSec")
@@ -142,7 +142,7 @@ export default function Home(props) {
 						</div>
 					</div>
 					{/* <div className={styles.secondBtnBox}>
-							<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+						<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
 					</div> */}
 				</div>
 				<div className={`${styles.videoThumnail}`}>
@@ -151,16 +151,16 @@ export default function Home(props) {
 			</div>
 			<div className={styles.analyticsBarWrapper}>
 				<div className={`maxWidthDefault text-white ${styles.analyticsBarSubWrapper}`}>
-					<div className={`${styles.badgeDiv} pt-4`}>
-						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
-						<div className='px-4'>
+					<div className={`${styles.badgeDiv}  pt-4`}>
+						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
+						<div className='pr-2'>
 							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p1Head2}</p>
 							<p className={styles.discriptionText}>{HomeConst.pDescriptionText1}</p>
 						</div>
 					</div>
-					<div className={`${styles.badgeDiv} pt-4`}>
-						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
-						<div className='px-4'>
+					<div className={`${styles.badgeDiv}`}>
+						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
+						<div className='pr-2'>
 							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p2Head2}</p>
 							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
 						</div>
@@ -178,8 +178,8 @@ export default function Home(props) {
 							</div>
 						</div>
 					</div>
-					<div className='pt-8'>
-						<p className={`fontMedium`} style={{ fontSize: '20px' }} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
+					<div className={styles.typesOfCourses}>
+						<p className={`fontMedium ${styles.offerText}`} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
 						<div className={styles.courseTypesWrapper}>
 							{typeOfCourse.map((data, index) => {
 								return (

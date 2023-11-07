@@ -58,7 +58,7 @@ export default function CourseDetailsHeader(props) {
 									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'location'} color={'#FFFFFF'} />
 								</div>
 								<div className='px-1'>
-									<p>{lang == 'en' ? 'Location' : 'تقدم الدورة في'}</p>
+									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
 									<p className='fontBold'>{courseDetail.type == "physical" ? courseDetail.locationName : lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
 								</div>
 							</div>
@@ -69,7 +69,7 @@ export default function CourseDetailsHeader(props) {
 									</div>
 									<div className='px-1'>
 										<p>{lang == 'en' ? 'Location' : 'يتم بثها عبر'}</p>
-										<p className='fontBold'>اونلاين</p>
+										<p className='fontBold'>{courseDetail.type == "online" ? courseDetail.locationName : lang == 'en' ? 'online' : 'اونلاين'}</p>
 									</div>
 								</div>
 								:
@@ -78,8 +78,8 @@ export default function CourseDetailsHeader(props) {
 										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
 									</div>
 									<div className='px-1'>
-										<p>{lang == 'en' ? 'Location' : 'تقدر تشوفها'}</p>
-										<p className='fontBold'>اونلاين</p>
+										<p>{lang == 'en' ? 'Location' : 'دروس مسجلة'}</p>
+										<p className='fontBold'>بجودة عالية</p>
 									</div>
 								</div>
 						}

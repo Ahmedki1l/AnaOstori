@@ -1,5 +1,5 @@
 import Image from 'next/legacy/image'
-import defaultProfile from '../../public/images/profile.png'
+// import defaultProfile from '../../public/images/defaultProfile.png'
 
 
 export default function ProfilePicture(props) {
@@ -8,7 +8,8 @@ export default function ProfilePicture(props) {
 	const alt = props.alt
 	return (
 		<div className='drop-shadow'>
-			<Image className='rounded-full' src={props.pictureKey ? `${props.pictureKey}` : defaultProfile} alt={alt} height={height} width={width} />
+			<Image className='rounded-full' src={props.pictureKey ? `${props.pictureKey}` : '/images/previewImage.png'} alt={alt} height={height} width={width} />
+			{/* <Image className='rounded-full' src={props.pictureKey ? `${props.pictureKey}` : defaultProfile} alt={alt} height={height} width={width} /> */}
 		</div>
 	)
 }
