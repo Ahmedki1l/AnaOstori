@@ -73,8 +73,7 @@ const SelectIcon = ({ value, setIconValue, ...rest }) => {
       <StyledSelect
         onChange={handleChange}
         optionLabelProp="label"
-        showArrow={false}
-
+        // showArrow={false}
         value={value}
         {...rest}
       >

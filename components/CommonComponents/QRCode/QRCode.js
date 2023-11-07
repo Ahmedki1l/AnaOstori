@@ -10,6 +10,7 @@ export default function QRCode(props) {
     const attendanceKey = props.attendanceKey
     const courseId = props.courseId
     const qrUrl = `https://anaostori.com/attendance/mark/${attendanceKey}/${courseId}`
+    console.log(qrUrl);
     return (
         <>
             {(attendanceKey && qrUrl) &&
