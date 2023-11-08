@@ -134,7 +134,10 @@ function MyApp({ Component, pageProps }) {
 				break;
 			case "/forgot-password":
 				setPageTitle(' نسيت كلمة السر')
-				break
+				break;
+			case "/payment":
+				setPageTitle('مراجعة الطلب والدفع')
+				break;
 		}
 	}, [router.asPath, pathName, router.query.catagoryName]);
 

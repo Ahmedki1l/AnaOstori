@@ -119,7 +119,7 @@ export default function Index(props) {
 
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].gender == "") {
-				data[i].genderCheck = inputErrorMessages.genderErrorMsg
+				data[i].genderCheck = inputErrorMessages.genderNotSelectErrorMsg
 				isError = true
 			}
 			else {
@@ -135,11 +135,12 @@ export default function Index(props) {
 			}
 
 			if (data[i].fullName == "") {
-				data[i].nameCheck = inputErrorMessages.fullNameErrorMsg
+				data[i].nameCheck = inputErrorMessages.fullNameErrorMsgForRegister
 				data[i].validName = ""
 				isError = true
 			}
 			else if (data[i].fullName.length < 3) {
+				console.log(data[i].fullName);
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = inputErrorMessages.nameFormatErrorMsg
 				data[i].validName = ""
@@ -158,21 +159,21 @@ export default function Index(props) {
 			}
 
 			if (data[i].phoneNumber == "") {
-				data[i].phoneNoCheck = inputErrorMessages.mobileNumberErrorMsg
+				data[i].phoneNoCheck = inputErrorMessages.mobileRequiredErrorMsg
 				data[i].phoneNoLengthCheck = ""
+				data[i].validPhoneNumber = ""
+				isError = true
+			}
+			else if (!data[i].phoneNumber.startsWith("05")) {
+				data[i].phoneNoCheck = ""
+				data[i].phoneNoLengthCheck = inputErrorMessages.mobileNumberFormatErrorMsg
 				data[i].validPhoneNumber = ""
 				isError = true
 			}
 			else if (data[i].phoneNumber.length < 10) {
 				data[i].phoneNoCheck = ""
-				data[i].phoneNoLengthCheck = inputErrorMessages.mobileNumberLengthErrorMsg
+				data[i].phoneNoLengthCheck = inputErrorMessages.phoneNumberLengthMsg
 				data[i].validPhoneNumber = ""
-				isError = true
-			}
-			else if (!data[i].phoneNumber.startsWith("05") && !data[i].phoneNumber.startsWith("00")) {
-				data[i].phoneNoCheck = ""
-				data[i].phoneNoLengthCheck = ""
-				data[i].validPhoneNumber = inputErrorMessages.mobileNumberFormatErrorMsg
 				isError = true
 			}
 			else {
@@ -187,7 +188,7 @@ export default function Index(props) {
 			}
 			else if (!(regexEmail.test(data[i].email))) {
 				data[i].emailCheck = ""
-				data[i].emailValidCheck = inputErrorMessages.emailFormatMsg
+				data[i].emailValidCheck = inputErrorMessages.enterEmailCorrectInputErrorMsg
 			}
 			else {
 				data[i].emailCheck = ""
