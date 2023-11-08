@@ -267,6 +267,7 @@
 
 /* ****************************************************** WhatsApp Logo Wrapper ******************************************************  */
 
+
 .whatsAppLogoWrapper {
     position: fixed;
     bottom: 30px;
@@ -609,6 +610,22 @@
     margin: 0 -3px;
 }
 
+// ******************************************** DropDown SCSS**************************************************** //
+
+.dropDownMenu {
+    .ant-dropdown-menu .ant-dropdown-menu-title-content {
+        font-size: 14px;
+        font-family: 'Tajawal-ExtraBold';
+    }
+
+    .ant-dropdown-menu {
+        border: 0.1px solid #0000001a;
+        border-radius: 4px;
+        top: -32px !important;
+        left: 25px !important;
+    }
+
+}
 
 // ******************************************** add Appoinment Modal SCSS**************************************************** //
 
@@ -742,6 +759,8 @@
 
 @media (max-width: 450px) {
     .head1 {
-        font-size: 20px;
+        font-size: 24px;
+        line-height: 28.8px;
+        font-weight: 700;
     }
 }

@@ -19,7 +19,7 @@
 
 .userInfoBox {
 	p {
-		line-height: 22px;
+		line-height: 20px;
 	}
 }
 
@@ -197,28 +197,23 @@
 	}
 
 	.tableAreaDiv {
-		border-radius: 4px;
-		overflow: hidden;
+		overflow: auto;
 		width: 358px;
 		margin: 24px auto;
-		border: 0.5px solid #808080;
-
 	}
 
 	.rowDiv {
-		width: 380px;
+		width: 100%;
 		line-height: 40px;
 		border-collapse: collapse;
-		border-right: hidden;
 
 		tr {
 			height: 66px;
+			border: 1px solid #8080804a;
 		}
 
 		th {
-			width: 127px;
-			border: 0.5px solid #808080;
-			border-top: none;
+			border: 1px solid #8080804a;
 			background-color: #F7F7F7;
 			padding: 5px;
 			font-weight: 500;
@@ -227,14 +222,13 @@
 
 		td {
 			width: 231px;
-			border: 0.5px solid #808080;
-			border-top: none;
-			padding: 5px 1rem;
+			border: 1px solid #8080804a;
+			padding: 24PX 12px;
 			font-weight: 400;
 			font-size: 14px;
 
 			p {
-				line-height: 1.2;
+				line-height: 20px;
 			}
 		}
 

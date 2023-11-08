@@ -11,7 +11,7 @@ export const inputErrorMessages = {
     mobileNumberRequiredErrorMsg: "رقم الجوال مطلوب", //mobile number required
     mobileNumberFormatErrorMsg: 'لازم يبدأ بـ05', //The entered format is incorrect, please type the number in the format 05"
     mobileNumberLengthErrorMsg: "يجب ان يتكون الجوال من ١٠ ارقام", //The mobile must consist of 10 digits.
-    appropriateDateErrorMsg: "فضلا اختار الموعد المناسب", //Please choose the appropriate date.
+    appropriateDateErrorMsg: 'اختار الموعد', //Please choose the appropriate date.
     nameFormatErrorMsg: "يجب أن يتكون الاسم من ثلاث حروف او اكثر",  //The name must be three letters or more.
     nameThreeFoldErrorMsg: 'لازم يكون اسم ثلاثي مثل هشام محمود خضر', //The name should be threefold, for example: Abdul-Ilah Madkhali.
     emailFormatMsg: "فضلا عيد كتابة ايميلك بالطريقة الصحيحة", //Please type your email correctly.
@@ -29,6 +29,7 @@ export const inputErrorMessages = {
     passwordIncludeNumberMsg: 'رقم واحد على الأقل',//It must contain at least one number
     passwordIncludeSpecialCharMsg: 'علامة مميزة واحدة على الأقل مثلا هاشتاق #',//It must contain at least one special character
     phoneNoFormateMsg: 'بصيغة 05xxxxxxxx',//It must start with 05
+    genderNotSelectErrorMsg: 'اختار الجنس',
 }
 
 export const inputSuccessMessages = {
@@ -42,7 +43,6 @@ export const toastErrorMessage = {
     seatsAvailableMsg: "رح نعلمك اول ما نضيف او نوسع المقاعد", //you will get notified once seats are available
     emailUsedErrorMsg: 'الايميل مستخدم من قبل، جرب ايميل مختلف', //'Email already used'
     uniqueNameError: 'إضافة وتعديل درجات الطلاب',// "name must be unique",
-    // curriculumNameError: 'ما ينفع تستخدم نفس العنوان',// 'Curriculum name already in use',
     sameFileError: 'إضافة وتعديل الكوبونات',// "this item already exist in this section",
     tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
     newEmailToastMsg: 'مافي حساب بهذا الايميل او انه انحذف',// 'There is no account with this email or it has been deleted',
@@ -69,7 +69,7 @@ export const toastSuccessMessage = {
     appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
     examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',
     examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',    
-    accountRestoreSuccessMsg: ' مبسوطين برجعتك', // We are happy to have you back
+    accountRestoreSuccessMsg: 'مبسوطين برجعتك', // We are happy to have you back
 }
 
 export const createAndEditBtnText = {

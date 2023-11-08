@@ -8,7 +8,7 @@ const OnlineDoubleColorIcon = ({ height, width, color }) => {
             </g>
             <defs>
                 <clipPath id="clip0_293_5573">
-                    <rect width="12" height="12" fill="white" transform="translate(0 0.5)" />
+                    <rect width={width} height={height} fill="white" transform="translate(0 0.5)" />
                 </clipPath>
             </defs>
         </svg>

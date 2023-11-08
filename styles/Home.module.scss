@@ -44,6 +44,10 @@
 	}
 }
 
+.offerText {
+	font-size: 20px;
+}
+
 .animatedText {
 	position: absolute;
 	color: $primary-color;
@@ -59,6 +63,10 @@
 	overflow: hidden;
 	height: 30px;
 	width: 165px;
+}
+
+.typesOfCourses {
+	padding-top: 3rem;
 }
 
 @keyframes textAnimation {
@@ -95,16 +103,15 @@
 	animation-delay: 6s;
 }
 
-.btnBox {
-	width: 32rem;
-	display: flex;
-}
-
 .firstBtnBox,
 .secondBtnBox {
 	width: 210px;
 	height: 46px;
-	margin: 1rem 0 0 1rem;
+	margin: 1rem 0 0;
+
+	button {
+		font-size: 18px;
+	}
 }
 
 .firstBtn,
@@ -127,8 +134,8 @@
 
 
 .analyticsBarWrapper {
-	background-color: #2d2e2dcc;
-	padding: 0.5rem;
+	background-color: #2D2E2D;
+	padding: 0.5rem 1rem;
 	position: relative;
 }
 
@@ -139,7 +146,6 @@
 
 .badgeDiv {
 	display: flex;
-	align-items: center;
 	padding-bottom: 3rem;
 	width: 65%;
 }
@@ -151,15 +157,24 @@
 
 .courseTypeCard {
 	width: 250px;
-	margin: 2rem 0;
+	margin: 12px 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	p {
+		font-size: 23px;
+	}
 }
 
 .discriptionText,
 .userFeedbackDiscription {
+	padding-top: 8px;
 	font-size: 22px;
+}
+
+.discriptionLink {
+	color: #ffffff;
 }
 
 .imagesWrapper {
@@ -177,6 +192,8 @@
 .image2,
 .image3 {
 	position: absolute;
+	border-radius: 4px;
+	overflow: auto;
 }
 
 .image1 {
@@ -201,18 +218,13 @@
 	width: 167px;
 }
 
-
-
 .courseSection {
 	padding: 2rem 1rem;
 }
 
 .courseCardsWraper {
-	display: flex;
-	flex-wrap: wrap;
-	padding: 1rem 0 0 0;
-	justify-content: space-between;
-	margin: auto;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .courseCardWraper {
@@ -222,7 +234,18 @@
 	border-radius: 4px;
 	cursor: pointer;
 	overflow: hidden;
-	margin: 1rem 0 1rem 3rem;
+}
+
+.courseCardWraper:nth-child(3n + 1) {
+	margin: 1rem 0 1rem auto;
+}
+
+.courseCardWraper:nth-child(3n + 2) {
+	margin: 1rem auto;
+}
+
+.courseCardWraper:nth-child(3n + 3) {
+	margin: 1rem auto 1rem 0;
 }
 
 .courseImgBox {
@@ -244,264 +267,6 @@
 
 .paddingTop {
 	padding-top: 4rem;
-}
-
-
-@media (max-width: 1280px) {
-	.textSection {
-		width: 530px;
-
-		p {
-			font-size: 19px;
-		}
-	}
-
-	.videoSection {
-		height: 275px;
-		width: 450px;
-	}
-
-
-	.courseCardWraper {
-		width: 270px;
-		height: 210px;
-	}
-
-	.discriptionText,
-	.userFeedbackDiscription {
-		font-size: 19px;
-	}
-
-	.firstBtnBox,
-	.secondBtnBox {
-		height: auto;
-	}
-
-	.firstBtn,
-	.secondBtn {
-		padding: 0.5rem 1rem;
-	}
-}
-
-@media (max-width: 1180px) {
-	.courseCardsWraper {
-		// justify-content: center;
-		width: auto;
-	}
-
-	.courseCardWraper {
-		margin: 0 auto 1rem 1rem;
-	}
-
-	.discriptionText {
-		width: 470px;
-	}
-}
-
-@media (max-width: 1024px) {
-	.videoSection {
-		height: 250px;
-		width: 400px;
-	}
-
-	.notificationText {
-		font-size: 18px;
-	}
-
-	.closeIcon {
-		font-size: 25px;
-	}
-
-	.videoThumnail {
-		width: 25rem;
-		margin: 0 auto;
-	}
-
-	.discriptionText {
-		width: 450px;
-	}
-
-	.image1,
-	.image3 {
-		height: 82px;
-		width: 151px;
-	}
-
-	.image2 {
-		top: 5rem;
-		left: 8rem;
-		height: 102px;
-		width: 179px;
-	}
-
-	.image3 {
-		top: 10rem;
-		right: 5rem;
-	}
-}
-
-@media (max-width: 962px) {
-	.mainSection {
-		display: flex;
-		flex-direction: column-reverse;
-	}
-
-	.videoThumnail {
-		width: 530px;
-		margin: 0 auto;
-	}
-
-	.textSection {
-		padding-top: 1rem;
-		width: 530px;
-	}
-
-	.imagesWrapper {
-		position: static;
-	}
-
-	.imagesSubWrapper {
-		height: 270px;
-		margin: 0 auto;
-	}
-
-	.badgeDiv {
-		justify-content: center;
-		padding-bottom: 2rem;
-		width: 100%;
-	}
-
-	.typeOfCourseHeader {
-		text-align: center;
-	}
-
-	.courseSection {
-		padding: 3rem 1rem 2rem 1rem;
-	}
-
-	.btnBox {
-		justify-content: center;
-	}
-
-	.discriptionText,
-	.userFeedbackDiscription {
-		font-size: 17px;
-	}
-
-}
-
-@media(max-width :890px) {
-	.courseCardsWraper {
-		justify-content: center;
-	}
-}
-
-@media (max-width: 640px) {
-	.textSection {
-		width: 100%;
-	}
-
-	.discriptionText {
-		width: 100%;
-	}
-
-	.videoThumnail {
-		width: 100%;
-	}
-
-	.animatedTextBox {
-		width: 137px;
-	}
-
-	.courseTypeText {
-		font-size: 20px;
-		font-weight: 500;
-	}
-
-	.videoSection {
-		width: 350px;
-	}
-
-	.btnBox {
-		width: 100%;
-		padding: 1rem 0;
-	}
-
-	.analyticsBarSubWrapper {
-		padding: 0;
-	}
-
-	.badgeDiv {
-		justify-content: right;
-		padding-bottom: 2rem;
-		width: 100%;
-
-		div {
-			width: 88%;
-		}
-	}
-
-	.imagesSubWrapper {
-		width: 340px;
-		height: 220px;
-	}
-
-	.image1 {
-		top: 0.5rem;
-		left: 0.5rem;
-	}
-
-	.image2 {
-		top: 4rem;
-		left: 5.5rem;
-	}
-
-	.image3 {
-		top: 9rem;
-		right: 0.5rem;
-	}
-
-	.courseCardWraper {
-		height: auto;
-		width: 358px;
-		margin: 0 0px 1rem;
-	}
-
-	.notificationText {
-		font-size: 16px;
-	}
-
-	.closeIcon {
-		font-size: 20px;
-	}
-
-
-	.firstBtnBox,
-	.secondBtnBox {
-		width: 100%;
-	}
-
-	.firstBtn,
-	.secondBtn {
-		font-size: 18px !important;
-	}
-}
-
-@media (max-width: 525px) {
-	.mainSection {
-		align-items: flex-start;
-	}
-
-	.textSection {
-		width: 350px;
-		text-align: right;
-	}
-
-	.animatedTextBox {
-		position: absolute;
-		top: 27px;
-		left: 185px;
-	}
 }
 
 .displayAdminText {
@@ -536,4 +301,377 @@
 	display: flex;
 	margin: 27px 0px -15px;
 	align-items: center;
+}
+
+
+@media (max-width: 1280px) {
+	.textSection {
+		width: 530px;
+
+		p {
+			font-size: 19px;
+		}
+	}
+
+	.videoSection {
+		height: 275px;
+		width: 450px;
+	}
+
+
+	.courseCardWraper {
+		width: 270px;
+		height: 210px;
+	}
+
+	.discriptionText,
+	.userFeedbackDiscription {
+		font-size: 19px;
+	}
+
+	.firstBtn,
+	.secondBtn {
+		padding: 0.5rem 1rem;
+	}
+}
+
+@media (max-width: 1180px) {
+
+	.discriptionText {
+		width: 470px;
+	}
+}
+
+@media (max-width: 1040px) {
+	.courseCardWraper {
+		margin: 1rem 0 1rem 2rem;
+	}
+}
+
+@media (max-width: 1024px) {
+	.videoSection {
+		height: 250px;
+		width: 400px;
+	}
+
+	.notificationText {
+		font-size: 18px;
+	}
+
+	.closeIcon {
+		font-size: 25px;
+	}
+
+	.videoThumnail {
+		width: 25rem;
+		margin: 0 auto;
+	}
+
+	.discriptionText {
+		width: 450px;
+	}
+
+	.image1,
+	.image3 {
+		height: 98px;
+		width: 159px;
+	}
+
+	.image2 {
+		top: 5rem;
+		left: 8rem;
+		height: 102px;
+		width: 179px;
+	}
+
+	.image3 {
+		top: 10rem;
+		right: 5rem;
+	}
+}
+
+@media (max-width: 962px) {
+	.courseCardsWraper {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.firstBtnBox,
+	.secondBtnBox {
+		width: 100%;
+	}
+
+	.courseCardWraper:nth-child(2n + 1) {
+		margin: 1rem 0 1rem auto;
+	}
+
+	.courseCardWraper:nth-child(2n + 2) {
+		margin: 1rem auto;
+	}
+
+	.mainSection {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
+	.videoThumnail {
+		width: 530px;
+		margin: 0 auto;
+	}
+
+	.textSection {
+		padding-top: 1rem;
+		width: 530px;
+	}
+
+	.imagesWrapper {
+		position: static;
+	}
+
+	.imagesSubWrapper {
+		height: 270px;
+		margin: 0 auto;
+	}
+
+	.badgeDiv {
+		justify-content: center;
+		padding-bottom: 20px;
+		width: 100%;
+	}
+
+	.courseSection {
+		padding: 3rem 1rem 2rem 1rem;
+	}
+
+	.btnBox {
+		justify-content: center;
+	}
+
+	.discriptionText,
+	.userFeedbackDiscription {
+		font-size: 16px;
+	}
+
+}
+
+@media (max-width: 640px) {
+	.textSection {
+		width: 100%;
+	}
+
+	.courseCardsWraper {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
+
+	.courseCardWraper:nth-child(1n + 1) {
+		margin: 1rem 0;
+	}
+
+	.discriptionText {
+		width: 100%;
+	}
+
+	.videoThumnail {
+		width: 100%;
+	}
+
+	.animatedTextBox {
+		width: 137px;
+	}
+
+	.courseTypeText {
+		font-size: 20px;
+		font-weight: 500;
+	}
+
+	.videoSection {
+		width: 350px;
+	}
+
+	.btnBox {
+		padding: 0;
+	}
+
+	// .offerText {
+	// 	margin-right: 1rem;
+	// }
+
+	.analyticsBarSubWrapper {
+		padding: 0;
+	}
+
+	.badgeDiv {
+		justify-content: right;
+		width: 100%;
+
+		div {
+			width: 88%;
+		}
+	}
+
+	.imagesSubWrapper {
+		width: 390px;
+		height: 220px;
+		margin: 0 auto 20px;
+	}
+
+	.image1 {
+		top: 0.4rem;
+		left: 0rem;
+	}
+
+	.image2 {
+		top: 3.5rem;
+		left: 5.5rem;
+		height: 119px;
+		width: 192px;
+	}
+
+	.image3 {
+		top: 9.9rem;
+		right: 1.9rem;
+	}
+
+	.courseCardWraper {
+		height: auto;
+		width: 358px;
+		margin: 0 0px 1rem;
+	}
+
+	.notificationText {
+		font-size: 16px;
+	}
+
+	.closeIcon {
+		font-size: 20px;
+	}
+
+	.firstBtn,
+	.secondBtn {
+		font-size: 18px !important;
+	}
+}
+
+@media (max-width: 525px) {
+	.mainSection {
+		align-items: flex-start;
+	}
+
+	.textSection {
+		width: 100%;
+		text-align: right;
+
+		p {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 21.6px;
+		}
+	}
+
+	.btnBox {
+		padding: 1rem 0 12px;
+	}
+
+	.discriptionText a {
+		color: #ffffff;
+	}
+
+	.text2FontMedium {
+		margin-top: 25px;
+	}
+
+	.animatedTextBox {
+		position: absolute;
+		top: 1.6rem;
+	}
+
+	.discriptionText {
+		font-size: 16px;
+		line-height: 19.2px;
+	}
+
+	.typeOfCourseHeader {
+		text-align: right;
+		font-size: 20px;
+		line-height: 24px;
+	}
+
+	.firstBtnBox,
+	.secondBtnBox {
+		margin: 0;
+	}
+
+	.userFeedbackDiscription {
+		font-size: 18px;
+		font-weight: 400;
+		line-height: 21.6px;
+	}
+
+	.courseTypeCard {
+
+		p {
+			font-size: 14px;
+		}
+	}
+}
+
+@media(max-width :470px) {
+	.imagesSubWrapper {
+		width: 100%;
+	}
+
+	.image1 {
+		left: 0;
+	}
+
+	.image2 {
+		left: 27%;
+		top: 4rem;
+	}
+
+	.image3 {
+		right: 0;
+	}
+}
+
+@media(max-width :430px) {
+	.image2 {
+		left: 25%;
+	}
+}
+
+@media(max-width :400px) {
+	.image2 {
+		left: 23%;
+	}
+}
+
+@media (max-width: 370px) {
+	.animatedTextBox {
+		right: 1.7rem;
+		top: 2rem
+	}
+
+	.text2FontMedium {
+		margin-top: 0px;
+	}
+
+	.image1 {
+		top: 0;
+	}
+
+	.image2 {
+		left: 21%;
+	}
+
+	.image3 {
+		top: 10rem;
+	}
+
+	.textSection {
+
+		p {
+			line-height: 27.6px;
+		}
+	}
+
 }

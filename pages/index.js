@@ -11,6 +11,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
 import { HomeConst } from '../constants/HomeConst';
+// import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewCard/ReviewCard';
 
 export const metadata = {
 	title: 'Anaostori',
@@ -84,7 +85,6 @@ export default function Home(props) {
 		}
 		setScrollSectionName(sectionName)
 	}
-	console.log(props);
 	useEffect(() => {
 		if (props.params?.دوراتنا == '') {
 			const scrollToCourse = handleScrollToSection("refCourseSec")
@@ -101,9 +101,9 @@ export default function Home(props) {
 
 
 	const typeOfCourse = [
-		{ courseTypeHead: HomeConst.courseTypeHead1, iconName: 'physicalCourseIcon', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
-		{ courseTypeHead: HomeConst.courseTypeHead2, iconName: 'live', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 33 : 54) : 70 },
-		{ courseTypeHead: HomeConst.courseTypeHead3, iconName: 'onlineCourseIcon', height: isMediumScreen ? (isSmallScreen ? 28 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 64) : 82 },
+		{ courseTypeHead: HomeConst.courseTypeHead1, iconName: 'locationDoubleColor', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
+		{ courseTypeHead: HomeConst.courseTypeHead2, iconName: 'onlineDoubleColorIcon', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
+		{ courseTypeHead: HomeConst.courseTypeHead3, iconName: 'televisonDoubleColorIcon', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 64) : 82 },
 	]
 
 	return (
@@ -128,22 +128,22 @@ export default function Home(props) {
 				<div className={styles.textSection}>
 					<h1 className='head1'>{HomeConst.head1}</h1>
 					<div className='flex relative'>
-						<p className='fontMedium'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
-						<div className={styles.animatedTextBox}>
+						<p className='fontMedium pt-2'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
+						<div className={`${styles.animatedTextBox} pt-2`}>
 							<p id={styles.animatedText1} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText1}</p>
 							<p id={styles.animatedText2} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText2}</p>
 							<p id={styles.animatedText3} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
 						</div>
 					</div>
-					<p className='fontMedium'>{HomeConst.pfontMedium2}</p>
+					<p className={`fontMedium ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
 					<div className={styles.btnBox}>
 						<div className={styles.firstBtnBox}>
-							<button className={`secondrySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
 						</div>
-						{/* <div className={styles.secondBtnBox}>
-							<button className={`secondryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>تجارب الأساطير</button>
-						</div> */}
 					</div>
+					{/* <div className={styles.secondBtnBox}>
+						<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+					</div> */}
 				</div>
 				<div className={`${styles.videoThumnail}`}>
 					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(videoObject?.fileBucket, videoObject?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
@@ -151,18 +151,18 @@ export default function Home(props) {
 			</div>
 			<div className={styles.analyticsBarWrapper}>
 				<div className={`maxWidthDefault text-white ${styles.analyticsBarSubWrapper}`}>
-					<div className={`${styles.badgeDiv} pt-4`}>
-						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
-						<div className='px-4'>
-							<p className='head2' style={{ fontSize: '20px' }}>{HomeConst.p1Head2}</p>
+					<div className={`${styles.badgeDiv}  pt-4`}>
+						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
+						<div className='pr-2'>
+							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p1Head2}</p>
 							<p className={styles.discriptionText}>{HomeConst.pDescriptionText1}</p>
 						</div>
 					</div>
-					<div className={`${styles.badgeDiv} pt-4`}>
-						<Icon height={isSmallScreen ? 35 : 40} width={isSmallScreen ? 35 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
-						<div className='px-4'>
-							<p className='head2' style={{ fontSize: '20px' }}>{HomeConst.p2Head2}</p>
-							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className='link' href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
+					<div className={`${styles.badgeDiv}`}>
+						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
+						<div className='pr-2'>
+							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p2Head2}</p>
+							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
 						</div>
 					</div>
 					<div className={styles.imagesWrapper}>
@@ -178,14 +178,14 @@ export default function Home(props) {
 							</div>
 						</div>
 					</div>
-					<div className='pt-8'>
-						<p className={`head2 ${styles.typeOfCourseHeader}`}>{HomeConst.p3Head2TypeOfCourseHeader}</p>
+					<div className={styles.typesOfCourses}>
+						<p className={`fontMedium ${styles.offerText}`} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
 						<div className={styles.courseTypesWrapper}>
 							{typeOfCourse.map((data, index) => {
 								return (
 									<div className={styles.courseTypeCard} key={`courseType${index}`}>
 										<AllIconsComponenet height={data.height} width={data.width} iconName={data.iconName} color={'#FFFFFF'} />
-										<p className='head2 py-2'>{data.courseTypeHead}</p>
+										<p className='fontMedium py-2'>{data.courseTypeHead}</p>
 									</div>
 								)
 							})}
@@ -194,24 +194,23 @@ export default function Home(props) {
 				</div>
 			</div>
 			<div ref={refCourseSec} className={`maxWidthDefault ${styles.courseSection} ${scrollSectionName == 'refCourseSec' ? `${styles.paddingTop}` : ''}`}>
-				<h1 className='head1'>تصفح مجالاتنا</h1>
+				<h1 className='head1'>{HomeConst.refCourseSecHead1}</h1>
 				<div className={styles.courseCardsWraper}>
 					{catagories.length > 0 && catagories.map((catagory, index) => {
 						return (
-							<div key={`catagory${index}`} onClick={() => handleNavigation(catagory.name)}>
+							<div className={styles.courseCardWraper} key={`catagory${index}`} onClick={() => handleNavigation(catagory.name)}>
 								<CourseCard pictureUrl={mediaUrl(catagory.pictureBucket, catagory.pictureKey)} courseType={catagory.name} imgHeight={windowScreen > 1280 ? 164 : 145} />
 							</div>
 						)
-					})
-					}
+					})}
 				</div>
 			</div>
 			{/* <div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
 				<div className={`flex justify-between items-center px-4`}>
-					<h1 className='head1'>تجارب الأساطير</h1>
-					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>مشاهدة الكل</p>
+					<h1 className='head1'>{HomeConst.studentSectionHead1}</h1>
+					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>{HomeConst.studentSectionLink}</p>
 				</div>
-				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>+25,000 طالب وطالبة ساعدناهم يحققون أهدافهم، <span className='fontPrimarycolor'>وعقبالك</span> تكون منهم 🧡</p>
+				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1} <br /> {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
 				<ReviewComponent homeReviews={homeReviews} />
 			</div> */}
 		</div>

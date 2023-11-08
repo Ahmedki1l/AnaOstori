@@ -76,12 +76,12 @@ const DeleteAccount = ({ data }) => {
     return (
         <>
             {accountsSectionType == 'default' ?
-                <>
+                <div className='mt-4'>
                     <p className={` ${styles.paraText}`}>{DeleteAccoutConst.nameText} <span className='fontBold'> {data?.fullName ? data?.fullName : data?.firstName}  🙏</span></p>
                     <p className={` ${styles.paraText}`}>{DeleteAccoutConst.deleteAccountText1}</p>
                     <div className='flex items-baseline'>
                         <p className='pr-2'>1.</p>
-                        <p className={styles.paraPoints}>{DeleteAccoutConst.point11} <span style={{ color: 'red' }}>30 {DeleteAccoutConst.point12}</span> {DeleteAccoutConst.point13} {DeleteAccoutConst.point14}</p>
+                        <p className={styles.paraPoints}>{DeleteAccoutConst.point11} <span className='fontMedium text-red-500'>30 {DeleteAccoutConst.point12}</span>  {DeleteAccoutConst.point14}</p>
                     </div>
                     <div className='flex items-baseline'>
                         <p className='pr-2'>2.</p>
@@ -89,19 +89,18 @@ const DeleteAccount = ({ data }) => {
                     </div>
                     <div className='flex items-baseline'>
                         <p className='pr-2'>3.</p>
-                        <p className={styles.paraPoints}>{DeleteAccoutConst.point3}</p>
+                        <p className={styles.paraPoints}>{DeleteAccoutConst.point31} <span className='fontMedium'>{DeleteAccoutConst.point32} .</span></p>
                     </div>
-                    <p className={styles.paraPoints}><span style={{ color: 'red' }}>{DeleteAccoutConst.noteText} </span>{DeleteAccoutConst.confirmDeleteAccountText}</p>
                     <div className={`${styles.buttonDiv}`}>
                         <button className={`primarySolidBtn ${styles.updateRetreat}`} onClick={() => router.push('/')}>{DeleteAccoutConst.AccountNotDeleteBtnText}</button>
                         <button className={styles.updateDeleteBtn} onClick={() => handleDeleteAccount()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}{DeleteAccoutConst.confirmAccountDeleteBtnText}</button>
                     </div>
-                </>
+                </div>
                 :
                 <>
                     <h3 className={`fontBold ${styles.sectionHeader}`}>{data?.fullName ? data?.fullName : data?.firstName}</h3>
                     <p className={styles.paraText}>{DeleteAccoutConst.recoveryText11} <span style={{ color: '#E5342F' }}>{countRemainingDays(data?.inActiveAt)}</span> {DeleteAccoutConst.recoveryText12}</p>
-                    <p className={styles.paraText}>{DeleteAccoutConst.recoveryText2}</p>
+                    <p className={styles.paraText}>{DeleteAccoutConst.recoveryText21} <span className='fontMedium'>{DeleteAccoutConst.recoveryText22}</span></p>
                     <div className={styles.accountRecoveryBtnBox}>
                         <button className={`primarySolidBtn`} onClick={() => handleAccountRecovery()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} color='#FF0000' /> : ""}{DeleteAccoutConst.accountRecoverBtnText}</button>
                     </div>

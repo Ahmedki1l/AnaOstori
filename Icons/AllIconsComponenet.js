@@ -133,6 +133,9 @@ import NewLockIcon from './customeIcons/newLockIcon'
 import NewSettingIcon from './customeIcons/newSettingIcon'
 import NewLogOutIcon from './customeIcons/newLogOutIcon'
 import WhatsApp_whiteBorder from './customeIcons/whatsApp_whiteBorder'
+import DropMenuIcon from './customeIcons/dropMenuIcon'
+import StarDoubleColoredIcon from './customeIcons/starDoubleColoredIcon'
+import PersonDoubleColoredIcon from './customeIcons/personDoubleColoredIcon'
 
 
 
@@ -217,6 +220,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'courseTypePhysical' && <CourseTypePhysical height={height} width={width} color={color} />}
 			{iconName == 'uploadIncvoice' && <UploadInvoice height={height} width={width} color={color} />}
 			{iconName == 'dragIcon' && <DragIcon height={height} width={width} color={color} />}
+			{iconName == 'dropMenuIcon' && <DropMenuIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'visaPayment' && <VisaPayment height={height} width={width} color={color} />}
@@ -270,6 +274,9 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'linkDoubleColorIcon' && <LinkDoubleColorIcon height={height} width={width} color={color} />}
 			{iconName == 'onlineDoubleColorIcon' && <OnlineDoubleColorIcon height={height} width={width} color={color} />}
 			{iconName == 'televisonDoubleColorIcon' && <TelevisonDoubleColorIcon height={height} width={width} color={color} />}
+			{iconName == 'starDoubleColoredIcon' && <StarDoubleColoredIcon height={height} width={width} color={color} />}
+			{iconName == 'personDoubleColoredIcon' && <PersonDoubleColoredIcon height={height} width={width} color={color} />}
+
 
 			{iconName == 'curriculumNewQuizIcon' && <CurriculumNewQuizIcon height={height} width={width} color={color} />}
 			{iconName == 'curriculumNewVideoIcon' && <CurriculumNewVideoIcon height={height} width={width} color={color} />}

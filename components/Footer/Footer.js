@@ -24,7 +24,7 @@ export default function Footer() {
 							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText'>
 								<li className={styles.locationLinkBox} >
 									<AllIconsComponenet height={isSmallScreen ? 24 : 32} width={isSmallScreen ? 24 : 32} iconName={'coloredGoogleMapIcon'} />
-									<p className={styles.locationLinkText}>المقر الرئيسي، الرياض، حي الياسمين</p>
+									<p className={`pr-2 ${styles.locationLinkText}`}>المقر الرئيسي، الرياض، حي الياسمين</p>
 								</li>
 							</Link>
 							<div className={styles.socialMediaIconWraper}>
@@ -92,7 +92,7 @@ export default function Footer() {
 						<ul>
 							<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
 								<li className={styles.whatsAppWrapper} >
-									<AllIconsComponenet height={isSmallScreen ? 20 : 32} width={isSmallScreen ? 20 : 32} iconName={'whatsappFill'} color={'#40C351'} />
+									<AllIconsComponenet height={isSmallScreen ? 28 : 36} width={isSmallScreen ? 28 : 36} iconName={'whatsApp_whiteBorder'} color={'#40C351'} />
 									<p>0502413980</p>
 								</li>
 							</Link>

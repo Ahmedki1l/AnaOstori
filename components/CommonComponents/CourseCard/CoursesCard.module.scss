@@ -1,4 +1,5 @@
 .cardMainDiv {
+	width: 360px;
 	min-width: 317px;
 	border: 1px solid #0000002c;
 	border-radius: 4px;
@@ -21,7 +22,7 @@
 	display: flex;
 	justify-content: right;
 	align-items: center;
-	margin-bottom: 8px;
+	// margin-bottom: 8px;
 }
 
 .followUpBtn {
@@ -44,8 +45,22 @@
 	margin-bottom: 4px;
 }
 
+.DropMenuBtnBox {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
 @media (max-width: 1024px) {
 	.cardMainDiv {
 		margin: 0.5rem;
+	}
+}
+
+@media (max-width: 1024px) {
+	.cardMainDiv {
+		width: 317px;
+		margin: 0.5rem 0 0.5rem 0.5rem;
 	}
 }

@@ -12,7 +12,7 @@ const StyledSelect = styled(AntdSelect)`
     height:100% !important;
     width:100% !important;
     border-radius: 4px;
-    box-shadow: none;
+    box-shadow: none !important;
     border: none !important;
     padding:  0  !important;
   }
@@ -74,7 +74,6 @@ const SelectIcon = ({ value, setIconValue, ...rest }) => {
         onChange={handleChange}
         optionLabelProp="label"
         showArrow={false}
-
         value={value}
         {...rest}
       >

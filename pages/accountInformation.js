@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from '../styles/AccountInformation.module.scss'
 import loader from '../public/icons/loader.svg'
 import { toast } from "react-toastify";
-import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService';
+import { getAuthRouteAPI } from '../services/apisService';
 import { changeEmail, signOutUser, verifyPassword } from '../services/fireBaseAuthService';
 import Image from 'next/image'
 import ChangePassword from '../components/AccountInformation/ChangePassword/ChangePassword';
@@ -129,7 +129,7 @@ export default function AccountInformation() {
         else {
             setShowLoader(true)
             await verifyPassword(userProfileData?.email, password).then(async (res) => {
-                toast.success(AccountInformationConst.passwordUpdateSuccessToastMsg, { rtl: true, })
+                toast.success(toastSuccessMessage.passwordVerifiedSuccessMsg, { rtl: true, })
                 if (res?.user?.accessToken) {
                     await changeEmail(email).then(res => {
                         toast.success(AccountInformationConst.emailUpdateSuccessToastMsg, { rtl: true, })
@@ -156,11 +156,15 @@ export default function AccountInformation() {
             })
         }
     }
-
     const handleEmailNextBtn = (e) => {
-        if (!email?.length) {
+        if (!email?.length || emailError || isEmailError) {
             setIsEmailError(true)
-        } else {
+        }
+        else if (email == storeData.viewProfileData.email) {
+            toast.error(AccountInformationConst.emailNotChangedMsg, { rtl: true, })
+            return
+        }
+        else {
             setIsEmailError(false)
             setSectionType('password')
         }
@@ -214,7 +218,7 @@ export default function AccountInformation() {
                                         <div className={styles.tabDiv}>
                                             <AllIconsComponenet height={25} width={25} iconName={'newLockIcon'} color={'#000000'} />
                                             <div className={styles.tabTitleDiv}>
-                                                <p className={`fontMedium ${styles.tabTitle}`}>تغيير كلمة السر</p>
+                                                <p className={`fontMedium pr-2 ${styles.tabTitle}`}>تغيير كلمة السر</p>
                                             </div>
                                         </div>
                                     </div>}
@@ -235,7 +239,7 @@ export default function AccountInformation() {
                                 <div className={styles.tabDiv}>
                                     <AllIconsComponenet height={25} width={25} iconName={`${userProfileData?.inActiveAt == null ? 'accountDelet' : 'accountRestore'}`} color={'#000000'} />
                                     <div className={styles.tabTitleDiv}>
-                                        <p className={`fontMedium ${styles.tabTitle}`}>{`${userProfileData?.inActiveAt == null ? 'حذف الحساب' : 'استرجاع الحساب'}`}</p>
+                                        <p className={`fontMedium pr-2 ${styles.tabTitle}`}>{`${userProfileData?.inActiveAt == null ? 'حذف الحساب' : 'استرجاع الحساب'}`}</p>
                                     </div>
                                 </div>
                             </div>}
@@ -248,7 +252,7 @@ export default function AccountInformation() {
                                 <>
                                     {sectionType == 'default' ?
                                         <div className={styles.phoneContainer}>
-                                            <p className={`font-medium ${styles.existingDetailText}`}>{AccountInformationConst?.currentEmailText} : {email ? email : userProfileData?.email}</p>
+                                            <p className={`font-medium ${styles.existingDetailText}`}>{AccountInformationConst?.currentEmailText}: {userProfileData?.email}</p>
                                             <div className='formInputBox'>
                                                 <div className='formInputIconDiv'>
                                                     <AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
@@ -256,14 +260,14 @@ export default function AccountInformation() {
                                                 <input className={`formInput ${emailError || isEmailError ? `${styles.formInputError}` : `${styles.formInputText}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
                                                 <label className={`formLabel ${emailError || isEmailError ? `${styles.formInputPlaceHolderError}` : `${styles.formInputLabel}`}`} htmlFor="email">{AccountInformationConst.emailLabel}</label>
                                             </div>
-
                                             {emailError ? <p className={styles.errorText}>{AccountInformationConst.emptyEmailError}</p> : isEmailError == true && <p className={styles.errorText}>{AccountInformationConst.emailError}</p>}
                                             <div className={styles.submitBtnBox}>
                                                 <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleEmailNextBtn()} >{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} {AccountInformationConst.submitBtn}</button>
                                             </div>
-                                            <div className={styles.submitBtnBox}>
-                                                <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => handleArraowClick()}>{AccountInformationConst.cancelBtn}</button>
-                                            </div>
+                                            {isSmallScreen &&
+                                                <div className={styles.submitBtnBox}>
+                                                    <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => handleArraowClick()}>{AccountInformationConst.cancelBtn}</button>
+                                                </div>}
                                         </div>
                                         : sectionType == 'password' ?
                                             <div className={styles.phoneContainer}>
@@ -287,13 +291,13 @@ export default function AccountInformation() {
                                                         }
                                                     </div>
                                                 </div>
-                                                {passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>يجب ان تحتوي على 8 احرف كحد ادنى، حرف واحد كبير على الاقل، رقم، وعلامة مميزة </p>}
+                                                {passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>{AccountInformationConst.passwordIncorrecterrorMsg} </p>}
                                                 <div className={styles.submitBtnBox}>
                                                     <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleCheckPassword()}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ </button>
                                                 </div>
-                                                <div className={styles.submitBtnBox}>
+                                                {/* <div className={styles.submitBtnBox}>
                                                     <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => setSectionType('default')}>{AccountInformationConst.cancelBtn}</button>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             : ""
                                     }

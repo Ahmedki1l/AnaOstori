@@ -14,14 +14,14 @@ const noOfUsersTag = [
 const noOfUsersTag2 = [
     'شخص 1',
     'شخصين',
-    '3 اشخاص',
-    '4 اشخاص',
-    '5 اشخاص',
-    '6 اشخاص',
-    '7 اشخاص',
-    '8 اشخاص',
-    '9 اشخاص',
-    '10 اشخاص',
+    '3 أشخاص',
+    '4 أشخاص',
+    '5 أشخاص',
+    '6 أشخاص',
+    '7 أشخاص',
+    '8 أشخاص',
+    '9 أشخاص',
+    '10 أشخاص',
 ]
 
 const noOfUsersTag3 = [
@@ -38,6 +38,41 @@ const noOfUsersTag3 = [
 ]
 
 const iosProductIdList = [
+    {
+        label: '1739.99',
+        value: 'tier29_content_AN',
+        key: 'tier29_content_AN',
+    },
+    {
+        label: '1589.99',
+        value: 'tier28_content_AN',
+        key: 'tier28_content_AN',
+    },
+    {
+        label: '1489.99',
+        value: 'tier27_content_AN',
+        key: 'tier27_content_AN',
+    },
+    {
+        label: '1289.99',
+        value: 'tier26_content_AN',
+        key: 'tier26_content_AN',
+    },
+    {
+        label: '1149.99',
+        value: 'tier25_content_AN',
+        key: 'tier25_content_AN',
+    },
+    {
+        label: '979.99',
+        value: 'tier24_content_AN',
+        key: 'tier24_content_AN',
+    },
+    {
+        label: '850',
+        value: 'tier23_content_AN',
+        key: 'tier23_content_AN',
+    },
     {
         label: '749',
         value: 'tier22_content_AN',

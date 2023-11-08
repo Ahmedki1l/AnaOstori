@@ -2,7 +2,7 @@
 
 .footerWrapper {
 	border-top: 0.3px solid rgba(0, 0, 0, 0.25);
-	background-color: #F8F8F8;
+	background-color: #FFFFFF;
 }
 
 .footerSubWrapper {
@@ -18,7 +18,7 @@
 .footerMainBox {
 	display: grid;
 	grid-template-columns: auto 24rem 15rem;
-	grid-template-rows: 18rem auto;
+	grid-template-rows: 14rem auto;
 	padding: 1rem 1rem 0 1rem;
 }
 
@@ -292,7 +292,6 @@
 
 	.locationLinkText {
 		font-size: 16px;
-		padding-right: 5px;
 	}
 
 	.section2 {
