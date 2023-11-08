@@ -1,9 +1,17 @@
 import React from 'react'
 
-const Index = () => {
-    return (
-        <div>Index</div>
-    )
+export async function getServerSideProps(contex) {
+    if (contex?.query.attendanceKey == undefined) {
+        return {
+            notFound: true,
+        };
+    }
 }
 
-export default Index
+export default function Index() {
+    return (
+        <div>
+            <h1>Home Page</h1>
+        </div>
+    )
+}

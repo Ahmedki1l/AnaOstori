@@ -5,25 +5,39 @@ import { useRouter } from 'next/router'
 import { postAuthRouteAPI } from '../../../../../services/apisService'
 import Spinner from '../../../../../components/CommonComponents/spinner'
 
-export default function Index() {
+export async function getServerSideProps(contex) {
+    if (contex?.query.courseId == undefined && contex?.query.attendanceKey == undefined) {
+        return {
+            notFound: true,
+        };
+    }
+    return {
+        props: {
+            courseId: contex?.query.courseId,
+            attendanceKey: contex?.query.attendanceKey
+        }
+    }
+}
 
-    const router = useRouter()
 
+export default function Index(props) {
+
+    const { courseId, attendanceKey } = props
     useEffect(() => {
         setLoading(true)
         getAttendanceKey()
-    }, [router.query.attendanceKey])
+    }, [])
 
     const [markAttendanceType, setMarkAttendanceType] = useState()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState()
 
     const getAttendanceKey = async () => {
-        if (router?.query?.attendanceKey) {
+        if (attendanceKey) {
             let body = {
                 routeName: 'markAttendance',
-                attendanceKey: router.query.attendanceKey,
-                courseId: router.query.courseId
+                attendanceKey: attendanceKey,
+                courseId: courseId
             }
             await postAuthRouteAPI(body).then((res) => {
                 setLoading(false)
