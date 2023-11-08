@@ -505,7 +505,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                                 <div className={styles.dropDownArrowWrapper}>
                                     <AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
                                 <div className='flex justify-center items-center h-100'>
-                                    <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'location'} height={24} width={24} color={'#FFFFFF'} /></div>
+                                    <AllIconsComponenet iconName={courseType == "onDemand" ? 'newLiveTVIcon' : 'locationDoubleColor'} height={26} width={24} color={'#FFFFFF'} /></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
                                 <p>{courseType == 'physical' ? physicalCourseConst.locationFixedText :
@@ -531,7 +531,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
                                 <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'} /></div>
-                                <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'star'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
+                                <div className='flex justify-center items-center h-100'>  <AllIconsComponenet iconName={'starDoubleColoredIcon'} height={24} width={24} color={'#FFCD3C'} ></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
                                 <p>{courseType == 'physical' ? physicalCourseConst.rateFixedText :
@@ -557,7 +557,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         <div className='flex'>
                             <div className={styles.IconWrapper} >
                                 <div className={styles.dropDownArrowWrapper}><AllIconsComponenet iconName={'dropDown'} height={24} width={24} color={'#000000'}></AllIconsComponenet></div>
-                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personegroup'} height={24} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
+                                <div className='flex justify-center items-center h-100'><AllIconsComponenet iconName={'personDoubleColoredIcon'} height={20} width={24} backColor={'#FFFFFF'} color={'#FFFFFF'}></AllIconsComponenet></div>
                             </div>
                             <div className={styles.detailDataWrapper}>
                                 <p>{courseType == 'physical' ? physicalCourseConst.enrolledFixedText :

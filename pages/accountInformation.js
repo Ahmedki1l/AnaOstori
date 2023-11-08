@@ -129,6 +129,7 @@ export default function AccountInformation() {
         else {
             setShowLoader(true)
             await verifyPassword(userProfileData?.email, password).then(async (res) => {
+                toast.success(toastSuccessMessage.passwordVerifiedSuccessMsg, { rtl: true, })
                 if (res?.user?.accessToken) {
                     await changeEmail(email).then(res => {
                         toast.success(AccountInformationConst.emailUpdateSuccessToastMsg, { rtl: true, })
@@ -251,7 +252,7 @@ export default function AccountInformation() {
                                 <>
                                     {sectionType == 'default' ?
                                         <div className={styles.phoneContainer}>
-                                            <p className={`font-medium ${styles.existingDetailText}`}>{AccountInformationConst?.currentEmailText}: {email ? email : userProfileData?.email}</p>
+                                            <p className={`font-medium ${styles.existingDetailText}`}>{AccountInformationConst?.currentEmailText}: {userProfileData?.email}</p>
                                             <div className='formInputBox'>
                                                 <div className='formInputIconDiv'>
                                                     <AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
@@ -294,9 +295,9 @@ export default function AccountInformation() {
                                                 <div className={styles.submitBtnBox}>
                                                     <button className='primarySolidBtn flex items-center' type='submit' onClick={() => handleCheckPassword()}>{showLoader ? <Image src={loader} width={50} height={30} alt={'loader'} /> : ""} تحديث وحفظ </button>
                                                 </div>
-                                                <div className={styles.submitBtnBox}>
+                                                {/* <div className={styles.submitBtnBox}>
                                                     <button className={`flex items-center ${styles.cancelBtn}`} onClick={() => setSectionType('default')}>{AccountInformationConst.cancelBtn}</button>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             : ""
                                     }

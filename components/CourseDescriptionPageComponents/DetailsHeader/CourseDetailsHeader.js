@@ -55,7 +55,7 @@ export default function CourseDetailsHeader(props) {
 						{courseDetail.type == 'physical' ?
 							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 								<div className='m-1'>
-									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'location'} color={'#FFFFFF'} />
+									<AllIconsComponenet height={isMediumScreen ? 18 : 32} width={isMediumScreen ? 20 : 32} iconName={'locationDoubleColor'} color={'#FFFFFF'} />
 								</div>
 								<div className='px-1'>
 									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
@@ -75,7 +75,7 @@ export default function CourseDetailsHeader(props) {
 								:
 								<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 									<div className='mt-2'>
-										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
+										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'newLiveTVIcon'} color={'#FFFFFF'} />
 									</div>
 									<div className='px-1'>
 										<p>{lang == 'en' ? 'Location' : 'دروس مسجلة'}</p>
@@ -106,7 +106,7 @@ export default function CourseDetailsHeader(props) {
 						} */}
 						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 							<div className='m-1'>
-								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'star'} color={'#FFCD3C'} />
+								<AllIconsComponenet height={isMediumScreen ? 18 : 24} width={isMediumScreen ? 20 : 24} iconName={'starDoubleColoredIcon'} color={'#FFCD3C'} />
 							</div>
 							<div className='px-1'>
 								<p> {lang == 'en' ? `Course Review` : 'تقييم الدورة'} </p>
@@ -115,7 +115,7 @@ export default function CourseDetailsHeader(props) {
 						</div>
 						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 							<div className='m-1'>
-								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'graduate'} color={'#FFFFFF'} />
+								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'personDoubleColoredIcon'} color={'#FFFFFF'} />
 							</div>
 							<div className='px-1'>
 								{courseDetail.type == 'onDemand' ?
