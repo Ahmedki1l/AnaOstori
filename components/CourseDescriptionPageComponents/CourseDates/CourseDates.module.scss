@@ -173,10 +173,8 @@
 }
 
 .instructorWrapper {
-    width: 90%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .instructorRoleText {

@@ -125,6 +125,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             return obj.id
         });
         appointmentForm.setFieldsValue({
+            name: appointment?.name,
             instructors: instructorsList,
             location: appointment?.location,
             locationName: appointment?.locationName,
