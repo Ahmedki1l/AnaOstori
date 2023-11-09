@@ -65,11 +65,13 @@ export const toastSuccessMessage = {
     courseCreatedSuccessMsg: 'إضافة وتعديل المجالات',//"Course details created successfully.",
     externalCourseDetailCreateMsg: 'إضافة وتعديل الدورات', //'course details created successfully',
     externalCourseDetailUpdateMsg: 'تم تحديث بيانات البطاقة الخارجية بنجاح',// 'courese details updated successfully',
-    appoitmentCretedSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been created successfully',
-    appoitmentUpdateSuccessMsg: 'إضافة وإدارة المدربين',//'appoitment has been updated successfully',
+    appoitmentCretedSuccessMsg: 'تم إضافة الموعد بنجاح',//'appoitment has been created successfully',
+    appoitmentUpdateSuccessMsg: 'تم تعديل بيانات الموعد بنجاح',// The appointment data has been successfully modified,
     examCreateSuccessMsg: 'إضافة وتعديل الشريط التسويقي',// 'student examData created successfully',
     examUpdateSuccessMsg: 'تحديث نسخ التطبيق',//student examData updated successfully',    
     accountRestoreSuccessMsg: 'مبسوطين برجعتك', // We are happy to have you back
+    appointmentSuccessHiddenMsg: 'تم إخفاء الموعد بنجاح', //The appointment has been successfully hidden
+    appointmentSuccessShowMsg: 'تم إظهار الموعد بنجاح', //The appointment has been shown successfully
 }
 
 export const createAndEditBtnText = {

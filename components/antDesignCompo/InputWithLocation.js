@@ -31,7 +31,11 @@ width: ${props => (props.width ? props.width : '172')}px !important;
             color:#00000045;
           } 
     }
-
+    input.ant-input {
+        padding: 8px;
+        font-size: 16px;
+        font-family: 'Tajawal-Regular';
+    }
     .ant-btn{
         height:40px;
         border-left:none
@@ -51,7 +55,7 @@ const InputWithLocation = ({
             placeholder={placeholder}
             onChange={onChange}
             width={width}
-            prefix={<AllIconsComponenet height={13} width={13} iconName={suFFixIconName} color={'#00000080'} />}
+            prefix={<AllIconsComponenet height={16} width={16} iconName={suFFixIconName} color={'#000000'} />}
             {...rest}
         />
 
