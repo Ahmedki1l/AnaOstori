@@ -60,7 +60,7 @@ const Index = () => {
                     return item.value == text
                 })
                 return (
-                    <p>{couponType.label}</p>
+                    <p>{couponType?.label}</p>
                 )
             }
         },
