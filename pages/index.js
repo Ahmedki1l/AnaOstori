@@ -95,9 +95,6 @@ export default function Home(props) {
 	const handleNavigation = (catagoryName) => {
 		router.push(`/${catagoryName.replace(/ /g, "-")}`)
 	}
-	const navigation = (navigationLink) => {
-		router.push(`/${navigationLink}`)
-	}
 
 
 	const typeOfCourse = [

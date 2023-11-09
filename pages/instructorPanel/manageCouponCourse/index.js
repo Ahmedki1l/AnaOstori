@@ -59,16 +59,16 @@ const Index = () => {
                     return item.value == text
                 })
                 return (
-                    <p>{couponType.label}</p>
+                    <p>{couponType?.label}</p>
                 )
             }
         },
         {
             title: 'تاريخ الانتهاء',
             dataIndex: 'expires',
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+            sorter: (a, b) => a.expires.localeCompare(b.expires),
             render: (text, _date) => {
-                return (fullDate(_date.createdAt))
+                return (fullDate(_date.expires))
             }
         },
         {
@@ -180,6 +180,7 @@ const Index = () => {
 
     const handleAddCouponCourse = () => {
         setDrawerForCouponCourse(true)
+        setSelectedCoupon()
     }
     const customEmptyComponent = (
         <Empty emptyText={'ما أضفت كوبون'} containerhight={400} buttonText={'إضافة كوبون'} onClick={() => handleAddCouponCourse()} />
@@ -200,9 +201,9 @@ const Index = () => {
                 />
             </div>
             <div className={styles.couponHeadeArea}>
-                <h1 className={`head2`}>إضافة وتعديل كوبونات الخصم</h1>
+                <h1 className={`head2`}>كوبونات الخصم</h1>
                 <div className={`${styles.createCourseBtnBox}`}>
-                    <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة مجال</button>
+                    <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة كوبون</button>
                 </div>
             </div>
             <Table
@@ -221,7 +222,7 @@ const Index = () => {
                     title={
                         <div className={styles.drawerHeadingArea}>
                             <p className={`fontBold ${styles.drawerTitle}`}>{selectedCoupon ? manageCouponConst.updateCouponHead : manageCouponConst.createCouponHead}</p>
-                            {selectedCoupon && <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable.color}>{selectedCouponStatusLable?.label}</Tag>}
+                            {selectedCoupon && <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable?.color}>{selectedCouponStatusLable?.label}</Tag>}
                         </div>
                     }
 
