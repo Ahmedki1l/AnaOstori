@@ -121,7 +121,7 @@ export default function CourseDetailsHeader(props) {
 								{courseDetail.type == 'onDemand' ?
 									<p>{lang == 'en' ? 'Number of graduates subscriptions ' : 'عدد الاشتراكات'}</p>
 									:
-									<p>{lang == 'en' ? `Number of graduates` : `عدد الخريجين`} </p>
+									<p>{lang == 'en' ? 'Number of graduates' : 'عدد المسجلين'} </p>
 								}
 								<p className='fontBold'>{courseDetail.numberOfGrarduates}</p>
 							</div>

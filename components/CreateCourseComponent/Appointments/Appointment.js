@@ -151,7 +151,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setEditAvailability()
     }
 
-    const handlePublishedCategory = async (e, availabilityId) => {
+    const handlePublishedAppointment = async (e, availabilityId) => {
         let body = {
             routeName: 'updateAvailability',
             published: e,
@@ -258,7 +258,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         </td>
                                         <td>
                                             <div className={styles.publishState}>
-                                                <Switch defaultChecked={appointment.published} onChange={handlePublishedCategory} params={appointment.id} ></Switch>
+                                                <Switch defaultChecked={appointment.published} onChange={handlePublishedAppointment} params={appointment.id} ></Switch>
                                                 <p className='pr-2'>{appointment.published ? 'إظهار' : 'مخفي'}</p>
                                             </div>
                                         </td>

@@ -9,11 +9,6 @@ import { dateWithDay, timeDuration } from '../../../constants/DateConverter';
 import ContentAccessModal from '../ContentAccessModal/ContentAccessModal';
 import { Dropdown, Space } from 'antd';
 import { WhatsApp_Link } from '../../../constants/LinkConst';
-import styled from 'styled-components';
-
-const StyledDropDown = styled(Dropdown)`
-
-`
 
 export default function CoursesCard(props) {
 	const courseDetails = props?.data?.course
@@ -58,7 +53,7 @@ export default function CoursesCard(props) {
 				<div className={styles.cardContentDiv}>
 					<div className={styles.DropMenuBtnBox}>
 						<h1 className={`fontBold ${styles.courseTitle}`}>{courseDetails.name}</h1>
-						<StyledDropDown
+						<Dropdown
 							overlayClassName='dropDownMenu'
 							menu={{
 								items,
@@ -67,9 +62,9 @@ export default function CoursesCard(props) {
 							trigger={['click']}
 						>
 							<div className='cursor-pointer ' onClick={(e) => e.preventDefault()}>
-								<AllIconsComponenet height={20} width={3} iconName={'dropMenuIcon'} color={'#000000'} />
+								<AllIconsComponenet height={20} width={20} iconName={'dropMenuIcon'} color={'#000000'} />
 							</div>
-						</StyledDropDown>
+						</Dropdown>
 					</div>
 					<div className={styles.subscriptionText}>
 						<AllIconsComponenet height={20} width={20} iconName={'calenderDoubleColorIcon'} color={'#000000'} />

@@ -222,7 +222,9 @@
 	padding-right: 0.5rem;
 }
 
-
+.categoryName {
+	width: 280px;
+}
 
 @media (max-width: 1280px) {
 	.navbarSubWrapper {
@@ -336,6 +338,9 @@
 	}
 
 	.mainMenuWrapper {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		border-bottom: 1px solid #0000001a;
 	}
 

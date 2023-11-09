@@ -43,7 +43,7 @@ export default function MyProfile() {
 							<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
 							<p className={styles.paregraphText}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
 							<div className={`mt-4 ${styles.homeBtnBox}`}>
-								<button className="primarySolidBtn" onClick={() => Router.push('/')}>تصفح المجالات</button>
+								<button className="primarySolidBtn" onClick={() => Router.push('/?دوراتنا')}>تصفح المجالات</button>
 							</div>
 						</div>
 					}

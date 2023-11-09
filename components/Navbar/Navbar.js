@@ -6,7 +6,6 @@ import axios from 'axios';
 import useWindowSize from '../../hooks/useWindoSize';
 import { useRouter } from 'next/router';
 import useScrollEvent from '../../hooks/useScrollEvent';
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import ModalComponent from '../CommonComponents/ModalComponent/ModalComponent';
 import { getNewToken, signOutUser } from '../../services/fireBaseAuthService'
@@ -14,9 +13,10 @@ import { getAuthRouteAPI, getRouteAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
-import { ConfigProvider, Drawer } from 'antd';
+import { ConfigProvider, Drawer, Dropdown } from 'antd';
 import styled from 'styled-components';
 import Image from 'next/legacy/image';
+import { WhatsApp_Link } from '../../constants/LinkConst';
 
 const StyledDrawer = styled(Drawer)`
   .ant-drawer-body{
@@ -150,6 +150,7 @@ export default function Navbar() {
 	const handleClickCourseName = (submenu, menu, lang) => {
 		setShowSubMenuShown()
 		setIsMenuShow(false)
+		console.log(submenu);
 		if (submenu.type == "on-demand" && submenu.isEnrolled == true) {
 			router.push(`/myCourse/${submenu.id}`)
 		} else {
@@ -201,11 +202,6 @@ export default function Navbar() {
 
 	}, [storeData?.viewProfileData?.inActiveAt])
 
-
-	const handleClose = () => {
-		setOpen(false)
-	}
-
 	const handleInstructorBtnClick = () => {
 		router.push('/instructorPanel')
 	}
@@ -216,7 +212,6 @@ export default function Navbar() {
 			router.push('/accountInformation')
 		}
 	}
-
 	return (
 		<>
 			{isMediumScreen ?
@@ -302,11 +297,9 @@ export default function Navbar() {
 									<ul className={styles.navbarSubWrapper}>
 										{catagories?.map((menu, i = index) => {
 											return (
-												<li className={`border-b border-inherit w-full list-none`} key={`navMenu${i}`}>
-													<div className={`flex items-center cursor-pointer ${styles.mainMenuWrapper}`} onClick={() => handleshowSubMenu(i)}>
-														<p className={`p-4 text-lg ${catagoryName == menu.name ? 'fontBold' : 'fontRegular'}`}>
-															{stringUpdation(menu.name, 35)}
-														</p>
+												<li className={`border-b border-inherit w-full`} key={`navMenu${i}`}>
+													<div className={styles.mainMenuWrapper} onClick={() => handleshowSubMenu(i)}>
+														<p className={`p-4 text-lg ${styles.categoryName} ${catagoryName == menu.name ? 'fontBold' : 'fontRegular'}`}>{menu.name}</p>
 														<AllIconsComponenet height={24} width={24} iconName={showSubMenu == i ? 'newUpArrowIcon' : 'newDownArrowIcon'} color={'#000000'} />
 													</div>
 													{showSubMenu == i &&
@@ -335,7 +328,7 @@ export default function Navbar() {
 							</StyledDrawer>
 						</ConfigProvider>
 					}
-				</div>
+				</div >
 				:
 				<div className={styles.navbarWrapper} id="navBar" >
 					<div className='maxWidthDefault'>
@@ -440,13 +433,15 @@ export default function Navbar() {
 					</div>
 				</div>
 			}
-			{open && <ModalComponent open={open} handleClose={handleClose} dispatch={dispatch} toast={toast} />}
-			{commingSoonModalOpen &&
+			{/* {open && <ModalComponent open={open} handleClose={handleClose} dispatch={dispatch} toast={toast} />} */}
+			{
+				commingSoonModalOpen &&
 				<CommingSoonModal
 					open={commingSoonModalOpen}
 					commingSoonModalOpen={commingSoonModalOpen}
 					setCommingSoonModalOpen={setCommingSoonModalOpen}
-				/>}
+				/>
+			}
 		</>
 	)
 }

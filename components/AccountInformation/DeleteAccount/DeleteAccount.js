@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { toastSuccessMessage } from '../../../constants/ar';
 import Image from 'next/legacy/image';
 import loader from '../../../public/icons/loader.svg'
-import { getNewToken } from '../../../services/fireBaseAuthService';
+import { getNewToken, signOutUser } from '../../../services/fireBaseAuthService';
 import { countRemainingDays } from '../../../constants/DataManupulation';
 import { DeleteAccoutConst } from '../../../constants/DeleteAccountConst';
 
@@ -19,12 +19,11 @@ const DeleteAccount = ({ data }) => {
     const dispatch = useDispatch();
     const router = useRouter()
     const [showLoader, setShowLoader] = useState(false);
-    const [deleteProfileRes, setDelteProfileRes] = useState()
 
     const handleDeleteAccount = async () => {
         setShowLoader(true)
         await postAuthRouteAPI({ routeName: "deleteProfile" }).then(async (res) => {
-            setDelteProfileRes(res.data)
+            signOutUser()
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
@@ -36,6 +35,7 @@ const DeleteAccount = ({ data }) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postAuthRouteAPI({ routeName: "deleteProfile" }).then(async (res) => {
+                        signOutUser()
                         dispatch({
                             type: 'SET_PROFILE_DATA',
                             viewProfileData: res?.data,
@@ -90,6 +90,10 @@ const DeleteAccount = ({ data }) => {
                     <div className='flex items-baseline'>
                         <p className='pr-2'>3.</p>
                         <p className={styles.paraPoints}>{DeleteAccoutConst.point31} <span className='fontMedium'>{DeleteAccoutConst.point32} .</span></p>
+                    </div>
+                    <div className='flex'>
+                        <p className={styles.noteText}> ملاحظة: </p>
+                        <p className='pr-1'>بعد ما تأكد حذف حسابك، راح يتم تسجيل خروجك تلقائيًا</p>
                     </div>
                     <div className={`${styles.buttonDiv}`}>
                         <button className={`primarySolidBtn ${styles.updateRetreat}`} onClick={() => router.push('/')}>{DeleteAccoutConst.AccountNotDeleteBtnText}</button>
