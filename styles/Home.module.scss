@@ -45,7 +45,8 @@
 }
 
 .offerText {
-	font-size: 20px;
+	font-size: 26px;
+	font-weight: 500;
 }
 
 .animatedText {
@@ -66,7 +67,7 @@
 }
 
 .typesOfCourses {
-	padding-top: 3rem;
+	padding-top: 2rem;
 }
 
 @keyframes textAnimation {
@@ -163,7 +164,7 @@
 	align-items: center;
 
 	p {
-		font-size: 23px;
+		font-size: 25px;
 	}
 }
 
@@ -251,6 +252,11 @@
 .courseImgBox {
 	width: 100%;
 	position: relative;
+}
+
+.greySectionHeadText {
+	font-size: 26px;
+	font-weight: 700;
 }
 
 .courseDetailsBox {
@@ -483,6 +489,10 @@
 		font-weight: 500;
 	}
 
+	.typesOfCourses {
+		padding-top: 3rem;
+	}
+
 	.videoSection {
 		width: 350px;
 	}
@@ -491,9 +501,13 @@
 		padding: 0;
 	}
 
-	// .offerText {
-	// 	margin-right: 1rem;
-	// }
+	.greySectionHeadText {
+		font-size: 20px;
+	}
+
+	.offerText {
+		font-size: 20px;
+	}
 
 	.analyticsBarSubWrapper {
 		padding: 0;
@@ -607,7 +621,6 @@
 	}
 
 	.courseTypeCard {
-
 		p {
 			font-size: 14px;
 		}

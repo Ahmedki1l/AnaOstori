@@ -30,6 +30,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         setSelectedCourse(selectedCoupon?.couponCourses.map((item) => {
             return item.course.id
         }))
+        setSelectedCouponType(selectedCoupon?.type)
     }, [])
 
     const handleSaveCouponDetails = async (values) => {

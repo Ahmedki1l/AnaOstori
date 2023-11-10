@@ -68,7 +68,7 @@
 	display: flex;
 	margin: 10px 0;
 	font-size: 16px;
-	align-items: center;
+	// align-items: center;
 
 	&:hover {
 		color: $primary-color;
@@ -267,7 +267,7 @@
 @media (max-width: 640px) {
 	.footerMainBox {
 		grid-template-columns: auto;
-		grid-template-rows: 11.5rem 10.5rem 6rem auto;
+		grid-template-rows: 12.5rem 10.5rem 6rem auto;
 		grid-gap: 16px;
 	}
 
@@ -310,11 +310,20 @@
 	.footerSubWrapper {
 		li {
 			font-size: 16px;
-			line-height: 27px;
 		}
 
 		h3 {
 			font-size: 18px;
+		}
+
+		p {
+			line-height: 27px;
+		}
+	}
+
+	.linkTextWrapper {
+		li {
+			line-height: 27px;
 		}
 	}
 
@@ -346,6 +355,6 @@
 
 @media(max-width: 436px) {
 	.footerMainBox {
-		grid-template-rows: 12.5rem 10.5rem 6.5rem auto;
+		grid-template-rows: 14rem 10.5rem 6.5rem auto;
 	}
 }

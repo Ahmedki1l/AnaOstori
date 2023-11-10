@@ -69,7 +69,7 @@ export default function Footer() {
 					</div>
 					<div className={styles.section}>
 						<h3 className={isSmallScreen ? `${styles.sectionWrapper}` : ''}>الروابط المهمة</h3>
-						<ul>
+						<ul className={styles.linkTextWrapper}>
 							<Link href={'/privacyAndPolicy'} target='_blank' className='normalLinkText'>
 								<li>سياسة الخصوصية</li>
 							</Link>

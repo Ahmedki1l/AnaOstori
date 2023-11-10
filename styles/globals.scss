@@ -627,6 +627,12 @@
 
 }
 
+.dropDownMenuWrapper {
+    .ant-dropdown-menu {
+        padding: 0;
+    }
+}
+
 // ******************************************** add Appoinment Modal SCSS**************************************************** //
 
 .addAppoinmentModal {
