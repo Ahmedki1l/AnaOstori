@@ -32,6 +32,10 @@
 .tabDiv {
 	display: flex;
 	align-items: center;
+	display: -webkit-flex;
+	-webkit-align-items: center;
+	height: 25px;
+	margin: auto 0;
 }
 
 .smallScreenTabTitleDiv {
@@ -43,14 +47,10 @@
 }
 
 .tabTitle {
-	margin-top: 3px;
+	// margin-top: 3px;
 	font-size: 18px;
-}
-
-.tab1SubTitle {
-	font-size: 15px;
-	line-height: 18px;
-	opacity: 0.5;
+	height: 25px;
+	line-height: 0;
 }
 
 .passwordVisibilityIcon {
@@ -76,10 +76,6 @@
 	cursor: pointer;
 }
 
-.userDetailTitle {
-	font-size: 16px;
-	line-height: 19px;
-}
 
 .subContentValueDiv {
 	display: inline-flex;
@@ -87,12 +83,6 @@
 	cursor: pointer;
 }
 
-.userDetailText {
-	margin-left: 5px;
-	font-size: 17px;
-	line-height: 20px;
-	color: #0000008a;
-}
 
 .existingDetailText {
 	margin-top: 1rem;
@@ -142,66 +132,6 @@
 		font-size: 18px;
 		font-weight: 500;
 	}
-}
-
-.updateGenderBtnDefault.active {
-	background: #F06A25;
-}
-
-.genderBtnBox {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	width: 19.8rem;
-	height: 47px;
-	margin: 1rem 0;
-	border: 1px solid #0000001a;
-	border-radius: 4px;
-	overflow: hidden;
-
-	button {
-		border: none;
-		background: #FFFFFF;
-		font-size: 16px;
-		line-height: 19px;
-		color: #000000;
-		width: 50%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		cursor: pointer;
-
-		span {
-			margin-right: 5px;
-		}
-	}
-
-	.maleBtn {
-		border-left: 1px solid #0000001a;
-	}
-}
-
-
-.genderActiveBtn {
-	background: #F06A25 !important;
-	color: #FFFFFF !important;
-}
-
-
-.phoneTitleDiv {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	margin-bottom: 15px;
-	cursor: pointer;
-}
-
-.phoneTitleDiv h3 {
-	font-size: 18px;
-	line-height: 22px;
-	text-align: right;
-	margin-right: 10px;
 }
 
 .formInputIconDiv {

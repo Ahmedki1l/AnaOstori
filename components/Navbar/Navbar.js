@@ -22,13 +22,27 @@ const StyledDrawer = styled(Drawer)`
   .ant-drawer-body{
 	padding: 0px !important;
   }
+ 
   .ant-drawer {
     position: fixed;
     inset: 0;
     pointer-events: none;
-}
+  }
 `
-
+const StyledDropdown = styled(Dropdown)`
+	.ant-dropdown-menu{
+		border-radius: 0px !important;
+ 	}
+	.ant-dropdown-menu-root{
+		border-radius: 0px !important;
+	}
+	.ant-dropdown-menu-item {
+		padding: 0px 0px !important;
+	}
+	.ant-dropdown-menu .ant-dropdown-menu-submenu-title {
+		padding: 0px 0px !important;
+	}
+`
 export default function Navbar() {
 
 	const isSmallScreen = useWindowSize().smallScreen
@@ -150,7 +164,6 @@ export default function Navbar() {
 	const handleClickCourseName = (submenu, menu, lang) => {
 		setShowSubMenuShown()
 		setIsMenuShow(false)
-		console.log(submenu);
 		if (submenu.type == "on-demand" && submenu.isEnrolled == true) {
 			router.push(`/myCourse/${submenu.id}`)
 		} else {
@@ -212,44 +225,69 @@ export default function Navbar() {
 			router.push('/accountInformation')
 		}
 	}
+	const items = [
+		{
+			label: (
+				<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
+					<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
+					<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
+				</Link>
+			),
+			key: '0',
+		},
+		{
+			label: (
+				<div className={styles.inqBtnBox}>
+					<Link href={'/purchaseInquiry'} className='no-underline'>
+						<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
+							<p> استعلام الحجوزات</p>
+							<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} /> &nbsp;
+						</button>
+					</Link>
+				</div>
+			),
+			key: '1',
+		},
+		{
+			type: 'divider',
+		},
+		{
+			label: (
+				<div onClick={() => handleTabChange()} className={`normalLinkText pt-2 ${styles.profileMenuItemsWrapper}`}>
+					<p className={styles.profileMenuItemsText}>إعدادات الحساب</p>
+					<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
+				</div>
+			),
+			key: '3',
+		},
+		{
+			label: (
+				<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
+					<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
+					<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
+				</div>
+			),
+			key: '4',
+		},
+	];
+
 	return (
 		<>
 			{isMediumScreen ?
 				<div className={styles.mobileLogoBar} id="navBar">
 					{(storeData?.accessToken && !isRegisterSocialMediaUser) &&
 						<div className={styles.navLeftDivMO}>
-							<div className={styles.navLeftDiv}>
-								<div className={styles.viewProfile}>
+							<StyledDropdown
+								menu={{
+									items,
+								}}
+								trigger={['click']}
+							>
+								<div onClick={(e) => e.preventDefault()} className={styles.viewProfile}>
 									<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={30} width={30} />
 									<div style={{ height: '15px', marginRight: '8px' }}><AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} /></div>
 								</div>
-								<div className={`${styles.profileMenuWrapperMo} ${styles.profileMenuWrapper}`}>
-									<div className={styles.profileMenuSubWrapper}>
-										<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
-											<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
-											<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
-										</Link>
-										<div className={styles.inqBtnBox}>
-											<Link href={'/purchaseInquiry'} className='no-underline'>
-												<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
-													<div style={{ height: '40px' }} className='p-2'>
-														<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} /> &nbsp;
-													</div>
-													استعلام الحجوزات
-												</button>
-											</Link>
-										</div>
-										<div onClick={() => handleTabChange()} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
-											<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
-											<p className={styles.profileMenuItemsText}>إعدادات الحساب</p>
-										</div>
-										<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
-											<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
-											<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
-										</div>
-									</div>
-								</div>
-							</div>
+							</StyledDropdown>
 						</div>
 					}
 					<Link href={'/'} className='pt-1'>
@@ -389,42 +427,16 @@ export default function Navbar() {
 									</div>}
 									<div className={styles.navLeftDiv}>
 										{!isRegisterSocialMediaUser &&
-											<>
-												<div className={styles.viewProfile}>
-													<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={35} width={35} />
-													{/* <AllIconsComponenet height={35} width={35} iconName={'profileIcon'} color={'#ffffff'} /> */}
-													<p>
-														{stringUpdation(userFullName, 10)}
-													</p>
-													<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />
+											<StyledDropdown
+												menu={{
+													items,
+												}}
+											>
+												<div onClick={(e) => e.preventDefault()} className={styles.viewProfile}>
+													<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={30} width={30} />
+													<div style={{ height: '15px', marginRight: '8px' }}><AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} /></div>
 												</div>
-												<div className={styles.profileMenuWrapper}>
-													<div className={styles.profileMenuSubWrapper}>
-														<Link href={'/myProfile'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
-															<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
-															<p className={styles.profileMenuItemsText}>الملف الشخصي</p>
-														</Link>
-														<div className={styles.inqBtnBox}>
-															<Link href={'/purchaseInquiry'} className='no-underline'>
-																<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
-																	<div style={{ height: '25px' }}>
-																		<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} />
-																	</div> &nbsp;
-																	استعلام الحجوزات
-																</button>
-															</Link>
-														</div>
-														<div onClick={() => handleTabChange()} className={`normalLinkText ${styles.profileMenuItemsWrapper} ${styles.borderTop}`}>
-															<div style={{ height: '23px' }}><AllIconsComponenet height={20} width={20} iconName={'newSettingIcon'} color={'#808080'} /></div>
-															<p className={styles.profileMenuItemsText}>إعدادات الحساب</p>
-														</div>
-														<div className={styles.profileMenuItemsWrapper} onClick={() => handleSignOut()}>
-															<AllIconsComponenet height={20} width={20} iconName={'newLogOutIcon'} color={'#E5342F'} />
-															<p style={{ color: "red" }} className={styles.profileMenuItemsText}>تسجيل الخروج</p>
-														</div>
-													</div>
-												</div>
-											</>
+											</StyledDropdown>
 										}
 									</div>
 								</div>

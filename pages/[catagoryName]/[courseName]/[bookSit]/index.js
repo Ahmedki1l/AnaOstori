@@ -140,7 +140,6 @@ export default function Index(props) {
 				isError = true
 			}
 			else if (data[i].fullName.length < 3) {
-				console.log(data[i].fullName);
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = inputErrorMessages.nameFormatErrorMsg
 				data[i].validName = ""

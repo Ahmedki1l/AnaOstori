@@ -147,15 +147,20 @@
 }
 
 .inqBtnBox {
-	height: 39px;
-	margin: 0.5rem 0;
-	padding: 0 0.7rem;
+	height: 38px;
+	width: 219px;
+	// margin: 0.5rem 0;
+	// padding: 0 0.7rem;
 
 	.serchQueryBtn {
+		padding: 5px 12px;
 		font-size: 15px;
-		justify-content: flex-start !important;
 		background-color: #F26722;
 		border-color: #F26722;
+		display: flex;
+		display: -webkit-flex;
+		align-items: center;
+		-webkit-align-items: center;
 	}
 }
 
@@ -198,23 +203,11 @@
 	}
 }
 
-.borderTop {
-	border-top: 1px solid #0000001a;
-}
-
-.navLeftDiv {
-	&:hover .profileMenuWrapper {
-		opacity: 1;
-		visibility: visible;
-		height: auto;
-	}
-}
-
 .profileMenuItemsWrapper {
 	display: flex;
 	align-items: center;
-	padding: 0.7rem 0.7rem 0 0.7rem;
 	cursor: pointer;
+	justify-content: end;
 }
 
 .profileMenuItemsText {
@@ -243,12 +236,6 @@
 
 	.subMenuText {
 		padding-bottom: 0.5rem;
-	}
-
-	.inqBtnBox {
-		.serchQueryBtn {
-			font-size: 15px;
-		}
 	}
 }
 
@@ -305,11 +292,9 @@
 	}
 
 	.inqBtnBox {
-		height: 46px;
 		width: 100%;
 
 		.serchQueryBtn {
-			padding: 0.5rem 0;
 			height: 38px;
 		}
 	}

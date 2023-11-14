@@ -53,7 +53,6 @@ const Select = ({
         fontSize={fontSize}
         onChange={(e) => onChange(e)}
         filterOption={filterOption}
-        // dropdownStyle={{ direction: 'rtl' }}
         {...rest}
       />
     </ConfigProvider>

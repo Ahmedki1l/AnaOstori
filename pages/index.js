@@ -26,31 +26,30 @@ export async function getServerSideProps(context) {
 	try {
 		const newsReq = axios.post(`${process.env.API_BASE_URL}/route`, { routeName: 'listNewsBar' })
 		const catagoriesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`)
-		// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
+		const homeReviewsReq = axios.post(`${process.env.API_BASE_URL}/route`, { routeName: `allReviews` })
 		const homeMetaDataReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=homeMetaData`)
-		const [news, catagories, homeMetaData] = await Promise.all([
-			// const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
+		// const [news, catagories, homeMetaData] = await Promise.all([
+		const [news, catagories, homeReviews, homeMetaData] = await Promise.all([
 			newsReq,
 			catagoriesReq,
-			// homeReviewsReq,
+			homeReviewsReq,
 			homeMetaDataReq
 		])
-
 		return {
-			props: {
-				catagories: catagories.data,
-				homeMetaData: homeMetaData.data,
-				news: news.data,
-				params: params
-			}
-
 			// props: {
-			// 	// news: news.data,
 			// 	catagories: catagories.data,
-			// 	// homeReviews: homeReviews.data,
-			// 	// homeMetaData: homeMetaData.data,
+			// 	homeMetaData: homeMetaData.data,
+			// 	news: news.data,
 			// 	params: params
 			// }
+
+			props: {
+				news: news.data,
+				catagories: catagories.data,
+				homeReviews: homeReviews.data,
+				homeMetaData: homeMetaData.data,
+				params: params
+			}
 		};
 	} catch (error) {
 		console.log(error);
@@ -88,7 +87,6 @@ export default function Home(props) {
 	useEffect(() => {
 		if (props.params?.دوراتنا == '') {
 			const scrollToCourse = handleScrollToSection("refCourseSec")
-			console.log(scrollToCourse);
 		}
 	}, [props.params?.دوراتنا]);
 
@@ -98,9 +96,9 @@ export default function Home(props) {
 
 
 	const typeOfCourse = [
-		{ courseTypeHead: HomeConst.courseTypeHead1, iconName: 'locationDoubleColor', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
-		{ courseTypeHead: HomeConst.courseTypeHead2, iconName: 'onlineDoubleColorIcon', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 54) : 70 },
-		{ courseTypeHead: HomeConst.courseTypeHead3, iconName: 'televisonDoubleColorIcon', height: isMediumScreen ? (isSmallScreen ? 36 : 51) : 65, width: isMediumScreen ? (isSmallScreen ? 40 : 64) : 82 },
+		{ courseTypeHead: HomeConst.courseTypeHead1, iconName: 'locationDoubleColor', height: isSmallScreen ? 36 : 40, width: 40 },
+		{ courseTypeHead: HomeConst.courseTypeHead2, iconName: 'onlineDoubleColorIcon', height: isSmallScreen ? 36 : 40, width: 40 },
+		{ courseTypeHead: HomeConst.courseTypeHead3, iconName: 'televisonDoubleColorIcon', height: isSmallScreen ? 36 : 40, width: 40 },
 	]
 
 	return (
@@ -151,14 +149,14 @@ export default function Home(props) {
 					<div className={`${styles.badgeDiv}  pt-4`}>
 						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
 						<div className='pr-2'>
-							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p1Head2}</p>
+							<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p1Head2}</p>
 							<p className={styles.discriptionText}>{HomeConst.pDescriptionText1}</p>
 						</div>
 					</div>
 					<div className={`${styles.badgeDiv}`}>
 						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
 						<div className='pr-2'>
-							<p className='fontMedium' style={{ fontSize: '20px' }}>{HomeConst.p2Head2}</p>
+							<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p2Head2}</p>
 							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
 						</div>
 					</div>
@@ -176,13 +174,13 @@ export default function Home(props) {
 						</div>
 					</div>
 					<div className={styles.typesOfCourses}>
-						<p className={`fontMedium ${styles.offerText}`} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
+						<p className={` ${styles.offerText}`} >{HomeConst.p3Head2TypeOfCourseHeader}</p>
 						<div className={styles.courseTypesWrapper}>
 							{typeOfCourse.map((data, index) => {
 								return (
 									<div className={styles.courseTypeCard} key={`courseType${index}`}>
 										<AllIconsComponenet height={data.height} width={data.width} iconName={data.iconName} color={'#FFFFFF'} />
-										<p className='fontMedium py-2'>{data.courseTypeHead}</p>
+										<p className=' py-2'>{data.courseTypeHead}</p>
 									</div>
 								)
 							})}
