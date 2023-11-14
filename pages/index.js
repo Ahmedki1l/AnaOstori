@@ -87,7 +87,6 @@ export default function Home(props) {
 	useEffect(() => {
 		if (props.params?.دوراتنا == '') {
 			const scrollToCourse = handleScrollToSection("refCourseSec")
-			console.log(scrollToCourse);
 		}
 	}, [props.params?.دوراتنا]);
 
