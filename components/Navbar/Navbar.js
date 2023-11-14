@@ -241,7 +241,9 @@ export default function Navbar() {
 					<Link href={'/purchaseInquiry'} className='no-underline'>
 						<button className={`secondrySolidBtn ${styles.serchQueryBtn}`} onClick={() => handleClickOnLink()}>
 							<p> استعلام الحجوزات</p>
-							<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} /> &nbsp;
+							<div style={{ marginLeft: '10px', height: '24px' }}>
+								<AllIconsComponenet height={24} width={24} iconName={'managePurchaseOrder'} color={'#ffffff'} /> &nbsp;
+							</div>
 						</button>
 					</Link>
 				</div>
@@ -434,7 +436,7 @@ export default function Navbar() {
 											>
 												<div onClick={(e) => e.preventDefault()} className={styles.viewProfile}>
 													<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={30} width={30} />
-													<div style={{ height: '15px', marginRight: '8px' }}><AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} /></div>
+													<div style={{ marginRight: '8px' }}><AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} /></div>
 												</div>
 											</StyledDropdown>
 										}
