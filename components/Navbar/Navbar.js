@@ -164,7 +164,6 @@ export default function Navbar() {
 	const handleClickCourseName = (submenu, menu, lang) => {
 		setShowSubMenuShown()
 		setIsMenuShow(false)
-		console.log(submenu);
 		if (submenu.type == "on-demand" && submenu.isEnrolled == true) {
 			router.push(`/myCourse/${submenu.id}`)
 		} else {

@@ -45,40 +45,6 @@ export const forgotPassword = async (email) => {
 	});
 }
 
-
-// export const signupWithEmailAndPassword = async (email, password, fullName, phoneNumber, gender) => {
-// 	await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
-// 		localStorage.setItem("accessToken", userCredential?.user?.accessToken);
-// 		const data = {
-// 			fullName: fullName,
-// 			phone: phoneNumber.replace(/[0-9]/, "+966"),
-// 			gender: gender
-// 		}
-// 		if (!gender?.length) {
-// 			delete data?.gender
-// 		}
-// 		// const params = {
-// 		// 	data: body,
-// 		// }
-// 		const params = {
-// 			routeName: 'updateProfileHandler',
-// 			...data,
-// 		}
-// 		await postAuthRouteAPI(params).then(async (res) => {
-// 			Router.push('/login')
-// 			fbq.event('Sign up', { email: email })
-// 		}).catch(error => {
-// 			toast.error(error.message)
-// 			console.log(error)
-// 		});
-// 	}).catch((error) => {
-// 		console.log(error);
-// 		if (error.code == 'auth/email-already-in-use') {
-// 			toast.error(toastErrorMessage.emailUsedErrorMsg)
-// 		}
-// 	});
-// }
-
 export const signupWithEmailAndPassword = (email, password) => {
 	return new Promise(async (resolve, reject) => {
 		try {
