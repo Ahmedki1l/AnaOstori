@@ -1,5 +1,4 @@
 import '../styles/globals.scss'
-import Navbar from '../components/Navbar/Navbar'
 import Footer from '../components/Footer/Footer'
 import Head from 'next/head'
 import { useRouter } from "next/router";
@@ -14,6 +13,7 @@ import * as fbq from '../lib/fpixel'
 import Script from 'next/script'
 import GoogleAnalytics from '../lib/GoogleAnalytics';
 import * as allMetaTags from '../lib/metaData'
+import Navbar from '../components/Navbar/Navbar';
 
 
 function MyApp({ Component, pageProps }) {
