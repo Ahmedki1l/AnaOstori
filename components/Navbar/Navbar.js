@@ -433,7 +433,6 @@ export default function Navbar() {
 												menu={{
 													items,
 												}}
-												open={true}
 											>
 												<div onClick={(e) => e.preventDefault()} className={styles.viewProfile}>
 													<Image className='rounded-full' src={'/images/previewImage.png'} alt="Course Cover Image" height={30} width={30} />
