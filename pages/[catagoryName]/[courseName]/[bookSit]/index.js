@@ -82,7 +82,7 @@ export default function Index(props) {
 							email: storeData?.viewProfileData?.email,
 							fullName: storeData?.viewProfileData?.fullName,
 							gender: storeData?.viewProfileData?.gender,
-							phoneNumber: storeData?.viewProfileData?.phone,
+							phoneNumber: storeData?.viewProfileData?.phone || '',
 						}
 					]
 				}
