@@ -37,5 +37,6 @@ export const manageCouponConst = {
 
     couponCreateSuccessMsg: 'تم إضافة الكوبون بنجاح',
     couponUpdateSuccessMsg: 'تم تحديث الكوبون بنجاح',
-    submitBtnText: 'إضافة',
+    addBtnText: 'إضافة',
+    saveBtnText: 'حفظ',
 }

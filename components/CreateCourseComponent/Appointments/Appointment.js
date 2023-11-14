@@ -151,7 +151,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setEditAvailability()
     }
 
-    const handlePublishedCategory = async (e, availabilityId) => {
+    const handlePublishedAppointment = async (e, availabilityId) => {
         let body = {
             routeName: 'updateAvailability',
             published: e,
@@ -159,7 +159,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         }
         await postRouteAPI(body).then((res) => {
             setShowBtnLoader(false)
-            availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+            availabilitySuccessRes(e ? toastSuccessMessage.appointmentSuccessShowMsg : toastSuccessMessage.appointmentSuccessHiddenMsg)
             getAllAvailability()
         }).catch(async (error) => {
             console.log(error);
@@ -167,7 +167,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(body).then((res) => {
                         setShowBtnLoader(false)
-                        availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
+                        availabilitySuccessRes(e ? toastSuccessMessage.appointmentSuccessShowMsg : toastSuccessMessage.appointmentSuccessHiddenMsg)
                         getAllAvailability()
                     })
                 }).catch(error => {
@@ -194,7 +194,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             <div>
                 <div dir='ltr'>
                     <div className={styles.createAppointmentBtnBox}>
-                        <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إنشاء موعد</button>
+                        <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>
                     </div>
                 </div>
                 <table className={styles.tableArea}>
@@ -258,7 +258,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         </td>
                                         <td>
                                             <div className={styles.publishState}>
-                                                <Switch defaultChecked={appointment.published} onChange={handlePublishedCategory} params={appointment.id} ></Switch>
+                                                <Switch defaultChecked={appointment.published} onChange={handlePublishedAppointment} params={appointment.id} ></Switch>
                                                 <p className='pr-2'>{appointment.published ? 'إظهار' : 'مخفي'}</p>
                                             </div>
                                         </td>
@@ -283,7 +283,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         </td>
                                         <td>
                                             <div onClick={() => editAppointment(appointment)} className='cursor-pointer'>
-                                                <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                                                <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                             </div>
                                         </td>
                                     </tr>
@@ -486,7 +486,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                             </div>
                             <div className={styles.saveBtnBox}>
                                 <CustomButton
-                                    btnText={'إنشاء'}
+                                    btnText={editAvailability ? 'حفظ' : 'إضافة'}
                                     width={80}
                                     height={37}
                                     showLoader={showBtnLoader}

@@ -30,6 +30,7 @@ const StyledSelect = styled(AntdSelect)`
     font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
     display:flex;
     align-items:center;
+    margin-bottom:-17px !important;
   }  
 `;
 
@@ -52,7 +53,6 @@ const Select = ({
         fontSize={fontSize}
         onChange={(e) => onChange(e)}
         filterOption={filterOption}
-        // dropdownStyle={{ direction: 'rtl' }}
         {...rest}
       />
     </ConfigProvider>

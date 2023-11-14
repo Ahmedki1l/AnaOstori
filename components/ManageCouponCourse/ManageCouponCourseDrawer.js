@@ -30,11 +30,12 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         setSelectedCourse(selectedCoupon?.couponCourses.map((item) => {
             return item.course.id
         }))
+        setSelectedCouponType(selectedCoupon?.type)
     }, [])
 
     const handleSaveCouponDetails = async (values) => {
         setShowBtnLoader(true)
-        values.expires = dayjs(values?.expires?.$d).format('YYYY-MM-DD HH:mm:ss');
+        values.expires = dayjs(values?.expires?.$d).endOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.global = true
         values.id = selectedCoupon?.id
         let data = {
@@ -174,13 +175,13 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                 <div className={styles.courseNames}>
                     {
                         course.filter((item) => selectedCourse?.includes(item.value)).map((item, index) => {
-                            return <p style={{ fontSize: '16px' }} key={item.value}>{item.label}</p>
+                            return <p style={{ fontSize: '16px' }} key={item?.value}>{item?.label}</p>
                         })
                     }
                 </div>
                 <div className={styles.couponBtnBox}>
                     <CustomButton
-                        btnText={manageCouponConst.submitBtnText}
+                        btnText={selectedCoupon ? manageCouponConst.saveBtnText : manageCouponConst.addBtnText}
                         height={37}
                         showLoader={showBtnLoader}
                         fontSize={16}

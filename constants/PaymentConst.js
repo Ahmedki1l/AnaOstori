@@ -39,6 +39,11 @@ const noOfUsersTag3 = [
 
 const iosProductIdList = [
     {
+        label: '679.99',
+        value: 'tier30_content_AN',
+        key: 'tier30_content_AN',
+    },
+    {
         label: '1739.99',
         value: 'tier29_content_AN',
         key: 'tier29_content_AN',

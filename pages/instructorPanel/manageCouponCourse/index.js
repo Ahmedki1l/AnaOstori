@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { ConfigProvider, Drawer, Table, Tag } from 'antd'
+import { Drawer, Table, Tag } from 'antd'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
-import styled from 'styled-components'
 import ManageCouponCourseDrawer from '../../../components/ManageCouponCourse/ManageCouponCourseDrawer'
 import { postRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
@@ -67,9 +66,9 @@ const Index = () => {
         {
             title: 'تاريخ الانتهاء',
             dataIndex: 'expires',
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+            sorter: (a, b) => a.expires.localeCompare(b.expires),
             render: (text, _date) => {
-                return (fullDate(_date.createdAt))
+                return (fullDate(_date.expires))
             }
         },
         {
@@ -181,6 +180,7 @@ const Index = () => {
 
     const handleAddCouponCourse = () => {
         setDrawerForCouponCourse(true)
+        setSelectedCoupon()
     }
     const customEmptyComponent = (
         <Empty emptyText={'ما أضفت كوبون'} containerhight={400} buttonText={'إضافة كوبون'} onClick={() => handleAddCouponCourse()} />
@@ -188,62 +188,60 @@ const Index = () => {
 
     const selectedCouponStatusLable = selectedCoupon?.status == true ? { label: 'مفعل', color: 'green' } : { label: 'منتهي', color: 'red' }
     return (
-        <div>
-            <div className='maxWidthDefault px-4'>
-                <div style={{ height: 30 }}>
-                    <BackToPath
-                        backpathForPage={true}
-                        backPathArray={
-                            [
-                                { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
-                                { lable: 'إضافة وتعديل كوبونات الخصم', link: null },
-                            ]
-                        }
-                    />
-                </div>
-                <div className={styles.couponHeadeArea}>
-                    <h1 className={`head2`}>إضافة وتعديل كوبونات الخصم</h1>
-                    <div className={`${styles.createCourseBtnBox}`}>
-                        <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة مجال</button>
-                    </div>
-                </div>
-                <Table
-                    columns={tableColumns}
-                    minheight={400}
-                    dataSource={listOfCoupon}
-                    locale={{ emptyText: customEmptyComponent }}
+        <div className='maxWidthDefault px-4'>
+            <div style={{ height: 30 }}>
+                <BackToPath
+                    backpathForPage={true}
+                    backPathArray={
+                        [
+                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
+                            { lable: 'إضافة وتعديل كوبونات الخصم', link: null },
+                        ]
+                    }
                 />
-                {drawerForCouponCourse &&
-                    <Drawer
-                        closable={false}
-                        open={drawerForCouponCourse}
-                        onClose={onClose}
-                        width={480}
-                        placement={'right'}
-                        title={
-                            <div className={styles.drawerHeadingArea}>
-                                <p className={`fontBold ${styles.drawerTitle}`}>{selectedCoupon ? manageCouponConst.updateCouponHead : manageCouponConst.createCouponHead}</p>
-                                {selectedCoupon && <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable.color}>{selectedCouponStatusLable?.label}</Tag>}
-                            </div>
-                        }
-
-                    >
-                        <ManageCouponCourseDrawer
-                            selectedCoupon={selectedCoupon}
-                            getCouponList={getCouponList}
-                            setDrawerForCouponCourse={setDrawerForCouponCourse}
-                            category={category}
-                        />
-                    </Drawer>
-                }
-                {ismodelForDeleteItems &&
-                    <ModelForDeleteItems
-                        ismodelForDeleteItems={ismodelForDeleteItems}
-                        onCloseModal={onCloseModal}
-                        deleteItemType={'coupon'}
-                        onDelete={handledeleteCoupon}
-                    />}
             </div>
+            <div className={styles.couponHeadeArea}>
+                <h1 className={`head2`}>كوبونات الخصم</h1>
+                <div className={`${styles.createCourseBtnBox}`}>
+                    <button className='primarySolidBtn' onClick={() => handleAddCouponCourse()}>إضافة كوبون</button>
+                </div>
+            </div>
+            <Table
+                columns={tableColumns}
+                minheight={400}
+                dataSource={listOfCoupon}
+                locale={{ emptyText: customEmptyComponent }}
+            />
+            {drawerForCouponCourse &&
+                <Drawer
+                    closable={false}
+                    open={drawerForCouponCourse}
+                    onClose={onClose}
+                    width={480}
+                    placement={'right'}
+                    title={
+                        <div className={styles.drawerHeadingArea}>
+                            <p className={`fontBold ${styles.drawerTitle}`}>{selectedCoupon ? manageCouponConst.updateCouponHead : manageCouponConst.createCouponHead}</p>
+                            {selectedCoupon && <Tag style={{ fontSize: 16, fontFamily: 'Tajawal-Regular', padding: 10 }} bordered={false} color={selectedCouponStatusLable?.color}>{selectedCouponStatusLable?.label}</Tag>}
+                        </div>
+                    }
+
+                >
+                    <ManageCouponCourseDrawer
+                        selectedCoupon={selectedCoupon}
+                        getCouponList={getCouponList}
+                        setDrawerForCouponCourse={setDrawerForCouponCourse}
+                        category={category}
+                    />
+                </Drawer>
+            }
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={'coupon'}
+                    onDelete={handledeleteCoupon}
+                />}
         </div>
     )
 }
