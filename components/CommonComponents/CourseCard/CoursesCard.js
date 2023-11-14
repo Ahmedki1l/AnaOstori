@@ -48,7 +48,7 @@ export default function CoursesCard(props) {
 		<>
 			<div className={styles.cardMainDiv}>
 				<div className='cursor-pointer' onClick={() => handleClick()}>
-					<CoverImg height={140} url={coverImgUrl} />
+					<CoverImg height={201} url={coverImgUrl} />
 				</div>
 				<div className={styles.cardContentDiv}>
 					<div className={styles.DropMenuBtnBox}>
@@ -61,7 +61,7 @@ export default function CoursesCard(props) {
 							renderTitle={() => ''}
 							trigger={['click']}
 						>
-							<div className='cursor-pointer ' onClick={(e) => e.preventDefault()}>
+							<div className='cursor-pointer' style={{ height: '20px' }} onClick={(e) => e.preventDefault()}>
 								<AllIconsComponenet height={20} width={20} iconName={'dropMenuIcon'} color={'#000000'} />
 							</div>
 						</Dropdown>

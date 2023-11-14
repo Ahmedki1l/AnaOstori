@@ -125,9 +125,9 @@ export default function Home(props) {
 					<div className='flex relative'>
 						<p className='fontMedium pt-2'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
 						<div className={`${styles.animatedTextBox} pt-2`}>
-							<p id={styles.animatedText1} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText1}</p>
-							<p id={styles.animatedText2} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText2}</p>
-							<p id={styles.animatedText3} className={`fontBold ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
+							<p id={styles.animatedText1} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText1}</p>
+							<p id={styles.animatedText2} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText2}</p>
+							<p id={styles.animatedText3} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
 						</div>
 					</div>
 					<p className={`fontMedium ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
@@ -146,30 +146,34 @@ export default function Home(props) {
 			</div>
 			<div className={styles.analyticsBarWrapper}>
 				<div className={`maxWidthDefault text-white ${styles.analyticsBarSubWrapper}`}>
-					<div className={`${styles.badgeDiv}  pt-4`}>
-						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
-						<div className='pr-2'>
-							<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p1Head2}</p>
-							<p className={styles.discriptionText}>{HomeConst.pDescriptionText1}</p>
-						</div>
-					</div>
-					<div className={`${styles.badgeDiv}`}>
-						<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
-						<div className='pr-2'>
-							<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p2Head2}</p>
-							<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
-						</div>
-					</div>
-					<div className={styles.imagesWrapper}>
-						<div className={styles.imagesSubWrapper}>
-							<div className={styles.image1}>
-								<Image src="/images/laptopImg_big.png" alt='Live Course Image' layout='fill' objectFit="cover" priority />
+					<div className={styles.analyticsBarMAinArea}>
+						<div>
+							<div className={`${styles.badgeDiv} pb-12`}>
+								<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'medalIcon'} alt={'Medal Icon'} />
+								<div className='pr-2'>
+									<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p1Head2}</p>
+									<p className={styles.discriptionText}>{HomeConst.pDescriptionText1}</p>
+								</div>
 							</div>
-							<div className={styles.image2}>
-								<Image src="/images/classroomImg1_big.png" alt='Physical Course Image' layout='fill' objectFit="cover" priority />
+							<div className={`${styles.badgeDiv}`}>
+								<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
+								<div className='pr-2'>
+									<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p2Head2}</p>
+									<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
+								</div>
 							</div>
-							<div className={styles.image3}>
-								<Image src="/images/classroomImg2_big.png" alt='Online Course Image' layout='fill' objectFit="cover" priority />
+						</div>
+						<div className={styles.imagesWrapper}>
+							<div className={styles.imagesSubWrapper}>
+								<div className={styles.image1}>
+									<Image src="/images/laptopImg_big.png" alt='Live Course Image' layout='fill' objectFit="cover" priority />
+								</div>
+								<div className={styles.image2}>
+									<Image src="/images/classroomImg1_big.png" alt='Physical Course Image' layout='fill' objectFit="cover" priority />
+								</div>
+								<div className={styles.image3}>
+									<Image src="/images/classroomImg2_big.png" alt='Online Course Image' layout='fill' objectFit="cover" priority />
+								</div>
 							</div>
 						</div>
 					</div>
@@ -208,6 +212,6 @@ export default function Home(props) {
 				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1} <br /> {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
 				<ReviewComponent homeReviews={homeReviews} />
 			</div> */}
-		</div>
+		</div >
 	)
 }

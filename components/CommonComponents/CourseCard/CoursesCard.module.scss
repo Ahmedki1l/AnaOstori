@@ -8,7 +8,7 @@
 }
 
 .cardContentDiv {
-	padding: 10px;
+	padding: 12px;
 }
 
 .courseHeading p {
@@ -29,13 +29,13 @@
 	font-size: 18px;
 	width: 100%;
 	height: 46px;
-	// margin: 10px 0 8px 0;
+	margin: 12px 0 0 0;
 }
 
 .courseTitle {
 	font-size: 18px;
 	line-height: 22px;
-	margin-bottom: 8px;
+	margin-bottom: 10px;
 }
 
 .progressText {
@@ -49,7 +49,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 8px;
+	// margin-bottom: 8px;
 }
 
 @media (max-width: 1024px) {
