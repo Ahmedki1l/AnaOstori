@@ -22,7 +22,6 @@
 	display: flex;
 	justify-content: right;
 	align-items: center;
-	// margin-bottom: 8px;
 }
 
 .followUpBtn {
@@ -55,5 +54,18 @@
 @media (max-width: 1024px) {
 	.cardMainDiv {
 		margin: 0.5rem;
+	}
+}
+
+@media (max-width: 730px) {
+	.cardMainDiv {
+		margin: 0.5rem 0;
+	}
+}
+
+@media (max-width: 400px) {
+	.cardMainDiv {
+		width: 100%;
+		min-width: 100%;
 	}
 }
