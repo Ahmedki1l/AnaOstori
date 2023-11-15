@@ -65,7 +65,7 @@ export default function CourseDetailsHeader(props) {
 							: courseDetail.type == 'online' ?
 								<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 									<div className='mt-2'>
-										<AllIconsComponenet height={isMediumScreen ? 18 : 20} width={isMediumScreen ? 20 : 22} iconName={'globe'} color={'#FFFFFF'} />
+										<AllIconsComponenet height={isMediumScreen ? 18 : 32} width={isMediumScreen ? 20 : 32} iconName={'onlineDoubleColorIcon'} color={'#FFFFFF'} />
 									</div>
 									<div className='px-1'>
 										<p>{lang == 'en' ? 'Location' : 'يتم بثها عبر'}</p>
