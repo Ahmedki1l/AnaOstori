@@ -93,3 +93,12 @@
 		width: 100%;
 	}
 }
+
+@media (max-width: 730px) {
+	.courseCardsWrapper {
+		justify-content: right;
+		margin: 0;
+		padding: 0 1rem;
+		width: 100%;
+	}
+}

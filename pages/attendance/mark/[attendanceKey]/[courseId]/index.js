@@ -23,6 +23,7 @@ export async function getServerSideProps(contex) {
 export default function Index(props) {
 
     const { courseId, attendanceKey } = props
+    const router = useRouter()
     useEffect(() => {
         setLoading(true)
         getAttendanceKey()
@@ -50,6 +51,11 @@ export default function Index(props) {
         }
     }
 
+    const handleBtnClick = () => {
+        setLoading(true)
+        router.push('/')
+    }
+
     return (
         <>
             {loading ?
@@ -65,7 +71,7 @@ export default function Index(props) {
                         <h1 className={`head1 ${styles.pageHeader}`}>كفو، حضرناك 😎</h1>
                         <p className={`fontMedium ${styles.note1}`}>{markAttendanceType}</p>
                         <div className='p-6'>
-                            <button className={`primarySolidBtn ${styles.btnBoxWrapper}`}>الرجوع إلى الرئيسية</button>
+                            <button className={`primarySolidBtn ${styles.btnBoxWrapper}`} onClick={() => handleBtnClick()}>الرجوع إلى الرئيسية</button>
                         </div>
                     </div>
                     :
@@ -76,7 +82,7 @@ export default function Index(props) {
                         <h1 className={`head1 ${styles.pageHeader}`}>ما تحضرت 😅</h1>
                         <p className={` ${styles.note1}`}>نعتذر حصلت مشكلة، ارجع حاول أو تواصل مع طاقم أنا أسطوري</p>
                         <div className='p-6'>
-                            <button className={`primarySolidBtn ${styles.btnBoxWrapper}`}>الرجوع إلى الرئيسية</button>
+                            <button className={`primarySolidBtn ${styles.btnBoxWrapper}`} onClick={() => handleBtnClick()}>الرجوع إلى الرئيسية</button >
                         </div>
                     </div>
             }

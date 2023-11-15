@@ -149,8 +149,6 @@
 .inqBtnBox {
 	height: 38px;
 	width: 219px;
-	// margin: 0.5rem 0;
-	// padding: 0 0.7rem;
 
 	.serchQueryBtn {
 		padding: 5px 12px;
@@ -159,7 +157,7 @@
 		border-color: #F26722;
 		display: flex;
 		display: -webkit-flex;
-		justify-content: end;
+		justify-content: flex-end;
 		align-items: center;
 		-webkit-align-items: center;
 	}
@@ -208,7 +206,7 @@
 	display: flex;
 	align-items: center;
 	cursor: pointer;
-	justify-content: end;
+	justify-content: flex-end;
 }
 
 .profileMenuItemsText {
