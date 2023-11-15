@@ -200,6 +200,8 @@
 		overflow: auto;
 		width: 358px;
 		margin: 24px auto;
+		border: 1px solid #8080804a;
+		border-radius: 4px;
 	}
 
 	.rowDiv {
@@ -209,11 +211,11 @@
 
 		tr {
 			height: 66px;
-			border: 1px solid #8080804a;
 		}
 
 		th {
 			border: 1px solid #8080804a;
+			border-right: none;
 			background-color: #F7F7F7;
 			padding: 5px;
 			font-weight: 500;
@@ -222,7 +224,7 @@
 
 		td {
 			width: 231px;
-			border: 1px solid #8080804a;
+			border-bottom: 1px solid #8080804a;
 			padding: 24PX 12px;
 			font-weight: 400;
 			font-size: 14px;
@@ -233,12 +235,23 @@
 		}
 
 		tr:last-child {
+			border-bottom: none;
 
 			td,
 			th {
 				border-bottom: none;
 			}
 		}
+
+		tr:first-child {
+			border-top: none;
+
+			td,
+			th {
+				border-top: none;
+			}
+		}
+
 	}
 }
 
