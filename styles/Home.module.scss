@@ -65,7 +65,7 @@
 .animatedTextBox {
 	position: relative;
 	overflow: hidden;
-	height: 30px;
+	height: 34px;
 	width: 165px;
 }
 
@@ -75,23 +75,23 @@
 
 @keyframes textAnimation {
 	0% {
-		top: 31px
+		top: 35px
 	}
 
 	16% {
-		top: 5px
+		top: 14px
 	}
 
 	24% {
-		top: 5px
+		top: 14px
 	}
 
 	40% {
-		top: 31px
+		top: 35px
 	}
 
 	100% {
-		top: 31px
+		top: 35px
 	}
 }
 
@@ -181,12 +181,6 @@
 
 .discriptionLink {
 	color: #ffffff;
-}
-
-.imagesWrapper {
-	// position: absolute;
-	// top: 0;
-	// left: 0;
 }
 
 .imagesSubWrapper {
@@ -511,25 +505,23 @@
 
 	.imagesSubWrapper {
 		width: 390px;
-		height: 220px;
-		margin: 0 auto 20px;
 	}
 
 	.image1 {
 		top: 0.4rem;
-		left: 0rem;
+		left: 1rem;
 	}
 
 	.image2 {
 		top: 3.5rem;
-		left: 5.5rem;
+		left: 6.5rem;
 		height: 119px;
 		width: 192px;
 	}
 
 	.image3 {
 		top: 9.9rem;
-		right: 1.9rem;
+		right: 0.9rem;
 	}
 
 	.courseCardWraper {
@@ -564,7 +556,7 @@
 		p {
 			font-size: 18px;
 			font-weight: 500;
-			line-height: 21.6px;
+			// line-height: 21.6px;
 		}
 	}
 
@@ -614,9 +606,14 @@
 	}
 }
 
-@media(max-width :470px) {
+@media(max-width :430px) {
+	.imagesWrapper {
+		width: 100%;
+	}
+
 	.imagesSubWrapper {
 		width: 100%;
+		padding: 0;
 	}
 
 	.image1 {
@@ -624,18 +621,15 @@
 	}
 
 	.image2 {
-		left: 27%;
-		top: 4rem;
+		left: 25%;
 	}
 
 	.image3 {
 		right: 0;
 	}
-}
 
-@media(max-width :430px) {
-	.image2 {
-		left: 25%;
+	.analyticsBarSubWrapper {
+		padding: 24px 16px;
 	}
 }
 
@@ -643,12 +637,14 @@
 	.image2 {
 		left: 23%;
 	}
+
+
 }
 
 @media (max-width: 370px) {
 	.animatedTextBox {
 		right: 1.7rem;
-		top: 2rem
+		top: 1.5rem
 	}
 
 	.text2FontMedium {
