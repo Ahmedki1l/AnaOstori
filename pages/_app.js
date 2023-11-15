@@ -175,6 +175,7 @@ function MyApp({ Component, pageProps }) {
 			<Head>
 				<title>{`${pageTitle} | منصة أنا أسطوري`}</title>
 				<link rel="icon" href="/favicon.png" className='rounded-full' />
+				<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 				<meta name="description" content={metaTags.description} />
 				<meta name="keywords" content={metaTags.keywords} />
 				<meta property="og:title" content={metaTags.title} />
