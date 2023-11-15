@@ -45,8 +45,8 @@ const iosProductIdList = [
     },
     {
         label: '1739.99',
-        value: 'tier29_content_AN',
-        key: 'tier29_content_AN',
+        value: 'tier_29_content_AN',
+        key: 'tier_29_content_AN',
     },
     {
         label: '1589.99',
