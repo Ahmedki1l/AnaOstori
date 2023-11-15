@@ -11,6 +11,7 @@ export default function QRCode(props) {
     const courseId = props.courseId
     // const qrUrl = `https://anaostori.com/attendance/mark/${attendanceKey}/${courseId}`
     const qrUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/attendance/mark/${attendanceKey}/${courseId}`
+    console.log(qrUrl);
 
 
     return (
