@@ -35,7 +35,7 @@ export default function DatesInfo(props) {
 				<li>
 					{date.gender == 'mix' ?
 						<>
-							<Icon height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'liveCourseBlackIcon'} alt={'live Icon'} />
+							<AllIconsComponenet height={24} width={28} iconName={'onlineDoubleColorIcon'} color={'#000000'} />
 							<p className={`fontMedium link ${styles.listItemText}`}>قاعة افتراضية</p>
 						</>
 						:
