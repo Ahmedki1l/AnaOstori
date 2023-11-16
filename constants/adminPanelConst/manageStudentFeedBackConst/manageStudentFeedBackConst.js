@@ -1,9 +1,12 @@
-import React from 'react'
-
-const ManageStudentFeedBackConst = () => {
-    return (
-        <div>ManageStudentFeedBackConst</div>
-    )
+export const studentFeedBackConst = {
+    addStudentFeedBackTitle: 'إضافة تجربة طالب',
+    editStudentFeedBackTitle: 'تعديل تجربة طالب',
+    studentName: 'اسم الطالب* ',
+    studentNamePlaceHolder: 'اسم الطالب ',
+    selectCategories: 'اختار التصنيف*',
+    addFeedBackPhoto: 'صور التجارب*',
+    addPhotoBtnText: '+ إضافة',
+    uploadPhotoTitle: 'ارفع الصورة',
+    addBtnText: 'إضافة',
+    saveBtnText: 'حفظ',
 }
-
-export default ManageStudentFeedBackConst

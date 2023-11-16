@@ -1,0 +1,67 @@
+@import "../../styles/variables.module.scss";
+
+
+.modalHeader {
+    display: flex;
+    padding: 8px 18px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closebutton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.studentFeedBackTitle {
+    font-size: 18px;
+}
+
+.studentFeedBackFields {
+    padding: 14px 18px 0px 0px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.addSectionArea {
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 0;
+    align-items: center;
+}
+
+.sectionName {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.addSections {
+    cursor: pointer;
+    font-size: 14px;
+    color: #0075FF
+}
+
+.addItems {
+    color: #F26722;
+    display: grid;
+    place-content: center;
+    padding: 15px;
+    border: 0.5px solid #F26722;
+    cursor: pointer;
+    border: dashed;
+    border-radius: 4px;
+    width: 20rem;
+    margin-bottom: 18px;
+}
+
+.studetnFeedBackBtnBox {
+    height: 38px;
+    width: 100px;
+    margin: 10px;
+
+    button {
+        font-size: 16px;
+    }
+}

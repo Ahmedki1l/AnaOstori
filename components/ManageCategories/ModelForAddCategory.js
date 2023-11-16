@@ -225,7 +225,7 @@ const ModelForAddCategory = ({
                     </Form>
                 </div>
             </Modal >
-        </div >
+        </div>
     )
 }
 
