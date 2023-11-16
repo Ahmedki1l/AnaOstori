@@ -39,7 +39,7 @@
 }
 
 .tableHead1 {
-    width: 41%;
+    width: 100px;
 }
 
 .tableHead2 {
@@ -63,7 +63,12 @@
     border-radius: 0px 0px 4px 4px;
 }
 
+.draggableArea {
+    width: 100%;
+}
+
 .tableRow {
+
     td {
         height: 141px;
         text-align: center;
