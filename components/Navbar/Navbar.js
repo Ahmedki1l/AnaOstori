@@ -66,7 +66,7 @@ export default function Navbar() {
 
 	const isUserInstructor = storeData?.isUserInstructor
 
-	const [catagories, setCatagories] = useState()
+	const [catagories, setCatagories] = useState(storeData.catagories.filter((item) => item.published == true) || [])
 
 	useEffect(() => {
 		if (storeData?.accessToken) {
@@ -80,6 +80,10 @@ export default function Navbar() {
 	const catagoryNoAuth = async () => {
 		await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then(res => {
 			setCatagories(res?.data.filter((item) => item.published == true))
+			dispatch({
+				type: 'SET_CATAGORIES',
+				catagories: res?.data.filter((item) => item.published == true)
+			});
 		}).catch(async (error) => {
 			console.log(error);
 		})
@@ -93,14 +97,13 @@ export default function Navbar() {
 			const getInstructorListReq = getRouteAPI({ routeName: 'getAllInstructors' })
 			const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 
-
 			const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
 				getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
 			])
 			setCatagories(catagories?.data.filter((item) => item.published == true))
 			dispatch({
 				type: 'SET_CATAGORIES',
-				catagories: catagories?.data
+				catagories: catagories?.data.filter((item) => item.published == true)
 			});
 			dispatch({
 				type: 'SET_CURRICULUMIDS',
@@ -115,6 +118,7 @@ export default function Navbar() {
 				myCourses: myCourseData?.data,
 			});
 		} catch (error) {
+			console.error("Error:", error);
 			if (error?.response?.status == 401) {
 				await getNewToken().then(async (token) => {
 					const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
@@ -125,9 +129,12 @@ export default function Navbar() {
 					const [catagories, curriculumIds, instructorList, myCourseData] = await Promise.all([
 						getcatagoriReq, getCurriculumIdsReq, getInstructorListReq, getMyCourseReq
 					])
+
+					setCatagories(catagories?.data.filter((item) => item.published == true))
+
 					dispatch({
 						type: 'SET_CATAGORIES',
-						catagories: catagories?.data
+						catagories: catagories?.data.filter((item) => item.published == true)
 					});
 					dispatch({
 						type: 'SET_CURRICULUMIDS',

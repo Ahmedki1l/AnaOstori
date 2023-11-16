@@ -1,5 +1,5 @@
 import { Form, Modal } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { FormItem } from '../antDesignCompo/FormItem'
 import Input from '../antDesignCompo/Input'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
@@ -16,14 +16,31 @@ const ModelForStudentFeedBack = ({
 }) => {
 
     const [appVersionForm] = Form.useForm()
+    const storeData = useSelector((state) => state?.globalStore);
+    const [selectCourseName, setSelectCourseName] = useState()
     const isModelClose = () => {
         setIsModelForStudentFeedBack(false)
     }
-    const storeData = useSelector((state) => state?.globalStore);
-    const course = storeData.catagories.map
+
+    const course = storeData.catagories.flatMap((item) => {
+        return item.courses.map((subItem) => {
+            return { value: subItem.id, label: subItem.name };
+        });
+    })
+
     const onFinish = (values) => {
         console.log(values);
     }
+    const handleSelectCourse = (value) => {
+        setSelectCourseName(value);
+    }
+    console.log(selectCourseName);
+
+    const categoryName = storeData.catagories.find((selectCourseName) => {
+        console.log(selectCourseName);
+
+    })
+
     return (
         <div>
             <Modal
@@ -63,9 +80,13 @@ const ModelForStudentFeedBack = ({
                                     width={352}
                                     height={40}
                                     placeholder={studentFeedBackConst.selectCategories}
-                                // OptionData={course}
+                                    OptionData={course}
+                                    onChange={handleSelectCourse}
                                 />
                             </FormItem>
+                            <div className={styles.courseNames}>
+                                <p>ewrew</p>
+                            </div>
                             {/* <div className={styles.addSectionArea}>
                                 <p className={`fontMedium text-lg`}>{studentFeedBackConst.addFeedBackPhoto}</p>
                                 <p className={styles.addSections} onClick={() => handleAddSection()}>{studentFeedBackConst.addPhotoBtnText}</p>
