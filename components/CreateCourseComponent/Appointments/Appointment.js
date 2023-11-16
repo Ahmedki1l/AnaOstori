@@ -327,6 +327,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                     </FormItem>
                                 </>
                                 {/* } */}
+                                <FormItem
+                                    name={'description'}
+                                    rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
+                                >
+                                    <Input
+                                        fontSize={16}
+                                        width={355}
+                                        height={40}
+                                        placeholder='اكتب ملاحظة على الموعد'
+                                    />
+                                </FormItem>
                                 <p className={` ${styles.createappointmentFormFileds}`}>تفاصيل الموعد</p>
                                 <div className='flex'>
                                     <FormItem
@@ -356,17 +367,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         />
                                     </FormItem>
                                 </div>
-                                <FormItem
-                                    name={'description'}
-                                    rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
-                                >
-                                    <Input
-                                        fontSize={16}
-                                        width={355}
-                                        height={40}
-                                        placeholder='اكتب ملاحظة على الموعد'
-                                    />
-                                </FormItem>
                                 <div className='flex'>
                                     <FormItem
                                         name={'timeFrom'}

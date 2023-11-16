@@ -383,7 +383,7 @@ export default function UserInfoForm(props) {
 							<input id='termsCheckBox' type='checkbox' name='agree' onChange={(event) => setUserAgree(event.target.checked)} />
 							<label htmlFor='termsCheckBox' className={`fontMedium ${styles.checkboxText}`}>أقر بموافقتي على <Link href={'/terms'} className='link' >الشروط والأحكام</Link></label>
 						</div>
-						{props.userAgreeError == false && <div style={{ color: 'red' }} className={`${styles.errorText} pb-4`}>فضلا الموافقة على الشروط والأحكام</div>}
+						{props.userAgreeError == false && <div style={{ color: 'red' }} className={`${styles.errorText} pb-4`}>فضلًا وافق على الشروط والأحكام</div>}
 						<div className={` pt-2 ${styles.btnBox}`}>
 							<button className='primarySolidBtn' onClick={() => handleSubmit(studentsData, courseDetail.type)}>مراجعة الطلب والدفع</button>
 						</div>
