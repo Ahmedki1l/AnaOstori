@@ -136,6 +136,7 @@ import WhatsApp_whiteBorder from './customeIcons/whatsApp_whiteBorder'
 import DropMenuIcon from './customeIcons/dropMenuIcon'
 import StarDoubleColoredIcon from './customeIcons/starDoubleColoredIcon'
 import PersonDoubleColoredIcon from './customeIcons/personDoubleColoredIcon'
+import UploadDataIcon from './customeIcons/uploadDataIcon'
 
 
 
@@ -218,9 +219,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'mobileWebDevice' && <MobileWebDevice height={height} width={width} color={color} />}
 			{iconName == 'instructorIcon' && <InstructorIcon height={height} width={width} color={color} />}
 			{iconName == 'courseTypePhysical' && <CourseTypePhysical height={height} width={width} color={color} />}
-			{iconName == 'uploadIncvoice' && <UploadInvoice height={height} width={width} color={color} />}
+			{iconName == 'uploadInvoice' && <UploadInvoice height={height} width={width} color={color} />}
 			{iconName == 'dragIcon' && <DragIcon height={height} width={width} color={color} />}
 			{iconName == 'dropMenuIcon' && <DropMenuIcon height={height} width={width} color={color} />}
+			{iconName == 'uploadDataIcon' && <UploadDataIcon height={height} width={width} color={color} />}
 
 
 			{iconName == 'visaPayment' && <VisaPayment height={height} width={width} color={color} />}

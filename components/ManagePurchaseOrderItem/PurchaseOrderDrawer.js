@@ -166,7 +166,7 @@ const PurchaseOrderDrawer = (props) => {
                         <div className={`border-dashed border-2  ${styles.downloadInvoice}`}>
                             <div className={styles.receiptItem}>
                                 <div className={styles.uploadInvoiceBtn}>
-                                    <AllIconsComponenet iconName={'uploadIncvoice'} />
+                                    <AllIconsComponenet iconName={'uploadInvoice'} />
                                 </div>
                                 <p>{managePuchaseOrderDrawerConst.userReceiptBtnText}</p>
                             </div>

@@ -122,9 +122,9 @@ export default function Home(props) {
 			<div className={`maxWidthDefault ${styles.mainSection}`}>
 				<div className={styles.textSection}>
 					<h1 className='head1'>{HomeConst.head1}</h1>
-					<div className='flex relative'>
-						<p className='fontMedium pt-2'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
-						<div className={`${styles.animatedTextBox} pt-2`}>
+					<div className='flex relative pt-2'>
+						<p className='fontMedium'>إننا نساعدك تجيب الدرجة الي تطمح لها 🎯 في</p>
+						<div className={`${styles.animatedTextBox}`}>
 							<p id={styles.animatedText1} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText1}</p>
 							<p id={styles.animatedText2} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText2}</p>
 							<p id={styles.animatedText3} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
