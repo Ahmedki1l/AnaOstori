@@ -232,7 +232,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                     <p className='mr-1'>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
                                                 </div><br />
                                                 <div className={styles.genderDetails}>
-                                                    <AllIconsComponenet iconName={'locationDoubleColor'} height={17} width={17} color={'#000000'} />
+                                                    <AllIconsComponenet iconName={courseType == 'online' ? 'onlineDoubleColorIcon' : 'locationDoubleColor'} height={17} width={17} color={'#000000'} />
                                                     {appointment.location ?
                                                         <Link className='mr-1' target='_blank' href={appointment.location}>{appointment.locationName}</Link>
                                                         :
@@ -329,7 +329,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                 {/* } */}
                                 <p className={` ${styles.createappointmentFormFileds}`}>تفاصيل الموعد</p>
                                 <div className='flex'>
-
                                     <FormItem
                                         name={'dateFrom'}
                                         rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
@@ -357,6 +356,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         />
                                     </FormItem>
                                 </div>
+                                <FormItem
+                                    name={'description'}
+                                    rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
+                                >
+                                    <Input
+                                        fontSize={16}
+                                        width={355}
+                                        height={40}
+                                        placeholder='اكتب ملاحظة على الموعد'
+                                    />
+                                </FormItem>
                                 <div className='flex'>
                                     <FormItem
                                         name={'timeFrom'}
