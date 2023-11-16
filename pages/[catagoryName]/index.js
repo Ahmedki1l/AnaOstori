@@ -133,7 +133,7 @@ export default function Index(props) {
 					<div className={styles.coursesWrapper}>
 						{coursesDetails?.length > 0 && coursesDetails.map((course, index) => {
 							return (
-								<div key={`courseDetaisl${index}`} className='my-4 mx-2'>
+								<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
 									<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
 								</div>
 							)

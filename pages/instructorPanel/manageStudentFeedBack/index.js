@@ -4,10 +4,13 @@ import BackToPath from '../../../components/CommonComponents/BackToPath'
 import { Table } from 'antd'
 import Empty from '../../../components/CommonComponents/Empty'
 import { postRouteAPI } from '../../../services/apisService'
+import ModelForStudentFeedBack from '../../../components/ManageStudentFeedBack/ModelForStudentFeedBack'
 
 const Index = () => {
 
     const [listOfStudentFeedBack, setListOfStudentFeedBack] = useState()
+    const [isModelForStudentFeedBack, setIsModelForStudentFeedBack] = useState(true)
+    const [isEdit, setIsEdit] = useState(false)
 
     const tableColumns = [
         {
@@ -57,7 +60,7 @@ const Index = () => {
     }
 
     const handleAddStudentFeedBack = () => {
-        console.log('add student feedback');
+        setIsModelForStudentFeedBack(true)
     }
 
     const customEmptyComponent = (
@@ -90,6 +93,13 @@ const Index = () => {
                 dataSource={listOfStudentFeedBack}
                 locale={{ emptyText: customEmptyComponent }}
             />
+
+            {isModelForStudentFeedBack &&
+                <ModelForStudentFeedBack
+                    isModelForStudentFeedBack={isModelForStudentFeedBack}
+                    setIsModelForStudentFeedBack={setIsModelForStudentFeedBack}
+                    isEdit={isEdit}
+                />}
         </div>
     )
 }
