@@ -54,7 +54,7 @@
 	position: absolute;
 	color: $primary-color;
 	padding-right: 0.3rem;
-	top: 31px;
+	top: 35px;
 	animation-duration: 9s;
 	animation-name: textAnimation;
 	animation-iteration-count: infinite;
@@ -65,8 +65,9 @@
 .animatedTextBox {
 	position: relative;
 	overflow: hidden;
-	height: 34px;
+	height: 40px;
 	width: 165px;
+	margin-top: -12px;
 }
 
 .typesOfCourses {
@@ -152,6 +153,13 @@
 	position: relative;
 }
 
+.textSection {
+
+	p {
+		line-height: 37.6px;
+	}
+}
+
 .badgeDiv {
 	display: grid;
 	grid-template-columns: 40px auto;
@@ -169,7 +177,7 @@
 	align-items: center;
 
 	p {
-		font-size: 25px;
+		font-size: 24px;
 	}
 }
 
@@ -569,12 +577,13 @@
 	}
 
 	.text2FontMedium {
-		margin-top: 25px;
+		margin-top: 20px;
 	}
 
 	.animatedTextBox {
 		position: absolute;
-		top: 1.6rem;
+		top: 50px;
+		height: 24px;
 	}
 
 	.discriptionText {
@@ -602,6 +611,28 @@
 	.courseTypeCard {
 		p {
 			font-size: 14px;
+		}
+	}
+
+	@keyframes textAnimation {
+		0% {
+			top: 26px
+		}
+
+		16% {
+			top: 0px
+		}
+
+		24% {
+			top: 0px
+		}
+
+		40% {
+			top: 26px
+		}
+
+		100% {
+			top: 26px
 		}
 	}
 }
@@ -644,11 +675,10 @@
 @media (max-width: 370px) {
 	.animatedTextBox {
 		right: 1.7rem;
-		top: 1.5rem
 	}
 
 	.text2FontMedium {
-		margin-top: 0px;
+		margin-top: 8px;
 	}
 
 	.image1 {
@@ -661,13 +691,6 @@
 
 	.image3 {
 		top: 10rem;
-	}
-
-	.textSection {
-
-		p {
-			line-height: 27.6px;
-		}
 	}
 
 }
