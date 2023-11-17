@@ -106,10 +106,13 @@
 }
 
 .noteText {
-	font-size: 16px;
+	font-size: 17px;
 	line-height: 19px;
 	margin: 0 0 1rem 0;
-	color: #E5342F;
+
+	span {
+		color: #E5342F;
+	}
 }
 
 @media(max-width:640px) {

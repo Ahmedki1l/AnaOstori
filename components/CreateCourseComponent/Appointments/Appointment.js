@@ -130,6 +130,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             location: appointment?.location,
             locationName: appointment?.locationName,
             gender: appointment?.gender,
+            description: appointment?.description,
             maxNumberOfSeats: appointment?.maxNumberOfSeats,
             dateFrom: dayjs(appointment?.dateFrom, 'YYYY-MM-DD'),
             dateTo: dayjs(appointment?.dateTo, 'YYYY-MM-DD'),
@@ -310,34 +311,24 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         </div>
                         <Form form={appointmentForm} onFinish={onFinish}>
                             <div className={styles.createAppointmentFields}>
-                                {/* {courseType == 'physical' && */}
-                                <>
-                                    <p className={`${styles.createappointmentFormFileds}`}>عنوان الموعد</p>
-                                    <FormItem
-                                        name={'name'}
-                                        rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={352}
-                                            height={40}
-                                            placeholder='ادخل العنوان'
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                </>
-                                {/* } */}
-                                <FormItem
-                                    name={'description'}
-                                    rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
-                                >
-                                    <Input
-                                        fontSize={16}
-                                        width={355}
-                                        height={40}
-                                        placeholder='اكتب ملاحظة على الموعد'
-                                    />
-                                </FormItem>
+                                {courseType == 'physical' &&
+                                    <>
+                                        <p className={`${styles.createappointmentFormFileds}`}>عنوان الموعد</p>
+                                        <FormItem
+                                            name={'name'}
+                                            rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
+                                        >
+                                            <Input
+                                                fontSize={16}
+                                                width={352}
+                                                height={40}
+                                                placeholder='ادخل العنوان'
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                    </>
+                                }
+
                                 <p className={` ${styles.createappointmentFormFileds}`}>تفاصيل الموعد</p>
                                 <div className='flex'>
                                     <FormItem
@@ -367,6 +358,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         />
                                     </FormItem>
                                 </div>
+                                <FormItem
+                                    name={'description'}
+                                    rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
+                                >
+                                    <Input
+                                        fontSize={16}
+                                        width={355}
+                                        height={40}
+                                        placeholder='اكتب ملاحظة على الموعد'
+                                    />
+                                </FormItem>
                                 <div className='flex'>
                                     <FormItem
                                         name={'timeFrom'}

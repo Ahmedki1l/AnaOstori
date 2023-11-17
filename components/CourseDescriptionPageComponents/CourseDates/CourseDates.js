@@ -10,6 +10,7 @@ import { mediaUrl } from '../../../constants/DataManupulation';
 
 export default function CourseDates(props) {
 	const date = props.date
+	console.log(date);
 	const lang = props.lang
 	const isSmallScreen = useWindowSize().smallScreen
 
@@ -47,6 +48,10 @@ export default function CourseDates(props) {
 							:
 							<p className={` ${styles.listItemText}`}>من {dateWithDay(date?.dateFrom)} &nbsp; إلى  {dateWithDay(date?.dateTo)} </p>
 						}
+					</li>
+					<li>
+						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
+						<p className={` ${styles.listItemText}`}>{date.description}</p>
 					</li>
 					<li>
 						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockDoubleColor'} color={'#000000'} />

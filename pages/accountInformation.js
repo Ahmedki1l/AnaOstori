@@ -30,7 +30,6 @@ export default function AccountInformation() {
     const [emailError, setEmailError] = useState(null);
     const [isEmailError, setIsEmailError] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
-    // const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
     const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, [])
     const regexPassword = useMemo(() => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, []);
     const regexPhone = useMemo(() => /^(\+?\d{1,3}[- ]?)?\d{10}$/, []);

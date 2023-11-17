@@ -269,9 +269,9 @@ export default function Index(props) {
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
 							{(screenWidth <= 767) ?
-								<ul className={`flex justify-center py-2 border-b border-inherit bg-white z-10 list-none`}>
-									<li onClick={() => handleSlectedItem(0, `header`)} className={`mx-auto fontBold ${styles.mobileTabBarFont}`}>{lang == 'en' ? 'Course features' : `مميزات الدورة`}</li>
-									<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto fontBold ${styles.mobileTabBarFont}`}>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
+								<ul className={`flex justify-center border-b border-inherit bg-white z-10 list-none`}>
+									<li onClick={() => handleSlectedItem(0, `header`)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 0 ? styles.activeItemMobile : ''}`}>{lang == 'en' ? 'Course features' : `مميزات الدورة`}</li>
+									<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 								</ul>
 								:
 								<ul className={`${styles.courseDetailsNavbar} ${offset > 313 ? `${styles.courseDetailsNavbarFixed}` : ''}`}>
