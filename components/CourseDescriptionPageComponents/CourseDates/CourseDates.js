@@ -49,6 +49,10 @@ export default function CourseDates(props) {
 						}
 					</li>
 					<li>
+						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
+						<p className={` ${styles.listItemText}`}>{date.description}</p>
+					</li>
+					<li>
 						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockDoubleColor'} color={'#000000'} />
 						{lang == 'en' ?
 							<p className={` ${styles.listItemText}`}>{enTimeDuration(date.timeFrom, date.timeTo)}</p>

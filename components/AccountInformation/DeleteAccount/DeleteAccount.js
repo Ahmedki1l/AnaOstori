@@ -91,10 +91,7 @@ const DeleteAccount = ({ data }) => {
                         <p className='pr-2'>3.</p>
                         <p className={styles.paraPoints}>{DeleteAccoutConst.point31} <span className='fontMedium'>{DeleteAccoutConst.point32} .</span></p>
                     </div>
-                    <div className='flex pr-2'>
-                        <p className={styles.noteText}> ملاحظة: </p>
-                        <p className='pr-1'>بعد ما تأكد حذف حسابك، راح يتم تسجيل خروجك تلقائيًا</p>
-                    </div>
+                    <p className={`${styles.noteText}`}><span > ملاحظة:  </span> بعد ما تأكد حذف حسابك، راح يتم تسجيل خروجك تلقائيًا</p>
                     <div className={`${styles.buttonDiv}`}>
                         <button className={`primarySolidBtn ${styles.updateRetreat}`} onClick={() => router.push('/')}>{DeleteAccoutConst.AccountNotDeleteBtnText}</button>
                         <button className={styles.updateDeleteBtn} onClick={() => handleDeleteAccount()} disabled={showLoader} > {showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}{DeleteAccoutConst.confirmAccountDeleteBtnText}</button>

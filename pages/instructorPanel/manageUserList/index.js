@@ -231,7 +231,7 @@ const Index = () => {
                         closable={false}
                         open={drawerForUsers}
                         onClose={onClose}
-                        width={400}
+                        width={473}
                         placement={'right'}
                         title={
                             <>
