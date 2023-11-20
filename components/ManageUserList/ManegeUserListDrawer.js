@@ -6,6 +6,7 @@ import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFil
 import CustomButton from '../CommonComponents/CustomButton';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import styles from './manageUserList.module.scss'
+import { manageUserListConst } from '../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
 
@@ -35,7 +36,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     name={'fullName'}>
                     <Input
                         disabled={true}
-                        width={350}
+                        width={425}
                         height={40}
                         placeholder='studentName'
                     />
@@ -66,7 +67,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     name={'email'}>
                     <Input
                         disabled={true}
-                        width={350}
+                        width={425}
                         height={40}
                         placeholder='DisplayEmail'
                     />
@@ -76,21 +77,14 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     name={'phone'}>
                     <Input
                         disabled={true}
-                        width={350}
+                        width={425}
                         height={40}
                         placeholder='phoneNo'
                     />
                 </FormItem>
                 <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' disabled>حفظ</button>
 
-                {/* <div className='pt-5'>
-                    <CustomButton
-                        btnText='حفظ'
-                        height={37}
-                        showLoader={showBtnLoader}
-                        fontSize={16}
-                    />
-                </div> */}
+                <p className={`fontBold ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
             </Form>
         </div>
     )

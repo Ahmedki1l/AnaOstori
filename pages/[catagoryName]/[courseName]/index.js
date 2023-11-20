@@ -254,6 +254,14 @@ export default function Index(props) {
 		getCourseByName()
 	}, [courseDetail])
 
+	useEffect(() => {
+		if (screenWidth < 768) {
+			setSelectedNavItem(0)
+		} else if (screenWidth > 767) {
+			setSelectedNavItem(1)
+		}
+	}, [screenWidth])
+
 	return (
 		<>
 			{(courseDetail) &&

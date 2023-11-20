@@ -46,13 +46,11 @@ export default function Login() {
 		} else {
 			setEmailError(null)
 		}
-		if (password && !(regexPassword.test(password))) {
-			setPasswordError(inputErrorMessages.passwordFormateMsg)
-		} else {
+		if (!password) {
 			setPasswordError(null)
 		}
 
-	}, [email, password, regexEmail, regexPassword])
+	}, [email, password, regexEmail])
 
 
 	const handleStoreUpdate = async (isUserNew) => {

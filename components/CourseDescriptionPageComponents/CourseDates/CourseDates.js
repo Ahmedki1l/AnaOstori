@@ -10,7 +10,6 @@ import { mediaUrl } from '../../../constants/DataManupulation';
 
 export default function CourseDates(props) {
 	const date = props.date
-	console.log(date);
 	const lang = props.lang
 	const isSmallScreen = useWindowSize().smallScreen
 
