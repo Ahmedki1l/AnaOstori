@@ -34,7 +34,6 @@ const ModelForStudentFeedBack = ({
     const handleSelectCourse = (value) => {
         setSelectCourseName(value);
     }
-    console.log(selectCourseName);
 
     const categoryName = storeData.catagories.find((selectCourseName) => {
         console.log(selectCourseName);

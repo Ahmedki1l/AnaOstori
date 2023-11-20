@@ -25,28 +25,33 @@ export default function DatesInfo(props) {
 		<>
 			<ul className={styles.list}>
 				<li>
-					<Icon height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'calendarIcon'} alt={'calendar Icon'} />
-					<p className={`fontMedium ${styles.listItemText}`}>من {dateWithDay(date.dateFrom)} إلى {dateWithDay(date.dateTo)} </p>
+					<AllIconsComponenet height={24} width={22} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
+					<p className={` ${styles.listItemText}`}>من {dateWithDay(date.dateFrom)} إلى {dateWithDay(date.dateTo)} </p>
 				</li>
+				{date.description &&
+					<li>
+						<p className={`pr-[28px]  ${styles.listItemText}`}>{date.description}</p>
+					</li>
+				}
 				<li>
-					<AllIconsComponenet height={24} width={28} iconName={'clock'} color={'#000000'} />
-					<p className={`fontMedium ${styles.listItemText}`}>{timeDuration(date.timeFrom, date.timeTo)}</p>
+					<AllIconsComponenet height={24} width={22} iconName={'clockDoubleColor'} color={'#000000'} />
+					<p className={` ${styles.listItemText}`}>{timeDuration(date.timeFrom, date.timeTo)}</p>
 				</li>
 				<li>
 					{date.gender == 'mix' ?
 						<>
-							<AllIconsComponenet height={24} width={28} iconName={'onlineDoubleColorIcon'} color={'#000000'} />
-							<p className={`fontMedium link ${styles.listItemText}`}>قاعة افتراضية</p>
+							<AllIconsComponenet height={24} width={22} iconName={'onlineDoubleColorIcon'} color={'#000000'} />
+							<p className={` link ${styles.listItemText}`}>قاعة افتراضية</p>
 						</>
 						:
 						<>
-							<AllIconsComponenet height={24} width={28} iconName={'location'} color={'#000000'} />
+							<AllIconsComponenet height={24} width={22} iconName={'locationDoubleColor'} color={'#000000'} />
 							{date.location ?
 								<Link href={date.location ?? ""} target='_blank'>
-									<p className={`fontMedium link ${styles.listItemText}`}>{date.locationName}</p>
+									<p className={` link ${styles.listItemText}`}>{date.locationName}</p>
 								</Link>
 								:
-								<p className={`fontMedium link ${styles.listItemText}`}>{date.locationName}</p>
+								<p className={` link ${styles.listItemText}`}>{date.locationName}</p>
 							}
 						</>
 					}
@@ -60,7 +65,7 @@ export default function DatesInfo(props) {
 								<Image src={`/images/alert-blink.gif`} alt={'alert gif'} layout="fill" objectFit="cover" />
 							</div>
 						}
-						<p className={`fontMedium ${styles.listItemText}`}>{noOfSeatRemainingText}</p>
+						<p className={` ${styles.listItemText}`}>{noOfSeatRemainingText}</p>
 					</>
 				</li>
 			</ul>
