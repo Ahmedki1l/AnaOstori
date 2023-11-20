@@ -302,7 +302,7 @@ export default function UserInfoForm(props) {
 																				<div className={styles.dateRadioBtnBox}>
 																					<div className={styles.circle}><div></div></div>
 																					<p className={`fontBold ${styles.dateBoxHeaderText}`}>
-																						{dateWithDay(date.dateFrom)}
+																						{date.name ? date.name : dateWithDay(date.dateFrom)}
 																					</p>
 																				</div>
 																			</div>

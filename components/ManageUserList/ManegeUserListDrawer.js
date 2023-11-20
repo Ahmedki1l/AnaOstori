@@ -7,6 +7,7 @@ import CustomButton from '../CommonComponents/CustomButton';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import styles from './manageUserList.module.scss'
 import { manageUserListConst } from '../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
+import Empty from '../CommonComponents/Empty';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
 
@@ -82,9 +83,12 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='phoneNo'
                     />
                 </FormItem>
-                <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' disabled>حفظ</button>
-
-                <p className={`fontBold ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
+                <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
+                <Empty emptyText={'ماهو مشترك بأي دورة'} containerhight={165} />
+                <div className={styles.userListBtnBox}>
+                    <button className='primaryStrockedBtn mb-6' htmltype='submit' disabled>إضافة دورة</button>
+                    <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' disabled>حفظ</button>
+                </div>
             </Form>
         </div>
     )

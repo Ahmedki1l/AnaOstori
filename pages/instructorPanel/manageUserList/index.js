@@ -215,7 +215,6 @@ const Index = () => {
                 />
             </div>
             <h1 className={`head2 py-8`}>بيانات المستخدمين</h1>
-
             <ConfigProvider direction="rtl">
                 <Table
                     columns={tableColumns}
