@@ -139,7 +139,7 @@ const Index = () => {
                             <tbody className={styles.tableBodyArea}>
                                 {regionDataList.map((item, index) => {
                                     return (
-                                        <tr className={styles.tableRow}>
+                                        <tr key={`tableRow${index}`} className={styles.tableRow}>
                                             <td className='cursor-pointer' onClick={() => handleAddBranch(item)}>{item.region}</td>
                                             <td>{item.branchTitle}</td>
                                             <td>{fullDate(item.createdAt)}</td>
@@ -169,7 +169,7 @@ const Index = () => {
                             <tbody className={styles.tableBodyArea}>
                                 {branchDataList.map((item, index) => {
                                     return (
-                                        <tr className={styles.tableRow}>
+                                        <tr key={`tableRow${index}`} className={styles.tableRow}>
                                             <td>{item.districtTitle}</td>
                                             <td>{fullDate(item.createdAt)}</td>
                                             <td>{fullDate(item.updatedAt)}</td>
