@@ -10,3 +10,9 @@ export const studentFeedBackConst = {
     addBtnText: 'إضافة',
     saveBtnText: 'حفظ',
 }
+
+export const deleteReviewsConst = {
+    title: 'تأكيد حذف التجربة',
+    messageText: 'متأكد انك تبي تحذف تجربة الطالب؟',
+    btnText: 'تأكيد الحذف'
+}

@@ -72,6 +72,20 @@
     padding: 15px;
     border: 0.5px solid #00000081;
     border-radius: 4px;
-    min-height: 50px;
+    min-height: 47px;
     margin-bottom: 1.2rem;
+}
+
+.addSectionArea {
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 0;
+    align-items: center;
+}
+
+.addSections {
+    cursor: pointer;
+    font-size: 14px;
+    color: #0075FF
 }
