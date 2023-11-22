@@ -164,6 +164,13 @@
         border-color: $primary-hover-color;
         color: $primary-hover-color;
     }
+
+    &:disabled {
+        background-color: #0000000e;
+        border: 1px solid #00000052;
+        cursor: not-allowed;
+        color: #00000052;
+    }
 }
 
 .secondryStrockedBtn {

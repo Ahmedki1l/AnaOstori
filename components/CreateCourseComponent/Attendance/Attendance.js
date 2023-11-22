@@ -13,6 +13,7 @@ import CustomButton from '../../CommonComponents/CustomButton'
 import Empty from '../../CommonComponents/Empty'
 import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
+import { useRouter } from 'next/router'
 
 export default function Attendance(props) {
     const [openQR, setOpenQR] = useState(false)
@@ -23,11 +24,11 @@ export default function Attendance(props) {
     const [attendanceData, setAttendanceData] = useState([])
     const [updatedAttendanceData, setUpdatedAttendanceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
+    const [selectedAvailability, setSelectedAvailability] = useState(null)
     const dispatch = useDispatch();
-
+    const router = useRouter();
     const storeData = useSelector((state) => state?.globalStore);
     const availabilityList = storeData?.availabilityList;
-
     const allavailability = availabilityList?.map((obj) => {
         return {
             key: obj.id,
@@ -37,11 +38,14 @@ export default function Attendance(props) {
             DateTo: obj.dateTo,
         }
     });
-
     const generateQR = async () => {
         setOpenQR(true)
         await getRouteAPI({ routeName: 'getAttendanceKey' }).then((res) => {
             setAttendanceKey(res?.data?.key)
+            // router.push({
+            //     pathname: '/attendance/mark/',
+            //     query: { availabilityId: availabilityList[0].id, },
+            // })
         }).catch(async (error) => {
             toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             console.log(error);
@@ -127,6 +131,7 @@ export default function Attendance(props) {
             availabilityId: e,
         }
         await getRouteAPI(body).then((res) => {
+            setSelectedAvailability(e)
             createAttendanceTableData(e, res.data)
             setShowAttendanceTable(res.data.length > 0 ? true : false)
         }).catch(async (error) => {
@@ -214,8 +219,8 @@ export default function Attendance(props) {
                         </div>
                     }
                     <div className={styles.createQRBtnBox}>
-                        <button className='primaryStrockedBtn' onClick={() => generateQR()}>عرض كود التحضير</button>
-                        {attendanceKey && <QRCode openQR={openQR} attendanceKey={attendanceKey} courseId={courseId} handleCancel={handleCancel} />}
+                        <button className='primaryStrockedBtn' onClick={() => generateQR()} disabled={selectedAvailability == null}>عرض كود التحضير</button>
+                        {attendanceKey && <QRCode openQR={openQR} attendanceKey={attendanceKey} courseId={courseId} availabilityId={selectedAvailability} handleCancel={handleCancel} />}
                     </div>
                 </div>
             </div>

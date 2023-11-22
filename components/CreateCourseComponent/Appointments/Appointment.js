@@ -416,19 +416,19 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                     <div className='flex'>
                                         <FormItem
                                             name={'locationName'}
-                                            rules={[{ required: true, message: "ادخل رابط الفرع" }]}
+                                            rules={[{ required: true, message: 'ادخل عنوان المركز' }]}
                                         >
                                             <InputWithLocation
                                                 width={171}
                                                 height={40}
                                                 suFFixIconName='locationDoubleColor'
-                                                placeholder='الفرع والمدينة'
+                                                placeholder='عنوان المركز'
                                                 disabled={isFieldDisable}
                                             />
                                         </FormItem>
                                         <FormItem
                                             name={'location'}
-                                            rules={[{ required: true, message: "ادخل المكان (نص)" }]}
+                                            rules={[{ required: true, message: 'ادخل رابط المركز' }]}
                                         >
                                             <InputWithLocation
                                                 width={171}
