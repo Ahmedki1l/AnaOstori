@@ -1,0 +1,78 @@
+.uploadFileInput {
+    display: none !important;
+    cursor: pointer;
+}
+
+.addSectionArea {
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 0;
+    align-items: center;
+}
+
+.addSections {
+    cursor: pointer;
+    font-size: 14px;
+    color: #0075FF
+}
+
+.addItems {
+    color: #F26722;
+    display: grid;
+    place-content: center;
+    border: 0.5px solid #F26722;
+    border: dashed;
+    border-radius: 4px;
+    width: 20rem;
+    margin-bottom: 18px;
+}
+
+.uploadFileLabel {
+    cursor: pointer;
+    width: 19.5rem;
+    height: 78px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.uploadimagetext {
+    font-size: 18px;
+    color: #808080a6;
+    margin-top: 8px;
+}
+
+.loaderWrapper {
+    position: absolute;
+    background: #0000000b;
+    height: 100%;
+    width: 100%;
+    cursor: not-allowed;
+}
+
+.imageUploadWrapper {
+    width: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.7rem 1.7rem;
+    position: relative;
+}
+
+.imageWrapper {
+    padding: 0rem 1.7rem 0.7rem;
+}
+
+.closeIconWrapper {
+    position: absolute;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5019607843);
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    left: 34px;
+    top: 18px;
+    z-index: 1;
+    padding: 2px 5px 0 0;
+}
