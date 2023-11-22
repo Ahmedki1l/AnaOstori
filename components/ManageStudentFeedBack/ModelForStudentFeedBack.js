@@ -22,11 +22,9 @@ const ModelForStudentFeedBack = ({
     const [reviewsForm] = Form.useForm()
     const storeData = useSelector((state) => state?.globalStore);
     const [selectCatagoryName, setSelectCatagoryName] = useState()
-    const [isReviewMideaOpen, setIsReviewMideaOpen] = useState(false)
     const [uploadFileData, setUploadFileData] = useState([])
     const [numberOfMedia, setNumberOfMedia] = useState(0)
 
-    console.log(uploadFileData);
     const course = storeData.catagories.flatMap((item) => {
         return item.courses.map((subItem) => {
             return { value: subItem.id, label: subItem.name };
@@ -56,15 +54,11 @@ const ModelForStudentFeedBack = ({
             ...values,
             id: editStudetReviews?.id,
         }
-        // values.contentFileKey = uploadFileData?.key
-        // values.contentFileBucket = uploadFileData?.bucket
-        // values.contentFileMime = uploadFileData?.mime
         let body = {
             routeName: 'createReviewMedia',
             ...values,
         }
         await postAuthRouteAPI(editStudetReviews ? data2 : data1).then(async (res) => {
-            setIsReviewMideaOpen(true)
             if (uploadFileData) {
                 await postAuthRouteAPI(body).then((res) => {
                     console.log(res);
@@ -76,7 +70,7 @@ const ModelForStudentFeedBack = ({
         }).catch(async (err) => {
             if (err?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await postAuthRouteAPI(data).then((res) => {
+                    await postAuthRouteAPI(body).then((res) => {
                         getStudetnFeedBackList();
                     })
                 }).catch(err => {
@@ -100,9 +94,25 @@ const ModelForStudentFeedBack = ({
             })
         })
     }
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
     const addMedia = () => {
-        setNumberOfMedia(numberOfMedia + 1)
+        if (uploadFileData.length > 3) {
+            return
+        }
+
+        uploadFileData.push(JSON.parse(JSON.stringify({
+            key: '',
+            bucket: '',
+            type: ''
+        })))
+        // if (uploadFileData[0].key == '' && uploadFileData[0].bucket == '' && uploadFileData[0].type == '') {
+        //     setButtonDisabled(true);
+        // } else  {
+        //     setNumberOfMedia(numberOfMedia + 1);
+        // }
     }
+
     return (
         <div>
             <Modal
@@ -152,13 +162,26 @@ const ModelForStudentFeedBack = ({
                             {numberOfMedia > 0 &&
                                 <div className={styles.addSectionArea}>
                                     <p className={`fontMedium text-lg`}>{studentFeedBackConst.addFeedBackPhoto}</p>
-                                    <p className={styles.addSections} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</p>
+                                    <button style={{ display: 'contents' }} className={styles.addSections} disabled={buttonDisabled} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</button >
                                 </div>
                             }
 
                             {numberOfMedia > 0 &&
                                 <>
-                                    {Array.from({ length: numberOfMedia + 0 }, (_, index) => (
+                                    {uploadFileData.map((item, index) => {
+                                        return (
+                                            <UploadFileForCourseReviews
+                                                key={`reviewMedia${index}`}
+                                                type={'image/*'}
+                                                pictureKey={editStudetReviews?.pictureKey}
+                                                pictureBucket={editStudetReviews?.pictureBucket}
+                                                uploadFileData={uploadFileData}
+                                                setUploadFileData={setUploadFileData}
+                                                index={index}
+                                            />
+                                        )
+                                    })}
+                                    {/* {Array.from({ length: numberOfMedia + 0 }, (_, index) => (
                                         <>
                                             <UploadFileForCourseReviews
                                                 key={index}
@@ -169,7 +192,7 @@ const ModelForStudentFeedBack = ({
                                                 setUploadFileData={setUploadFileData}
                                             />
                                         </>
-                                    ))}
+                                    ))} */}
                                 </>}
                         </div>
                         <div className='p-1'>

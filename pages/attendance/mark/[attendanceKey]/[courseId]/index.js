@@ -21,7 +21,7 @@ export async function getServerSideProps(contex) {
 
 
 export default function Index(props) {
-
+    console.log(props);
     const { courseId, attendanceKey } = props
     const router = useRouter()
     useEffect(() => {

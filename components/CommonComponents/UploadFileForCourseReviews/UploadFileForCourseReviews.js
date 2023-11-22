@@ -13,12 +13,16 @@ const UploadFileForCourseReviews = ({
     setUploadFileData,
     pictureBucket,
     pictureKey,
+    index,
 }) => {
+    console.log(uploadFileData);
+
     const [isFileExist, setIsFileExist] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0)
     const [uploadLoader, setUploadLoader] = useState(false)
     const [pictureUrl, setPictureUrl] = useState(pictureKey ? mediaUrl(pictureBucket, pictureKey) : null)
     const [hideImageWrapper, setHideImageWrapper] = useState(true)
+
     const getFileKey = async (e) => {
         setUploadLoader(true)
         const onUploadProgress = (percentCompleted) => {
@@ -29,11 +33,15 @@ const UploadFileForCourseReviews = ({
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileType = e.target.files[0].type
-            setUploadFileData([{
-                key: uploadFileKey,
-                bucket: uploadFileBucket,
-                mime: uploadFileType,
-            }, ...uploadFileData])
+            uploadFileData[index].key = uploadFileKey
+            uploadFileData[index].bucket = uploadFileBucket
+            uploadFileData[index].type = uploadFileType
+            setUploadFileData(uploadFileData)
+            // setUploadFileData([{
+            //     key: uploadFileKey,
+            //     bucket: uploadFileBucket,
+            //     mime: uploadFileType,
+            // }, ...uploadFileData])
             setPictureUrl(mediaUrl(uploadFileBucket, uploadFileKey))
         }).catch((err) => {
             console.log(err)
@@ -44,8 +52,8 @@ const UploadFileForCourseReviews = ({
         setIsFileExist(false)
         setUploadLoader(false)
         setHideImageWrapper(false)
+        // setUploadFileData(uploadFileData.filter((item, i) => i != index))
     }
-
     return (
         <>
             {hideImageWrapper &&
