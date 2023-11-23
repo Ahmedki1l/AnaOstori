@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react'
+import React, { Fragment, use, useEffect, useRef, useState } from 'react'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import styles from './AttendanceTable.module.scss'
 import dayjs from 'dayjs'
@@ -15,6 +15,9 @@ export default function AttendanceTable(props) {
     const [selectedDayIndex, setSelectedDayIndex] = useState(undefined)
     const [selectedDay, setSelectedDay] = useState('')
 
+    useEffect(() => {
+        setStudentAttendanceList(attendanceData)
+    }, [attendanceData])
 
     const handelDaySelection = (index, date) => {
         if (dayjs(date).startOf('day') > dayjs(new Date())) {
@@ -125,7 +128,6 @@ export default function AttendanceTable(props) {
         setStudentAttendanceList(tempStudentAttendanceList)
         props.setUpdatedAttendanceData(tempStudentAttendanceList)
     }
-
     return (
         <div className={styles.tableContainer}>
             <div className={styles.tableSubContainer}>

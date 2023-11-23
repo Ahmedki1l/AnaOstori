@@ -23,14 +23,16 @@ const ModelForStudentFeedBack = ({
     const storeData = useSelector((state) => state?.globalStore);
     const [selectCatagoryName, setSelectCatagoryName] = useState()
     const [uploadFileData, setUploadFileData] = useState([])
-    const [numberOfMedia, setNumberOfMedia] = useState(0)
+    const [selectedReviewId, setSelectedReviewId] = useState(editStudetReviews ? editStudetReviews.id : '')
 
     const course = storeData.catagories.flatMap((item) => {
         return item.courses.map((subItem) => {
             return { value: subItem.id, label: subItem.name };
         });
     })
-
+    const editReviewsPictureKey = editStudetReviews?.ReviewMedia.map((item) => {
+        return item
+    })
     useEffect(() => {
         if (editStudetReviews) {
             reviewsForm.setFieldsValue(editStudetReviews)
@@ -54,19 +56,40 @@ const ModelForStudentFeedBack = ({
             ...values,
             id: editStudetReviews?.id,
         }
-        let body = {
+        const newData = uploadFileData.map((item) => {
+            return {
+                ...item,
+                courseReviewId: selectedReviewId
+            }
+        })
+        let body1 = {
             routeName: 'createReviewMedia',
-            ...values,
+            data: newData
+        }
+        let body2 = {
+            routeName: 'updateReviewMedia',
+            data: newData,
+            id: editStudetReviews?.ReviewMedia.map((item) => item.id)
         }
         await postAuthRouteAPI(editStudetReviews ? data2 : data1).then(async (res) => {
-            if (uploadFileData) {
-                await postAuthRouteAPI(body).then((res) => {
+            setSelectedReviewId(res?.data?.id)
+            if (uploadFileData.length > 0) {
+                await postAuthRouteAPI(editStudetReviews ? body2 : body1).then((res) => {
                     console.log(res);
+                    setIsModelForStudentFeedBack(false)
+                    getStudetnFeedBackList();
                 }).catch((err) => {
                     console.log(err);
                 })
+            } else {
+                let data = [...uploadFileData]
+                data.push(JSON.parse(JSON.stringify({
+                    contentFileKey: '',
+                    contentFileMime: '',
+                    contentFileBucket: ''
+                })))
+                setUploadFileData(data)
             }
-            setNumberOfMedia(1)
         }).catch(async (err) => {
             if (err?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
@@ -94,23 +117,19 @@ const ModelForStudentFeedBack = ({
             })
         })
     }
-    const [buttonDisabled, setButtonDisabled] = useState(false);
 
     const addMedia = () => {
         if (uploadFileData.length > 3) {
             return
         }
-
-        uploadFileData.push(JSON.parse(JSON.stringify({
-            key: '',
-            bucket: '',
-            type: ''
+        let data = [...uploadFileData]
+        data.push(JSON.parse(JSON.stringify({
+            contentFileKey: '',
+            contentFileMime: '',
+            contentFileBucket: ''
         })))
-        // if (uploadFileData[0].key == '' && uploadFileData[0].bucket == '' && uploadFileData[0].type == '') {
-        //     setButtonDisabled(true);
-        // } else  {
-        //     setNumberOfMedia(numberOfMedia + 1);
-        // }
+        setUploadFileData(data)
+        console.log(data);
     }
 
     return (
@@ -159,40 +178,27 @@ const ModelForStudentFeedBack = ({
                             <div className={styles.courseNames}>
                                 {selectCatagoryName}
                             </div>
-                            {numberOfMedia > 0 &&
+                            {uploadFileData.length > 0 &&
                                 <div className={styles.addSectionArea}>
                                     <p className={`fontMedium text-lg`}>{studentFeedBackConst.addFeedBackPhoto}</p>
-                                    <button style={{ display: 'contents' }} className={styles.addSections} disabled={buttonDisabled} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</button >
+                                    <button style={{ display: 'contents' }} className={styles.addSections} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</button >
                                 </div>
                             }
-
-                            {numberOfMedia > 0 &&
+                            {uploadFileData.length > 0 &&
                                 <>
                                     {uploadFileData.map((item, index) => {
                                         return (
                                             <UploadFileForCourseReviews
                                                 key={`reviewMedia${index}`}
                                                 type={'image/*'}
-                                                pictureKey={editStudetReviews?.pictureKey}
-                                                pictureBucket={editStudetReviews?.pictureBucket}
+                                                pictureKey={editReviewsPictureKey.map((item) => item.contentFileKey)}
+                                                pictureBucket={editReviewsPictureKey.map((item) => item.contentFileBucket)}
                                                 uploadFileData={uploadFileData}
                                                 setUploadFileData={setUploadFileData}
                                                 index={index}
                                             />
                                         )
                                     })}
-                                    {/* {Array.from({ length: numberOfMedia + 0 }, (_, index) => (
-                                        <>
-                                            <UploadFileForCourseReviews
-                                                key={index}
-                                                type={'image/*'}
-                                                pictureKey={editStudetReviews?.pictureKey}
-                                                pictureBucket={editStudetReviews?.pictureBucket}
-                                                uploadFileData={uploadFileData}
-                                                setUploadFileData={setUploadFileData}
-                                            />
-                                        </>
-                                    ))} */}
                                 </>}
                         </div>
                         <div className='p-1'>

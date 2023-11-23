@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './UploadFileForCourseReviews.module.scss'
 import { studentFeedBackConst } from '../../../constants/adminPanelConst/manageStudentFeedBackConst/manageStudentFeedBackConst'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
@@ -16,7 +16,11 @@ const UploadFileForCourseReviews = ({
     index,
 }) => {
     console.log(uploadFileData);
-
+    useEffect(() => {
+        if (uploadFileData[index]?.contentFileKey) {
+            setPictureUrl(mediaUrl(uploadFileData[index]?.contentFileMime, uploadFileData[index]?.contentFileKey))
+        }
+    }, [])
     const [isFileExist, setIsFileExist] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0)
     const [uploadLoader, setUploadLoader] = useState(false)
@@ -33,9 +37,9 @@ const UploadFileForCourseReviews = ({
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileType = e.target.files[0].type
-            uploadFileData[index].key = uploadFileKey
-            uploadFileData[index].bucket = uploadFileBucket
-            uploadFileData[index].type = uploadFileType
+            uploadFileData[index].contentFileKey = uploadFileKey
+            uploadFileData[index].contentFileMime = uploadFileBucket
+            uploadFileData[index].contentFileBucket = uploadFileType
             setUploadFileData(uploadFileData)
             // setUploadFileData([{
             //     key: uploadFileKey,
