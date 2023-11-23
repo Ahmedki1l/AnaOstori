@@ -5,31 +5,32 @@ import QRCode from '../../CommonComponents/QRCode/QRCode'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import Select from '../../antDesignCompo/Select'
 import AttendanceTable from './AttendanceTableComponent/AttendanceTable'
-import { useDispatch, useSelector } from 'react-redux'
-import { dateRange, dateWithDay } from '../../../constants/DateConverter'
+import { useSelector } from 'react-redux'
+import { dateRange } from '../../../constants/DateConverter'
 import dayjs from 'dayjs'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import CustomButton from '../../CommonComponents/CustomButton'
 import Empty from '../../CommonComponents/Empty'
 import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
+import Spinner from '../../CommonComponents/spinner'
 
 export default function Attendance(props) {
+
+    const courseId = props.courseId
     const [openQR, setOpenQR] = useState(false)
     const [attendanceKey, setAttendanceKey] = useState("")
     const [showAttendanceTable, setShowAttendanceTable] = useState(false)
-    const courseId = props.courseId
     const [dateArray, setDateArray] = useState([])
     const [attendanceData, setAttendanceData] = useState([])
     const [updatedAttendanceData, setUpdatedAttendanceData] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [selectedAvailability, setSelectedAvailability] = useState(null)
-    const dispatch = useDispatch();
-    const router = useRouter();
+    const [loadning, setLoadning] = useState(false)
     const storeData = useSelector((state) => state?.globalStore);
     const availabilityList = storeData?.availabilityList;
     const allavailability = availabilityList?.map((obj) => {
+
         return {
             key: obj.id,
             label: dateRange(obj.dateFrom, obj.dateTo),
@@ -42,10 +43,6 @@ export default function Attendance(props) {
         setOpenQR(true)
         await getRouteAPI({ routeName: 'getAttendanceKey' }).then((res) => {
             setAttendanceKey(res?.data?.key)
-            // router.push({
-            //     pathname: '/attendance/mark/',
-            //     query: { availabilityId: availabilityList[0].id, },
-            // })
         }).catch(async (error) => {
             toast.error(toastErrorMessage.tryAgainErrorMsg, { rtl: true, })
             console.log(error);
@@ -68,19 +65,15 @@ export default function Attendance(props) {
         const selectedAvailability = availabilityList.find((element) => {
             return element.id === id;
         });
-
         const start = dayjs(selectedAvailability.dateFrom,);
         const end = dayjs(selectedAvailability.dateTo,);
         const datesArray = [];
         let currentDate = start;
-
         while (currentDate <= end) {
             datesArray.push({ date: currentDate.$d });
             currentDate = currentDate.add(1, "day");
         }
         setDateArray(datesArray)
-
-
         const attendanceDetailsData = data.map((student, index) => {
             const studentData = {
                 key: `studentAttendance${index}`,
@@ -91,15 +84,16 @@ export default function Attendance(props) {
                 attendancePercentage: '10',
                 attendanceDetails: []
             }
-            const existingDates = student.attendances.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
+            const sortStudentData = student.attendances.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            const existingDates = sortStudentData.map(detail => dayjs(detail.createdAt).format('DD/MM/YYYY'))
             for (let i = 0; i < datesArray.length; i++) {
                 const date = datesArray[i].date;
                 if (existingDates.includes(dayjs(date).format('DD/MM/YYYY'))) {
                     const attendanceDetail = {
                         key: `dateAttendance${i}`,
                         date: date,
-                        attendanceType: student?.attendances[i]?.status,
-                        id: student.attendances[i].id
+                        attendanceType: sortStudentData[i]?.status,
+                        id: sortStudentData[i].id
                     };
                     studentData.attendanceDetails.push(attendanceDetail);
                 } else if (dayjs(date).startOf('day') < dayjs(new Date()).startOf('day')) {
@@ -123,9 +117,9 @@ export default function Attendance(props) {
             return (studentData)
         })
         setAttendanceData(attendanceDetailsData)
-
     }
     const handlSelectAvailability = async (e) => {
+        setLoadning(true)
         let body = {
             routeName: "getAttendanceByAvailability",
             availabilityId: e,
@@ -134,6 +128,7 @@ export default function Attendance(props) {
             setSelectedAvailability(e)
             createAttendanceTableData(e, res.data)
             setShowAttendanceTable(res.data.length > 0 ? true : false)
+            setLoadning(false)
         }).catch(async (error) => {
             console.log(error);
             if (error?.response?.status == 401) {
@@ -146,6 +141,7 @@ export default function Attendance(props) {
                     console.error("Error:", error);
                 });
             }
+            setLoadning(false)
         })
     }
 
@@ -213,9 +209,6 @@ export default function Attendance(props) {
                                 fontSize={16}
                                 onClick={() => handleAttendanceSave()}
                             />
-                            {/* <div>
-                                <button className='primaryStrockedBtn' onClick={() => handleAttendanceSave()}>عرض كود التحضير</button>
-                            </div> */}
                         </div>
                     }
                     <div className={styles.createQRBtnBox}>
@@ -228,7 +221,15 @@ export default function Attendance(props) {
                 <Empty emptyText={'مافي طلاب لهذه الفترة'} fontWeight={'bold'} fontSize={20} containerhight={400} />
             }
             {showAttendanceTable &&
-                <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />
+                <>
+                    {loadning ?
+                        <div className='flex justify-center items-center h-96'>
+                            <Spinner borderwidth={4} width={5} height={5} margin={0.5} />
+                        </div>
+                        :
+                        <AttendanceTable dateArray={dateArray} attendanceData={attendanceData} setUpdatedAttendanceData={setUpdatedAttendanceData} />
+                    }
+                </>
             }
         </div>
     )
