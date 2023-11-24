@@ -47,10 +47,10 @@ export default function Index() {
                     <AllIconsComponenet width={39} height={39} iconName='manageAppVersion' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>تحديث نُسخ التطبيق</p>
                 </div>
-                {/* <Link href={'/instructorPanel/manageStudentFeedBack'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                <Link href={'/instructorPanel/manageStudentFeedBack'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='manageStudentFeedBack' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل تجارب الطلاب</p>
-                </Link> */}
+                </Link>
                 <Link href={'/instructorPanel/manageUserList'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='manageUsers' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة بيانات المستخدمين</p>
@@ -59,10 +59,10 @@ export default function Index() {
                     <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل كوبونات الخصم</p>
                 </Link>
-                {/* <Link href={`/instructorPanel/manageBranches?region=all`} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                <Link href={`/instructorPanel/manageBranches?region=all`} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='locationDoubleColor' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>manage state and branch</p>
-                </Link> */}
+                </Link>
             </div>
 
             {isModelForAppVersion &&

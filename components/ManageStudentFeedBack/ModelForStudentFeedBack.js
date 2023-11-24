@@ -23,65 +23,83 @@ const ModelForStudentFeedBack = ({
     const storeData = useSelector((state) => state?.globalStore);
     const [selectCatagoryName, setSelectCatagoryName] = useState()
     const [uploadFileData, setUploadFileData] = useState([])
-    const [selectedReviewId, setSelectedReviewId] = useState(editStudetReviews ? editStudetReviews.id : '')
+    const [editReviewData, setEditReviewData] = useState(editStudetReviews)
 
     const course = storeData.catagories.flatMap((item) => {
         return item.courses.map((subItem) => {
             return { value: subItem.id, label: subItem.name };
         });
     })
-    const editReviewsPictureKey = editStudetReviews?.ReviewMedia.map((item) => {
-        return item
-    })
     useEffect(() => {
-        if (editStudetReviews) {
-            reviewsForm.setFieldsValue(editStudetReviews)
-            handleCatagorySelect(editStudetReviews.courseId)
+        if (editReviewData) {
+            reviewsForm.setFieldsValue(editReviewData)
+            handleCatagorySelect(editReviewData.courseId)
         }
-    }, [])
+        if (editReviewData?.ReviewMedia?.length > 0) {
+            setUploadFileData(editReviewData?.ReviewMedia)
+        }
+        if (editReviewData?.ReviewMedia?.length == 0) {
+            let data = [...uploadFileData]
+            data.push(JSON.parse(JSON.stringify({
+                contentFileKey: '',
+                contentFileMime: '',
+                contentFileBucket: ''
+            })))
+            setUploadFileData(data)
+        }
+
+    }, [editReviewData])
+
 
     const isModelClose = () => {
         setIsModelForStudentFeedBack(false)
         setEditStudetReviews()
     }
+    const uploadReviewMediaValidate = () => {
+        if (editReviewData && (editReviewData?.ReviewMedia?.length !== uploadFileData.length)) {
+            return false;
+        }
 
-    const onFinish = async (values) => {
-        values.rate = '5';
-        let data1 = {
-            routeName: 'createCourseReview',
-            ...values,
+        for (let i = 0; i < editReviewData?.ReviewMedia.length; i++) {
+            if (editReviewData?.ReviewMedia[i].contentFileKey !== uploadFileData[i].contentFileKey) {
+                return false;
+            }
         }
-        let data2 = {
-            routeName: 'updateCourseReview',
-            ...values,
-            id: editStudetReviews?.id,
-        }
-        const newData = uploadFileData.map((item) => {
+
+        return;
+    }
+    const handleCreateReviewMedia = async () => {
+        if (!uploadReviewMediaValidate) return
+        let newData = uploadFileData.map((item) => {
             return {
-                ...item,
-                courseReviewId: selectedReviewId
+                contentFileKey: item.contentFileKey,
+                contentFileMime: item.contentFileMime,
+                contentFileBucket: item.contentFileBucket,
+                courseReviewId: editReviewData?.id,
             }
         })
-        let body1 = {
+        let createReviewMedia = {
             routeName: 'createReviewMedia',
             data: newData
         }
-        let body2 = {
-            routeName: 'updateReviewMedia',
-            data: newData,
-            id: editStudetReviews?.ReviewMedia.map((item) => item.id)
-        }
-        await postAuthRouteAPI(editStudetReviews ? data2 : data1).then(async (res) => {
-            setSelectedReviewId(res?.data?.id)
-            if (uploadFileData.length > 0) {
-                await postAuthRouteAPI(editStudetReviews ? body2 : body1).then((res) => {
-                    console.log(res);
-                    setIsModelForStudentFeedBack(false)
-                    getStudetnFeedBackList();
-                }).catch((err) => {
-                    console.log(err);
-                })
-            } else {
+        await postAuthRouteAPI(createReviewMedia).then((res) => {
+            setIsModelForStudentFeedBack(false)
+            getStudetnFeedBackList();
+        }).catch(async (err) => {
+            console.log(err);
+        })
+    }
+
+    const onFinish = async (values) => {
+        values.rate = '5';
+        if (!editReviewData && uploadFileData.length == 0) {
+            let createReviewBody = {
+                routeName: 'createCourseReview',
+                ...values,
+            }
+            await postAuthRouteAPI(createReviewBody).then(async (res) => {
+                setEditReviewData(res.data)
+                setEditStudetReviews(res.data)
                 let data = [...uploadFileData]
                 data.push(JSON.parse(JSON.stringify({
                     contentFileKey: '',
@@ -89,19 +107,26 @@ const ModelForStudentFeedBack = ({
                     contentFileBucket: ''
                 })))
                 setUploadFileData(data)
-            }
-        }).catch(async (err) => {
-            if (err?.response?.status == 401) {
-                await getNewToken().then(async (token) => {
-                    await postAuthRouteAPI(body).then((res) => {
-                        getStudetnFeedBackList();
-                    })
-                }).catch(err => {
-                    console.error("err:", err);
+            }).catch(async (err) => {
+                console.log(err);
+            })
+        } else {
+            if (editReviewData?.fullName !== values?.fullName || editReviewData?.courseId !== values?.courseId) {
+                let updateReviewBody = {
+                    routeName: 'updateCourseReview',
+                    ...values,
+                    id: editReviewData?.id,
+                }
+                await postAuthRouteAPI(updateReviewBody).then(async (res) => {
+                    setEditReviewData(res.data)
+                    setEditStudetReviews(res.data)
+                }).catch(async (err) => {
+                    console.log(err);
                 })
+            } else {
+                handleCreateReviewMedia()
             }
-            console.log(err);
-        })
+        }
     }
 
     const handleSelectCourse = (value) => {
@@ -117,8 +142,10 @@ const ModelForStudentFeedBack = ({
             })
         })
     }
-
     const addMedia = () => {
+        if (uploadFileData[0].contentFileBucket == '') {
+            return
+        }
         if (uploadFileData.length > 3) {
             return
         }
@@ -129,7 +156,6 @@ const ModelForStudentFeedBack = ({
             contentFileBucket: ''
         })))
         setUploadFileData(data)
-        console.log(data);
     }
 
     return (
@@ -181,7 +207,7 @@ const ModelForStudentFeedBack = ({
                             {uploadFileData.length > 0 &&
                                 <div className={styles.addSectionArea}>
                                     <p className={`fontMedium text-lg`}>{studentFeedBackConst.addFeedBackPhoto}</p>
-                                    <button style={{ display: 'contents' }} className={styles.addSections} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</button >
+                                    <p style={{ display: 'contents' }} className={styles.addSections} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</p >
                                 </div>
                             }
                             {uploadFileData.length > 0 &&
@@ -191,8 +217,6 @@ const ModelForStudentFeedBack = ({
                                             <UploadFileForCourseReviews
                                                 key={`reviewMedia${index}`}
                                                 type={'image/*'}
-                                                pictureKey={editReviewsPictureKey.map((item) => item.contentFileKey)}
-                                                pictureBucket={editReviewsPictureKey.map((item) => item.contentFileBucket)}
                                                 uploadFileData={uploadFileData}
                                                 setUploadFileData={setUploadFileData}
                                                 index={index}
@@ -209,7 +233,7 @@ const ModelForStudentFeedBack = ({
                     </Form>
                 </div>
             </Modal>
-        </div >
+        </div>
     )
 }
 

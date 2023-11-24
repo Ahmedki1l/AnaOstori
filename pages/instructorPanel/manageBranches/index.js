@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageStateAndBranch.module.scss'
 import Empty from '../../../components/CommonComponents/Empty'
@@ -8,23 +8,8 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import ModelForManageBranch from '../../../components/ManageBranch/ModelForManageBranch'
 import { fullDate } from '../../../constants/DateConverter'
 import { useRouter } from 'next/router'
+import { getRouteAPI } from '../../../services/apisService'
 
-const regionDataList = [
-    {
-        id: "611433e4-b461-4bb2-be5e-3a5b89e9f4af",
-        region: "region00123",
-        branchTitle: 'branch001',
-        createdAt: "2023-10-13T04:04:08.000Z",
-        updatedAt: "2023-10-13T04:06:32.000Z"
-    },
-    {
-        id: "611433e4-b461-4bb2-be5e-3a5b89e9f4af",
-        region: "region001234",
-        branchTitle: 'branch001',
-        createdAt: "2023-10-13T04:04:08.000Z",
-        updatedAt: "2023-10-13T04:06:32.000Z"
-    }
-]
 const branchDataList = [
     {
         id: "611433e4-b461-4bb2-be5e-3a5b89e9f4af",
@@ -53,6 +38,8 @@ const Index = () => {
     const [showRegionDetails, setShowRegionDetails] = useState(false)
     const [showBranchDetails, setShowBranchDetails] = useState(false)
     const [branchData, setBranchData] = useState()
+    const [regionDataList, setRegionDataList] = useState()
+
     const router = useRouter()
 
     useEffect(() => {
@@ -65,6 +52,20 @@ const Index = () => {
         }
     }, [router])
 
+    useEffect(() => {
+        getRegionAndBranchList()
+    }, [])
+
+    const getRegionAndBranchList = async () => {
+        let body = {
+            routeName: 'listRegion',
+        }
+        await getRouteAPI(body).then((res) => {
+            setRegionDataList(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
     const handleBranchAndAddRegion = () => {
         if (showBranchDetails) {
             setIsModelForAddBranch(true)
@@ -135,13 +136,13 @@ const Index = () => {
                                 <th className={styles.tableHead5}>{manageStateAndBranchConst.action}</th>
                             </tr>
                         </thead>
-                        {regionDataList.length > 0 &&
+                        {regionDataList?.length > 0 &&
                             <tbody className={styles.tableBodyArea}>
-                                {regionDataList.map((item, index) => {
+                                {regionDataList?.map((item, index) => {
                                     return (
                                         <tr key={`tableRow${index}`} className={styles.tableRow}>
-                                            <td className='cursor-pointer' onClick={() => handleAddBranch(item)}>{item.region}</td>
-                                            <td>{item.branchTitle}</td>
+                                            <td className='cursor-pointer' onClick={() => handleAddBranch(item)}>{item.nameAr}</td>
+                                            <td>branchName</td>
                                             <td>{fullDate(item.createdAt)}</td>
                                             <td>{fullDate(item.updatedAt)}</td>
                                             <td>
@@ -184,7 +185,7 @@ const Index = () => {
                             </tbody>}
                     </table>
                 }
-                {regionDataList.length == 0 &&
+                {regionDataList?.length == 0 &&
                     <div className={styles.tableBodyArea}>
                         <Empty buttonText={manageStateAndBranchConst.emptyBtnText} emptyText={manageStateAndBranchConst.emptyTitleText} containerhight={500} onClick={() => handleBranchAndAddRegion()} />
                     </div>
@@ -201,6 +202,7 @@ const Index = () => {
                     setIsModelForRegion={setIsModelForRegion}
                     editRegionData={editRegionData}
                     setEditRegionData={setEditRegionData}
+                    getRegionAndBranchList={getRegionAndBranchList}
                 />
             }
             {isModelForAddBranch &&

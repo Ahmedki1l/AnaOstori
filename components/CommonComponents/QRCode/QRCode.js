@@ -7,11 +7,11 @@ import { Modal } from 'antd'
 
 
 export default function QRCode(props) {
-    console.log(props);
     const attendanceKey = props.attendanceKey
     const courseId = props.courseId
     const availabilityId = props.availabilityId
     // const qrUrl = `https://anaostori.com/attendance/mark?attendanceKey=${attendanceKey}&courseId=${courseId}&availabilityId=${availabilityId}`
+    // const qrUrl = `dev.d25wup5zukd53i.amplifyapp.com/attendance/mark?attendanceKey=${attendanceKey}&courseId=${courseId}&availabilityId=${availabilityId}`
     const qrUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/attendance/mark?attendanceKey=${attendanceKey}&courseId=${courseId}&availabilityId=${availabilityId}`
     console.log(qrUrl);
 
