@@ -85,10 +85,6 @@ const UploadFileForModel = ({
         })
     }
 
-    const cancelUpload = () => {
-        source.cancel('Upload cancelled by user');
-    }
-
     const handleRemoveFile = () => {
         setUploadedFileName()
         uploadResData()

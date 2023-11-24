@@ -10,7 +10,6 @@ const ImageWrapper = styled('div')`
 `
 
 export default function CoverImg(props) {
-
 	const height = props.height;
 
 	return (
