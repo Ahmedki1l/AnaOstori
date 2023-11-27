@@ -34,4 +34,10 @@ export const manageStateAndBranchConst = {
     branchMapTitle: 'رابط الفرع',
     branchMapPlaceholder: 'رابط الفرع',
     branchMapinputErrorMsg: 'حط رابط الفرع',
+
+    updateRegionSuccessMsg: 'عدلت بيانات المنطقة بنجاح',
+    addRegionSuccessMsg: 'أضفت المنطقة بنجاح',
+
+    updateBranchSuccessMsg: 'عدلت بيانات الفرغ بنجاح',
+    addBranchSuccessMsg: 'أضفت الفرع بنجاح',
 }

@@ -89,8 +89,13 @@ const ModelForStudentFeedBack = ({
             console.log(err);
         })
     }
-
+    console.log(uploadFileData, editReviewData?.ReviewMedia);
+    console.log(uploadFileData.length == editReviewData?.ReviewMedia?.length);
     const onFinish = async (values) => {
+        // if (editReviewData?.fullName == values?.fullName || editReviewData?.courseId == values?.courseId) {
+        //     setIsModelForStudentFeedBack(false)
+        //     return
+        // }
         values.rate = '5';
         if (!editReviewData && uploadFileData.length == 0) {
             let createReviewBody = {

@@ -64,7 +64,7 @@ export default function CourseDates(props) {
 						{date.gender == 'mix' ?
 							<>
 								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'onlineDoubleColorIcon'} color={'#000000'} />
-								<p className={` link ${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
+								<p className={`${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
 							</>
 							:
 							<>

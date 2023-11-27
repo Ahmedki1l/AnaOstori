@@ -58,7 +58,7 @@ const ModelForManageBranch = ({
                             <p className='mb-1 font-medium text-sm'>{manageStateAndBranchConst.districtBranchTitle}</p>
                             <FormItem
                                 name={'districtTitle'}
-                                rules={[{ required: true, message: manageStateAndBranchConst.branchMapinputErrorMsg }]}
+                                rules={[{ required: true, message: manageStateAndBranchConst.districtBranchinputErrorMsg }]}
                             >
                                 <Input
                                     fontSize={16}
