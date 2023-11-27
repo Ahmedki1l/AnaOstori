@@ -138,9 +138,9 @@ export default function Home(props) {
 							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
 						</div>
 					</div>
-					// <div className={styles.secondBtnBox}>
-						// <button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
-					// </div>
+					{/* <div className={styles.secondBtnBox}>
+						 <button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+					 </div> */}
 				</div>
 				<div className={`${styles.videoThumnail}`}>
 					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(videoObject?.fileBucket, videoObject?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
