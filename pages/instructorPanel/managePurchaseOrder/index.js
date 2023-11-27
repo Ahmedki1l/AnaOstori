@@ -118,9 +118,7 @@ const Index = () => {
             dataIndex: 'status',
             sorter: (a, b) => a.status.localeCompare(b.status),
             render: (text, _record) => {
-                // const statusLabel = paymentStatus.find((item) => item.value == text)
                 const statusLabel = _record?.paymentMethod == "bank_transfer" ? paymentStatusBank.find((item) => item.value == text) : paymentStatusOther.find((item) => item.value == text)
-
                 return (
                     <Tag color={statusLabel?.color}>{statusLabel?.label}</Tag>
                 )

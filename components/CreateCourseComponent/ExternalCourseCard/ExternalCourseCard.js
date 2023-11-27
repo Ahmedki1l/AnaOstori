@@ -18,7 +18,7 @@ import { externalCourseCardDetailsConst } from '../../../constants/adminPanelCon
 
 
 
-const ExternalCourseCard = ({ createCourseApiRes, setSelectedItem }) => {
+const ExternalCourseCard = ({ createCourseApiRes }) => {
     const storeData = useSelector((state) => state?.globalStore);
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;

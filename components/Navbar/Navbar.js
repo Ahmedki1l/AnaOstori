@@ -13,7 +13,7 @@ import { getAuthRouteAPI, getRouteAPI, } from '../../services/apisService';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { stringUpdation } from '../../constants/DataManupulation';
 import CommingSoonModal from '../CommonComponents/CommingSoonModal/CommingSoonModal';
-import { ConfigProvider, Drawer, Dropdown } from 'antd';
+import { ConfigProvider, Drawer, Dropdown, Tooltip } from 'antd';
 import styled from 'styled-components';
 import Image from 'next/legacy/image';
 import { WhatsApp_Link } from '../../constants/LinkConst';
@@ -393,6 +393,7 @@ export default function Navbar() {
 											return (
 												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
 													<p className={`${styles.mainMenuText} ${catagoryName == menu.name ? `fontBold` : `fontRegular`}`}>
+														{/* {menu.name} */}
 														{stringUpdation(menu.name, 30)}
 													</p>
 													<AllIconsComponenet height={16} width={20} iconName={'keyBoardDownIcon'} color={'#000000'} />

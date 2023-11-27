@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import styles from './Appointment.module.scss'
 import { useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import Select from '../../antDesignCompo/Select';
 import DatePicker from '../../antDesignCompo/Datepicker';
 import Input from '../../antDesignCompo/Input';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import { postRouteAPI } from '../../../services/apisService';
+import { getRouteAPI, postRouteAPI } from '../../../services/apisService';
 import Link from 'next/link';
 import { dateRange, fullDate, timeDuration } from '../../../constants/DateConverter';
 import dayjs from 'dayjs';
@@ -30,7 +30,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
-    const allAppointments = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // const allAppointmentList = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const [allAppointmentList, setAllAppointmentList] = useState(storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
@@ -38,6 +39,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
+    const [regionDataList, setRegionDataList] = useState()
+
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -45,6 +48,23 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             value: obj.id,
         }
     });
+    useEffect(() => {
+        getRegionLIst()
+    }, [])
+
+    const getRegionLIst = async () => {
+        await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
+            setRegionDataList(res.data.map((obj) => {
+                return {
+                    key: obj.id,
+                    label: obj.nameAr,
+                    value: obj.nameEn,
+                }
+            }))
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
@@ -64,6 +84,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         if (isAvailabilityEdit) values.contentAccess = isContentAccess
         values.numberOfSeats = isAvailabilityEdit ? calculateNumberOfSeats(values.maxNumberOfSeats) : values.maxNumberOfSeats
         if (!values.gender) values.gender = 'mix'
+        if (courseType == 'online') delete values.name
         if (isAvailabilityEdit) {
             if (values.maxNumberOfSeats < (editAvailability.maxNumberOfSeats - editAvailability?.numberOfSeats)) {
                 toast.error('max number of seates are not less then number of enrolled students', { rtl: true, })
@@ -130,6 +151,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             location: appointment?.location,
             locationName: appointment?.locationName,
             gender: appointment?.gender,
+            description: appointment?.description,
             maxNumberOfSeats: appointment?.maxNumberOfSeats,
             dateFrom: dayjs(appointment?.dateFrom, 'YYYY-MM-DD'),
             dateTo: dayjs(appointment?.dateTo, 'YYYY-MM-DD'),
@@ -188,13 +210,41 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         setIAppointmentPublished(checked)
     }
 
+    const selectRegionFilter = (value) => {
+        console.log(value);
+        const newAppointmentList = [...allAppointmentList]
+        // setAllAppointmentList(newAppointmentList.filter((region) => region.region == value))
+    }
 
     return (
         <div className='maxWidthDefault px-4'>
             <div>
-                <div dir='ltr'>
+                {/* <div dir='ltr'>
                     <div className={styles.createAppointmentBtnBox}>
                         <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>
+                    </div>
+                </div> */}
+                <div dir='ltr' className='flex justify-between items-center '>
+                    <div className={styles.createAppointmentBtnBox}>
+                        <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>
+                    </div>
+                    <div>
+                        {courseType == 'physical' &&
+                            <FormItem
+                                name={'region'}
+                                rules={[{ required: true, message: 'اختار المنطقة' }]}
+                            >
+                                <Select
+                                    fontSize={16}
+                                    width={166}
+                                    height={40}
+                                    placeholder='اختار المنطقة'
+                                    OptionData={regionDataList}
+                                    maxTagCount='responsive'
+                                    onChange={selectRegionFilter}
+                                />
+                            </FormItem>
+                        }
                     </div>
                 </div>
                 <table className={styles.tableArea}>
@@ -209,9 +259,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                             <th className={`${styles.tableHeadText} ${styles.tableHead6}`}>الإجراءات</th>
                         </tr>
                     </thead>
-                    {allAppointments?.length > 0 &&
+                    {allAppointmentList?.length > 0 &&
                         <tbody className={styles.tableBodyArea}>
-                            {allAppointments?.map((appointment, index) => {
+                            {allAppointmentList?.map((appointment, index) => {
                                 return (
                                     <tr key={`tableRow${index}`} className={styles.tableRow}>
                                         <td>
@@ -232,7 +282,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                     <p className='mr-1'>{timeDuration(appointment.timeFrom, appointment.timeTo)}</p>
                                                 </div><br />
                                                 <div className={styles.genderDetails}>
-                                                    <AllIconsComponenet iconName={'locationDoubleColor'} height={17} width={17} color={'#000000'} />
+                                                    <AllIconsComponenet iconName={courseType == 'online' ? 'onlineDoubleColorIcon' : 'locationDoubleColor'} height={17} width={17} color={'#000000'} />
                                                     {appointment.location ?
                                                         <Link className='mr-1' target='_blank' href={appointment.location}>{appointment.locationName}</Link>
                                                         :
@@ -292,7 +342,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         </tbody>
                     }
                 </table>
-                {allAppointments?.length == 0 &&
+                {allAppointmentList?.length == 0 &&
                     <Empty buttonText={'إضافة موعد'} emptyText={'ما أضفت أي موعد'} containerhight={500} onClick={() => handleCreateAvailability()} />
                 }
                 {isModalOpen &&
@@ -310,26 +360,26 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                         </div>
                         <Form form={appointmentForm} onFinish={onFinish}>
                             <div className={styles.createAppointmentFields}>
-                                {/* {courseType == 'physical' && */}
-                                <>
-                                    <p className={`${styles.createappointmentFormFileds}`}>عنوان الموعد</p>
-                                    <FormItem
-                                        name={'name'}
-                                        rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
-                                    >
-                                        <Input
-                                            fontSize={16}
-                                            width={352}
-                                            height={40}
-                                            placeholder='ادخل العنوان'
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                </>
-                                {/* } */}
+                                {courseType == 'physical' &&
+                                    <>
+                                        <p className={`${styles.createappointmentFormFileds}`}>عنوان الموعد</p>
+                                        <FormItem
+                                            name={'name'}
+                                            rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
+                                        >
+                                            <Input
+                                                fontSize={16}
+                                                width={352}
+                                                height={40}
+                                                placeholder='ادخل العنوان'
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                    </>
+                                }
+
                                 <p className={` ${styles.createappointmentFormFileds}`}>تفاصيل الموعد</p>
                                 <div className='flex'>
-
                                     <FormItem
                                         name={'dateFrom'}
                                         rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
@@ -357,6 +407,17 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         />
                                     </FormItem>
                                 </div>
+                                <FormItem
+                                    name={'description'}
+                                    rules={[{ required: false, message: 'لازم تكتب العنوان' }]}
+                                >
+                                    <Input
+                                        fontSize={16}
+                                        width={355}
+                                        height={40}
+                                        placeholder='اكتب ملاحظة على الموعد'
+                                    />
+                                </FormItem>
                                 <div className='flex'>
                                     <FormItem
                                         name={'timeFrom'}
@@ -385,38 +446,58 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         />
                                     </FormItem>
                                 </div>
-                                <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
                                 {courseType != 'physical' &&
-                                    <FormItem
-                                        name={'locationName'}
-                                        rules={[{ required: true, message: "ادخل رابط الفرع" }]}
-                                    >
-                                        <InputWithLocation
-                                            width={352}
-                                            height={40}
-                                            suFFixIconName='onlineDoubleColorIcon'
-                                            placeholder='المكان'
-                                            disabled={isFieldDisable}
-                                        />
-                                    </FormItem>
-                                }
-                                {courseType == 'physical' &&
-                                    <div className='flex'>
+                                    <>
+                                        <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
                                         <FormItem
                                             name={'locationName'}
                                             rules={[{ required: true, message: "ادخل رابط الفرع" }]}
                                         >
                                             <InputWithLocation
+                                                width={352}
+                                                height={40}
+                                                suFFixIconName='onlineDoubleColorIcon'
+                                                placeholder='المكان'
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                    </>
+                                }
+                                {/* {courseType == 'physical' &&
+                                    <>
+                                        <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
+                                        <FormItem
+                                            name={'region'}
+                                            rules={[{ required: true, message: 'اختار المنطقة' }]}
+                                        >
+                                            <Select
+                                                fontSize={16}
+                                                width={352}
+                                                height={40}
+                                                placeholder='اختار المنطقة'
+                                                OptionData={regionDataList}
+                                                maxTagCount='responsive'
+                                            />
+                                        </FormItem>
+                                    </>
+                                } */}
+                                {courseType == 'physical' &&
+                                    <div className='flex'>
+                                        <FormItem
+                                            name={'locationName'}
+                                            rules={[{ required: true, message: 'ادخل عنوان المركز' }]}
+                                        >
+                                            <InputWithLocation
                                                 width={171}
                                                 height={40}
                                                 suFFixIconName='locationDoubleColor'
-                                                placeholder='الفرع والمدينة'
+                                                placeholder='عنوان المركز'
                                                 disabled={isFieldDisable}
                                             />
                                         </FormItem>
                                         <FormItem
                                             name={'location'}
-                                            rules={[{ required: true, message: "ادخل المكان (نص)" }]}
+                                            rules={[{ required: true, message: 'ادخل رابط المركز' }]}
                                         >
                                             <InputWithLocation
                                                 width={171}

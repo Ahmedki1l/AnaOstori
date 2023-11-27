@@ -3,6 +3,7 @@ import { Modal } from 'antd';
 import styles from './ModelForDeleteItems.module.scss'
 import { curriculumConst, folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 import { instructorConst } from '../../../constants/adminPanelConst/instructorConst';
+import { deleteReviewsConst } from '../../../constants/adminPanelConst/manageStudentFeedBackConst/manageStudentFeedBackConst';
 
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
@@ -37,11 +38,6 @@ const ModelForDeleteItems = ({
             messageText: curriculumConst.deleteSectionModelConst.deleteSectionPopUpText,
             btnText: curriculumConst.deleteSectionModelConst.deleteSectionBtnText,
         },
-        // sectionItem: {
-        //     title: "إزالة عنصر",
-        //     messageText: "هل انت متأكد من انك تريد إزالة هذا العنصر؟",
-        //     btnText: 'تأكيد الحذف',
-        // },
         curriculum: {
             title: curriculumConst.curriculumDeleteModelConst.deleteCurriculumPopUpTitle,
             messageText: curriculumConst.curriculumDeleteModelConst.deleteCurriculumPopUpText,
@@ -81,6 +77,11 @@ const ModelForDeleteItems = ({
             title: 'تأكيد حذف الكوبون',
             messageText: 'متأكد انك تبي تحذف الكوبون؟',
             btnText: 'تأكيد الحذف'
+        },
+        studentReview: {
+            title: deleteReviewsConst.title,
+            messageText: deleteReviewsConst.messageText,
+            btnText: deleteReviewsConst.btnText,
         },
     }
 

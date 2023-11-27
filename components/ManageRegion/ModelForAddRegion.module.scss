@@ -1,0 +1,36 @@
+.modalHeader {
+    display: flex;
+    padding: 8px 18px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closebutton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.addRegion {
+    font-size: 18px;
+}
+
+.createNewsFields {
+    padding: 14px 18px 0px 0px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.newsFieldBorderBottom {
+    direction: rtl;
+    display: flex;
+    padding: 3px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+    padding: 4px 9px 7px 0;
+
+    button {
+        width: 78px;
+        height: 37px;
+        font-size: 16px;
+        margin: 7px;
+    }
+}

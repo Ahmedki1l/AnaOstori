@@ -1,13 +1,13 @@
 {
-  "applinks": {
-    "apps": [],
-    "details": [
-      {
-        "appID": “939555C4ZJ2L.com.anaostori",
-        "paths": [
-          "*"
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "939555C4ZJ2L.com.anaostori",
+                "paths": [
+                    "*"
+                ]
+            }
         ]
-      }
-    ]
-  }
+    }
 }

@@ -3,39 +3,77 @@ import styles from '../../../styles/InstructorPanelStyleSheets/ManageStudentFeed
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import { Table } from 'antd'
 import Empty from '../../../components/CommonComponents/Empty'
-import { postRouteAPI } from '../../../services/apisService'
+import { postAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import ModelForStudentFeedBack from '../../../components/ManageStudentFeedBack/ModelForStudentFeedBack'
+import { fullDate } from '../../../constants/DateConverter'
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 
 const Index = () => {
 
     const [listOfStudentFeedBack, setListOfStudentFeedBack] = useState()
-    const [isModelForStudentFeedBack, setIsModelForStudentFeedBack] = useState(true)
-    const [isEdit, setIsEdit] = useState(false)
+    const [isModelForStudentFeedBack, setIsModelForStudentFeedBack] = useState(false)
+    const [editStudetReviews, setEditStudetReviews] = useState()
+    const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
 
     const tableColumns = [
         {
             title: 'اسم الطالب',
-            dataIndex: 'studentName',
+            dataIndex: 'fullName',
         },
         {
             title: 'تصنيف المجال',
             dataIndex: 'categoryTitle',
+            render: (text, _record) => {
+                return (_record?.course?.catagory?.name)
+            }
         },
         {
             title: 'عدد الصور',
             dataIndex: 'noOfPhotos',
+            render: (text, _record) => {
+                const noOfPhotos = _record?.noOfPhotos
+            }
         },
         {
             title: 'تاريخ الانشاء',
             dataIndex: 'createdAt',
+            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+            render: (text, _date) => {
+                return (fullDate(_date.createdAt))
+            }
         },
         {
             title: 'تاريخ اخر تحديث',
             dataIndex: 'updatedAt',
+            sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
+            render: (text, _date) => {
+                return (fullDate(_date.updatedAt))
+            }
         },
         {
             title: 'الإجراءات',
             dataIndex: 'action',
+            render: (text, _record) => {
+                const handleEditReview = () => {
+                    setIsModelForStudentFeedBack(true)
+                    setEditStudetReviews(_record);
+                }
+                const handleDeleteModalOpen = () => {
+                    setIsmodelForDeleteItems(true)
+                    setEditStudetReviews(_record)
+                }
+                return (
+                    <div className='flex'>
+                        <div className='pl-2 cursor-pointer' onClick={handleEditReview}>
+                            <AllIconsComponenet iconName={'newEditIcon'} height={16} width={16} color={'#000000'} />
+                        </div>
+                        <div className='pl-2 cursor-pointer' onClick={handleDeleteModalOpen}>
+                            <AllIconsComponenet iconName={'newDeleteIcon'} height={16} width={16} color={'#000000'} />
+                        </div>
+                    </div>
+                )
+            }
         },
     ]
     useEffect(() => {
@@ -58,11 +96,25 @@ const Index = () => {
 
         })
     }
-
+    const handleDeleteReview = async () => {
+        let data = {
+            routeName: 'updateCourseReview',
+            id: editStudetReviews.id,
+            isDeleted: true
+        }
+        await postAuthRouteAPI(data).then((res) => {
+            getStudetnFeedBackList();
+            setIsmodelForDeleteItems(false);
+        }).catch(async (err) => {
+            console.log(err);
+        })
+    }
     const handleAddStudentFeedBack = () => {
         setIsModelForStudentFeedBack(true)
     }
-
+    const onCloseModal = () => {
+        setIsmodelForDeleteItems(false)
+    }
     const customEmptyComponent = (
         <Empty emptyText={'ما أضفت تجربة'} containerhight={400} buttonText={'إضافة تجربة'} onClick={() => handleAddStudentFeedBack()} />
     )
@@ -98,7 +150,16 @@ const Index = () => {
                 <ModelForStudentFeedBack
                     isModelForStudentFeedBack={isModelForStudentFeedBack}
                     setIsModelForStudentFeedBack={setIsModelForStudentFeedBack}
-                    isEdit={isEdit}
+                    getStudetnFeedBackList={getStudetnFeedBackList}
+                    editStudetReviews={editStudetReviews}
+                    setEditStudetReviews={setEditStudetReviews}
+                />}
+            {ismodelForDeleteItems &&
+                <ModelForDeleteItems
+                    ismodelForDeleteItems={ismodelForDeleteItems}
+                    onCloseModal={onCloseModal}
+                    deleteItemType={'studentReview'}
+                    onDelete={handleDeleteReview}
                 />}
         </div>
     )

@@ -11,6 +11,7 @@ import useWindowSize from '../../../hooks/useWindoSize';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
+import { getRouteAPI } from '../../../services/apisService';
 
 
 
@@ -53,6 +54,7 @@ export default function UserInfoForm(props) {
 	const smallScreen = useWindowSize().smallScreen
 
 	const [isDateForAllSelected, setIsDateForAllSelected] = useState(false)
+	const [regionDataList, setRegionDataList] = useState()
 
 	const noOfUsersLabelData = [
 		{ iconName: 'studentOneIcon', iconWidth: '24', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `خصم ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
@@ -79,6 +81,9 @@ export default function UserInfoForm(props) {
 			setTotalStudent(studentsDataLength)
 		}
 	}, [props.studentsData, studentsDataLength])
+	useEffect(() => {
+		getRegionAndBranchList()
+	}, [])
 
 	const handleTotalStudent = (value) => {
 		const newTotalStudent = value
@@ -189,6 +194,16 @@ export default function UserInfoForm(props) {
 		props.isInfoFill(studentsData, courseDetailType, userAgree)
 	}
 
+	const getRegionAndBranchList = async () => {
+		let body = {
+			routeName: 'listRegion',
+		}
+		await getRouteAPI(body).then((res) => {
+			setRegionDataList(res.data)
+		}).catch((err) => {
+			console.log(err)
+		})
+	}
 	return (
 		<>
 			<FirstPaymentPageInfo />
@@ -259,7 +274,25 @@ export default function UserInfoForm(props) {
 										}
 									</div>
 								}
-								<p className={`fontBold ${styles.radioBtnHead}`}>الجنس</p>
+								<p className={`fontBold ${styles.radioBtnHead}`}>المنطقة</p>
+								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>}
+								<div className={styles.genderWrapper}>
+									{/***************************************** FOR loop for radio button to select region ****************************************/}
+									{regionDataList?.map((region, j = index) => {
+										console.log(region);
+										return (
+											<div className={styles.radioBtnBox} key={`region${j}`}>
+												<input id={`region${i}`} type="radio" name={`region${i}`} title="region"
+													className={`${styles.radioBtn}`}
+													// checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
+													onChange={event => handleFormChange(event, i, '')}
+												/>
+												<label htmlFor='dateForAll' className={`fontBold ${styles.lableName1}`}>{region.nameAr}</label>
+											</div>
+										)
+									})}
+								</div>
+								<p className={`fontBold mt-6 ${styles.radioBtnHead}`}>الجنس</p>
 								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>}
 								<div className={styles.genderWrapper}>
 									{/***************************************** FOR loop for radio button to select Gender ****************************************/}
@@ -302,7 +335,7 @@ export default function UserInfoForm(props) {
 																				<div className={styles.dateRadioBtnBox}>
 																					<div className={styles.circle}><div></div></div>
 																					<p className={`fontBold ${styles.dateBoxHeaderText}`}>
-																						{dateWithDay(date.dateFrom)}
+																						{date.name ? date.name : dateWithDay(date.dateFrom)}
 																					</p>
 																				</div>
 																			</div>
@@ -383,7 +416,7 @@ export default function UserInfoForm(props) {
 							<input id='termsCheckBox' type='checkbox' name='agree' onChange={(event) => setUserAgree(event.target.checked)} />
 							<label htmlFor='termsCheckBox' className={`fontMedium ${styles.checkboxText}`}>أقر بموافقتي على <Link href={'/terms'} className='link' >الشروط والأحكام</Link></label>
 						</div>
-						{props.userAgreeError == false && <div style={{ color: 'red' }} className={`${styles.errorText} pb-4`}>فضلا الموافقة على الشروط والأحكام</div>}
+						{props.userAgreeError == false && <div style={{ color: 'red' }} className={`${styles.errorText} pb-4`}>فضلًا وافق على الشروط والأحكام</div>}
 						<div className={` pt-2 ${styles.btnBox}`}>
 							<button className='primarySolidBtn' onClick={() => handleSubmit(studentsData, courseDetail.type)}>مراجعة الطلب والدفع</button>
 						</div>

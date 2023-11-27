@@ -20,7 +20,6 @@ export default function CourseDates(props) {
 				: date.numberOfSeats > 3 && date.numberOfSeats < 10 ? `${date.numberOfSeats} مقاعد متبقية`
 					: `${date.numberOfSeats} مقعد متبقي`
 
-
 	return (
 		<div className={lang == 'en' ? `${styles.englishDateBox}` : `${styles.arDateBox}`}>
 			<div className={`${styles.dateBox}`}>
@@ -37,7 +36,7 @@ export default function CourseDates(props) {
 					}
 				</div> */}
 				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
-					<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{date?.name ? date?.name : dateWithDay(date?.dateFrom)}</p>
+					<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{date?.course.type == 'physical' && date?.name ? date.name : dateWithDay(date?.dateFrom)}</p>
 				</div>
 				<ul className={styles.list}>
 					<li>
@@ -48,6 +47,11 @@ export default function CourseDates(props) {
 							<p className={` ${styles.listItemText}`}>من {dateWithDay(date?.dateFrom)} &nbsp; إلى  {dateWithDay(date?.dateTo)} </p>
 						}
 					</li>
+					{date.description &&
+						<li>
+							<p className={`pr-[22px] ${styles.listItemText}`}>{date.description}</p>
+						</li>
+					}
 					<li>
 						<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'clockDoubleColor'} color={'#000000'} />
 						{lang == 'en' ?
@@ -59,8 +63,8 @@ export default function CourseDates(props) {
 					<li>
 						{date.gender == 'mix' ?
 							<>
-								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'linkDoubleColorIcon'} color={'#000000'} />
-								<p className={` link ${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
+								<AllIconsComponenet height={isSmallScreen ? 19 : 22} width={isSmallScreen ? 19 : 22} iconName={'onlineDoubleColorIcon'} color={'#000000'} />
+								<p className={`${styles.listItemText}`}>{lang == 'en' ? 'Virtual Classroom' : `قاعة افتراضية`}</p>
 							</>
 							:
 							<>
