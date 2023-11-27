@@ -6,6 +6,7 @@ import { manageStateAndBranchConst } from '../../constants/adminPanelConst/manag
 import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import { postAuthRouteAPI } from '../../services/apisService';
+import { toast } from 'react-toastify';
 
 const ModelForManageRegion = ({
     isModelForRegion,
@@ -37,6 +38,7 @@ const ModelForManageRegion = ({
             id: editRegionData?.id
         }
         await postAuthRouteAPI(editRegionData ? updateBody : createBody).then((res) => {
+            toast.success(editRegionData ? manageStateAndBranchConst.updateRegionSuccessMsg : manageStateAndBranchConst.addRegionSuccessMsg)
             setIsModelForRegion(false)
             getRegionAndBranchList()
         }).catch((err) => {

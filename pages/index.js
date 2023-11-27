@@ -74,7 +74,9 @@ export default function Home(props) {
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
 	const [scrollSectionName, setScrollSectionName] = useState()
 	const videoObject = props.homeMetaData.find(obj => obj.key === "video");
+	// const homeReviews = props.homeReviews
 
+	console.log(homeReviews);
 	const handleScrollToSection = (sectionName) => {
 		if (sectionName == 'refCourseSec') {
 			refCourseSec.current?.scrollIntoView({ behavior: 'smooth' });
@@ -136,9 +138,9 @@ export default function Home(props) {
 							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
 						</div>
 					</div>
-					{/* <div className={styles.secondBtnBox}>
+					<div className={styles.secondBtnBox}>
 						<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
-					</div> */}
+					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
 					<VideoThumnail pictureKey={''} videoUrl={mediaUrl(videoObject?.fileBucket, videoObject?.fileKey)} thumnailHeight={isSmallScreen ? 250 : isMediumScreen ? 270 : 290} />
@@ -210,7 +212,7 @@ export default function Home(props) {
 					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>{HomeConst.studentSectionLink}</p>
 				</div>
 				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1} <br /> {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
-				<ReviewComponent homeReviews={homeReviews} />
+				 <ReviewComponent homeReviews={homeReviews} />
 			</div> */}
 		</div >
 	)

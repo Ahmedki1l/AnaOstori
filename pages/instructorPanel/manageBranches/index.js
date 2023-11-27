@@ -113,14 +113,14 @@ const Index = () => {
                                 [
                                     { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
                                     { lable: 'إضافة المناطق', link: `/instructorPanel/manageBranches?region=all` },
-                                    { lable: `فروع منطقة  ${branchData?.region}`, link: null },
+                                    { lable: `منطقة ${branchData?.nameAr}`, link: null },
                                 ]
                             }
                         />
                     }
                 </div>
                 <div className={`${styles.headerWrapper}`}>
-                    <h1 className={`head2 py-4`}>{showBranchDetails ? `منطقة ${branchData?.region}` : 'المناطق'}</h1>
+                    <h1 className={`head2 py-4`}>{showBranchDetails ? `فروع منطقة ${branchData?.nameAr}` : 'المناطق'}</h1>
                     <div className={styles.createNewInstructorBtnBox}>
                         <button className='primarySolidBtn' onClick={() => handleBranchAndAddRegion()}>إضافة منطقة</button>
                     </div>
