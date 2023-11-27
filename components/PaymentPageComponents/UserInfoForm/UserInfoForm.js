@@ -276,8 +276,7 @@ export default function UserInfoForm(props) {
 								}
 								<p className={`fontBold ${styles.radioBtnHead}`}>المنطقة</p>
 								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>}
-								<div className={styles.genderWrapper}>
-									{/***************************************** FOR loop for radio button to select region ****************************************/}
+								 {/* <div className={styles.genderWrapper}>
 									{regionDataList?.map((region, j = index) => {
 										console.log(region);
 										return (
@@ -291,7 +290,7 @@ export default function UserInfoForm(props) {
 											</div>
 										)
 									})}
-								</div>
+								</div> */}
 								<p className={`fontBold mt-6 ${styles.radioBtnHead}`}>الجنس</p>
 								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>}
 								<div className={styles.genderWrapper}>
