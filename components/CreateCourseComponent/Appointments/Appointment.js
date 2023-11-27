@@ -463,7 +463,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         </FormItem>
                                     </>
                                 }
-                                {courseType == 'physical' &&
+                                {/* {courseType == 'physical' &&
                                     <>
                                         <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
                                         <FormItem
@@ -480,7 +480,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                             />
                                         </FormItem>
                                     </>
-                                }
+                                } */}
                                 {courseType == 'physical' &&
                                     <div className='flex'>
                                         <FormItem
