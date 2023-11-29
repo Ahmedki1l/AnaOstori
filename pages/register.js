@@ -60,7 +60,9 @@ export default function Register() {
 					type: 'IS_USER_INSTRUCTOR',
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
-
+				if (viewProfileData?.data.gender == null) {
+					router.push('./registerSocialMediaUser')
+				}
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
 					toast.success(toastErrorMessage.successLoginMsg, { rtl: true })
