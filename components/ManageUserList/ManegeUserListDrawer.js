@@ -3,25 +3,30 @@ import React, { useEffect, useState } from 'react'
 import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
-import CustomButton from '../CommonComponents/CustomButton';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import styles from './manageUserList.module.scss'
 import { manageUserListConst } from '../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 import Empty from '../CommonComponents/Empty';
+import AddCourseInUserList from '../CommonComponents/AddCourseInUserList/AddCourseInUserList';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
 
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
-    const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [userForm] = Form.useForm()
+    const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments)
 
     useEffect(() => {
         userForm.setFieldsValue(selectedUserDetails)
         setGender(selectedUserDetails.gender)
     }, [])
 
+    useEffect(() => {
+        setEnrolledCourseList(enrolledCourseList)
+    }, [enrolledCourseList])
+
     const handleSaveUserDetails = (values) => {
+        console.log(values);
         if (avatarUploadResData) {
             values.avatarKey = avatarUploadResData?.key
             values.avatarBucket = avatarUploadResData?.bucket
@@ -29,10 +34,20 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
         }
     }
 
+    const addCourse = () => {
+        let data = [...enrolledCourseList]
+        data.push(JSON.parse(JSON.stringify({
+            contentFileKey: '',
+            contentFileMime: '',
+            contentFileBucket: ''
+        })))
+        setEnrolledCourseList(data)
+    }
+    console.log(enrolledCourseList);
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>اسم الطالب</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.studentFullName}</p>
                 <FormItem
                     name={'fullName'}>
                     <Input
@@ -42,7 +57,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='studentName'
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الصورة الشخصية</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.uploadFilePlaceHolder}</p>
                 <UploadFileForModel
                     fileName={selectedUserDetails?.avatarKey}
                     fileType={'.jpg , .png'}
@@ -51,7 +66,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     uploadResData={setAvtarUploadResData}
                     disabledInput={true}
                 />
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الجنس</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.genderHeading}</p>
                 <div className={styles.genderBtnBox}>
                     <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender("male")} disabled>
                         <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F06A25' : '#808080'} />
@@ -63,7 +78,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     </button>
                 </div>
 
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الايميل</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.emailHeading}</p>
                 <FormItem
                     name={'email'}>
                     <Input
@@ -73,7 +88,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='DisplayEmail'
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>رقم الجوال</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.phoneNoHeading}</p>
                 <FormItem
                     name={'phone'}>
                     <Input
@@ -83,11 +98,39 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='phoneNo'
                     />
                 </FormItem>
-                <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
-                <Empty emptyText={'ماهو مشترك بأي دورة'} containerhight={165} />
+                {selectedUserDetails.enrollments.length > 0 ?
+                    <>
+                        <div className={`mt-6 ${styles.addCourseWrapper}`}>
+                            <p className={`fontBold text-xl`}>{manageUserListConst.addCourseTitle}</p>
+                            <p className={styles.addCourseBtnBox} onClick={() => addCourse()}>{manageUserListConst.addCourseBtn}</p>
+                        </div>
+                        <>
+                            {selectedUserDetails.enrollments.map((item, index) => {
+                                return (
+                                    <AddCourseInUserList
+                                        key={`enrolledCourse${index}`}
+                                        index={index}
+                                        selectedUserDetails={selectedUserDetails}
+                                        enrolledCourseList={enrolledCourseList}
+                                        setEnrolledCourseList={setEnrolledCourseList}
+                                    />
+                                )
+                            })}
+                        </>
+                    </>
+                    :
+                    <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
+                }
+                {selectedUserDetails.enrollments.length == 0 &&
+                    <>
+                        <Empty emptyText={manageUserListConst.emptyBtnPlaceHolder} containerhight={165} />
+                        <div className={styles.userListBtnBox}>
+                            <button className='primaryStrockedBtn mb-6' htmltype='submit' onClick={() => addCourse()}>{manageUserListConst.emptyBtnText}</button>
+                        </div>
+                    </>
+                }
                 <div className={styles.userListBtnBox}>
-                    <button className='primaryStrockedBtn mb-6' htmltype='submit' disabled>إضافة دورة</button>
-                    <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' disabled>حفظ</button>
+                    <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' >{manageUserListConst.saveBtn}</button>
                 </div>
             </Form>
         </div>

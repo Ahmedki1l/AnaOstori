@@ -40,7 +40,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
     const [regionDataList, setRegionDataList] = useState()
-
+    console.log(allAppointmentList);
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -58,7 +58,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 return {
                     key: obj.id,
                     label: obj.nameAr,
-                    value: obj.nameEn,
+                    value: obj.id,
                 }
             }))
         }).catch((err) => {
@@ -71,10 +71,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const availabilitySuccessRes = (msg) => {
         toast.success(msg, { rtl: true, })
         setIsModalOpen(false)
-        getAllAvailability()
-        setShowBtnLoader(false)
     }
     const onFinish = async (values) => {
+        setShowBtnLoader(true)
         values.dateFrom = dayjs(values?.dateFrom?.$d).startOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).endOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
@@ -98,6 +97,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             }
             await postRouteAPI(body).then((res) => {
                 setShowBtnLoader(false)
+                getAllAvailability(res.data)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
                 console.log(error);
@@ -117,6 +117,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         } else {
             values.routeName = "createAvailability"
             await postRouteAPI(values).then((res) => {
+                setShowBtnLoader(false)
+                getAllAvailability(res.data)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
@@ -157,6 +159,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             dateTo: dayjs(appointment?.dateTo, 'YYYY-MM-DD'),
             timeFrom: dayjs(appointment?.timeFrom, 'HH:mm:ss'),
             timeTo: dayjs(appointment?.timeTo, 'HH:mm:ss'),
+            regionId: appointment?.regionId
         });
     }
 
@@ -211,9 +214,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     }
 
     const selectRegionFilter = (value) => {
-        console.log(value);
-        const newAppointmentList = [...allAppointmentList]
-        // setAllAppointmentList(newAppointmentList.filter((region) => region.region == value))
+        setAllAppointmentList(storeData?.availabilityList.filter((obj) => obj.regionId == value))
     }
 
     return (
@@ -463,11 +464,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         </FormItem>
                                     </>
                                 }
-                                {/* {courseType == 'physical' &&
+                                {courseType == 'physical' &&
                                     <>
                                         <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
                                         <FormItem
-                                            name={'region'}
+                                            name={'regionId'}
                                             rules={[{ required: true, message: 'اختار المنطقة' }]}
                                         >
                                             <Select
@@ -480,7 +481,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                             />
                                         </FormItem>
                                     </>
-                                } */}
+                                }
                                 {courseType == 'physical' &&
                                     <div className='flex'>
                                         <FormItem

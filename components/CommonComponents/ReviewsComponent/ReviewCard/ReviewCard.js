@@ -6,7 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import { Modal } from 'antd';
 import styled from 'styled-components';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
-import useWindowSize from '../../../../hooks/useWindoSize';
 import { mediaUrl } from '../../../../constants/DataManupulation';
 
 
@@ -27,14 +26,16 @@ const StylesModal = styled(Modal)`
 `
 
 export default function ReviewCard(props) {
-
-	const review = props.review
-	const reviewMedia = review.ReviewMedia
-	const totalPostNumber = reviewMedia.length
 	const [currentPost, setCurrentPost] = useState(1)
 	const [openVideo, setOpenVideo] = useState(false);
-	const windowScreen = useWindowSize().width
 
+	const reviewMedia = props.review.ReviewMedia?.flatMap((item) => {
+		return item
+	})
+
+	const studentName = props.review.fullName
+
+	const totalPostNumber = reviewMedia.length
 	const handleClose = (event) => {
 		// event.stopPropagation();
 	};
@@ -57,9 +58,9 @@ export default function ReviewCard(props) {
 								<div className='relative'>
 									{media.contentFileMime == "video/mp4" ?
 										<>
-											<div className='playIconDiv' onClick={() => { setOpenVideo(true) }}>
-												{/* <PlayArrowIcon className='playIcon' /> */}
-											</div>
+											{/* <div className='playIconDiv' onClick={() => { setOpenVideo(true) }}>
+												<PlayArrowIcon className='playIcon' />
+											</div> */}
 											<Image src='/images/anaOstori2.png' alt={'User Feedback'} width={433} height={436} />
 											{/* <Dialog open={openVideo} maxWidth="md">
 												<DialogContent className='p-0' onClick={handleVideoClick}>
@@ -94,13 +95,13 @@ export default function ReviewCard(props) {
 				})}
 				{currentPost != 1 &&
 					<div className={styles.rightArrowBtn} onClick={() => setCurrentPost(currentPost - 1)}>
-						<div className='m-1.5'>
+						<div className={styles.rightArroWrapper}>
 							<AllIconsComponenet iconName={'arrowRight'} height={12} width={12} color={'#FFFFFF'} />
 						</div>
 					</div>
 				}
 			</div>
-			<p className={`fontBold ${styles.reviewerName}`}>{review.fullName}</p>
+			<p className={`fontBold ${styles.reviewerName}`}>{studentName}</p>
 		</div>
 	)
 }

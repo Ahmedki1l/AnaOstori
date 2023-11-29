@@ -178,11 +178,11 @@ export default function Index(props) {
 		}
 	}
 
-	const handleBookSit = async (date, gender, noOfSit) => {
+	const handleBookSit = async (date, gender, noOfSit, regionId) => {
 		if (noOfSit == 0) {
 			return
 		} else {
-			let query = { date: date, gender: gender }
+			let query = { date: date, gender: gender, region: regionId }
 			handleUserLogin(query)
 		}
 	}

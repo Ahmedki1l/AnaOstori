@@ -4,6 +4,7 @@ import styles from './ModelForDeleteItems.module.scss'
 import { curriculumConst, folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 import { instructorConst } from '../../../constants/adminPanelConst/instructorConst';
 import { deleteReviewsConst } from '../../../constants/adminPanelConst/manageStudentFeedBackConst/manageStudentFeedBackConst';
+import { manageUserListConst } from '../../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 
 const ModelForDeleteItems = ({
     ismodelForDeleteItems,
@@ -83,6 +84,11 @@ const ModelForDeleteItems = ({
             messageText: deleteReviewsConst.messageText,
             btnText: deleteReviewsConst.btnText,
         },
+        enrolledCourse: {
+            title: manageUserListConst.deleteCourseTitle,
+            messageText: manageUserListConst.deleteCourseMessageText,
+            btnText: manageUserListConst.deleteCourseBtnText,
+        }
     }
 
     const handleDeleteItems = () => {

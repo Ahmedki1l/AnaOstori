@@ -147,7 +147,7 @@ const Index = () => {
                 }
                 return (
                     <div className='cursor-pointer' onClick={handleEditUsers}>
-                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                        <AllIconsComponenet iconName={'newEditIcon'} height={18} width={18} color={'#000000'} />
                     </div>
                 )
             }

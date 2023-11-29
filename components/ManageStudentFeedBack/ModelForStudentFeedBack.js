@@ -89,8 +89,6 @@ const ModelForStudentFeedBack = ({
             console.log(err);
         })
     }
-    console.log(uploadFileData, editReviewData?.ReviewMedia);
-    console.log(uploadFileData.length == editReviewData?.ReviewMedia?.length);
     const onFinish = async (values) => {
         // if (editReviewData?.fullName == values?.fullName || editReviewData?.courseId == values?.courseId) {
         //     setIsModelForStudentFeedBack(false)
@@ -162,7 +160,7 @@ const ModelForStudentFeedBack = ({
         })))
         setUploadFileData(data)
     }
-
+    console.log(uploadFileData);
     return (
         <div>
             <Modal
@@ -212,7 +210,7 @@ const ModelForStudentFeedBack = ({
                             {uploadFileData.length > 0 &&
                                 <div className={styles.addSectionArea}>
                                     <p className={`fontMedium text-lg`}>{studentFeedBackConst.addFeedBackPhoto}</p>
-                                    <p style={{ display: 'contents' }} className={styles.addSections} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</p >
+                                    <p className={styles.addSections} onClick={() => addMedia()}>{studentFeedBackConst.addPhotoBtnText}</p >
                                 </div>
                             }
                             {uploadFileData.length > 0 &&
@@ -228,7 +226,8 @@ const ModelForStudentFeedBack = ({
                                             />
                                         )
                                     })}
-                                </>}
+                                </>
+                            }
                         </div>
                         <div className='p-1'>
                             <div className={styles.studetnFeedBackBtnBox}>

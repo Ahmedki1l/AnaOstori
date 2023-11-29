@@ -13,7 +13,6 @@ export default function CourseDates(props) {
 	const lang = props.lang
 	const isSmallScreen = useWindowSize().smallScreen
 
-
 	const noOfSeatRemainingText = date.numberOfSeats == 0 ? "جميع المقاعد محجوزة"
 		: date.numberOfSeats == 1 ? "مقعد واحد متبقي"
 			: date.numberOfSeats == 2 ? "مقعدين متبقيين"
@@ -35,7 +34,7 @@ export default function CourseDates(props) {
 						<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
 					}
 				</div> */}
-				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats)}>
+				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats, date.regionId)}>
 					<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{date?.course.type == 'physical' && date?.name ? date.name : dateWithDay(date?.dateFrom)}</p>
 				</div>
 				<ul className={styles.list}>
