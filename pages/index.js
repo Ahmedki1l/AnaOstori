@@ -130,7 +130,7 @@ export default function Home(props) {
 							<p id={styles.animatedText3} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
 						</div>
 					</div>
-					<p className={`fontMedium ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
+					<p className={`fontMedium mt-2 ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
 					<div className={styles.btnBox}>
 						<div className={styles.firstBtnBox}>
 							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>

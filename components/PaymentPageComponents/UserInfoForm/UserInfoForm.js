@@ -54,9 +54,9 @@ export default function UserInfoForm(props) {
 	}
 
 	const noOfUsersLabelData = [
-		{ iconName: 'studentOneIcon', iconWidth: '24', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `خصم ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
-		{ iconName: 'studentTwoIcon', iconWidth: '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
-		{ iconName: 'studentThreeIcon', iconWidth: '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentOneIcon', iconWidth: smallScreen ? '13' : '20', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `خصم ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
+		{ iconName: 'studentTwoIcon', iconWidth: smallScreen ? '20' : '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentThreeIcon', iconWidth: smallScreen ? '22' : '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
 	]
 	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
 	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
@@ -202,7 +202,9 @@ export default function UserInfoForm(props) {
 		}
 		await getRouteAPI(body).then((res) => {
 			setRegionDataList(res.data)
-			// setSelectedRegion(res.data[0].id)
+			if (!router.query.region) {
+				setSelectedRegion(res.data[0].id)
+			}
 		}).catch((err) => {
 			console.log(err)
 		})
@@ -223,7 +225,7 @@ export default function UserInfoForm(props) {
 				{groupDiscountEligible && courseDetail.type != 'on-demand' &&
 					<div className={styles.borderBottom}>
 						<div className={`maxWidthDefault  ${styles.radioBtnsContainer}`}>
-							<p className={`fontBold ${styles.radioBtnHead}`}>كم شخص؟</p>
+							<p className={`fontBold my-2 ${styles.radioBtnHead}`}>كم شخص؟</p>
 							<div className={styles.noOfUserWrapper}>
 								{/***************************************** FOR loop for radio button to select number of Users ******************************************/}
 								{noOfUsersLabelData.map((data, index) => {
@@ -316,10 +318,13 @@ export default function UserInfoForm(props) {
 											<div className={styles.radioBtnBox} key={`gender${j}`}>
 												<input id={`gender${i}`} type="radio" name={`gender${i}`} value={gender.value} title="gender"
 													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+													// className={`${styles.radioBtn}`}
 													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
 													onChange={event => handleFormChange(event, i, '')}
-													disabled={disabledGender == gender.value} />
+													disabled={disabledGender == gender.value}
+												/>
 												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
+												{/* <label htmlFor='dateForAll' className={` ${styles.lableName1}`}>{gender.label}</label> */}
 											</div>
 										)
 									})}
@@ -350,8 +355,9 @@ export default function UserInfoForm(props) {
 																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`}>
 																				<div className={styles.dateRadioBtnBox}>
 																					<div className={styles.circle}><div></div></div>
-																					<p className={`fontBold ${styles.dateBoxHeaderText}`}>
-																						{date.name ? date.name : dateWithDay(date.dateFrom)}
+																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
+																						{(courseDetail.type == 'physical' && date.name) ? date.name : dateWithDay(date.dateFrom)}
+																						{/* {date.name ? date.name : dateWithDay(date.dateFrom)} */}
 																					</p>
 																				</div>
 																			</div>
