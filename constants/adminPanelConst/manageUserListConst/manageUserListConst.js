@@ -2,6 +2,7 @@ export const manageUserListConst = {
     addCourseTitle: 'الدورات المشترك فيها',
     addCourseBtn: '+ إضافة دورة جديدة',
 
+    courseTitle: 'عنوان الدورة',
     studentFullName: 'اسم الطالب',
     uploadFilePlaceHolder: 'الصورة الشخصية',
     genderHeading: 'الجنس',

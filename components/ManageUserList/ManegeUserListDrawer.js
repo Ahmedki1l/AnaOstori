@@ -26,12 +26,13 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
     }, [enrolledCourseList])
 
     const handleSaveUserDetails = (values) => {
-        console.log(values);
         if (avatarUploadResData) {
             values.avatarKey = avatarUploadResData?.key
             values.avatarBucket = avatarUploadResData?.bucket
             values.avatarMime = avatarUploadResData?.mime
         }
+        values.enrolledCourse = enrolledCourseList
+        console.log(values);
     }
 
     const addCourse = () => {
@@ -43,7 +44,6 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
         })))
         setEnrolledCourseList(data)
     }
-    console.log(enrolledCourseList);
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
@@ -105,7 +105,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                             <p className={styles.addCourseBtnBox} onClick={() => addCourse()}>{manageUserListConst.addCourseBtn}</p>
                         </div>
                         <>
-                            {selectedUserDetails.enrollments.map((item, index) => {
+                            {enrolledCourseList.map((item, index) => {
                                 return (
                                     <AddCourseInUserList
                                         key={`enrolledCourse${index}`}

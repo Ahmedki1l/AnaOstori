@@ -30,7 +30,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
-    // const allAppointmentList = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     const [allAppointmentList, setAllAppointmentList] = useState(storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
@@ -40,7 +39,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
     const [regionDataList, setRegionDataList] = useState()
-    console.log(allAppointmentList);
+
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -51,7 +50,13 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     useEffect(() => {
         getRegionLIst()
     }, [])
-
+    {
+        regionDataList?.push({
+            key: '3',
+            label: 'جميع المناطق',
+            value: 'all',
+        })
+    }
     const getRegionLIst = async () => {
         await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
             setRegionDataList(res.data.map((obj) => {
@@ -214,17 +219,16 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     }
 
     const selectRegionFilter = (value) => {
-        setAllAppointmentList(storeData?.availabilityList.filter((obj) => obj.regionId == value))
+        if (value == 'all') {
+            setAllAppointmentList(storeData?.availabilityList)
+        } else {
+            setAllAppointmentList(storeData?.availabilityList.filter((obj) => obj.regionId == value))
+        }
     }
 
     return (
         <div className='maxWidthDefault px-4'>
             <div>
-                {/* <div dir='ltr'>
-                    <div className={styles.createAppointmentBtnBox}>
-                        <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>
-                    </div>
-                </div> */}
                 <div dir='ltr' className='flex justify-between items-center '>
                     <div className={styles.createAppointmentBtnBox}>
                         <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>

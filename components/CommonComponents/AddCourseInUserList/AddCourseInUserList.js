@@ -60,7 +60,7 @@ const AddCourseInUserList = ({
     return (
         <div>
             <div className={`my-4 ${styles.addCourseWrapper}`}>
-                <p className={`fontBold  text-xl`}>{manageUserListConst.addCourseTitle}</p>
+                <p className={`fontMedium`} style={{ fontSize: '18px' }}>{manageUserListConst.courseTitle}</p>
                 <div className='flex cursor-pointer' onClick={handleDeleteCourse}>
                     <div style={{ height: '20px' }}>
                         <AllIconsComponenet height={20} width={24} iconName={'newDeleteIcon'} color={'#FF0000'} />

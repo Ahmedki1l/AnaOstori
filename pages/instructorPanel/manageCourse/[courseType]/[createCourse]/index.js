@@ -30,7 +30,6 @@ export default function Index() {
     }
 
     const getAllAvailability = async () => {
-        console.log("value");
         if (!courseId) {
             return;
         }
@@ -40,7 +39,6 @@ export default function Index() {
             gender: "all"
         }
         await getAuthRouteAPI(body).then(res => {
-            console.log("res", res);
             dispatch({
                 type: 'SET_AllAVAILABILITY',
                 availabilityList: res?.data.sort((a, b) => a.createdAt - b.createdAt),
