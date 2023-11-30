@@ -34,6 +34,8 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
             values.avatarBucket = avatarUploadResData?.bucket
             values.avatarMime = avatarUploadResData?.mime
         }
+        values.enrolledCourse = enrolledCourseList
+        console.log(values);
     }
 
     const addCourse = () => {
