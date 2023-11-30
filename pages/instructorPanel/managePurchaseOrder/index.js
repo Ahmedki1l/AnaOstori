@@ -172,7 +172,7 @@ const Index = () => {
                 return (
                     <div className='flex'>
                         <div className='pl-2 cursor-pointer' onClick={handleEditOrders}>
-                            <AllIconsComponenet iconName={'editicon'} height={16} width={16} color={'#000000'} />
+                            <AllIconsComponenet iconName={'newEditIcon'} height={20} width={20} color={'#000000'} />
                         </div>
                         {(status && _record.invoiceKey) &&
                             <Link className='pr-2 cursor-pointer' href={mediaUrl(_record.invoiceBucket, _record.invoiceKey)} target='_blank'>

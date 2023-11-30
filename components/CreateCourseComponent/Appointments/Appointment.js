@@ -24,14 +24,13 @@ import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 
-const Appointments = ({ courseId, courseType, getAllAvailability }) => {
+const Appointments = ({ courseId, courseType, getAllAvailability, availabilityList }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
-    // const allAppointmentList = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    const [allAppointmentList, setAllAppointmentList] = useState(storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+    const [allAppointmentList, setAllAppointmentList] = useState(availabilityList)
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
@@ -40,7 +39,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
     const [regionDataList, setRegionDataList] = useState()
-    console.log(allAppointmentList);
+
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -51,6 +50,10 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     useEffect(() => {
         getRegionLIst()
     }, [])
+
+    useEffect(() => {
+        setAllAppointmentList(availabilityList)
+    }, [availabilityList])
 
     const getRegionLIst = async () => {
         await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
@@ -71,6 +74,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const availabilitySuccessRes = (msg) => {
         toast.success(msg, { rtl: true, })
         setIsModalOpen(false)
+        setShowBtnLoader(false)
+        getAllAvailability()
     }
     const onFinish = async (values) => {
         setShowBtnLoader(true)
@@ -96,8 +101,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await postRouteAPI(body).then((res) => {
-                setShowBtnLoader(false)
-                getAllAvailability(res.data)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
                 console.log(error);
@@ -117,8 +120,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         } else {
             values.routeName = "createAvailability"
             await postRouteAPI(values).then((res) => {
-                setShowBtnLoader(false)
-                getAllAvailability(res.data)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {

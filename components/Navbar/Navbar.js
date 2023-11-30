@@ -66,7 +66,7 @@ export default function Navbar() {
 
 	const isUserInstructor = storeData?.isUserInstructor
 
-	const [catagories, setCatagories] = useState(storeData.catagories.filter((item) => item.published == true) || [])
+	const [catagories, setCatagories] = useState(storeData.catagories?.filter((item) => item.published == true) || [])
 
 	useEffect(() => {
 		if (storeData?.accessToken) {
@@ -279,7 +279,13 @@ export default function Navbar() {
 			key: '4',
 		},
 	];
-
+	const handleRouteChange = () => {
+		if (isRegisterSocialMediaUser) {
+			return
+		} else {
+			router.push('/')
+		}
+	}
 	return (
 		<>
 			{isMediumScreen ?
@@ -299,12 +305,13 @@ export default function Navbar() {
 							</StyledDropdown>
 						</div>
 					}
-					<Link href={'/'} className='pt-1'>
+					<p onClick={() => handleRouteChange()} className='pt-1'>
 						<Logo height={34} width={62} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
-					</Link>
-					<div className={`p-1 cursor-pointer ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
-						<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />
-					</div>
+					</p>
+					{!isRegisterSocialMediaUser &&
+						<div className={`p-1 cursor-pointer ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
+							<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />
+						</div>}
 					{isMenuShow &&
 						<ConfigProvider direction='rtl'>
 							<StyledDrawer
@@ -380,9 +387,9 @@ export default function Navbar() {
 				<div className={styles.navbarWrapper} id="navBar" >
 					<div className='maxWidthDefault'>
 						<div className={styles.navbarInnerWrapper}>
-							<Link href={'/'} className={`pl-8 my-auto ${isRegisterSocialMediaUser && 'cursor-not-allowed'}`}>
+							<p onClick={() => handleRouteChange()} className={`pl-8 my-auto ${isRegisterSocialMediaUser && 'cursor-not-allowed'}`}>
 								<Logo height={38} width={68} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
-							</Link>
+							</p>
 							{!isRegisterSocialMediaUser &&
 								<>
 									<div className={`pl-6 my-auto`}>
