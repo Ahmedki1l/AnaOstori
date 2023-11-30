@@ -6,12 +6,15 @@ import { FormItem } from '../../antDesignCompo/FormItem';
 import { getRouteAPI } from '../../../services/apisService';
 import styles from './AddCourseInUserList.module.scss'
 import ModelForDeleteItems from '../../ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems';
+import { dateRange, fullDate } from '../../../constants/DateConverter';
 
 
 const AddCourseInUserList = ({
     selectedUserDetails,
     enrolledCourseList,
     setEnrolledCourseList,
+    category,
+
 }) => {
     const [selectedCourse, setSelectedCourse] = useState()
     const [regionDataList, setRegionDataList] = useState()
@@ -21,6 +24,7 @@ const AddCourseInUserList = ({
     useEffect(() => {
         getRegionLIst()
     }, [])
+
     const getRegionLIst = async () => {
         await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
             setRegionDataList(res.data.map((obj) => {
@@ -56,7 +60,11 @@ const AddCourseInUserList = ({
     const handleDeleteFolderItems = async () => {
         console.log('delete');
     }
-
+    const allCourse = category.flatMap((item) => {
+        return item.courses.map((subItem) => {
+            return { value: subItem.id, label: subItem.name };
+        });
+    });
     return (
         <div>
             <div className={`my-4 ${styles.addCourseWrapper}`}>
@@ -69,13 +77,13 @@ const AddCourseInUserList = ({
                 </div>
             </div>
             <FormItem
-                name={'enrolledCourse'}>
+                name={'allCourses'}>
                 <Select
                     width={425}
                     height={47}
                     placeholder='selectCourse'
                     onChange={handleSelectCourse}
-                    OptionData={enrolledCourse}
+                    OptionData={allCourse}
                     defaultValue={selectedCourse}
                 />
             </FormItem>
@@ -108,7 +116,7 @@ const AddCourseInUserList = ({
                     <div className={styles.courseNames}>
                         {selectedUserDetails?.enrollments.filter((item) => selectedCourse?.includes(item.course.id)).map((item, index) => {
                             return (
-                                <p key={index} style={{ fontSize: '16px' }}>appoitmentDate{item.course.date ? item.course.date : 'اختار الموعد'}</p>
+                                <p key={index} style={{ fontSize: '16px' }}>{item?.availability?.dateFrom ? dateRange(item?.availability?.dateFrom, item?.availability?.dateTo) : 'اختار الموعد'}</p>
                             )
                         })}
                     </div>

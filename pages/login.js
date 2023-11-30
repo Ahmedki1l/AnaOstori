@@ -76,12 +76,16 @@ export default function Login() {
 					type: 'IS_USER_INSTRUCTOR',
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
-				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
-					router.push('/')
-					toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
-				}
-				else {
-					router.push(storeData?.returnUrl)
+				if (viewProfileData?.data.gender == null) {
+					router.push('/registerSocialMediaUser')
+				} else {
+					if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
+						router.push('/')
+						toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+					}
+					else {
+						router.push(storeData?.returnUrl)
+					}
 				}
 			} catch (error) {
 				console.log(error);

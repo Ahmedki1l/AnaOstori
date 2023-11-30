@@ -20,10 +20,11 @@ export default function UserInfoForm(props) {
 	const noOfUsersTag = PaymentConst.noOfUsersTag
 	const courseDetail = props.courseDetails
 	const genders = PaymentConst.genders
-	const [maleDates, setMaleDates] = useState(props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates);
-	const [femaleDates, setFemaleDates] = useState(props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates);
+	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates
+	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates
+	const [maleDates, setMaleDates] = useState([]);
+	const [femaleDates, setFemaleDates] = useState([]);
 	const mixDates = props.mixDates.length > 0 && props.mixDates.every(obj => obj.numberOfSeats === 0) ? [] : props.mixDates;
-	const disabledGender = courseDetail.type == 'physical' ? (maleDates.length == 0 ? "male" : femaleDates.length == 0 ? "female" : null) : null
 	const storeData = useSelector((state) => state?.globalStore);
 	const userPredefineEmail = storeData?.viewProfileData?.email
 	const userPredefinePhone = storeData?.viewProfileData?.phone?.replace("966", "0")
@@ -34,7 +35,7 @@ export default function UserInfoForm(props) {
 	const router = useRouter()
 	const groupDiscountEligible = courseDetail.groupDiscountEligible
 	const smallScreen = useWindowSize().smallScreen
-
+	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
 	const userTemplet = {
 		gender: '',
 		date: '',
@@ -60,7 +61,7 @@ export default function UserInfoForm(props) {
 	]
 	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
 	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
-	const [selectedRegion, setSelectedRegion] = useState(router.query.region ? router.query.region : "");
+	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
 
 	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: '', phoneNumber: '', email: '', availabilityId: router.query.date }
 	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
@@ -78,14 +79,14 @@ export default function UserInfoForm(props) {
 			setTotalStudent(studentsDataLength)
 		}
 		if (router.query.region) {
-			setSelectedRegion(router.query.region)
+			setSelectedRegionId(router.query.region)
 		}
 		getRegionAndBranchList()
 	}, [props.studentsData, studentsDataLength])
 
 	useEffect(() => {
-		setMaleDates(props.maleDates.filter((date) => date.regionId == router.query.region));
-		setFemaleDates(props.femaleDates.filter((date) => date.regionId == router.query.region))
+		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region));
+		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
 	}, [])
 
 	const handleTotalStudent = (value) => {
@@ -138,8 +139,11 @@ export default function UserInfoForm(props) {
 			data[index]['availabilityId'] = availabilityId
 		}
 		if (event.target.title == 'gender') {
+			setSelectedGender(event.target.value)
 			data[index]['date'] = ''
 			data[index]['availabilityId'] = ''
+			setMaleDates(initialMaleDate.filter((date) => date.regionId == selectedRegionId))
+			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == selectedRegionId))
 		}
 		if (totalStudent > 1 && (event.target.title == 'date' || event.target.title == 'gender')) {
 			for (let i = 0; i < data.length; i++) {
@@ -203,21 +207,35 @@ export default function UserInfoForm(props) {
 		await getRouteAPI(body).then((res) => {
 			setRegionDataList(res.data)
 			if (!router.query.region) {
-				setSelectedRegion(res.data[0].id)
+				setSelectedRegionId(res.data[0].id)
 			}
 		}).catch((err) => {
 			console.log(err)
 		})
 	}
-
 	const handleRegionChange = (event, index) => {
-		setSelectedRegion(event.target.value)
+		setSelectedRegionId(event.target.value)
 		let data = [...studentsData]
 		data[index]['region'] = event.target.value
 		setStudentsData(data);
-		setMaleDates(props.maleDates.filter((date) => date.regionId == event.target.value));
-		setFemaleDates(props.femaleDates.filter((date) => date.regionId == event.target.value))
+		const regionDateListMale = initialMaleDate.filter((date) => date.regionId == event.target.value)
+		const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == event.target.value)
+		if (regionDateListMale.length > 0 && disabledGender == 'male') {
+			setDisabledGender(null)
+			setMaleDates(regionDateListMale)
+		} else if (regionDateListMale.length == 0) {
+			setSelectedGender('female')
+			setDisabledGender('male')
+		}
+		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
+			setDisabledGender(null)
+			setFemaleDates(regionDateListFemale)
+		} else if (regionDateListFemale.length == 0) {
+			setSelectedGender('male')
+			setDisabledGender('female')
+		}
 	}
+
 	return (
 		<>
 			<FirstPaymentPageInfo />
@@ -270,7 +288,6 @@ export default function UserInfoForm(props) {
 						email,
 						emailCheck,
 						emailValidCheck,
-						regionCheck
 					} = student
 					return (
 						<div className={`px-4 ${styles.oneUserInfoForm} ${totalStudent > 1 ? '' : 'pt-4'}`} key={`student${i}`}>
@@ -299,8 +316,8 @@ export default function UserInfoForm(props) {
 													<div className={styles.radioBtnBox} key={`region${j}`}>
 														<input id={`region${i}`} type="radio" name={`region${i}`} value={region.id} title="region"
 															className={`${styles.radioBtn}`}
-															checked={(selectedRegion && i == 0 ? selectedRegion == region.id : student.region == region.id)}
-															onChange={event => handleRegionChange(event, i, '')}
+															checked={(selectedRegionId && i == 0 ? selectedRegionId == region.id : student.region == region.id)}
+															onChange={event => handleRegionChange(event, i)}
 														/>
 														<label htmlFor='dateForAll' className={` ${styles.lableName1}`}>{region.nameAr}</label>
 													</div>
@@ -318,13 +335,11 @@ export default function UserInfoForm(props) {
 											<div className={styles.radioBtnBox} key={`gender${j}`}>
 												<input id={`gender${i}`} type="radio" name={`gender${i}`} value={gender.value} title="gender"
 													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-													// className={`${styles.radioBtn}`}
 													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
 													onChange={event => handleFormChange(event, i, '')}
 													disabled={disabledGender == gender.value}
 												/>
 												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
-												{/* <label htmlFor='dateForAll' className={` ${styles.lableName1}`}>{gender.label}</label> */}
 											</div>
 										)
 									})}
@@ -332,7 +347,7 @@ export default function UserInfoForm(props) {
 								<div style={{ color: 'red' }} className={styles.errorText}>{genderCheck}</div>
 							</div>
 
-							{student.gender && courseDetail.type != 'on-demand' &&
+							{selectedGender && courseDetail.type != 'on-demand' &&
 								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
 									<p className={`fontBold ${styles.radioBtnHead}`}>اختار الموعد اللي يناسبك</p>
 									<div style={{ color: 'red' }} className={styles.errorText}>{dateCheck}</div>
@@ -357,7 +372,6 @@ export default function UserInfoForm(props) {
 																					<div className={styles.circle}><div></div></div>
 																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
 																						{(courseDetail.type == 'physical' && date.name) ? date.name : dateWithDay(date.dateFrom)}
-																						{/* {date.name ? date.name : dateWithDay(date.dateFrom)} */}
 																					</p>
 																				</div>
 																			</div>

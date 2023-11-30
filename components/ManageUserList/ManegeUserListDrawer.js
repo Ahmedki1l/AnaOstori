@@ -8,6 +8,7 @@ import styles from './manageUserList.module.scss'
 import { manageUserListConst } from '../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 import Empty from '../CommonComponents/Empty';
 import AddCourseInUserList from '../CommonComponents/AddCourseInUserList/AddCourseInUserList';
+import { useSelector } from 'react-redux';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
 
@@ -15,6 +16,8 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [userForm] = Form.useForm()
     const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments)
+    const storeData = useSelector((state) => state?.globalStore);
+    const category = storeData.catagories
 
     useEffect(() => {
         userForm.setFieldsValue(selectedUserDetails)
@@ -44,6 +47,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
         })))
         setEnrolledCourseList(data)
     }
+
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
@@ -113,6 +117,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                                         selectedUserDetails={selectedUserDetails}
                                         enrolledCourseList={enrolledCourseList}
                                         setEnrolledCourseList={setEnrolledCourseList}
+                                        category={category}
                                     />
                                 )
                             })}

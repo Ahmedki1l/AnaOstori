@@ -24,13 +24,13 @@ import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 
-const Appointments = ({ courseId, courseType, getAllAvailability }) => {
+const Appointments = ({ courseId, courseType, getAllAvailability, availabilityList }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
-    const [allAppointmentList, setAllAppointmentList] = useState(storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+    const [allAppointmentList, setAllAppointmentList] = useState(availabilityList)
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
@@ -50,22 +50,26 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     useEffect(() => {
         getRegionLIst()
     }, [])
-    {
-        regionDataList?.push({
-            key: '3',
-            label: 'جميع المناطق',
-            value: 'all',
-        })
-    }
+
+    useEffect(() => {
+        setAllAppointmentList(availabilityList)
+    }, [availabilityList])
+
     const getRegionLIst = async () => {
         await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
-            setRegionDataList(res.data.map((obj) => {
+            const regionList = res.data.map((obj) => {
                 return {
                     key: obj.id,
                     label: obj.nameAr,
                     value: obj.id,
                 }
-            }))
+            })
+            regionDataList?.push({
+                key: '3',
+                label: 'جميع المناطق',
+                value: 'all',
+            })
+            setRegionDataList(regionList)
         }).catch((err) => {
             console.log(err)
         })
@@ -76,6 +80,8 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const availabilitySuccessRes = (msg) => {
         toast.success(msg, { rtl: true, })
         setIsModalOpen(false)
+        setShowBtnLoader(false)
+        getAllAvailability()
     }
     const onFinish = async (values) => {
         setShowBtnLoader(true)
@@ -101,8 +107,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await postRouteAPI(body).then((res) => {
-                setShowBtnLoader(false)
-                getAllAvailability(res.data)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
                 console.log(error);
@@ -122,8 +126,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         } else {
             values.routeName = "createAvailability"
             await postRouteAPI(values).then((res) => {
-                setShowBtnLoader(false)
-                getAllAvailability(res.data)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentCretedSuccessMsg)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {

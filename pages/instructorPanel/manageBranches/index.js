@@ -142,7 +142,7 @@ const Index = () => {
                                     return (
                                         <tr key={`tableRow${index}`} className={styles.tableRow}>
                                             <td className='cursor-pointer' onClick={() => handleAddBranch(item)}>{item.nameAr}</td>
-                                            <td>branchName</td>
+                                            <td>{item.nameEn}</td>
                                             <td>{fullDate(item.createdAt)}</td>
                                             <td>{fullDate(item.updatedAt)}</td>
                                             <td>
