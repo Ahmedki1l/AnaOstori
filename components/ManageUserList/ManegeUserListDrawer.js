@@ -8,6 +8,7 @@ import styles from './manageUserList.module.scss'
 import { manageUserListConst } from '../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 import Empty from '../CommonComponents/Empty';
 import AddCourseInUserList from '../CommonComponents/AddCourseInUserList/AddCourseInUserList';
+import { useSelector } from 'react-redux';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
 
@@ -15,6 +16,8 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [userForm] = Form.useForm()
     const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments)
+    const storeData = useSelector((state) => state?.globalStore);
+    const category = storeData.catagories
 
     useEffect(() => {
         userForm.setFieldsValue(selectedUserDetails)
@@ -26,7 +29,6 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
     }, [enrolledCourseList])
 
     const handleSaveUserDetails = (values) => {
-        console.log(values);
         if (avatarUploadResData) {
             values.avatarKey = avatarUploadResData?.key
             values.avatarBucket = avatarUploadResData?.bucket
@@ -43,7 +45,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
         })))
         setEnrolledCourseList(data)
     }
-    console.log(enrolledCourseList);
+
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
@@ -105,7 +107,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                             <p className={styles.addCourseBtnBox} onClick={() => addCourse()}>{manageUserListConst.addCourseBtn}</p>
                         </div>
                         <>
-                            {selectedUserDetails.enrollments.map((item, index) => {
+                            {enrolledCourseList.map((item, index) => {
                                 return (
                                     <AddCourseInUserList
                                         key={`enrolledCourse${index}`}
@@ -113,6 +115,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                                         selectedUserDetails={selectedUserDetails}
                                         enrolledCourseList={enrolledCourseList}
                                         setEnrolledCourseList={setEnrolledCourseList}
+                                        category={category}
                                     />
                                 )
                             })}

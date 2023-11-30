@@ -6,7 +6,6 @@ import { postAuthRouteAPI } from '../../../services/apisService'
 import Spinner from '../../../components/CommonComponents/spinner'
 
 export async function getServerSideProps(contex) {
-    console.log(contex, 9999);
     if (contex?.query.courseId == undefined && contex?.query.attendanceKey == undefined) {
         return {
             notFound: true,
@@ -23,7 +22,6 @@ export async function getServerSideProps(contex) {
 
 
 export default function Index(props) {
-    console.log(props);
     const { courseId, attendanceKey, availabilityId } = props
     const router = useRouter()
     useEffect(() => {

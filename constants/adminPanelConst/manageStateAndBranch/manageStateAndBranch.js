@@ -18,6 +18,7 @@ export const manageStateAndBranchConst = {
     addBtnText: 'إضافة',
 
     addBranchTitle: 'إضافة فرع',
+    editBranchTitle: 'تعديل بيانات الفرع',
     branchAddressTitle: 'عنوان الحي والفرع',
 
     noBranchEmptyText: 'ما أضفت فرع',

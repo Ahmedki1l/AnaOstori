@@ -25,12 +25,12 @@ export default function Index() {
     const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
     const courseName = isCourseEdit ? editCourseData?.name : createCourseApiRes?.name ? createCourseApiRes?.name : undefined
+    const [availabilityList, setAvailabilityList] = useState([])
     const handleItemSelect = (id) => {
         setSelectedItem(id)
     }
 
     const getAllAvailability = async () => {
-        console.log("value");
         if (!courseId) {
             return;
         }
@@ -40,18 +40,19 @@ export default function Index() {
             gender: "all"
         }
         await getAuthRouteAPI(body).then(res => {
-            console.log("res", res);
+            setAvailabilityList(res?.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
             dispatch({
                 type: 'SET_AllAVAILABILITY',
-                availabilityList: res?.data.sort((a, b) => a.createdAt - b.createdAt),
+                availabilityList: res?.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
             })
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getAuthRouteAPI(body).then(res => {
+                        setAvailabilityList(res?.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
                         dispatch({
                             type: 'SET_AllAVAILABILITY',
-                            availabilityList: res?.data,
+                            availabilityList: res?.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
                         })
                     })
                 }).catch(error => {
@@ -111,7 +112,7 @@ export default function Index() {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
-                        {selectedItem == 3 && courseType != "on-demand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} />}
+                        {selectedItem == 3 && courseType != "on-demand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} availabilityList={availabilityList} />}
                         {selectedItem == 4 && <TheStudents courseId={courseId} courseType={courseType} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} courseType={courseType} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} />}

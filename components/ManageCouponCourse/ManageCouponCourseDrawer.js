@@ -61,7 +61,6 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             return { value: subItem.id, label: subItem.name };
         });
     });
-    console.log(course);
     const handleSelectCourse = (value) => {
         setSelectedCourse(value);
     }

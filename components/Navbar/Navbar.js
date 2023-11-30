@@ -66,7 +66,7 @@ export default function Navbar() {
 
 	const isUserInstructor = storeData?.isUserInstructor
 
-	const [catagories, setCatagories] = useState(storeData.catagories.filter((item) => item.published == true) || [])
+	const [catagories, setCatagories] = useState(storeData.catagories?.filter((item) => item.published == true) || [])
 
 	useEffect(() => {
 		if (storeData?.accessToken) {

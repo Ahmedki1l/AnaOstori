@@ -160,7 +160,6 @@ const ModelForStudentFeedBack = ({
         })))
         setUploadFileData(data)
     }
-    console.log(uploadFileData);
     return (
         <div>
             <Modal
