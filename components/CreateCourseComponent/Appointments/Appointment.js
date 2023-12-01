@@ -64,7 +64,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
                     value: obj.id,
                 }
             })
-            regionDataList?.push({
+            regionList?.push({
                 key: '3',
                 label: 'جميع المناطق',
                 value: 'all',
