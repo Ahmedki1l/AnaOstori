@@ -3,36 +3,96 @@ import React, { useEffect, useState } from 'react'
 import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
-import CustomButton from '../CommonComponents/CustomButton';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import styles from './manageUserList.module.scss'
 import { manageUserListConst } from '../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 import Empty from '../CommonComponents/Empty';
+import AddCourseInUserList from '../CommonComponents/AddCourseInUserList/AddCourseInUserList';
+import { useSelector } from 'react-redux';
+import { postAuthRouteAPI } from '../../services/apisService';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
-
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
-    const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [userForm] = Form.useForm()
-
+    const storeData = useSelector((state) => state?.globalStore);
+    const category = storeData.catagories
+    const [newEnrollCourseList, setNewEnrollCourseList] = useState()
+    const [updatedEnrollCourseList, setUpdatedEnrollCourseList] = useState()
+    const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments.map((item) => {
+        return {
+            courseId: item?.course?.id,
+            type: item?.course?.type,
+            regionId: item?.availability?.regionId,
+            availabilityId: item?.availability?.id,
+            enrollmentId: item.id
+        }
+    }))
+    const allCourse = category.flatMap((item) => {
+        return item.courses.map((subItem) => {
+            return { value: subItem.id, label: subItem.name, type: subItem.type };
+        });
+    });
     useEffect(() => {
-        userForm.setFieldsValue(selectedUserDetails)
-        setGender(selectedUserDetails.gender)
-    }, [])
+        if (selectedUserDetails) {
+            userForm.setFieldsValue(selectedUserDetails)
+        }
+        if (selectedUserDetails.enrollments.length > 0) {
+            userForm.setFieldsValue({
+                enrolledCourseList: selectedUserDetails.enrollments.map((item) => {
+                    return {
+                        courseId: item?.course?.id,
+                        type: item?.course?.type,
+                        regionId: item?.availability?.regionId,
+                        availabilityId: item?.availability?.id,
+                        enrollmentId: item.id
+                    }
+                })
+            })
+        }
+    }, [selectedUserDetails, selectedUserDetails.enrollments]);
 
-    const handleSaveUserDetails = (values) => {
+    // useEffect(() => {
+    //     setEnrolledCourseList(enrolledCourseList)
+    // }, [enrolledCourseList])
+
+    const handleSaveUserDetails = async (values) => {
         if (avatarUploadResData) {
             values.avatarKey = avatarUploadResData?.key
             values.avatarBucket = avatarUploadResData?.bucket
             values.avatarMime = avatarUploadResData?.mime
         }
+        let newData = values.enrolledCourseList.map((enrollment) => {
+            const course = allCourse.find((course) => course.value === enrollment.courseId);
+            if (course) {
+                return {
+                    ...enrollment,
+                    type: course.type
+                };
+            }
+            return enrollment;
+        });
+        values.enrolledCourseList = newData
+        const courseIdsToDelete = enrolledCourseList.map((item) => item.courseId);
+        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment) => {
+            return !courseIdsToDelete.includes(enrollment.courseId);
+        });
+        values.updatesCourseList = updatedEnrolledCourseList
+        let body = {
+            routeName: 'adminEnroll',
+            data: values.updatesCourseList
+        }
+        console.log(body);
+        await postAuthRouteAPI(body).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err)
+        })
     }
-
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>اسم الطالب</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.studentFullName}</p>
                 <FormItem
                     name={'fullName'}>
                     <Input
@@ -42,7 +102,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='studentName'
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الصورة الشخصية</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.uploadFilePlaceHolder}</p>
                 <UploadFileForModel
                     fileName={selectedUserDetails?.avatarKey}
                     fileType={'.jpg , .png'}
@@ -51,7 +111,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     uploadResData={setAvtarUploadResData}
                     disabledInput={true}
                 />
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الجنس</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.genderHeading}</p>
                 <div className={styles.genderBtnBox}>
                     <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender("male")} disabled>
                         <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "male" ? '#F06A25' : '#808080'} />
@@ -63,7 +123,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     </button>
                 </div>
 
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>الايميل</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.emailHeading}</p>
                 <FormItem
                     name={'email'}>
                     <Input
@@ -73,7 +133,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='DisplayEmail'
                     />
                 </FormItem>
-                <p className='fontBold py-2' style={{ fontSize: '18px' }}>رقم الجوال</p>
+                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.phoneNoHeading}</p>
                 <FormItem
                     name={'phone'}>
                     <Input
@@ -83,14 +143,59 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='phoneNo'
                     />
                 </FormItem>
-                <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
-                <Empty emptyText={'ماهو مشترك بأي دورة'} containerhight={165} />
+                {enrolledCourseList.length > 0 ?
+                    <>
+                        <Form.List name="enrolledCourseList" initialValue={[{
+                            name: '',
+                            region: '',
+                        }]}>
+                            {(field, { add, remove }) => (
+                                <>
+                                    <div className={`mt-6 ${styles.addCourseWrapper}`}>
+                                        <p className={`fontBold text-xl`}>{manageUserListConst.addCourseTitle}</p>
+                                        <p className={styles.addCourseBtnBox} onClick={() => { add() }}>{manageUserListConst.addCourseBtn}</p>
+                                    </div>
+                                    <>
+                                        {field.map(({ name, key, fieldKey, ...restField }, index) => {
+                                            const enrollment = enrolledCourseList[index]
+                                            return (
+                                                <AddCourseInUserList
+                                                    key={`enrolledCourse${name}${index}`}
+                                                    index={index}
+                                                    allCourse={allCourse}
+                                                    name={name}
+                                                    enrollment={enrollment}
+                                                    enrolledCourseList={enrolledCourseList}
+                                                    setEnrolledCourseList={setEnrolledCourseList}
+                                                    newEnrollCourseList={newEnrollCourseList}
+                                                    setNewEnrollCourseList={setNewEnrollCourseList}
+                                                    updatedEnrollCourseList={updatedEnrollCourseList}
+                                                    setUpdatedEnrollCourseList={setUpdatedEnrollCourseList}
+                                                />
+                                            )
+                                        }
+                                        )}
+                                    </>
+                                </>
+                            )}
+                        </Form.List>
+                    </>
+                    :
+                    <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
+                }
+                {selectedUserDetails.enrollments.length == 0 &&
+                    <>
+                        <Empty emptyText={manageUserListConst.emptyBtnPlaceHolder} containerhight={165} />
+                        <div className={styles.userListBtnBox}>
+                            <button className='primaryStrockedBtn mb-6' htmltype='submit' onClick={() => addCourse()}>{manageUserListConst.emptyBtnText}</button>
+                        </div>
+                    </>
+                }
                 <div className={styles.userListBtnBox}>
-                    <button className='primaryStrockedBtn mb-6' htmltype='submit' disabled>إضافة دورة</button>
-                    <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' disabled>حفظ</button>
+                    <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' >{manageUserListConst.saveBtn}</button>
                 </div>
             </Form>
-        </div>
+        </div >
     )
 }
 

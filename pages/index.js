@@ -11,7 +11,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
 import { HomeConst } from '../constants/HomeConst';
-// import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewCard/ReviewCard';
+import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewComponent';
 
 export const metadata = {
 	title: 'Anaostori',
@@ -74,10 +74,8 @@ export default function Home(props) {
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
 	const [scrollSectionName, setScrollSectionName] = useState()
 	const videoObject = props.homeMetaData.find(obj => obj.key === "video");
-	// const homeReviews = props.homeReviews
-
-	console.log(homeReviews);
 	const handleScrollToSection = (sectionName) => {
+
 		if (sectionName == 'refCourseSec') {
 			refCourseSec.current?.scrollIntoView({ behavior: 'smooth' });
 		}
@@ -132,7 +130,7 @@ export default function Home(props) {
 							<p id={styles.animatedText3} className={`fontMedium ${styles.animatedText}`}>{HomeConst.animatedText3}</p>
 						</div>
 					</div>
-					<p className={`fontMedium ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
+					<p className={`fontMedium mt-2 ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
 					<div className={styles.btnBox}>
 						<div className={styles.firstBtnBox}>
 							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
@@ -206,14 +204,14 @@ export default function Home(props) {
 					})}
 				</div>
 			</div>
-			{/* <div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
+			<div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
 				<div className={`flex justify-between items-center px-4`}>
 					<h1 className='head1'>{HomeConst.studentSectionHead1}</h1>
 					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>{HomeConst.studentSectionLink}</p>
 				</div>
 				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1} <br /> {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
-				 <ReviewComponent homeReviews={homeReviews} />
-			</div> */}
-		</div >
+				<ReviewComponent homeReviews={homeReviews} />
+			</div>
+		</div>
 	)
 }

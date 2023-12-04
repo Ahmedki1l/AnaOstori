@@ -24,14 +24,13 @@ import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 
-const Appointments = ({ courseId, courseType, getAllAvailability }) => {
+const Appointments = ({ courseId, courseType, getAllAvailability, availabilityList }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
     const storeData = useSelector((state) => state?.globalStore);
     const instructorList = storeData?.instructorList;
-    // const allAppointmentList = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    const [allAppointmentList, setAllAppointmentList] = useState(storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+    const [allAppointmentList, setAllAppointmentList] = useState(availabilityList)
     const genders = PaymentConst.genders
     const [appointmentForm] = Form.useForm();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
@@ -39,8 +38,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
-    const [regionDataList, setRegionDataList] = useState()
-
+    const [regionDataList, setRegionDataList] = useState([{
+        key: '0',
+        label: 'جميع المناطق',
+        value: '0',
+    }])
+    const [regionDataListForModel, setRegionDataListForModel] = useState()
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -52,29 +55,37 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
         getRegionLIst()
     }, [])
 
+    useEffect(() => {
+        setAllAppointmentList(availabilityList)
+    }, [availabilityList])
+
     const getRegionLIst = async () => {
         await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
-            setRegionDataList(res.data.map((obj) => {
+            const regionList = res.data.map((obj) => {
                 return {
                     key: obj.id,
                     label: obj.nameAr,
-                    value: obj.nameEn,
+                    value: obj.id,
                 }
-            }))
+            })
+            setRegionDataListForModel(regionList)
+            setRegionDataList([...regionDataList, ...regionList])
         }).catch((err) => {
             console.log(err)
         })
     }
+
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
     const availabilitySuccessRes = (msg) => {
         toast.success(msg, { rtl: true, })
         setIsModalOpen(false)
-        getAllAvailability()
         setShowBtnLoader(false)
+        getAllAvailability()
     }
     const onFinish = async (values) => {
+        setShowBtnLoader(true)
         values.dateFrom = dayjs(values?.dateFrom?.$d).startOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.dateTo = dayjs(values?.dateTo?.$d).endOf('day').format('YYYY-MM-DD HH:mm:ss');
         values.timeFrom = dayjs(values?.timeFrom?.$d).format('HH:mm:ss')
@@ -97,7 +108,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                 availabilityId: editAvailability?.id
             }
             await postRouteAPI(body).then((res) => {
-                setShowBtnLoader(false)
                 availabilitySuccessRes(toastSuccessMessage.appoitmentUpdateSuccessMsg)
             }).catch(async (error) => {
                 console.log(error);
@@ -157,6 +167,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
             dateTo: dayjs(appointment?.dateTo, 'YYYY-MM-DD'),
             timeFrom: dayjs(appointment?.timeFrom, 'HH:mm:ss'),
             timeTo: dayjs(appointment?.timeTo, 'HH:mm:ss'),
+            regionId: appointment?.regionId
         });
     }
 
@@ -211,19 +222,16 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
     }
 
     const selectRegionFilter = (value) => {
-        console.log(value);
-        const newAppointmentList = [...allAppointmentList]
-        // setAllAppointmentList(newAppointmentList.filter((region) => region.region == value))
+        if (value == 'all') {
+            setAllAppointmentList(storeData?.availabilityList)
+        } else {
+            setAllAppointmentList(storeData?.availabilityList.filter((obj) => obj.regionId == value))
+        }
     }
 
     return (
         <div className='maxWidthDefault px-4'>
             <div>
-                {/* <div dir='ltr'>
-                    <div className={styles.createAppointmentBtnBox}>
-                        <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>
-                    </div>
-                </div> */}
                 <div dir='ltr' className='flex justify-between items-center '>
                     <div className={styles.createAppointmentBtnBox}>
                         <button className='primarySolidBtn' onClick={() => handleCreateAvailability()}>إضافة موعد</button>
@@ -463,11 +471,11 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                         </FormItem>
                                     </>
                                 }
-                                {/* {courseType == 'physical' &&
+                                {courseType == 'physical' &&
                                     <>
                                         <p className={`${styles.createappointmentFormFileds}`}>تفاصيل المكان</p>
                                         <FormItem
-                                            name={'region'}
+                                            name={'regionId'}
                                             rules={[{ required: true, message: 'اختار المنطقة' }]}
                                         >
                                             <Select
@@ -475,12 +483,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability }) => {
                                                 width={352}
                                                 height={40}
                                                 placeholder='اختار المنطقة'
-                                                OptionData={regionDataList}
+                                                OptionData={regionDataListForModel}
                                                 maxTagCount='responsive'
                                             />
                                         </FormItem>
                                     </>
-                                } */}
+                                }
                                 {courseType == 'physical' &&
                                     <div className='flex'>
                                         <FormItem

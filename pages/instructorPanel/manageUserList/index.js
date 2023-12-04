@@ -85,7 +85,7 @@ const Index = () => {
                         <>
                             {uniqueCourses.map((data, index) => {
                                 return (
-                                    <p key={index} className='p-2'>{data.course.name}</p>
+                                    <p key={index} className='p-2'>{data?.course?.name}</p>
                                 )
                             })}
                         </>
@@ -146,8 +146,8 @@ const Index = () => {
                     setSelectedUser(_record)
                 }
                 return (
-                    <div className='cursor-pointer' onClick={handleEditUsers}>
-                        <AllIconsComponenet iconName={'editicon'} height={18} width={18} color={'#000000'} />
+                    <div className='cursor-pointer'>
+                        <AllIconsComponenet iconName={'newEditIcon'} height={18} width={18} color={'#000000'} />
                     </div>
                 )
             }

@@ -39,14 +39,22 @@
     background: #FFFFFF !important;
 }
 
-.addCourse {
-    margin-top: 32px;
-    font-size: 20px;
-}
-
 .userListBtnBox {
     button {
         height: 38px;
         font-size: 16px;
     }
+}
+
+.addCourseWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.addCourseBtnBox {
+    cursor: pointer;
+    font-size: 14px;
+    color: #0075FF
 }

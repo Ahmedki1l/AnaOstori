@@ -1,0 +1,21 @@
+.addCourseWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.deleteCourseBtn {
+    font-size: 14px;
+    color: #FF0000;
+}
+
+.courseNames {
+    width: 100%;
+    max-width: 425px;
+    padding: 15px;
+    border: 0.5px solid #00000081;
+    border-radius: 4px;
+    min-height: 50px;
+    margin-bottom: 1.5rem;
+}

@@ -1,130 +1,185 @@
 @import "../../../styles/variables.module.scss";
 
-.pageOneMainArea,.pageTwoMainArea{
-    position: relative;
-    width: 61.25rem;
+.pageOneMainArea,
+.pageTwoMainArea {
+	position: relative;
+	width: 61.25rem;
 	height: 9.3rem;
 	overflow: hidden;
 	margin: auto;
 }
-.pageNoOne{
+
+.pageNoOne {
 	top: 50%;
-    right: 0;
-    transform: translate(0, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	right: 0;
+	transform: translate(0, -50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
-.pageNoTwo{
+
+.pageNoTwo {
 	top: 50%;
-    left: 0;
-    transform: translate(0, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	left: 0;
+	transform: translate(0, -50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
-.circle{
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+.circle {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
-.middleLine{
+
+.middleLine {
 	width: 85%;
 	height: 10px;
-	top:38%;
-    left: 5rem;
-    z-index: -1;
+	top: 38%;
+	left: 5rem;
+	z-index: -1;
 }
-.pageNoHead{
+
+.pageNoHead {
+	color: #FF7632;
 	font-size: 20px;
+	margin-top: 1rem;
 }
-.pageOneMainArea{
-	.firstPageBox{
-		background-color: $primary-color;
-		p{
+
+.pageOneMainArea {
+	.firstPageBox {
+		border: 6px solid #FF7632;
+		background-color: #FFAF88;
+
+		p {
 			color: #ffffff;
 			font-size: 28px;
 		}
 	}
-	.middleLine{
-		background-color: #ffc4a6;
+
+	.middleLine {
+		background-color: #FF7632;
 	}
-	.secondPage{
-		border: 6px solid #ffc4a6;
+
+	.secondPage {
+		border: 6px solid #FF7632;
 		background-color: #ffffff;
-		p{
-			color: #ffc4a6;
+
+		p {
+			color: #FF7632;
 			font-size: 28px;
 		}
 	}
 }
-.pageTwoMainArea{
-	.firstPageBox{
+
+.pageTwoMainArea {
+	.firstPageBox {
 		border: 6px solid #00B564;
 		background-color: #ffffff;
-		.icon{
+
+		.icon {
 			color: #00B564;
 			font-size: 5rem;
 			margin: 0.3rem 0;
 		}
 	}
-	.middleLine{
+
+	.middleLine {
 		background-color: #00B564;
 	}
-	.secondPage{
+
+	.secondPage {
 		background-color: #00B564;
-		p{
+
+		p {
 			color: #ffffff;
 			font-size: 28px;
 		}
 	}
-	
-	
+
+
 }
+
 @media (max-width:1024px) {
-	.pageOneMainArea,.pageTwoMainArea{
+
+	.pageOneMainArea,
+	.pageTwoMainArea {
 		width: 35rem;
 		height: 8rem;
+		border-width: 3px;
 	}
-	.middleLine{
+
+	.middleLine {
 		width: 25rem;
 		height: 7px;
 	}
-	.pageNoHead{
+
+	.pageNoHead {
 		font-size: 17px;
 	}
-	.pageOneMainArea{
-		.secondPage{
+
+	.pageOneMainArea {
+		.secondPage {
 			border-width: 5px;
 		}
 	}
-	.pageTwoMainArea{
-		.firstPageBox{
+
+	.pageTwoMainArea {
+		.firstPageBox {
 			border-width: 5px;
 		}
 	}
-	
+
 }
+
 @media (max-width:640px) {
-	.pageOneMainArea,.pageTwoMainArea{
-		width: 20rem;
+
+	.pageOneMainArea,
+	.pageTwoMainArea {
+		width: 24rem;
 		height: 6.25rem;
 		margin-top: 1rem;
+		margin: auto;
 	}
-	.middleLine{
-		width: 11rem;
-		height: 5px;
-		top: 41%;
+
+	.middleLine {
+		width: 14rem;
+		height: 3px;
 	}
-	.pageNoHead{
-		font-size: 15px;
+
+	.pageNoOne {
+		right: 16px;
 	}
-	
-	.pageOneMainArea{
-		.secondPage{
+
+	.pageNoTwo {
+		left: 16px;
+		margin-left: 1rem;
+	}
+
+	.circle {
+		height: 38px;
+		width: 38px;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.pageNoHead {
+		font-size: 12px;
+		margin-top: 0.75rem;
+	}
+
+	.pageOneMainArea {
+		.secondPage {
+			border-width: 4px;
+		}
+
+		.firstPageBox {
 			border-width: 4px;
 		}
 	}

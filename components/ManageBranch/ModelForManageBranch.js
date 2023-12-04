@@ -10,7 +10,6 @@ import InputWithLocation from '../antDesignCompo/InputWithLocation';
 const ModelForManageBranch = ({
     isModelForAddBranch,
     setIsModelForAddBranch,
-    isEdit,
     editBranchData,
     setEditBranchData
 }) => {
@@ -38,7 +37,7 @@ const ModelForManageBranch = ({
                 <div className={styles.modalHeader}>
                     <button onClick={isModelClose} className={styles.closebutton}>
                         <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
-                    <p className={`fontBold ${styles.addBranch}`}>{manageStateAndBranchConst.addBranchTitle}</p>
+                    <p className={`fontBold ${styles.addBranch}`}>{editBranchData ? manageStateAndBranchConst.editBranchTitle : manageStateAndBranchConst.addBranchTitle}</p>
                 </div>
                 <div dir='rtl'>
                     <Form form={branchForm} onFinish={onFinish}>

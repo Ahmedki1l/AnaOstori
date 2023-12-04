@@ -20,18 +20,24 @@ export default function UserInfoForm(props) {
 	const noOfUsersTag = PaymentConst.noOfUsersTag
 	const courseDetail = props.courseDetails
 	const genders = PaymentConst.genders
-
-	const maleDates = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates;
-	const femaleDates = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates;
+	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates
+	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates
+	const [maleDates, setMaleDates] = useState([]);
+	const [femaleDates, setFemaleDates] = useState([]);
 	const mixDates = props.mixDates.length > 0 && props.mixDates.every(obj => obj.numberOfSeats === 0) ? [] : props.mixDates;
-
-	const disabledGender = courseDetail.type == 'physical' ? (maleDates.length == 0 ? "male" : femaleDates.length == 0 ? "female" : null) : null
 	const storeData = useSelector((state) => state?.globalStore);
 	const userPredefineEmail = storeData?.viewProfileData?.email
 	const userPredefinePhone = storeData?.viewProfileData?.phone?.replace("966", "0")
 	const userPredefinefullName = (storeData?.viewProfileData?.fullName) ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName
 	const userPredefineGender = storeData?.viewProfileData?.gender
-
+	const [isDateForAllSelected, setIsDateForAllSelected] = useState(false)
+	const [regionDataList, setRegionDataList] = useState()
+	const router = useRouter()
+	const groupDiscountEligible = courseDetail.groupDiscountEligible
+	const smallScreen = useWindowSize().smallScreen
+	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
+	const [disabledRegion, setDisabledRegion] = useState(initialFemaleDate.regionId == initialMaleDate.regionId ? initialFemaleDate.regionId : null)
+	console.log(disabledRegion);
 	const userTemplet = {
 		gender: '',
 		date: '',
@@ -50,21 +56,15 @@ export default function UserInfoForm(props) {
 		availabilityId: ''
 	}
 
-	const groupDiscountEligible = courseDetail.groupDiscountEligible
-	const smallScreen = useWindowSize().smallScreen
-
-	const [isDateForAllSelected, setIsDateForAllSelected] = useState(false)
-	const [regionDataList, setRegionDataList] = useState()
-
 	const noOfUsersLabelData = [
-		{ iconName: 'studentOneIcon', iconWidth: '24', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `خصم ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
-		{ iconName: 'studentTwoIcon', iconWidth: '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
-		{ iconName: 'studentThreeIcon', iconWidth: '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentOneIcon', iconWidth: smallScreen ? '13' : '20', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `خصم ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
+		{ iconName: 'studentTwoIcon', iconWidth: smallScreen ? '20' : '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentThreeIcon', iconWidth: smallScreen ? '22' : '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
 	]
-
-	const router = useRouter()
 	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
 	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
+	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
+
 	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: '', phoneNumber: '', email: '', availabilityId: router.query.date }
 	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
 	const [userAgree, setUserAgree] = useState(false)
@@ -80,9 +80,15 @@ export default function UserInfoForm(props) {
 			setStudentsData(props.studentsData)
 			setTotalStudent(studentsDataLength)
 		}
-	}, [props.studentsData, studentsDataLength])
-	useEffect(() => {
+		if (router.query.region) {
+			setSelectedRegionId(router.query.region)
+		}
 		getRegionAndBranchList()
+	}, [props.studentsData, studentsDataLength])
+
+	useEffect(() => {
+		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region));
+		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
 	}, [])
 
 	const handleTotalStudent = (value) => {
@@ -121,7 +127,6 @@ export default function UserInfoForm(props) {
 		setStudentsData(data)
 		setTotalStudent(data.length)
 	}
-
 	const handleFormChange = (event, index, availabilityId) => {
 		const data = [...studentsData]
 		if (event.target.title == 'phoneNumber') {
@@ -136,8 +141,11 @@ export default function UserInfoForm(props) {
 			data[index]['availabilityId'] = availabilityId
 		}
 		if (event.target.title == 'gender') {
+			setSelectedGender(event.target.value)
 			data[index]['date'] = ''
 			data[index]['availabilityId'] = ''
+			setMaleDates(initialMaleDate.filter((date) => date.regionId == selectedRegionId))
+			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == selectedRegionId))
 		}
 		if (totalStudent > 1 && (event.target.title == 'date' || event.target.title == 'gender')) {
 			for (let i = 0; i < data.length; i++) {
@@ -200,10 +208,43 @@ export default function UserInfoForm(props) {
 		}
 		await getRouteAPI(body).then((res) => {
 			setRegionDataList(res.data)
+			if (!router.query.region) {
+				setSelectedRegionId(res.data[0].id)
+			}
 		}).catch((err) => {
 			console.log(err)
 		})
 	}
+	const handleRegionChange = (event, index) => {
+		setSelectedRegionId(event.target.value)
+		let data = [...studentsData]
+		data[index]['region'] = event.target.value
+		setStudentsData(data);
+		const regionDateListMale = initialMaleDate.filter((date) => date.regionId == event.target.value)
+		const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == event.target.value)
+		if (regionDateListMale.length > 0 && disabledGender == 'male') {
+			setDisabledGender(null)
+			setMaleDates(regionDateListMale)
+		} else if (regionDateListMale.length == 0) {
+			setSelectedGender('female')
+			setDisabledGender('male')
+			setDisabledRegion(disabledRegion)
+		}
+		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
+			setDisabledGender(null)
+			setFemaleDates(regionDateListFemale)
+		} else if (regionDateListFemale.length == 0) {
+			setSelectedGender('male')
+			setDisabledGender('female')
+		}
+		if (regionDateListMale.length == 0) {
+			setMaleDates([])
+		} else {
+			setMaleDates(regionDateListMale)
+		}
+	}
+
+
 	return (
 		<>
 			<FirstPaymentPageInfo />
@@ -211,7 +252,7 @@ export default function UserInfoForm(props) {
 				{groupDiscountEligible && courseDetail.type != 'on-demand' &&
 					<div className={styles.borderBottom}>
 						<div className={`maxWidthDefault  ${styles.radioBtnsContainer}`}>
-							<p className={`fontBold ${styles.radioBtnHead}`}>كم شخص؟</p>
+							<p className={`fontMedium  ${styles.radioBtnHead}`}>كم شخص؟</p>
 							<div className={styles.noOfUserWrapper}>
 								{/***************************************** FOR loop for radio button to select number of Users ******************************************/}
 								{noOfUsersLabelData.map((data, index) => {
@@ -255,7 +296,7 @@ export default function UserInfoForm(props) {
 						validPhoneNumber,
 						email,
 						emailCheck,
-						emailValidCheck
+						emailValidCheck,
 					} = student
 					return (
 						<div className={`px-4 ${styles.oneUserInfoForm} ${totalStudent > 1 ? '' : 'pt-4'}`} key={`student${i}`}>
@@ -265,7 +306,6 @@ export default function UserInfoForm(props) {
 										<p className='fontBold rounded-b p-2'>{noOfUsersTag[i]}</p>
 										{i > 2 &&
 											<p className={styles.closeIcon} onClick={() => handleRemoveForm(i)}>
-												{/* <CloseRoundedIcon />	 */}
 												<div className='pl-2'>
 													<AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
 												</div>
@@ -274,25 +314,29 @@ export default function UserInfoForm(props) {
 										}
 									</div>
 								}
-								<p className={`fontBold ${styles.radioBtnHead}`}>المنطقة</p>
-								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>}
-								 {/* <div className={styles.genderWrapper}>
-									{regionDataList?.map((region, j = index) => {
-										console.log(region);
-										return (
-											<div className={styles.radioBtnBox} key={`region${j}`}>
-												<input id={`region${i}`} type="radio" name={`region${i}`} title="region"
-													className={`${styles.radioBtn}`}
-													// checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
-													onChange={event => handleFormChange(event, i, '')}
-												/>
-												<label htmlFor='dateForAll' className={`fontBold ${styles.lableName1}`}>{region.nameAr}</label>
-											</div>
-										)
-									})}
-								</div> */}
+								{courseDetail.type == 'physical' &&
+									<>
+										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المنطقة</p>
+										<p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>
+										<div className={styles.genderWrapper}>
+											{/***************************************** FOR loop for radio button to select region ****************************************/}
+											{regionDataList?.map((region, j = index) => {
+												return (
+													<div className={styles.radioBtnBox} key={`region${j}`}>
+														<input id={`region${i}`} type="radio" name={`region${i}`} value={region.id} title="region"
+															className={`${styles.radioBtn}`}
+															checked={(selectedRegionId && i == 0 ? selectedRegionId == region.id : student.region == region.id)}
+															onChange={event => handleRegionChange(event, i)}
+														/>
+														<label htmlFor='dateForAll' className={` ${styles.lableName1}`}>{region.nameAr}</label>
+													</div>
+												)
+											})}
+										</div>
+									</>
+								}
 								<p className={`fontBold mt-6 ${styles.radioBtnHead}`}>الجنس</p>
-								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>}
+								{/* {courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>} */}
 								<div className={styles.genderWrapper}>
 									{/***************************************** FOR loop for radio button to select Gender ****************************************/}
 									{genders.map((gender, j = index) => {
@@ -302,15 +346,17 @@ export default function UserInfoForm(props) {
 													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
 													onChange={event => handleFormChange(event, i, '')}
-													disabled={disabledGender == gender.value} />
-												<label htmlFor='dateForAll' className={`fontBold ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
+													disabled={disabledGender == gender.value}
+												/>
+												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
 											</div>
 										)
 									})}
 								</div>
 								<div style={{ color: 'red' }} className={styles.errorText}>{genderCheck}</div>
 							</div>
-							{student.gender && courseDetail.type != 'on-demand' &&
+
+							{selectedGender && courseDetail.type != 'on-demand' &&
 								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
 									<p className={`fontBold ${styles.radioBtnHead}`}>اختار الموعد اللي يناسبك</p>
 									<div style={{ color: 'red' }} className={styles.errorText}>{dateCheck}</div>
@@ -333,8 +379,8 @@ export default function UserInfoForm(props) {
 																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`}>
 																				<div className={styles.dateRadioBtnBox}>
 																					<div className={styles.circle}><div></div></div>
-																					<p className={`fontBold ${styles.dateBoxHeaderText}`}>
-																						{date.name ? date.name : dateWithDay(date.dateFrom)}
+																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
+																						{(courseDetail.type == 'physical' && date.name) ? date.name : dateWithDay(date.dateFrom)}
 																					</p>
 																				</div>
 																			</div>

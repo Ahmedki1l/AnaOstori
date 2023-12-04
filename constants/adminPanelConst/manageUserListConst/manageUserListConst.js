@@ -1,3 +1,22 @@
 export const manageUserListConst = {
-    addCourseTitle: 'الدورات المشترك فيها'
+    addCourseTitle: 'الدورات المشترك فيها',
+    addCourseBtn: '+ إضافة دورة جديدة',
+
+    courseTitle: 'عنوان الدورة',
+    studentFullName: 'اسم الطالب',
+    uploadFilePlaceHolder: 'الصورة الشخصية',
+    genderHeading: 'الجنس',
+    emailHeading: 'الايميل',
+    phoneNoHeading: 'رقم الجوال',
+    emptyBtnText: 'إضافة دورة',
+    saveBtn: 'حفظ',
+    emptyBtnPlaceHolder: 'ماهو مشترك بأي دورة',
+    deleteCourseBtnText: 'حذف',
+    regionHeading: 'المنطقة',
+    selectRegion: 'اختار المنطقة',
+    datesHeading: 'موعد الدورة',
+    selectAvailability: 'اختار الموعد',
+    deleteCourseTitle: 'تأكيد حذف الدورة من الطالب',
+    deleteCourseMessageText: 'متأكد انك تبي تحذف الدورة من الطالب؟',
+    deleteCourseBtnText: 'تأكيد الحذف',
 }
