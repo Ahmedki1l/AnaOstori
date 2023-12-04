@@ -15,7 +15,7 @@ export const manageUserListConst = {
     regionHeading: 'المنطقة',
     selectRegion: 'اختار المنطقة',
     datesHeading: 'موعد الدورة',
-
+    selectAvailability: 'اختار الموعد',
     deleteCourseTitle: 'تأكيد حذف الدورة من الطالب',
     deleteCourseMessageText: 'متأكد انك تبي تحذف الدورة من الطالب؟',
     deleteCourseBtnText: 'تأكيد الحذف',

@@ -36,6 +36,8 @@ export default function UserInfoForm(props) {
 	const groupDiscountEligible = courseDetail.groupDiscountEligible
 	const smallScreen = useWindowSize().smallScreen
 	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
+	const [disabledRegion, setDisabledRegion] = useState(initialFemaleDate.regionId == initialMaleDate.regionId ? initialFemaleDate.regionId : null)
+	console.log(disabledRegion);
 	const userTemplet = {
 		gender: '',
 		date: '',
@@ -226,6 +228,7 @@ export default function UserInfoForm(props) {
 		} else if (regionDateListMale.length == 0) {
 			setSelectedGender('female')
 			setDisabledGender('male')
+			setDisabledRegion(disabledRegion)
 		}
 		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
 			setDisabledGender(null)
@@ -234,7 +237,13 @@ export default function UserInfoForm(props) {
 			setSelectedGender('male')
 			setDisabledGender('female')
 		}
+		if (regionDateListMale.length == 0) {
+			setMaleDates([])
+		} else {
+			setMaleDates(regionDateListMale)
+		}
 	}
+
 
 	return (
 		<>
@@ -243,7 +252,7 @@ export default function UserInfoForm(props) {
 				{groupDiscountEligible && courseDetail.type != 'on-demand' &&
 					<div className={styles.borderBottom}>
 						<div className={`maxWidthDefault  ${styles.radioBtnsContainer}`}>
-							<p className={`fontBold my-2 ${styles.radioBtnHead}`}>كم شخص؟</p>
+							<p className={`fontMedium  ${styles.radioBtnHead}`}>كم شخص؟</p>
 							<div className={styles.noOfUserWrapper}>
 								{/***************************************** FOR loop for radio button to select number of Users ******************************************/}
 								{noOfUsersLabelData.map((data, index) => {
@@ -327,7 +336,7 @@ export default function UserInfoForm(props) {
 									</>
 								}
 								<p className={`fontBold mt-6 ${styles.radioBtnHead}`}>الجنس</p>
-								{courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>}
+								{/* {courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>} */}
 								<div className={styles.genderWrapper}>
 									{/***************************************** FOR loop for radio button to select Gender ****************************************/}
 									{genders.map((gender, j = index) => {

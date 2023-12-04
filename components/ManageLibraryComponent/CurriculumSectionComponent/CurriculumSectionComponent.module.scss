@@ -81,7 +81,7 @@
 .curriculumSectionBody {
     width: 60%;
     max-height: 0;
-    overflow: hidden;
+    overflow: auto;
     transition: all 0.5s;
     border: 1px solid #B8B8B8;
     border-top: none;
@@ -97,7 +97,7 @@
 }
 
 .showCurriculumSectionBody {
-    max-height: 100vh;
+    max-height: 21rem;
 }
 
 .curriculumData {

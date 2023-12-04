@@ -9,45 +9,86 @@ import { manageUserListConst } from '../../constants/adminPanelConst/manageUserL
 import Empty from '../CommonComponents/Empty';
 import AddCourseInUserList from '../CommonComponents/AddCourseInUserList/AddCourseInUserList';
 import { useSelector } from 'react-redux';
+import { postAuthRouteAPI } from '../../services/apisService';
 
 const ManegeUserListDrawer = ({ selectedUserDetails }) => {
-
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [userForm] = Form.useForm()
-    const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments)
     const storeData = useSelector((state) => state?.globalStore);
     const category = storeData.catagories
-
+    const [newEnrollCourseList, setNewEnrollCourseList] = useState()
+    const [updatedEnrollCourseList, setUpdatedEnrollCourseList] = useState()
+    const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments.map((item) => {
+        return {
+            courseId: item?.course?.id,
+            type: item?.course?.type,
+            regionId: item?.availability?.regionId,
+            availabilityId: item?.availability?.id,
+            enrollmentId: item.id
+        }
+    }))
+    const allCourse = category.flatMap((item) => {
+        return item.courses.map((subItem) => {
+            return { value: subItem.id, label: subItem.name, type: subItem.type };
+        });
+    });
     useEffect(() => {
-        userForm.setFieldsValue(selectedUserDetails)
-        setGender(selectedUserDetails.gender)
-    }, [])
+        if (selectedUserDetails) {
+            userForm.setFieldsValue(selectedUserDetails)
+        }
+        if (selectedUserDetails.enrollments.length > 0) {
+            userForm.setFieldsValue({
+                enrolledCourseList: selectedUserDetails.enrollments.map((item) => {
+                    return {
+                        courseId: item?.course?.id,
+                        type: item?.course?.type,
+                        regionId: item?.availability?.regionId,
+                        availabilityId: item?.availability?.id,
+                        enrollmentId: item.id
+                    }
+                })
+            })
+        }
+    }, [selectedUserDetails, selectedUserDetails.enrollments]);
 
-    useEffect(() => {
-        setEnrolledCourseList(enrolledCourseList)
-    }, [enrolledCourseList])
+    // useEffect(() => {
+    //     setEnrolledCourseList(enrolledCourseList)
+    // }, [enrolledCourseList])
 
-    const handleSaveUserDetails = (values) => {
+    const handleSaveUserDetails = async (values) => {
         if (avatarUploadResData) {
             values.avatarKey = avatarUploadResData?.key
             values.avatarBucket = avatarUploadResData?.bucket
             values.avatarMime = avatarUploadResData?.mime
         }
-        values.enrolledCourse = enrolledCourseList
-        console.log(values);
+        let newData = values.enrolledCourseList.map((enrollment) => {
+            const course = allCourse.find((course) => course.value === enrollment.courseId);
+            if (course) {
+                return {
+                    ...enrollment,
+                    type: course.type
+                };
+            }
+            return enrollment;
+        });
+        values.enrolledCourseList = newData
+        const courseIdsToDelete = enrolledCourseList.map((item) => item.courseId);
+        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment) => {
+            return !courseIdsToDelete.includes(enrollment.courseId);
+        });
+        values.updatesCourseList = updatedEnrolledCourseList
+        let body = {
+            routeName: 'adminEnroll',
+            data: values.updatesCourseList
+        }
+        console.log(body);
+        await postAuthRouteAPI(body).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err)
+        })
     }
-
-    const addCourse = () => {
-        let data = [...enrolledCourseList]
-        data.push(JSON.parse(JSON.stringify({
-            contentFileKey: '',
-            contentFileMime: '',
-            contentFileBucket: ''
-        })))
-        setEnrolledCourseList(data)
-    }
-
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
@@ -102,26 +143,42 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         placeholder='phoneNo'
                     />
                 </FormItem>
-                {selectedUserDetails.enrollments.length > 0 ?
+                {enrolledCourseList.length > 0 ?
                     <>
-                        <div className={`mt-6 ${styles.addCourseWrapper}`}>
-                            <p className={`fontBold text-xl`}>{manageUserListConst.addCourseTitle}</p>
-                            <p className={styles.addCourseBtnBox} onClick={() => addCourse()}>{manageUserListConst.addCourseBtn}</p>
-                        </div>
-                        <>
-                            {enrolledCourseList.map((item, index) => {
-                                return (
-                                    <AddCourseInUserList
-                                        key={`enrolledCourse${index}`}
-                                        index={index}
-                                        selectedUserDetails={selectedUserDetails}
-                                        enrolledCourseList={enrolledCourseList}
-                                        setEnrolledCourseList={setEnrolledCourseList}
-                                        category={category}
-                                    />
-                                )
-                            })}
-                        </>
+                        <Form.List name="enrolledCourseList" initialValue={[{
+                            name: '',
+                            region: '',
+                        }]}>
+                            {(field, { add, remove }) => (
+                                <>
+                                    <div className={`mt-6 ${styles.addCourseWrapper}`}>
+                                        <p className={`fontBold text-xl`}>{manageUserListConst.addCourseTitle}</p>
+                                        <p className={styles.addCourseBtnBox} onClick={() => { add() }}>{manageUserListConst.addCourseBtn}</p>
+                                    </div>
+                                    <>
+                                        {field.map(({ name, key, fieldKey, ...restField }, index) => {
+                                            const enrollment = enrolledCourseList[index]
+                                            return (
+                                                <AddCourseInUserList
+                                                    key={`enrolledCourse${name}${index}`}
+                                                    index={index}
+                                                    allCourse={allCourse}
+                                                    name={name}
+                                                    enrollment={enrollment}
+                                                    enrolledCourseList={enrolledCourseList}
+                                                    setEnrolledCourseList={setEnrolledCourseList}
+                                                    newEnrollCourseList={newEnrollCourseList}
+                                                    setNewEnrollCourseList={setNewEnrollCourseList}
+                                                    updatedEnrollCourseList={updatedEnrollCourseList}
+                                                    setUpdatedEnrollCourseList={setUpdatedEnrollCourseList}
+                                                />
+                                            )
+                                        }
+                                        )}
+                                    </>
+                                </>
+                            )}
+                        </Form.List>
                     </>
                     :
                     <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
@@ -138,7 +195,7 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                     <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' >{manageUserListConst.saveBtn}</button>
                 </div>
             </Form>
-        </div>
+        </div >
     )
 }
 

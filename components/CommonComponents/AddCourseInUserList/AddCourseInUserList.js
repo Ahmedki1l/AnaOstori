@@ -3,28 +3,43 @@ import { manageUserListConst } from '../../../constants/adminPanelConst/manageUs
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import Select from '../../antDesignCompo/Select';
 import { FormItem } from '../../antDesignCompo/FormItem';
-import { getRouteAPI } from '../../../services/apisService';
+import { getAuthRouteAPI, getRouteAPI } from '../../../services/apisService';
 import styles from './AddCourseInUserList.module.scss'
 import ModelForDeleteItems from '../../ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems';
-import { dateRange, fullDate } from '../../../constants/DateConverter';
+import { dateRange } from '../../../constants/DateConverter';
 
 
 const AddCourseInUserList = ({
-    selectedUserDetails,
+    allCourse,
+    name,
+    enrollment,
     enrolledCourseList,
     setEnrolledCourseList,
-    category,
-
+    newEnrollCourseList,
+    setNewEnrollCourseList,
+    updatedEnrollCourseList,
+    setUpdatedEnrollCourseList
 }) => {
-    const [selectedCourse, setSelectedCourse] = useState()
+    const [selectedCourseId, setSelectedCourseId] = useState(enrollment?.courseId)
+    const [selectedCourseType, setSelectedCourseType] = useState(enrollment?.type)
     const [regionDataList, setRegionDataList] = useState()
+    const [availabilityList, setAvailabilityList] = useState()
     const [selectedRegion, setSelectedRegion] = useState()
+    const [selectedAvailability, setSelectedAvailability] = useState()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
-
     useEffect(() => {
         getRegionLIst()
+        if (enrollment) {
+            getAllAvailability(enrollment.courseId)
+        }
     }, [])
 
+    useEffect(() => {
+        if (enrollment) {
+            const selectedAvailabilityDate = availabilityList?.find((date) => date.value === enrollment.availabilityId);
+            setSelectedAvailability(selectedAvailabilityDate?.label)
+        }
+    }, [])
     const getRegionLIst = async () => {
         await getRouteAPI({ routeName: 'listRegion' }).then((res) => {
             setRegionDataList(res.data.map((obj) => {
@@ -38,19 +53,37 @@ const AddCourseInUserList = ({
             console.log(err)
         })
     }
+    const getAllAvailability = async (courseId) => {
+        let body = {
+            routeName: 'availabilityByCourse',
+            courseId: courseId,
+            gender: "all"
+        }
+        await getAuthRouteAPI(body).then(res => {
+            setAvailabilityList(res?.data?.map((obj) => {
+                return {
+                    key: obj.id,
+                    label: dateRange(obj.dateFrom, obj.dateTo),
+                    value: obj.id,
+                }
+            }))
+        }).catch(async (error) => {
+            console.error("Error:", error);
+        })
+    }
     const handleSelectregion = (value) => {
         setSelectedRegion(value);
     }
-    const handleSelectCourse = (value) => {
-        setSelectedCourse(value);
+    const handleOnSelectCourse = (value, option) => {
+        setSelectedCourseId(value)
+        setSelectedCourseType(option.type)
+        getAllAvailability(value)
+        let newEnrolledCourse = {
+            courseId: value,
+            type: option.type,
+        }
+        setNewEnrollCourseList(newEnrolledCourse);
     }
-    const enrolledCourse = selectedUserDetails?.enrollments.map((item) => {
-        return { label: item.course.name, value: item.course.id }
-    })
-    const selectedCourseType = selectedUserDetails?.enrollments.filter((item) => selectedCourse?.includes(item.course.id)).map((item, index) => {
-        return item.course.type
-    })
-
     const handleDeleteCourse = () => {
         setIsmodelForDeleteItems(true)
     }
@@ -60,11 +93,11 @@ const AddCourseInUserList = ({
     const handleDeleteFolderItems = async () => {
         console.log('delete');
     }
-    const allCourse = category.flatMap((item) => {
-        return item.courses.map((subItem) => {
-            return { value: subItem.id, label: subItem.name };
-        });
-    });
+    const handleSelectAvailability = (value) => {
+        setSelectedAvailability(value);
+    }
+
+
     return (
         <div>
             <div className={`my-4 ${styles.addCourseWrapper}`}>
@@ -77,28 +110,23 @@ const AddCourseInUserList = ({
                 </div>
             </div>
             <FormItem
-                name={'allCourses'}>
+                name={[name, 'courseId']}
+            >
                 <Select
                     width={425}
                     height={47}
                     placeholder='selectCourse'
-                    onChange={handleSelectCourse}
+                    onSelect={(value, option) => handleOnSelectCourse(value, option)}
                     OptionData={allCourse}
-                    defaultValue={selectedCourse}
+                    defaultValue={selectedCourseId}
                 />
             </FormItem>
-            <div className={styles.courseNames}>
-                {selectedUserDetails?.enrollments.filter((item) => selectedCourse?.includes(item.course.id)).map((item, index) => {
-                    return (
-                        <p key={index} style={{ fontSize: '16px' }}>{item.course.type}</p>
-                    )
-                })}
-            </div>
-            {selectedCourseType == 'physical' &&
+            {(selectedCourseType == 'physical') &&
                 <>
                     <p className='fontMedium pb-2' style={{ fontSize: '18px' }}>{manageUserListConst.regionHeading}</p>
                     <FormItem
-                        name={'regionId'}>
+                        name={[name, 'regionId']}
+                    >
                         <Select
                             width={425}
                             height={47}
@@ -109,20 +137,27 @@ const AddCourseInUserList = ({
                         />
                     </FormItem>
                 </>
+
             }
-            {selectedCourseType.length > 0 && selectedCourseType != 'on-demand' &&
+            {(selectedCourseId && selectedCourseType != 'on-demand') &&
                 <>
                     <p className='fontMedium pb-2' style={{ fontSize: '18px' }}>{manageUserListConst.datesHeading}</p>
-                    <div className={styles.courseNames}>
-                        {selectedUserDetails?.enrollments.filter((item) => selectedCourse?.includes(item.course.id)).map((item, index) => {
-                            return (
-                                <p key={index} style={{ fontSize: '16px' }}>{item?.availability?.dateFrom ? dateRange(item?.availability?.dateFrom, item?.availability?.dateTo) : 'اختار الموعد'}</p>
-                            )
-                        })}
-                    </div>
+                    <FormItem
+                        name={[name, 'availabilityId']}
+                    >
+                        <Select
+                            width={425}
+                            height={47}
+                            placeholder={manageUserListConst.selectAvailability}
+                            onChange={handleSelectAvailability}
+                            OptionData={availabilityList}
+                            defaultValue={selectedAvailability}
+                        />
+                    </FormItem>
                 </>
             }
-            {ismodelForDeleteItems &&
+            {
+                ismodelForDeleteItems &&
                 <ModelForDeleteItems
                     ismodelForDeleteItems={ismodelForDeleteItems}
                     onCloseModal={onCloseModal}
@@ -130,7 +165,7 @@ const AddCourseInUserList = ({
                     onDelete={handleDeleteFolderItems}
                 />
             }
-        </div>
+        </div >
     )
 }
 

@@ -38,8 +38,12 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [isAppointmentPublished, setIAppointmentPublished] = useState(editAvailability ? editAvailability.published : true)
     const [isContentAccess, setIsContentAccess] = useState(editAvailability ? editAvailability.contentAccess : false)
-    const [regionDataList, setRegionDataList] = useState()
-
+    const [regionDataList, setRegionDataList] = useState([{
+        key: '0',
+        label: 'جميع المناطق',
+        value: '0',
+    }])
+    const [regionDataListForModel, setRegionDataListForModel] = useState()
     const instructor = instructorList?.map((obj) => {
         return {
             key: obj.id,
@@ -64,16 +68,13 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
                     value: obj.id,
                 }
             })
-            regionList?.push({
-                key: '3',
-                label: 'جميع المناطق',
-                value: 'all',
-            })
-            setRegionDataList(regionList)
+            setRegionDataListForModel(regionList)
+            setRegionDataList([...regionDataList, ...regionList])
         }).catch((err) => {
             console.log(err)
         })
     }
+
     const calculateNumberOfSeats = (newMaxSeats) => {
         return editAvailability?.numberOfSeats + (newMaxSeats - editAvailability.maxNumberOfSeats)
     }
@@ -482,7 +483,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
                                                 width={352}
                                                 height={40}
                                                 placeholder='اختار المنطقة'
-                                                OptionData={regionDataList}
+                                                OptionData={regionDataListForModel}
                                                 maxTagCount='responsive'
                                             />
                                         </FormItem>
