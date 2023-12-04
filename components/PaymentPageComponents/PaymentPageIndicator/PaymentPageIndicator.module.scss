@@ -52,7 +52,8 @@
 
 .pageOneMainArea {
 	.firstPageBox {
-		background-color: $primary-color;
+		border: 6px solid #FF7632;
+		background-color: #FFAF88;
 
 		p {
 			color: #ffffff;
@@ -61,15 +62,15 @@
 	}
 
 	.middleLine {
-		background-color: #ffc4a6;
+		background-color: #FF7632;
 	}
 
 	.secondPage {
-		border: 6px solid #ffc4a6;
+		border: 6px solid #FF7632;
 		background-color: #ffffff;
 
 		p {
-			color: #ffc4a6;
+			color: #FF7632;
 			font-size: 28px;
 		}
 	}
@@ -109,6 +110,7 @@
 	.pageTwoMainArea {
 		width: 35rem;
 		height: 8rem;
+		border-width: 3px;
 	}
 
 	.middleLine {
@@ -138,24 +140,46 @@
 
 	.pageOneMainArea,
 	.pageTwoMainArea {
-		width: 20rem;
+		width: 24rem;
 		height: 6.25rem;
 		margin-top: 1rem;
+		margin: auto;
 	}
 
 	.middleLine {
-		width: 11rem;
-		height: 5px;
-		top: 41%;
+		width: 14rem;
+		height: 3px;
+	}
+
+	.pageNoOne {
+		right: 16px;
+	}
+
+	.pageNoTwo {
+		left: 16px;
+		margin-left: 1rem;
+	}
+
+	.circle {
+		height: 38px;
+		width: 38px;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.pageNoHead {
-		font-size: 15px;
+		font-size: 12px;
 		margin-top: 0.75rem;
 	}
 
 	.pageOneMainArea {
 		.secondPage {
+			border-width: 4px;
+		}
+
+		.firstPageBox {
 			border-width: 4px;
 		}
 	}

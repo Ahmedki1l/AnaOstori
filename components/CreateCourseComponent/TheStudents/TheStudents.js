@@ -33,7 +33,7 @@ const TheStudent = (props) => {
     const genders = PaymentConst.genders
     const dispatch = useDispatch();
     const storeData = useSelector((state) => state?.globalStore);
-    const availabilityList = storeData?.availabilityList;
+    const availabilityList = storeData?.availabilityList.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).reverse();
     const [examList, setExamList] = useState()
     const [oldExamList, setOldExamList] = useState()
     const [selectedStudent, setSelectedStudent] = useState()

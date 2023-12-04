@@ -28,9 +28,8 @@ export default function Attendance(props) {
     const [selectedAvailability, setSelectedAvailability] = useState(null)
     const [loadning, setLoadning] = useState(false)
     const storeData = useSelector((state) => state?.globalStore);
-    const availabilityList = storeData?.availabilityList;
+    const availabilityList = storeData?.availabilityList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     const allavailability = availabilityList?.map((obj) => {
-
         return {
             key: obj.id,
             label: dateRange(obj.dateFrom, obj.dateTo),

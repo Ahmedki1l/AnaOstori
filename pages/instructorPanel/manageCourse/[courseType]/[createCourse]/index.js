@@ -14,7 +14,7 @@ import BackToPath from '../../../../../components/CommonComponents/BackToPath';
 import { getNewToken } from '../../../../../services/fireBaseAuthService';
 
 export default function Index() {
-    // const { courseType, courseId } = useRouter().query
+
     const courseId = useRouter().query.courseId
     const courseType = useRouter().query.courseType
     const [selectedItem, setSelectedItem] = useState(1);

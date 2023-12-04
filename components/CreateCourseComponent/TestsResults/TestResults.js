@@ -22,7 +22,7 @@ const TestResults = (props) => {
     const courseType = props.courseType
     const storeData = useSelector((state) => state?.globalStore);
     const [examList, setExamList] = useState()
-    const availabilityList = storeData?.availabilityList;
+    const availabilityList = storeData?.availabilityList.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).reverse();
     const [showStudentList, setShowStudentList] = useState(false)
     const [selectedExam, setSelectedExam] = useState()
     const [selectedAvailability, setSelectedAvailability] = useState()
