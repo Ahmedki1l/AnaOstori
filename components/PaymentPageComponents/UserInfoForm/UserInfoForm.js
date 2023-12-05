@@ -314,7 +314,7 @@ export default function UserInfoForm(props) {
 										}
 									</div>
 								}
-								{courseDetail.type == 'physical' &&
+								{(courseDetail.type == 'physical' && regionDataList.length > 0) &&
 									<>
 										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المنطقة</p>
 										<p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>
