@@ -76,7 +76,7 @@ export default function Attendance(props) {
         const attendanceDetailsData = data.map((student, index) => {
             const studentData = {
                 key: `studentAttendance${index}`,
-                studentName: student.fullName ? student.fullName : student.firstName + ' ' + student.lastName,
+                studentName: student.fullName ? student.fullName : student.firstName ? student.firstName + ' ' + student.lastName : '',
                 studentAvatar: student.avatar,
                 studentAvatarKey: student.avatarKey,
                 studentAvatarBucket: student.avatarBucket,
