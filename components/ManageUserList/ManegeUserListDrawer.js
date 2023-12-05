@@ -52,10 +52,6 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
         }
     }, [selectedUserDetails, selectedUserDetails.enrollments]);
 
-    // useEffect(() => {
-    //     setEnrolledCourseList(enrolledCourseList)
-    // }, [enrolledCourseList])
-
     const handleSaveUserDetails = async (values) => {
         if (avatarUploadResData) {
             values.avatarKey = avatarUploadResData?.key
@@ -67,7 +63,8 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
             if (course) {
                 return {
                     ...enrollment,
-                    type: course.type
+                    type: course.type,
+                    userProfileId: selectedUserDetails.id,
                 };
             }
             return enrollment;
