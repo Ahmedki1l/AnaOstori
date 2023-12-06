@@ -287,7 +287,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             } else if (courseMetaDataBody.data.length === 0 && courseDetailsMetaDataBody.data.length === 0) {
                 editCourseData = editCourse.data;
             } else {
-                editCourseData = editCourseMetaData.data;
+                editCourseData = editCourse.data;
+                editCourseData.courseMetaData = editCourseMetaData.data.courseMetaData;
                 editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
             }
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });
