@@ -386,7 +386,7 @@ export default function Index(props) {
 										<h1 className='head2'>محتوى الدورة </h1>
 										{/* <p className='link'>إظهار جميع الأقسام</p> */}
 									</div>
-									<p className={styles.courseContentDetailsText}>{noOfVideos} فيديو، {noOfQuizes} اختبارات، {noOfFiles} ملفات</p>
+									<p className={styles.courseContentDetailsText}>{noOfVideos > 0 && <span>{noOfVideos} فيديو</span>} {noOfQuizes > 0 && <span>{noOfQuizes} اختبارات</span>} {noOfFiles > 0 && <span>{noOfFiles} ملفات</span>} </p>
 									<div>
 										{ccSections?.map((section, i) => {
 											return (
