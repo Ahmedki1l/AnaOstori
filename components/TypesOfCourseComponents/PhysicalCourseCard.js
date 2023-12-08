@@ -13,7 +13,7 @@ export default function PhysicalCourseCard(props) {
 
 	const courseDetail = props.courseDetails
 	const isEdit = props.isEdit
-	const lang = courseDetail.language
+	const lang = courseDetail?.language
 	const groupDiscountEligible = courseDetail?.groupDiscountEligible
 	const catagoryName = props.catagoryName ? props.catagoryName : ""
 	const [discountShow, setDiscountShow] = useState(false)
@@ -35,15 +35,15 @@ export default function PhysicalCourseCard(props) {
 	return (
 		<div className={`${lang == 'en' ? `${styles.rightSide}` : `${styles.leftSide}`}`}>
 			<div className={styles.typeOfCourseCardWrapper}>
-				{!courseDetail.isPurchasable && <div className={styles.notAllowedWrapper}><div className={styles.notAllowedIconWrapper}></div></div>}
+				{!courseDetail?.isPurchasable && <div className={styles.notAllowedWrapper}><div className={styles.notAllowedIconWrapper}></div></div>}
 				<div className='cursor-pointer' onClick={() => handleNavigation(catagoryName, courseDetail)}>
-					<CoverImg height={215} url={courseDetail.pictureKey ? mediaUrl(courseDetail.pictureBucket, courseDetail.pictureKey) : '/images/anaOstori.png'} />
+					<CoverImg height={215} url={courseDetail?.pictureKey ? mediaUrl(courseDetail?.pictureBucket, courseDetail?.pictureKey) : '/images/anaOstori.png'} />
 				</div>
 				<div className={styles.detailsBox}>
-					<h1 className='head2 text-center'>{courseDetail.name}</h1>
-					<p className={styles.courseDetailText}>{courseDetail.cardDescription}</p>
+					<h1 className='head2 text-center'>{courseDetail?.name}</h1>
+					<p className={styles.courseDetailText}>{courseDetail?.cardDescription}</p>
 					<ul className={styles.descriptionList}>
-						{courseDetail.CourseCardMetaData?.map((metaData, index) => {
+						{courseDetail?.CourseCardMetaData?.map((metaData, index) => {
 							return (
 								<li key={`courseCare${index}`}>
 									<div>
@@ -69,7 +69,7 @@ export default function PhysicalCourseCard(props) {
 						<div style={{ height: '0.3px' }}>
 							<div className={styles.separateLine}></div>
 						</div>
-						{(courseDetail.discount == null || courseDetail.discount == courseDetail.price) ?
+						{(courseDetail?.discount == null || courseDetail.discount == courseDetail.price) ?
 							<div>
 								<p className={`fontBold pt-4 px-3 ${styles.detailHeadText}`}>{lang == 'en' ? 'Prices includes VAT' : 'الأسعار شاملة الضريبة'}</p>
 								<div className={styles.onePersonPriceBox}>
@@ -88,7 +88,7 @@ export default function PhysicalCourseCard(props) {
 								</div>
 							</div>
 						}
-						{(courseDetail.type != "on-demand" && groupDiscountEligible) && <>
+						{(courseDetail?.type != "on-demand" && groupDiscountEligible) && <>
 							<div>
 								<div className={`flex items-center cursor-pointer select-none ${styles.hidePriceBox}`} onClick={() => { setDiscountShow(!discountShow) }}>
 									<div style={{ height: '18px' }}>

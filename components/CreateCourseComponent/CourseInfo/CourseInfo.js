@@ -188,7 +188,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             delete obj.updatedAt
             delete obj.grayedText
             obj.order = `${index + 1}`
-            obj.courseId = editCourseData.id
+            obj.courseId = editCourseData?.id
             obj.tailLinkName = obj.tailLinkName ? obj.tailLinkName : null
             obj.tailLink = obj.tailLink ? obj.tailLink : null
             obj.link = obj.link ? obj.link : null
@@ -287,7 +287,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             } else if (courseMetaDataBody.data.length === 0 && courseDetailsMetaDataBody.data.length === 0) {
                 editCourseData = editCourse.data;
             } else {
-                editCourseData = editCourseMetaData.data;
+                editCourseData = editCourse.data;
+                editCourseData.courseMetaData = editCourseMetaData.data.courseMetaData;
                 editCourseData.courseDetailsMetaData = editCourseDetailsMetadata.data.courseDetailsMetaData;
             }
             dispatch({ type: 'SET_EDIT_COURSE_DATA', editCourseData });

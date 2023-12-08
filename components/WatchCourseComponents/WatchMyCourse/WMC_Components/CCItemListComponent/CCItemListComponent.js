@@ -8,11 +8,9 @@ import { secondsToMinutes } from '../../../../../constants/DataManupulation';
 
 export default function CCItemListComponent(props) {
 
-	const isSmallScreen = useWindowSize().smallScreen
 	const item = props?.item
 	const itemId = item?.id
 	const completedCourseItem = props?.completedCourseItem
-	const [videoDuration, setVideoDuration] = useState()
 	const [isItemComplete, setIsItemComplete] = useState(false)
 
 	useEffect(() => {
