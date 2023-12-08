@@ -94,12 +94,13 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                             {sectionItemList?.map((data, index) => (
                                 <Draggable key={`item ${index}`} draggableId={`item-${index}`} index={index}>
                                     {(provided) => (
-                                        <div
+                                        < div
                                             key={`data${index}`}
                                             className={styles.curriculumDataArea}
                                             {...provided.draggableProps}
                                             ref={provided.innerRef}
                                         >
+                                            {console.log(data)}
                                             <div className={styles.curriculimDetailsData}>
                                                 <div {...provided.dragHandleProps} className={styles.updownArrowWrapper}>
                                                     <AllIconsComponenet height={18} width={18} iconName={'updownarrow'} color={'#00000094'} />
@@ -137,7 +138,7 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                         </div>
                     )}
                 </Droppable>
-            </DragDropContext>
+            </DragDropContext >
 
             {ismodelForDeleteItems &&
                 <ModelForDeleteItems
@@ -145,8 +146,10 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                     onCloseModal={onCloseModal}
                     deleteItemType={deleteItemType}
                     onDelete={handleDeleteSectionItem}
-                />}
-            {videoModalOpen &&
+                />
+            }
+            {
+                videoModalOpen &&
                 <ModalForVideo
                     videoModalOpen={videoModalOpen}
                     setVideoModalOpen={setVideoModalOpen}

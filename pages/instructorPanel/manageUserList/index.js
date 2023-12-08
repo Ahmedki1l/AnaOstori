@@ -27,7 +27,6 @@ const Index = () => {
     })
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState()
-
     const genders = PaymentConst.genders
 
     const tableColumns = [
@@ -146,7 +145,7 @@ const Index = () => {
                     setSelectedUser(_record)
                 }
                 return (
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={() => handleEditUsers()}>
                         <AllIconsComponenet iconName={'newEditIcon'} height={18} width={18} color={'#000000'} />
                     </div>
                 )
@@ -238,7 +237,11 @@ const Index = () => {
                             </>
                         }
                     >
-                        <ManegeUserListDrawer selectedUserDetails={selectedUser} />
+                        <ManegeUserListDrawer
+                            selectedUserDetails={selectedUser}
+                            setDrawerForUsers={setDrawerForUsers}
+                            getUserList={getUserList}
+                        />
                     </Drawer>
                 }
             </ConfigProvider>

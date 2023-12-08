@@ -1,43 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import useWindowSize from '../../../../hooks/useWindoSize'
+
 import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux';
-import { getAuthRouteAPI, postAuthRouteAPI } from '../../../../services/apisService';
-import { getNewToken } from '../../../../services/fireBaseAuthService';
-import CCItemListComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemListComponent/CCItemListComponent'
-import CCItemVideoComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemVideoComponent/CCItemVideoComponent';
-import CCItemQuizComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemQuizComponent/CCItemQuizComponent';
-import CCItemFileComponent from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemFileComponent/CCItemFileComponent';
-import CourseCompleteDialog from '../../../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CourseCompleteDialog/CourseCompleteDialog';
-import styles from '../../../../styles/MyCourseWatch.module.scss'
-import Spinner from '../../../../components/CommonComponents/spinner';
-import MyCourseDetails from '../../../../components/WatchCourseComponents/MyCourseContent/MyCourseContent';
-import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import Spinner from '../../components/CommonComponents/spinner'
+import { getAuthRouteAPI, postAuthRouteAPI } from '../../services/apisService'
+import styles from '../../styles/MyCourseWatch.module.scss'
+import useWindowSize from '../../hooks/useWindoSize'
+import AllIconsComponenet from '../../Icons/AllIconsComponenet'
+import CCItemListComponent from '../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemListComponent/CCItemListComponent'
+import CCItemVideoComponent from '../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemVideoComponent/CCItemVideoComponent'
+import CCItemFileComponent from '../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemFileComponent/CCItemFileComponent'
+import CCItemQuizComponent from '../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CCItemQuizComponent/CCItemQuizComponent'
+import CourseCompleteDialog from '../../components/WatchCourseComponents/WatchMyCourse/WMC_Components/CourseCompleteDialog/CourseCompleteDialog'
+import { getNewToken } from '../../services/fireBaseAuthService'
 
-
-
-export default function Index() {
-    const dispatch = useDispatch();
-    const smallScreen = useWindowSize().smallScreen
-    const [selectedTab, setSelectedTab] = useState(1)
+const Index = () => {
     const router = useRouter()
     const courseID = router?.query?.courseId
-    const currentItemId = router?.query?.itemId
-    const [courseCurriculum, setCourseCurriculum] = useState()
-    const [courseProgressPrecentage, setCourseProgressPrecentage] = useState()
-    const [filesInCourse, setFilesInCourse] = useState([])
-    const [ccSections, setCCSections] = useState([])
-    const [expandedSection, setExpandedSection] = useState(null);
-    const [newSelectedCourseItem, setNewSelectedCourseItem] = useState()
-    const [completedCourseItem, setCompletedCourseItem] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [isUserEnrolled, setIsUserEnrolled] = useState(false)
     const storeData = useSelector((state) => state?.globalStore);
-    const selectedCourse = storeData.myCourses.find((enrollment) => {
-        return enrollment.courseId == courseID
-    })
+    const [courseCurriculum, setCourseCurriculum] = useState()
+    const [currentItemId, setCurrentItemId] = useState()
+    const [filesInCourse, setFilesInCourse] = useState()
+    const [isUserEnrolled, setIsUserEnrolled] = useState(false)
+    const [completedCourseItem, setCompletedCourseItem] = useState([])
+    const [newSelectedCourseItem, setNewSelectedCourseItem] = useState()
+    const [expandedSection, setExpandedSection] = useState()
+    const [ccSections, setCCSections] = useState()
     const [isAllItemsCompleted, setIsAllItemsCompleted] = useState(false)
+    const [selectedTab, setSelectedTab] = useState(1)
+    const smallScreen = useWindowSize().smallScreen
+    const enrollmentId = storeData?.myCourses?.find((course) => {
+        return course.courseId = courseID
+    })?.id
 
     const chagenCourseItemHendler = async (itemID) => {
         if (itemID) {
@@ -48,27 +42,30 @@ export default function Index() {
             }
             await getAuthRouteAPI(currentItemParams).then((res) => {
                 setNewSelectedCourseItem(res.data)
-                router.push(`/myCourse/${courseID}/${itemID}`)
+                router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${itemID}`)
             }).catch(async (error) => {
                 console.log(error)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await getAuthRouteAPI(currentItemParams).then((res) => {
                             setNewSelectedCourseItem(res.data)
-                            router.push(`/myCourse/${courseID}/${itemID}`)
+                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${itemID}`)
                         }).catch((error) => console.log(error))
                     })
                 }
             })
         }
     }
-
+    const selectedCourse = storeData.myCourses.find((enrollment) => {
+        return enrollment.courseId == courseID
+    })
     const markCourseCompleteHandler = async (completedItems, curriculum) => {
         const filteredItems = completedItems.filter(item => item.pass !== false);
         const completedItemIds = new Set(filteredItems.map(item => item.itemId));
         const allItemsCompleted = curriculum.sections.every(section =>
             section.items.every(item => completedItemIds.has(item.id))
         );
+        console.log(allItemsCompleted);
         setIsAllItemsCompleted(allItemsCompleted)
         if (allItemsCompleted) {
             const params = {
@@ -85,123 +82,6 @@ export default function Index() {
             })
         }
     }
-
-    useEffect(() => {
-        if (courseID && currentItemId) {
-            setLoading(true)
-            const getPageProps = async () => {
-                let couresCurriculumParams = {
-                    routeName: 'getCourseCurriculum',
-                    courseId: courseID,
-                }
-                let courseProgressParams = {
-                    routeName: 'userCourseProgress',
-                    courseId: courseID,
-                    enrollmentId: selectedCourse.id,
-                }
-                let completedCourseItemParams = {
-                    routeName: 'CourseProgress',
-                    courseId: courseID,
-                    enrollmentId: selectedCourse.id,
-                }
-                let currentItemParams = {
-                    routeName: 'getItemById',
-                    courseId: courseID,
-                    itemId: currentItemId,
-                }
-
-                try {
-                    const courseCurriculumReq = getAuthRouteAPI(couresCurriculumParams)
-                    const completedCourseItemReq = getAuthRouteAPI(completedCourseItemParams)
-                    const courseProgressPrecentageReq = getAuthRouteAPI(courseProgressParams)
-                    const currentItemContentReq = getAuthRouteAPI(currentItemParams)
-
-                    const [courseCurriculum, completedCourseItem, courseProgressPrecentage, currentItemContent] = await Promise.all([
-                        courseCurriculumReq,
-                        completedCourseItemReq,
-                        courseProgressPrecentageReq,
-                        currentItemContentReq
-                    ])
-                    setCourseCurriculum(courseCurriculum.data)
-                    setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
-                    setCCSections(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
-                    setCourseProgressPrecentage(courseProgressPrecentage.data)
-                    setCompletedCourseItem(completedCourseItem.data)
-                    setNewSelectedCourseItem(currentItemContent.data)
-                    getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
-                    markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
-                    setLoading(false)
-                    setIsUserEnrolled(true)
-                } catch (error) {
-                    console.log(error);
-                    if (error?.response?.data?.message == "Enrollment not found") {
-                        setLoading(false)
-                        setIsUserEnrolled(false)
-                    }
-                    if (error?.response?.status == 401) {
-                        await getNewToken().then(async (token) => {
-                            const courseCurriculumReq = getAuthRouteAPI(couresCurriculumParams)
-                            const completedCourseItemReq = getAuthRouteAPI(completedCourseItemParams)
-                            const courseProgressPrecentageReq = getAuthRouteAPI(courseProgressParams)
-                            const currentItemContentReq = getAuthRouteAPI(currentItemParams)
-
-                            const [courseCurriculum, completedCourseItem, courseProgressPrecentage, currentItemContent] = await Promise.all([
-                                courseCurriculumReq,
-                                completedCourseItemReq,
-                                courseProgressPrecentageReq,
-                                currentItemContentReq
-                            ])
-                            setCourseCurriculum(courseCurriculum.data)
-                            setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
-                            setCCSections(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
-                            setCourseProgressPrecentage(courseProgressPrecentage.data)
-                            setCompletedCourseItem(completedCourseItem.data)
-                            setNewSelectedCourseItem(currentItemContent.data)
-                            getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
-                            markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
-                            setLoading(false)
-                            setIsUserEnrolled(true)
-                        })
-                    }
-                }
-            }
-            getPageProps()
-        }
-    }, [courseID])
-
-    useEffect(() => {
-        if (!smallScreen) setSelectedTab(1)
-    }, [smallScreen])
-
-
-    const getCurrentItemId = (watchedItems, ccSections) => {
-        if (watchedItems.length == 0) {
-            setExpandedSection(0)
-        }
-        else {
-            for (let i = ccSections?.length; i > 0; i--) {
-                const itemInSection = ccSections[i - 1]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order);
-                for (let j = itemInSection?.length; j > 0; j--) {
-                    const itemId = itemInSection[j - 1]?.id;
-                    if (watchedItems?.some(watchedItem => watchedItem.itemId == itemId)) {
-                        if ((j - 1) == ((itemInSection?.length) - 1) && (i - 1) == ((ccSections?.length) - 1)) {
-                            setExpandedSection(0)
-                            return
-                        } else if ((j - 1) == ((itemInSection?.length) - 1)) {
-                            setExpandedSection(i)
-                            return
-                        } else {
-                            setExpandedSection(i - 1)
-                        }
-                        return
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
     const markItemCompleteHendler = async (itemID) => {
         if (!completedCourseItem?.some(watchedItem => watchedItem.itemId == itemID)) {
             const params = {
@@ -241,36 +121,92 @@ export default function Index() {
             }
         }
     }
-
-    const downloadFileHandler = async (itemID) => {
+    useEffect(() => {
         if (courseID) {
-            let currentItemParams = {
-                routeName: 'getItemById',
-                courseId: courseID,
-                itemId: itemID,
-            }
-            await getAuthRouteAPI(currentItemParams).then((res) => {
-                router.push(`${res.data.url}`)
-            }).catch(async (error) => {
-                console.log(error)
-                if (error?.response?.status == 401) {
-                    await getNewToken().then(async (token) => {
-                        await getAuthRouteAPI(currentItemParams).then((res) => {
-                            router.push(`${res.data.url}`)
-                        }).catch((error) => console.log(error))
-                    })
+            const getPageProps = async () => {
+                let couresCurriculumParams = {
+                    routeName: 'getCourseCurriculum',
+                    courseId: courseID,
                 }
-            })
-        }
-    }
+                let courseProgressParams = {
+                    routeName: 'userCourseProgress',
+                    courseId: courseID,
+                    enrollmentId: selectedCourse.id,
+                }
+                let completedCourseItemParams = {
+                    routeName: 'CourseProgress',
+                    courseId: courseID,
+                    enrollmentId: selectedCourse.id,
+                }
+                try {
 
+                    const courseCurriculumReq = getAuthRouteAPI(couresCurriculumParams)
+                    const courseProgressReq = getAuthRouteAPI(courseProgressParams)
+                    const completedCourseItemReq = getAuthRouteAPI(completedCourseItemParams)
+
+                    const [courseCurriculum, courseProgress, completedCourseItem] = await Promise.all([
+                        courseCurriculumReq,
+                        courseProgressReq,
+                        completedCourseItemReq
+                    ])
+                    setCourseCurriculum(courseCurriculum.data)
+                    if (courseCurriculum.data?.enrollment != null) { setIsUserEnrolled(true) }
+                    setCCSections(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+                    setCompletedCourseItem(completedCourseItem.data)
+                    setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
+                    markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
+                    setNewSelectedCourseItem(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0])
+                    getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+                } catch (error) {
+                    if (error?.response?.status == 401) {
+                        await getNewToken().then(async (token) => {
+                            getPageProps()
+                        })
+                    }
+                }
+            }
+            getPageProps()
+        }
+    }, [courseID])
+
+    const getCurrentItemId = (watchedItems, ccSections) => {
+        if (watchedItems.length == 0) {
+            setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id)
+            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
+        }
+        else {
+            for (let i = ccSections?.length; i > 0; i--) {
+                const itemInSection = ccSections[i - 1]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order);
+                for (let j = itemInSection?.length; j > 0; j--) {
+                    const itemId = itemInSection[j - 1]?.id;
+                    if (watchedItems?.some(watchedItem => watchedItem.itemId == itemId)) {
+                        if ((j - 1) == ((itemInSection?.length) - 1) && (i - 1) == ((ccSections?.length) - 1)) {
+                            setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id)
+                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
+                            return
+                        } else if ((j - 1) == ((itemInSection?.length) - 1)) {
+                            setCurrentItemId(ccSections[i]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id)
+                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[i]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
+                            return
+                        } else {
+                            setCurrentItemId(itemInSection[j]?.id)
+                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${itemInSection[j]?.id}`)
+                        }
+                        return
+                    }
+                }
+            }
+        }
+        return null;
+    }
     return (
         <>
-            {loading ?
+            {!courseCurriculum ?
                 <div className='flex justify-center items-center'>
                     <Spinner />
                 </div>
-                : isUserEnrolled ?
+                :
+                isUserEnrolled ?
                     <>
                         <div className={styles.courseCurriculumMainArea}>
                             {selectedTab == 1 && <div className={styles.ccSectionsMainArea}>
@@ -306,7 +242,6 @@ export default function Index() {
                                     )
                                 })}
                             </div>}
-                            {/* {smallScreen && selectedTab == 2 && <MyCourseDetails courseCurriculum={courseCurriculum} courseID={courseID} courseProgressPrecentage={courseProgressPrecentage} />} */}
                             {smallScreen && selectedTab == 3 && <>
                                 {filesInCourse?.map((fileItem, index) => {
                                     return (
@@ -320,7 +255,6 @@ export default function Index() {
                             {smallScreen &&
                                 <div className={styles.navItemsWrapper}>
                                     <p className={`fontMedium ${styles.navItemText} ${selectedTab == '1' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(1)}>المحتوى</p>
-                                    {/* <p className={`fontMedium ${styles.navItemText} ${selectedTab == '2' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(2)}>الملفات</p> */}
                                     <p className={`fontMedium ${styles.navItemText} ${selectedTab == '3' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(3)}>نظرة عامة</p>
                                 </div>
                             }
@@ -347,15 +281,14 @@ export default function Index() {
                                 <div className={styles.ccItemDetailsWrapper}>
                                     <h1 className={`font-bold pr-4 pt-4 ${styles.currentItemName}`}>{newSelectedCourseItem?.name}</h1>
                                     <p className={`pr-4 ${styles.currentItemDiscription}`}>{newSelectedCourseItem?.description}</p>
-                                    {/* <div className={styles.currentItemBtnBox}>
-                                        <button className={`primarySolidBtn ${styles.currentItemBtn}`}>نص ينكتب هنا</button>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
-                        {(!courseCurriculum.enrollment.isCompleted && isAllItemsCompleted) && < div >
-                            <CourseCompleteDialog />
-                        </div>}
+                        {(!courseCurriculum.enrollment.isCompleted && isAllItemsCompleted) &&
+                            <div>
+                                <CourseCompleteDialog />
+                            </div>
+                        }
                     </>
                     :
                     <div>Please Enrolled Your self to access this course</div>
@@ -363,3 +296,5 @@ export default function Index() {
         </>
     )
 }
+
+export default Index

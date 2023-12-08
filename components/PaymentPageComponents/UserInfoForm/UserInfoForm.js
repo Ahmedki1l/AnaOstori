@@ -13,8 +13,6 @@ import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
 
-
-
 export default function UserInfoForm(props) {
 	const studentsDataLength = props.studentsData?.length
 	const noOfUsersTag = PaymentConst.noOfUsersTag
@@ -36,8 +34,7 @@ export default function UserInfoForm(props) {
 	const groupDiscountEligible = courseDetail.groupDiscountEligible
 	const smallScreen = useWindowSize().smallScreen
 	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
-	const [disabledRegion, setDisabledRegion] = useState(initialFemaleDate.regionId == initialMaleDate.regionId ? initialFemaleDate.regionId : null)
-	console.log(disabledRegion);
+	const [disabledRegion, setDisabledRegion] = useState()
 	const userTemplet = {
 		gender: '',
 		date: '',
@@ -46,7 +43,6 @@ export default function UserInfoForm(props) {
 		email: '',
 		availabilityId: ''
 	}
-
 	const preselectedUserTempletFOrOnDemand = {
 		gender: courseDetail.type == 'on-demand' && userPredefineGender ? userPredefineGender : '',
 		date: '',
@@ -84,11 +80,14 @@ export default function UserInfoForm(props) {
 			setSelectedRegionId(router.query.region)
 		}
 		getRegionAndBranchList()
-	}, [props.studentsData, studentsDataLength])
+		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region))
+		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
+	}, [])
 
 	useEffect(() => {
-		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region));
-		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
+
+
+
 	}, [])
 
 	const handleTotalStudent = (value) => {
@@ -211,6 +210,15 @@ export default function UserInfoForm(props) {
 			if (!router.query.region) {
 				setSelectedRegionId(res.data[0].id)
 			}
+			const availableRegionSet = new Set(initialMaleDate.concat(initialFemaleDate).map((dates) => {
+				return dates.regionId;
+			}));
+			const availableRegion = Array.from(availableRegionSet)
+
+			if (availableRegion?.length !== 2) {
+				const isRegionDisabled = res.data?.find((obj) => !availableRegion.includes(obj.id));
+				setDisabledRegion(isRegionDisabled?.id)
+			}
 		}).catch((err) => {
 			console.log(err)
 		})
@@ -228,7 +236,6 @@ export default function UserInfoForm(props) {
 		} else if (regionDateListMale.length == 0) {
 			setSelectedGender('female')
 			setDisabledGender('male')
-			setDisabledRegion(disabledRegion)
 		}
 		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
 			setDisabledGender(null)
@@ -314,7 +321,7 @@ export default function UserInfoForm(props) {
 										}
 									</div>
 								}
-								{(courseDetail.type == 'physical' && regionDataList.length > 0) &&
+								{(courseDetail.type == 'physical' && regionDataList?.length > 0) &&
 									<>
 										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المنطقة</p>
 										<p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>
@@ -324,11 +331,12 @@ export default function UserInfoForm(props) {
 												return (
 													<div className={styles.radioBtnBox} key={`region${j}`}>
 														<input id={`region${i}`} type="radio" name={`region${i}`} value={region.id} title="region"
-															className={`${styles.radioBtn}`}
+															className={`${styles.radioBtn}  ${disabledRegion == region.id ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 															checked={(selectedRegionId && i == 0 ? selectedRegionId == region.id : student.region == region.id)}
 															onChange={event => handleRegionChange(event, i)}
+															disabled={disabledRegion == region.id}
 														/>
-														<label htmlFor='dateForAll' className={` ${styles.lableName1}`}>{region.nameAr}</label>
+														<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledRegion == region.id ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr}</label>
 													</div>
 												)
 											})}

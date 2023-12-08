@@ -10,22 +10,25 @@ import Empty from '../CommonComponents/Empty';
 import AddCourseInUserList from '../CommonComponents/AddCourseInUserList/AddCourseInUserList';
 import { useSelector } from 'react-redux';
 import { postAuthRouteAPI } from '../../services/apisService';
+import { getNewToken } from '../../services/fireBaseAuthService';
 
-const ManegeUserListDrawer = ({ selectedUserDetails }) => {
+const ManegeUserListDrawer = ({
+    selectedUserDetails,
+    setDrawerForUsers,
+    getUserList
+}) => {
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [userForm] = Form.useForm()
     const storeData = useSelector((state) => state?.globalStore);
     const category = storeData.catagories
-    const [newEnrollCourseList, setNewEnrollCourseList] = useState()
-    const [updatedEnrollCourseList, setUpdatedEnrollCourseList] = useState()
     const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments.map((item) => {
         return {
             courseId: item?.course?.id,
             type: item?.course?.type,
             regionId: item?.availability?.regionId,
             availabilityId: item?.availability?.id,
-            enrollmentId: item.id
+            id: item.id
         }
     }))
     const allCourse = category.flatMap((item) => {
@@ -45,20 +48,16 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                         type: item?.course?.type,
                         regionId: item?.availability?.regionId,
                         availabilityId: item?.availability?.id,
-                        enrollmentId: item.id
+                        id: item.id
                     }
                 })
             })
         }
-    }, [selectedUserDetails, selectedUserDetails.enrollments]);
+    }, [selectedUserDetails, selectedUserDetails.enrollments])
+
 
     const handleSaveUserDetails = async (values) => {
-        if (avatarUploadResData) {
-            values.avatarKey = avatarUploadResData?.key
-            values.avatarBucket = avatarUploadResData?.bucket
-            values.avatarMime = avatarUploadResData?.mime
-        }
-        let newData = values.enrolledCourseList.map((enrollment) => {
+        let newEnrolledCourseData = values.enrolledCourseList.map((enrollment) => {
             const course = allCourse.find((course) => course.value === enrollment.courseId);
             if (course) {
                 return {
@@ -69,23 +68,62 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
             }
             return enrollment;
         });
-        values.enrolledCourseList = newData
-        const courseIdsToDelete = enrolledCourseList.map((item) => item.courseId);
-        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment) => {
-            return !courseIdsToDelete.includes(enrollment.courseId);
-        });
-        values.updatesCourseList = updatedEnrolledCourseList
-        let body = {
-            routeName: 'adminEnroll',
-            data: values.updatesCourseList
+        const newEnrolledCourseList = newEnrolledCourseData.filter(item => !item.id);
+        if (newEnrolledCourseList.length > 0) {
+            let createAPIBody = {
+                routeName: 'adminEnroll',
+                data: newEnrolledCourseList
+            }
+            await postAuthRouteAPI(createAPIBody).then((res) => {
+                setEnrolledCourseList(res.data)
+                setDrawerForUsers(false)
+                getUserList(1)
+            }).catch(async (err) => {
+                if (err?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await postAuthRouteAPI(createAPIBody).then((res) => { })
+                    }).catch(err => {
+                        console.error(err);
+                    });
+                }
+                console.log(err)
+            })
+        } else {
+            setDrawerForUsers(false)
         }
-        console.log(body);
-        await postAuthRouteAPI(body).then((res) => {
-            console.log(res)
-        }).catch((err) => {
-            console.log(err)
-        })
+        const newUpdatedArray = values.enrolledCourseList.filter((updatedItem) => {
+            const updatedObject = enrolledCourseList.find((item) => {
+                return item.courseId === updatedItem.courseId &&
+                    item.regionId === updatedItem.regionId &&
+                    item.availabilityId === updatedItem.availabilityId &&
+                    item.type === updatedItem.type
+            });
+            return updatedObject !== undefined;
+        });
+        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment) => {
+            return !newUpdatedArray.map((item) => item.courseId).includes(enrollment.courseId);
+        });
+        if (updatedEnrolledCourseList.length > 0) {
+            let updateAPIBody = {
+                routeName: 'updateAdminEnroll',
+                data: updatedEnrolledCourseList
+            }
+            await postAuthRouteAPI(updateAPIBody).then((res) => {
+                setDrawerForUsers(false)
+                getUserList(1)
+            }).catch(async (err) => {
+                if (err?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await postAuthRouteAPI(updateAPIBody).then((res) => { })
+                    }).catch(err => {
+                        console.error(err);
+                    });
+                }
+                console.log(err)
+            })
+        }
     }
+
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
@@ -162,12 +200,8 @@ const ManegeUserListDrawer = ({ selectedUserDetails }) => {
                                                     allCourse={allCourse}
                                                     name={name}
                                                     enrollment={enrollment}
-                                                    enrolledCourseList={enrolledCourseList}
-                                                    setEnrolledCourseList={setEnrolledCourseList}
-                                                    newEnrollCourseList={newEnrollCourseList}
-                                                    setNewEnrollCourseList={setNewEnrollCourseList}
-                                                    updatedEnrollCourseList={updatedEnrollCourseList}
-                                                    setUpdatedEnrollCourseList={setUpdatedEnrollCourseList}
+                                                    getUserList={getUserList}
+                                                    setDrawerForUsers={setDrawerForUsers}
                                                 />
                                             )
                                         }
