@@ -325,8 +325,6 @@ const TestResults = (props) => {
     }
 
     const handleSearchName = (e) => {
-        console.log(e.target.value);
-        // const newStudentList = [...studentList]
         const filteredList = studentList?.filter((student) => {
             const fullName = student.userProfile?.fullName?.toLowerCase();
             const searchName = e.target.value.toLowerCase();
@@ -405,6 +403,7 @@ const TestResults = (props) => {
                             width={331}
                             placeholder={'بحث باسم الطالب'}
                             suffix
+                            allowClear={false}
                             onChange={(e) => handleSearchName(e)}
                         />
                     </FormItem>

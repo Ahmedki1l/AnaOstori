@@ -34,7 +34,6 @@ const ModelForAddItemLibrary = ({
     const { videoToastMsgConst, addVideoModelConst } = videoFileConst
     const { pdfToastMsgConst, addPdfModelConst } = pdfFileConst
     const { examToastMsgConst, addExamModelConst } = quizConst
-    console.log(fileUploadResponceData);
     useEffect(() => {
         if (!isEdit) return
         ItemDetailsForm.setFieldsValue(selectedItem)
@@ -83,7 +82,6 @@ const ModelForAddItemLibrary = ({
             ...body
         }
         await postRouteAPI(data).then((res) => {
-            console.log(res);
             toast.success(folderType == "video" ? videoToastMsgConst.addVideoSuccessMsg :
                 folderType == "quiz" ? examToastMsgConst.addExamSuccessMsg :
                     pdfToastMsgConst.addPdfSuccessMsg, { rtl: true, })

@@ -161,7 +161,7 @@ const Index = () => {
             }
         },
     ]
-    const getUserList = async (pageNo) => {
+    const getUserList = async (pageNo, searchValue) => {
         let body = {
             routeName: "userList",
             page: pageNo,
@@ -213,9 +213,14 @@ const Index = () => {
         <Empty emptyText={'لم تقم بإضافة اي مجلد'} containerhight={400} onClick={() => handleCreateFolder()} />
     )
     const handleSearchByEmail = async (e) => {
-        getUserList(1)
+        getUserList(1, e)
     }
-
+    const handleSearchValueChange = (e) => {
+        setSearchValue(e)
+        if (e == '') {
+            getUserList(1, e)
+        }
+    };
     return (
         <div className="maxWidthDefault px-4">
             <div style={{ height: 40 }}>
@@ -233,11 +238,11 @@ const Index = () => {
             <div className={`w-1/4`}>
                 <FormItem>
                     <SearchInput
-                        height={40}
                         fontSize={16}
                         placeholder={'فلترة'}
                         onSearch={(e) => handleSearchByEmail(e)}
-                        onChange={(e) => setSearchValue(e.target.value)}
+                        allowClear={true}
+                        onChange={(e) => handleSearchValueChange(e.target.value)}
                     />
                 </FormItem>
             </div>

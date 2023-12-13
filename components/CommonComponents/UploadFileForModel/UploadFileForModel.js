@@ -34,7 +34,6 @@ const UploadFileForModel = ({
     }, [cancleUpload])
 
     const getFileKey = async (e) => {
-        console.log(e.target.files[0]);
         setUploadedFileName()
         let file = e.target.files[0];
         if (accept == 'video') {
@@ -65,8 +64,6 @@ const UploadFileForModel = ({
             setUploadProgress(percentCompleted)
         }
         await uploadFileSevices(file, onUploadProgress, source.token).then((res) => {
-            console.log(file);
-            console.log(res);
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = file.type
