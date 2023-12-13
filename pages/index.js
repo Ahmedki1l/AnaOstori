@@ -131,13 +131,15 @@ export default function Home(props) {
 						</div>
 					</div>
 					<p className={`fontMedium mt-2 ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
-					<div className={styles.btnBox}>
-						<div className={styles.firstBtnBox}>
-							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+					<div className={styles.buttonBoxWrapper}>
+						<div className={styles.btnBox}>
+							<div className={styles.firstBtnBox}>
+								<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+							</div>
 						</div>
-					</div>
-					<div className={styles.secondBtnBox}>
-						<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+						<div className={styles.secondBtnBox}>
+							<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+						</div>
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
@@ -209,7 +211,7 @@ export default function Home(props) {
 					<h1 className='head1'>{HomeConst.studentSectionHead1}</h1>
 					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>{HomeConst.studentSectionLink}</p>
 				</div>
-				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1} <br /> {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
+				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1}  {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
 				<ReviewComponent homeReviews={homeReviews} />
 			</div>
 		</div>
