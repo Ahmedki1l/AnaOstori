@@ -65,7 +65,19 @@ const Index = () => {
         const allItemsCompleted = curriculum.sections.every(section =>
             section.items.every(item => completedItemIds.has(item.id))
         );
-        console.log(allItemsCompleted);
+        // const sectionItemNotQuiz = curriculum.sections.flatMap((section) =>
+        //     section.items.filter((item) => item.type !== "quiz")
+        // );
+        // const completedSectionItems = [];
+        // curriculum.sections.forEach((section) => {
+        //     section.items.forEach((item) => {
+        //         if (completedItems.some((completedItem) => completedItem.itemId === item.id)) {
+        //             completedSectionItems.push(item);
+        //         }
+        //     });
+        // });
+        // const allItemsCompleted = completedSectionItems.length === sectionItemNotQuiz.length;
+
         setIsAllItemsCompleted(allItemsCompleted)
         if (allItemsCompleted) {
             const params = {
@@ -82,6 +94,7 @@ const Index = () => {
             })
         }
     }
+    console.log(completedCourseItem);
     const markItemCompleteHendler = async (itemID) => {
         if (!completedCourseItem?.some(watchedItem => watchedItem.itemId == itemID)) {
             const params = {
@@ -93,6 +106,7 @@ const Index = () => {
                 value: false
             }
             await postAuthRouteAPI(params).then((res) => {
+                console.log(res);
                 let data = { itemId: itemID, pass: null }
                 setCompletedCourseItem([...completedCourseItem, data])
             }).catch((error) => {
@@ -165,6 +179,7 @@ const Index = () => {
                     }
                 }
             }
+            setExpandedSection(0)
             getPageProps()
         }
     }, [courseID])

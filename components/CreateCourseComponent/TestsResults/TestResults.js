@@ -325,11 +325,12 @@ const TestResults = (props) => {
     }
 
     const handleSearchName = (e) => {
-        const newStudentList = [...studentList]
-        const filteredList = newStudentList.filter((student) => {
-            const fullName = student.userProfile.fullName.toLowerCase();
+        console.log(e.target.value);
+        // const newStudentList = [...studentList]
+        const filteredList = studentList?.filter((student) => {
+            const fullName = student.userProfile?.fullName?.toLowerCase();
             const searchName = e.target.value.toLowerCase();
-            return fullName.includes(searchName);
+            return fullName?.includes(searchName);
         });
         setUpdatedStudentList(filteredList)
     }
