@@ -206,7 +206,7 @@ const Index = () => {
         getUserList(currentPage)
     };
     const handleTableChange = (pagination) => {
-        getUserList(pagination.current)
+        getUserList(pagination.current, searchValue)
         setCurrentPage(pagination.current)
     }
     const customEmptyComponent = (
