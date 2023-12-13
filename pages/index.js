@@ -131,15 +131,13 @@ export default function Home(props) {
 						</div>
 					</div>
 					<p className={`fontMedium mt-2 ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
-					<div className={styles.buttonBoxWrapper}>
-						<div className={styles.btnBox}>
-							<div className={styles.firstBtnBox}>
-								<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
-							</div>
+					<div className={styles.btnBox}>
+						<div className={styles.firstBtnBox}>
+							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
 						</div>
-						<div className={styles.secondBtnBox}>
-							<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
-						</div>
+					</div>
+					<div className={styles.secondBtnBox}>
+						<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
