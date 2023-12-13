@@ -325,8 +325,7 @@ const TestResults = (props) => {
     }
 
     const handleSearchName = (e) => {
-        const newStudentList = [...studentList]
-        const filteredList = newStudentList?.filter((student) => {
+        const filteredList = studentList?.filter((student) => {
             const fullName = student.userProfile?.fullName?.toLowerCase();
             const searchName = e.target.value.toLowerCase();
             return fullName?.includes(searchName);
