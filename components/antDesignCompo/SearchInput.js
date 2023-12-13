@@ -12,9 +12,6 @@ const SearchInputField = styled(Search)`
     .ant-input-group {
         width: ${props => (props.width ? props.width : '100%')};
     }
-    :where(.css-dev-only-do-not-override-xu9wm8).ant-input-group-wrapper {
-        display: contents;
-    }
     .ant-input-group .ant-input {
         height: ${props => (props.height ? props.height : '30')}px !important;
         width: 100%;
