@@ -28,7 +28,7 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (isCourseEdit && editCourseData.CourseCardMetaData) {
+        if (isCourseEdit && editCourseData?.CourseCardMetaData) {
             externalCourseForm.setFieldsValue(editCourseData)
         }
         else {

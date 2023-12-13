@@ -26,6 +26,7 @@ export const uploadFileSevices = async (file, onUploadProgress, cancelToken) => 
                     'Content-Type': 'application/octet-stream',
                 },
                 onUploadProgress: (progressEvent) => {
+                    console.log(progressEvent);
                     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     onUploadProgress(percentCompleted);
                 },

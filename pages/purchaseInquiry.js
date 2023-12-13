@@ -87,7 +87,6 @@ export default function PurchaseInquiry(props) {
 											<td >{fullDate(data.createdAt)}</td>
 											<td className={styles.tbodyName}>
 												{data.orderItems?.map((student, j = index) => {
-													console.log(dateRange(student?.availability?.dateFrom, student?.availability?.dateTo));
 													return (
 														<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
 															<p>{student.fullName}</p>

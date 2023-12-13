@@ -172,7 +172,7 @@ export default function Navbar() {
 		setShowSubMenuShown()
 		setIsMenuShow(false)
 		if (submenu.type == "on-demand" && submenu.isEnrolled == true) {
-			router.push(`/myCourse/${submenu.id}`)
+			router.push(`/myCourse?courseId=${submenu.id}`)
 		} else {
 			if (submenu.isPurchasable == false) {
 				setCommingSoonModalOpen(true)

@@ -65,7 +65,6 @@ const ModelForStudentFeedBack = ({
                 return false;
             }
         }
-
         return;
     }
     const handleCreateReviewMedia = async () => {
@@ -203,9 +202,9 @@ const ModelForStudentFeedBack = ({
                                     onChange={handleSelectCourse}
                                 />
                             </FormItem>
-                            <div className={styles.courseNames}>
+                            {/* <div className={styles.courseNames}>
                                 {selectCatagoryName}
-                            </div>
+                            </div> */}
                             {uploadFileData.length > 0 &&
                                 <div className={styles.addSectionArea}>
                                     <p className={`fontMedium text-lg`}>{studentFeedBackConst.addFeedBackPhoto}</p>

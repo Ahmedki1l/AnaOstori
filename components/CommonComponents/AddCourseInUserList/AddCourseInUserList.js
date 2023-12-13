@@ -3,22 +3,19 @@ import { manageUserListConst } from '../../../constants/adminPanelConst/manageUs
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import Select from '../../antDesignCompo/Select';
 import { FormItem } from '../../antDesignCompo/FormItem';
-import { getAuthRouteAPI, getRouteAPI } from '../../../services/apisService';
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
 import styles from './AddCourseInUserList.module.scss'
 import ModelForDeleteItems from '../../ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems';
 import { dateRange } from '../../../constants/DateConverter';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 
 
 const AddCourseInUserList = ({
     allCourse,
     name,
     enrollment,
-    enrolledCourseList,
-    setEnrolledCourseList,
-    newEnrollCourseList,
-    setNewEnrollCourseList,
-    updatedEnrollCourseList,
-    setUpdatedEnrollCourseList
+    getUserList,
+    setDrawerForUsers
 }) => {
     const [selectedCourseId, setSelectedCourseId] = useState(enrollment?.courseId)
     const [selectedCourseType, setSelectedCourseType] = useState(enrollment?.type)
@@ -27,6 +24,8 @@ const AddCourseInUserList = ({
     const [selectedRegion, setSelectedRegion] = useState()
     const [selectedAvailability, setSelectedAvailability] = useState()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
+    const [deleteEnrollmentId, setDeleteEnrollmentId] = useState()
+
     useEffect(() => {
         getRegionLIst()
         if (enrollment) {
@@ -38,6 +37,8 @@ const AddCourseInUserList = ({
         if (enrollment) {
             const selectedAvailabilityDate = availabilityList?.find((date) => date.value === enrollment.availabilityId);
             setSelectedAvailability(selectedAvailabilityDate?.label)
+            const selectedRegionData = regionDataList?.find((region) => region.value == enrollment.regionId);
+            setSelectedRegion(selectedRegionData?.value)
         }
     }, [])
     const getRegionLIst = async () => {
@@ -68,6 +69,19 @@ const AddCourseInUserList = ({
                 }
             }))
         }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getAuthRouteAPI(body).then(res => {
+                        setAvailabilityList(res?.data?.map((obj) => {
+                            return {
+                                key: obj.id,
+                                label: dateRange(obj.dateFrom, obj.dateTo),
+                                value: obj.id,
+                            }
+                        }))
+                    })
+                })
+            }
             console.error("Error:", error);
         })
     }
@@ -78,31 +92,47 @@ const AddCourseInUserList = ({
         setSelectedCourseId(value)
         setSelectedCourseType(option.type)
         getAllAvailability(value)
-        let newEnrolledCourse = {
-            courseId: value,
-            type: option.type,
-        }
-        setNewEnrollCourseList(newEnrolledCourse);
     }
-    const handleDeleteCourse = () => {
+    const handleDeleteCourse = (value) => {
         setIsmodelForDeleteItems(true)
+        setDeleteEnrollmentId(value)
     }
     const onCloseModal = () => {
         setIsmodelForDeleteItems(false)
     }
     const handleDeleteFolderItems = async () => {
-        console.log('delete');
+        let deleteEnrollmentBody = {
+            routeName: 'updateAdminEnroll',
+            data: [{
+                id: deleteEnrollmentId.id,
+                isDeleted: true
+            }]
+        }
+        await postAuthRouteAPI(deleteEnrollmentBody).then((res) => {
+            setDrawerForUsers(false)
+            setIsmodelForDeleteItems(false)
+            getUserList(1)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await postAuthRouteAPI(deleteEnrollmentBody).then((res) => {
+                        setIsmodelForDeleteItems(false)
+                    })
+                })
+            }
+            console.error("Error:", error);
+        })
     }
+
     const handleSelectAvailability = (value) => {
         setSelectedAvailability(value);
     }
-
 
     return (
         <div>
             <div className={`my-4 ${styles.addCourseWrapper}`}>
                 <p className={`fontMedium`} style={{ fontSize: '18px' }}>{manageUserListConst.courseTitle}</p>
-                <div className='flex cursor-pointer' onClick={handleDeleteCourse}>
+                <div className='flex cursor-pointer' onClick={() => handleDeleteCourse(enrollment)}>
                     <div style={{ height: '20px' }}>
                         <AllIconsComponenet height={20} width={24} iconName={'newDeleteIcon'} color={'#FF0000'} />
                     </div>
@@ -165,7 +195,7 @@ const AddCourseInUserList = ({
                     onDelete={handleDeleteFolderItems}
                 />
             }
-        </div >
+        </div>
     )
 }
 

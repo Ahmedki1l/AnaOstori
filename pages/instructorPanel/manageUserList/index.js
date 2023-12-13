@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import { ConfigProvider, Drawer, Table } from 'antd'
 import { fullDate } from '../../../constants/DateConverter'
@@ -11,6 +11,8 @@ import Link from 'next/link'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import ManegeUserListDrawer from '../../../components/ManageUserList/ManegeUserListDrawer'
+import SearchInput from '../../../components/antDesignCompo/SearchInput'
+import { FormItem } from '../../../components/antDesignCompo/FormItem'
 
 const DrawerTiitle = styled.p`
     font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -27,8 +29,14 @@ const Index = () => {
     })
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState()
-
+    const [searchValue, setSearchValue] = useState()
+    const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
+    const regexPhone = useMemo(() => /^\d+$/, []);
     const genders = PaymentConst.genders
+
+    useEffect(() => {
+        getUserList(1)
+    }, [])
 
     const tableColumns = [
         {
@@ -146,24 +154,26 @@ const Index = () => {
                     setSelectedUser(_record)
                 }
                 return (
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={() => handleEditUsers()}>
                         <AllIconsComponenet iconName={'newEditIcon'} height={18} width={18} color={'#000000'} />
                     </div>
                 )
             }
         },
     ]
-
-    useEffect(() => {
-        getUserList(1)
-    }, [])
-
     const getUserList = async (pageNo) => {
         let body = {
             routeName: "userList",
             page: pageNo,
             limit: 10,
             order: "createdAt DESC"
+        }
+        if (searchValue) {
+            body = {
+                ...body,
+                searchValue: searchValue,
+                searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
+            }
         }
         await postRouteAPI(body).then((res) => {
             setPaginationConfig({
@@ -193,28 +203,44 @@ const Index = () => {
 
     const onClose = () => {
         setDrawerForUsers(false);
+        getUserList(currentPage)
     };
     const handleTableChange = (pagination) => {
         getUserList(pagination.current)
+        setCurrentPage(pagination.current)
     }
     const customEmptyComponent = (
         <Empty emptyText={'لم تقم بإضافة اي مجلد'} containerhight={400} onClick={() => handleCreateFolder()} />
     )
+    const handleSearchByEmail = async (e) => {
+        getUserList(1)
+    }
 
     return (
-        <div className="maxWidthDefault">
+        <div className="maxWidthDefault px-4">
             <div style={{ height: 40 }}>
                 <BackToPath
                     backpathForPage={true}
                     backPathArray={
                         [
                             { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel/' },
-                            { lable: 'بيانات المستخدمين', link: null },
+                            { lable: 'إدارة بيانات المستخدمين', link: null },
                         ]
                     }
                 />
             </div>
-            <h1 className={`head2 py-8`}>بيانات المستخدمين</h1>
+            <h1 className={`head2 pb-4`}>بيانات المستخدمين</h1>
+            <div className={`w-1/4`}>
+                <FormItem>
+                    <SearchInput
+                        height={40}
+                        fontSize={16}
+                        placeholder={'فلترة'}
+                        onSearch={(e) => handleSearchByEmail(e)}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                </FormItem>
+            </div>
             <ConfigProvider direction="rtl">
                 <Table
                     columns={tableColumns}
@@ -224,7 +250,6 @@ const Index = () => {
                     locale={{ emptyText: customEmptyComponent }}
                     onChange={handleTableChange}
                 />
-
                 {drawerForUsers &&
                     <Drawer
                         closable={false}
@@ -238,7 +263,11 @@ const Index = () => {
                             </>
                         }
                     >
-                        <ManegeUserListDrawer selectedUserDetails={selectedUser} />
+                        <ManegeUserListDrawer
+                            selectedUserDetails={selectedUser}
+                            setDrawerForUsers={setDrawerForUsers}
+                            getUserList={getUserList}
+                        />
                     </Drawer>
                 }
             </ConfigProvider>
