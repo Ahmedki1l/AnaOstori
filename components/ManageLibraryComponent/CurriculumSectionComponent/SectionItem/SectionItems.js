@@ -100,7 +100,6 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
                                             {...provided.draggableProps}
                                             ref={provided.innerRef}
                                         >
-                                            {console.log(data)}
                                             <div className={styles.curriculimDetailsData}>
                                                 <div {...provided.dragHandleProps} className={styles.updownArrowWrapper}>
                                                     <AllIconsComponenet height={18} width={18} iconName={'updownarrow'} color={'#00000094'} />
