@@ -235,10 +235,11 @@ const Index = () => {
                 />
             </div>
             <h1 className={`head2 pb-4`}>بيانات المستخدمين</h1>
-            <div className={`w-1/4`}>
+            <div style={{ width: '362px' }}>
                 <FormItem>
                     <SearchInput
                         fontSize={16}
+                        width={10}
                         placeholder={'فلترة'}
                         onSearch={(e) => handleSearchByEmail(e)}
                         allowClear={true}
