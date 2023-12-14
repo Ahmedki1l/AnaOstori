@@ -105,6 +105,7 @@ const Index = () => {
                 value: false
             }
             await postAuthRouteAPI(params).then((res) => {
+                console.log(res);
                 let data = { itemId: itemID, pass: null }
                 setCompletedCourseItem([...completedCourseItem, data])
             }).catch((error) => {
@@ -288,6 +289,7 @@ const Index = () => {
                                     {newSelectedCourseItem?.type == "quiz" &&
                                         <CCItemQuizComponent
                                             newSelectedCourseItem={newSelectedCourseItem}
+                                            markItemCompleteHendler={markItemCompleteHendler}
                                         />
                                     }
                                 </div>

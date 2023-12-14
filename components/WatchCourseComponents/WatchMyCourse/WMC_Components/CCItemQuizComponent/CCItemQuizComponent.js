@@ -14,7 +14,11 @@ export default function CCItemQuizComponent(props) {
 	const quizText1 = quizeStatus == 'pass' ? 'مجتاز ' : quizeStatus == 'fail' ? 'الشاطر يتعلم من غلطه' : 'بعد ما تختبر، المدرب حيراجع حلك ويرصدلك الدرجة هنا'
 	// const quizText2 = quizeStatus == 'pass' ? 'رسالة المعلم هنا ' : quizeStatus == 'fail' ? 'رسالة المعلم هنا ' : 'بعد ما تختبر، المعلم رح يرصد لك الدرجة هنا'
 	const buttonText = quizeStatus == 'pass' ? 'برجع اختبر' : quizeStatus == 'fail' ? 'برجع اختبر ' : 'بختبر الآن'
-
+	const passedQuiz = currentItemContent.pass ? 'true' : 'false'
+	const itemId = currentItemContent?.id
+	const itemCompleteHendler = () => {
+		props.markItemCompleteHendler(itemId)
+	}
 	return (
 		<div className={styles.quizContentWrapper}>
 			<div className={styles.quizContentSubWrapper}>
@@ -36,3 +40,40 @@ export default function CCItemQuizComponent(props) {
 		</div>
 	)
 }
+//<>
+// {passedQuiz == 'true' ?
+// 				<div className={styles.quizContentWrapper}>
+// 					<div className={styles.quizContentSubWrapper}>
+// 						{quizeStatus == "notAttempted" ?
+// 							<AllIconsComponenet height={mediumScreen ? 60 : 100} width={mediumScreen ? 60 : 100} iconName={`curriculumNewQuizIcon`} color={'#F26722'} />
+// 							:
+// 							<Icon height={`${iconHeight}`} width={mediumScreen ? 72 : 107} iconName={`${quizIcon}`} alt={'Quiz Logo'} />
+// 						}
+// 						<h1 className={`fontBold ${styles.quizText1}`}>{quizText1}</h1>
+// 						<p className={`fontMedium ${styles.quizText2}`}>{currentItemContent.notes ? currentItemContent.notes : ''}</p>
+// 						<div className={styles.goQuizBtnBox}>
+// 							<div className={styles.goQuizBtnBox} onClick={() => { itemCompleteHendler() }}>
+// 								<button className='primarySolidBtn'>{buttonText}</button>
+// 							</div>
+// 						</div>
+// 					</div>
+// 				</div>
+// 				:
+// 				<div className={styles.quizContentWrapper}>
+// 					<div className={styles.quizContentSubWrapper}>
+// 						{quizeStatus == "notAttempted" ?
+// 							<AllIconsComponenet height={mediumScreen ? 60 : 100} width={mediumScreen ? 60 : 100} iconName={`curriculumNewQuizIcon`} color={'#F26722'} />
+// 							:
+// 							<Icon height={`${iconHeight}`} width={mediumScreen ? 72 : 107} iconName={`${quizIcon}`} alt={'Quiz Logo'} />
+// 						}
+// 						<h1 className={`fontBold ${styles.quizText1}`}>{quizText1}</h1>
+// 						<p className={`fontMedium ${styles.quizText2}`}>{currentItemContent.notes ? currentItemContent.notes : ''}</p>
+// 						<div className={styles.goQuizBtnBox}>
+// 							<Link href={`${currentItemContent?.quizLink}`} target='_blank' className='normalLinkText'>
+// 								<button className='primarySolidBtn'>{buttonText}</button>
+// 							</Link>
+// 						</div>
+// 					</div>
+// 				</div>
+// 			}
+//</>

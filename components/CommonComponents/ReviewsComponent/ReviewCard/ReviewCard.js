@@ -46,7 +46,7 @@ export default function ReviewCard(props) {
 				<div className={styles.pageNODiv}>{currentPost}/{totalPostNumber}</div>
 				{currentPost != totalPostNumber &&
 					<div className={styles.leftArrowBtn} onClick={() => setCurrentPost(currentPost + 1)}>
-						<div className='m-1.5'>
+						<div className='m-2'>
 							<AllIconsComponenet iconName={'arrowLeft'} height={12} width={12} color={'#FFFFFF'} />
 						</div>
 					</div>
