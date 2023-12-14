@@ -203,7 +203,7 @@ const Index = () => {
 
     const onClose = () => {
         setDrawerForUsers(false);
-        getUserList(currentPage)
+        getUserList(currentPage, searchValue)
     };
     const handleTableChange = (pagination) => {
         getUserList(pagination.current, searchValue)
