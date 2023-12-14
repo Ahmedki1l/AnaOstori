@@ -207,7 +207,7 @@ export default function Home(props) {
 			<div ref={refFeedback} className={`maxWidthDefault ${styles.userFeedbackSec} ${scrollSectionName == 'refFeedback' ? `${styles.paddingTop}` : ''}`}>
 				<div className={`flex justify-between items-center px-4`}>
 					<h1 className='head1'>{HomeConst.studentSectionHead1}</h1>
-					<p className='link cursor-pointer' onClick={() => navigation('studentFeedback')}>{HomeConst.studentSectionLink}</p>
+					{/* <p className='link cursor-pointer' onClick={() => router.push('/studentFeedback')}>{HomeConst.studentSectionLink}</p> */}
 				</div>
 				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1}  {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
 				<ReviewComponent homeReviews={homeReviews} />
