@@ -262,6 +262,43 @@ const paymentStatusOther = [
 
 ]
 
+const paymentMode = [
+    {
+        label: 'Hyper Pay',
+        options: [
+            {
+                label: 'فيزا',
+                value: 'credit',
+            },
+            {
+                label: 'مدى',
+                value: 'mada'
+            },
+            {
+                label: 'ابل باي',
+                value: 'applepay',
+            },
+        ],
+    },
+    {
+        label: 'Bank Transfer',
+        options: [
+            {
+                label: 'تحويل بنكي',
+                value: 'bank_transfer',
+            },
+        ],
+    },
+    {
+        label: 'In-App Purchase',
+        options: [
+            {
+                label: 'مشتريات داخل التطبيق',
+                value: 'inAppPurchase',
+            },
+        ],
+    },
+]
 
 
-export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatusBank, paymentStatusOther };
+export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatusBank, paymentStatusOther, paymentMode };

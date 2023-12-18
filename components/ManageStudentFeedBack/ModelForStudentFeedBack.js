@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import { postAuthRouteAPI } from '../../services/apisService'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import UploadFileForCourseReviews from '../CommonComponents/UploadFileForCourseReviews/UploadFileForCourseReviews'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 const ModelForStudentFeedBack = ({
     isModelForStudentFeedBack,
@@ -36,7 +37,13 @@ const ModelForStudentFeedBack = ({
             handleCatagorySelect(editReviewData.courseId)
         }
         if (editReviewData?.ReviewMedia?.length > 0) {
-            setUploadFileData(editReviewData?.ReviewMedia)
+            const data = editReviewData?.ReviewMedia.map((item, index) => {
+                return {
+                    ...item,
+                    order: index + 1
+                }
+            }).sort((a, b) => a.order - b.order)
+            setUploadFileData(data)
         }
         if (editReviewData?.ReviewMedia?.length == 0) {
             let data = [...uploadFileData]
@@ -44,12 +51,11 @@ const ModelForStudentFeedBack = ({
                 contentFileKey: '',
                 contentFileMime: '',
                 contentFileBucket: ''
-            })))
+            }))).sort((a, b) => a.order - b.order)
             setUploadFileData(data)
         }
 
     }, [editReviewData])
-
 
     const isModelClose = () => {
         setIsModelForStudentFeedBack(false)
@@ -159,6 +165,15 @@ const ModelForStudentFeedBack = ({
         })))
         setUploadFileData(data)
     }
+    const handleSectionDragEnd = (result) => {
+        const newSectionOrder = Array.from(uploadFileData);
+        const [reorderedSection] = newSectionOrder.splice(result.source.index, 1);
+        newSectionOrder.splice(result.destination.index, 0, reorderedSection);
+        newSectionOrder.forEach((item, index) => {
+            item.order = index + 1;
+        });
+        setUploadFileData(newSectionOrder);
+    }
     return (
         <div>
             <Modal
@@ -212,19 +227,40 @@ const ModelForStudentFeedBack = ({
                                 </div>
                             }
                             {uploadFileData.length > 0 &&
-                                <>
-                                    {uploadFileData.map((item, index) => {
-                                        return (
-                                            <UploadFileForCourseReviews
-                                                key={`reviewMedia${index}`}
-                                                type={'image/*'}
-                                                uploadFileData={uploadFileData}
-                                                setUploadFileData={setUploadFileData}
-                                                index={index}
-                                            />
+                                <DragDropContext onDragEnd={handleSectionDragEnd}>
+                                    <Droppable droppableId='sections' direction="vertical" >
+                                        {(provided) => (
+                                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                                {uploadFileData.map((item, index) => (
+                                                    <Draggable key={`item${index}`} draggableId={`item-${index}`} index={index}>
+                                                        {(provided) => (
+                                                            <div
+                                                                key={`item${index}`}
+                                                                {...provided.draggableProps}
+                                                                ref={provided.innerRef}
+                                                            >
+                                                                <div className='flex'>
+                                                                    <div className='mt-2' {...provided.dragHandleProps}>
+                                                                        <AllIconsComponenet iconName={'dragIcon'} height={24} width={24} color={'#0000008a'} />
+                                                                    </div>
+                                                                    <UploadFileForCourseReviews
+                                                                        key={`reviewMedia${index}`}
+                                                                        type={'image/*'}
+                                                                        uploadFileData={uploadFileData.sort((a, b) => a.order - b.order)}
+                                                                        setUploadFileData={setUploadFileData}
+                                                                        index={index}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                ))}
+                                                {provided.placeholder}
+                                            </div>
                                         )
-                                    })}
-                                </>
+                                        }
+                                    </Droppable>
+                                </DragDropContext>
                             }
                         </div>
                         <div className='p-1'>
@@ -240,3 +276,19 @@ const ModelForStudentFeedBack = ({
 }
 
 export default ModelForStudentFeedBack
+
+{/* {uploadFileData.length > 0 &&
+                                <>
+                                    {uploadFileData.map((item, index) => {
+                                        return (
+                                            <UploadFileForCourseReviews
+                                                key={`reviewMedia${index}`}
+                                                type={'image/*'}
+                                                uploadFileData={uploadFileData}
+                                                setUploadFileData={setUploadFileData}
+                                                index={index}
+                                            />
+                                        )
+                                    })}
+                                </>
+                            } */}

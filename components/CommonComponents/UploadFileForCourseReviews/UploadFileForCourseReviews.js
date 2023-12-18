@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './UploadFileForCourseReviews.module.scss'
 import { studentFeedBackConst } from '../../../constants/adminPanelConst/manageStudentFeedBackConst/manageStudentFeedBackConst'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
@@ -6,7 +6,6 @@ import CoverImg from '../CoverImg';
 import { uploadFileSevices } from '../../../services/UploadFileSevices';
 import Spinner from '../spinner';
 import { mediaUrl } from '../../../constants/DataManupulation';
-import { postAuthRouteAPI } from '../../../services/apisService';
 
 const UploadFileForCourseReviews = ({
     type,
@@ -14,11 +13,17 @@ const UploadFileForCourseReviews = ({
     setUploadFileData,
     index,
 }) => {
-    const [isFileExist, setIsFileExist] = useState(uploadFileData[index].contentFileKey ? true : false)
+    const [isFileExist, setIsFileExist] = useState(uploadFileData[index]?.contentFileKey ? true : false)
     const [uploadProgress, setUploadProgress] = useState(0)
     const [uploadLoader, setUploadLoader] = useState(false)
-    const [pictureUrl, setPictureUrl] = useState(uploadFileData[index].contentFileKey ? mediaUrl(uploadFileData[index].contentFileBucket, uploadFileData[index].contentFileKey) : null)
+    const [pictureUrl, setPictureUrl] = useState()
 
+    useEffect(() => {
+        if (uploadFileData) {
+            let newPictureUrl = uploadFileData[index]?.contentFileKey ? mediaUrl(uploadFileData[index]?.contentFileBucket, uploadFileData[index]?.contentFileKey) : null
+            setPictureUrl(newPictureUrl)
+        }
+    }, [uploadFileData])
     const getFileKey = async (e) => {
         setUploadLoader(true)
         const onUploadProgress = (percentCompleted) => {
@@ -40,19 +45,24 @@ const UploadFileForCourseReviews = ({
         })
         setIsFileExist(true)
     }
-
+    const handleCloseImagePreview = (index) => {
+        uploadFileData[index].contentFileKey = null
+        uploadFileData[index].contentFileMime = null
+        uploadFileData[index].contentFileBucket = null
+        const filteredData = uploadFileData.filter(obj => obj.contentFileKey !== null);
+        setUploadFileData(filteredData);
+        setPictureUrl(filteredData[index]?.contentFileKey ? mediaUrl(filteredData[index]?.contentFileBucket, filteredData[index]?.contentFileKey) : null)
+    }
     return (
         <>
             <div className='flex'>
-                <div className='mt-2'>
-                    <AllIconsComponenet iconName={'dragIcon'} height={24} width={24} color={'#0000008a'} />
-                </div>
                 <div className={`m-2 ${styles.addItems}`}>
                     <>
                         {isFileExist ?
                             <>
                                 <div className={styles.imageUploadWrapper}>
-                                    <div className={styles.closeIconWrapper} onClick={() => setUploadFileData(uploadFileData.filter((item, i) => i !== index))}>
+                                    <div className={styles.closeIconWrapper} onClick={() => handleCloseImagePreview(index)}>
+                                        {/* <div className={styles.closeIconWrapper} onClick={() => setUploadFileData(uploadFileData.filter((item, i) => i === index))}> */}
                                         <AllIconsComponenet height={10} width={10} iconName={'closeicon'} color={'#ffffff'} />
                                     </div>
 
