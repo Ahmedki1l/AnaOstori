@@ -86,6 +86,20 @@
 	}
 }
 
+.reviewMediaWithShareLinkBox {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 1rem 0;
+
+}
+
+@media (max-width: 768px) {
+	.reviewMediaWithShareLinkBox {
+		flex-direction: column;
+	}
+}
+
 @media (max-width: 640px) {
 	.dateDrapdownWrapper.courseDrapdownWrapper {
 		width: 100%;

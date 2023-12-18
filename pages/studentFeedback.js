@@ -28,7 +28,6 @@ export default function StudentFeedback(props) {
 	const [catagoryReviews, setCatagoryReviews] = useState()
 	const [showDateDropDown, setShowDateDropDown] = useState(false)
 	const [showCourseDropDown, setShowCourseDropDown] = useState(false)
-	const isSmallScreen = useWindowSize().smallScreen
 
 	const handelDateFilter = (data) => {
 		setDateFilterType(data)
@@ -39,7 +38,6 @@ export default function StudentFeedback(props) {
 		setAllReviews(newArray)
 		setShowDateDropDown(false)
 	}
-
 
 	const handelCourseFilter = (data) => {
 		setCourseFilterType(data)
@@ -63,13 +61,6 @@ export default function StudentFeedback(props) {
 		return categorizedArray;
 	}
 	const categoriWiseArray = categorizeArray();
-
-	const filteredArray = categoriWiseArray.filter((arr) => {
-		return arr.length <= 1
-	});
-	const notFilteres = categoriWiseArray.filter((arr) => {
-		return arr.length > 1
-	});
 	return (
 		<div>
 			<div className={styles.headevDiv}>
@@ -119,63 +110,63 @@ export default function StudentFeedback(props) {
 							</div>
 						</div>
 					</div>
-					{/* {isSmallScreen && */}
-					<>
-						{filteredArray.map((arr, index) => {
-							return (
-								<>
-									{arr.length > 0 &&
-										<div key={`catagori${index}`}>
-											<p className={`text-xl fontBold px-4 pt-4`}>{arr[0].course.catagory.name}</p>
+					{courseFilterType !== 'جميع الدورات' ?
+						<div>
+							<div>
+								{catagoryReviews &&
+									<>
+										<p className={`text-xl fontBold px-4 pt-4`}>{catagoryReviews[0].course.catagory.name}</p>
+										<div className='flex flex-wrap justify-center pt-4'>
+											<ReviewCard review={catagoryReviews[0]} />
 											<div className='flex flex-wrap justify-center pt-4'>
-												{arr.map((feedback, index) => {
-													return (
-														<div key={`feedback${index}`}>
-															<ReviewCard review={feedback} />
+												<div className={styles.sharedItemsDiv}>
+													<div className='text-center'>
+														<p className='fontBold text-xl mb-2' >ننتظرك تشاركنا 🥇</p>
+														<p className='text-lg'>إذا انت من طلابنا، تفضل شاركنا درجتك <br /> وتجربتك <br /> متحمسين نسمع منك 😁</p>
+													</div>
+													<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
+														<div className={styles.shareWhatsAppBtnBox}>
+															<AllIconsComponenet height={20} width={20} iconName={'whatsappFill'} color={'#40C351'} />
+															<p className='fontMedium mx-2'>شاركنا على الواتس</p>
 														</div>
-													)
-												})}
+													</Link>
+													<Link href={`${linkConst.Instagram_Link}`} target='_blank' className='normalLinkText'>
+														<div className={styles.shareWhatsAppBtnBox}>
+															<AllIconsComponenet height={20} width={20} iconName={'coloredInstaIcon'} />
+															<p className='fontMedium mx-2'>شاركنا على الانستقرام</p>
+														</div>
+													</Link>
+												</div>
 											</div>
+											{catagoryReviews.map((feedback, index) => {
+												return (
+													<>
+														{index > 0 &&
+															<div key={`feedback${index}`}>
+																<ReviewCard review={feedback} />
+															</div>
+														}
+													</>
+												)
+											}
+											)}
 										</div>
-									}
-								</>
-							)
-						})
-						}
-						<div className='flex flex-wrap justify-center pt-4'>
-							<div className={styles.sharedItemsDiv}>
-								<div className='text-center'>
-									<p className='fontBold text-xl mb-2' >ننتظرك تشاركنا 🥇</p>
-									<p className='text-lg'>إذا انت من طلابنا، تفضل شاركنا درجتك <br /> وتجربتك <br /> متحمسين نسمع منك 😁</p>
-								</div>
-								<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
-									<div className={styles.shareWhatsAppBtnBox}>
-										<AllIconsComponenet height={20} width={20} iconName={'whatsappFill'} color={'#40C351'} />
-										<p className='fontMedium mx-2'>شاركنا على الواتس</p>
-									</div>
-								</Link>
-								<Link href={`${linkConst.Instagram_Link}`} target='_blank' className='normalLinkText'>
-									<div className={styles.shareWhatsAppBtnBox}>
-										<AllIconsComponenet height={20} width={20} iconName={'coloredInstaIcon'} />
-										<p className='fontMedium mx-2'>شاركنا على الانستقرام</p>
-									</div>
-								</Link>
+									</>
+								}
 							</div>
 						</div>
-					</>
-					{/* } */}
-					{courseFilterType == 'جميع الدورات' ?
-						<>
-							{notFilteres.map((catagory, i = index) => {
+						:
+						<div>
+							{categoriWiseArray.map((arr, index) => {
 								return (
 									<>
-										{catagory.length > 0 &&
-											<div key={`catagori${i}`}>
-												<p className={`text-xl fontBold px-4 pt-4`}>{catagory[0].course.catagory.name}</p>
+										{arr.length > 0 &&
+											<div key={`catagori${index}`}>
+												<p className={`text-xl fontBold px-4 pt-4`}>{arr[0].course.catagory.name}</p>
 												<div className='flex flex-wrap justify-center pt-4'>
-													{catagory.map((feedback, j = index) => {
+													{arr.map((feedback, index) => {
 														return (
-															<div key={`feedback${j}`}>
+															<div key={`feedback${index}`}>
 																<ReviewCard review={feedback} />
 															</div>
 														)
@@ -186,20 +177,10 @@ export default function StudentFeedback(props) {
 									</>
 								)
 							})}
-						</>
-						:
-						<div className='flex flex-wrap justify-center pt-4'>
-							{catagoryReviews.map((feedback, index) => {
-								return (
-									<div key={`feedback${index}`}>
-										<ReviewCard review={feedback} />
-									</div>
-								)
-							})}
 						</div>
 					}
 				</>
-			</div >
-		</div >
+			</div>
+		</div>
 	)
 }

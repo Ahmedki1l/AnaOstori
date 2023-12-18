@@ -33,7 +33,7 @@ export default function CoursesCard(props) {
 			setIsModelforcontentAccess(true)
 			return
 		} else {
-			Router.push(`myCourse/${courseDetails.id}`)
+			Router.push(`/myCourse?courseId=${courseDetails.id}`)
 		}
 	}
 
