@@ -137,6 +137,7 @@ import DropMenuIcon from './customeIcons/dropMenuIcon'
 import StarDoubleColoredIcon from './customeIcons/starDoubleColoredIcon'
 import PersonDoubleColoredIcon from './customeIcons/personDoubleColoredIcon'
 import UploadDataIcon from './customeIcons/uploadDataIcon'
+import NewFilterIcon from './customeIcons/newFilterIcon'
 
 
 
@@ -262,13 +263,11 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newLockIcon' && <NewLockIcon height={height} width={width} color={color} />}
 			{iconName == 'newSettingIcon' && <NewSettingIcon height={height} width={width} color={color} />}
 			{iconName == 'newLogOutIcon' && <NewLogOutIcon height={height} width={width} color={color} />}
-
-
+			{iconName == 'newFilterIcon' && <NewFilterIcon height={height} width={width} color={color} />}
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
 			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}
 			{iconName == 'goToNextArrow' && <GoToNextArrow height={height} width={width} color={color} />}
-
 
 			{iconName == 'clockDoubleColor' && <ClockDoubleColor height={height} width={width} color={color} />}
 			{iconName == 'locationDoubleColor' && <LocationDoubleColor height={height} width={width} color={color} />}
@@ -278,7 +277,6 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'televisonDoubleColorIcon' && <TelevisonDoubleColorIcon height={height} width={width} color={color} />}
 			{iconName == 'starDoubleColoredIcon' && <StarDoubleColoredIcon height={height} width={width} color={color} />}
 			{iconName == 'personDoubleColoredIcon' && <PersonDoubleColoredIcon height={height} width={width} color={color} />}
-
 
 			{iconName == 'curriculumNewQuizIcon' && <CurriculumNewQuizIcon height={height} width={width} color={color} />}
 			{iconName == 'curriculumNewVideoIcon' && <CurriculumNewVideoIcon height={height} width={width} color={color} />}
@@ -296,7 +294,6 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 
 			{iconName == 'passwordAlertIcon' && <PasswordAlert height={height} width={width} color={color} />}
 			{iconName == 'whatsApp_whiteBorder' && <WhatsApp_whiteBorder height={height} width={width} color={color} />}
-
 
 		</>
 	)
