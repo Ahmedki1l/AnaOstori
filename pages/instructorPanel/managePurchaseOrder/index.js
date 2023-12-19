@@ -33,7 +33,7 @@ const Index = () => {
         pageSize: 10,
     })
     const [selectedOrder, setSelectedOrder] = useState()
-    const { paymentStatusBank, paymentStatusOther, paymentMode } = paymentConst
+    const { paymentStatusBank, paymentStatusOther, paymentMode, allPaymentStatus } = paymentConst
     const [currentPage, setCurrentPage] = useState(1)
     const [searchValue, setSearchValue] = useState()
     const [selectedStatus, setSelectedStatus] = useState()
@@ -319,7 +319,7 @@ const Index = () => {
                             width={180}
                             height={40}
                             placeholder='اختار الجنس'
-                            OptionData={paymentStatusOther}
+                            OptionData={allPaymentStatus}
                             allowClear={true}
                             onChange={(value) => setSelectedStatus(value)}
                         />
@@ -354,7 +354,10 @@ const Index = () => {
                     </div>
                 </div>
                 <div>
-                    <button className={`primarySolidBtn ${styles.searchBtnWrapper}`} onClick={handleSearchFilters}>searchUserData</button>
+                    <button className={`primaryStrockedBtn ${styles.searchBtnWrapper}`} onClick={handleSearchFilters}>
+                        <AllIconsComponenet height={20} width={20} iconName={'newFilterIcon'} color={'#F26722'} />
+                        <p className="pr-2">فلترة</p>
+                    </button>
                 </div>
             </div>
             <ConfigProvider direction="rtl">

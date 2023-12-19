@@ -116,27 +116,25 @@ export default function StudentFeedback(props) {
 								{catagoryReviews &&
 									<>
 										<p className={`text-xl fontBold px-4 pt-4`}>{catagoryReviews[0].course.catagory.name}</p>
-										<div className='flex flex-wrap justify-center pt-4'>
+										<div className={styles.allReviewsItemsWrapper}>
 											<ReviewCard review={catagoryReviews[0]} />
-											<div className='flex flex-wrap justify-center pt-4'>
-												<div className={styles.sharedItemsDiv}>
-													<div className='text-center'>
-														<p className='fontBold text-xl mb-2' >ننتظرك تشاركنا 🥇</p>
-														<p className='text-lg'>إذا انت من طلابنا، تفضل شاركنا درجتك <br /> وتجربتك <br /> متحمسين نسمع منك 😁</p>
-													</div>
-													<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
-														<div className={styles.shareWhatsAppBtnBox}>
-															<AllIconsComponenet height={20} width={20} iconName={'whatsappFill'} color={'#40C351'} />
-															<p className='fontMedium mx-2'>شاركنا على الواتس</p>
-														</div>
-													</Link>
-													<Link href={`${linkConst.Instagram_Link}`} target='_blank' className='normalLinkText'>
-														<div className={styles.shareWhatsAppBtnBox}>
-															<AllIconsComponenet height={20} width={20} iconName={'coloredInstaIcon'} />
-															<p className='fontMedium mx-2'>شاركنا على الانستقرام</p>
-														</div>
-													</Link>
+											<div className={styles.sharedItemsDiv}>
+												<div className='text-center'>
+													<p className='fontBold text-xl mb-2' >ننتظرك تشاركنا 🥇</p>
+													<p className='text-lg'>إذا انت من طلابنا، تفضل شاركنا درجتك <br /> وتجربتك <br /> متحمسين نسمع منك 😁</p>
 												</div>
+												<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
+													<div className={styles.shareWhatsAppBtnBox}>
+														<AllIconsComponenet height={20} width={20} iconName={'whatsappFill'} color={'#40C351'} />
+														<p className='fontMedium mx-2'>شاركنا على الواتس</p>
+													</div>
+												</Link>
+												<Link href={`${linkConst.Instagram_Link}`} target='_blank' className='normalLinkText'>
+													<div className={styles.shareWhatsAppBtnBox}>
+														<AllIconsComponenet height={20} width={20} iconName={'coloredInstaIcon'} />
+														<p className='fontMedium mx-2'>شاركنا على الانستقرام</p>
+													</div>
+												</Link>
 											</div>
 											{catagoryReviews.map((feedback, index) => {
 												return (
