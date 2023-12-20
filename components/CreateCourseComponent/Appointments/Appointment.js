@@ -23,8 +23,14 @@ import Image from 'next/legacy/image';
 import InputWithLocation from '../../antDesignCompo/InputWithLocation';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
-
-const Appointments = ({ courseId, courseType, getAllAvailability, availabilityList }) => {
+import { useRouter } from 'next/router';
+const Appointments = ({
+    courseId,
+    courseType,
+    getAllAvailability,
+    availabilityList,
+    setSelectedItem
+}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAvailabilityEdit, setIsAvailabilityEdit] = useState(false)
     const [editAvailability, setEditAvailability] = useState('')
@@ -32,6 +38,7 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
     const instructorList = storeData?.instructorList;
     const [allAppointmentList, setAllAppointmentList] = useState(availabilityList)
     const genders = PaymentConst.genders
+    const router = useRouter()
     const [appointmentForm] = Form.useForm();
     const [showSwitchBtn, setShowSwitchBtn] = useState(false)
     const [isFieldDisable, setIsFieldDisable] = useState(false)
@@ -54,7 +61,6 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
     useEffect(() => {
         getRegionLIst()
     }, [])
-
     useEffect(() => {
         setAllAppointmentList(availabilityList)
     }, [availabilityList])
@@ -228,7 +234,13 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
             setAllAppointmentList(storeData?.availabilityList.filter((obj) => obj.regionId == value))
         }
     }
-
+    const handleStudentData = (appointment) => {
+        router.push({
+            pathname: `/instructorPanel/manageCourse/${courseType}/appointments`,
+            query: { courseId: appointment.courseId, availabilityId: appointment?.id },
+        });
+        setSelectedItem(4)
+    }
     return (
         <div className='maxWidthDefault px-4'>
             <div>
@@ -334,9 +346,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
                                         <td>{fullDate(appointment?.createdAt)}</td>
                                         <td>{fullDate(appointment?.updatedAt)}</td>
                                         <td>
-                                            <div className={styles.personeDetails}>
+                                            <div className={styles.personeDetails} onClick={() => handleStudentData(appointment)}>
                                                 <AllIconsComponenet iconName={'personegroup'} height={18} width={24} color={'#F26722'} backColor={'#000000'} />
-                                                <p>{appointment.maxNumberOfSeats - appointment.numberOfSeats} طالب</p>
+                                                <p className={styles.studentCountWrapper}>{appointment.maxNumberOfSeats - appointment.numberOfSeats} طالب</p>
                                             </div>
                                         </td>
                                         <td>
@@ -589,8 +601,9 @@ const Appointments = ({ courseId, courseType, getAllAvailability, availabilityLi
                         </Form>
                     </Modal>
                 }
-            </div >
-        </div >
+            </div>
+
+        </div>
     )
 }
 

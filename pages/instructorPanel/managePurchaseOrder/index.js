@@ -230,10 +230,12 @@ const Index = () => {
             body.endDate = dayjs(selectedDates[1]).format('YYYY-MM-DD')
         }
         await postRouteAPI(body).then((res) => {
-            setPaginationConfig({
-                ...paginationConfig,
+            setPaginationConfig((prevConfig) => ({
+                ...prevConfig,
                 total: res.data.totalItems,
-            })
+                current: res.data.currentPage,
+            }));
+            setCurrentPage(res.data.currentPage)
             const purchaseOrderList = res.data.data.map((item) => {
                 return {
                     ...item,
@@ -241,15 +243,11 @@ const Index = () => {
                 }
             })
             setPurchaseOrderList(purchaseOrderList)
-            setCurrentPage(res.data.currentPage)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(data).then((res) => {
-                        setPaginationConfig({
-                            ...paginationConfig,
-                            total: res.data.totalItems,
-                        })
+                        setPurchaseOrderList(res.data.data)
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -261,7 +259,6 @@ const Index = () => {
         getPurchaseOrderList(pagination.current, searchValue)
         setCurrentPage(pagination.current)
     }
-
     const onDrawerClose = () => {
         setPurchaseOrderOpen(false);
         getPurchaseOrderList(currentPage, searchValue)
