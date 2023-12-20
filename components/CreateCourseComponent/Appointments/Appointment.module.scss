@@ -92,6 +92,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+}
+
+.studentCountWrapper {
+    color: #0075FF;
+    border-bottom: 1px solid #0075FF;
+    line-height: 10px;
+    margin-right: 5px;
 }
 
 .tableRow {

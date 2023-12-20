@@ -3,9 +3,7 @@ import React, { useEffect } from 'react'
 import { FormItem } from '../../antDesignCompo/FormItem'
 import styles from './TheStudenet.module.scss'
 import Select from '../../antDesignCompo/Select'
-import { useDispatch, useSelector } from 'react-redux'
 import * as PaymentConst from '../../../constants/PaymentConst'
-import { dateRange } from '../../../constants/DateConverter'
 import { useState } from 'react'
 import { getAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
@@ -20,8 +18,8 @@ import { toastSuccessMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 import Link from 'next/link'
 import { studentsExamsConst } from '../../../constants/adminPanelConst/studentsExamsConst/studentsExamsConst'
-
-
+import { useRouter } from 'next/router'
+import Spinner from '../../CommonComponents/spinner'
 
 const TheStudent = (props) => {
     const [showStudentDetails, setShowStudentDetails] = useState(false)
@@ -31,29 +29,22 @@ const TheStudent = (props) => {
     const courseId = props.courseId
     const courseType = props.courseType
     const genders = PaymentConst.genders
-    const dispatch = useDispatch();
-    const storeData = useSelector((state) => state?.globalStore);
-    const availabilityList = storeData?.availabilityList.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).reverse();
     const [examList, setExamList] = useState()
     const [oldExamList, setOldExamList] = useState()
     const [selectedStudent, setSelectedStudent] = useState()
-    const [selectedAvailabilityId, setSelectedAvailabilityId] = useState()
     const [studentDetailsForm] = Form.useForm()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-
-    const allavailability = availabilityList?.map((obj) => {
-        return {
-            key: obj.id,
-            label: dateRange(obj.dateFrom, obj.dateTo),
-            value: obj.id,
-        }
-    });
-
+    const router = useRouter()
+    const [showLoader, setShowLoader] = useState(false)
     useEffect(() => {
+        if (router.query.availabilityId == undefined && courseType != 'onDemand')
+            return
         if (courseType == 'onDemand') {
             getAllStudentList("007")
+        } else {
+            getAllStudentList(router?.query?.availabilityId)
         }
-    }, [courseType])
+    }, [router])
 
     const onInputChange = (e, index, fieldeName) => {
         const updatedExamData = [...examList]
@@ -188,25 +179,25 @@ const TheStudent = (props) => {
         setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
         setSelectedStudent(student)
     }
-
-    const getAllStudentList = async (e) => {
+    const getAllStudentList = async (id) => {
+        setShowLoader(true)
         let data = {
             routeName: 'getStudentByAvailability',
-            availabilityId: e,
+            availabilityId: id,
             courseId: courseId,
         }
         await getAuthRouteAPI(data).then((res) => {
-            setSelectedAvailabilityId(e)
+            setShowLoader(false)
             setShowStudentList(true)
             setAllStudentDetails(res?.data)
             setDisplayedStudentList(res?.data)
             studentDetailsForm.resetFields(['selectgender'])
         }).catch(async (error) => {
+            setShowLoader(false)
             console.log(error);
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getAuthRouteAPI(data).then((res) => {
-                        setSelectedAvailabilityId(e)
                         setShowStudentList(true)
                         setAllStudentDetails(res?.data)
                         setDisplayedStudentList(res?.data)
@@ -251,37 +242,29 @@ const TheStudent = (props) => {
             {!showStudentDetails &&
                 <div>
                     <Form form={studentDetailsForm}>
-                        <div className='flex'>
-                            {courseType !== "onDemand" &&
-                                <FormItem
-                                    name={'selectperiod'}
-                                >
-                                    <Select
-                                        fontSize={16}
-                                        width={210}
-                                        height={40}
-                                        placeholder='اختار الاختبار'
-                                        OptionData={allavailability}
-                                        onChange={(e) => getAllStudentList(e)}
-                                    />
-                                </FormItem>
-                            }
-                            {!(courseType == 'physical') &&
-                                <FormItem
-                                    name={'selectgender'}
-                                >
-                                    <Select
-                                        fontSize={16}
-                                        width={133}
-                                        height={40}
-                                        placeholder="اختر الجنس "
-                                        OptionData={genders}
-                                        onChange={selectGenderFilter}
-                                    />
-                                </FormItem>}
-                        </div>
+                        {courseType == 'online' &&
+                            <FormItem
+                                name={'selectgender'}
+                            >
+                                <Select
+                                    fontSize={16}
+                                    width={133}
+                                    height={40}
+                                    placeholder="اختر الجنس "
+                                    OptionData={genders}
+                                    onChange={selectGenderFilter}
+                                />
+                            </FormItem>}
                     </Form>
-                    {showStudentList &&
+                    {showLoader ?
+                        <div className={styles.tableBodyArea}>
+                            <div className={styles.noDataManiArea} >
+                                <div className={`relative ${styles.loadingWrapper}`}>
+                                    <Spinner borderwidth={7} width={6} height={6} />
+                                </div>
+                            </div>
+                        </div>
+                        :
                         <div>
                             <table className={styles.tableArea}>
                                 <thead className={styles.tableHeaderArea}>

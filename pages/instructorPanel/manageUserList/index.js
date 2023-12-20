@@ -176,11 +176,11 @@ const Index = () => {
             }
         }
         await postRouteAPI(body).then((res) => {
-            setPaginationConfig({
-                ...paginationConfig,
+            setPaginationConfig((prevConfig) => ({
+                ...prevConfig,
                 total: res.data.totalItems,
-            })
-            setCurrentPage(res.data.currentPage)
+                current: res.data.currentPage,
+            }));
             const userList = res.data.data.map((item) => {
                 return {
                     ...item,
