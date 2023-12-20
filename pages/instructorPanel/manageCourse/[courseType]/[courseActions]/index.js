@@ -99,12 +99,12 @@ export default function Index() {
             handleClick: router.query.courseActions == 'appointments' ? handleLinkClick : null
         },
     ]
-    router?.query?.courseActions == "appointments" &&
+    if (router?.query?.courseActions == "appointments") {
         backPathItemsArray.push(
             { lable: courseName, handleClick: () => router.push(`/instructorPanel/manageCourse/${courseType}`) },
             { lable: 'تفاصيل الموعد', link: null }
         )
-
+    }
     return (
         <>
             <div className={styles.headerWrapper}>
@@ -114,8 +114,8 @@ export default function Index() {
                         backPathArray={backPathItemsArray}
                     />
                     <div className='flex'>
-                        <h1 className={`head2 ${styles.createCourseHeaderText}`}>{`${courseName ? `${courseName} ,  ` : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة'}`}</h1>
-                        <h1 className={`head2 mr-2 ${styles.createCourseHeaderText}`}>{selectedaAvailabilityId && dateRange(selectedaAvailabilityId.dateFrom, selectedaAvailabilityId.dateTo)}</h1>
+                        <h1 className={`head2 ${styles.createCourseHeaderText}`}>{`${courseName ? `${courseName} ` : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة'}`}</h1>
+                        {selectedaAvailabilityId && <h1 className={`head2 mr-2 ${styles.createCourseHeaderText}`}>, {dateRange(selectedaAvailabilityId.dateFrom, selectedaAvailabilityId.dateTo)}</h1>}
                     </div>
                     <div>
                         <div className={styles.navItems}>
