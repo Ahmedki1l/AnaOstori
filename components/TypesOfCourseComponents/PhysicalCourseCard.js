@@ -22,7 +22,7 @@ export default function PhysicalCourseCard(props) {
 	const handleNavigation = (catagoryName, courseDetail) => {
 		if (isEdit == true) return
 		if (courseDetail.isEnrolled && courseDetail.type == "on-demand") {
-			router.push(`/myCourse/${courseDetail.id}/`)
+			router.push(`/myCourse?courseId=${courseDetail.id}`)
 		} else {
 			router.push(`/${courseDetail.name.replace(/ /g, "-")}/${catagoryName.replace(/ /g, "-")}`)
 		}

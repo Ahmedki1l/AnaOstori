@@ -233,7 +233,10 @@ const TestResults = (props) => {
                 });
             }
         });
-
+        if (updateDataBody.length == 0 && createDataBody.length == 0) {
+            setShowBtnLoader(false)
+            return
+        }
         let createAPIBody = {
             data: createDataBody,
             routeName: "createCourseTrackBulk"

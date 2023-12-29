@@ -25,7 +25,6 @@ const TheStudent = (props) => {
     const [showStudentDetails, setShowStudentDetails] = useState(false)
     const [allStudentDetails, setAllStudentDetails] = useState([])
     const [displayedStudentList, setDisplayedStudentList] = useState([])
-    const [showStudentList, setShowStudentList] = useState(false)
     const courseId = props.courseId
     const courseType = props.courseType
     const genders = PaymentConst.genders
@@ -63,8 +62,8 @@ const TheStudent = (props) => {
 
     const saveStudentExamDetails = async () => {
         setShowBtnLoader(true)
-        const createDataBody = []
-        const updateDataBody = []
+        let createDataBody = []
+        let updateDataBody = []
         examList.forEach((newObj) => {
             const oldObj = oldExamList.find((old) => old.quizId === newObj.quizId);
             const oldGrade = oldObj?.grade;
@@ -79,17 +78,17 @@ const TheStudent = (props) => {
             const oldAbsent = oldObj?.absent;
             const newAbsent = newObj?.absent;
 
-            if (newObj.old == false && (oldGrade == undefined && newGrade != undefined) ||
+            if (newObj.old == false && ((oldGrade == undefined && newGrade != undefined) ||
                 (oldNote == undefined && newNote != undefined) ||
                 (oldPresent == undefined && newPresent != undefined) ||
-                (oldAbsent == undefined && newAbsent != undefined)) {
+                (oldAbsent == undefined && newAbsent != undefined))) {
                 createDataBody.push({
                     userProfileId: selectedStudent.userProfile.id,
                     enrollmentId: selectedStudent.enrollmentId,
                     courseId: courseId,
                     itemId: newObj.quizId,
-                    grade: newObj.grade ?? null,
-                    note: newObj.note ?? null,
+                    grade: newObj.grade,
+                    note: newObj.note,
                     pass: newObj.present ? true : newObj.absent ? false : null
                 });
             } else if (newObj.old == true && (oldGrade != newGrade || oldNote != newNote || oldPresent != newPresent || oldAbsent != newAbsent)) {
@@ -98,12 +97,16 @@ const TheStudent = (props) => {
                     enrollmentId: selectedStudent.enrollmentId,
                     courseId: courseId,
                     itemId: newObj.quizId,
-                    grade: newObj.grade ?? null,
-                    note: newObj.note ?? null,
+                    grade: newObj.grade,
+                    note: newObj.note,
                     pass: newObj.present ? true : newObj.absent ? false : null
                 });
             }
         });
+        if (updateDataBody.length == 0 && createDataBody.length == 0) {
+            setShowBtnLoader(false)
+            return
+        }
         let createAPIBody = {
             data: createDataBody,
             routeName: 'createCourseTrackBulk'
@@ -114,6 +117,8 @@ const TheStudent = (props) => {
         }
         if (createDataBody.length > 0) {
             await postRouteAPI(createAPIBody).then((res) => {
+                createDataBody = []
+                console.log(createDataBody);
                 studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
@@ -131,6 +136,8 @@ const TheStudent = (props) => {
         }
         if (updateDataBody.length > 0) {
             await postRouteAPI(updateAPIBody).then((res) => {
+                updateDataBody = []
+                console.log(updateDataBody);
                 studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
@@ -188,7 +195,6 @@ const TheStudent = (props) => {
         }
         await getAuthRouteAPI(data).then((res) => {
             setShowLoader(false)
-            setShowStudentList(true)
             setAllStudentDetails(res?.data)
             setDisplayedStudentList(res?.data)
             studentDetailsForm.resetFields(['selectgender'])
@@ -198,7 +204,6 @@ const TheStudent = (props) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getAuthRouteAPI(data).then((res) => {
-                        setShowStudentList(true)
                         setAllStudentDetails(res?.data)
                         setDisplayedStudentList(res?.data)
                         studentDetailsForm.resetFields(['selectgender'])

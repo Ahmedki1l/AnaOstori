@@ -298,7 +298,7 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
                 </Form >
             </div >
             <div>
-                <PhysicalCourseCard courseDetails={courseDetail} />
+                <PhysicalCourseCard courseDetails={courseDetail} isEdit={isCourseEdit} />
             </div>
         </div >
     )
