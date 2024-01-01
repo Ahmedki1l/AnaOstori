@@ -135,8 +135,8 @@ const ManegeUserListDrawer = ({
             availabilityId: '',
             id: ''
         })))
-        console.log(newData);
         setEnrolledCourseList(newData)
+        setDrawerForUsers(true)
     }
     return (
         <div>
