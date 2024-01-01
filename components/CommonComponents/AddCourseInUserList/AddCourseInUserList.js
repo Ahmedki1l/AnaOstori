@@ -111,13 +111,6 @@ const AddCourseInUserList = ({
                 isDeleted: true
             }]
         }
-        if (searchValue) {
-            deleteEnrollmentBody = {
-                ...deleteEnrollmentBody,
-                searchValue: searchValue,
-                searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
-            }
-        }
         await postAuthRouteAPI(deleteEnrollmentBody).then((res) => {
             setDrawerForUsers(false)
             setIsmodelForDeleteItems(false)
