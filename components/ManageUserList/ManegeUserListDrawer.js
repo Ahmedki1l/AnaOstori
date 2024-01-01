@@ -72,7 +72,7 @@ const ManegeUserListDrawer = ({
             return enrollment;
         });
         const newEnrolledCourseList = newEnrolledCourseData?.filter(item => !item.id);
-        if (newEnrolledCourseList.length > 0) {
+        if (newEnrolledCourseList?.length > 0) {
             let createAPIBody = {
                 routeName: 'adminEnroll',
                 data: newEnrolledCourseList
@@ -106,7 +106,7 @@ const ManegeUserListDrawer = ({
         const updatedEnrolledCourseList = values.enrolledCourseList?.filter((enrollment) => {
             return !newUpdatedArray.map((item) => item.courseId).includes(enrollment.courseId);
         });
-        if (updatedEnrolledCourseList.length > 0) {
+        if (updatedEnrolledCourseList?.length > 0) {
             let updateAPIBody = {
                 routeName: 'updateAdminEnroll',
                 data: updatedEnrolledCourseList
@@ -127,13 +127,15 @@ const ManegeUserListDrawer = ({
         }
     }
     const addCourse = () => {
-        setEnrolledCourseList({
+        let newData = [...enrolledCourseList]
+        newData.push(JSON.parse(JSON.stringify({
             courseId: '',
             type: '',
             regionId: '',
             availabilityId: '',
             id: ''
-        })
+        })))
+        setEnrolledCourseList(newData)
     }
     return (
         <div>
