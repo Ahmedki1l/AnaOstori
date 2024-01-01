@@ -61,7 +61,7 @@ const ManegeUserListDrawer = ({
 
     const handleSaveUserDetails = async (values) => {
         let newEnrolledCourseData = values?.enrolledCourseList?.map((enrollment) => {
-            const course = allCourse.find((course) => course.value === enrollment.courseId);
+            const course = allCourse?.find((course) => course.value === enrollment.courseId);
             if (course) {
                 return {
                     ...enrollment,
@@ -71,18 +71,11 @@ const ManegeUserListDrawer = ({
             }
             return enrollment;
         });
-        const newEnrolledCourseList = newEnrolledCourseData.filter(item => !item.id);
+        const newEnrolledCourseList = newEnrolledCourseData?.filter(item => !item.id);
         if (newEnrolledCourseList.length > 0) {
             let createAPIBody = {
                 routeName: 'adminEnroll',
                 data: newEnrolledCourseList
-            }
-            if (searchValue) {
-                createAPIBody = {
-                    ...createAPIBody,
-                    searchValue: searchValue,
-                    searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
-                }
             }
             await postAuthRouteAPI(createAPIBody).then((res) => {
                 setEnrolledCourseList(res.data)
@@ -101,7 +94,7 @@ const ManegeUserListDrawer = ({
         } else {
             setDrawerForUsers(false)
         }
-        const newUpdatedArray = values.enrolledCourseList.filter((updatedItem) => {
+        const newUpdatedArray = values.enrolledCourseList?.filter((updatedItem) => {
             const updatedObject = enrolledCourseList.find((item) => {
                 return item.courseId === updatedItem.courseId &&
                     item.regionId === updatedItem.regionId &&
@@ -110,20 +103,13 @@ const ManegeUserListDrawer = ({
             });
             return updatedObject !== undefined;
         });
-        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment) => {
+        const updatedEnrolledCourseList = values.enrolledCourseList?.filter((enrollment) => {
             return !newUpdatedArray.map((item) => item.courseId).includes(enrollment.courseId);
         });
         if (updatedEnrolledCourseList.length > 0) {
             let updateAPIBody = {
                 routeName: 'updateAdminEnroll',
                 data: updatedEnrolledCourseList
-            }
-            if (searchValue) {
-                updateAPIBody = {
-                    ...updateAPIBody,
-                    searchValue: searchValue,
-                    searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
-                }
             }
             await postAuthRouteAPI(updateAPIBody).then((res) => {
                 setDrawerForUsers(false)
