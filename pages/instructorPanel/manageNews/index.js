@@ -31,6 +31,7 @@ const Index = () => {
             routeName: "listNewsBar",
         }
         await postRouteAPI(body).then((res) => {
+            console.log(res.data);
             setNewsDataList(res.data);
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
