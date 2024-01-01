@@ -84,7 +84,7 @@ export default function Navbar() {
 				catagories: res?.data.filter((item) => item.published == true)
 			});
 		}).catch(async (error) => {
-			console.log(error);
+			console.log("noAuth Catagori Error :", error);
 		})
 	};
 
