@@ -1,5 +1,5 @@
 import { Form } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FormItem } from '../antDesignCompo/FormItem';
 import Input from '../antDesignCompo/Input';
 import UploadFileForModel from '../CommonComponents/UploadFileForModel/UploadFileForModel'
@@ -15,13 +15,16 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 const ManegeUserListDrawer = ({
     selectedUserDetails,
     setDrawerForUsers,
-    getUserList
+    getUserList,
+    searchValue
 }) => {
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
     const [userForm] = Form.useForm()
     const storeData = useSelector((state) => state?.globalStore);
-    const category = storeData.catagories
+    const category = storeData.catagories;
+    const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
+    const regexPhone = useMemo(() => /^\d+$/, []);
     const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments.map((item) => {
         return {
             courseId: item?.course?.id,
@@ -74,10 +77,17 @@ const ManegeUserListDrawer = ({
                 routeName: 'adminEnroll',
                 data: newEnrolledCourseList
             }
+            if (searchValue) {
+                createAPIBody = {
+                    ...createAPIBody,
+                    searchValue: searchValue,
+                    searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
+                }
+            }
             await postAuthRouteAPI(createAPIBody).then((res) => {
                 setEnrolledCourseList(res.data)
                 setDrawerForUsers(false)
-                getUserList(1)
+                getUserList(1, searchValue)
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
@@ -108,9 +118,16 @@ const ManegeUserListDrawer = ({
                 routeName: 'updateAdminEnroll',
                 data: updatedEnrolledCourseList
             }
+            if (searchValue) {
+                updateAPIBody = {
+                    ...updateAPIBody,
+                    searchValue: searchValue,
+                    searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
+                }
+            }
             await postAuthRouteAPI(updateAPIBody).then((res) => {
                 setDrawerForUsers(false)
-                getUserList(1)
+                getUserList(1, searchValue)
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
@@ -201,6 +218,7 @@ const ManegeUserListDrawer = ({
                                                     name={name}
                                                     enrollment={enrollment}
                                                     getUserList={getUserList}
+                                                    searchValue={searchValue}
                                                     setDrawerForUsers={setDrawerForUsers}
                                                 />
                                             )

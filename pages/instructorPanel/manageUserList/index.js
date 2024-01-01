@@ -273,6 +273,7 @@ const Index = () => {
                             selectedUserDetails={selectedUser}
                             setDrawerForUsers={setDrawerForUsers}
                             getUserList={getUserList}
+                            searchValue={searchValue}
                         />
                     </Drawer>
                 }
