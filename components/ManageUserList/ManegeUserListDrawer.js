@@ -136,7 +136,6 @@ const ManegeUserListDrawer = ({
             id: ''
         })))
         setEnrolledCourseList(newData)
-        setDrawerForUsers(true)
     }
     return (
         <div>
@@ -229,7 +228,7 @@ const ManegeUserListDrawer = ({
                     :
                     <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
                 }
-                {selectedUserDetails.enrollments.length == 0 &&
+                {enrolledCourseList.length == 0 &&
                     <>
                         <Empty emptyText={manageUserListConst.emptyBtnPlaceHolder} containerhight={165} />
                         <div className={styles.userListBtnBox}>
