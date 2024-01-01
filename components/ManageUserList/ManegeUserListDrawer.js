@@ -57,7 +57,7 @@ const ManegeUserListDrawer = ({
 
 
     const handleSaveUserDetails = async (values) => {
-        let newEnrolledCourseData = values.enrolledCourseList.map((enrollment) => {
+        let newEnrolledCourseData = values?.enrolledCourseList?.map((enrollment) => {
             const course = allCourse.find((course) => course.value === enrollment.courseId);
             if (course) {
                 return {
