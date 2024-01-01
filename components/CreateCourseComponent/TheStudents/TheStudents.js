@@ -118,7 +118,6 @@ const TheStudent = (props) => {
         if (createDataBody.length > 0) {
             await postRouteAPI(createAPIBody).then((res) => {
                 createDataBody = []
-                console.log(createDataBody);
                 studentDetailsSuccessRes(toastSuccessMessage.examCreateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {
@@ -137,7 +136,6 @@ const TheStudent = (props) => {
         if (updateDataBody.length > 0) {
             await postRouteAPI(updateAPIBody).then((res) => {
                 updateDataBody = []
-                console.log(updateDataBody);
                 studentDetailsSuccessRes(toastSuccessMessage.examUpdateSuccessMsg)
                 setShowBtnLoader(false)
             }).catch(async (error) => {

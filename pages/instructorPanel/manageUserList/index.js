@@ -162,6 +162,7 @@ const Index = () => {
         },
     ]
     const getUserList = async (pageNo, searchValue) => {
+        console.log('pageNo, pageNo');
         let body = {
             routeName: "userList",
             page: pageNo,
@@ -273,6 +274,7 @@ const Index = () => {
                             selectedUserDetails={selectedUser}
                             setDrawerForUsers={setDrawerForUsers}
                             getUserList={getUserList}
+                            searchValue={searchValue}
                         />
                     </Drawer>
                 }
