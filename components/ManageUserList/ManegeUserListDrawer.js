@@ -233,7 +233,7 @@ const ManegeUserListDrawer = ({
                     <>
                         <Empty emptyText={manageUserListConst.emptyBtnPlaceHolder} containerhight={165} />
                         <div className={styles.userListBtnBox}>
-                            <button className='primaryStrockedBtn mb-6' htmltype='submit' onClick={() => addCourse()}>{manageUserListConst.emptyBtnText}</button>
+                            <button className='primaryStrockedBtn mb-6' onClick={() => addCourse()}>{manageUserListConst.emptyBtnText}</button>
                         </div>
                     </>
                 }
