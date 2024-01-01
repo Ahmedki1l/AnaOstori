@@ -60,8 +60,8 @@ const ManegeUserListDrawer = ({
 
 
     const handleSaveUserDetails = async (values) => {
-        let newEnrolledCourseData = values.enrolledCourseList.map((enrollment) => {
-            const course = allCourse.find((course) => course.value === enrollment.courseId);
+        let newEnrolledCourseData = values?.enrolledCourseList?.map((enrollment) => {
+            const course = allCourse?.find((course) => course.value === enrollment.courseId);
             if (course) {
                 return {
                     ...enrollment,
@@ -71,7 +71,7 @@ const ManegeUserListDrawer = ({
             }
             return enrollment;
         });
-        const newEnrolledCourseList = newEnrolledCourseData.filter(item => !item.id);
+        const newEnrolledCourseList = newEnrolledCourseData?.filter(item => !item.id);
         if (newEnrolledCourseList.length > 0) {
             let createAPIBody = {
                 routeName: 'adminEnroll',
@@ -101,7 +101,7 @@ const ManegeUserListDrawer = ({
         } else {
             setDrawerForUsers(false)
         }
-        const newUpdatedArray = values.enrolledCourseList.filter((updatedItem) => {
+        const newUpdatedArray = values.enrolledCourseList?.filter((updatedItem) => {
             const updatedObject = enrolledCourseList.find((item) => {
                 return item.courseId === updatedItem.courseId &&
                     item.regionId === updatedItem.regionId &&
@@ -110,7 +110,7 @@ const ManegeUserListDrawer = ({
             });
             return updatedObject !== undefined;
         });
-        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment) => {
+        const updatedEnrolledCourseList = values.enrolledCourseList?.filter((enrollment) => {
             return !newUpdatedArray.map((item) => item.courseId).includes(enrollment.courseId);
         });
         if (updatedEnrolledCourseList.length > 0) {
@@ -140,7 +140,15 @@ const ManegeUserListDrawer = ({
             })
         }
     }
-
+    const addCourse = () => {
+        setEnrolledCourseList({
+            courseId: '',
+            type: '',
+            regionId: '',
+            availabilityId: '',
+            id: ''
+        })
+    }
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
