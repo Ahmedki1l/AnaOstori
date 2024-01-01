@@ -140,7 +140,15 @@ const ManegeUserListDrawer = ({
             })
         }
     }
-
+    const addCourse = () => {
+        setEnrolledCourseList({
+            courseId: '',
+            type: '',
+            regionId: '',
+            availabilityId: '',
+            id: ''
+        })
+    }
     return (
         <div>
             <Form form={userForm} onFinish={handleSaveUserDetails}>
