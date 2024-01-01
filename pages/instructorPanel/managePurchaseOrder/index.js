@@ -1,6 +1,6 @@
-import { ConfigProvider, Drawer, Table, Tag } from "antd";
+import { ConfigProvider, DatePicker, Drawer, Table, Tag } from "antd";
 import { postAuthRouteAPI, postRouteAPI } from "../../../services/apisService";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fullDate } from "../../../constants/DateConverter";
 import Empty from "../../../components/CommonComponents/Empty";
 import AllIconsComponenet from "../../../Icons/AllIconsComponenet";
@@ -13,6 +13,12 @@ import { getNewToken } from "../../../services/fireBaseAuthService";
 import { mediaUrl } from "../../../constants/DataManupulation";
 import { toast } from "react-toastify";
 import { managePurchaseOrderConst } from "../../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst";
+import Input from "../../../components/antDesignCompo/Input";
+import { SearchOutlined } from '@ant-design/icons';
+import styles from '../../../styles/InstructorPanelStyleSheets/ManagePurchaseOrder.module.scss'
+import Select from "../../../components/antDesignCompo/Select";
+import { FormItem } from "../../../components/antDesignCompo/FormItem";
+import dayjs from "dayjs";
 
 const DrawerTiitle = styled.p`
 font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -27,8 +33,16 @@ const Index = () => {
         pageSize: 10,
     })
     const [selectedOrder, setSelectedOrder] = useState()
-    const { paymentStatusBank, paymentStatusOther } = paymentConst
+    const { paymentStatusBank, paymentStatusOther, paymentMode, allPaymentStatus } = paymentConst
     const [currentPage, setCurrentPage] = useState(1)
+    const [searchValue, setSearchValue] = useState()
+    const [selectedStatus, setSelectedStatus] = useState()
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
+    const { RangePicker } = DatePicker;
+    const [dates, setDates] = useState(null);
+    const [selectedDates, setSelectedDates] = useState(null);
+    const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
+    const regexPhone = useMemo(() => /^\d+$/, []);
 
     const tableColumns = [
         {
@@ -184,24 +198,44 @@ const Index = () => {
             }
         },
     ];
-
     useEffect(() => {
         getPurchaseOrderList(1)
     }, [])
 
-
-    const getPurchaseOrderList = async (pageNo) => {
-        let data = {
+    const getPurchaseOrderList = async (pageNo, searchValue) => {
+        let body = {
             routeName: "orderList",
             page: pageNo,
             limit: 10,
             order: "createdAt DESC"
         }
-        await postRouteAPI(data).then((res) => {
-            setPaginationConfig({
-                ...paginationConfig,
+        if (searchValue) {
+            body.searchType = regexEmail.test(searchValue) ? 'buyerEmail' : regexPhone.test(searchValue) ? 'buyerPhone' : 'buyerFullName'
+            body.searchValue = searchValue
+        }
+        if (selectedStatus) {
+            body.filterType = "status"
+            body.filterValue = selectedStatus
+        }
+        if (selectedPaymentMethod && selectedPaymentMethod !== 'bank_transfer') {
+            body.filterType = "cardType"
+            body.filterValue = selectedPaymentMethod
+        }
+        if (selectedPaymentMethod == 'bank_transfer' || selectedPaymentMethod == 'inAppPurchase') {
+            body.filterType = "paymentMethod"
+            body.filterValue = selectedPaymentMethod
+        }
+        if (selectedDates) {
+            body.startDate = dayjs(selectedDates[0]).format('YYYY-MM-DD')
+            body.endDate = dayjs(selectedDates[1]).format('YYYY-MM-DD')
+        }
+        await postRouteAPI(body).then((res) => {
+            setPaginationConfig((prevConfig) => ({
+                ...prevConfig,
                 total: res.data.totalItems,
-            })
+                current: res.data.currentPage,
+            }));
+            setCurrentPage(res.data.currentPage)
             const purchaseOrderList = res.data.data.map((item) => {
                 return {
                     ...item,
@@ -209,15 +243,11 @@ const Index = () => {
                 }
             })
             setPurchaseOrderList(purchaseOrderList)
-            setCurrentPage(res.data.currentPage)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(data).then((res) => {
-                        setPaginationConfig({
-                            ...paginationConfig,
-                            total: res.data.totalItems,
-                        })
+                        setPurchaseOrderList(res.data.data)
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -225,31 +255,36 @@ const Index = () => {
             }
         })
     }
-
-
-    const handleTableChange = (pagination, filter, sorter) => {
-        getPurchaseOrderList(pagination.current)
+    const handleTableChange = (pagination) => {
+        getPurchaseOrderList(pagination.current, searchValue)
         setCurrentPage(pagination.current)
     }
-
-    const onDrawerClose = (apiCall) => {
-        if (apiCall) {
-            getPurchaseOrderList(currentPage)
-        }
+    const onDrawerClose = () => {
         setPurchaseOrderOpen(false);
+        getPurchaseOrderList(currentPage, searchValue)
     };
-
-
     const customEmptyComponent = (
         <Empty emptyText={'باقي محد اشترى'} containerhight={300} onClick={() => handleCreateFolder()} />
     )
-
-    // const selectedOrderStatusLable = paymentStatus.find((item) => item.value == selectedOrder?.status)
-
     const selectedOrderStatusLable = selectedOrder?.paymentMethod == "bank_transfer" ? paymentStatusBank.find((item) => item.value == selectedOrder?.status) : paymentStatusOther.find((item) => item.value == selectedOrder?.status)
-
+    const handleSearchFilters = async () => {
+        getPurchaseOrderList(1, searchValue)
+    }
+    const handleSearchValueChange = (value) => {
+        setSearchValue(value)
+        if (value == '') {
+            getPurchaseOrderList(1, value)
+        }
+    }
+    const onOpenChange = (open) => {
+        if (open) {
+            setDates([null, null]);
+        } else {
+            setDates(null);
+        }
+    };
     return (
-        <div className="maxWidthDefault">
+        <div className="maxWidthDefault px-4">
             <div style={{ height: 40 }}>
                 <BackToPath
                     backpathForPage={true}
@@ -260,6 +295,67 @@ const Index = () => {
                         ]
                     }
                 />
+            </div>
+            <div className='flex justify-between mb-2'>
+                <div className="flex">
+                    <div className='ml-3'>
+                        <Input
+                            placeholder="Search"
+                            height={40}
+                            fontSize={16}
+                            onChange={(e) => handleSearchValueChange(e.target.value)}
+                            prefix={<SearchOutlined />}
+                            allowClear={true}
+                        />
+                    </div>
+                    <FormItem
+                        name={'status'}
+                    >
+                        <Select
+                            fontSize={16}
+                            width={180}
+                            height={40}
+                            placeholder='اختار الجنس'
+                            OptionData={allPaymentStatus}
+                            allowClear={true}
+                            onChange={(value) => setSelectedStatus(value)}
+                        />
+                    </FormItem>
+                    <FormItem
+                        name={'paymentMethod'}
+                    >
+                        <Select
+                            fontSize={16}
+                            width={180}
+                            height={40}
+                            placeholder='اختار الجنس'
+                            OptionData={paymentMode}
+                            allowClear={true}
+                            onChange={(value) => setSelectedPaymentMethod(value)}
+                        />
+                    </FormItem>
+                    <div className='ml-3'>
+                        <RangePicker
+                            height={40}
+                            value={dates || selectedDates}
+                            onCalendarChange={(val) => {
+                                setDates(val);
+                            }}
+                            onChange={(val) => {
+                                setSelectedDates(val);
+                            }}
+                            onOpenChange={onOpenChange}
+                            changeOnBlur
+                            size="large"
+                        />
+                    </div>
+                </div>
+                <div>
+                    <button className={`primaryStrockedBtn ${styles.searchBtnWrapper}`} onClick={handleSearchFilters}>
+                        <AllIconsComponenet height={20} width={20} iconName={'newFilterIcon'} color={'#F26722'} />
+                        <p className="pr-2">فلترة</p>
+                    </button>
+                </div>
             </div>
             <ConfigProvider direction="rtl">
                 <Table

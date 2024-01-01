@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import styles from '../../../../../styles/InstructorPanelStyleSheets/CreateCourse.module.scss'
 import CourseInfo from '../../../../../components/CreateCourseComponent/CourseInfo/CourseInfo';
 import Appointment from '../../../../../components/CreateCourseComponent/Appointments/Appointment';
@@ -12,6 +12,7 @@ import { getAuthRouteAPI } from '../../../../../services/apisService';
 import { useDispatch } from 'react-redux';
 import BackToPath from '../../../../../components/CommonComponents/BackToPath';
 import { getNewToken } from '../../../../../services/fireBaseAuthService';
+import { dateRange } from '../../../../../constants/DateConverter';
 
 export default function Index() {
 
@@ -20,16 +21,26 @@ export default function Index() {
     const [selectedItem, setSelectedItem] = useState(1);
     const storeData = useSelector((state) => state?.globalStore);
     const dispatch = useDispatch();
+    const router = useRouter()
     const isCourseEdit = storeData?.isCourseEdit;
     const editCourseData = storeData?.editCourseData;
     const [showExtraNavItem, setShowExtraNavItem] = useState(isCourseEdit == true)
     const [createCourseApiRes, setCreateCourseApiRes] = useState()
     const courseName = isCourseEdit ? editCourseData?.name : createCourseApiRes?.name ? createCourseApiRes?.name : undefined
     const [availabilityList, setAvailabilityList] = useState([])
+    const availabilityId = router?.query?.availabilityId
+    const selectedaAvailabilityId = availabilityList?.filter((item) => availabilityId?.includes(item.id))[0]
+    const [tabShown, setTabShown] = useState({
+        firstTab: false,
+        secondTab: false,
+        thirdTab: false,
+        fourthTab: false,
+        fifthTab: false,
+        sixthTab: false,
+    })
     const handleItemSelect = (id) => {
         setSelectedItem(id)
     }
-
     const getAllAvailability = async () => {
         if (!courseId) {
             return;
@@ -65,38 +76,57 @@ export default function Index() {
         getAllAvailability();
     }, [courseId]);
 
+    useEffect(() => {
+        setTabShown({
+            firstTab: (router?.query?.courseActions != "appointments" ? true : false),
+            secondTab: (router?.query?.courseActions == "editCourse" ? true : false),
+            thirdTab: (courseType != 'onDemand' && router?.query?.courseActions == 'editCourse' ? true : false),
+            fourthTab: (((courseType == 'onDemand' && router?.query?.courseActions == 'editCourse') || (courseType != 'onDemand' && router?.query?.courseActions == 'appointments')) ? true : false),
+            fifthTab: (((courseType == 'onDemand' && router?.query?.courseActions == 'editCourse') || (courseType != 'onDemand' && router?.query?.courseActions == 'appointments')) ? true : false),
+            sixthTab: (courseType != 'onDemand' && router?.query?.courseActions == 'appointments' ? true : false),
+        })
+    }, [router])
+
+    const handleLinkClick = () => {
+        router.push(`/instructorPanel/manageCourse/${courseType}/editCourse?courseId=${courseId}`)
+        setSelectedItem(3);
+    };
+    const backPathItemsArray = [
+        { lable: 'صفحة الأدمن الرئيسية', handleClick: () => router.push(`/instructorPanel`) },
+        { lable: 'إضافة وإدارة الدورات', handleClick: () => router.push('/instructorPanel/manageCourse') },
+        {
+            lable: courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة',
+            handleClick: router.query.courseActions == 'appointments' ? handleLinkClick : null
+        },
+    ]
+    if (router?.query?.courseActions == "appointments") {
+        backPathItemsArray.push(
+            { lable: courseName, handleClick: () => router.push(`/instructorPanel/manageCourse/${courseType}`) },
+            { lable: 'تفاصيل الموعد', link: null }
+        )
+    }
     return (
         <>
             <div className={styles.headerWrapper}>
                 <div className='maxWidthDefault px-4'>
-                    <div>
-                        <BackToPath
-                            backpathForPage={true}
-                            backPathArray={
-                                [
-                                    { lable: 'صفحة الأدمن الرئيسية', link: `/instructorPanel` },
-                                    { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel/manageCourse' },
-                                    { lable: courseName ? courseName : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة', link: null },
-                                    // {lable: courseName ? courseName : courseType == "on-demand" ? 'الدورات المسجلة' : '', link: null }
-                                ]
-                            }
-                        />
+                    <BackToPath
+                        backpathForTabel={true}
+                        backPathArray={backPathItemsArray}
+                    />
+                    <div className='flex'>
+                        <h1 className={`head2 ${styles.createCourseHeaderText}`}>{`${courseName ? `${courseName} ` : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة'}`}</h1>
+                        {selectedaAvailabilityId && <h1 className={`head2 mr-2 ${styles.createCourseHeaderText}`}>, {dateRange(selectedaAvailabilityId.dateFrom, selectedaAvailabilityId.dateTo)}</h1>}
                     </div>
-                    <h1 className={`head2 ${styles.createCourseHeaderText}`}>
-                        {courseName ? courseName : courseType == "physical" ? 'الدورات الحضورية' : courseType == "online" ? 'الدورات المباشرة' : 'الدورات المسجلة'}
-                    </h1>
                     <div>
                         <div className={styles.navItems}>
-                            <p onClick={() => handleItemSelect(1)} className={selectedItem == 1 ? styles.activeItem : ""}>معلومات الدورة </p>
-                            {showExtraNavItem &&
-                                <>
-                                    <p onClick={() => handleItemSelect(2)} className={selectedItem == 2 ? styles.activeItem : ""}>بطاقة الدورة الخارجية</p>
-                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
-                                    <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>
-                                    <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>
-                                    {courseType != "onDemand" && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
-                                </>
-                            }
+                            {tabShown.firstTab && <p onClick={() => handleItemSelect(1)} className={selectedItem == 1 ? styles.activeItem : ""}>معلومات الدورة </p>}
+                            <>
+                                {tabShown.secondTab && <p onClick={() => handleItemSelect(2)} className={selectedItem == 2 ? styles.activeItem : ""}>بطاقة الدورة الخارجية</p>}
+                                {tabShown.thirdTab && <p onClick={() => handleItemSelect(3)} className={selectedItem == 3 ? styles.activeItem : ""}>المواعيد</p>}
+                                {tabShown.fourthTab && <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>}
+                                {tabShown.fifthTab && <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>}
+                                {tabShown.sixthTab && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
+                            </>
                         </div>
                     </div>
                 </div>
@@ -112,7 +142,7 @@ export default function Index() {
                                 setSelectedItem={setSelectedItem}
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
-                        {selectedItem == 3 && courseType != "on-demand" && <Appointment courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} availabilityList={availabilityList} />}
+                        {selectedItem == 3 && <Appointment setSelectedItem={setSelectedItem} courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} availabilityList={availabilityList} />}
                         {selectedItem == 4 && <TheStudents courseId={courseId} courseType={courseType} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} courseType={courseType} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} />}

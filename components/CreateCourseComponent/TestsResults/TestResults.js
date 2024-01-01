@@ -15,28 +15,21 @@ import CustomButton from '../../CommonComponents/CustomButton'
 import { toastSuccessMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 import { getNewToken } from '../../../services/fireBaseAuthService'
+import { useRouter } from 'next/router'
+import Spinner from '../../CommonComponents/spinner'
 
 const TestResults = (props) => {
 
     const courseId = props.courseId
     const courseType = props.courseType
-    const storeData = useSelector((state) => state?.globalStore);
     const [examList, setExamList] = useState()
-    const availabilityList = storeData?.availabilityList.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).reverse();
     const [showStudentList, setShowStudentList] = useState(false)
     const [selectedExam, setSelectedExam] = useState()
-    const [selectedAvailability, setSelectedAvailability] = useState()
     const [studentList, setStudentList] = useState()
     const [updatedStudentList, setUpdatedStudentList] = useState()
     const [showBtnLoader, setShowBtnLoader] = useState(false)
-
-    const allavailability = availabilityList?.map((obj) => {
-        return {
-            key: obj.id,
-            label: dateRange(obj.dateFrom, obj.dateTo),
-            value: obj.id,
-        }
-    });
+    const router = useRouter()
+    const [showLoader, setShowLoader] = useState(false)
 
     useEffect(() => {
         getExamList()
@@ -126,15 +119,15 @@ const TestResults = (props) => {
         } else {
             if (type == 'exam') {
                 setSelectedExam(e)
-                getStudentList(e, selectedAvailability)
+                getStudentList(e, router.query.availabilityId)
             } else {
-                setSelectedAvailability(e)
-                getStudentList(selectedExam, e)
+                getStudentList(selectedExam, router.query.availabilityId)
             }
         }
     }
 
     const getStudentList = async (examId, availabilityId) => {
+        setShowLoader(true)
         if (!examId || !availabilityId) return
         if (courseType == "onDemand") {
             let params = {
@@ -144,13 +137,13 @@ const TestResults = (props) => {
                 courseId: courseId
             }
             await getRouteAPI(params).then((res) => {
-                // await getStudentListByExamOnDemandAPI(params).then((res) => {
+                setShowLoader(false)
                 createUpdatedList(res.data)
                 setShowStudentList(true)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        // await getStudentListByExamOnDemandAPI(params).then((res) => {
+                        setShowLoader(false)
                         await getRouteAPI(params).then((res) => {
                             createUpdatedList(res.data)
                             setShowStudentList(true)
@@ -168,9 +161,11 @@ const TestResults = (props) => {
                 courseId: courseId
             }
             await getRouteAPI(params).then((res) => {
+                setShowLoader(false)
                 createUpdatedList(res.data)
                 setShowStudentList(true)
             }).catch(async (error) => {
+                setShowLoader(false)
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await getRouteAPI(params).then((res) => {
@@ -238,7 +233,10 @@ const TestResults = (props) => {
                 });
             }
         });
-
+        if (updateDataBody.length == 0 && createDataBody.length == 0) {
+            setShowBtnLoader(false)
+            return
+        }
         let createAPIBody = {
             data: createDataBody,
             routeName: "createCourseTrackBulk"
@@ -331,23 +329,15 @@ const TestResults = (props) => {
             return fullName?.includes(searchName);
         });
         setUpdatedStudentList(filteredList)
+        if (e.target.value == '') {
+            setUpdatedStudentList(studentList)
+        }
     }
 
     const handlePassOrFaild = (type, index) => {
         const list = [...updatedStudentList]
         if (type == 'present') {
             if (list[index].userProfile.exam.length == 0) {
-                // list[index].userProfile.exam.push({
-                //     grade: null,
-                //     note: '',
-                //     present: true,
-                //     absent: false,
-                //     old: false,
-                //     courseId: courseId,
-                //     enrollmentId: list[index].enrollmentId,
-                //     itemId: selectedExam,
-                //     userProfileId: list[index].userProfile.id
-                // })
             } else if (list[index].userProfile.exam[0]?.present && list[index].userProfile.exam[0].present == true) {
                 list[index].userProfile.exam[0].present = false
                 list[index].userProfile.exam[0].absent = false
@@ -371,20 +361,6 @@ const TestResults = (props) => {
         <div className='maxWidthDefault px-4'>
             <Form>
                 <div className='flex'>
-                    {courseType !== "onDemand" &&
-                        <FormItem
-                            name={'selectAvailability'}
-                        >
-                            <Select
-                                fontSize={16}
-                                width={200}
-                                height={40}
-                                OptionData={allavailability}
-                                placeholder="اختر الجنس"
-                                onChange={(e) => onParamsSelect(e, 'availability')}
-                            />
-                        </FormItem>
-                    }
                     <FormItem
                         name={'examList'}
                     >
@@ -403,13 +379,22 @@ const TestResults = (props) => {
                             width={331}
                             placeholder={'بحث باسم الطالب'}
                             suffix
-                            allowClear={false}
+                            allowClear={true}
                             onChange={(e) => handleSearchName(e)}
                         />
                     </FormItem>
                 </div>
             </Form>
-            {showStudentList &&
+            {showLoader ?
+                <div className={styles.tableBodyArea}>
+                    <div className={styles.noDataManiArea}>
+                        <div className={`relative ${styles.loadingWrapper}`}>
+                            <Spinner borderwidth={7} width={6} height={6} />
+                        </div>
+                    </div>
+                </div>
+                :
+                showStudentList &&
                 <div>
                     <table className={styles.examTableArea}>
                         <thead className={styles.tableHeaderArea}>

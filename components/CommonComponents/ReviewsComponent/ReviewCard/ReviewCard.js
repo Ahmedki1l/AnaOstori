@@ -35,7 +35,7 @@ export default function ReviewCard(props) {
 
 	const studentName = props.review.fullName
 
-	const totalPostNumber = reviewMedia.length
+	const totalPostNumber = reviewMedia?.length
 	const handleClose = (event) => {
 		// event.stopPropagation();
 	};

@@ -64,15 +64,26 @@
 }
 
 .sharedItemsDiv {
-	width: 420px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	padding: 15px;
 	border: 0.5px solid #00000081;
-	border-radius: 4px;
-	min-height: 50px;
+	border-radius: 8px;
+	height: 482px;
+	width: 418px;
+}
+
+.allReviewsItemsWrapper {
+	display: flex;
+	margin-top: 1rem;
+	justify-content: center;
 }
 
 .shareWhatsAppBtnBox {
 	height: 50px;
+	width: 20rem;
 	border: 0.5px solid rgba(0, 0, 0, 0.5);
 	border-radius: 4px;
 	margin: 0.8rem 0;
@@ -86,7 +97,51 @@
 	}
 }
 
-@media (max-width: 640px) {
+.reviewMediaWithShareLinkBox {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 1rem 0;
+
+}
+
+@media (max-width: 1280px) {
+	.sharedItemsDiv {
+		height: 443px;
+		width: 380px;
+	}
+
+	.allReviewsItemsWrapper {
+		justify-content: center;
+	}
+}
+
+@media (max-width: 1200px) {
+	.allReviewsItemsWrapper {
+		flex-wrap: wrap;
+	}
+}
+
+@media(max-width: 962px) {
+	.sharedItemsDiv {
+		height: 332px;
+		width: 280px;
+	}
+
+	.shareWhatsAppBtnBox {
+		height: 33px;
+		width: 15rem;
+		margin: 0.4rem 0;
+	}
+}
+
+@media (max-width: 768px) {
+	.reviewMediaWithShareLinkBox {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 622px) {
 	.dateDrapdownWrapper.courseDrapdownWrapper {
 		width: 100%;
 		margin-right: 1rem;
@@ -98,12 +153,8 @@
 	}
 
 	.sharedItemsDiv {
-		width: 100%;
-		max-width: 425px;
-		padding: 15px;
-		border: 0.5px solid #00000081;
-		border-radius: 4px;
-		min-height: 50px;
-		margin: 1rem;
+		height: 280px;
+		width: 280px;
+		margin: 1rem 1rem 2rem;
 	}
 }

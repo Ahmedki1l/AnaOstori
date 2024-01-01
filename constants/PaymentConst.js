@@ -237,21 +237,21 @@ const paymentStatusBank = [
 const paymentStatusOther = [
     {
         key: 1,
+        label: ' جديد',
+        value: 'witing',
+        color: 'yellow'
+    },
+    {
+        key: 2,
         label: 'مؤكد',
         value: 'accepted',
         color: 'green'
     },
     {
-        key: 2,
+        key: 3,
         label: 'مرفوضة',
         value: 'failed',
         color: 'red'
-    },
-    {
-        key: 3,
-        label: ' جديد',
-        value: 'witing',
-        color: 'yellow'
     },
     {
         key: 4,
@@ -259,9 +259,83 @@ const paymentStatusOther = [
         value: 'refund',
         color: ''
     },
-
 ]
 
+const paymentMode = [
+    {
+        label: 'Hyper Pay',
+        options: [
+            {
+                label: 'فيزا',
+                value: 'credit',
+            },
+            {
+                label: 'مدى',
+                value: 'mada'
+            },
+            {
+                label: 'ابل باي',
+                value: 'applepay',
+            },
+        ],
+    },
+    {
+        label: 'Bank Transfer',
+        options: [
+            {
+                label: 'تحويل بنكي',
+                value: 'bank_transfer',
+            },
+        ],
+    },
+    {
+        label: 'In-App Purchase',
+        options: [
+            {
+                label: 'مشتريات داخل التطبيق',
+                value: 'inAppPurchase',
+            },
+        ],
+    },
+]
 
+const allPaymentStatus = [
+    {
+        key: 1,
+        label: ' جديد',
+        value: 'witing',
+        color: 'yellow'
+    },
+    {
+        key: 2,
+        label: 'مؤكد',
+        value: 'accepted',
+        color: 'green'
+    },
+    {
+        key: 3,
+        label: 'ردينا فلوسه',
+        value: 'refund',
+        color: ''
+    },
+    {
+        key: 4,
+        label: 'ملغي',
+        value: 'rejected',
+        color: 'red'
+    },
+    {
+        key: 5,
+        label: 'بنراجع طلبك',
+        value: 'review',
+        color: 'geekblue'
+    },
+    {
+        key: 6,
+        label: 'مرفوضة',
+        value: 'failed',
+        color: 'red'
+    },
+]
 
-export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatusBank, paymentStatusOther };
+export { noOfUsersTag, noOfUsersTag2, noOfUsersTag3, genders, bankDetails, iosProductIdList, paymentStatusBank, paymentStatusOther, paymentMode, allPaymentStatus };

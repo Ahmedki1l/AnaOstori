@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Attendance.module.scss'
 import { getRouteAPI, postAuthRouteAPI } from '../../../services/apisService'
 import QRCode from '../../CommonComponents/QRCode/QRCode'
@@ -14,6 +14,7 @@ import Empty from '../../CommonComponents/Empty'
 import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 import Spinner from '../../CommonComponents/spinner'
+import { useRouter } from 'next/router'
 
 export default function Attendance(props) {
 
@@ -38,6 +39,13 @@ export default function Attendance(props) {
             DateTo: obj.dateTo,
         }
     });
+    const router = useRouter()
+    const availabilityId = router.query.availabilityId
+    useEffect(() => {
+        if (availabilityId) {
+            handlSelectAvailability(availabilityId)
+        }
+    }, [])
     const generateQR = async () => {
         setOpenQR(true)
         await getRouteAPI({ routeName: 'getAttendanceKey' }).then((res) => {
@@ -185,7 +193,7 @@ export default function Attendance(props) {
     return (
         <div className='maxWidthDefault px-4'>
             <div className={styles.attendanceDetails}>
-                <div>
+                {/* <div>
                     <FormItem>
                         <Select
                             fontSize={16}
@@ -196,7 +204,7 @@ export default function Attendance(props) {
                             onChange={(e) => handlSelectAvailability(e)}
                         />
                     </FormItem>
-                </div>
+                </div> */}
                 <div className='flex'>
                     {updatedAttendanceData &&
                         <div className={`${styles.saveAttendanceBtn}`}>
