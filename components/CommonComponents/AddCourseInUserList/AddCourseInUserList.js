@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { manageUserListConst } from '../../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import Select from '../../antDesignCompo/Select';
@@ -15,6 +15,7 @@ const AddCourseInUserList = ({
     name,
     enrollment,
     getUserList,
+    searchValue,
     setDrawerForUsers
 }) => {
     const [selectedCourseId, setSelectedCourseId] = useState(enrollment?.courseId)
@@ -25,6 +26,8 @@ const AddCourseInUserList = ({
     const [selectedAvailability, setSelectedAvailability] = useState()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [deleteEnrollmentId, setDeleteEnrollmentId] = useState()
+    const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
+    const regexPhone = useMemo(() => /^\d+$/, []);
 
     useEffect(() => {
         getRegionLIst()
@@ -108,10 +111,17 @@ const AddCourseInUserList = ({
                 isDeleted: true
             }]
         }
+        if (searchValue) {
+            deleteEnrollmentBody = {
+                ...deleteEnrollmentBody,
+                searchValue: searchValue,
+                searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
+            }
+        }
         await postAuthRouteAPI(deleteEnrollmentBody).then((res) => {
             setDrawerForUsers(false)
             setIsmodelForDeleteItems(false)
-            getUserList(1)
+            getUserList(1, searchValue)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {

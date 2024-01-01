@@ -105,7 +105,6 @@ const Index = () => {
                 value: false
             }
             await postAuthRouteAPI(params).then((res) => {
-                console.log(res);
                 let data = { itemId: itemID, pass: null }
                 setCompletedCourseItem([...completedCourseItem, data])
             }).catch((error) => {
