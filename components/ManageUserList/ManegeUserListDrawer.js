@@ -135,7 +135,6 @@ const ManegeUserListDrawer = ({
             availabilityId: '',
             id: ''
         })))
-        console.log(newData);
         setEnrolledCourseList(newData)
     }
     return (
@@ -229,11 +228,11 @@ const ManegeUserListDrawer = ({
                     :
                     <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
                 }
-                {selectedUserDetails.enrollments.length == 0 &&
+                {enrolledCourseList.length == 0 &&
                     <>
                         <Empty emptyText={manageUserListConst.emptyBtnPlaceHolder} containerhight={165} />
                         <div className={styles.userListBtnBox}>
-                            <button className='primaryStrockedBtn mb-6' htmltype='submit' onClick={() => addCourse()}>{manageUserListConst.emptyBtnText}</button>
+                            <button className='primaryStrockedBtn mb-6' onClick={() => addCourse()}>{manageUserListConst.emptyBtnText}</button>
                         </div>
                     </>
                 }
