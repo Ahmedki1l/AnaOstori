@@ -77,13 +77,6 @@ const ManegeUserListDrawer = ({
                 routeName: 'adminEnroll',
                 data: newEnrolledCourseList
             }
-            if (searchValue) {
-                createAPIBody = {
-                    ...createAPIBody,
-                    searchValue: searchValue,
-                    searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
-                }
-            }
             await postAuthRouteAPI(createAPIBody).then((res) => {
                 setEnrolledCourseList(res.data)
                 setDrawerForUsers(false)
@@ -117,13 +110,6 @@ const ManegeUserListDrawer = ({
             let updateAPIBody = {
                 routeName: 'updateAdminEnroll',
                 data: updatedEnrolledCourseList
-            }
-            if (searchValue) {
-                updateAPIBody = {
-                    ...updateAPIBody,
-                    searchValue: searchValue,
-                    searchType: regexEmail.test(searchValue) ? 'email' : regexPhone.test(searchValue) ? 'phone' : 'fullName'
-                }
             }
             await postAuthRouteAPI(updateAPIBody).then((res) => {
                 setDrawerForUsers(false)
