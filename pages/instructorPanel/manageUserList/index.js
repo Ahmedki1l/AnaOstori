@@ -161,11 +161,10 @@ const Index = () => {
             }
         },
     ]
-    const getUserList = async (pageNo, searchValue) => {
-        console.log('pageNo, pageNo');
+    const getUserList = async (currentPage, searchValue) => {
         let body = {
             routeName: "userList",
-            page: pageNo,
+            page: currentPage,
             limit: 10,
             order: "createdAt DESC"
         }
@@ -214,7 +213,7 @@ const Index = () => {
         <Empty emptyText={'لم تقم بإضافة اي مجلد'} containerhight={400} onClick={() => handleCreateFolder()} />
     )
     const handleSearchByEmail = async (e) => {
-        getUserList(1, e)
+        getUserList(currentPage, e)
     }
     const handleSearchValueChange = (e) => {
         setSearchValue(e)
@@ -275,6 +274,7 @@ const Index = () => {
                             setDrawerForUsers={setDrawerForUsers}
                             getUserList={getUserList}
                             searchValue={searchValue}
+                            currentPage={currentPage}
                         />
                     </Drawer>
                 }

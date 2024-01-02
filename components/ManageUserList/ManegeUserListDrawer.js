@@ -16,7 +16,8 @@ const ManegeUserListDrawer = ({
     selectedUserDetails,
     setDrawerForUsers,
     getUserList,
-    searchValue
+    searchValue,
+    currentPage
 }) => {
     const [gender, setGender] = useState();
     const [avatarUploadResData, setAvtarUploadResData] = useState()
@@ -80,7 +81,7 @@ const ManegeUserListDrawer = ({
             await postAuthRouteAPI(createAPIBody).then((res) => {
                 setEnrolledCourseList(res.data)
                 setDrawerForUsers(false)
-                getUserList(1, searchValue)
+                getUserList(currentPage, searchValue)
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
@@ -113,7 +114,7 @@ const ManegeUserListDrawer = ({
             }
             await postAuthRouteAPI(updateAPIBody).then((res) => {
                 setDrawerForUsers(false)
-                getUserList(1, searchValue)
+                getUserList(currentPage, searchValue)
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
@@ -215,6 +216,7 @@ const ManegeUserListDrawer = ({
                                                     enrollment={enrollment}
                                                     getUserList={getUserList}
                                                     searchValue={searchValue}
+                                                    currentPage={currentPage}
                                                     setDrawerForUsers={setDrawerForUsers}
                                                 />
                                             )
