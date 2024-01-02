@@ -16,6 +16,7 @@ const AddCourseInUserList = ({
     enrollment,
     getUserList,
     searchValue,
+    currentPage,
     setDrawerForUsers
 }) => {
     const [selectedCourseId, setSelectedCourseId] = useState(enrollment?.courseId)
@@ -114,7 +115,7 @@ const AddCourseInUserList = ({
         await postAuthRouteAPI(deleteEnrollmentBody).then((res) => {
             setDrawerForUsers(false)
             setIsmodelForDeleteItems(false)
-            getUserList(1, searchValue)
+            getUserList(currentPage, searchValue)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
