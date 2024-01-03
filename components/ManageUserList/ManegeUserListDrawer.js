@@ -61,6 +61,7 @@ const ManegeUserListDrawer = ({
 
 
     const handleSaveUserDetails = async (values) => {
+        console.log(values);
         let newEnrolledCourseData = values?.enrolledCourseList?.map((enrollment) => {
             const course = allCourse?.find((course) => course.value === enrollment.courseId);
             if (course) {
@@ -85,7 +86,11 @@ const ManegeUserListDrawer = ({
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await postAuthRouteAPI(createAPIBody).then((res) => { })
+                        await postAuthRouteAPI(createAPIBody).then((res) => {
+                            setEnrolledCourseList(res.data)
+                            setDrawerForUsers(false)
+                            getUserList(currentPage, searchValue)
+                        })
                     }).catch(err => {
                         console.error(err);
                     });
@@ -95,18 +100,29 @@ const ManegeUserListDrawer = ({
         } else {
             setDrawerForUsers(false)
         }
-        const newUpdatedArray = values.enrolledCourseList?.filter((updatedItem) => {
-            const updatedObject = enrolledCourseList.find((item) => {
-                return item.courseId === updatedItem.courseId &&
-                    item.regionId === updatedItem.regionId &&
-                    item.availabilityId === updatedItem.availabilityId &&
-                    item.type === updatedItem.type
-            });
-            return updatedObject !== undefined;
+        // const newUpdatedArray = values.enrolledCourseList?.filter((updatedItem) => {
+        //     const updatedObject = enrolledCourseList.find((item) => {
+        //         return item.courseId === updatedItem.courseId &&
+        //             item.regionId === updatedItem.regionId &&
+        //             item.availabilityId === updatedItem.availabilityId &&
+        //             item.type === updatedItem.type
+        //     });
+        //     return updatedObject !== undefined;
+        // });
+        // const updatedEnrolledCourseList = values.enrolledCourseList?.filter((enrollment) => {
+        //     return !newUpdatedArray.map((item) => item.courseId).includes(enrollment.courseId);
+        // });
+        const updatedEnrolledCourseList = values.enrolledCourseList.filter((enrollment, index) => {
+            const updatedEnrollment = enrolledCourseList[index];
+            return (
+                updatedEnrollment &&
+                (enrollment.courseId !== updatedEnrollment.courseId ||
+                    enrollment.type !== updatedEnrollment.type ||
+                    enrollment.regionId !== updatedEnrollment.regionId ||
+                    enrollment.availabilityId !== updatedEnrollment.availabilityId)
+            );
         });
-        const updatedEnrolledCourseList = values.enrolledCourseList?.filter((enrollment) => {
-            return !newUpdatedArray.map((item) => item.courseId).includes(enrollment.courseId);
-        });
+        console.log(updatedEnrolledCourseList);
         if (updatedEnrolledCourseList?.length > 0) {
             let updateAPIBody = {
                 routeName: 'updateAdminEnroll',

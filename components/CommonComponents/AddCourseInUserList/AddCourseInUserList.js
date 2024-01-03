@@ -27,8 +27,6 @@ const AddCourseInUserList = ({
     const [selectedAvailability, setSelectedAvailability] = useState()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
     const [deleteEnrollmentId, setDeleteEnrollmentId] = useState()
-    const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
-    const regexPhone = useMemo(() => /^\d+$/, []);
 
     useEffect(() => {
         getRegionLIst()
@@ -153,6 +151,7 @@ const AddCourseInUserList = ({
                     onSelect={(value, option) => handleOnSelectCourse(value, option)}
                     OptionData={allCourse}
                     defaultValue={selectedCourseId}
+                    disabled={enrollment && true}
                 />
             </FormItem>
             {(selectedCourseType == 'physical') &&
