@@ -61,6 +61,7 @@ const ManegeUserListDrawer = ({
 
 
     const handleSaveUserDetails = async (values) => {
+        console.log(values);
         let newEnrolledCourseData = values?.enrolledCourseList?.map((enrollment) => {
             const course = allCourse?.find((course) => course.value === enrollment.courseId);
             if (course) {
@@ -121,6 +122,7 @@ const ManegeUserListDrawer = ({
                     enrollment.availabilityId !== updatedEnrollment.availabilityId)
             );
         });
+        console.log(updatedEnrolledCourseList);
         if (updatedEnrolledCourseList?.length > 0) {
             let updateAPIBody = {
                 routeName: 'updateAdminEnroll',
