@@ -41,30 +41,33 @@ export default function Payment(props) {
     }, [isLoading]);
 
     useEffect(() => {
-        const getPaymentData = async () => {
-            let data = {
-                orderId: orderID,
-                transactionId: transactionID,
-            }
-            await getPaymentInfoAPI(data).then(async (response) => {
-                ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
-                setTransactionDetails(response.data)
-                setIsPaymentSuccess(response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false)
-                setLoading(false)
-                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
-                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
-                const [myCourseData] = await Promise.all([getMyCourseReq])
-                dispatch({
-                    type: 'SET_ALL_MYCOURSE',
-                    myCourses: myCourseData?.data,
-                });
-            }).catch((error) => {
-                console.log(error)
-                setLoading(false)
-            })
+        if (router.query.orderId && router.query.id) {
+            getPaymentData()
         }
-        getPaymentData()
-    }, [orderID, transactionID])
+    }, [router.query.orderId, router.query.id])
+
+    const getPaymentData = async () => {
+        let data = {
+            orderId: router.query.orderId,
+            transactionId: router.query.id,
+        }
+        await getPaymentInfoAPI(data).then(async (response) => {
+            ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
+            setTransactionDetails(response.data)
+            setIsPaymentSuccess(response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false)
+            setLoading(false)
+            setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
+            const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
+            const [myCourseData] = await Promise.all([getMyCourseReq])
+            dispatch({
+                type: 'SET_ALL_MYCOURSE',
+                myCourses: myCourseData?.data,
+            });
+        }).catch((error) => {
+            console.log(error)
+            setLoading(false)
+        })
+    }
 
     return (
         <>
