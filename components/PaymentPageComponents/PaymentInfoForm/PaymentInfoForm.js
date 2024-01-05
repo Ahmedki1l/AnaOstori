@@ -37,6 +37,7 @@ export default function PaymentInfoForm(props) {
 
 
 	const generateCheckoutId = async (type) => {
+		if (type == paymentType) return
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type })
 		let data = {
 			orderId: createdOrder.id,
