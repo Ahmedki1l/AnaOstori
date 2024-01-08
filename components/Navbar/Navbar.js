@@ -68,12 +68,12 @@ export default function Navbar() {
 	const [catagories, setCatagories] = useState(storeData?.catagories?.data?.filter((item) => item.published == true) || [])
 
 	useEffect(() => {
-		if (storeData?.accessToken) {
+		if (localStorage.getItem("accessToken") !== null) {
 			catagoryAuth()
 		} else {
 			catagoryNoAuth()
 		}
-	}, [storeData?.accessToken])
+	}, [localStorage.getItem("accessToken")])
 
 
 	const catagoryNoAuth = async () => {
