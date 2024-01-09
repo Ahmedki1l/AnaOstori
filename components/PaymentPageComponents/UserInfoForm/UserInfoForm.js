@@ -36,20 +36,20 @@ export default function UserInfoForm(props) {
 	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
 	const [disabledRegion, setDisabledRegion] = useState()
 	const userTemplet = {
-		gender: '',
-		date: '',
-		fullName: '',
-		phoneNumber: '',
-		email: '',
-		availabilityId: ''
+		gender: null,
+		date: null,
+		fullName: null,
+		phoneNumber: null,
+		email: null,
+		availabilityId: null
 	}
 	const preselectedUserTempletFOrOnDemand = {
-		gender: courseDetail.type == 'on-demand' && userPredefineGender ? userPredefineGender : '',
-		date: '',
-		fullName: courseDetail.type == 'on-demand' && userPredefinefullName ? userPredefinefullName : '',
-		phoneNumber: courseDetail.type == 'on-demand' && userPredefinePhone ? userPredefinePhone : '',
-		email: courseDetail.type == 'on-demand' && userPredefineEmail ? userPredefineEmail : '',
-		availabilityId: ''
+		gender: courseDetail.type == 'on-demand' && userPredefineGender ? userPredefineGender : null,
+		date: null,
+		fullName: courseDetail.type == 'on-demand' && userPredefinefullName ? userPredefinefullName : null,
+		phoneNumber: courseDetail.type == 'on-demand' && userPredefinePhone ? userPredefinePhone : null,
+		email: courseDetail.type == 'on-demand' && userPredefineEmail ? userPredefineEmail : null,
+		availabilityId: null
 	}
 
 	const noOfUsersLabelData = [
@@ -61,7 +61,7 @@ export default function UserInfoForm(props) {
 	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
 	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
 
-	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: '', phoneNumber: '', email: '', availabilityId: router.query.date }
+	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: null, phoneNumber: null, email: null, availabilityId: router.query.date }
 	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
 	const [userAgree, setUserAgree] = useState(false)
 	const [enrollForMe, setEnrollForMe] = useState(false)
@@ -111,7 +111,7 @@ export default function UserInfoForm(props) {
 	const handleAddForm = (isDateForAllSelected) => {
 		if (isDateForAllSelected == true) {
 			setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(
-				{ gender: studentsData[0]['gender'], date: studentsData[0]['date'], fullName: '', phoneNumber: '', email: '', availabilityId: studentsData[0]['availabilityId'] }
+				{ gender: studentsData[0]['gender'], date: studentsData[0]['date'], fullName: null, phoneNumber: null, email: null, availabilityId: studentsData[0]['availabilityId'] }
 			))])
 		}
 		else {
@@ -134,25 +134,25 @@ export default function UserInfoForm(props) {
 			}
 		}
 		data[index][event.target.title] = event.target.value
-		setSelectedGender()
+		// setSelectedGender()
 		setSelectedDate()
 		if (event.target.title == 'date') {
 			data[index]['availabilityId'] = availabilityId
 		}
 		if (event.target.title == 'gender') {
 			setSelectedGender(event.target.value)
-			data[index]['date'] = ''
-			data[index]['availabilityId'] = ''
+			data[index]['date'] = null
+			data[index]['availabilityId'] = null
 			setMaleDates(initialMaleDate.filter((date) => date.regionId == selectedRegionId))
 			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == selectedRegionId))
 		}
 		if (totalStudent > 1 && (event.target.title == 'date' || event.target.title == 'gender')) {
 			for (let i = 0; i < data.length; i++) {
-				if (data[i]['gender'].length > 0 && data[0]['gender'] != data[i]['gender']) {
+				if (data[i]['gender'] !== null && data[0]['gender'] != data[i]['gender']) {
 					document.getElementById("dateForAll").checked = false;
 					break
 				}
-				else if (data[i]['availabilityId'].length > 0 && data[0]['availabilityId'] != data[i]['availabilityId']) {
+				else if (data[i]['availabilityId'] !== null && data[0]['availabilityId'] != data[i]['availabilityId']) {
 					document.getElementById("dateForAll").checked = false;
 					break
 				}
@@ -174,9 +174,9 @@ export default function UserInfoForm(props) {
 		else {
 			for (let i = 0; i < data.length; i++) {
 				if (i != 0) {
-					data[i]['availabilityId'] = ''
-					data[i]['date'] = ''
-					data[i]['gender'] = ''
+					data[i]['availabilityId'] = null
+					data[i]['date'] = null
+					data[i]['gender'] = null
 				}
 			}
 		}
@@ -191,9 +191,9 @@ export default function UserInfoForm(props) {
 			data[0]['fullName'] = userPredefinefullName
 			data[0]['phoneNumber'] = userPredefinePhone
 		} else {
-			data[0]['email'] = ''
-			data[0]['fullName'] = ''
-			data[0]['phoneNumber'] = ''
+			data[0]['email'] = null
+			data[0]['fullName'] = null
+			data[0]['phoneNumber'] = null
 		}
 		setStudentsData(data);
 	}
@@ -353,7 +353,7 @@ export default function UserInfoForm(props) {
 												<input id={`gender${i}`} type="radio" name={`gender${i}`} value={gender.value} title="gender"
 													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
-													onChange={event => handleFormChange(event, i, '')}
+													onChange={event => handleFormChange(event, i, null)}
 													disabled={disabledGender == gender.value}
 												/>
 												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
@@ -364,27 +364,27 @@ export default function UserInfoForm(props) {
 								<div style={{ color: 'red' }} className={styles.errorText}>{genderCheck}</div>
 							</div>
 
-							{selectedGender && courseDetail.type != 'on-demand' &&
+							{(studentsData[i].gender !== null && courseDetail.type != 'on-demand') &&
 								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
 									<p className={`fontBold ${styles.radioBtnHead}`}>اختار الموعد اللي يناسبك</p>
 									<div style={{ color: 'red' }} className={styles.errorText}>{dateCheck}</div>
 									<ScrollContainer className='flex'>
 										<div className={styles.datesMainArea}>
 											{/***************************************** FOR loop for radio button to select date ****************************************/}
-											{(courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).length > 0 ?
+											{((courseDetail.type == 'physical' && studentsData[i].gender !== null) ? ((studentsData[i].gender == 'female') ? femaleDates : maleDates) : mixDates).length > 0 ?
 												<>
-													{(courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).map((date, k = index) => {
+													{((courseDetail.type == 'physical' && studentsData[i].gender !== null) ? ((studentsData[i].gender == 'female') ? femaleDates : maleDates) : mixDates).map((date, k = index) => {
 														return (
 															<div key={`datecard${k}`}>
 																{date.numberOfSeats !== 0 &&
-																	<div className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : ''}`}>
+																	<div className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : null}`}>
 																		<input type="radio" id={`date1_${k}_${i}`} name={`date${i}`} title="date" value={date.dateFrom}
 																			className="hidden peer" onChange={event => handleFormChange(event, i, date.id)}
 																			checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
 																			disabled={date.numberOfSeats == 0}
 																		/>
 																		<label htmlFor={`date1_${k}_${i}`} className="cursor-pointer">
-																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : ''}`}>
+																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : null}`}>
 																				<div className={styles.dateRadioBtnBox}>
 																					<div className={styles.circle}><div></div></div>
 																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
@@ -429,7 +429,7 @@ export default function UserInfoForm(props) {
 									<div className='formInputBox'>
 										<input className='formInput' id="fullName" type="text" name={`name${i}`} title="fullName" placeholder=' '
 											value={fullName}
-											onChange={event => handleFormChange(event, i, '')}
+											onChange={event => handleFormChange(event, i, null)}
 										/>
 										<label className='formLabel' htmlFor="fullName">الاسم الثلاثي</label>
 									</div>
@@ -437,7 +437,7 @@ export default function UserInfoForm(props) {
 									<div className='formInputBox'>
 										<input className='formInput' id="phoneNo" type="number" name={`phoneNo${i}`} title="phoneNumber" placeholder=' '
 											value={phoneNumber}
-											onChange={event => handleFormChange(event, i, '')}
+											onChange={event => handleFormChange(event, i, null)}
 										/>
 										<label className='formLabel' htmlFor="phoneNo">رقم الجوال</label>
 									</div>
@@ -448,7 +448,7 @@ export default function UserInfoForm(props) {
 									<div className='formInputBox'>
 										<input className='formInput' id="email" type="email" name={`email${i}`} title="email" placeholder=' '
 											value={email}
-											onChange={event => handleFormChange(event, i, '')}
+											onChange={event => handleFormChange(event, i, null)}
 										/>
 										<label className='formLabel' htmlFor="email">الإيميل</label>
 									</div>
