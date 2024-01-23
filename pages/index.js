@@ -12,6 +12,7 @@ import { mediaUrl } from '../constants/DataManupulation';
 import Link from 'next/link';
 import { HomeConst } from '../constants/HomeConst';
 import ReviewComponent from '../components/CommonComponents/ReviewsComponent/ReviewComponent';
+import * as LinkConst from '../constants/LinkConst';
 
 export const metadata = {
 	title: 'Anaostori',
@@ -74,6 +75,8 @@ export default function Home(props) {
 	const homeReviews = props.homeReviews ? props.homeReviews.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)) : []
 	const [scrollSectionName, setScrollSectionName] = useState()
 	const videoObject = props.homeMetaData.find(obj => obj.key === "video");
+	const whatsAppLink = LinkConst.WhatsApp_Link
+
 	const handleScrollToSection = (sectionName) => {
 
 		if (sectionName == 'refCourseSec') {
@@ -131,13 +134,23 @@ export default function Home(props) {
 						</div>
 					</div>
 					<p className={`fontMedium mt-2 ${styles.text2FontMedium}`}>{HomeConst.pfontMedium2}</p>
-					<div className={styles.btnBox}>
-						<div className={styles.firstBtnBox}>
-							<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+					<div className={styles.buttonBoxWrapper}>
+						<div className={styles.btnBox}>
+							<div className={styles.firstBtnBox}>
+								<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleScrollToSection('refCourseSec')}>{HomeConst.scrolltoSection}</button>
+							</div>
 						</div>
-					</div>
-					<div className={styles.secondBtnBox}>
+						{/* <div className={styles.secondBtnBox}>
 						<button className={`primaryStrockedBtn ${styles.secondBtn}`} onClick={() => handleScrollToSection('refFeedback')}>{HomeConst.scrollToSectionStrockBtn}</button>
+					</div> */}
+						<Link className='no-underline' href={whatsAppLink} target='_blank'>
+							<div className={styles.secondBtnBox}>
+								<button className='greenStrockedBtn'>
+									<div className='h-5 ml-2'><AllIconsComponenet height={20} width={20} iconName={'whatsappFill'} color={'#40C351'} /></div>
+									{HomeConst.scrollToSectionStrockBtn}
+								</button>
+							</div>
+						</Link>
 					</div>
 				</div>
 				<div className={`${styles.videoThumnail}`}>
@@ -212,6 +225,6 @@ export default function Home(props) {
 				<p className={`pb-4 pr-4 pl-8 ${styles.userFeedbackDiscription}`}>{HomeConst.studentSectionParaLine1}  {HomeConst.studentSectionParaLine21} <span className='fontPrimarycolor'>{HomeConst.studentSectionParaLine22}</span>{HomeConst.studentSectionParaLine23}</p>
 				<ReviewComponent homeReviews={homeReviews} />
 			</div>
-		</div>
+		</div >
 	)
 }
