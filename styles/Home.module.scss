@@ -120,6 +120,9 @@
 	width: 210px;
 	height: 46px;
 	margin: 1rem 0 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	button {
 		font-size: 18px;

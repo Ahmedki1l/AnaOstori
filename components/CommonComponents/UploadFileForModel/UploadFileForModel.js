@@ -135,3 +135,35 @@ const UploadFileForModel = ({
 }
 
 export default UploadFileForModel
+
+
+
+
+// const baseUrl = process.env.API_BASE_URL;
+//     const chunkSize = 5 * 1024 * 1024; // 5MB
+//     const getFileKey = async (e) => {
+//         const file = e.target.files[0];
+//         const fileName = Date.now().toString() + '_' + file.name;
+//         const totalChunks = Math.ceil(file.size / chunkSize);
+//         const requestedBody = { fileName }
+//         let body = {
+//             routeName: 'initiateupload',
+//             body: fileName
+//         }
+//         await postRouteAPI(body).then((res) => {
+//             console.log(res);
+//         }).catch((error) => {
+//             console.log(error);
+//         })
+//         // await fetch(`${baseUrl}/initiateupload`, {
+//         //     method: 'POST',
+//         //     body: JSON.stringify(requestedBody),
+//         //     headers: {
+//         //         'Content-Type': 'application/json',
+//         //     },
+//         // }).then((res) => {
+//         //     console.log(res);
+//         // }).catch((error) => {
+//         //     console.log(error);
+//         // })
+//     }

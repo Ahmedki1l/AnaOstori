@@ -173,6 +173,21 @@
     }
 }
 
+.greenStrockedBtn {
+    height: 100%;
+    width: 100%;
+    border: 1px solid #40C351;
+    background-color: transparent;
+    color: #40C351;
+    border-radius: 4px;
+    font-family: 'Tajawal-Medium';
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .secondryStrockedBtn {
     height: 100%;
     width: 100%;
@@ -445,7 +460,7 @@
     padding: 1rem 1rem 0 1rem;
     font-size: 18px;
     font-family: 'Tajawal-Regular';
-    z-index: 1;
+    z-index: -1;
     background-color: transparent !important;
 
     &:disabled {
@@ -680,6 +695,7 @@
     .primarySolidBtn,
     .secondrySolidBtn,
     .primaryStrockedBtn,
+    .greenStrockedBtn,
     .secondryStrockedBtn {
         padding: 0.4rem 0.8rem;
     }
@@ -711,6 +727,7 @@
     .primarySolidBtn,
     .secondrySolidBtn,
     .primaryStrockedBtn,
+    .greenStrockedBtn,
     .secondryStrockedBtn {
         font-size: 20px;
         padding: 0.3rem 0.6rem;
@@ -766,6 +783,7 @@
     .primarySolidBtn,
     .secondrySolidBtn,
     .primaryStrockedBtn,
+    .greenStrockedBtn,
     .secondryStrockedBtn {
         font-size: 16px;
     }
