@@ -190,7 +190,7 @@ export default function Login() {
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'email'} color={'#808080'} />
 							</div>
-							<input className={`formInput ${styles.loginFormInput} ${emailError && `${styles.inputError}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
+							<input className={`formInput ${styles.loginFormInput} ${emailError && `${styles.inputError}`}`} name='email' id='email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' autoComplete='off' />
 							<label className={`formLabel ${styles.loginFormLabel} ${emailError && `${styles.inputPlaceHoldererror}`}`} htmlFor="email">الايميل</label>
 						</div>
 						{emailError && <p className={styles.errorText}>{emailError}</p>}

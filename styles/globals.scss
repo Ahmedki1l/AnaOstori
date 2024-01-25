@@ -460,7 +460,7 @@
     padding: 1rem 1rem 0 1rem;
     font-size: 18px;
     font-family: 'Tajawal-Regular';
-    z-index: -1;
+    z-index: 1;
     background-color: transparent !important;
 
     &:disabled {
@@ -483,13 +483,13 @@
 .formInput:focus+.formLabel {
     font-size: 10px;
     top: 0.5rem;
-    z-index: 0;
+    z-index: 1;
 }
 
 .formInput:not(:placeholder-shown).formInput:not(:focus)+.formLabel {
     font-size: 10px;
     top: 0.5rem;
-    z-index: 0;
+    z-index: 1;
 }
 
 .formInput:disabled+.formLable {
@@ -501,6 +501,11 @@
     position: absolute;
     display: grid;
     right: 1rem;
+    z-index: 2;
+}
+
+input:-internal-autofill-selected {
+    background-color: transparent !important;
 }
 
 
