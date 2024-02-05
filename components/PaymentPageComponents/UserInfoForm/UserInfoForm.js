@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './UserInfoForm.module.scss'
 import FirstPaymentPageInfo from '../PaymentPageIndicator/FirstPageIndicator';
 import DatesInfo from './DatesBox/DatesInfo'
-import * as PaymentConst from '../../../constants/PaymentConst';
+import * as paymentConst from '../../../constants/paymentConst';
 import ScrollContainer from 'react-indiana-drag-scroll'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -15,9 +15,9 @@ import { getRouteAPI } from '../../../services/apisService';
 
 export default function UserInfoForm(props) {
 	const studentsDataLength = props.studentsData?.length
-	const noOfUsersTag = PaymentConst.noOfUsersTag
+	const noOfUsersTag = paymentConst.noOfUsersTag
 	const courseDetail = props.courseDetails
-	const genders = PaymentConst.genders
+	const genders = paymentConst.genders
 	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates
 	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates
 	const [maleDates, setMaleDates] = useState([]);
@@ -235,6 +235,7 @@ export default function UserInfoForm(props) {
 			setMaleDates(regionDateListMale)
 		} else if (regionDateListMale.length == 0) {
 			setSelectedGender('female')
+			data[index]['gender'] = 'female'
 			setDisabledGender('male')
 		}
 		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
@@ -242,6 +243,7 @@ export default function UserInfoForm(props) {
 			setFemaleDates(regionDateListFemale)
 		} else if (regionDateListFemale.length == 0) {
 			setSelectedGender('male')
+			data[index]['gender'] = 'male'
 			setDisabledGender('female')
 		}
 		if (regionDateListMale.length == 0) {
@@ -400,8 +402,8 @@ export default function UserInfoForm(props) {
 														)
 													})}
 												</>
-
 												:
+												(selectedGender && selectedRegionId) &&
 												<div>
 													<UserDetailForm1 gender={studentsData[i].gender} />
 												</div>
