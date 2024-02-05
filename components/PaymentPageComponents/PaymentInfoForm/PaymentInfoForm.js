@@ -1,269 +1,483 @@
 import React, { useEffect, useState } from 'react'
-import SecondPageIndicator from '../PaymentPageIndicator/SecondPageIndicator'
-import styles from './PaymentInfoFrom.module.scss'
-import Logo from '../../CommonComponents/Logo'
-import BankDetailsCard from '../../CommonComponents/BankDetailCard/BankDetailsCard'
-import * as PaymentConst from '../../../constants/PaymentConst'
-import CoverImg from '../../CommonComponents/CoverImg'
-import axios from 'axios'
-import { useRouter } from 'next/router'
-import CreditCardDetailForm from './CreditCardDetailForm'
-import MadaCardDetailForm from './MadaCardDetailForm'
-import ApplePayForm from './ApplePayForm'
-import useWindowSize from '../../../hooks/useWindoSize'
-import * as fbq from '../../../lib/fpixel'
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
-import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
-import { mediaUrl } from '../../../constants/DataManupulation'
-import { getRouteAPI } from '../../../services/apisService'
+import styles from './UserInfoForm.module.scss'
+import FirstPaymentPageInfo from '../PaymentPageIndicator/FirstPageIndicator';
+import DatesInfo from './DatesBox/DatesInfo'
+import ScrollContainer from 'react-indiana-drag-scroll'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import UserDetailForm1 from '../../CourseDescriptionPageComponents/UserDetailForm1';
+import useWindowSize from '../../../hooks/useWindoSize';
+import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
+import { useSelector } from 'react-redux';
+import { dateWithDay } from '../../../constants/DateConverter';
+import { getRouteAPI } from '../../../services/apisService';
+import * as PaymentConst from '../../../constants/PaymentConst';
 
-
-export default function PaymentInfoForm(props) {
-	const createdOrder = props.createdOrder
-	const studentsData = props.studentsData
-	const bankDetails = PaymentConst.bankDetails
-	const noOfUser = PaymentConst.noOfUsersTag2
-	const numberOfUser = PaymentConst.noOfUsersTag3
+export default function UserInfoForm(props) {
+	const studentsDataLength = props.studentsData?.length
+	const noOfUsersTag = PaymentConst.noOfUsersTag
+	const courseDetail = props.courseDetails
+	const genders = PaymentConst.genders
+	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates
+	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates
+	const [maleDates, setMaleDates] = useState([]);
+	const [femaleDates, setFemaleDates] = useState([]);
+	const mixDates = props.mixDates.length > 0 && props.mixDates.every(obj => obj.numberOfSeats === 0) ? [] : props.mixDates;
+	const storeData = useSelector((state) => state?.globalStore);
+	const userPredefineEmail = storeData?.viewProfileData?.email
+	const userPredefinePhone = storeData?.viewProfileData?.phone?.replace("966", "0")
+	const userPredefinefullName = (storeData?.viewProfileData?.fullName) ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName
+	const userPredefineGender = storeData?.viewProfileData?.gender
+	const [isDateForAllSelected, setIsDateForAllSelected] = useState(false)
+	const [regionDataList, setRegionDataList] = useState()
 	const router = useRouter()
-	const screenWidth = useWindowSize().width
-	const isSmallScreen = useWindowSize().smallScreen
-
-	const [couponCode, setCouponCode] = useState()
-	const [couponError, setCouponError] = useState(false)
-	const [couponAppliedData, setCouponAppliedData] = useState()
-	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
-	const [paymentType, setPaymentType] = useState('')
-	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
-
-
-	const generateCheckoutId = async (type) => {
-		if (type == paymentType) return
-		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type })
-		let data = {
-			orderId: createdOrder.id,
-			withcoupon: couponAppliedData ? true : false,
-			couponId: couponAppliedData ? couponAppliedData.id : null,
-			type: type
-		}
-		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data).then(res => {
-			if (res.status != 200) { return }
-			setPaymentType(type)
-			setCheckoutId(res.data[0].id)
-		}).catch(error => {
-			console.log(error)
-		});
+	const groupDiscountEligible = courseDetail.groupDiscountEligible
+	const smallScreen = useWindowSize().smallScreen
+	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
+	const [disabledRegion, setDisabledRegion] = useState()
+	const userTemplet = {
+		gender: null,
+		date: null,
+		fullName: null,
+		phoneNumber: null,
+		email: null,
+		availabilityId: null
+	}
+	const preselectedUserTempletFOrOnDemand = {
+		gender: courseDetail.type == 'on-demand' && userPredefineGender ? userPredefineGender : null,
+		date: null,
+		fullName: courseDetail.type == 'on-demand' && userPredefinefullName ? userPredefinefullName : null,
+		phoneNumber: courseDetail.type == 'on-demand' && userPredefinePhone ? userPredefinePhone : null,
+		email: courseDetail.type == 'on-demand' && userPredefineEmail ? userPredefineEmail : null,
+		availabilityId: null
 	}
 
-	const handleBankTransfer = async () => {
-		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' })
-		let data = {
-			orderId: createdOrder.id,
-			withcoupon: couponAppliedData ? true : false,
-			couponId: couponAppliedData ? couponAppliedData.id : null,
-		}
-		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/choosePaymentMethod`, data).then(res => {
-			if (res.status != 200) { return }
-			router.push({
-				pathname: '/receiveRequest',
-				query: { orderId: res.data.id },
-			})
-		}).catch(error => {
-			console.log(error)
-		});
-	}
+	const noOfUsersLabelData = [
+		{ iconName: 'studentOneIcon', iconWidth: smallScreen ? '13' : '20', label1: 'شخص واحد ', subLabel1: '', label2: `${courseDetail.discount} ر.س`, subLabel2: '', oldPrice: `${courseDetail.price} ر.س`, singleDiscount: `${courseDetail.discount != null ? `خصم ${(100 - ((courseDetail.discount / courseDetail.price) * 100)).toFixed(2)} % ` : ''}` },
+		{ iconName: 'studentTwoIcon', iconWidth: smallScreen ? '20' : '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
+		{ iconName: 'studentThreeIcon', iconWidth: smallScreen ? '22' : '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
+	]
+	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
+	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
+	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
 
-	const handleCheckCouponIsValid = async () => {
-		let data = {
-			routeName: 'checkCouponValidity',
-			courseId: createdOrder.courseId,
-			coupon: couponCode
-		}
-		await getRouteAPI(data).then(res => {
-			if (res.status != 200) { return }
-			setCouponAppliedData(res.data)
-			setCouponError(false)
-			var radio = document.querySelector('input[type=radio][name=paymentDetails]:checked');
-			if (radio) {
-				radio.checked = false;
-			}
-		}).catch(error => {
-			console.log(error);
-			setCouponAppliedData('');
-			setCouponError(true);
-		});
-	}
+	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: null, phoneNumber: null, email: null, availabilityId: router.query.date }
+	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
+	const [userAgree, setUserAgree] = useState(false)
+	const [enrollForMe, setEnrollForMe] = useState(false)
+	const [studentsData, setStudentsData] = useState(
+		(courseDetail.type == 'on-demand') ? [preselectedUserTempletFOrOnDemand]
+			: studentsDataLength ? (props.studentsData)
+				: (router.query ? [preSelectTemplet]
+					: [userTemplet]))
 
 	useEffect(() => {
-		if (window.ApplePaySession) {
-			setIsCanMakePayments(true)
-		} else {
-			setIsCanMakePayments(false)
+		if (studentsDataLength && studentsDataLength > 0) {
+			setStudentsData(props.studentsData)
+			setTotalStudent(studentsDataLength)
 		}
-	}, [setIsCanMakePayments])
+		if (router.query.region) {
+			setSelectedRegionId(router.query.region)
+		}
+		getRegionAndBranchList()
+		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region))
+		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
+	}, [])
+
+	useEffect(() => {
+
+
+
+	}, [])
+
+	const handleTotalStudent = (value) => {
+		const newTotalStudent = value
+		setTotalStudent(newTotalStudent)
+
+		if (newTotalStudent > totalStudent) {
+			const students = newTotalStudent - totalStudent
+			for (let i = 0; i < students; i++) {
+				setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(userTemplet))])
+			}
+		}
+		else {
+			const students = totalStudent - newTotalStudent
+			let data = [...studentsData]
+			data.splice(1, students)
+			setStudentsData(data)
+		}
+	}
+
+	const handleAddForm = (isDateForAllSelected) => {
+		if (isDateForAllSelected == true) {
+			setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(
+				{ gender: studentsData[0]['gender'], date: studentsData[0]['date'], fullName: null, phoneNumber: null, email: null, availabilityId: studentsData[0]['availabilityId'] }
+			))])
+		}
+		else {
+			setStudentsData(studentsData => [...studentsData, JSON.parse(JSON.stringify(userTemplet))])
+		}
+		setTotalStudent(studentsData.length)
+	}
+
+	const handleRemoveForm = (i) => {
+		let data = [...studentsData]
+		data.splice(i, 1)
+		setStudentsData(data)
+		setTotalStudent(data.length)
+	}
+	const handleFormChange = (event, index, availabilityId) => {
+		const data = [...studentsData]
+		if (event.target.title == 'phoneNumber') {
+			if (event.target.value.length > 10) {
+				return
+			}
+		}
+		data[index][event.target.title] = event.target.value
+		// setSelectedGender()
+		setSelectedDate()
+		if (event.target.title == 'date') {
+			data[index]['availabilityId'] = availabilityId
+		}
+		if (event.target.title == 'gender') {
+			setSelectedGender(event.target.value)
+			data[index]['date'] = null
+			data[index]['availabilityId'] = null
+			setMaleDates(initialMaleDate.filter((date) => date.regionId == selectedRegionId))
+			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == selectedRegionId))
+		}
+		if (totalStudent > 1 && (event.target.title == 'date' || event.target.title == 'gender')) {
+			for (let i = 0; i < data.length; i++) {
+				if (data[i]['gender'] !== null && data[0]['gender'] != data[i]['gender']) {
+					document.getElementById("dateForAll").checked = false;
+					break
+				}
+				else if (data[i]['availabilityId'] !== null && data[0]['availabilityId'] != data[i]['availabilityId']) {
+					document.getElementById("dateForAll").checked = false;
+					break
+				}
+			}
+		}
+		setStudentsData(data);
+	}
+
+	const handleDateForAll = (event) => {
+		const data = [...studentsData]
+		setIsDateForAllSelected(event.target.checked)
+		if (event.target.checked == true) {
+			for (let i = 0; i < data.length; i++) {
+				data[i]['availabilityId'] = data[0]['availabilityId']
+				data[i]['date'] = data[0]['date']
+				data[i]['gender'] = data[0]['gender']
+			}
+		}
+		else {
+			for (let i = 0; i < data.length; i++) {
+				if (i != 0) {
+					data[i]['availabilityId'] = null
+					data[i]['date'] = null
+					data[i]['gender'] = null
+				}
+			}
+		}
+		setStudentsData(data);
+	}
+
+	const handleEnrollForMe = (event) => {
+		setEnrollForMe(event.target.checked)
+		let data = [...studentsData]
+		if (event.target.checked == true) {
+			data[0]['email'] = userPredefineEmail
+			data[0]['fullName'] = userPredefinefullName
+			data[0]['phoneNumber'] = userPredefinePhone
+		} else {
+			data[0]['email'] = null
+			data[0]['fullName'] = null
+			data[0]['phoneNumber'] = null
+		}
+		setStudentsData(data);
+	}
+	const handleSubmit = (studentsData, courseDetailType) => {
+		props.isInfoFill(studentsData, courseDetailType, userAgree)
+	}
+
+	const getRegionAndBranchList = async () => {
+		let body = {
+			routeName: 'listRegion',
+		}
+		await getRouteAPI(body).then((res) => {
+			setRegionDataList(res.data)
+			if (!router.query.region) {
+				setSelectedRegionId(res.data[0].id)
+			}
+			const availableRegionSet = new Set(initialMaleDate.concat(initialFemaleDate).map((dates) => {
+				return dates.regionId;
+			}));
+			const availableRegion = Array.from(availableRegionSet)
+
+			if (availableRegion?.length !== 2) {
+				const isRegionDisabled = res.data?.find((obj) => !availableRegion.includes(obj.id));
+				setDisabledRegion(isRegionDisabled?.id)
+			}
+		}).catch((err) => {
+			console.log(err)
+		})
+	}
+	const handleRegionChange = (event, index) => {
+		setSelectedRegionId(event.target.value)
+		let data = [...studentsData]
+		data[index]['region'] = event.target.value
+		setStudentsData(data);
+		const regionDateListMale = initialMaleDate.filter((date) => date.regionId == event.target.value)
+		const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == event.target.value)
+		if (regionDateListMale.length > 0 && disabledGender == 'male') {
+			setDisabledGender(null)
+			setMaleDates(regionDateListMale)
+		} else if (regionDateListMale.length == 0) {
+			setSelectedGender('female')
+			data[index]['gender'] = 'female'
+			setDisabledGender('male')
+		}
+		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
+			setDisabledGender(null)
+			setFemaleDates(regionDateListFemale)
+		} else if (regionDateListFemale.length == 0) {
+			setSelectedGender('male')
+			data[index]['gender'] = 'male'
+			setDisabledGender('female')
+		}
+		if (regionDateListMale.length == 0) {
+			setMaleDates([])
+		} else {
+			setMaleDates(regionDateListMale)
+		}
+	}
+
 
 	return (
-		<div className='maxWidthDefault'>
-			{isSmallScreen &&
-				<div className={styles.backBarWrapper}>
-					<div className={styles.backArrowIcon} onClick={() => props.backToUserForm(studentsData, false)}>
-						<AllIconsComponenet height={20} width={24} iconName={'arrowRight'} color={'#000000'} />
-					</div>
-					<p className='py-4 text-center w-100'>مراجعة الطلب والدفع</p>
-				</div>
-			}
-			{createdOrder.course.type != "on-demand" && <SecondPageIndicator />}
-			<div className={`${styles.paymentInfoMainArea} createdOrder.course.type != "on-demand" && pt-4`}>
-				<div className={`px-4 ${styles.paymentInfoContainer}`}>
-					<h1 className='head2'>اختار طريقة الدفع</h1>
-					<div className={styles.paymentInfoDiv}>
-						{isCanMakePayments &&
-							<>
-								<input type="radio" id="applePay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('applepay')} />
-								<label htmlFor="applePay" className='relative'>
-									<div className={`${styles.radioBtnBox} ${styles.radioBtnBox1}`}>
-										<div className='flex items-center'>
-											<div className={styles.circle}><div></div></div>
-											<p className={`fontMedium ${styles.labelText}`}>ابل باي (Apple Pay)</p>
+		<>
+			<FirstPaymentPageInfo />
+			<div className='pb-4'>
+				{groupDiscountEligible && courseDetail.type != 'on-demand' &&
+					<div className={styles.borderBottom}>
+						<div className={`maxWidthDefault  ${styles.radioBtnsContainer}`}>
+							<p className={`fontMedium  ${styles.radioBtnHead}`}>كم شخص؟</p>
+							<div className={styles.noOfUserWrapper}>
+								{/***************************************** FOR loop for radio button to select number of Users ******************************************/}
+								{noOfUsersLabelData.map((data, index) => {
+									return (
+										<div key={`noOfUsersRadoi${index}`}>
+											<input type="radio" id={`user${index + 1}`} name='noOfUser' value={index + 1} className="hidden peer" defaultChecked={totalStudent == 1 ? (index === 0) : (totalStudent == 2 ? (index === 1) : (index === 2))} onChange={() => handleTotalStudent(index + 1)} />
+											<label htmlFor={`user${index + 1}`} className={styles.usersRadioWrapper}>
+												<div className={styles.circle}><div></div></div>
+												<div className={styles.userRadioLabelBox}>
+													<AllIconsComponenet height={24} width={data.iconWidth} iconName={data.iconName} color={totalStudent == index + 1 ? '#ffffff' : '#000000'} strockColor={totalStudent == index + 1 ? '#F26722' : '#ffffff'} />
+													<div className={styles.lable1Box}>
+														<p className={`fontMedium ${styles.lable1}`}>{data.label1} {data.singleDiscount && <span className={styles.singleDiscount}>{data.singleDiscount}</span>} </p>
+														<p className={styles.subLable1}>{data.subLabel1}</p>
+													</div>
+													<div className={styles.lable2Box}>
+														<p className={`${smallScreen ? 'fontMedium' : 'fontBold'} ${styles.lable2}`}>{data.label2 === `null ر.س` ? `${data.oldPrice}` : `${data.label2}`}</p>
+														<p className={`fontMedium ${styles.subLable2}`}>{data.subLabel2}</p>
+														{(data.oldPrice && data.label2 != `null ر.س`) && <p className={styles.oldPrice}>{data.oldPrice}</p>}
+													</div>
+												</div>
+											</label>
 										</div>
-										<Logo height={27} width={53} logoName={'applePayLogo'} alt={'Payment Methode Logo'} />
-									</div>
-									<div className={styles.creditCardWrapper}>
-										{(checkoutID && paymentType == 'applepay') &&
-											<ApplePayForm checkoutID={checkoutID} orderID={createdOrder.id} />
+									)
+								})}
+							</div>
+						</div>
+					</div>
+				}
+				{/***************************************** FOR loop for User form ******************************************************/}
+				{studentsData.map((student, i = index) => {
+					const {
+						genderCheck,
+						dateCheck,
+						fullName,
+						nameCheck,
+						nameLengthCheck,
+						validName,
+						phoneNumber,
+						phoneNoCheck,
+						phoneNoLengthCheck,
+						validPhoneNumber,
+						email,
+						emailCheck,
+						emailValidCheck,
+					} = student
+					return (
+						<div className={`px-4 ${styles.oneUserInfoForm} ${totalStudent > 1 ? '' : 'pt-4'}`} key={`student${i}`}>
+							<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
+								{totalStudent > 1 &&
+									<div className={`flex justify-between pt-2 ${styles.radioBtnHead}`}>
+										<p className='fontBold rounded-b p-2'>{noOfUsersTag[i]}</p>
+										{i > 2 &&
+											<p className={styles.closeIcon} onClick={() => handleRemoveForm(i)}>
+												<div className='pl-2'>
+													<AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#FF0000'} />
+												</div>
+												<span className='fontMedium'>حذف</span>
+											</p>
 										}
 									</div>
-								</label>
-							</>
-						}
-						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
-						<label htmlFor="madaCardDetails" className='relative'>
-							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
-								<div className='flex items-center'>
-									<div className={styles.circle}><div></div></div>
-									<p className={`fontMedium ${styles.labelText}`}>بطاقة مدى البنكية</p>
-								</div>
-								<Logo height={27} width={53} logoName={'madaPaymentLogo'} alt={'Payment Methode Logo'} />
-							</div>
-							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType == 'mada') &&
-									<MadaCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
 								}
-							</div>
-						</label>
-						<input type="radio" id="creditCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('credit')} />
-						<label htmlFor="creditCardDetails" className='relative'>
-							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
-								<div className='flex items-center'>
-									<div className={styles.circle}><div></div></div>
-									<p className={`fontMedium ${styles.labelText}`}>بطاقة ائتمانية </p>
-								</div>
-								<Logo height={27} width={120} logoName={'creditCardPaymentLogo'} alt={'Payment Methode Logo'} />
-							</div>
-							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType == 'credit') &&
-									<CreditCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
+								{(courseDetail.type == 'physical' && regionDataList?.length > 0) &&
+									<>
+										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المنطقة</p>
+										<p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>
+										<div className={styles.genderWrapper}>
+											{/***************************************** FOR loop for radio button to select region ****************************************/}
+											{regionDataList?.map((region, j = index) => {
+												return (
+													<div className={styles.radioBtnBox} key={`region${j}`}>
+														<input id={`region${i}`} type="radio" name={`region${i}`} value={region.id} title="region"
+															className={`${styles.radioBtn}  ${disabledRegion == region.id ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+															checked={(selectedRegionId && i == 0 ? selectedRegionId == region.id : student.region == region.id)}
+															onChange={event => handleRegionChange(event, i)}
+															disabled={disabledRegion == region.id}
+														/>
+														<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledRegion == region.id ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr}</label>
+													</div>
+												)
+											})}
+										</div>
+									</>
 								}
-							</div>
-						</label>
-						<input type="radio" id="bankDetails" name="paymentDetails" className="hidden peer" />
-						<label htmlFor="bankDetails">
-							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox3}`}>
-								<div className={styles.circle}><div></div></div>
-								<p className={`fontMedium ${styles.labelText}`}>تحويل بنكي</p>
-							</div>
-							<div className={`${styles.creditCardWrapper} ${styles.bankDetailWrapper}`}>
-								<p className={styles.creditcardWrapperText}> نرجوا إتمام عملية التحويل خلال <span className='text-red-500 fontBold'>24 ساعة كحد أقصى</span></p>
-								<p className={`fontBold ${styles.creditcardWrapperText}`}>ملاحظات:</p>
-								<ul className={styles.list}>
-									<li className={`pt-2 ${styles.creditcardWrapperText}`}>
-										١. بضغطك على زر <span className='fontMedium'>“إرسال الطلب”</span> مقعدك رح يكون محجوز بشكل مؤقت الى ما تحولنا المبلغ.
-									</li>
-									<li className={`pt-2 ${styles.creditcardWrapperText}`}>
-										٢. بعد التحويل ارفق ايصال الحوالة من صفحة <span className='underline'>استعلام المشتريات</span> او من خلال الرابط اللي بيوصلك بالايميل و الواتس
-									</li>
-
-								</ul>
-								<div className={`flex flex-wrap ${styles.bankDetailSubWrapper}`}>
-									{bankDetails.map((bank, index) => {
+								<p className={`fontBold mt-6 ${styles.radioBtnHead}`}>الجنس</p>
+								{/* {courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>} */}
+								<div className={styles.genderWrapper}>
+									{/***************************************** FOR loop for radio button to select Gender ****************************************/}
+									{genders.map((gender, j = index) => {
 										return (
-											<div key={`bank${index}`} className={`py-4 ${styles.bankDetailsBox}`}>
-												<BankDetailsCard bank={bank} index={index} />``
+											<div className={styles.radioBtnBox} key={`gender${j}`}>
+												<input id={`gender${i}`} type="radio" name={`gender${i}`} value={gender.value} title="gender"
+													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
+													onChange={event => handleFormChange(event, i, null)}
+													disabled={disabledGender == gender.value}
+												/>
+												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
 											</div>
 										)
 									})}
 								</div>
-								<div className={styles.paymentBtnBox}>
-									<button className='primarySolidBtn' onClick={() => handleBankTransfer()}>إرسال الطلب</button>
-								</div>
+								<div style={{ color: 'red' }} className={styles.errorText}>{genderCheck}</div>
 							</div>
-						</label>
-					</div>
-					{(!isSmallScreen && createdOrder.course.type != "on-demand") &&
-						<div className={styles.backBtnBox}>
-							<button className='fontBold primaryStrockedBtn'>
-								<div className={styles.arrowIcon}>
-									<AllIconsComponenet height={20} width={20} iconName={'rightArrowIcon'} color={'#F26722'} />
+
+							{(studentsData[i].gender !== null && courseDetail.type != 'on-demand') &&
+								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
+									<p className={`fontBold ${styles.radioBtnHead}`}>اختار الموعد اللي يناسبك</p>
+									<div style={{ color: 'red' }} className={styles.errorText}>{dateCheck}</div>
+									<ScrollContainer className='flex'>
+										<div className={styles.datesMainArea}>
+											{/***************************************** FOR loop for radio button to select date ****************************************/}
+											{((courseDetail.type == 'physical' && studentsData[i].gender !== null) ? ((studentsData[i].gender == 'female') ? femaleDates : maleDates) : mixDates).length > 0 ?
+												<>
+													{((courseDetail.type == 'physical' && studentsData[i].gender !== null) ? ((studentsData[i].gender == 'female') ? femaleDates : maleDates) : mixDates).map((date, k = index) => {
+														return (
+															<div key={`datecard${k}`}>
+																{date.numberOfSeats !== 0 &&
+																	<div className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : null}`}>
+																		<input type="radio" id={`date1_${k}_${i}`} name={`date${i}`} title="date" value={date.dateFrom}
+																			className="hidden peer" onChange={event => handleFormChange(event, i, date.id)}
+																			checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
+																			disabled={date.numberOfSeats == 0}
+																		/>
+																		<label htmlFor={`date1_${k}_${i}`} className="cursor-pointer">
+																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : null}`}>
+																				<div className={styles.dateRadioBtnBox}>
+																					<div className={styles.circle}><div></div></div>
+																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
+																						{(courseDetail.type == 'physical' && date.name) ? date.name : dateWithDay(date.dateFrom)}
+																					</p>
+																				</div>
+																			</div>
+																			<DatesInfo date={date} />
+																		</label>
+																	</div>
+																}
+															</div>
+														)
+													})}
+												</>
+												:
+												(selectedGender && selectedRegionId) &&
+												<div>
+													<UserDetailForm1 gender={studentsData[i].gender} />
+												</div>
+											}
+										</div>
+									</ScrollContainer>
+									{i == 0 &&
+										<div className='checkBoxDiv pt-4'>
+											<input id='enrollForMe' type='checkbox' name='enrollForMySelf' onChange={(event) => handleEnrollForMe(event)} />
+											<label htmlFor='enrollForMe' className={`fontMedium ${styles.checkboxText}`}>بسجل لنفسي</label>
+										</div>
+									}
+									{(totalStudent > 1 && i == 0 && (courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).length > 0) &&
+										<div className='checkBoxDiv pb-4'>
+											<input id='dateForAll' type='checkbox' name='agree' onChange={(event) => handleDateForAll(event)} />
+											<label htmlFor='dateForAll' className={`fontMedium ${styles.checkboxText}`}>اختيار نفس الموعد لجميع الأشخاص</label>
+										</div>
+									}
 								</div>
-								الصفحة السابقة </button>
-						</div>
-					}
-				</div>
-				<div className={`ml-4 ${styles.courseInfoBox}`}>
-					<h1 className='head2 pb-2'>ملخص الطلب</h1>
-					<div className='flex'>
-						<div className={styles.courseCover}>
-							<CoverImg height={screenWidth > 1085 ? 113 : 81} url={createdOrder.course?.pictureKey ? mediaUrl(createdOrder.course?.pictureBucket, createdOrder.course?.pictureKey) : '/images/anaOstori.png'} />
-						</div>
-						<div>
-							<p className={`fontBold pr-3 ${styles.courseTitle}`}>{createdOrder.courseName}</p>
-							<p className={`fontRegular pr-3 ${styles.noOfUsersTagText}`}>{noOfUser[createdOrder.orderItems.length - 1]}</p>
-						</div>
-					</div>
-					<div className={`formInputBox ${styles.couponCodeInputBox}`}>
-						<input id='couponCode' type="text" className={`formInput ${styles.couponCodeInput}`} placeholder=' ' onChange={(e) => setCouponCode(e.target.value)} />
-						<label className={`formLabel ${styles.couponCodeLabel}`} htmlFor="couponCode">كود الخصم</label>
-						<div className={styles.applyCouponBtnBox}>
-							{couponCode?.length > 0 ?
-								<button className={`fontMedium cursor-pointer ${styles.couponCodeBtn}`} onClick={() => handleCheckCouponIsValid()}>تطبيق</button>
-								:
-								<button className={`${styles.couponCodeBtn} ${styles.DisCouponCodeBtn}`}>تطبيق</button>
+							}
+							{((courseDetail.type != 'on-demand' && student.date) || (courseDetail.type == 'on-demand' && student.gender)) &&
+								<div className={`maxWidthDefault ${styles.radioBtnsContainer}`}>
+									<p className={`fontBold ${styles.radioBtnHead}`}>البيانات الشخصية</p>
+									<p className={`fontRegular ${styles.radioBtnDiscription}`}>فضلا اكتبها بدقة، عشان حنتواصل معك</p>
+									<div className='formInputBox'>
+										<input className='formInput' id="fullName" type="text" name={`name${i}`} title="fullName" placeholder=' '
+											value={fullName}
+											onChange={event => handleFormChange(event, i, null)}
+										/>
+										<label className='formLabel' htmlFor="fullName">الاسم الثلاثي</label>
+									</div>
+									<div style={{ color: 'red' }} className={styles.errorText}>{nameCheck} {nameLengthCheck} {validName}</div>
+									<div className='formInputBox'>
+										<input className='formInput' id="phoneNo" type="number" name={`phoneNo${i}`} title="phoneNumber" placeholder=' '
+											value={phoneNumber}
+											onChange={event => handleFormChange(event, i, null)}
+										/>
+										<label className='formLabel' htmlFor="phoneNo">رقم الجوال</label>
+									</div>
+									{(!phoneNoCheck && !phoneNoLengthCheck && !validPhoneNumber) &&
+										<p className={styles.hintText}>ادخل الرقم بصيغة 05xxxxxxxx </p>
+									}
+									<div style={{ color: 'red' }} className={styles.errorText}>{phoneNoCheck} {phoneNoLengthCheck} {validPhoneNumber}</div>
+									<div className='formInputBox'>
+										<input className='formInput' id="email" type="email" name={`email${i}`} title="email" placeholder=' '
+											value={email}
+											onChange={event => handleFormChange(event, i, null)}
+										/>
+										<label className='formLabel' htmlFor="email">الإيميل</label>
+									</div>
+									<div style={{ color: 'red' }} className={styles.errorText}>{emailCheck}{emailValidCheck}</div>
+								</div>
 							}
 						</div>
-					</div>
-					{couponError &&
-						<p className={styles.errorText}>{inputErrorMessages.incorrectCodeErrorMsg}</p>
-					}
-					{couponAppliedData &&
-						<p className={styles.sucessText}>{inputSuccessMessages.discountAppliedMsg}</p>
-					}
-					<div className={styles.priceDetailsBox}>
-						<div className='flex justify-between  py-2'>
-							<p>{numberOfUser[createdOrder.orderItems.length - 1]}سعر الدورة</p>
-							<p>{Number(createdOrder.totalPrice).toFixed(2)} ر.س</p>
-						</div>
-						<div className='flex justify-between  py-2'>
-							<p>ضريبة القيمة المضافة</p>
-							<p>{Number(createdOrder.totalVat).toFixed(2)} ر.س</p>
-						</div>
-						<div className='flex justify-between py-2 '>
-							<p className='fontBold'>المبلغ الإجمالي</p>
-							<p className='fontBold pb-2'>{(Number(Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)).toFixed(2))} ر.س</p>
-						</div>
-						{(couponAppliedData?.percentage) &&
-							<>
-								<div className='flex justify-between'>
-									<p style={{ color: '#00bd5d' }} className='fontBold  pb-2'>خصم كود ({couponAppliedData?.percentage} %) </p>
-									<p style={{ color: '#00bd5d' }}> {(couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)}- ر.س</p>
-								</div>
-								<div className='flex justify-between '>
-									<p style={{ color: '#F26722' }} className='fontBold'>المبلغ المطلوب</p>
-									<p className='fontBold pb-2'>{((((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)).toFixed(2)))} ر.س</p>
-								</div>
-							</>
+					)
+				})}
+				<div className='border-t border-inherit  pr-3'>
+					<div className={`maxWidthDefault pr-4 ${styles.radioBtnsContainer}`}>
+						{(studentsData.length > 2 && studentsData.length <= 9) &&
+							<div>
+								<p className={`fontBold ${styles.addMoreFormText}`} onClick={() => handleAddForm(isDateForAllSelected)} >+ إضافة شخص آخر</p>
+							</div>
 						}
+						<div className='checkBoxDiv pb-4'>
+							<input id='termsCheckBox' type='checkbox' name='agree' onChange={(event) => setUserAgree(event.target.checked)} />
+							<label htmlFor='termsCheckBox' className={`fontMedium ${styles.checkboxText}`}>أقر بموافقتي على <Link href={'/terms'} className='link' >الشروط والأحكام</Link></label>
+						</div>
+						{props.userAgreeError == false && <div style={{ color: 'red' }} className={`${styles.errorText} pb-4`}>فضلًا وافق على الشروط والأحكام</div>}
+						<div className={` pt-2 ${styles.btnBox}`}>
+							<button className='primarySolidBtn' onClick={() => handleSubmit(studentsData, courseDetail.type)}>مراجعة الطلب والدفع</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	)
 }
