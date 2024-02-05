@@ -11,7 +11,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
-import PaymentConst from '../../../constants/PaymentConst';
+import * as PaymentConst from '../../../constants/PaymentConst';
 
 export default function UserInfoForm(props) {
 	const studentsDataLength = props.studentsData?.length
