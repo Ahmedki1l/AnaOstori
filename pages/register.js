@@ -38,7 +38,7 @@ export default function Register() {
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
-			router.push('/registerSocialMediaUser')
+			router.push('/updateProfile')
 			toast.success(toastErrorMessage.successRegisterMsg, { rtl: true, })
 		} else {
 			try {
@@ -61,7 +61,7 @@ export default function Register() {
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
 				if (viewProfileData?.data.gender == null) {
-					router.push('/registerSocialMediaUser')
+					router.push('/updateProfile')
 				}
 				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 					router.push('/')
