@@ -1,0 +1,68 @@
+.cardContainer {
+  display: flex;
+  gap: 20px;
+  direction: ltr;
+  flex-direction: column;
+  margin-right: 1.5rem;
+}
+
+.graphWrapper {
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 1.75rem;
+  padding: 1rem;
+  position: relative;
+  // height: max-content;
+
+  .linkWrapper {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+  }
+}
+
+.graphContainerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.graphContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cardWrapper {
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.pieChartLabels {
+  display: inline-flex;
+  // grid-template-columns: repeat(2, 1fr);
+  // gap: 10px
+  // display: flex;
+  // justify-content: center;
+}
+
+.courseInfoImage {
+  margin: 18px 14px;
+  border: 0.7px solid #636060;
+  height: 109px;
+  width: 190px;
+  border-radius: 4px;
+  position: relative;
+  overflow: auto;
+}
+
+.labelsWrapper {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 8rem;
+}

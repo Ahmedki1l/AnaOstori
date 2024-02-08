@@ -304,9 +304,9 @@ export default function Navbar() {
 							</StyledDropdown>
 						</div>
 					}
-					<p onClick={() => handleRouteChange()} className='pt-1'>
+					<div onClick={() => handleRouteChange()} className='pt-1'>
 						<Logo height={34} width={62} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
-					</p>
+					</div>
 					{!isRegisterSocialMediaUser &&
 						<div className={`p-1 cursor-pointer ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
 							<AllIconsComponenet iconName={'menuIcon'} height={18} width={18} color={'#000000'} />
@@ -386,9 +386,9 @@ export default function Navbar() {
 				<div className={styles.navbarWrapper} id="navBar" >
 					<div className='maxWidthDefault'>
 						<div className={styles.navbarInnerWrapper}>
-							<p onClick={() => handleRouteChange()} className={`pl-8 my-auto ${isRegisterSocialMediaUser && 'cursor-not-allowed'}`}>
+							<div onClick={() => handleRouteChange()} className={`pl-8 my-auto ${isRegisterSocialMediaUser && 'cursor-not-allowed'}`}>
 								<Logo height={38} width={68} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
-							</p>
+							</div>
 							{!isRegisterSocialMediaUser &&
 								<>
 									<div className={`pl-6 my-auto`}>

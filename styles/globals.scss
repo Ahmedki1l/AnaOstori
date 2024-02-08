@@ -801,3 +801,25 @@ input:-internal-autofill-selected {
         font-weight: 700;
     }
 }
+
+.custom-legend {
+    list-style: none;
+    padding: 0;
+}
+
+.custom-legend li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.legend-label {
+    display: inline-block;
+}

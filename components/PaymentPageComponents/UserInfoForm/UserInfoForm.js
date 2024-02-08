@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styles from './UserInfoForm.module.scss'
 import FirstPaymentPageInfo from '../PaymentPageIndicator/FirstPageIndicator';
 import DatesInfo from './DatesBox/DatesInfo'
-import * as PaymentConst from '../../../constants/PaymentConst';
 import ScrollContainer from 'react-indiana-drag-scroll'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -12,6 +11,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
+import * as PaymentConst from '../../../constants/PaymentConst';
 
 export default function UserInfoForm(props) {
 	const studentsDataLength = props.studentsData?.length
@@ -235,6 +235,7 @@ export default function UserInfoForm(props) {
 			setMaleDates(regionDateListMale)
 		} else if (regionDateListMale.length == 0) {
 			setSelectedGender('female')
+			data[index]['gender'] = 'female'
 			setDisabledGender('male')
 		}
 		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
@@ -242,6 +243,7 @@ export default function UserInfoForm(props) {
 			setFemaleDates(regionDateListFemale)
 		} else if (regionDateListFemale.length == 0) {
 			setSelectedGender('male')
+			data[index]['gender'] = 'male'
 			setDisabledGender('female')
 		}
 		if (regionDateListMale.length == 0) {
@@ -400,8 +402,8 @@ export default function UserInfoForm(props) {
 														)
 													})}
 												</>
-
 												:
+												(selectedGender && selectedRegionId) &&
 												<div>
 													<UserDetailForm1 gender={studentsData[i].gender} />
 												</div>

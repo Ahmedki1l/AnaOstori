@@ -6,7 +6,6 @@ import Empty from "../../../components/CommonComponents/Empty";
 import AllIconsComponenet from "../../../Icons/AllIconsComponenet";
 import PurchaseOrderDrawer from "../../../components/ManagePurchaseOrderItem/PurchaseOrderDrawer";
 import styled from "styled-components";
-import * as paymentConst from "../../../constants/PaymentConst"
 import Link from "next/link";
 import BackToPath from "../../../components/CommonComponents/BackToPath";
 import { getNewToken } from "../../../services/fireBaseAuthService";
@@ -19,6 +18,7 @@ import styles from '../../../styles/InstructorPanelStyleSheets/ManagePurchaseOrd
 import Select from "../../../components/antDesignCompo/Select";
 import { FormItem } from "../../../components/antDesignCompo/FormItem";
 import dayjs from "dayjs";
+import * as PaymentConst from "../../../constants/PaymentConst";
 
 const DrawerTiitle = styled.p`
 font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -33,7 +33,7 @@ const Index = () => {
         pageSize: 10,
     })
     const [selectedOrder, setSelectedOrder] = useState()
-    const { paymentStatusBank, paymentStatusOther, paymentMode, allPaymentStatus } = paymentConst
+    const { paymentStatusBank, paymentStatusOther, paymentMode, allPaymentStatus } = PaymentConst
     const [currentPage, setCurrentPage] = useState(1)
     const [searchValue, setSearchValue] = useState()
     const [selectedStatus, setSelectedStatus] = useState()

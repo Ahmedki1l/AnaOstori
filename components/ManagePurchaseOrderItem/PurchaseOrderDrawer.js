@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Form, FormItem } from '../antDesignCompo/FormItem'
 import Select from '../antDesignCompo/Select'
-import * as paymentConst from '../../constants/PaymentConst'
 import { postAuthRouteAPI } from '../../services/apisService'
 import styles from './purchaseOrderDrawer.module.scss'
 import AllIconsComponenet from '../../Icons/AllIconsComponenet'
@@ -14,12 +13,12 @@ import CustomButton from '../CommonComponents/CustomButton'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import Input from '../antDesignCompo/Input'
 import { managePuchaseOrderDrawerConst, paymentTypeConst } from '../../constants/adminPanelConst/managePurchaseOrderConst/managePurchaseOrderConst'
-
+import * as PaymentConst from '../../constants/PaymentConst'
 
 const PurchaseOrderDrawer = (props) => {
     const selectedOrder = props.selectedOrder
     const [orderForm] = Form.useForm()
-    const { paymentStatusBank, paymentStatusOther } = paymentConst
+    const { paymentStatusBank, paymentStatusOther } = PaymentConst
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [paymentStatus, setPaymentStatus] = useState(selectedOrder.status)
 

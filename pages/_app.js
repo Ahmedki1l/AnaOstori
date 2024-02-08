@@ -14,8 +14,16 @@ import Script from 'next/script'
 import GoogleAnalytics from '../lib/GoogleAnalytics';
 import * as allMetaTags from '../lib/metaData'
 import Navbar from '../components/Navbar/Navbar';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-
+// const queryClient = new QueryClient({
+// 	defaultOptions: {
+// 		queries: {
+// 			refetchOnWindowFocus: false,
+// 		},
+// 	},
+// });
+const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }) {
 	const router = useRouter();
 	const [pageTitle, setPageTitle] = useState('الرئيسية')
@@ -172,25 +180,26 @@ function MyApp({ Component, pageProps }) {
 
 	return (
 		<>
-			<Head>
-				<title>{`${pageTitle} | منصة أنا أسطوري`}</title>
-				<link rel="icon" href="/favicon.png" className='rounded-full' />
-				<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-				<meta name="description" content={metaTags.description} />
-				<meta name="keywords" content={metaTags.keywords} />
-				<meta property="og:title" content={metaTags.title} />
-				<meta property="og:description" content={metaTags.description} />
-				<meta property="og:url" content={`https://anaostori.com${router.asPath}`} />
-				<meta property="og:type" content={`https://anaostori.com}`} />
-				<meta property="og:image" content={`${metaTags.image}`} />
-			</Head>
-			<div dir='rtl'>
-				<GoogleAnalytics pathName={pathName} />
-				<Script
-					id="fb-pixel"
-					strategy="afterInteractive"
-					dangerouslySetInnerHTML={{
-						__html: `
+			<QueryClientProvider client={queryClient}>
+				<Head>
+					<title>{`${pageTitle} | منصة أنا أسطوري`}</title>
+					<link rel="icon" href="/favicon.png" className='rounded-full' />
+					<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+					<meta name="description" content={metaTags.description} />
+					<meta name="keywords" content={metaTags.keywords} />
+					<meta property="og:title" content={metaTags.title} />
+					<meta property="og:description" content={metaTags.description} />
+					<meta property="og:url" content={`https://anaostori.com${router.asPath}`} />
+					<meta property="og:type" content={`https://anaostori.com}`} />
+					<meta property="og:image" content={`${metaTags.image}`} />
+				</Head>
+				<div dir='rtl'>
+					<GoogleAnalytics pathName={pathName} />
+					<Script
+						id="fb-pixel"
+						strategy="afterInteractive"
+						dangerouslySetInnerHTML={{
+							__html: `
 						!function(f,b,e,v,n,t,s)
 						{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 						n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -202,9 +211,9 @@ function MyApp({ Component, pageProps }) {
 						fbq('init', ${fbq.FB_PIXEL_ID});
 						fbq('track', 'PageView');
 						`,
-					}}
-				/>
-				{/* <Script
+						}}
+					/>
+					{/* <Script
 					id="snap-pixel"
 					strategy="afterInteractive"
 					type='text/javascript'
@@ -221,24 +230,25 @@ function MyApp({ Component, pageProps }) {
 						`,
 					}}
 				/> */}
-				<noscript><img height="1" width="1" style={{ display: 'none' }}
-					src={`https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1`}
-					alt={'fbPixelNoScriptAlt'}
-				/></noscript>
-				<ToastContainer />
-				<Provider store={store} >
-					<PersistGate loading={null} persistor={persistor}>
-						<Navbar />
-						<Component {...pageProps} />
-					</PersistGate>
-				</Provider>
-				{!hasFooterShown &&
-					<Footer />
-				}
-				{!hasWhatsAppShown &&
-					<WhatsAppLinkComponent isBookSeatPageOpen={isBookSeatPageOpen} />
-				}
-			</div>
+					<noscript><img height="1" width="1" style={{ display: 'none' }}
+						src={`https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1`}
+						alt={'fbPixelNoScriptAlt'}
+					/></noscript>
+					<ToastContainer />
+					<Provider store={store} >
+						<PersistGate loading={null} persistor={persistor}>
+							<Navbar />
+							<Component {...pageProps} />
+						</PersistGate>
+					</Provider>
+					{!hasFooterShown &&
+						<Footer />
+					}
+					{!hasWhatsAppShown &&
+						<WhatsAppLinkComponent isBookSeatPageOpen={isBookSeatPageOpen} />
+					}
+				</div>
+			</QueryClientProvider>
 		</>
 	)
 }
