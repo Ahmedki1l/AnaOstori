@@ -147,20 +147,20 @@ const Index = () => {
             nextPageLink: '/instructorPanel/manageAdminDashBoard/allCoursesForDashBoard',
             iconName: 'bookIcon',
         },
-        {
-            id: 6,
-            titleHead: dashBoardData?.mostCourseViewed || 'MostCourseViewedName',
-            titleBody: 'أكثر دورة زيارة',
-            iconName: 'newVisibleIcon',
-        },
-        {
-            id: 7,
-            titleHead: dashBoardData?.mostPageViewed || 'MostPageViewdName',
-            titleBody: 'أكثر صفحة زيارة',
-            viewMoreInfo: 'عرض التفاصيل',
-            nextPageLink: '/instructorPanel/manageAdminDashBoard/mostViewdPageList',
-            iconName: 'newVisibleIcon',
-        },
+        // {
+        //     id: 6,
+        //     titleHead: dashBoardData?.mostCourseViewed || 'MostCourseViewedName',
+        //     titleBody: 'أكثر دورة زيارة',
+        //     iconName: 'newVisibleIcon',
+        // },
+        // {
+        //     id: 7,
+        //     titleHead: dashBoardData?.mostPageViewed || 'MostPageViewdName',
+        //     titleBody: 'أكثر صفحة زيارة',
+        //     viewMoreInfo: 'عرض التفاصيل',
+        //     nextPageLink: '/instructorPanel/manageAdminDashBoard/mostViewdPageList',
+        //     iconName: 'newVisibleIcon',
+        // },
     ]
     const createOrderPieChartData = (data) => {
         const result = data?.orderStats?.map(item => item.count);
@@ -335,7 +335,7 @@ const Index = () => {
                     </div>
                     :
                     <div className='flex justify-between'>
-                        <div style={{ width: '100%' }} >
+                        <div className='w-3/4'>
                             <div className={`${styles.graphWrapper} flex justify-center`}>
                                 {orderDataForLineChart && <ComponentForLineChart data={orderDataForLineChart} />}
                             </div>
@@ -408,7 +408,7 @@ const Index = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className={styles.cardContainer}>
+                        <div className={`w-1/4 ${styles.cardContainer}`}>
                             {adminDashBoardData.map((data, index) => (
                                 <div key={`index ${index}`} className={styles.cardWrapper}>
                                     <div style={{ textAlign: 'right' }}>
