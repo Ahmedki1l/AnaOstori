@@ -1,0 +1,250 @@
+import React, { useEffect, useState } from 'react'
+import BackToPath from '../../../../components/CommonComponents/BackToPath';
+import styles from '../../../../styles/InstructorPanelStyleSheets/ManageAdminOverView.module.scss'
+import { DatePicker, Tag } from 'antd';
+import CustomOrderListComponent from '../../../../components/CommonComponents/CustomOrderListComponent/CustomOrderListComponent';
+import ComponentForBarChart from '../../../../components/CommonComponents/ComponentForBarChart/ComponentForBarChart';
+import { getNewToken } from '../../../../services/fireBaseAuthService';
+import { useQuery, useQueryClient } from 'react-query';
+import { getRouteAPI } from '../../../../services/apisService';
+import { mediaUrl } from '../../../../constants/DataManupulation';
+import Image from 'next/legacy/image';
+import { fullDate } from '../../../../constants/DateConverter';
+import dayjs from 'dayjs';
+import Spinner from '../../../../components/CommonComponents/spinner';
+
+const Index = () => {
+
+    const { RangePicker } = DatePicker;
+    const [dates, setDates] = useState(null);
+    const [allCourseList, setAllCourseList] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [courseDataForBarChart, setCourseDataForBarChart] = useState()
+    const [paginationConfig, setPaginationConfig] = useState({
+        pageSizeOptions: [],
+        position: ['bottomCenter'],
+        pageSize: 10,
+    })
+    const [dateRange, setDateRange] = useState({
+        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
+        endDate: dayjs().format('YYYY-MM-DD')
+    })
+
+    useEffect(() => {
+        if (allCourseList.length > 0) {
+            createBarChartForCourse()
+        }
+        setCurrentPage(1)
+    }, [dateRange])
+
+    const disabledDate = (current) => {
+        return current > dayjs().endOf('day');
+    };
+    const onOpenChange = (open) => {
+        if (open) {
+            setDates([null, null]);
+        } else {
+            setDates(null);
+        }
+    }
+    const handleDateChange = (val) => {
+        if (val !== null && val.length === 2) {
+            const startDate = dayjs(val[0]).format('YYYY-MM-DD');
+            const endDate = dayjs(val[1]).format('YYYY-MM-DD');
+            setDateRange({
+                startDate: startDate,
+                endDate: endDate
+            });
+        } else if (val === null) {
+            setDateRange(null)
+        }
+    };
+
+    const { getAllCourseList, isLoading, isError } = useQuery(
+        ['getDashboardCourse', currentPage, dateRange?.startDate, dateRange?.endDate],
+        async () => {
+            let body = {
+                routeName: "dashboardCourse",
+            }
+            if (dateRange !== null) {
+                body.startDate = dateRange.startDate
+                body.endDate = dateRange.endDate
+            }
+            await getRouteAPI(body).then((res) => {
+                setPaginationConfig((prevConfig) => ({
+                    ...prevConfig,
+                    total: res.data.totalItems,
+                    current: res.data.currentPage,
+                }));
+                setAllCourseList(res?.data?.courseData)
+                createBarChartForCourse(res?.data?.courseData)
+            }).catch(async (error) => {
+                console.log(error);
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        await getRouteAPI(body).then(res => {
+                            setPaginationConfig((prevConfig) => ({
+                                ...prevConfig,
+                                total: res.data.totalItems,
+                                current: res.data.currentPage,
+                            }));
+                            setAllCourseList(res?.data?.courseData)
+                            createBarChartForCourse(res?.data?.courseData)
+                        })
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            })
+        }
+    )
+
+    const createBarChartForCourse = (data) => {
+        const labels = [];
+        const totalEarnings = [];
+        const totalEnrollment = [];
+        if (data && data.length > 0) {
+            data.forEach(order => {
+                labels.push(order.name);
+                totalEarnings.push(order.earning || 0);
+                totalEnrollment.push(order.enrollmentCount || 0);
+            });
+        }
+        const dataForCourseBarChart = {
+            chartId: 'barChartForCourse',
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Number Of Sales',
+                    data: totalEarnings,
+                    backgroundColor: '#FED0EEB2',
+                    borderColor: '#FED0EEB2',
+                    borderWidth: 1
+                },
+                {
+                    label: ' Number Of Enrolled',
+                    data: totalEnrollment,
+                    backgroundColor: '#D0E8FFB2',
+                    borderColor: '#D0E8FFB2',
+                    borderWidth: 1
+                }
+            ]
+        }
+        setCourseDataForBarChart(dataForCourseBarChart)
+    }
+
+    const data = {
+        tableColumns: [
+            {
+                title: 'عنوان الدورة',
+                dataIndex: 'name',
+                render: (text, _record) => {
+                    return (
+                        <div className='flex items-center'>
+                            <div className={styles.courseInfoImage}>
+                                <Image src={_record.pictureKey ? mediaUrl(_record.pictureBucket, _record.pictureKey) : '/images/anaOstori.png'} alt="Course Cover Image" layout="fill" objectFit="cover" priority />
+                            </div>
+                            <p className='pr-2'>{_record.name}</p>
+                        </div>
+                    )
+                }
+            },
+            {
+                title: 'حالة النشر',
+                dataIndex: 'published',
+                render: (text, _record) => {
+                    return (
+                        <Tag color={_record.published ? 'green' : 'red'}>{_record.published ? 'منشورة' : 'غير منشورة'}</Tag>
+                    )
+                }
+            },
+            {
+                title: 'إجمالي المبيعات',
+                dataIndex: 'earning',
+                render: (text, _record) => {
+                    return (
+                        <div>
+                            <p>{(Number(_record?.earning)).toFixed()} ر.س</p>
+                        </div>
+                    )
+                }
+            },
+            {
+                title: 'إجمالي المشتركين',
+                dataIndex: 'enrollmentCount',
+            },
+            {
+                title: 'تاريخ اخر تحديث',
+                dataIndex: 'createdAt',
+                sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+                render: (text, _date) => {
+                    return (fullDate(_date.createdAt))
+                }
+            },
+            {
+                title: 'تاريخ انشاء الحساب',
+                dataIndex: 'updatedAt',
+                sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
+                render: (text, _date) => {
+                    return (fullDate(_date.updatedAt))
+                }
+            },
+        ],
+        dataSource: allCourseList,
+        paginationConfig: paginationConfig,
+        handleTableChange: (pagination) => {
+            if (pagination.current !== currentPage) {
+                setCurrentPage(pagination.current)
+            }
+        }
+    }
+
+    return (
+        <div className='maxWidthDefault px-4'>
+            <div className='py-2'>
+                <BackToPath
+                    backPathArray={
+                        [
+                            { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
+                            { lable: 'إحصائيات الموقع', link: '/instructorPanel/manageAdminDashBoard' },
+                            { lable: 'دورات الموقع', link: null },
+                        ]
+                    }
+                />
+            </div>
+            <h1 className={`head2 pt-6 pr-2`}>الدورات</h1>
+            <div className='my-6 flex flex-row-reverse' >
+                <RangePicker
+                    height={40}
+                    disabledDate={disabledDate}
+                    defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
+                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
+                    onCalendarChange={(val) => {
+                        setDates(val);
+                    }}
+                    onChange={(val) => {
+                        handleDateChange(val);
+                    }}
+                    onOpenChange={onOpenChange}
+                    changeOnBlur
+                    size="large"
+                    placeholder={['تاريخ البداية', 'تاريخ النهاية']}
+                />
+            </div>
+            {isLoading ?
+                <div className='flex justify-center items-center h-80'>
+                    <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+                </div>
+                :
+                <div style={{ width: '100%' }}>
+                    <div className={`${styles.graphWrapper}`}>
+                        {courseDataForBarChart && <ComponentForBarChart data={courseDataForBarChart} />}
+                    </div>
+                </div>
+            }
+            <CustomOrderListComponent data={data} />
+        </div>
+    )
+}
+
+export default Index

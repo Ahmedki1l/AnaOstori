@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styles from './UserInfoForm.module.scss'
 import FirstPaymentPageInfo from '../PaymentPageIndicator/FirstPageIndicator';
 import DatesInfo from './DatesBox/DatesInfo'
-import * as paymentConst from '../../../constants/paymentConst';
 import ScrollContainer from 'react-indiana-drag-scroll'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -12,12 +11,13 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
+import * as PaymentConst from '../../../constants/PaymentConst';
 
 export default function UserInfoForm(props) {
 	const studentsDataLength = props.studentsData?.length
-	const noOfUsersTag = paymentConst.noOfUsersTag
+	const noOfUsersTag = PaymentConst.noOfUsersTag
 	const courseDetail = props.courseDetails
-	const genders = paymentConst.genders
+	const genders = PaymentConst.genders
 	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates
 	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates
 	const [maleDates, setMaleDates] = useState([]);

@@ -26,7 +26,7 @@ const ManegeUserListDrawer = ({
     const category = storeData.catagories;
     const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
     const regexPhone = useMemo(() => /^\d+$/, []);
-    const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails.enrollments.map((item) => {
+    const [enrolledCourseList, setEnrolledCourseList] = useState(selectedUserDetails?.enrollments?.map((item) => {
         return {
             courseId: item?.course?.id,
             type: item?.course?.type,
@@ -44,9 +44,9 @@ const ManegeUserListDrawer = ({
         if (selectedUserDetails) {
             userForm.setFieldsValue(selectedUserDetails)
         }
-        if (selectedUserDetails.enrollments.length > 0) {
+        if (selectedUserDetails?.enrollments?.length > 0) {
             userForm.setFieldsValue({
-                enrolledCourseList: selectedUserDetails.enrollments.map((item) => {
+                enrolledCourseList: selectedUserDetails?.enrollments?.map((item) => {
                     return {
                         courseId: item?.course?.id,
                         type: item?.course?.type,
@@ -81,6 +81,7 @@ const ManegeUserListDrawer = ({
             await postAuthRouteAPI(createAPIBody).then((res) => {
                 setEnrolledCourseList(res.data)
                 setDrawerForUsers(false)
+                userForm.resetFields()
                 getUserList(currentPage, searchValue)
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
@@ -88,6 +89,7 @@ const ManegeUserListDrawer = ({
                         await postAuthRouteAPI(createAPIBody).then((res) => {
                             setEnrolledCourseList(res.data)
                             setDrawerForUsers(false)
+                            userForm.resetFields()
                             getUserList(currentPage, searchValue)
                         })
                     }).catch(err => {
@@ -128,11 +130,16 @@ const ManegeUserListDrawer = ({
             }
             await postAuthRouteAPI(updateAPIBody).then((res) => {
                 setDrawerForUsers(false)
+                userForm.resetFields()
                 getUserList(currentPage, searchValue)
             }).catch(async (err) => {
                 if (err?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
-                        await postAuthRouteAPI(updateAPIBody).then((res) => { })
+                        await postAuthRouteAPI(updateAPIBody).then((res) => {
+                            setDrawerForUsers(false)
+                            userForm.resetFields()
+                            getUserList(currentPage, searchValue)
+                        })
                     }).catch(err => {
                         console.error(err);
                     });
@@ -206,7 +213,7 @@ const ManegeUserListDrawer = ({
                         placeholder='phoneNo'
                     />
                 </FormItem>
-                {enrolledCourseList.length > 0 ?
+                {enrolledCourseList?.length > 0 ?
                     <>
                         <Form.List name="enrolledCourseList" initialValue={[{
                             name: '',
@@ -244,7 +251,7 @@ const ManegeUserListDrawer = ({
                     :
                     <p className={`fontBold mb-4 ${styles.addCourse}`}>{manageUserListConst.addCourseTitle}</p>
                 }
-                {enrolledCourseList.length == 0 &&
+                {enrolledCourseList?.length == 0 &&
                     <>
                         <Empty emptyText={manageUserListConst.emptyBtnPlaceHolder} containerhight={165} />
                         <div className={styles.userListBtnBox}>
