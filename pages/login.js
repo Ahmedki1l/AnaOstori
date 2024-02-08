@@ -55,7 +55,8 @@ export default function Login() {
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
-			router.push('/registerSocialMediaUser')
+			// router.push('/registerSocialMediaUser')
+			router.push('/updateProfile')
 			toast.success(toastSuccessMessage.successRegisterMsg, { rtl: true, })
 		} else {
 			try {
@@ -76,8 +77,10 @@ export default function Login() {
 					type: 'IS_USER_INSTRUCTOR',
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
-				if (viewProfileData?.data.gender == null) {
-					router.push('/registerSocialMediaUser')
+				// if (viewProfileData?.data.gender == null) {
+				// 	router.push('/registerSocialMediaUser')
+				if (viewProfileData?.data.gender == null || viewProfileData?.data.gender == '') {
+					router.push('/updateProfile')
 				} else {
 					if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
 						router.push('/')

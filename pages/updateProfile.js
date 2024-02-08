@@ -24,6 +24,8 @@ const UpdateProfile = () => {
     const [fullNameError, setFullNameError] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(storeData?.viewProfileData?.phone?.replace('966', '0'));
     const [phoneNumberError, setPhoneNumberError] = useState(null);
+    const [isGenderError, setIsGenderError] = useState(null);
+
     const initialState = {
         fullName: storeData?.viewProfileData?.fullName,
         phoneNumber: storeData?.viewProfileData?.phone?.replace('966', '0'),
@@ -76,7 +78,10 @@ const UpdateProfile = () => {
         } else {
             setPhoneNumberError(null);
         }
-    }, [fullName, phoneNumber])
+        if (gender) {
+            setIsGenderError(null)
+        }
+    }, [fullName, phoneNumber, gender])
 
 
     const handleSubmit = async (event) => {
@@ -96,7 +101,12 @@ const UpdateProfile = () => {
         } else {
             setPhoneNumberError(null);
         }
-        if ((!phoneNumber || phoneNumberError) || (!fullName || fullNameError)) {
+        if (!gender) {
+            setIsGenderError(inputErrorMessages.genderErrorMsg);
+        } else {
+            setIsGenderError(null)
+        }
+        if ((!phoneNumber || phoneNumberError) || (!fullName || fullNameError) || (!gender || isGenderError)) {
             return
         }
         if (JSON.stringify(initialState) === JSON.stringify({ fullName, phoneNumber, gender })) {
@@ -179,7 +189,7 @@ const UpdateProfile = () => {
                                     </div>
                                     {phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>{inputErrorMessages.phoneNoFormateMsg}</p>}
                                 </div>
-                                <div className='w-full'>
+                                {/* <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
                                     <div className={styles.genderBtnBox} >
                                         <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
@@ -191,6 +201,20 @@ const UpdateProfile = () => {
                                             <span>أنثى</span>
                                         </button>
                                     </div>
+                                </div> */}
+                                <div className='w-full'>
+                                    <p className={styles.titleLabel}>الجنس</p>
+                                    <div className={`${styles.genderBtnBox} ${isGenderError && `${styles.inputErrorBox}`}`} >
+                                        <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
+                                            <AllIconsComponenet height={24} width={24} iconName={'newMaleIcon'} color={gender == "male" ? '#F26722 ' : '#808080'} />
+                                            <span>ذكر</span>
+                                        </button>
+                                        <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
+                                            <AllIconsComponenet height={24} width={24} iconName={'newFemaleIcon'} color={gender == "female" ? '#F26722 ' : '#808080'} />
+                                            <span>أنثى</span>
+                                        </button>
+                                    </div>
+                                    {isGenderError && <p className={styles.errorText}>{isGenderError}</p>}
                                 </div>
                                 <div className={styles.loginBtnBox}>
                                     <button className={`primarySolidBtn ${styles.updateProfileBtn}`} name="submit" type='submit'>{showLoader ? <Image src={loader} width={40} height={25} alt="Loder Picture" /> : ""} حفظ</button>
