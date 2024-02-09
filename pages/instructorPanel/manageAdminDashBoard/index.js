@@ -12,6 +12,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService';
 import Empty from '../../../components/CommonComponents/Empty';
 import dayjs from 'dayjs';
 import Spinner from '../../../components/CommonComponents/spinner';
+import * as PaymentConst from '../../../constants/PaymentConst';
 
 const Index = () => {
     const { RangePicker } = DatePicker;
@@ -39,17 +40,6 @@ const Index = () => {
         createOrderLineChartData();
     }, [dateRange])
 
-    const paymentStatusLabels = dashBoardData?.orderStats?.map((status, index) => {
-        const statusLabel = []
-        status.status === 'accepted' ? statusLabel.push('طلب مؤكد') :
-            status.status === 'new' ? statusLabel.push('طلب جديد') :
-                status.status === 'waiting' ? statusLabel.push('بانتظار الحوالة') :
-                    status.status === 'refund' ? statusLabel.push(' طلب مسترجع') :
-                        status.status === 'review' ? statusLabel.push('طلب ينتظرنا نراجعه') :
-                            status.status === 'failed' ? statusLabel.push('طلب مرفوض') :
-                                status.status === 'init' ? statusLabel.push('الشروع في') : statusLabel.push('آخر')
-        return statusLabel
-    })
     const onOpenChange = (open) => {
         if (open) {
             setDates([null, null]);
@@ -163,24 +153,30 @@ const Index = () => {
         // },
     ]
     const createOrderPieChartData = (data) => {
-        const result = data?.orderStats?.map(item => item.count);
-        const payMentStatuslabelColors = data?.orderStats?.map((status, index) => {
-            const statusColor = []
-            status.status === 'accepted' ? statusColor.push('#00A725') : //green
-                status.status === 'new' ? statusColor.push('#F4C20F') : //yellow
-                    status.status === 'waiting' ? statusColor.push('#AD00FF') : //purple
-                        status.status === 'refund' ? statusColor.push('#000000') : //black
-                            status.status === 'review' ? statusColor.push('#0039A7') : //blue
-                                status.status === 'failed' ? statusColor.push('#FF0000') : //red
-                                    status.status === 'init' ? statusColor.push('#F06A25') : //orange
-                                        statusColor.push('#000000')
-            return statusColor
-        })
-        const statusColorForPieChart = payMentStatuslabelColors?.flatMap((item) => item);
+        const orderStatusArray = [];
+        const filteredOrderStatusArray = data?.orderStats.filter(status => status.status !== 'failed'); //&& status.status !== 'init'
+        filteredOrderStatusArray?.forEach(order => {
+            if (order?.status === 'accepted') {
+                orderStatusArray.push({ label: 'طلب مؤكد', value: "accepted", color: "#00A725" }); //green
+            } else if (order?.status === 'init') {
+                orderStatusArray.push({ label: 'طلب جديد', value: "new", color: "#F4C20F" }); //yellow
+            } else if (order?.status === 'waiting') {
+                orderStatusArray.push({ label: 'بانتظار الحوالة', value: "waiting", color: "#AD00FF" }); //purple
+            } else if (order?.status === 'refund') {
+                orderStatusArray.push({ label: 'طلب مسترجع', value: "refunded", color: "#000000" }); //black
+            } else if (order?.status === 'review') {
+                orderStatusArray.push({ label: 'طلب ينتظر مراجعتنا', value: "review", color: "#0039A7" }); //blue
+            } else if (order?.status === 'rejected') {
+                orderStatusArray.push({ label: 'طلب مرفوض', value: "rejected", color: "#FF0000" }); //red
+            }
+        });
+        const result = filteredOrderStatusArray?.map(item => item.count);
+        const label = orderStatusArray.map(item => item.label);
+        const statusColorForPieChart = orderStatusArray.map(item => item.color);
         const orderDataForPieChart = {
             chartId: 'statusPieChart',
             context: '2d',
-            labels: paymentStatusLabels,
+            labels: label,
             datasets: {
                 data: result,
                 fill: false,
@@ -276,7 +272,7 @@ const Index = () => {
             chartId: 'lineChartForOrders',
             labels: labels,
             datasets: {
-                label: 'My First Dataset',
+                label: 'إجمالي الربح',
                 data: totalEarnings,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -295,8 +291,7 @@ const Index = () => {
         }
         return totalCount;
     }
-    const payMentStatuslabelColors = orderPieChart?.datasets?.backgroundColor?.map(color => [color])
-
+    const payMentStatuslabelColors = orderPieChart?.datasets?.backgroundColor
     return (
         <div className='maxWidthDefault px-4'>
             <div className='py-2'>
@@ -361,7 +356,7 @@ const Index = () => {
                                                             color={payMentStatuslabelColors[index]}
                                                         />
                                                         <p style={{ fontWeight: '500', fontSize: '20px' }} className='mx-2'>{data}</p>
-                                                        <p style={{ fontWeight: '500', fontSize: '20px' }}>{paymentStatusLabels[index]}</p> &nbsp;
+                                                        <p style={{ fontWeight: '500', fontSize: '20px' }}>{orderPieChart.labels[index]}</p> &nbsp;
                                                     </div>
                                                 ))}
                                             </div>

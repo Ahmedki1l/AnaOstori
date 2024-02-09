@@ -90,14 +90,14 @@ const Index = () => {
             labels: labels,
             datasets: [
                 {
-                    label: 'Number Of Girls',
+                    label: 'عدد البنات',
                     data: femaleCount,
                     backgroundColor: '#FED0EEB2',
                     borderColor: '#FED0EEB2',
                     borderWidth: 1
                 },
                 {
-                    label: ' Number Of Boys',
+                    label: 'عدد الشباب',
                     data: maleCount,
                     backgroundColor: '#D0E8FFB2',
                     borderColor: '#D0E8FFB2',

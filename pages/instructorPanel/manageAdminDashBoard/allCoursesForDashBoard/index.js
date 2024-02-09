@@ -115,14 +115,14 @@ const Index = () => {
             labels: labels,
             datasets: [
                 {
-                    label: 'Number Of Sales',
+                    label: 'إجمالي المبيعات',
                     data: totalEarnings,
                     backgroundColor: '#FED0EEB2',
                     borderColor: '#FED0EEB2',
                     borderWidth: 1
                 },
                 {
-                    label: ' Number Of Enrolled',
+                    label: 'عدد الاشتراكات',
                     data: totalEnrollment,
                     backgroundColor: '#D0E8FFB2',
                     borderColor: '#D0E8FFB2',
@@ -174,7 +174,7 @@ const Index = () => {
                 dataIndex: 'enrollmentCount',
             },
             {
-                title: 'تاريخ اخر تحديث',
+                title: 'تاريخ الإنشاء',
                 dataIndex: 'createdAt',
                 sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
                 render: (text, _date) => {
@@ -182,7 +182,7 @@ const Index = () => {
                 }
             },
             {
-                title: 'تاريخ انشاء الحساب',
+                title: 'اخر تعديل',
                 dataIndex: 'updatedAt',
                 sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
                 render: (text, _date) => {
