@@ -133,7 +133,7 @@ const Index = () => {
             chartId: 'lineChartForOrders',
             labels: labels,
             datasets: {
-                label: 'My First Dataset',
+                label: 'إجمالي الربح',
                 data: totalEarnings,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
