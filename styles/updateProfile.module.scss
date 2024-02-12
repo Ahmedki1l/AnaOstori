@@ -192,3 +192,15 @@
 		color: #E5342F;
 	}
 }
+
+.inputErrorBox {
+	border: 1px solid red;
+
+	button {
+		border-left: 1px solid red;
+	}
+
+	:last-child {
+		border-left: none;
+	}
+}

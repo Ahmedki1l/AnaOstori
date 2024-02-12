@@ -19,6 +19,10 @@ export default function Index() {
         <div className='maxWidthDefault'>
             <h1 className={`${styles.instructorName} fontBold`}> <span className='fontMedium'> حياك الله</span> {instructorName}</h1>
             <div className='flex flex-wrap p-4'>
+                <Link href={'/instructorPanel/manageAdminDashBoard'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={39} height={39} iconName='manageAdminOverView' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إحصائيات الموقع</p>
+                </Link>
                 <Link href={'/instructorPanel/manageCategories'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='manageCatagory' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وإدارة المجالات</p>

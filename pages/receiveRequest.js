@@ -1,11 +1,10 @@
 import styles from '../styles/ReceiveRequest.module.scss'
-import * as PaymentConst from '../constants/PaymentConst'
 import * as LinkConst from '../constants/LinkConst'
 import BankDetailsCard from '../components/CommonComponents/BankDetailCard/BankDetailsCard';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
-
+import * as PaymentConst from '../constants/PaymentConst'
 
 
 

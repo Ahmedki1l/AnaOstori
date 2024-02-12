@@ -138,6 +138,12 @@ import StarDoubleColoredIcon from './customeIcons/starDoubleColoredIcon'
 import PersonDoubleColoredIcon from './customeIcons/personDoubleColoredIcon'
 import UploadDataIcon from './customeIcons/uploadDataIcon'
 import NewFilterIcon from './customeIcons/newFilterIcon'
+import ManageAdminOverView from './customeIcons/manageAdminOverView'
+import NewMaleFemaleIcon from './customeIcons/newMaleFemaleIcon'
+import DollarIcon from './customeIcons/dollarIcon'
+import FailedEmojiIcon from './customeIcons/failedEmojiIcon'
+import BookIcon from './customeIcons/bookIcon'
+import RectangleBox from './customeIcons/rectangleBox'
 
 
 
@@ -225,6 +231,10 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'dropMenuIcon' && <DropMenuIcon height={height} width={width} color={color} />}
 			{iconName == 'uploadDataIcon' && <UploadDataIcon height={height} width={width} color={color} />}
 
+			{iconName == 'dollarIcon' && <DollarIcon height={height} width={width} color={color} />}
+			{iconName == 'failedEmojiIcon' && <FailedEmojiIcon height={height} width={width} color={color} />}
+			{iconName == 'bookIcon' && <BookIcon height={height} width={width} color={color} />}
+			{iconName == 'rectangleBox' && <RectangleBox height={height} width={width} color={color} />}
 
 			{iconName == 'visaPayment' && <VisaPayment height={height} width={width} color={color} />}
 			{iconName == 'masterCardPayment' && <MasterCardPayment height={height} width={width} color={color} />}
@@ -233,7 +243,7 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'applePayment' && <ApplePayment height={height} width={width} color={color} />}
 			{iconName == 'inAppPurchaseIcon' && <InAppPurchaseIcon height={height} width={width} color={color} />}
 
-
+			{iconName == 'manageAdminOverView' && <ManageAdminOverView height={height} width={width} color={color} />}
 			{iconName == 'manageCatagory' && <ManageCatagory height={height} width={width} color={color} />}
 			{iconName == 'manageCourse' && <ManageCourse height={height} width={width} color={color} />}
 			{iconName == 'manageLibrary' && <ManageLibrary height={height} width={width} color={color} />}
@@ -264,6 +274,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newSettingIcon' && <NewSettingIcon height={height} width={width} color={color} />}
 			{iconName == 'newLogOutIcon' && <NewLogOutIcon height={height} width={width} color={color} />}
 			{iconName == 'newFilterIcon' && <NewFilterIcon height={height} width={width} color={color} />}
+			{iconName == 'newMaleFemaleIcon' && <NewMaleFemaleIcon height={height} width={width} color={color} />}
+
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
 			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}
