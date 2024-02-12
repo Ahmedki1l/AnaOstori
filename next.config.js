@@ -13,18 +13,18 @@ const nextConfig = {
   },
 
   //PROD CONFIG
-  // env: {
-  //    API_BASE_URL: "https://fxhu44o7ua.execute-api.eu-central-1.amazonaws.com",
-  //    NEXT_PUBLIC_API_BASE_URL: "https://fxhu44o7ua.execute-api.eu-central-1.amazonaws.com",
-  //    NEXT_PUBLIC_APPLE_MERCHENT_ID: "merchant.com.anaostori"
-  //  },
+   env: {
+      API_BASE_URL: "https://fxhu44o7ua.execute-api.eu-central-1.amazonaws.com",
+      NEXT_PUBLIC_API_BASE_URL: "https://fxhu44o7ua.execute-api.eu-central-1.amazonaws.com",
+      NEXT_PUBLIC_APPLE_MERCHENT_ID: "merchant.com.anaostori"
+    },
 
   //DEV CONFIG
-  env: {
-    API_BASE_URL: "https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com",
-    NEXT_PUBLIC_API_BASE_URL: "https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com",
-    NEXT_PUBLIC_APPLE_MERCHENT_ID: "merchant.com.anaostori"
-  },
+  //env: {
+   // API_BASE_URL: "https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com",
+   // NEXT_PUBLIC_API_BASE_URL: "https://yts36bs5s8.execute-api.eu-central-1.amazonaws.com",
+   // NEXT_PUBLIC_APPLE_MERCHENT_ID: "merchant.com.anaostori"
+ // },
   async headers() {
     return [
       {
