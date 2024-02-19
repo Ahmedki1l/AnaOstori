@@ -77,6 +77,9 @@ export default function Index() {
     }, [courseId]);
 
     useEffect(() => {
+        if (router.query.selectedTab) {
+            router.query.selectedTab && setSelectedItem(router.query.selectedTab)
+        }
         setTabShown({
             firstTab: (router?.query?.courseActions != "appointments" ? true : false),
             secondTab: (router?.query?.courseActions == "editCourse" ? true : false),

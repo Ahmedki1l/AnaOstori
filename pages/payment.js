@@ -9,6 +9,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
 import { mediaUrl } from '../constants/DataManupulation';
 import { useDispatch } from 'react-redux';
+import { VerifyPaymentConst } from '../constants/verifyPaymentConst';
 
 
 
@@ -68,37 +69,83 @@ export default function Payment(props) {
             setLoading(false)
         })
     }
-
+    const courseType = transactionDetails[0]?.orderDetails?.courseType;
+    console.log(transactionDetails);
+    const handleFillInformation = () => {
+        router.push({
+            pathname: (`/studentInformation`),
+            query: {
+                courseId: transactionDetails[0]?.orderDetails?.courseId,
+                courseType: transactionDetails[0]?.orderDetails?.courseType,
+            }
+        })
+    }
     return (
         <>
             {loading ?
                 <div>
                     <div className={`relative ${styles.mainArea}`}>
                         <Spinner borderwidth={7} width={6} height={6} />
-                        <h1 style={{ textAlign: 'center' }}>بنتحقق من عملية الدفع</h1>
-                        <h3 style={{ textAlign: 'center', padding: '0 1rem' }}> لا تقفل أو تحدث الصفحة عشان ما تفشل العملية</h3>
+                        <h1 style={{ textAlign: 'center' }}>{VerifyPaymentConst.paymentProcessConst}</h1>
+                        <h3 style={{ textAlign: 'center', padding: '0 1rem' }}>{VerifyPaymentConst.doNotRefreshPageConst}</h3>
                     </div>
                 </div>
                 :
                 <>
                     {(transactionDetails && isPaymentSuccess && invoiceUrl) ?
                         <div className={`maxWidthDefault ${styles.mainArea}`}>
-                            <div className='m-5'>
-                                <div className={styles.circle}>
-                                    <AllIconsComponenet iconName={'checkCircleRoundIcon'} height={40} width={35} color={'#FFFFFF'} />
+                            <div className={styles.paymentSuccessArea}>
+                                <div className='m-5'>
+                                    <div className={styles.circle}>
+                                        <AllIconsComponenet iconName={'checkCircleRoundIcon'} height={40} width={35} color={'#FFFFFF'} />
+                                    </div>
+                                </div>
+                                <h1 className={`head1 `}>{VerifyPaymentConst.paymentProcessCompletedConst}</h1>
+                                {courseType === 'on-demand' ?
+                                    <p className={`fontMedium text-lg p-2`}>{VerifyPaymentConst.invoiceSendWhatsAppText}</p>
+                                    :
+                                    <>
+                                        <p className={`fontMedium text-lg p-2`}>{VerifyPaymentConst.contactAsOnWhatsAppConstText1}</p>
+                                        <p className={`fontMedium text-lg p-2`}>{VerifyPaymentConst.contactAsOnWhatsAppConstText2}</p>
+                                    </>
+                                }
+                                <div className={styles.subsciptionInfoArea}>
+                                    <div className='flex'>
+                                        <div className='mt-3'>
+                                            <AllIconsComponenet height={20} width={20} iconName={'informationIcon'} color={'#1C26FF'} />
+                                        </div>
+                                        <p className={`fontMedium text-lg p-2`}>{VerifyPaymentConst.subsciptionInformationConst}</p>
+                                    </div>
+                                </div>
+                                <div className={styles.paymentSuccessBtnWrapper}>
+                                    {/* <Link href={'/studentInformation'} className={`${styles.btnsBox} no-underline`}>
+                                        <button className='primarySolidBtn flex justify-center items-center'>
+                                            {VerifyPaymentConst.fillInformationBtnText}
+                                        </button>
+                                    </Link> */}
+                                    <div className={`${styles.btnsBox}`} onClick={() => handleFillInformation()}>
+                                        <button className='primarySolidBtn flex justify-center items-center'>
+                                            {VerifyPaymentConst.fillInformationBtnText}
+                                        </button>
+                                    </div>
+                                    {courseType === 'on-demand' ?
+                                        <Link href={'/myProfile'} className={`${styles.btnsBox} no-underline`}>
+                                            <button className='primaryStrockedBtn flex justify-center items-center'>
+                                                {VerifyPaymentConst.watchCourseContentConst}
+                                            </button>
+                                        </Link>
+                                        :
+                                        <Link target={'_blank'} href={invoiceUrl || ''} className={`${styles.btnsBox} no-underline`}>
+                                            <button className='primaryStrockedBtn flex justify-center items-center'>
+                                                <div className='pl-2' style={{ height: '1.5rem' }}>
+                                                    <AllIconsComponenet height={24} width={24} iconName={'newDownloadIcon'} color={'#F26722'} />
+                                                </div>
+                                                {VerifyPaymentConst.downloadInvoiceBtnText}
+                                            </button>
+                                        </Link>
+                                    }
                                 </div>
                             </div>
-                            <h1 className={`head1 ${styles.pageHeader}`}>شكرا لك، اكتملت عملية الشراء</h1>
-                            <p className={`fontMedium ${styles.note1}`}> فريق الدعم راح يتواصل معك ويضيفك في قروب واتس الدورة في أقرب وقت. إذا احتجت مساعدة تواصل معنا على  <Link href={whatsAppLink} className='link'>الواتساب</Link></p>
-                            <p className={`fontMedium ${styles.note2}`}>رسلنا الفاتورة على الواتساب وعلى الايميل. وتقدر تشوفها ايضا من <Link href={'/purchaseInquiry'} className='link'>صفحة استعلام وتأكيد الحجوزات</Link>.</p>
-                            <Link target='_blank' href={invoiceUrl || ''} className={`${styles.btnsBox} no-underline`}>
-                                <button className='primarySolidBtn flex justify-center items-center'>
-                                    <div className='pl-2'>
-                                        <AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#FFFFFF'} />
-                                    </div>
-                                    تحميل الفاتورة
-                                </button>
-                            </Link>
                         </div>
                         :
                         <div className={`maxWidthDefault ${styles.mainArea}`}>

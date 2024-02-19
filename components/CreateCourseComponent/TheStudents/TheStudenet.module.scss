@@ -1,7 +1,7 @@
 @import "../../../styles/variables.module.scss";
 
 .tableArea {
-    width: 1020px;
+    // width: 1020px;
     border-collapse: collapse;
 }
 
@@ -12,11 +12,6 @@
     font-size: 20px;
     width: 100%;
     border-collapse: separate;
-}
-
-.tableBodyArea {
-    width: 100%;
-    border-radius: 0px 0px 4px 4px;
 }
 
 .tableRow {
@@ -44,19 +39,27 @@
 }
 
 .tableHead2 {
-    width: 20%;
+    width: 15%;
 }
 
 .tableHead3 {
-    width: 20%;
+    width: 25%;
 }
 
 .tableHead4 {
-    width: 20%;
+    width: 15%;
 }
 
 .tableHead5 {
+    width: 15%;
+}
+
+.tableHead6 {
     width: 20%;
+}
+
+.studentInfoTableHead {
+    width: 11%;
 }
 
 .progressbar {
@@ -116,20 +119,14 @@
     width: 20%;
 }
 
-.studentTableHead2 {
-    width: 15%;
-}
-
-.studentTableHead3 {
-    width: 15%;
-}
-
-.studentTableHead4 {
-    width: 20%;
-}
-
-.studentTableHead5 {
-    width: 40%;
+.studentTableRow {
+    td {
+        font-size: 18px;
+        padding: 0.5rem 1rem;
+        text-align: center;
+        border: 0.7px solid #c3c3c3;
+        border-top: none;
+    }
 }
 
 .studentDetailsSave {
@@ -150,7 +147,7 @@
 }
 
 .tableBodyArea {
-    width: 1020px;
+    // width: 1020px;
     border: 0.7px solid #c3c3c3;
     border-top: none;
     border-radius: 0px 0px 4px 4px;

@@ -123,7 +123,7 @@ const ManegeUserListDrawer = ({
                     enrollment.availabilityId !== updatedEnrollment.availabilityId)
             );
         });
-        if (updatedEnrolledCourseList?.length > 0) {
+        if (!newEnrolledCourseList && updatedEnrolledCourseList?.length > 0) {
             let updateAPIBody = {
                 routeName: 'updateAdminEnroll',
                 data: updatedEnrolledCourseList

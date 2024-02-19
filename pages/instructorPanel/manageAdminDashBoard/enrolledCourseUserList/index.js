@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import BackToPath from '../../../../components/CommonComponents/BackToPath';
 import styles from '../../../../styles/InstructorPanelStyleSheets/ManageAdminOverView.module.scss'
 import { ConfigProvider, DatePicker, Drawer } from 'antd';
 import CustomOrderListComponent from '../../../../components/CommonComponents/CustomOrderListComponent/CustomOrderListComponent';
 import ComponentForBarChart from '../../../../components/CommonComponents/ComponentForBarChart/ComponentForBarChart';
-import { useQuery } from 'react-query';
 import { postRouteAPI } from '../../../../services/apisService';
 import ProfilePicture from '../../../../components/CommonComponents/ProfilePicture';
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
@@ -16,7 +15,7 @@ import Spinner from '../../../../components/CommonComponents/spinner';
 import * as PaymentConst from '../../../../constants/PaymentConst';
 import dayjs from 'dayjs';
 import { getNewToken } from '../../../../services/fireBaseAuthService';
-import { get } from 'jquery';
+import Empty from '../../../../components/CommonComponents/Empty';
 
 const DrawerTiitle = styled.p`
     font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -28,14 +27,16 @@ const Index = () => {
     const { genders } = PaymentConst.genders
     const [dates, setDates] = useState(null);
     const [userList, setUserList] = useState([]);
-    const [userListForGraph, setUserListForGraph] = useState()
     const [drawerForUsers, setDrawerForUsers] = useState(false);
     const [dataOfBarChart, setDataOfBarChart] = useState()
     const [selectedUser, setSelectedUser] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [loaderForGraph, setLoaderForGraph] = useState()
+    const [selectedDate, setSelectedDate] = useState()
     const [dateRange, setDateRange] = useState({
         startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().format('YYYY-MM-DD')
+        endDate: dayjs().subtract(1, 'day').format('YYYY-MM-DD')
     })
     const disabledDate = (current) => {
         return current > dayjs().endOf('day');
@@ -46,12 +47,15 @@ const Index = () => {
         pageSize: 10,
     })
     useEffect(() => {
-        // getGraphDataOfUsers.refetch()
-        getAdminUserList.refetch()
-        if (userList.length > 0) {
-            createGraphForUserDashboard()
+        if (dateRange !== null) {
+            getUserListData()
+        } else {
+            setUserList([])
         }
-        setCurrentPage(1)
+    }, [dateRange, currentPage])
+
+    useEffect(() => {
+        getGraphDataOfUsers()
     }, [dateRange])
 
     const onOpenChange = (open) => {
@@ -69,21 +73,69 @@ const Index = () => {
                 startDate: startDate,
                 endDate: endDate
             });
+            setCurrentPage(1)
+            setSelectedDate(val)
         } else {
             setDateRange(null);
+            setSelectedDate(null)
         }
     };
 
     const createGraphForUserDashboard = (data) => {
+        const selectedStartDate = dateRange?.startDate;
+        const selectedEndDate = dateRange?.endDate;
         const labels = [];
         const maleCount = [];
         const femaleCount = [];
-        if (data && data.length > 0) {
-            data.forEach((item) => {
-                labels.push(item.date);
-                maleCount.push(item.maleCount);
-                femaleCount.push(item.femaleCount);
-            });
+        const dateArray = [];
+        // ----------- working without filtering date   ----------------
+
+        // const sortedDate = data?.sort((a, b) => new Date(a.date) - new Date(b.date))
+        // if (sortedDate && sortedDate.length > 0) {
+        //     sortedDate.forEach((item) => {
+        //         labels.push(item.date);
+        //         maleCount.push(item.maleCount);
+        //         femaleCount.push(item.femaleCount);
+        //     });
+        // }
+        if (selectedDate === undefined) {
+            for (let i = 0; i < 7; i++) {
+                console.log("week days");
+                const currentDate = dayjs(selectedStartDate).add(i, 'day').format('YYYY-MM-DD');
+                const foundData = data.find(item => item.date === currentDate) || { maleCount: 0, femaleCount: 0 };
+                labels.push(currentDate);
+                maleCount.push(foundData.maleCount);
+                femaleCount.push(foundData.femaleCount);
+            }
+        }
+        else if (selectedDate !== undefined) {
+            if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') < 91) {
+                console.log("monthly  date");
+                for (let i = 0; i < dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') + 1; i++) {
+                    const currentDate = dayjs(selectedStartDate).add(i, 'day').format('YYYY-MM-DD');
+                    const foundData = data.find(item => item.date === currentDate) || { maleCount: 0, femaleCount: 0 };
+                    labels.push(currentDate);
+                    maleCount.push(foundData.maleCount);
+                    femaleCount.push(foundData.femaleCount);
+                }
+            }
+            if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 90) {
+                console.log("greater then 90 days");
+                const monthlyCounts = {};
+                data.forEach(item => {
+                    const month = dayjs(item.date).format('YYYY-MM');
+                    monthlyCounts[month] = {
+                        maleCount: (monthlyCounts[month]?.maleCount || 0) + item.maleCount,
+                        femaleCount: (monthlyCounts[month]?.femaleCount || 0) + item.femaleCount
+                    };
+                });
+                const sortedMonths = Object.keys(monthlyCounts).sort(); // sort by month
+                sortedMonths.forEach(month => {
+                    labels.push(month);
+                    maleCount.push(monthlyCounts[month].maleCount);
+                    femaleCount.push(monthlyCounts[month].femaleCount);
+                });
+            }
         }
         const dataForEnrolledUserListChart = {
             chartId: 'barChartForCourse',
@@ -123,51 +175,46 @@ const Index = () => {
         setDataOfBarChart(dataForEnrolledUserListChart)
     }
 
-    const { getGraphDataOfUsers, isLoading, isError } = useQuery(
-        ['getGraphDataOfUsers', dateRange?.startDate, dateRange?.endDate],
-        async () => {
-            try {
-                const newData = {
-                    routeName: "userList",
-                    graphData: true
-                }
-                if (dateRange !== null) {
-                    newData.startDate = dateRange?.startDate
-                    newData.endDate = dateRange?.endDate
-                }
-                const response = await postRouteAPI(newData);
-                setUserListForGraph(response?.data?.graphData)
-                createGraphForUserDashboard(response?.data?.graphData)
-            }
-            catch (error) {
-                if (error.response.status === 401) {
-                    await getNewToken().then(async () => {
-                        const response = await postRouteAPI(newData);
-                        setUserListForGraph(response?.data?.graphData)
-                        createGraphForUserDashboard(response?.data?.graphData)
-                    });
-                }
-                console.error('Error getting data:', error);
-                throw error;
-            }
+    const getGraphDataOfUsers = async () => {
+        setLoaderForGraph(true)
+        let newData = {
+            routeName: 'userList',
+            graphData: true
         }
-    )
+        if (dateRange !== null) {
+            newData.startDate = dateRange?.startDate,
+                newData.endDate = dateRange?.endDate
+        }
+        await postRouteAPI(newData).then((res) => {
+            setLoaderForGraph(false)
+            createGraphForUserDashboard(res?.data?.graphData)
+        }).catch(async (error) => {
+            setLoaderForGraph(false)
+            if (error?.response?.status === 401) {
+                await getNewToken().then(async () => {
+                    await postRouteAPI(newData).then((res) => {
+                        setLoaderForGraph(false)
+                        createGraphForUserDashboard(res?.data?.graphData)
+                    })
+                });
+            }
+            console.error('Error getting data:', error);
+        })
+    }
 
-    const getAdminUserList = useQuery(
-        ['getAdminUserList', currentPage, dateRange?.startDate, dateRange?.endDate],
-        async () => {
-            try {
-                const newData = {
-                    routeName: "userList",
-                    page: currentPage,
-                    limit: 10,
-                    order: "createdAt DESC",
-                }
-                if (dateRange !== null) {
-                    newData.startDate = dateRange.startDate
-                    newData.endDate = dateRange.endDate
-                }
-                const response = await postRouteAPI(newData);
+    const getUserListData = async () => {
+        setLoading(true)
+        if (dateRange !== null) {
+            let data = {
+                routeName: "userList",
+                page: currentPage,
+                limit: 10,
+                order: "createdAt DESC",
+                startDate: dateRange.startDate,
+                endDate: dateRange.endDate
+            }
+            await postRouteAPI(data).then((response) => {
+                setLoading(false)
                 setPaginationConfig((prevConfig) => ({
                     ...prevConfig,
                     total: response.data.totalItems,
@@ -180,31 +227,20 @@ const Index = () => {
                     }
                 });
                 setUserList(userList);
-            }
-            catch (error) {
+            }).catch(async (error) => {
                 if (error.response.status === 401) {
                     await getNewToken().then(async () => {
-                        const response = await postRouteAPI(newData);
-                        setPaginationConfig((prevConfig) => ({
-                            ...prevConfig,
-                            total: response.data.totalItems,
-                            current: response.data.currentPage,
-                        }));
-                        const userList = response.data.data.map((item) => {
-                            return {
-                                ...item,
-                                key: item.id
-                            }
-                        });
-                        setUserList(userList);
+                        await postRouteAPI(newData).then((res) => {
+                            setLoaderForGraph(false)
+                            createGraphForUserDashboard(res?.data?.graphData)
+                        })
                     });
                 }
+                setLoading(false)
                 console.error('Error getting data:', error);
-                throw error;
-            }
+            })
         }
-    )
-
+    }
     const data = {
         tableColumns: [
             {
@@ -339,10 +375,41 @@ const Index = () => {
     const onClose = () => {
         setDrawerForUsers(false);
         setCurrentPage(currentPage)
-        getAdminUserList.refetch()
+        getUserListData()
     };
-    const getUserList = () => {
-        getAdminUserList.refetch()
+    const getUserListForDrawer = () => {
+        getUserListData()
+    }
+
+    const renderContent = () => {
+        if (dateRange === null) {
+            return (
+                <div>
+                    <Empty buttonText={'إضافة مجال'} emptyText={'ما أضفت مجال'} containerhight={600} />
+                </div>
+            );
+        } else {
+            return (
+                loaderForGraph ?
+                    <div className='flex justify-center items-center h-80'>
+                        <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+                    </div>
+                    :
+                    <div style={{ width: '100%' }}>
+                        <div className={`${styles.graphWrapper}`}>
+                            {dataOfBarChart && <ComponentForBarChart data={dataOfBarChart} />}
+                        </div>
+                        {
+                            loading ?
+                                <div className='flex justify-center items-center h-80'>
+                                    <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+                                </div>
+                                :
+                                <CustomOrderListComponent data={data} />
+                        }
+                    </div>
+            );
+        }
     }
     return (
         <div className='maxWidthDefault px-4'>
@@ -362,7 +429,8 @@ const Index = () => {
                 <RangePicker
                     disabledDate={disabledDate}
                     height={40}
-                    defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
+                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
+                    defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
                     onCalendarChange={(val) => {
                         setDates(val);
                     }}
@@ -375,23 +443,7 @@ const Index = () => {
                     placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                 />
             </div>
-            {isLoading ?
-                <div className='flex justify-center items-center h-80'>
-                    <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
-                </div>
-                : <div style={{ width: '100%' }}>
-                    <div className={`${styles.graphWrapper}`}>
-                        {dataOfBarChart && <ComponentForBarChart data={dataOfBarChart} />}
-                    </div>
-                </div>
-            }
-            {getAdminUserList.isFetching ?
-                <div className='flex justify-center items-center h-80'>
-                    <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
-                </div>
-                :
-                <CustomOrderListComponent data={data} />
-            }
+            {renderContent()}
             <ConfigProvider direction="rtl">
                 {drawerForUsers &&
                     <Drawer
@@ -410,7 +462,7 @@ const Index = () => {
                             selectedUserDetails={selectedUser}
                             setDrawerForUsers={setDrawerForUsers}
                             currentPage={currentPage}
-                            getUserList={getUserList}
+                            getUserList={getUserListForDrawer}
                         />
                     </Drawer>
                 }
@@ -420,3 +472,29 @@ const Index = () => {
 }
 
 export default Index
+
+
+// const renderContent = () => {
+//     if (loaderForGraph || loading) {
+//         return (
+//             <div className='flex justify-center items-center h-80'>
+//                 <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+//             </div>
+//         );
+//     } else if (userList.length === 0) {
+//         return (
+//             <div>
+//                 <Empty buttonText={'إضافة مجال'} emptyText={'ما أضفت مجال'} containerhight={600} />
+//             </div>
+//         );
+//     } else {
+//         return (
+//             <div style={{ width: '100%' }}>
+//                 <div className={`${styles.graphWrapper}`}>
+//                     {dataOfBarChart && <ComponentForBarChart data={dataOfBarChart} />}
+//                 </div>
+//                 <CustomOrderListComponent data={data} />
+//             </div>
+//         );
+//     }
+// };

@@ -21,6 +21,15 @@ import { studentsExamsConst } from '../../../constants/adminPanelConst/studentsE
 import { useRouter } from 'next/router'
 import Spinner from '../../CommonComponents/spinner'
 
+const accountFoundFromList = [
+    { value: '1', label: 'الأصدقاء', value: 'friends' },
+    { value: '2', label: 'الأهل', value: 'parents' },
+    { value: '3', label: 'إعلان سناب', value: 'snap_ad' },
+    { value: '4', label: 'إعلان إنستقرام', value: 'instagram_ad' },
+    { value: '5', label: 'إعلان تويتر', value: 'twitter_ad' },
+    { value: '6', label: 'إعلان تيك توك', value: 'tiktok_ad' },
+]
+
 const TheStudent = (props) => {
     const [showStudentDetails, setShowStudentDetails] = useState(false)
     const [allStudentDetails, setAllStudentDetails] = useState([])
@@ -35,6 +44,9 @@ const TheStudent = (props) => {
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const router = useRouter()
     const [showLoader, setShowLoader] = useState(false)
+    const [showStudentInfo, setShowStudentInfo] = useState(false)
+    const [showSelectedStudentInfo, setShowSelectedStudentInfo] = useState()
+
     useEffect(() => {
         if (router.query.availabilityId == undefined && courseType != 'onDemand')
             return
@@ -152,38 +164,6 @@ const TheStudent = (props) => {
             })
         }
     }
-
-    const showSelectedStudentExamDetails = (student) => {
-        setShowStudentDetails(true)
-        const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems.map((quiz, index) => {
-            return {
-                key: quiz.id,
-                quizId: quiz.id,
-                quizName: quiz.name,
-                grade: undefined,
-                note: undefined,
-                present: undefined,
-                absent: undefined,
-                old: false
-            }
-        })
-
-        const completedQuizItems = student?.userProfile.quizExams.map((quiz, index) => {
-            return {
-                key: quiz.item.id,
-                quizId: quiz.item.id,
-                quizName: quiz.item.name,
-                grade: quiz.grade,
-                note: quiz.note,
-                present: quiz.pass == true ? true : false,
-                absent: quiz.pass == false ? true : false,
-                old: true
-            }
-        })
-        setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
-        setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
-        setSelectedStudent(student)
-    }
     const getAllStudentList = async (id) => {
         setShowLoader(true)
         let data = {
@@ -239,10 +219,62 @@ const TheStudent = (props) => {
         }
         setExamList(tempStudentExamList)
     }
+    const showSelectedStudentExamDetails = (student) => {
+        setShowStudentDetails(true)
+        const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems.map((quiz, index) => {
+            return {
+                key: quiz.id,
+                quizId: quiz.id,
+                quizName: quiz.name,
+                grade: undefined,
+                note: undefined,
+                present: undefined,
+                absent: undefined,
+                old: false
+            }
+        })
+
+        const completedQuizItems = student?.userProfile.quizExams.map((quiz, index) => {
+            return {
+                key: quiz.item.id,
+                quizId: quiz.item.id,
+                quizName: quiz.item.name,
+                grade: quiz.grade,
+                note: quiz.note,
+                present: quiz.pass == true ? true : false,
+                absent: quiz.pass == false ? true : false,
+                old: true
+            }
+        })
+        setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
+        setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
+        setSelectedStudent(student)
+    }
+
+    const showSelectedStudentInformation = (student, courseId) => {
+        setShowStudentInfo(true);
+        const studentInfoBasedOnCoursed = student?.userProfile?.studentInformations.length > 0 && student?.userProfile?.studentInformations.find(info => info.courseId === router.query.courseId);
+        if (studentInfoBasedOnCoursed) {
+            const studentInfo = {
+                phone: student?.userProfile?.phone,
+                email: student?.userProfile?.email,
+                schoolLevel: studentInfoBasedOnCoursed?.schoolLevel,
+                examResult: studentInfoBasedOnCoursed?.examResult,
+                examDate: studentInfoBasedOnCoursed?.examDate ? fullDate(studentInfoBasedOnCoursed?.examDate) : '-',
+                city: studentInfoBasedOnCoursed?.city,
+                schoolName: studentInfoBasedOnCoursed?.schoolName,
+                parentNumber: studentInfoBasedOnCoursed?.parentNumber,
+                reference: JSON.parse(studentInfoBasedOnCoursed?.reference).join(', ')
+            };
+            setShowSelectedStudentInfo(studentInfo);
+        } else {
+            setShowSelectedStudentInfo();
+        }
+    }
 
     return (
         <div className='maxWidthDefault px-4'>
-            {!showStudentDetails &&
+            {(!showStudentDetails && !showStudentInfo) &&
                 <div>
                     <Form form={studentDetailsForm}>
                         {courseType == 'online' &&
@@ -275,8 +307,9 @@ const TheStudent = (props) => {
                                         <th className={styles.tableHead1}>اسم الطالب</th>
                                         <th className={styles.tableHead2}>رقم الجوال</th>
                                         <th className={styles.tableHead3}>الايميل</th>
-                                        <th className={styles.tableHead4}>نتائج الاختبارات</th>
-                                        <th className={styles.tableHead5}>تاريخ الاشتراك</th>
+                                        <th className={styles.tableHead4}>بيانات الاشتراك</th>
+                                        <th className={styles.tableHead5}>نتائج الاختبارات</th>
+                                        <th className={styles.tableHead6}>تاريخ الاشتراك</th>
                                     </tr>
                                 </thead>
                                 <tbody className={styles.tableBodyArea}>
@@ -297,6 +330,7 @@ const TheStudent = (props) => {
                                                     <Link className='link' target={'_blank'} href={`https://api.whatsapp.com/send/?phone=${student?.userProfile?.phone}&text&type=phone_number&app_absent=0`}>{student?.userProfile?.phone}</Link>
                                                 </td>
                                                 <td>{student?.userProfile?.email}</td>
+                                                <td className={`${styles.examText} link`} onClick={() => showSelectedStudentInformation(student)}>عرض البيانات</td>
                                                 <td className={`${styles.examText} link`} onClick={() => showSelectedStudentExamDetails(student)}>مشاهدة الدرجات</td>
                                                 <td>{fullDate(student?.userProfile?.createdAt)}</td>
                                             </tr>
@@ -318,12 +352,12 @@ const TheStudent = (props) => {
                     }
                 </div>
             }
-            {showStudentDetails &&
+            {(showStudentDetails && !showStudentInfo) &&
                 <div>
                     <div className={styles.studentDetailsTable}>
                         <p className={`${styles.studentDetails}`} onClick={() => setShowStudentDetails(false)}> الطلاب </p>
                         <p className='pl-2'>{'>'}</p>
-                        <p className={styles.examResultsForStudents}>درجات الطالب {selectedStudent.userProfile.fullName}</p>
+                        <p className={styles.examResultsForStudents}>درجات الطالب {selectedStudent?.userProfile?.fullName}</p>
                     </div>
                     <div>
                         <table className={styles.studentTableArea}>
@@ -337,9 +371,9 @@ const TheStudent = (props) => {
                                 </tr>
                             </thead>
                             <tbody className={styles.studentTableBodyArea}>
-                                {examList.map((exam, index) => {
+                                {examList?.map((exam, index) => {
                                     return (
-                                        <tr className={styles.studentTableRow} key={exam.id}>
+                                        <tr className={styles.studentTableRow} key={`studentExamTable ${index}`}>
                                             <td>{exam.quizName}</td>
                                             <td>
                                                 <Input
@@ -361,7 +395,6 @@ const TheStudent = (props) => {
                                                     <AllIconsComponenet iconName={exam.absent == true ? 'absent' : 'circleicon'} height={34} width={34} color={'#D9D9D9'} />
                                                 </div>
                                             </td>
-
                                             <td>
                                                 <Input
                                                     fontSize={16}
@@ -381,7 +414,66 @@ const TheStudent = (props) => {
                     </div>
                 </div>
             }
-            {showStudentDetails &&
+            {showStudentInfo &&
+                <div>
+                    <div className={styles.studentDetailsTable}>
+                        <p className={`${styles.studentDetails}`} onClick={() => setShowStudentInfo(false)}>بيانات </p>
+                        <p className='pl-2'>{'>'}</p>
+                        <p className={styles.examResultsForStudents}>بيانات الطالب {selectedStudent?.userProfile?.fullName}</p>
+                    </div>
+                    <table className={`mt-4 ${styles.tableArea} `}>
+                        <thead className={styles.tableHeaderArea}>
+                            <tr>
+                                <th className={styles.studentInfoTableHead}>رقم الجوال</th>
+                                <th className={styles.studentInfoTableHead}>الايميل</th>
+                                <th className={styles.studentInfoTableHead}>المرحلة الدراسية</th>
+                                <th className={styles.studentInfoTableHead}>درجة الطالب</th>
+                                <th className={styles.studentInfoTableHead}>موعد الاختبار</th>
+                                <th className={styles.studentInfoTableHead}>المدينة</th>
+                                <th className={styles.studentInfoTableHead}>المدرسة</th>
+                                <th className={styles.studentInfoTableHead}>رقم ولي الأمر</th>
+                                <th className={styles.studentInfoTableHead}>من وين عرفنا</th>
+                            </tr>
+                        </thead>
+                        {showSelectedStudentInfo &&
+                            <tbody className={styles.studentTableBodyArea}>
+                                <tr className={styles.studentTableRow}>
+                                    <td> {showSelectedStudentInfo?.phone}</td>
+                                    <td>{showSelectedStudentInfo?.email}</td>
+                                    <td>{showSelectedStudentInfo?.schoolLevel}</td>
+                                    <td>{showSelectedStudentInfo?.examResult}</td>
+                                    <td>{showSelectedStudentInfo?.examDate}</td>
+                                    <td>{showSelectedStudentInfo?.city}</td>
+                                    <td>{showSelectedStudentInfo?.schoolName}</td>
+                                    <td>{showSelectedStudentInfo?.parentNumber}</td>
+                                    <td>
+                                        {accountFoundFromList.filter((item) =>
+                                            showSelectedStudentInfo?.reference?.includes(item.value)).map((item, index) => {
+                                                return (
+                                                    <div key={index}>
+                                                        <p>{item.label}</p>
+                                                    </div>
+                                                )
+                                            })}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                    {displayedStudentList?.length == 0 || !showSelectedStudentInfo &&
+                        <div className={styles.tableBodyArea}>
+                            <div className={styles.noDataManiArea} >
+                                <div className='flex columns items-center flex-col'>
+                                    <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
+                                    <p className='fontBold py-2' style={{ fontSize: '18px' }}>{!showSelectedStudentInfo ? 'no Data Available' : 'ما أنشئت أي موعد'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            {
+                showStudentDetails &&
                 <div className='pt-5'>
                     <CustomButton
                         btnText='حفظ'
@@ -393,7 +485,7 @@ const TheStudent = (props) => {
                     />
                 </div>
             }
-        </div>
+        </div >
     )
 }
 
