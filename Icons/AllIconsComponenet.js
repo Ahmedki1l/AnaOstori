@@ -144,6 +144,8 @@ import DollarIcon from './customeIcons/dollarIcon'
 import FailedEmojiIcon from './customeIcons/failedEmojiIcon'
 import BookIcon from './customeIcons/bookIcon'
 import RectangleBox from './customeIcons/rectangleBox'
+import InformationIcon from './customeIcons/informationIcon'
+import NewDownloadIcon from './customeIcons/newDownloadIcon'
 
 
 
@@ -275,11 +277,12 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'newLogOutIcon' && <NewLogOutIcon height={height} width={width} color={color} />}
 			{iconName == 'newFilterIcon' && <NewFilterIcon height={height} width={width} color={color} />}
 			{iconName == 'newMaleFemaleIcon' && <NewMaleFemaleIcon height={height} width={width} color={color} />}
-
+			{iconName == 'newDownloadIcon' && <NewDownloadIcon height={height} width={width} color={color} />}
 
 			{iconName == 'alertIcon' && <AlertIcon height={height} width={width} color={color} />}
 			{iconName == 'checkCircleIcon' && <CheckCircleIcon height={height} width={width} color={color} />}
 			{iconName == 'goToNextArrow' && <GoToNextArrow height={height} width={width} color={color} />}
+			{iconName == 'informationIcon' && <InformationIcon height={height} width={width} color={color} />}
 
 			{iconName == 'clockDoubleColor' && <ClockDoubleColor height={height} width={width} color={color} />}
 			{iconName == 'locationDoubleColor' && <LocationDoubleColor height={height} width={width} color={color} />}

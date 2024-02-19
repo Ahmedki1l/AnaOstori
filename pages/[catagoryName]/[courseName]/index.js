@@ -38,11 +38,11 @@ export async function getServerSideProps(ctx) {
 		courseDetailsReq,
 	])
 
-	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.data.id}&gender=male`)
+	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=male`)
 
-	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.data.id}&gender=female`)
+	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=female`)
 
-	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.data.id}&gender=mix`)
+	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=mix`)
 
 
 	const [maleDates, femaleDates, mixDates] = await Promise.all([

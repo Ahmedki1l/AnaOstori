@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import { DatePicker } from 'antd';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageAdminOverView.module.scss'
@@ -6,13 +6,11 @@ import Link from 'next/link';
 import ComponentForLineChart from '../../../components/CommonComponents/ComponentForLineChart/ComponentForLineChart';
 import ComponentForPieChart from '../../../components/CommonComponents/ComponentForPieChart/ComponentForPieChart';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
-import { useQuery } from 'react-query';
-import { getAuthRouteAPI } from '../../../services/apisService';
+import { getRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import Empty from '../../../components/CommonComponents/Empty';
 import dayjs from 'dayjs';
 import Spinner from '../../../components/CommonComponents/spinner';
-import * as PaymentConst from '../../../constants/PaymentConst';
 
 const Index = () => {
     const { RangePicker } = DatePicker;
@@ -23,21 +21,24 @@ const Index = () => {
     const disabledDate = (current) => {
         return current > dayjs().endOf('day');
     };
+    const [isLoading, setIsLoading] = useState(false)
     const [dates, setDates] = useState(null);
     const [selectedDate, setSelectedDate] = useState()
     const [dateRange, setDateRange] = useState({
         startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().format('YYYY-MM-DD')
+        endDate: dayjs().subtract(1, 'day').format('YYYY-MM-DD')
     })
-    const preSelectedDate = ({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().format('YYYY-MM-DD')
-    });
+
+    // useEffect(() => {
+    //     createOrderPieChartData();
+    //     createGenderPieChartData();
+    //     createOrderLineChartData();
+    // }, [dateRange])
 
     useEffect(() => {
-        createOrderPieChartData();
-        createGenderPieChartData();
-        createOrderLineChartData();
+        if (dateRange !== null) {
+            getDashBoardData();
+        }
     }, [dateRange])
 
     const onOpenChange = (open) => {
@@ -58,46 +59,46 @@ const Index = () => {
             });
             setSelectedDate(val);
         } else {
-            setDateRange(preSelectedDate);
+            setDateRange(null);
             setSelectedDate(null);
         }
     };
 
-    const { data, isLoading, isError } = useQuery(
-        ['myDashBoardData', dateRange?.startDate, dateRange?.endDate],
-        async () => {
-            try {
-                const newData = {
-                    startDate: dateRange?.startDate,
-                    endDate: dateRange?.endDate,
-                    routeName: 'dashboard',
-                }
-                const response = await getAuthRouteAPI(newData);
-                setDashBoardData(response.data);
-                createOrderPieChartData(response.data);
-                createGenderPieChartData(response.data);
-                createOrderLineChartData(response.data);
-                return response.data;
+    const getDashBoardData = async () => {
+        setIsLoading(true);
+        try {
+            const newData = {
+                startDate: dateRange?.startDate,
+                endDate: dateRange?.endDate,
+                routeName: 'dashboard',
             }
-            catch (error) {
-                if (error.response.status === 401) {
-                    await getNewToken().then(() => {
-                        getAuthRouteAPI(newData).then((response) => {
-                            setDashBoardData(response.data);
-                            createOrderPieChartData(response.data);
-                            createGenderPieChartData(response.data);
-                            createOrderLineChartData(response.data);
-                        }).catch((error) => {
-                            console.error('Error getting data:', error);
-                        });
-                    });
-                }
-                console.error('Error getting data:', error);
-                throw error;
-            }
+            const response = await getRouteAPI(newData);
+            setIsLoading(false);
+            setDashBoardData(response.data);
+            createOrderPieChartData(response.data);
+            createGenderPieChartData(response.data);
+            createOrderLineChartData(response.data);
+            return response.data;
         }
-    )
-    isError && console.error('Error getting data:', isError);
+        catch (error) {
+            if (error.response.status === 401) {
+                await getNewToken().then(() => {
+                    getRouteAPI(newData).then((response) => {
+                        setDashBoardData(response.data);
+                        createOrderPieChartData(response.data);
+                        createGenderPieChartData(response.data);
+                        createOrderLineChartData(response.data);
+                    }).catch((error) => {
+                        console.error('Error getting data:', error);
+                    });
+                });
+            }
+            console.error('Error getting data:', error);
+            setIsLoading(false);
+            throw error;
+        }
+
+    }
     const adminDashBoardData = [
         {
             id: 1,
@@ -324,102 +325,112 @@ const Index = () => {
                         placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                     />
                 </div>
-                {isLoading ?
+                {dateRange === null ?
                     <div className='flex justify-center items-center h-80'>
-                        <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+                        <Empty emptyText={'no Data Available'} containerhight={500} />
                     </div>
                     :
-                    <div className='flex justify-between'>
-                        <div className='w-3/4'>
-                            <div className={`${styles.graphWrapper} flex justify-center`}>
-                                {orderDataForLineChart && <ComponentForLineChart data={orderDataForLineChart} />}
-                            </div>
-                            <div className={styles.graphContainer}>
-                                <div className={`ml-5 ${styles.graphWrapper}`}>
-                                    <div className='flex items-center'>
-                                        <AllIconsComponenet height={30} width={32} iconName={'managePurchaseOrder'} color={'#F06A25'} />
-                                        <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }} className='mt-1'>{dashBoardData?.orderStats?.length > 0 ? functionForCountData('orders') : '0'}</p>
-                                    </div>
-                                    <p style={{ fontWeight: '500', fontSize: '20px' }} className='m-2 mr-6'>إجمالي الطلبات</p>
-                                    {dashBoardData?.orderStats.length > 0 ?
-                                        <>
-                                            <div className='mt-10' >
-                                                {orderPieChart && <ComponentForPieChart data={orderPieChart} />}
-                                            </div>
-                                            <div className={styles.labelsWrapper}>
-                                                {orderPieChart?.datasets?.data?.map((data, index) => (
-                                                    <div key={index} className={styles.pieChartLabels} >
-                                                        <AllIconsComponenet
-                                                            iconName={'rectangleBox'}
-                                                            height={24}
-                                                            width={24}
-                                                            color={payMentStatuslabelColors[index]}
-                                                        />
-                                                        <p style={{ fontWeight: '500', fontSize: '20px' }} className='mx-2'>{data}</p>
-                                                        <p style={{ fontWeight: '500', fontSize: '20px' }}>{orderPieChart.labels[index]}</p> &nbsp;
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </>
-                                        :
-                                        <Empty emptyText={'no Data Available'} containerhight={300} />
+                    isLoading ?
+                        <div className='flex justify-center items-center h-80'>
+                            <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+                        </div>
+                        :
+                        <div className='flex justify-between'>
+                            <div className='w-3/4'>
+                                <div className={`${styles.graphWrapper} flex justify-center`}>
+                                    {
+                                        dateRange == null ?
+                                            <Empty emptyText={'no Data Available'} containerhight={300} />
+                                            :
+                                            orderDataForLineChart && <ComponentForLineChart data={orderDataForLineChart} />
                                     }
                                 </div>
-                                <div className={styles.graphWrapper}>
-                                    <div className='flex items-center'>
-                                        <AllIconsComponenet height={20} width={24} iconName={'personDoubleColoredIcon'} color={'#F06A25'} />
-                                        <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }} className='mt-1'>{dashBoardData?.userStats?.length > 0 ? functionForCountData('users') : '0'}</p>
-                                    </div>
-                                    <p style={{ fontWeight: '500', fontSize: '20px' }} className='m-2 mr-6'>إجمالي المستخدمين</p>
-                                    {dashBoardData?.userStats?.length > 0 ?
-                                        <div className={styles.graphContainerWrapper}>
-                                            <div className='mt-10'>
-                                                {genderPieChart && <ComponentForPieChart data={genderPieChart} />}
-                                            </div>
-                                            <div style={{ position: 'absolute' }}>
-                                                <AllIconsComponenet iconName='newMaleFemaleIcon' height={47} width={47} color={'#000000'} />
-                                            </div>
-                                            <div className='mt-5'>
-                                                {genderPieChart?.datasets?.data?.map((data, index) => (
-                                                    <div key={index} className={styles.pieChartLabels}>
-                                                        <AllIconsComponenet
-                                                            iconName={genderPieChart.labels[index] === 'بنات' ? 'newFemaleIcon' : genderPieChart.labels[index] === 'شباب' ? 'newMaleIcon' : 'newMaleFemaleIcon'}
-                                                            height={24}
-                                                            width={24}
-                                                            color={genderPieChart.labels[index] === 'بنات' ? '#E10768' : genderPieChart.labels[index] === 'شباب' ? '#0C5D96' : '#F4C20F'}
-                                                        />
-                                                        <p style={{ fontWeight: '500', fontSize: '20px' }} className='ml-2'>{data}</p>
-                                                        <p style={{ fontWeight: '500', fontSize: '20px' }}>{genderPieChart.labels[index]}</p> &nbsp;
-                                                    </div>
-                                                ))}
-                                            </div>
+                                <div className={styles.graphContainer}>
+                                    <div className={`ml-5 ${styles.graphWrapper}`}>
+                                        <div className='flex items-center'>
+                                            <AllIconsComponenet height={30} width={32} iconName={'managePurchaseOrder'} color={'#F06A25'} />
+                                            <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }} className='mt-1'>{dashBoardData?.orderStats?.length > 0 ? functionForCountData('orders') : '0'}</p>
                                         </div>
-                                        :
-                                        <Empty emptyText={'no Data Available'} containerhight={300} />
-                                    }
-                                    <div className={styles.linkWrapper}>
-                                        <Link href={'/instructorPanel/manageAdminDashBoard/enrolledCourseUserList'} className='no-underline' style={{ color: '#0075FF' }}>عرض التفاصيل</Link>
+                                        <p style={{ fontWeight: '500', fontSize: '20px' }} className='m-2 mr-6'>إجمالي الطلبات</p>
+                                        {dashBoardData?.orderStats.length > 0 ?
+                                            <>
+                                                <div className='mt-10' >
+                                                    {orderPieChart && <ComponentForPieChart data={orderPieChart} />}
+                                                </div>
+                                                <div className={styles.labelsWrapper}>
+                                                    {orderPieChart?.datasets?.data?.map((data, index) => (
+                                                        <div key={index} className={styles.pieChartLabels} >
+                                                            <AllIconsComponenet
+                                                                iconName={'rectangleBox'}
+                                                                height={24}
+                                                                width={24}
+                                                                color={payMentStatuslabelColors[index]}
+                                                            />
+                                                            <p style={{ fontWeight: '500', fontSize: '20px' }} className='mx-2'>{data}</p>
+                                                            <p style={{ fontWeight: '500', fontSize: '20px' }}>{orderPieChart.labels[index]}</p> &nbsp;
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </>
+                                            :
+                                            <Empty emptyText={'no Data Available'} containerhight={300} />
+                                        }
+                                    </div>
+                                    <div className={styles.graphWrapper}>
+                                        <div className='flex items-center'>
+                                            <AllIconsComponenet height={20} width={24} iconName={'personDoubleColoredIcon'} color={'#F06A25'} />
+                                            <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }} className='mt-1'>{dashBoardData?.userStats?.length > 0 ? functionForCountData('users') : '0'}</p>
+                                        </div>
+                                        <p style={{ fontWeight: '500', fontSize: '20px' }} className='m-2 mr-6'>إجمالي المستخدمين</p>
+                                        {dashBoardData?.userStats?.length > 0 ?
+                                            <div className={styles.graphContainerWrapper}>
+                                                <div className='mt-10'>
+                                                    {genderPieChart && <ComponentForPieChart data={genderPieChart} />}
+                                                </div>
+                                                <div style={{ position: 'absolute' }}>
+                                                    <AllIconsComponenet iconName='newMaleFemaleIcon' height={47} width={47} color={'#000000'} />
+                                                </div>
+                                                <div className='mt-5'>
+                                                    {genderPieChart?.datasets?.data?.map((data, index) => (
+                                                        <div key={index} className={styles.pieChartLabels}>
+                                                            <AllIconsComponenet
+                                                                iconName={genderPieChart.labels[index] === 'بنات' ? 'newFemaleIcon' : genderPieChart.labels[index] === 'شباب' ? 'newMaleIcon' : 'newMaleFemaleIcon'}
+                                                                height={24}
+                                                                width={24}
+                                                                color={genderPieChart.labels[index] === 'بنات' ? '#E10768' : genderPieChart.labels[index] === 'شباب' ? '#0C5D96' : '#F4C20F'}
+                                                            />
+                                                            <p style={{ fontWeight: '500', fontSize: '20px' }} className='ml-2'>{data}</p>
+                                                            <p style={{ fontWeight: '500', fontSize: '20px' }}>{genderPieChart.labels[index]}</p> &nbsp;
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            :
+                                            <Empty emptyText={'no Data Available'} containerhight={300} />
+                                        }
+                                        <div className={styles.linkWrapper}>
+                                            <Link href={'/instructorPanel/manageAdminDashBoard/enrolledCourseUserList'} className='no-underline' style={{ color: '#0075FF' }}>عرض التفاصيل</Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className={`w-1/4 ${styles.cardContainer}`}>
-                            {adminDashBoardData.map((data, index) => (
-                                <div key={`index ${index}`} className={styles.cardWrapper}>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div className='flex items-center flex-row-reverse'>
-                                            <div className='ml-2'><AllIconsComponenet iconName={data.iconName} height={32} width={32} color={'#F06A25'} /></div>
-                                            <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }}>{data.titleHead}</p>
+                            <div className={`w-1/4 ${styles.cardContainer}`}>
+                                {adminDashBoardData.map((data, index) => (
+                                    <div key={`index ${index}`} className={styles.cardWrapper}>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <div className='flex items-center flex-row-reverse'>
+                                                <div className='ml-2'><AllIconsComponenet iconName={data.iconName} height={32} width={32} color={'#F06A25'} /></div>
+                                                <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }}>{data.titleHead}</p>
+                                            </div>
+                                            <p style={{ fontWeight: '500', fontSize: '20px' }}>{data.titleBody}</p>
                                         </div>
-                                        <p style={{ fontWeight: '500', fontSize: '20px' }}>{data.titleBody}</p>
+                                        <div style={{ textAlign: 'left' }}>
+                                            <Link href={`${data.nextPageLink}`} className='no-underline' style={{ color: '#0075FF' }}>{data.viewMoreInfo}</Link>
+                                        </div>
                                     </div>
-                                    <div style={{ textAlign: 'left' }}>
-                                        <Link href={`${data.nextPageLink}`} className='no-underline' style={{ color: '#0075FF' }}>{data.viewMoreInfo}</Link>
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
                 }
             </div>
         </div >
