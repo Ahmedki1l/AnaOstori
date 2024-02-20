@@ -35,11 +35,11 @@ const Index = () => {
     const [loaderForGraph, setLoaderForGraph] = useState()
     const [selectedDate, setSelectedDate] = useState()
     const [dateRange, setDateRange] = useState({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+        startDate: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
+        endDate: dayjs().format('YYYY-MM-DD')
     })
     const disabledDate = (current) => {
-        return current > dayjs().endOf('day');
+        return current && current > dayjs().endOf('day');
     };
     const [paginationConfig, setPaginationConfig] = useState({
         pageSizeOptions: [],
@@ -430,8 +430,8 @@ const Index = () => {
                 <RangePicker
                     disabledDate={disabledDate}
                     height={40}
-                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
-                    defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
+                    defaultValue={[dayjs().subtract(6, 'day'), dayjs()]}
+                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
                     onCalendarChange={(val) => {
                         setDates(val);
                     }}
