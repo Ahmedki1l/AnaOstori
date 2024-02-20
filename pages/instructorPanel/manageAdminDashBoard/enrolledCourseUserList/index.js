@@ -109,7 +109,8 @@ const Index = () => {
             }
         }
         else if (selectedDate !== undefined) {
-            if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') < 91) {
+            // if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') < 91) {
+            if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day')) {
                 console.log("monthly  date");
                 for (let i = 0; i < dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') + 1; i++) {
                     const currentDate = dayjs(selectedStartDate).add(i, 'day').format('YYYY-MM-DD');
@@ -385,7 +386,7 @@ const Index = () => {
         if (dateRange === null) {
             return (
                 <div>
-                    <Empty buttonText={'إضافة مجال'} emptyText={'ما أضفت مجال'} containerhight={600} />
+                    <Empty emptyText={'لا توجد بيانات'} containerhight={600} />
                 </div>
             );
         } else {
