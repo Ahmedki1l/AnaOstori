@@ -465,7 +465,7 @@ const TheStudent = (props) => {
                             <div className={styles.noDataManiArea} >
                                 <div className='flex columns items-center flex-col'>
                                     <AllIconsComponenet height={118} width={118} iconName={'noData'} color={'#00000080'} />
-                                    <p className='fontBold py-2' style={{ fontSize: '18px' }}>{!showSelectedStudentInfo ? 'no Data Available' : 'ما أنشئت أي موعد'}</p>
+                                    <p className='fontBold py-2' style={{ fontSize: '18px' }}>{!showSelectedStudentInfo ? 'لا توجد بيانات' : 'ما أنشئت أي موعد'}</p>
                                 </div>
                             </div>
                         </div>

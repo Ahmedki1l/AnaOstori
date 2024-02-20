@@ -59,7 +59,6 @@ const Index = () => {
 
     useEffect(() => {
         if (dateRange !== null) {
-            console.log('dateRange:', dateRange);
             getPurchaseOrderList()
         }
     }, [dateRange, currentPage])
@@ -433,7 +432,7 @@ const Index = () => {
                 />
             </div>
             {dateRange === null ?
-                <Empty emptyText={'no Data Available'} containerhight={500} />
+                <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
                 :
                 <div>
                     {pathNameForOrderStatus === 'completedOrders' &&

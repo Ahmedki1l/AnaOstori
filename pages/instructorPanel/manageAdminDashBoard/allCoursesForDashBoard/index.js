@@ -235,7 +235,7 @@ const Index = () => {
                 />
             </div>
             {dateRange === null ?
-                <Empty emptyText={'no Data Available'} containerhight={500} />
+                <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
                 :
                 <>
                     <div style={{ width: '100%' }}>

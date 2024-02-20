@@ -327,7 +327,7 @@ const Index = () => {
                 </div>
                 {dateRange === null ?
                     <div className='flex justify-center items-center h-80'>
-                        <Empty emptyText={'no Data Available'} containerhight={500} />
+                        <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
                     </div>
                     :
                     isLoading ?
@@ -340,7 +340,7 @@ const Index = () => {
                                 <div className={`${styles.graphWrapper} flex justify-center`}>
                                     {
                                         dateRange == null ?
-                                            <Empty emptyText={'no Data Available'} containerhight={300} />
+                                            <Empty emptyText={'لا توجد بيانات'} containerhight={300} />
                                             :
                                             orderDataForLineChart && <ComponentForLineChart data={orderDataForLineChart} />
                                     }
@@ -373,7 +373,7 @@ const Index = () => {
                                                 </div>
                                             </>
                                             :
-                                            <Empty emptyText={'no Data Available'} containerhight={300} />
+                                            <Empty emptyText={'لا توجد بيانات'} containerhight={300} />
                                         }
                                     </div>
                                     <div className={styles.graphWrapper}>
@@ -406,7 +406,7 @@ const Index = () => {
                                                 </div>
                                             </div>
                                             :
-                                            <Empty emptyText={'no Data Available'} containerhight={300} />
+                                            <Empty emptyText={'لا توجد بيانات'} containerhight={300} />
                                         }
                                         <div className={styles.linkWrapper}>
                                             <Link href={'/instructorPanel/manageAdminDashBoard/enrolledCourseUserList'} className='no-underline' style={{ color: '#0075FF' }}>عرض التفاصيل</Link>
