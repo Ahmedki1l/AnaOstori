@@ -28,10 +28,12 @@ const Index = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [loaderForGraph, setLoaderForGraph] = useState(false)
     const [dateRange, setDateRange] = useState({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+        startDate: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
+        endDate: dayjs().format('YYYY-MM-DD')
     })
-
+    const disabledDate = (current) => {
+        return current && current > dayjs().endOf('day');
+    };
     useEffect(() => {
         if (dateRange !== null) {
             getDashboardCourse()
@@ -40,9 +42,6 @@ const Index = () => {
         }
     }, [currentPage, dateRange])
 
-    const disabledDate = (current) => {
-        return current > dayjs().endOf('day');
-    };
     const onOpenChange = (open) => {
         if (open) {
             setDates([null, null]);
@@ -220,8 +219,8 @@ const Index = () => {
                 <RangePicker
                     height={40}
                     disabledDate={disabledDate}
-                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
-                    defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
+                    defaultValue={[dayjs().subtract(6, 'day'), dayjs()]}
+                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
                     onCalendarChange={(val) => {
                         setDates(val);
                     }}

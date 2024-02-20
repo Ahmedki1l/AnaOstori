@@ -18,22 +18,16 @@ const Index = () => {
     const [genderPieChart, setGenderPieChart] = useState(null);
     const [orderPieChart, setOrderPieChart] = useState(null)
     const [orderDataForLineChart, setOrderDataForLineChart] = useState(null);
-    const disabledDate = (current) => {
-        return current > dayjs().endOf('day');
-    };
     const [isLoading, setIsLoading] = useState(false)
     const [dates, setDates] = useState(null);
     const [selectedDate, setSelectedDate] = useState()
     const [dateRange, setDateRange] = useState({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+        startDate: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
+        endDate: dayjs().format('YYYY-MM-DD')
     })
-
-    // useEffect(() => {
-    //     createOrderPieChartData();
-    //     createGenderPieChartData();
-    //     createOrderLineChartData();
-    // }, [dateRange])
+    const disabledDate = (current) => {
+        return current && current > dayjs().endOf('day');
+    };
 
     useEffect(() => {
         if (dateRange !== null) {
@@ -310,8 +304,7 @@ const Index = () => {
                 <div className='my-6 flex flex-row-reverse' >
                     <RangePicker
                         height={40}
-                        // defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
-                        defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
+                        defaultValue={[dayjs().subtract(6, 'day'), dayjs()]}
                         onCalendarChange={(val) => {
                             setDates(val);
                         }}
