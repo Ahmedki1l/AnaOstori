@@ -200,27 +200,27 @@ const Index = () => {
                 newData.startDate = dateRange.startDate
                 newData.endDate = dateRange.endDate
             }
-            const response = await getAuthRouteAPI(newData);
+            const response = await getRouteAPI(newData);
             setIsLoading(false)
             setDashBoardData(response.data);
-            createOrderLineChartData(response.data)
-        }
-        catch (error) {
-            if (error.response.status === 401) {
-                await getNewToken().then(() => {
-                    getAuthRouteAPI(newData).then((response) => {
-                        setIsLoading(false)
-                        setDashBoardData(response.data);
-                        createOrderLineChartData(response.data)
-                    }).catch((error) => {
-                        console.error('Error getting data:', error);
-                    });
-                });
+            createOrderLineChartData(response.data);
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                try {
+                    await getNewToken();
+                    const response = await getRouteAPI(newData);
+                    setIsLoading(false);
+                    setDashBoardData(response.data);
+                    createOrderLineChartData(response.data);
+                } catch (error) {
+                    console.error('Error getting data:', error);
+                }
+            } else {
+                console.error('Error getting data:', error);
+                throw error;
             }
-            console.error('Error getting data:', error);
-            throw error;
         }
-    }
+    };
 
     const adminDashBoardData = [
         {
