@@ -123,11 +123,11 @@ export default function Payment(props) {
                                             {VerifyPaymentConst.fillInformationBtnText}
                                         </button>
                                     </Link> */}
-                                    <div className={`${styles.btnsBox}`} onClick={() => handleFillInformation()}>
+                                    {/* <div className={`${styles.btnsBox}`} onClick={() => handleFillInformation()}>
                                         <button className='primarySolidBtn flex justify-center items-center'>
                                             {VerifyPaymentConst.fillInformationBtnText}
                                         </button>
-                                    </div>
+                                    </div> */}
                                     {courseType === 'on-demand' ?
                                         <Link href={'/myProfile'} className={`${styles.btnsBox} no-underline`}>
                                             <button className='primaryStrockedBtn flex justify-center items-center'>
