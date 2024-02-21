@@ -50,7 +50,7 @@ const Index = () => {
     const disabledDate = (current) => {
         return current && current > dayjs().endOf('day');
     };
-    const selectedOrderStatusLable = selectedOrder?.paymentMethod == "bank_transfer" ?
+    const selectedOrderStatusLable = selectedOrder && selectedOrder?.paymentMethod == "bank_transfer" ?
         paymentStatusBank.find((item) => item.value == selectedOrder?.status) :
         paymentStatusOther.find((item) => item.value == selectedOrder?.status)
 
@@ -475,7 +475,7 @@ const Index = () => {
                 </div>
             }
             <ConfigProvider direction="rtl">
-                {selectedOrder &&
+                {selectedOrder && selectedOrderStatusLable &&
                     <Drawer
                         title={
                             <>
