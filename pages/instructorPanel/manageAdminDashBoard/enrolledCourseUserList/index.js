@@ -233,7 +233,18 @@ const Index = () => {
                     await getNewToken().then(async () => {
                         await postRouteAPI(newData).then((res) => {
                             setLoaderForGraph(false)
-                            createGraphForUserDashboard(res?.data?.graphData)
+                            setPaginationConfig((prevConfig) => ({
+                                ...prevConfig,
+                                total: response.data.totalItems,
+                                current: response.data.currentPage,
+                            }));
+                            const userList = response.data.data.map((item) => {
+                                return {
+                                    ...item,
+                                    key: item.id
+                                }
+                            });
+                            setUserList(userList);
                         })
                     });
                 }
@@ -368,6 +379,7 @@ const Index = () => {
         dataSource: userList,
         paginationConfig: paginationConfig,
         handleTableChange: (pagination) => {
+            console.log(pagination);
             if (pagination.current !== currentPage) {
                 setCurrentPage(pagination.current)
             }
