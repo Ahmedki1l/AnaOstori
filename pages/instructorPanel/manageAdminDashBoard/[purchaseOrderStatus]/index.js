@@ -171,6 +171,7 @@ const Index = () => {
             body.endDate = dateRange.endDate
         }
         await postRouteAPI(body).then((res) => {
+            console.log(res);
             setIsLoading(false)
             setPaginationConfig((prevConfig) => ({
                 ...prevConfig,
@@ -390,6 +391,7 @@ const Index = () => {
         dataSource: purchaseOrderList,
         paginationConfig: paginationConfig,
         handleTableChange: (pagination) => {
+            console.log(pagination);
             if (pagination.current !== currentPage) {
                 setCurrentPage(pagination.current)
             }
