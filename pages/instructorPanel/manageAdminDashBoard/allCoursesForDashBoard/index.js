@@ -50,6 +50,7 @@ const Index = () => {
         }
     }
     const handleDateChange = (val) => {
+        console.log("val", val);
         if (val !== null && val.length === 2) {
             const startDate = dayjs(val[0]).format('YYYY-MM-DD');
             const endDate = dayjs(val[1]).format('YYYY-MM-DD');
@@ -59,6 +60,7 @@ const Index = () => {
             });
         } else if (val === null) {
             setDateRange(null)
+            setCourseDataForBarChart()
         }
     };
 
@@ -112,9 +114,6 @@ const Index = () => {
                 totalEnrollment.push(order.enrollmentCount || 0);
             });
         }
-        console.log("labels", labels);
-        console.log("totalEarnings", totalEarnings);
-        console.log("totalEnrollment", totalEnrollment);
         const dataForCourseBarChart = {
             chartId: 'barChartForCourse',
             labels: labels,
@@ -242,7 +241,7 @@ const Index = () => {
                 <>
                     <div style={{ width: '100%' }}>
                         <div className={`${styles.graphWrapper}`}>
-                            {courseDataForBarChart && <ComponentForBarChart data={courseDataForBarChart} />}
+                            {(courseDataForBarChart && !isLoading) && <ComponentForBarChart data={courseDataForBarChart} />}
                         </div>
                     </div>
                     {isLoading ?
