@@ -112,6 +112,9 @@ const Index = () => {
                 totalEnrollment.push(order.enrollmentCount || 0);
             });
         }
+        console.log("labels", labels);
+        console.log("totalEarnings", totalEarnings);
+        console.log("totalEnrollment", totalEnrollment);
         const dataForCourseBarChart = {
             chartId: 'barChartForCourse',
             labels: labels,
@@ -192,7 +195,7 @@ const Index = () => {
                 }
             },
         ],
-        dataSource: allCourseList,
+        dataSource: allCourseList.map((item, index) => ({ ...item, key: index })),
         paginationConfig: paginationConfig,
         handleTableChange: (pagination) => {
             if (pagination.current !== currentPage) {
