@@ -5,7 +5,7 @@ import styles from '../../../../styles/InstructorPanelStyleSheets/ManageAdminOve
 import { ConfigProvider, DatePicker, Drawer, Tag } from 'antd'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI } from '../../../../services/apisService'
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI, postRouteAPI } from '../../../../services/apisService'
 import CustomOrderListComponent from '../../../../components/CommonComponents/CustomOrderListComponent/CustomOrderListComponent'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { toast } from 'react-toastify'
@@ -191,17 +191,17 @@ const Index = () => {
     }
 
     const getDashBoardData = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
             const newData = {
                 routeName: 'dashboard',
-            }
+            };
             if (dateRange !== null) {
-                newData.startDate = dateRange.startDate
-                newData.endDate = dateRange.endDate
+                newData.startDate = dateRange.startDate;
+                newData.endDate = dateRange.endDate;
             }
             const response = await getRouteAPI(newData);
-            setIsLoading(false)
+            setIsLoading(false);
             setDashBoardData(response.data);
             createOrderLineChartData(response.data);
         } catch (error) {
