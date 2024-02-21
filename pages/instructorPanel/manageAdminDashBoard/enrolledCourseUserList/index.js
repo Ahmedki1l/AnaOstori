@@ -100,7 +100,6 @@ const Index = () => {
         // }
         if (selectedDate === undefined) {
             for (let i = 0; i < 7; i++) {
-                console.log("week days");
                 const currentDate = dayjs(selectedStartDate).add(i, 'day').format('YYYY-MM-DD');
                 const foundData = data.find(item => item.date === currentDate) || { maleCount: 0, femaleCount: 0 };
                 labels.push(currentDate);
@@ -109,9 +108,8 @@ const Index = () => {
             }
         }
         else if (selectedDate !== undefined) {
-            // if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') < 91) {
-            if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day')) {
-                console.log("monthly  date");
+            if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') < 91) {
+                // if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 0 && dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day')) {
                 for (let i = 0; i < dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') + 1; i++) {
                     const currentDate = dayjs(selectedStartDate).add(i, 'day').format('YYYY-MM-DD');
                     const foundData = data.find(item => item.date === currentDate) || { maleCount: 0, femaleCount: 0 };
@@ -121,20 +119,10 @@ const Index = () => {
                 }
             }
             if (dayjs(selectedEndDate).diff(dayjs(selectedStartDate), 'day') > 90) {
-                console.log("greater then 90 days");
-                const monthlyCounts = {};
-                data.forEach(item => {
-                    const month = dayjs(item.date).format('YYYY-MM');
-                    monthlyCounts[month] = {
-                        maleCount: (monthlyCounts[month]?.maleCount || 0) + item.maleCount,
-                        femaleCount: (monthlyCounts[month]?.femaleCount || 0) + item.femaleCount
-                    };
-                });
-                const sortedMonths = Object.keys(monthlyCounts).sort(); // sort by month
-                sortedMonths.forEach(month => {
-                    labels.push(month);
-                    maleCount.push(monthlyCounts[month].maleCount);
-                    femaleCount.push(monthlyCounts[month].femaleCount);
+                data.forEach(entry => {
+                    labels.push(entry.month);
+                    maleCount.push(entry.maleCount);
+                    femaleCount.push(entry.femaleCount);
                 });
             }
         }
