@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import ComponentForLineChart from '../../../../components/CommonComponents/ComponentForLineChart/ComponentForLineChart'
 import styles from '../../../../styles/InstructorPanelStyleSheets/ManageAdminOverView.module.scss'
@@ -6,7 +6,6 @@ import { ConfigProvider, DatePicker, Drawer, Tag } from 'antd'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI } from '../../../../services/apisService'
-import { useQuery } from 'react-query'
 import CustomOrderListComponent from '../../../../components/CommonComponents/CustomOrderListComponent/CustomOrderListComponent'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet'
 import { toast } from 'react-toastify'
@@ -19,6 +18,7 @@ import PurchaseOrderDrawer from '../../../../components/ManagePurchaseOrderItem/
 import * as PaymentConst from '../../../../constants/PaymentConst'
 import Spinner from '../../../../components/CommonComponents/spinner'
 import { getNewToken } from '../../../../services/fireBaseAuthService'
+import Empty from '../../../../components/CommonComponents/Empty'
 
 const DrawerTiitle = styled.p`
     font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -32,6 +32,7 @@ const Index = () => {
     const pathName = usePathname()
     const pathNameForOrderStatus = pathName?.split('/')[3]
     const { paymentStatusBank, paymentStatusOther } = PaymentConst
+    const [isLoading, setIsLoading] = useState(false)
     const [paginationConfig, setPaginationConfig] = useState({
         pageSizeOptions: [],
         position: ['bottomCenter'],
@@ -43,26 +44,28 @@ const Index = () => {
     const [orderDataForLineChart, setOrderDataForLineChart] = useState()
     const [selectedDate, setSelectedDate] = useState()
     const [dateRange, setDateRange] = useState({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
+        startDate: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
         endDate: dayjs().format('YYYY-MM-DD')
     })
-    const preSelectedDate = ({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: dayjs().format('YYYY-MM-DD')
-    });
+    const disabledDate = (current) => {
+        return current && current > dayjs().endOf('day');
+    };
     const selectedOrderStatusLable = selectedOrder?.paymentMethod == "bank_transfer" ?
         paymentStatusBank.find((item) => item.value == selectedOrder?.status) :
         paymentStatusOther.find((item) => item.value == selectedOrder?.status)
 
     useEffect(() => {
-        // getPurchaseOrderList.refetch()
-        createOrderLineChartData()
-        setCurrentPage(1)
+        if (dateRange !== null) {
+            getDashBoardData()
+        }
     }, [dateRange])
 
-    const disabledDate = (current) => {
-        return current > dayjs().endOf('day');
-    };
+    useEffect(() => {
+        if (dateRange !== null) {
+            getPurchaseOrderList()
+        }
+    }, [dateRange, currentPage])
+
     const onOpenChange = (open) => {
         if (open) {
             setDates([null, null]);
@@ -142,84 +145,82 @@ const Index = () => {
         }
         setOrderDataForLineChart(lineChartData);
     }
-    const getPurchaseOrderList = useQuery(
-        ['getAdminUserList', currentPage, dateRange?.startDate, dateRange?.endDate],
-        async () => {
-            let body = {
-                routeName: "orderList",
-                page: currentPage,
-                limit: 10,
-                order: "createdAt DESC"
-            }
-            if (pathNameForOrderStatus === 'completedOrders') {
-                body.filterType = 'status'
-                body.filterValue = 'accepted'
-            }
-            if (pathNameForOrderStatus === 'refundedOrders') {
-                body.filterType = 'status'
-                body.filterValue = 'refund'
-            }
-            if (pathNameForOrderStatus === 'rejectedOrders') {
-                body.filterType = 'status'
-                body.filterValue = 'rejected'
+
+    const getPurchaseOrderList = async () => {
+        setIsLoading(true)
+        let body = {
+            routeName: "orderList",
+            page: currentPage,
+            limit: 10,
+            order: "createdAt DESC"
+        }
+        if (pathNameForOrderStatus === 'completedOrders') {
+            body.filterType = 'status'
+            body.filterValue = 'accepted'
+        }
+        if (pathNameForOrderStatus === 'refundedOrders') {
+            body.filterType = 'status'
+            body.filterValue = 'refund'
+        }
+        if (pathNameForOrderStatus === 'rejectedOrders') {
+            body.filterType = 'status'
+            body.filterValue = 'rejected'
+        }
+        if (dateRange !== null) {
+            body.startDate = dateRange.startDate
+            body.endDate = dateRange.endDate
+        }
+        await postRouteAPI(body).then((res) => {
+            setIsLoading(false)
+            setPaginationConfig((prevConfig) => ({
+                ...prevConfig,
+                total: res.data.totalItems,
+                current: res.data.currentPage,
+            }));
+            const purchaseOrderList = res.data.data.map((item) => {
+                return {
+                    ...item,
+                    key: item.id
+                }
+            })
+            setPurchaseOrderList(purchaseOrderList)
+        }).catch((err) => {
+            console.log(err);
+            setIsLoading(false)
+        })
+    }
+
+    const getDashBoardData = async () => {
+        setIsLoading(true)
+        try {
+            const newData = {
+                routeName: 'dashboard',
             }
             if (dateRange !== null) {
-                body.startDate = dateRange.startDate
-                body.endDate = dateRange.endDate
+                newData.startDate = dateRange.startDate
+                newData.endDate = dateRange.endDate
             }
-            await postRouteAPI(body).then((res) => {
-                setPaginationConfig((prevConfig) => ({
-                    ...prevConfig,
-                    total: res.data.totalItems,
-                    current: res.data.currentPage,
-                }));
-                const purchaseOrderList = res.data.data.map((item) => {
-                    return {
-                        ...item,
-                        key: item.id
-                    }
-                })
-                setPurchaseOrderList(purchaseOrderList)
-            }).catch((err) => {
-                console.log(err);
-            }),
-            {
-                enabled: true,
-            }
-        })
-
-    const { dashboardData, isLoading, isError } = useQuery(
-        ['myDashBoardData', dateRange?.startDate, dateRange?.endDate],
-        async () => {
-            try {
-                const newData = {
-                    routeName: 'dashboard',
-                }
-                if (dateRange !== null) {
-                    newData.startDate = dateRange.startDate
-                    newData.endDate = dateRange.endDate
-                }
-                const response = await getAuthRouteAPI(newData);
-                setDashBoardData(response.data);
-                createOrderLineChartData(response.data)
-                return response.data;
-            }
-            catch (error) {
-                if (error.response.status === 401) {
-                    await getNewToken().then(() => {
-                        getAuthRouteAPI(newData).then((response) => {
-                            setDashBoardData(response.data);
-                            createOrderLineChartData(response.data)
-                        }).catch((error) => {
-                            console.error('Error getting data:', error);
-                        });
-                    });
-                }
-                console.error('Error getting data:', error);
-                throw error;
-            }
+            const response = await getAuthRouteAPI(newData);
+            setIsLoading(false)
+            setDashBoardData(response.data);
+            createOrderLineChartData(response.data)
         }
-    )
+        catch (error) {
+            if (error.response.status === 401) {
+                await getNewToken().then(() => {
+                    getAuthRouteAPI(newData).then((response) => {
+                        setIsLoading(false)
+                        setDashBoardData(response.data);
+                        createOrderLineChartData(response.data)
+                    }).catch((error) => {
+                        console.error('Error getting data:', error);
+                    });
+                });
+            }
+            console.error('Error getting data:', error);
+            throw error;
+        }
+    }
 
     const adminDashBoardData = [
         {
@@ -238,7 +239,7 @@ const Index = () => {
     ]
     const onDrawerClose = () => {
         setDrawerForOrders(false);
-        getPurchaseOrderList.refetch()
+        getPurchaseOrderList()
     };
     const data = {
         tableColumns: [
@@ -254,7 +255,7 @@ const Index = () => {
                             assistanceAquired: !text
                         }
                         await postAuthRouteAPI(body).then((res) => {
-                            getPurchaseOrderList.refetch()
+                            getPurchaseOrderList()
                             if (text) {
                                 toast.success(managePurchaseOrderConst.studentHasNotContacted, { rtl: true, })
                             }
@@ -265,7 +266,7 @@ const Index = () => {
                             if (error?.response?.status == 401) {
                                 await getNewToken().then(async (token) => {
                                     await postAuthRouteAPI(body).then((res) => {
-                                        getPurchaseOrderList.refetch()
+                                        getPurchaseOrderList()
                                         if (text) {
                                             toast.success(managePurchaseOrderConst.studentHasNotContacted, { rtl: true, })
                                         }
@@ -412,87 +413,86 @@ const Index = () => {
                 />
             </div>
             <h1 className={`head2 pt-6 pr-2`}>{pathNameForOrderStatus === 'completedOrders' ? 'بيانات الطلبات المؤكدة' : pathNameForOrderStatus === 'refundedOrders' ? 'بيانات الطلبات المسترجعة' : 'بيانات الطلبات المرفوضة'}</h1>
-            <div>
-                <div className='my-6 flex flex-row-reverse' >
-                    <RangePicker
-                        height={40}
-                        disabledDate={disabledDate}
-                        // defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
-                        defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
-                        onCalendarChange={(val) => {
-                            setDates(val);
-                        }}
-                        onChange={(val) => {
-                            handleDateChange(val);
-                        }}
-                        onOpenChange={onOpenChange}
-                        changeOnBlur
-                        size="large"
-                        placeholder={['تاريخ البداية', 'تاريخ النهاية']}
-                    />
-                </div>
-                {isLoading ?
-                    <div className='flex justify-center items-center h-80'>
-                        <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
-                    </div>
-                    : pathNameForOrderStatus === 'completedOrders' &&
-                    <div className='flex justify-between'>
-                        <div className='w-3/4' >
-                            <div className={`${styles.graphWrapper} flex justify-center`}>
-                                {orderDataForLineChart && <ComponentForLineChart data={orderDataForLineChart} />}
+            <div className='my-6 flex flex-row-reverse' >
+                <RangePicker
+                    height={40}
+                    disabledDate={disabledDate}
+                    defaultValue={[dayjs().subtract(6, 'day'), dayjs()]}
+                    // defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
+                    onCalendarChange={(val) => {
+                        setDates(val);
+                    }}
+                    onChange={(val) => {
+                        handleDateChange(val);
+                    }}
+                    onOpenChange={onOpenChange}
+                    changeOnBlur
+                    size="large"
+                    placeholder={['تاريخ البداية', 'تاريخ النهاية']}
+                />
+            </div>
+            {dateRange === null ?
+                <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
+                :
+                <div>
+                    {pathNameForOrderStatus === 'completedOrders' &&
+                        <div className='flex justify-between'>
+
+                            <div className='w-3/4' >
+                                <div className={`${styles.graphWrapper} flex justify-center`}>
+                                    {orderDataForLineChart && <ComponentForLineChart data={orderDataForLineChart} />}
+                                </div>
+                            </div>
+                            <div className={`w-1/4 ${styles.cardContainer}`}>
+                                {adminDashBoardData.map((data, index) => (
+                                    <div key={`index ${index}`} className={styles.cardWrapper}>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <div className='flex items-center flex-row-reverse'>
+                                                <div className='ml-2'><AllIconsComponenet iconName={data.iconName} height={32} width={32} color={'#F06A25'} /></div>
+                                                <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }}>{data.titleHead}</p>
+                                            </div>
+                                            <p style={{ fontWeight: '500', fontSize: '20px' }}>{data.titleBody}</p>
+                                        </div>
+                                        {data.nextPageLink && (
+                                            <div style={{ textAlign: 'left' }}>
+                                                <Link href={data.nextPageLink ? data.nextPageLink : null} className='no-underline' style={{ color: '#0075FF' }}>{data.viewMoreInfo}</Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <div className={`w-1/4 ${styles.cardContainer}`}>
-                            {adminDashBoardData.map((data, index) => (
-                                <div key={`index ${index}`} className={styles.cardWrapper}>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div className='flex items-center flex-row-reverse'>
-                                            <div className='ml-2'><AllIconsComponenet iconName={data.iconName} height={32} width={32} color={'#F06A25'} /></div>
-                                            <p style={{ color: '#F06A25', fontWeight: '900', fontSize: '24px' }}>{data.titleHead}</p>
-                                        </div>
-                                        <p style={{ fontWeight: '500', fontSize: '20px' }}>{data.titleBody}</p>
-                                    </div>
-                                    {data.nextPageLink && (
-                                        <div style={{ textAlign: 'left' }}>
-                                            <Link href={data.nextPageLink ? data.nextPageLink : null} className='no-underline' style={{ color: '#0075FF' }}>{data.viewMoreInfo}</Link>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                }
-            </div>
-            <div>
-                {getPurchaseOrderList.isFetching ?
-                    <div className='flex justify-center items-center h-80'>
+                    }
+                    {isLoading ?
                         <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
-                    </div>
-                    :
-                    <CustomOrderListComponent data={data} />
-                }
-                <ConfigProvider direction="rtl">
-                    {selectedOrder &&
-                        <Drawer
-                            title={
-                                <>
-                                    <DrawerTiitle className="fontBold">{managePurchaseOrderConst.purchaseOrderDrawerTitle}</DrawerTiitle>
-                                    <DrawerTiitle className="fontBold">#{selectedOrder.id}</DrawerTiitle>
-                                </>
-                            }
-                            closable={false}
-                            placement={'right'}
-                            open={drawerForOrders}
-                            onClose={onDrawerClose}
-                            width={480}
-                            extra={
-                                <Tag style={{ fontSize: 16, padding: 10 }} bordered={false} color={selectedOrderStatusLable.color}>{selectedOrderStatusLable?.label}</Tag>
-                            }
-                        >
-                            <PurchaseOrderDrawer selectedOrder={selectedOrder} onClose={onDrawerClose} />
-                        </Drawer>}
-                </ConfigProvider>
-            </div>
+                        :
+                        <div className='w-full'>
+                            <CustomOrderListComponent data={data} />
+                        </div>
+                    }
+                </div>
+            }
+            <ConfigProvider direction="rtl">
+                {selectedOrder &&
+                    <Drawer
+                        title={
+                            <>
+                                <DrawerTiitle className="fontBold">{managePurchaseOrderConst.purchaseOrderDrawerTitle}</DrawerTiitle>
+                                <DrawerTiitle className="fontBold">#{selectedOrder.id}</DrawerTiitle>
+                            </>
+                        }
+                        closable={false}
+                        placement={'right'}
+                        open={drawerForOrders}
+                        onClose={onDrawerClose}
+                        width={480}
+                        extra={
+                            <Tag style={{ fontSize: 16, padding: 10 }} bordered={false} color={selectedOrderStatusLable.color}>{selectedOrderStatusLable?.label}</Tag>
+                        }
+                    >
+                        <PurchaseOrderDrawer selectedOrder={selectedOrder} onClose={onDrawerClose} />
+                    </Drawer>}
+            </ConfigProvider>
         </div>
     )
 }

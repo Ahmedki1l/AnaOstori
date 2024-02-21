@@ -1,0 +1,44 @@
+.circle {
+    height: 56px;
+    width: 56px;
+    border-radius: 50%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    background-color: #00B564;
+}
+
+.modelWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem 1rem 1rem;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0 0 0.7rem;
+    cursor: pointer;
+}
+
+.closebutton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.buttonModalDiv {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.cancelBtn {
+    font-size: 18px;
+}

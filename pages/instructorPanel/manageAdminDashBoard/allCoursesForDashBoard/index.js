@@ -5,13 +5,13 @@ import { DatePicker, Tag } from 'antd';
 import CustomOrderListComponent from '../../../../components/CommonComponents/CustomOrderListComponent/CustomOrderListComponent';
 import ComponentForBarChart from '../../../../components/CommonComponents/ComponentForBarChart/ComponentForBarChart';
 import { getNewToken } from '../../../../services/fireBaseAuthService';
-import { useQuery, useQueryClient } from 'react-query';
 import { getRouteAPI } from '../../../../services/apisService';
 import { mediaUrl } from '../../../../constants/DataManupulation';
 import Image from 'next/legacy/image';
 import { fullDate } from '../../../../constants/DateConverter';
 import dayjs from 'dayjs';
 import Spinner from '../../../../components/CommonComponents/spinner';
+import Empty from '../../../../components/CommonComponents/Empty';
 
 const Index = () => {
 
@@ -25,21 +25,23 @@ const Index = () => {
         position: ['bottomCenter'],
         pageSize: 10,
     })
+    const [isLoading, setIsLoading] = useState(false)
+    const [loaderForGraph, setLoaderForGraph] = useState(false)
     const [dateRange, setDateRange] = useState({
-        startDate: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
+        startDate: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
         endDate: dayjs().format('YYYY-MM-DD')
     })
-
-    useEffect(() => {
-        if (allCourseList.length > 0) {
-            createBarChartForCourse()
-        }
-        setCurrentPage(1)
-    }, [dateRange])
-
     const disabledDate = (current) => {
-        return current > dayjs().endOf('day');
+        return current && current > dayjs().endOf('day');
     };
+    useEffect(() => {
+        if (dateRange !== null) {
+            getDashboardCourse()
+        } else {
+            setAllCourseList([])
+        }
+    }, [currentPage, dateRange])
+
     const onOpenChange = (open) => {
         if (open) {
             setDates([null, null]);
@@ -60,44 +62,44 @@ const Index = () => {
         }
     };
 
-    const { getAllCourseList, isLoading, isError } = useQuery(
-        ['getDashboardCourse', currentPage, dateRange?.startDate, dateRange?.endDate],
-        async () => {
-            let body = {
-                routeName: "dashboardCourse",
-            }
-            if (dateRange !== null) {
-                body.startDate = dateRange.startDate
-                body.endDate = dateRange.endDate
-            }
-            await getRouteAPI(body).then((res) => {
-                setPaginationConfig((prevConfig) => ({
-                    ...prevConfig,
-                    total: res.data.totalItems,
-                    current: res.data.currentPage,
-                }));
-                setAllCourseList(res?.data?.courseData)
-                createBarChartForCourse(res?.data?.courseData)
-            }).catch(async (error) => {
-                console.log(error);
-                if (error?.response?.status == 401) {
-                    await getNewToken().then(async (token) => {
-                        await getRouteAPI(body).then(res => {
-                            setPaginationConfig((prevConfig) => ({
-                                ...prevConfig,
-                                total: res.data.totalItems,
-                                current: res.data.currentPage,
-                            }));
-                            setAllCourseList(res?.data?.courseData)
-                            createBarChartForCourse(res?.data?.courseData)
-                        })
-                    }).catch(error => {
-                        console.error("Error:", error);
-                    });
-                }
-            })
+    const getDashboardCourse = async () => {
+        setIsLoading(true)
+        let body = {
+            routeName: "dashboardCourse",
         }
-    )
+        if (dateRange !== null) {
+            body.startDate = dateRange.startDate
+            body.endDate = dateRange.endDate
+        }
+        await getRouteAPI(body).then((res) => {
+            setIsLoading(false)
+            setPaginationConfig((prevConfig) => ({
+                ...prevConfig,
+                total: res.data.totalItems,
+                current: res.data.currentPage,
+            }));
+            setAllCourseList(res?.data?.courseData)
+            createBarChartForCourse(res?.data?.courseData)
+        }).catch(async (error) => {
+            console.log(error);
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getRouteAPI(body).then(res => {
+                        setPaginationConfig((prevConfig) => ({
+                            ...prevConfig,
+                            total: res.data.totalItems,
+                            current: res.data.currentPage,
+                        }));
+                        setAllCourseList(res?.data?.courseData)
+                        createBarChartForCourse(res?.data?.courseData)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                    setIsLoading(false)
+                });
+            }
+        })
+    }
 
     const createBarChartForCourse = (data) => {
         const labels = [];
@@ -217,7 +219,7 @@ const Index = () => {
                 <RangePicker
                     height={40}
                     disabledDate={disabledDate}
-                    defaultValue={[dayjs().subtract(7, 'day'), dayjs()]}
+                    defaultValue={[dayjs().subtract(6, 'day'), dayjs()]}
                     // defaultValue={[dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]}
                     onCalendarChange={(val) => {
                         setDates(val);
@@ -231,18 +233,24 @@ const Index = () => {
                     placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                 />
             </div>
-            {isLoading ?
-                <div className='flex justify-center items-center h-80'>
-                    <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
-                </div>
+            {dateRange === null ?
+                <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
                 :
-                <div style={{ width: '100%' }}>
-                    <div className={`${styles.graphWrapper}`}>
-                        {courseDataForBarChart && <ComponentForBarChart data={courseDataForBarChart} />}
+                <>
+                    <div style={{ width: '100%' }}>
+                        <div className={`${styles.graphWrapper}`}>
+                            {courseDataForBarChart && <ComponentForBarChart data={courseDataForBarChart} />}
+                        </div>
                     </div>
-                </div>
+                    {isLoading ?
+                        <div className='flex justify-center items-center h-80'>
+                            <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
+                        </div>
+                        :
+                        allCourseList && <CustomOrderListComponent data={data} />
+                    }
+                </>
             }
-            <CustomOrderListComponent data={data} />
         </div>
     )
 }

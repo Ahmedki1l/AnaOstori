@@ -1,7 +1,7 @@
 import styles from './CoursesCard.module.scss'
 import Link from 'next/link';
 import CoverImg from '../CoverImg';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet';
 import { mediaUrl, subscriptionDays } from '../../../constants/DataManupulation';
@@ -17,8 +17,9 @@ export default function CoursesCard(props) {
 	const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
 	const coverImgUrl = courseDetails.pictureKey ? `${mediaUrl(courseDetails.pictureBucket, courseDetails.pictureKey)}` : '/images/previewImage.png'
 	const daysLeft = props?.data?.daysLeft
-
+	const router = useRouter()
 	const date = props?.data?.availability
+
 	useEffect(() => {
 		const date = new Date(props?.data?.createdAt);
 		date.setMonth(date.getMonth() + 6);
@@ -43,7 +44,15 @@ export default function CoursesCard(props) {
 			key: '1',
 		}
 	];
-
+	const handleStudentInformaion = () => {
+		Router.push({
+			pathname: (`/studentInformation`),
+			query: {
+				courseId: courseDetails.id,
+				editStudentInfo: true
+			}
+		})
+	}
 	return (
 		<>
 			<div className={styles.cardMainDiv}>
@@ -70,14 +79,8 @@ export default function CoursesCard(props) {
 						<AllIconsComponenet height={20} width={20} iconName={'calenderDoubleColorIcon'} color={'#000000'} />
 						<p className='px-2 text-sm'>{subscriptionDays(props.data)}</p>
 					</div>
-
-					{courseDetails.type == "on-demand" ?
-						<>
-							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة الدروس</button>
-						</>
-						:
-						<>
-							{/* <div className={styles.subscriptionText}>
+					<>
+						{/* <div className={styles.subscriptionText}>
 								<AllIconsComponenet height={14} width={14} iconName={'clock'} color={'#000000'} />
 								<p className='px-2'>{timeDuration(date.timeFrom, date.timeTo)}</p>
 							</div>
@@ -89,10 +92,10 @@ export default function CoursesCard(props) {
 								}
 								{courseDetails.type == "physical" ? <Link href="/" className='link px-2'>{date?.locationName}</Link> : <p className='px-2'>{date?.locationName}</p>}
 							</div> */}
-							{/* <button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة الدورة المسجلة</button> */}
-							<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>متابعة محتوى الدورة المسجلة</button>
-						</>
-					}
+						{/* <button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة الدورة المسجلة</button> */}
+						<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>{courseDetails.type === 'on-demand' ? 'متابعة محتوى الدورة' : 'متابعة محتوى الدورة المسجلة'}</button>
+						<button className={`${styles.followUpBtn} primarySolidBtn`} onClick={() => handleStudentInformaion()}>تعبئة بيانات الاشتراك</button>
+					</>
 				</div>
 				{isModelForcontentAccess &&
 					<ContentAccessModal
