@@ -3,7 +3,6 @@ import SecondPageIndicator from '../PaymentPageIndicator/SecondPageIndicator'
 import styles from './PaymentInfoFrom.module.scss'
 import Logo from '../../CommonComponents/Logo'
 import BankDetailsCard from '../../CommonComponents/BankDetailCard/BankDetailsCard'
-import * as PaymentConst from '../../../constants/PaymentConst'
 import CoverImg from '../../CommonComponents/CoverImg'
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -16,6 +15,7 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import { getRouteAPI } from '../../../services/apisService'
+import * as PaymentConst from '../../../constants/PaymentConst'
 
 
 export default function PaymentInfoForm(props) {
