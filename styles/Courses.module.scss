@@ -16,7 +16,7 @@
 }
 
 .leftSide {
-	left: 0rem;
+	height: 100%;
 }
 
 .pointList {
@@ -72,6 +72,8 @@
 .detailsBox {
 	display: table;
 	border-collapse: collapse;
+	position: sticky;
+	bottom: 0;
 
 	li {
 		display: flex;
@@ -252,7 +254,7 @@
 @media (max-width: 1380px) {
 	.courseCardMetaDataWrapper {
 		width: 32.5%;
-		margin: 0;
+		margin: 0.5rem 0;
 	}
 
 	.typeOfCourseCardWrapper {
