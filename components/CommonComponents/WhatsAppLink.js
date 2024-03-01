@@ -20,7 +20,7 @@ export default function WhatsAppLinkComponent(props) {
 			'event_category': 'Category',
 			'event_label': 'Label'
 		});
-		// window.open(linkConst.WhatsApp_Link, '_blank')
+		window.open(linkConst.WhatsApp_Link, '_blank')
 	}
 
 	return (
