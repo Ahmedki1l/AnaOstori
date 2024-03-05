@@ -393,7 +393,9 @@ export default function Index(props) {
 												<div key={`ccSection${i}`} className={styles.ccSectionWrapper}>
 													<div className={`${styles.ccSectionHeaders} ${expandedSection === i ? `${styles.borderBottom0}` : ''}`} onClick={() => setExpandedSection(expandedSection === i ? null : i)}>
 														<p className={`font-bold ${styles.ccSectionName}`}>{section.name}</p>
-														<AllIconsComponenet height={14} width={22} iconName={'arrow'} color={'#FFFFFF'} />
+														<div style={{ height: '20px' }} className={` ${expandedSection === i && 'rotate-180'}`}>
+															<AllIconsComponenet height={22} width={22} iconName={'keyBoardDownIcon'} color={'#FFFFFF'} />
+														</div>
 													</div>
 													{expandedSection === i &&
 														<div className={styles.ccSectionBodyWrapper}>
