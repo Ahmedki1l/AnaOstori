@@ -3,26 +3,36 @@ import * as linkConst from '../../constants/LinkConst';
 import useWindowSize from '../../hooks/useWindoSize';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import useScrollEvent from '../../hooks/useScrollEvent';
-
+import * as fpixel from '../../lib/fpixel';
+import GoogleAnalytics from '../../lib/GoogleAnalytics';
 
 export default function WhatsAppLinkComponent(props) {
 
-	const screenWidth = useWindowSize().width
-	const isBookSeatPageOpen = props.isBookSeatPageOpen
-	const offset = useScrollEvent().offset
-	const discountShow = props.discountShow
-	const paymentInfoChangePage = props.paymentInfoChangePage
-	const groupDiscountEligible = props?.courseDetail?.groupDiscountEligible
+	const screenWidth = useWindowSize().width;
+	const isBookSeatPageOpen = props.isBookSeatPageOpen;
+	const offset = useScrollEvent().offset;
+	const discountShow = props.discountShow;
+	const paymentInfoChangePage = props.paymentInfoChangePage;
+	const groupDiscountEligible = props?.courseDetail?.groupDiscountEligible;
+
+	const handleButtonClick = () => {
+		window.gtag('event', 'whatsapp_button_click', {
+			'event_category': 'Category',
+			'event_label': 'Label'
+		});
+		window.open(linkConst.WhatsApp_Link, '_blank')
+	}
 
 	return (
 		<div className={`whatsAppLogoWrapper 
-		    ${(groupDiscountEligible == false && offset > 512) && 'notShowWrapperUP'}
-		 	${discountShow == true ? `discountShowWrapperUp` : ``} 
-		 	${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`}
-		    ${paymentInfoChangePage && 'pageChangeLogoWrapper'}`}>
+            ${(groupDiscountEligible == false && offset > 512) && 'notShowWrapperUP'}
+            ${discountShow == true ? `discountShowWrapperUp` : ``} 
+            ${(isBookSeatPageOpen && offset > 512) ? `whatsAppLogoWrapperUp` : `whatsAppLogoWrapperDown`}
+            ${paymentInfoChangePage && 'pageChangeLogoWrapper'}`}>
 
 			<div className='whatsAppLogo'>
-				<Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'>
+				{/* <Link href={`${linkConst.WhatsApp_Link}`} target='_blank' className='normalLinkText'> */}
+				<div onClick={() => handleButtonClick()}>
 					<div className='flex'>
 						<AllIconsComponenet height={screenWidth < 769 ? 54 : 60} width={screenWidth < 769 ? 54 : 60} iconName={'whatsApp_whiteBorder'} color={'#ffffff'} />
 						<div className='whatsAppMessageWrapper'>
@@ -30,9 +40,9 @@ export default function WhatsAppLinkComponent(props) {
 							<p>تفضل تواصل معنا</p>
 						</div>
 					</div>
-				</Link>
+				</div>
+				{/* </Link> */}
 			</div>
 		</div>
 	)
-
 }
