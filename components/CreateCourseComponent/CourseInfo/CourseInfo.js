@@ -458,7 +458,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                         name={'englishCourse'}
                     >
                         <CheckBox
-                            disabled
+                            // disabled
                             label={' الدورة انجليزية'}
                             defaultChecked={englishCourse}
                             onChange={(e) => onChangeCourseChkBox(e, 'englishCourse')}
