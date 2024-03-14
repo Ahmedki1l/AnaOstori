@@ -52,11 +52,8 @@ const StudentInformation = () => {
         if (router?.query?.editStudentInfo === 'true') {
             getStudentInfoForEdit()
         }
-    }, [router.query.courseId])
-
-    useEffect(() => {
         Promise.all([fetchData('listCity'), fetchData('listDistrict'), fetchData('listSchool')])
-    }, [])
+    }, [router.query.courseId])
 
     const fetchData = async (routeName) => {
         let data = {
