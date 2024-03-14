@@ -7,27 +7,29 @@ import Input from '../components/antDesignCompo/Input';
 import Select from '../components/antDesignCompo/Select';
 import ModelAfterFillStudentInfo from '../components/CommonComponents/ModelAfterFillStudentInfo/ModelAfterFillStudentInfo';
 import { useRouter } from 'next/router';
-import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService';
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../services/apisService';
 import DatePicker from '../components/antDesignCompo/Datepicker';
 import { getNewToken } from '../services/fireBaseAuthService';
 import dayjs from 'dayjs';
 
 const educationalLevelList = [
-    { value: '1', label: 'أول ثانوي', value: 'first_secondary_school' },
-    { value: '2', label: 'ثاني ثانوي', value: 'second_secondary_school' },
-    { value: '3', label: 'ثالث ثانوي', value: 'third_secondary_school' },
-    { value: '4', label: 'غير ذلك ', value: 'other' },
-]
+    { value: 'first_secondary_school', label: 'أول ثانوي' },
+    { value: 'second_secondary_school', label: 'ثاني ثانوي' },
+    { value: 'third_secondary_school', label: 'ثالث ثانوي' },
+    { value: 'other', label: 'غير ذلك' },
+];
+
 const accountFoundFromList = [
-    { value: '1', label: 'الأصدقاء', value: 'friends' },
-    { value: '2', label: 'الأهل', value: 'parents' },
-    { value: '3', label: 'إعلان سناب', value: 'snap_ad' },
-    { value: '4', label: 'إعلان إنستقرام', value: 'instagram_ad' },
-    { value: '5', label: 'إعلان تويتر', value: 'twitter_ad' },
-    { value: '6', label: 'إعلان تيك توك', value: 'tiktok_ad' },
-]
+    { value: 'friends', label: 'الأصدقاء' },
+    { value: 'parents', label: 'الأهل' },
+    { value: 'snap_ad', label: 'إعلان سناب' },
+    { value: 'instagram_ad', label: 'إعلان إنستقرام' },
+    { value: 'twitter_ad', label: 'إعلان تويتر' },
+    { value: 'tiktok_ad', label: 'إعلان تيك توك' },
+];
 
 const StudentInformation = () => {
+
     const storeData = useSelector((state) => state?.globalStore);
     const fullName = storeData?.viewProfileData?.fullName;
     const [studentInfoForm] = Form.useForm();
@@ -36,6 +38,15 @@ const StudentInformation = () => {
     const router = useRouter()
     const courseId = router.query.courseId;
     const [studentInformationId, setStudentInformationId] = useState(null);
+    const [selectedCityOther, setSelectedCityOther] = useState(false);
+    const [inputForOtherSchoolName, setInputForOtherSchoolName] = useState(false);
+    const [selectedDistrictOther, setSelectedDistrictOther] = useState(false);
+    const [citiesList, setCitiesList] = useState([]);
+    const [selectedCity, setSelectedCity] = useState(null);
+    const [allDistrictList, setAllDistrictList] = useState([]);
+    const [districtList, setDistrictList] = useState(null);
+    const [selectedDistrict, setSelectedDistrict] = useState(null);
+    const [schoolNameList, setSchoolNameList] = useState([]);
 
     useEffect(() => {
         if (router?.query?.editStudentInfo === 'true') {
@@ -43,19 +54,73 @@ const StudentInformation = () => {
         }
     }, [router.query.courseId])
 
+    useEffect(() => {
+        Promise.all([fetchData('listCity'), fetchData('listDistrict'), fetchData('listSchool')])
+    }, [])
+
+    const fetchData = async (routeName) => {
+        let data = {
+            routeName: routeName
+        }
+        await getRouteAPI(data).then((res) => {
+            if (routeName === 'listCity') {
+                const formattedData = res?.data?.map(item => ({
+                    value: item.code,
+                    label: item.nameAr,
+                    key: item.id,
+                }));
+                formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
+                setCitiesList(formattedData);
+            } else if (routeName === 'listDistrict') {
+                const formattedData = res?.data?.map(item => ({
+                    value: item.code,
+                    label: item.nameAr,
+                    key: item.id
+                }));
+                formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
+                setAllDistrictList(formattedData);
+            } else if (routeName === 'listSchool') {
+                const formattedData = res?.data?.map(item => ({
+                    value: item.id,
+                    label: item.nameAr,
+                    key: item.id
+                }));
+                formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
+                setSchoolNameList(formattedData);
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
     const handleSaveInfo = async (values) => {
         values.courseId = courseId
+        values.city = selectedCityOther ? values.otherCity : selectedCity;
+        values.district = (selectedDistrictOther && !selectedCityOther) ? values.otherDistrict : selectedCityOther ? values.otherDistrictInput : selectedDistrict;
+        values.schoolName = inputForOtherSchoolName ? values.otherSchoolName : values.schoolName;
         values.reference = JSON.stringify(values.reference);
+        delete values.otherCity;
+        delete values.otherSchoolName;
+        delete values.otherDistrict;
+        delete values.otherDistrictInput;
         if (studentInformationId) {
             values.id = studentInformationId;
         }
         values.routeName = 'createStudentInformation',
             await postAuthRouteAPI(values).then((res) => {
-                console.log(res);
-                if (res?.response?.status !== 400) {
+                if (res?.status === 200) {
                     setModelAfterFillStudentInfo(true);
                 }
-            }).catch((err) => {
+            }).catch(async (err) => {
+                if (err?.response?.status === 401) {
+                    await getNewToken().then(async () => {
+                        await postAuthRouteAPI(values).then((res) => {
+                            if (res?.status === 200) {
+                                setModelAfterFillStudentInfo(true);
+                            }
+                        })
+                    });
+                }
                 console.log(err);
             });
     }
@@ -73,6 +138,7 @@ const StudentInformation = () => {
                 schoolLevel: studentInfoToSet?.schoolLevel,
                 examResult: studentInfoToSet?.examResult,
                 examDate: dayjs(studentInfoToSet?.examDate, 'YYYY-MM-DD'),
+                district: studentInfoToSet?.district,
                 city: studentInfoToSet?.city,
                 schoolName: studentInfoToSet?.schoolName,
                 parentNumber: studentInfoToSet?.parentNumber,
@@ -80,10 +146,6 @@ const StudentInformation = () => {
             });
         } catch (error) {
             console.log(error);
-            if (error?.response?.status === 401) {
-                await getNewToken();
-                await getStudentInfoForEdit();
-            }
         }
     };
 
@@ -94,6 +156,39 @@ const StudentInformation = () => {
             setInputForOtherLevel(false);
         }
     }
+
+    const handleCityChange = (value) => {
+        if (value === 'other') {
+            setSelectedCityOther(true);
+            setSelectedDistrict(null);
+        } else {
+            setSelectedCityOther(false);
+            const selectedCity = citiesList.find(city => city.value === value);
+            setSelectedCity(selectedCity?.label)
+            const district = allDistrictList.filter(dist => dist.value === selectedCity?.value);
+            const newDistrictList = [...district, { value: 'other', label: 'أخرى', value: 'other' }];
+            setDistrictList(newDistrictList);
+        }
+    };
+
+    const handleDistrictChange = (value) => {
+        if (value === 'other') {
+            setSelectedDistrictOther(true);
+            setSelectedDistrict(null)
+        } else {
+            setSelectedDistrictOther(false);
+            const district = districtList.find(dist => dist.value === value);
+            setSelectedDistrict(district?.label);
+        }
+    }
+    const handleSchoolNameChange = (value) => {
+        if (value === 'other') {
+            setInputForOtherSchoolName(true);
+        } else {
+            setInputForOtherSchoolName(false);
+        }
+    }
+
     return (
         <div className={`maxWidthDefault ${styles.studentInfoFormArea}`}>
             <div className={styles.studentInfoFormDiv}>
@@ -114,17 +209,14 @@ const StudentInformation = () => {
                             />
                         </FormItem>
                         {inputForOtherLevel &&
-                            <>
-                                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.otherLevelHeading}</p>
-                                <FormItem
-                                    name={'email'}>
-                                    <Input
-                                        width={358}
-                                        height={46}
-                                        placeholder={studentInformationConst.otherLevelPlaceHolder}
-                                    />
-                                </FormItem>
-                            </>
+                            <FormItem
+                                name={'otherSchoolLevel'}>
+                                <Input
+                                    width={358}
+                                    height={46}
+                                    placeholder={studentInformationConst.otherLevelPlaceHolder}
+                                />
+                            </FormItem>
                         }
                         <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.examResultsText}</p>
                         <FormItem
@@ -138,7 +230,6 @@ const StudentInformation = () => {
                         <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.nextExamDateHeading}</p>
                         <FormItem
                             name={'examDate'}
-                        // rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
                         >
                             <DatePicker
                                 format={'YYYY-MM-DD'}
@@ -151,21 +242,79 @@ const StudentInformation = () => {
                         <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.cityHeading}</p>
                         <FormItem
                             name={'city'}>
-                            <Input
+                            <Select
                                 width={358}
                                 height={46}
                                 placeholder={studentInformationConst.cityPlaceHolder}
+                                OptionData={citiesList}
+                                onChange={(e) => handleCityChange(e)}
                             />
                         </FormItem>
+                        {selectedCityOther &&
+                            <FormItem
+                                name={'otherCity'}>
+                                <Input
+                                    width={358}
+                                    height={46}
+                                    placeholder={studentInformationConst.addOtherCityPlaceHolder}
+                                />
+                            </FormItem>
+                        }
+                        <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.districtHeading}</p>
+                        {selectedCityOther ?
+                            <FormItem
+                                name={'otherDistrictInput'}>
+                                <Input
+                                    width={358}
+                                    height={46}
+                                    placeholder={studentInformationConst.otherDistrictPlaceHolder}
+                                />
+                            </FormItem>
+                            :
+                            <FormItem
+                                name={'district'}>
+                                <Select
+                                    width={358}
+                                    height={46}
+                                    placeholder={studentInformationConst.districtPlaceHolder}
+                                    OptionData={districtList}
+                                    onChange={handleDistrictChange}
+                                />
+                            </FormItem>
+                        }
+                        {(selectedDistrictOther && !selectedCityOther) &&
+                            <FormItem
+                                name={'otherDistrict'}>
+                                <Input
+                                    width={358}
+                                    height={46}
+                                    placeholder={studentInformationConst.otherDistrictPlaceHolder}
+                                />
+                            </FormItem>
+                        }
                         <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.schoolNameHeading}</p>
                         <FormItem
                             name={'schoolName'}>
-                            <Input
+                            <Select
                                 width={358}
                                 height={46}
                                 placeholder={studentInformationConst.schoolNamePlaceHolder}
+                                OptionData={schoolNameList}
+                                onChange={handleSchoolNameChange}
                             />
                         </FormItem>
+                        {inputForOtherSchoolName &&
+                            <>
+                                <FormItem
+                                    name={'otherSchoolName'}>
+                                    <Input
+                                        width={358}
+                                        height={46}
+                                        placeholder={studentInformationConst.otherSchoolNamePlaceHolder}
+                                    />
+                                </FormItem>
+                            </>
+                        }
                         <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.parentNumberHeading}</p>
                         <FormItem
                             name={'parentNumber'}>
