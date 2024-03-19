@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import styles from '../styles/StudentInformationForm.module.scss';
 import { useSelector } from 'react-redux';
 import { Form, FormItem } from '../components/antDesignCompo/FormItem';
@@ -44,16 +44,18 @@ const StudentInformation = () => {
     const [citiesList, setCitiesList] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [allDistrictList, setAllDistrictList] = useState([]);
-    const [districtList, setDistrictList] = useState(null);
+    const [districtList, setDistrictList] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [schoolNameList, setSchoolNameList] = useState([]);
+    const [selectedSchoolName, setSelectedSchoolName] = useState(null);
 
     useEffect(() => {
-        if (router?.query?.editStudentInfo === 'true') {
-            getStudentInfoForEdit()
-        }
         Promise.all([fetchData('listCity'), fetchData('listDistrict'), fetchData('listSchool')])
-    }, [router.query.courseId])
+        if (router.query.editStudentInfo === 'true') {
+            getStudentInfoForEdit();
+        }
+    }, [router.query.courseId]);
+
 
     const fetchData = async (routeName) => {
         let data = {
@@ -61,7 +63,7 @@ const StudentInformation = () => {
         }
         await getRouteAPI(data).then((res) => {
             if (routeName === 'listCity') {
-                const formattedData = res?.data?.map(item => ({
+                const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
                     value: item.code,
                     label: item.nameAr,
                     key: item.id,
@@ -69,16 +71,17 @@ const StudentInformation = () => {
                 formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
                 setCitiesList(formattedData);
             } else if (routeName === 'listDistrict') {
-                const formattedData = res?.data?.map(item => ({
+                const formattedData = res?.data?.sort((a, b) => parseInt(a.cityCode) - parseInt(b.cityCode)).map(item => ({
                     value: item.code,
                     label: item.nameAr,
-                    key: item.id
+                    key: item.id,
+                    cityCode: item.cityCode
                 }));
                 formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
                 setAllDistrictList(formattedData);
             } else if (routeName === 'listSchool') {
-                const formattedData = res?.data?.map(item => ({
-                    value: item.id,
+                const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
+                    value: item.nameAr,
                     label: item.nameAr,
                     key: item.id
                 }));
@@ -91,28 +94,26 @@ const StudentInformation = () => {
     }
 
     const handleSaveInfo = async (values) => {
+        console.log(values);
         values.courseId = courseId
-        values.city = selectedCityOther ? values.otherCity : selectedCity;
-        values.district = (selectedDistrictOther && !selectedCityOther) ? values.otherDistrict : selectedCityOther ? values.otherDistrictInput : selectedDistrict;
-        values.schoolName = inputForOtherSchoolName ? values.otherSchoolName : values.schoolName;
         values.reference = JSON.stringify(values.reference);
-        delete values.otherCity;
-        delete values.otherSchoolName;
-        delete values.otherDistrict;
-        delete values.otherDistrictInput;
+        values.otherCity = values.city == 'other' ? values.otherCity : null;
+        values.otherDistrict = values.district == 'other' || values.otherDistrict ? values.otherDistrict : null;
+        values.otherSchoolName = values.schoolName == 'other' ? values.otherSchoolName : null;
         if (studentInformationId) {
             values.id = studentInformationId;
         }
         values.routeName = 'createStudentInformation',
             await postAuthRouteAPI(values).then((res) => {
-                if (res?.status === 200) {
+                console.log(res);
+                if (res?.data?.statusCode !== 400) {
                     setModelAfterFillStudentInfo(true);
                 }
             }).catch(async (err) => {
                 if (err?.response?.status === 401) {
                     await getNewToken().then(async () => {
                         await postAuthRouteAPI(values).then((res) => {
-                            if (res?.status === 200) {
+                            if (res?.data?.statusCode !== 400) {
                                 setModelAfterFillStudentInfo(true);
                             }
                         })
@@ -121,6 +122,7 @@ const StudentInformation = () => {
                 console.log(err);
             });
     }
+
     const getStudentInfoForEdit = async () => {
         const data = {
             routeName: "viewProfile",
@@ -135,12 +137,18 @@ const StudentInformation = () => {
                 schoolLevel: studentInfoToSet?.schoolLevel,
                 examResult: studentInfoToSet?.examResult,
                 examDate: dayjs(studentInfoToSet?.examDate, 'YYYY-MM-DD'),
-                district: studentInfoToSet?.district,
                 city: studentInfoToSet?.city,
+                otherCity: studentInfoToSet?.otherCity,
+                district: studentInfoToSet?.district,
+                otherDistrict: studentInfoToSet?.otherDistrict,
                 schoolName: studentInfoToSet?.schoolName,
+                otherSchoolName: studentInfoToSet?.otherSchoolName,
                 parentNumber: studentInfoToSet?.parentNumber,
                 reference: JSON.parse(studentInfoToSet?.reference)
             });
+            setInputForOtherSchoolName(studentInfoToSet?.otherSchoolName ? true : false);
+            setSelectedDistrictOther(studentInfoToSet?.otherDistrict ? true : false);
+            setSelectedCityOther(studentInfoToSet?.otherCity ? true : false);
         } catch (error) {
             console.log(error);
         }
@@ -154,38 +162,45 @@ const StudentInformation = () => {
         }
     }
 
-    const handleCityChange = (value) => {
+    const handleOnSelecCity = (value, option) => {
         if (value === 'other') {
             setSelectedCityOther(true);
-            setSelectedDistrict(null);
+            setDistrictList([]);
         } else {
             setSelectedCityOther(false);
-            const selectedCity = citiesList.find(city => city.value === value);
-            setSelectedCity(selectedCity?.label)
-            const district = allDistrictList.filter(dist => dist.value === selectedCity?.value);
-            const newDistrictList = [...district, { value: 'other', label: 'أخرى', value: 'other' }];
-            setDistrictList(newDistrictList);
+            // setSelectedCity(option?.label);
+            const selectedCityCode = (value === '001' ? '01' : value);
+            const filteredDistricts = allDistrictList.filter(dist => dist.cityCode === selectedCityCode && dist.value !== null && dist.label !== null);
+            const newDistrictList = [...filteredDistricts, { value: 'other', label: 'أخرى', value: 'other' }];
+            if (filteredDistricts.length > 0) {
+                setDistrictList(newDistrictList);
+                setSelectedDistrictOther(false);
+            } else {
+                setDistrictList([]);
+            }
         }
-    };
+    }
 
-    const handleDistrictChange = (value) => {
+    const handleOnSelecDistricts = (value, option) => {
         if (value === 'other') {
             setSelectedDistrictOther(true);
-            setSelectedDistrict(null)
+            // setSelectedDistrict(null)
+            setSelectedCityOther(false);
         } else {
             setSelectedDistrictOther(false);
-            const district = districtList.find(dist => dist.value === value);
-            setSelectedDistrict(district?.label);
-        }
-    }
-    const handleSchoolNameChange = (value) => {
-        if (value === 'other') {
-            setInputForOtherSchoolName(true);
-        } else {
-            setInputForOtherSchoolName(false);
+            // setSelectedDistrict(option?.label);
         }
     }
 
+    const handleOnSchoolNameChange = (value, option) => {
+        if (value === 'other') {
+            setInputForOtherSchoolName(true);
+            // setSelectedSchoolName(null);
+        } else {
+            setInputForOtherSchoolName(false);
+            // setSelectedSchoolName(option?.label);
+        }
+    }
     return (
         <div className={`maxWidthDefault ${styles.studentInfoFormArea}`}>
             <div className={styles.studentInfoFormDiv}>
@@ -244,7 +259,7 @@ const StudentInformation = () => {
                                 height={46}
                                 placeholder={studentInformationConst.cityPlaceHolder}
                                 OptionData={citiesList}
-                                onChange={(e) => handleCityChange(e)}
+                                onSelect={(value, option) => handleOnSelecCity(value, option)}
                             />
                         </FormItem>
                         {selectedCityOther &&
@@ -257,37 +272,33 @@ const StudentInformation = () => {
                                 />
                             </FormItem>
                         }
-                        <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.districtHeading}</p>
-                        {selectedCityOther ?
-                            <FormItem
-                                name={'otherDistrictInput'}>
-                                <Input
-                                    width={358}
-                                    height={46}
-                                    placeholder={studentInformationConst.otherDistrictPlaceHolder}
-                                />
-                            </FormItem>
-                            :
-                            <FormItem
-                                name={'district'}>
-                                <Select
-                                    width={358}
-                                    height={46}
-                                    placeholder={studentInformationConst.districtPlaceHolder}
-                                    OptionData={districtList}
-                                    onChange={handleDistrictChange}
-                                />
-                            </FormItem>
+                        {(districtList?.length > 0) &&
+                            <>
+                                <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.districtHeading}</p>
+                                <FormItem
+                                    name={'district'}>
+                                    <Select
+                                        width={358}
+                                        height={46}
+                                        placeholder={studentInformationConst.districtPlaceHolder}
+                                        OptionData={districtList}
+                                        onSelect={(value, option) => handleOnSelecDistricts(value, option)}
+                                    />
+                                </FormItem>
+                            </>
                         }
-                        {(selectedDistrictOther && !selectedCityOther) &&
-                            <FormItem
-                                name={'otherDistrict'}>
-                                <Input
-                                    width={358}
-                                    height={46}
-                                    placeholder={studentInformationConst.otherDistrictPlaceHolder}
-                                />
-                            </FormItem>
+                        {(selectedCityOther || selectedDistrictOther || (districtList && districtList.length === 0)) &&
+                            <>
+                                {(!selectedDistrictOther || (studentInformationId && selectedDistrictOther)) && <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.districtHeading}</p>}
+                                <FormItem
+                                    name={'otherDistrict'}>
+                                    <Input
+                                        width={358}
+                                        height={46}
+                                        placeholder={studentInformationConst.otherDistrictPlaceHolder}
+                                    />
+                                </FormItem>
+                            </>
                         }
                         <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.schoolNameHeading}</p>
                         <FormItem
@@ -297,7 +308,7 @@ const StudentInformation = () => {
                                 height={46}
                                 placeholder={studentInformationConst.schoolNamePlaceHolder}
                                 OptionData={schoolNameList}
-                                onChange={handleSchoolNameChange}
+                                onSelect={(value, option) => handleOnSchoolNameChange(value, option)}
                             />
                         </FormItem>
                         {inputForOtherSchoolName &&

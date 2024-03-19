@@ -576,6 +576,34 @@ const Appointments = ({
                                         disabled={isFieldDisable}
                                     />
                                 </FormItem>
+                                <p className={`${styles.createappointmentFormFileds}`}>رابط الواتساب</p>
+                                <FormItem
+                                    name={'whatsappGroupLink'}
+                                >
+                                    <Input
+                                        fontSize={16}
+                                        width={352}
+                                        height={40}
+                                        placeholder='هنا تكتب اي شيء'
+                                        disabled={isFieldDisable}
+                                    />
+                                </FormItem>
+                                {courseType === 'online' &&
+                                    <>
+                                        <p className={`${styles.createappointmentFormFileds}`}>كود Google classroom</p>
+                                        <FormItem
+                                            name={'classRoomCode'}
+                                        >
+                                            <Input
+                                                fontSize={16}
+                                                width={352}
+                                                height={40}
+                                                placeholder='هنا تكتب اي شيء'
+                                                disabled={isFieldDisable}
+                                            />
+                                        </FormItem>
+                                    </>
+                                }
                                 {showSwitchBtn &&
                                     <>
                                         <div className='flex items-center'>
