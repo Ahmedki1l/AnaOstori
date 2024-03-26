@@ -256,19 +256,28 @@ const TheStudent = (props) => {
         const studentInfoBasedOnCoursed = student?.userProfile?.studentInformations.length > 0 && student?.userProfile?.studentInformations.find(info => info.courseId === router.query.courseId);
         if (studentInfoBasedOnCoursed) {
             const studentInfo = {
-                phone: student?.userProfile?.phone,
+                phone: `${student?.userProfile?.phone}+`,
                 email: student?.userProfile?.email,
-                schoolLevel: studentInfoBasedOnCoursed?.schoolLevel,
+                schoolLevel: studentInfoBasedOnCoursed?.schoolLevel === 'other' ? studentInfoBasedOnCoursed?.otherSchoolLevel : studentSchoolLevel(studentInfoBasedOnCoursed?.schoolLevel),
                 examResult: studentInfoBasedOnCoursed?.examResult,
                 examDate: studentInfoBasedOnCoursed?.examDate ? fullDate(studentInfoBasedOnCoursed?.examDate) : '-',
-                city: studentInfoBasedOnCoursed?.city,
-                schoolName: studentInfoBasedOnCoursed?.schoolName,
+                city: studentInfoBasedOnCoursed?.city === 'other' ? studentInfoBasedOnCoursed?.otherCity : studentInfoBasedOnCoursed?.city,
+                schoolName: studentInfoBasedOnCoursed?.schoolName === 'other' ? studentInfoBasedOnCoursed?.otherSchoolName : studentInfoBasedOnCoursed?.schoolName,
                 parentNumber: studentInfoBasedOnCoursed?.parentNumber,
                 reference: JSON.parse(studentInfoBasedOnCoursed?.reference).join(', ')
             };
             setShowSelectedStudentInfo(studentInfo);
         } else {
             setShowSelectedStudentInfo();
+        }
+    }
+    const studentSchoolLevel = (level) => {
+        if (level === 'first_secondary_school') {
+            return 'أول ثانوي'
+        } else if (level === 'second_secondary_school') {
+            return 'ثاني ثانوي'
+        } else {
+            return 'ثالث ثانوي'
         }
     }
 
@@ -407,8 +416,7 @@ const TheStudent = (props) => {
                                             </td>
                                         </tr>
                                     )
-                                })
-                                }
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -438,8 +446,8 @@ const TheStudent = (props) => {
                         {showSelectedStudentInfo &&
                             <tbody className={styles.studentTableBodyArea}>
                                 <tr className={styles.studentTableRow}>
-                                    <td> {showSelectedStudentInfo?.phone}</td>
-                                    <td>{showSelectedStudentInfo?.email}</td>
+                                    <td><Link className='link' style={{ textDecoration: 'none' }} target={'_blank'} href={`https://api.whatsapp.com/send/?phone=${showSelectedStudentInfo?.phone}&text&type=phone_number&app_absent=0`}>{showSelectedStudentInfo?.phone}</Link></td>
+                                    <td><Link className='link' style={{ textDecoration: 'none' }} target={'_blank'} href={`mailto:${showSelectedStudentInfo?.email}`}>{showSelectedStudentInfo?.email}</Link></td>
                                     <td>{showSelectedStudentInfo?.schoolLevel}</td>
                                     <td>{showSelectedStudentInfo?.examResult}</td>
                                     <td>{showSelectedStudentInfo?.examDate}</td>
@@ -468,12 +476,10 @@ const TheStudent = (props) => {
                                     <p className='fontBold py-2' style={{ fontSize: '18px' }}>{!showSelectedStudentInfo ? 'لا توجد بيانات' : 'ما أنشئت أي موعد'}</p>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        </div>}
                 </div>
             }
-            {
-                showStudentDetails &&
+            {showStudentDetails &&
                 <div className='pt-5'>
                     <CustomButton
                         btnText='حفظ'
@@ -483,9 +489,8 @@ const TheStudent = (props) => {
                         fontSize={16}
                         onClick={saveStudentExamDetails}
                     />
-                </div>
-            }
-        </div >
+                </div>}
+        </div>
     )
 }
 

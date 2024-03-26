@@ -49,6 +49,7 @@ export default function CoursesCard(props) {
 			pathname: (`/studentInformation`),
 			query: {
 				courseId: courseDetails.id,
+				courseType: courseDetails.type,
 				editStudentInfo: true
 			}
 		})

@@ -15,23 +15,30 @@ const StylesModal = styled(Modal)`
 
 const ModelAfterFillStudentInfo = ({
     modelAfterFillStudentInfo,
-    setModelAfterFillStudentInfo
+    setModelAfterFillStudentInfo,
+    courseId,
+    courseType,
 }) => {
 
     const router = useRouter()
+
     const isModelClose = () => {
-        setModelAfterFillStudentInfo(false)
+        if (courseType === "on-demand") {
+            router.push(`/myCourse?courseId=${courseId}`)
+        } else {
+            return setModelAfterFillStudentInfo(false)
+        }
     }
 
     return (
         <StylesModal
             open={modelAfterFillStudentInfo}
-            onCancel={isModelClose}
+            onCancel={() => setModelAfterFillStudentInfo(false)}
             closeIcon={false}
             width={358}
             centered={true}
             footer={false}>
-            <div onClick={isModelClose} className={styles.modalHeader}>
+            <div onClick={() => setModelAfterFillStudentInfo(false)} className={styles.modalHeader}>
                 <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
             </div>
             <div className={styles.modelWrapper}>
@@ -40,11 +47,11 @@ const ModelAfterFillStudentInfo = ({
                 </div>
                 <p className={`fontBold my-2 text-xl`}>{studentInformationConst.headingOfTheModel}</p>
                 <p className='text-base	'> 🧡 {studentInformationConst.blessingMsgForModel}</p>
-                {router.query.courseType == 'on-demand' &&
-                    <div className={`${styles.buttonModalDiv}`}>
-                        <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={isModelClose}>{studentInformationConst.btnTextForModel}</button>
-                    </div>
-                }
+                {/* {router.query.courseType == 'on-demand' && */}
+                <div className={`${styles.buttonModalDiv}`}>
+                    <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={isModelClose}>{studentInformationConst.btnTextForModel}</button>
+                </div>
+                {/* } */}
             </div>
         </StylesModal>
     )
