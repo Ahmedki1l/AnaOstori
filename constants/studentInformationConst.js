@@ -15,7 +15,7 @@ export const studentInformationConst = {
     districtPlaceHolder: 'ادخل اسم الحي',
     otherDistrictPlaceHolder: 'ادخل اسم الحي',
 
-    cityHeading: 'من أي مدينة - الحي؟',
+    cityHeading: 'المدينة',
     cityPlaceHolder: 'ادخل المدينة والحي',
     addOtherCityPlaceHolder: 'ادخل اسم المنطقة',
 
@@ -35,3 +35,19 @@ export const studentInformationConst = {
     blessingMsgForModel: 'فالك التوفيق يارب',
     btnTextForModel: 'متابعة محتوى الدورة ',
 }
+
+export const educationalLevelList = [
+    { value: 'first_secondary_school', label: 'أول ثانوي' },
+    { value: 'second_secondary_school', label: 'ثاني ثانوي' },
+    { value: 'third_secondary_school', label: 'ثالث ثانوي' },
+    { value: 'other', label: 'غير ذلك' },
+];
+
+export const accountFoundFromList = [
+    { value: 'friends', label: 'الأصدقاء' },
+    { value: 'parents', label: 'الأهل' },
+    { value: 'snap_ad', label: 'إعلان سناب' },
+    { value: 'instagram_ad', label: 'إعلان إنستقرام' },
+    { value: 'twitter_ad', label: 'إعلان تويتر' },
+    { value: 'tiktok_ad', label: 'إعلان تيك توك' },
+];

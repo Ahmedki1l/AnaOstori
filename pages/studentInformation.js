@@ -1,8 +1,8 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../styles/StudentInformationForm.module.scss';
 import { useSelector } from 'react-redux';
 import { Form, FormItem } from '../components/antDesignCompo/FormItem';
-import { studentInformationConst } from '../constants/studentInformationConst';
+import { accountFoundFromList, educationalLevelList, studentInformationConst } from '../constants/studentInformationConst';
 import Input from '../components/antDesignCompo/Input';
 import Select from '../components/antDesignCompo/Select';
 import ModelAfterFillStudentInfo from '../components/CommonComponents/ModelAfterFillStudentInfo/ModelAfterFillStudentInfo';
@@ -11,22 +11,6 @@ import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../services/apis
 import DatePicker from '../components/antDesignCompo/Datepicker';
 import { getNewToken } from '../services/fireBaseAuthService';
 import dayjs from 'dayjs';
-
-const educationalLevelList = [
-    { value: 'first_secondary_school', label: 'أول ثانوي' },
-    { value: 'second_secondary_school', label: 'ثاني ثانوي' },
-    { value: 'third_secondary_school', label: 'ثالث ثانوي' },
-    { value: 'other', label: 'غير ذلك' },
-];
-
-const accountFoundFromList = [
-    { value: 'friends', label: 'الأصدقاء' },
-    { value: 'parents', label: 'الأهل' },
-    { value: 'snap_ad', label: 'إعلان سناب' },
-    { value: 'instagram_ad', label: 'إعلان إنستقرام' },
-    { value: 'twitter_ad', label: 'إعلان تويتر' },
-    { value: 'tiktok_ad', label: 'إعلان تيك توك' },
-];
 
 const StudentInformation = () => {
 
@@ -37,17 +21,17 @@ const StudentInformation = () => {
     const [modelAfterFillStudentInfo, setModelAfterFillStudentInfo] = useState(false);
     const router = useRouter()
     const courseId = router.query.courseId;
+    const courseType = router.query.courseType;
     const [studentInformationId, setStudentInformationId] = useState(null);
     const [selectedCityOther, setSelectedCityOther] = useState(false);
     const [inputForOtherSchoolName, setInputForOtherSchoolName] = useState(false);
     const [selectedDistrictOther, setSelectedDistrictOther] = useState(false);
     const [citiesList, setCitiesList] = useState([]);
-    const [selectedCity, setSelectedCity] = useState(null);
     const [allDistrictList, setAllDistrictList] = useState([]);
     const [districtList, setDistrictList] = useState([]);
-    const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [schoolNameList, setSchoolNameList] = useState([]);
-    const [selectedSchoolName, setSelectedSchoolName] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    // const [parentNoError, setParentNoError] = useState('');
 
     useEffect(() => {
         Promise.all([fetchData('listCity'), fetchData('listDistrict'), fetchData('listSchool')])
@@ -64,18 +48,20 @@ const StudentInformation = () => {
         await getRouteAPI(data).then((res) => {
             if (routeName === 'listCity') {
                 const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
-                    value: item.code,
+                    value: item.nameAr,
                     label: item.nameAr,
                     key: item.id,
+                    cityCode: item.code
                 }));
                 formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
                 setCitiesList(formattedData);
             } else if (routeName === 'listDistrict') {
                 const formattedData = res?.data?.sort((a, b) => parseInt(a.cityCode) - parseInt(b.cityCode)).map(item => ({
-                    value: item.code,
+                    value: item.nameAr,
                     label: item.nameAr,
                     key: item.id,
-                    cityCode: item.cityCode
+                    cityCode: item.cityCode,
+                    districtCode: item.code
                 }));
                 formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
                 setAllDistrictList(formattedData);
@@ -94,18 +80,17 @@ const StudentInformation = () => {
     }
 
     const handleSaveInfo = async (values) => {
-        console.log(values);
         values.courseId = courseId
         values.reference = JSON.stringify(values.reference);
         values.otherCity = values.city == 'other' ? values.otherCity : null;
         values.otherDistrict = values.district == 'other' || values.otherDistrict ? values.otherDistrict : null;
         values.otherSchoolName = values.schoolName == 'other' ? values.otherSchoolName : null;
+        values.otherSchoolLevel = values.schoolLevel == 'other' ? values.otherSchoolLevel : null;
         if (studentInformationId) {
             values.id = studentInformationId;
         }
         values.routeName = 'createStudentInformation',
             await postAuthRouteAPI(values).then((res) => {
-                console.log(res);
                 if (res?.data?.statusCode !== 400) {
                     setModelAfterFillStudentInfo(true);
                 }
@@ -135,6 +120,7 @@ const StudentInformation = () => {
             const studentInfoToSet = studentInfos[0];
             studentInfoForm.setFieldsValue({
                 schoolLevel: studentInfoToSet?.schoolLevel,
+                otherSchoolLevel: studentInfoToSet?.otherSchoolLevel,
                 examResult: studentInfoToSet?.examResult,
                 examDate: dayjs(studentInfoToSet?.examDate, 'YYYY-MM-DD'),
                 city: studentInfoToSet?.city,
@@ -149,6 +135,7 @@ const StudentInformation = () => {
             setInputForOtherSchoolName(studentInfoToSet?.otherSchoolName ? true : false);
             setSelectedDistrictOther(studentInfoToSet?.otherDistrict ? true : false);
             setSelectedCityOther(studentInfoToSet?.otherCity ? true : false);
+            setInputForOtherLevel(studentInfoToSet?.otherSchoolLevel ? true : false);
         } catch (error) {
             console.log(error);
         }
@@ -161,17 +148,15 @@ const StudentInformation = () => {
             setInputForOtherLevel(false);
         }
     }
-
     const handleOnSelecCity = (value, option) => {
         if (value === 'other') {
             setSelectedCityOther(true);
             setDistrictList([]);
         } else {
             setSelectedCityOther(false);
-            // setSelectedCity(option?.label);
-            const selectedCityCode = (value === '001' ? '01' : value);
+            const selectedCityCode = (option.cityCode === '001' ? '01' : option.cityCode);
             const filteredDistricts = allDistrictList.filter(dist => dist.cityCode === selectedCityCode && dist.value !== null && dist.label !== null);
-            const newDistrictList = [...filteredDistricts, { value: 'other', label: 'أخرى', value: 'other' }];
+            const newDistrictList = [...filteredDistricts, { value: 'other', label: 'أخرى' }];
             if (filteredDistricts.length > 0) {
                 setDistrictList(newDistrictList);
                 setSelectedDistrictOther(false);
@@ -184,23 +169,41 @@ const StudentInformation = () => {
     const handleOnSelecDistricts = (value, option) => {
         if (value === 'other') {
             setSelectedDistrictOther(true);
-            // setSelectedDistrict(null)
             setSelectedCityOther(false);
         } else {
             setSelectedDistrictOther(false);
-            // setSelectedDistrict(option?.label);
         }
     }
 
     const handleOnSchoolNameChange = (value, option) => {
         if (value === 'other') {
             setInputForOtherSchoolName(true);
-            // setSelectedSchoolName(null);
         } else {
             setInputForOtherSchoolName(false);
-            // setSelectedSchoolName(option?.label);
         }
     }
+    const handlePhoneChange = (event) => {
+        const newValue = event.target.value;
+        if (newValue.length > 10) {
+            return
+        } else {
+            setPhoneNumber(newValue);
+        }
+    }
+    const validateMobileNumber = (rule, value, callback) => {
+        const mobileRegex = /^05\d{8}$/;
+        if (!value) {
+            setParentNoError('Please input your mobile number!');
+            callback('Please input your mobile number!');
+        } else if (!mobileRegex.test(value)) {
+            setParentNoError('Mobile number should start with 05 and have exactly 10 digits.');
+            callback('Mobile number should start with 05 and have exactly 10 digits.');
+        } else {
+            setParentNoError('');
+            callback();
+        }
+    };
+
     return (
         <div className={`maxWidthDefault ${styles.studentInfoFormArea}`}>
             <div className={styles.studentInfoFormDiv}>
@@ -323,16 +326,43 @@ const StudentInformation = () => {
                                 </FormItem>
                             </>
                         }
-                        <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.parentNumberHeading}</p>
+                        <p className='fontBold pt-2' style={{ fontSize: '18px' }}>{studentInformationConst.parentNumberHeading}</p>
                         <FormItem
+                            className='formInputBox'
                             name={'parentNumber'}>
                             <Input
+                                type={'number'}
                                 width={358}
                                 height={46}
+                                value={phoneNumber}
                                 placeholder={studentInformationConst.parentNumberPlaceHolder}
+                                onChange={event => handlePhoneChange(event)}
+                                maxLength={10}
                             />
                         </FormItem>
-                        <p className='fontBold py-2' style={{ fontSize: '18px' }}>{studentInformationConst.whereYouFoundAccountHeading}</p>
+                        {/* <FormItem
+                            overlayClassName="numeric-input"
+                            className='formInputBox'
+                            name={'parentNumber'}
+                            rules={[
+                                { required: true, message: 'Please input your mobile number!' },
+                                { validator: validateMobileNumber }
+                            ]}
+                            validateStatus={parentNoError ? 'parentNoError' : ''}
+                            help={<h8 style={{ color: 'red' }}> {parentNoError}</h8>}
+                        >
+
+                            <Input
+                                type={'number'}
+                                width={358}
+                                height={46}
+                                onChange={(e) => setPhoneNumber(e)}
+                                value={phoneNumber}
+                                placeholder={studentInformationConst.parentNumberPlaceHolder}
+                                maxLength={10}
+                            />
+                        </FormItem> */}
+                        <p className='fontBold pb-2' style={{ fontSize: '18px' }}>{studentInformationConst.whereYouFoundAccountHeading}</p>
                         <FormItem
                             name={'reference'}
                         >
@@ -355,6 +385,8 @@ const StudentInformation = () => {
                     <ModelAfterFillStudentInfo
                         modelAfterFillStudentInfo={modelAfterFillStudentInfo}
                         setModelAfterFillStudentInfo={setModelAfterFillStudentInfo}
+                        courseId={courseId}
+                        courseType={courseType}
                     />
                 }
             </div>
