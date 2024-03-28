@@ -50,7 +50,8 @@ export default function CoursesCard(props) {
 			query: {
 				courseId: courseDetails.id,
 				courseType: courseDetails.type,
-				editStudentInfo: true
+				editStudentInfo: true,
+				contentAccess: contentAccess,
 			}
 		})
 	}

@@ -256,12 +256,13 @@ const TheStudent = (props) => {
         const studentInfoBasedOnCoursed = student?.userProfile?.studentInformations.length > 0 && student?.userProfile?.studentInformations.find(info => info.courseId === router.query.courseId);
         if (studentInfoBasedOnCoursed) {
             const studentInfo = {
-                phone: `${student?.userProfile?.phone}+`,
+                phone: `${student?.userProfile?.phone}`,
                 email: student?.userProfile?.email,
                 schoolLevel: studentInfoBasedOnCoursed?.schoolLevel === 'other' ? studentInfoBasedOnCoursed?.otherSchoolLevel : studentSchoolLevel(studentInfoBasedOnCoursed?.schoolLevel),
                 examResult: studentInfoBasedOnCoursed?.examResult,
                 examDate: studentInfoBasedOnCoursed?.examDate ? fullDate(studentInfoBasedOnCoursed?.examDate) : '-',
                 city: studentInfoBasedOnCoursed?.city === 'other' ? studentInfoBasedOnCoursed?.otherCity : studentInfoBasedOnCoursed?.city,
+                district: studentInfoBasedOnCoursed?.district === 'other' ? studentInfoBasedOnCoursed?.otherDistrict : studentInfoBasedOnCoursed?.district,
                 schoolName: studentInfoBasedOnCoursed?.schoolName === 'other' ? studentInfoBasedOnCoursed?.otherSchoolName : studentInfoBasedOnCoursed?.schoolName,
                 parentNumber: studentInfoBasedOnCoursed?.parentNumber,
                 reference: JSON.parse(studentInfoBasedOnCoursed?.reference).join(', ')
@@ -438,6 +439,7 @@ const TheStudent = (props) => {
                                 <th className={styles.studentInfoTableHead}>درجة الطالب</th>
                                 <th className={styles.studentInfoTableHead}>موعد الاختبار</th>
                                 <th className={styles.studentInfoTableHead}>المدينة</th>
+                                <th className={styles.studentInfoTableHead}>الحي</th>
                                 <th className={styles.studentInfoTableHead}>المدرسة</th>
                                 <th className={styles.studentInfoTableHead}>رقم ولي الأمر</th>
                                 <th className={styles.studentInfoTableHead}>من وين عرفنا</th>
@@ -446,12 +448,13 @@ const TheStudent = (props) => {
                         {showSelectedStudentInfo &&
                             <tbody className={styles.studentTableBodyArea}>
                                 <tr className={styles.studentTableRow}>
-                                    <td><Link className='link' style={{ textDecoration: 'none' }} target={'_blank'} href={`https://api.whatsapp.com/send/?phone=${showSelectedStudentInfo?.phone}&text&type=phone_number&app_absent=0`}>{showSelectedStudentInfo?.phone}</Link></td>
+                                    <td><Link className='link' style={{ textDecoration: 'none' }} target={'_blank'} href={`https://api.whatsapp.com/send/?phone=${showSelectedStudentInfo?.phone}&text&type=phone_number&app_absent=0`}>{showSelectedStudentInfo?.phone}+</Link></td>
                                     <td><Link className='link' style={{ textDecoration: 'none' }} target={'_blank'} href={`mailto:${showSelectedStudentInfo?.email}`}>{showSelectedStudentInfo?.email}</Link></td>
                                     <td>{showSelectedStudentInfo?.schoolLevel}</td>
                                     <td>{showSelectedStudentInfo?.examResult}</td>
                                     <td>{showSelectedStudentInfo?.examDate}</td>
                                     <td>{showSelectedStudentInfo?.city}</td>
+                                    <td>{showSelectedStudentInfo?.district}</td>
                                     <td>{showSelectedStudentInfo?.schoolName}</td>
                                     <td>{showSelectedStudentInfo?.parentNumber}</td>
                                     <td>
