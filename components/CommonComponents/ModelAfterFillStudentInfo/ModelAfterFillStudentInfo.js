@@ -1,10 +1,11 @@
 import { Modal } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './ModelAfterFillStudentInfo.module.scss'
 import styled from 'styled-components'
 import { studentInformationConst } from '../../../constants/studentInformationConst'
 import { useRouter } from 'next/router'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
+import ContentAccessModal from '../ContentAccessModal/ContentAccessModal'
 
 const StylesModal = styled(Modal)`
     .ant-modal-content {
@@ -21,12 +22,14 @@ const ModelAfterFillStudentInfo = ({
 }) => {
 
     const router = useRouter()
+    const [isModelForcontentAccess, setIsModelforcontentAccess] = useState(false)
 
-    const isModelClose = () => {
-        if (courseType === "on-demand") {
-            router.push(`/myCourse?courseId=${courseId}`)
+    const goToTheCourseContent = () => {
+        if (router.query.contentAccess === 'false') {
+            setIsModelforcontentAccess(true)
+            return
         } else {
-            return setModelAfterFillStudentInfo(false)
+            router.push(`/myCourse?courseId=${courseId}`)
         }
     }
 
@@ -49,10 +52,16 @@ const ModelAfterFillStudentInfo = ({
                 <p className='text-base	'> 🧡 {studentInformationConst.blessingMsgForModel}</p>
                 {/* {router.query.courseType == 'on-demand' && */}
                 <div className={`${styles.buttonModalDiv}`}>
-                    <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={isModelClose}>{studentInformationConst.btnTextForModel}</button>
+                    <button className={`primarySolidBtn ${styles.cancelBtn}`} onClick={goToTheCourseContent}>{studentInformationConst.btnTextForModel}</button>
                 </div>
                 {/* } */}
             </div>
+            {isModelForcontentAccess &&
+                <ContentAccessModal
+                    isModelForcontentAccess={isModelForcontentAccess}
+                    setIsModelforcontentAccess={setIsModelforcontentAccess}
+                />
+            }
         </StylesModal>
     )
 }
