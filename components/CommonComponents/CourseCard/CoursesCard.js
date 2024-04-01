@@ -49,7 +49,9 @@ export default function CoursesCard(props) {
 			pathname: (`/studentInformation`),
 			query: {
 				courseId: courseDetails.id,
-				editStudentInfo: true
+				courseType: courseDetails.type,
+				editStudentInfo: true,
+				contentAccess: contentAccess,
 			}
 		})
 	}
@@ -94,7 +96,7 @@ export default function CoursesCard(props) {
 							</div> */}
 						{/* <button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => Router.push(`myCourse/${courseDetails.id}`)}>متابعة الدورة المسجلة</button> */}
 						<button className={`${styles.followUpBtn} primaryStrockedBtn`} onClick={() => handleClick()}>{courseDetails.type === 'on-demand' ? 'متابعة محتوى الدورة' : 'متابعة محتوى الدورة المسجلة'}</button>
-						{/* <button className={`${styles.followUpBtn} primarySolidBtn`} onClick={() => handleStudentInformaion()}>تعبئة بيانات الاشتراك</button> */}
+						<button className={`${styles.followUpBtn} primarySolidBtn`} onClick={() => handleStudentInformaion()}>تعبئة بيانات الاشتراك</button>
 					</>
 				</div>
 				{isModelForcontentAccess &&
