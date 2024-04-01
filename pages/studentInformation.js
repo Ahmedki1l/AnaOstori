@@ -31,6 +31,7 @@ const StudentInformation = () => {
     const [districtList, setDistrictList] = useState([]);
     const [schoolNameList, setSchoolNameList] = useState([]);
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [inputForOtherReferances, setInputForOtherReferances] = useState(false);
     // const [parentNoError, setParentNoError] = useState('');
 
     useEffect(() => {
@@ -86,6 +87,7 @@ const StudentInformation = () => {
         values.otherDistrict = values.district == 'other' || values.otherDistrict ? values.otherDistrict : null;
         values.otherSchoolName = values.schoolName == 'other' ? values.otherSchoolName : null;
         values.otherSchoolLevel = values.schoolLevel == 'other' ? values.otherSchoolLevel : null;
+        values.otherReference = values.reference.includes('other') ? values.otherReference : null;
         if (studentInformationId) {
             values.id = studentInformationId;
         }
@@ -130,12 +132,15 @@ const StudentInformation = () => {
                 schoolName: studentInfoToSet?.schoolName,
                 otherSchoolName: studentInfoToSet?.otherSchoolName,
                 parentNumber: studentInfoToSet?.parentNumber,
-                reference: JSON.parse(studentInfoToSet?.reference)
+                reference: JSON.parse(studentInfoToSet?.reference),
+                otherReference: studentInfoToSet?.otherReference
+
             });
             setInputForOtherSchoolName(studentInfoToSet?.otherSchoolName ? true : false);
             setSelectedDistrictOther(studentInfoToSet?.otherDistrict ? true : false);
             setSelectedCityOther(studentInfoToSet?.otherCity ? true : false);
             setInputForOtherLevel(studentInfoToSet?.otherSchoolLevel ? true : false);
+            setInputForOtherReferances(studentInfoToSet?.otherReference ? true : false);
         } catch (error) {
             console.log(error);
         }
@@ -148,7 +153,7 @@ const StudentInformation = () => {
             setInputForOtherLevel(false);
         }
     }
-    const handleOnSelecCity = (value, option) => {
+    const handleOnSelectCity = (value, option) => {
         if (value === 'other') {
             setSelectedCityOther(true);
             setDistrictList([]);
@@ -180,6 +185,13 @@ const StudentInformation = () => {
             setInputForOtherSchoolName(true);
         } else {
             setInputForOtherSchoolName(false);
+        }
+    }
+    const handleOnSelectReferances = (value, option) => {
+        if (value.includes('other')) {
+            setInputForOtherReferances(true);
+        } else {
+            setInputForOtherReferances(false);
         }
     }
     const handlePhoneChange = (event) => {
@@ -262,7 +274,7 @@ const StudentInformation = () => {
                                 height={46}
                                 placeholder={studentInformationConst.cityPlaceHolder}
                                 OptionData={citiesList}
-                                onSelect={(value, option) => handleOnSelecCity(value, option)}
+                                onSelect={(value, option) => handleOnSelectCity(value, option)}
                             />
                         </FormItem>
                         {selectedCityOther &&
@@ -372,10 +384,23 @@ const StudentInformation = () => {
                                 width={358}
                                 height={46}
                                 placeholder={studentInformationConst.whereYouFoundAccountPlaceHolder}
-                                onChange={handleSelectEduCationalLevel}
                                 OptionData={accountFoundFromList}
+                                onSelect={(value, option) => handleOnSelectReferances(value, option)}
+
                             />
                         </FormItem>
+                        {inputForOtherReferances &&
+                            <>
+                                <FormItem
+                                    name={'otherReference'}>
+                                    <Input
+                                        width={358}
+                                        height={46}
+                                        placeholder={studentInformationConst.whereYouFoundAccountPlaceHolder}
+                                    />
+                                </FormItem>
+                            </>
+                        }
                         <div className={styles.saveStudentInfoBtn}>
                             <button className='primarySolidBtn py-2 px-5 mt-5' htmltype='submit' >{studentInformationConst.saveInformation}</button>
                         </div>

@@ -50,4 +50,5 @@ export const accountFoundFromList = [
     { value: 'instagram_ad', label: 'إعلان إنستقرام' },
     { value: 'twitter_ad', label: 'إعلان تويتر' },
     { value: 'tiktok_ad', label: 'إعلان تيك توك' },
+    { value: 'other', label: 'غير ذلك' }
 ];

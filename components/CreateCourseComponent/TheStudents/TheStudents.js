@@ -265,7 +265,8 @@ const TheStudent = (props) => {
                 district: studentInfoBasedOnCoursed?.district === 'other' ? studentInfoBasedOnCoursed?.otherDistrict : studentInfoBasedOnCoursed?.district,
                 schoolName: studentInfoBasedOnCoursed?.schoolName === 'other' ? studentInfoBasedOnCoursed?.otherSchoolName : studentInfoBasedOnCoursed?.schoolName,
                 parentNumber: studentInfoBasedOnCoursed?.parentNumber,
-                reference: JSON.parse(studentInfoBasedOnCoursed?.reference).join(', ')
+                reference: JSON.parse(studentInfoBasedOnCoursed?.reference).join(', '),
+                otherReference: studentInfoBasedOnCoursed?.otherReference
             };
             setShowSelectedStudentInfo(studentInfo);
         } else {
@@ -465,7 +466,7 @@ const TheStudent = (props) => {
                                                         <p>{item.label}</p>
                                                     </div>
                                                 )
-                                            })}
+                                            })}{showSelectedStudentInfo?.otherReference}
                                     </td>
                                 </tr>
                             </tbody>
