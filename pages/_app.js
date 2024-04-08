@@ -246,7 +246,7 @@ function MyApp({ Component, pageProps }) {
 						r.src=n;var u=t.getElementsByTagName(s)[0];
 						u.parentNode.insertBefore(r,u);})(window,document,
 						'https://sc-static.net/scevent.min.js');
-						snaptr('init', '5a36a3a1-9664-44da-8263-e9dce27f92f9', {
+						snaptr('init','${process.env.NEXT_PUBLIC_SNAPCHAT_PIXEL_ID}', {
 						'user_email': '__INSERT_USER_EMAIL__'
 						});
 						snaptr('track', 'PAGE_VIEW');
