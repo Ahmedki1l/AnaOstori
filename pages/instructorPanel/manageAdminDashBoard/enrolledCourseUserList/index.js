@@ -158,7 +158,10 @@ const Index = () => {
                         },
                         beginAtZero: true
                     }
-                }
+                },
+                // plugins: {
+                //     tooltip: false
+                // },
             },
         }
         setDataOfBarChart(dataForEnrolledUserListChart)
