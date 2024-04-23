@@ -304,7 +304,11 @@ const TheStudent = (props) => {
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Quiz Items');
         const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, `${editCourseData.name}-${availabilityDateRange(selectedaAvailability.dateFrom, selectedaAvailability.dateTo)}.xlsx`);
+        if (selectedaAvailability?.dateFrom && selectedaAvailability?.dateTo) {
+            saveAs(blob, `${editCourseData.name}-${availabilityDateRange(selectedaAvailability.dateFrom, selectedaAvailability.dateTo)}.xlsx`);
+        } else {
+            saveAs(blob, `${editCourseData.name}.xlsx`);
+        }
     }
 
     return (
