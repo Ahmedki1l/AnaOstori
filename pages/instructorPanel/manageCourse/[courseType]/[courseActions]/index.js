@@ -146,7 +146,7 @@ export default function Index() {
                             />}
                         {selectedItem == 2 && <ExternalCourseCard createCourseApiRes={createCourseApiRes} setSelectedItem={setSelectedItem} />}
                         {selectedItem == 3 && <Appointment setSelectedItem={setSelectedItem} courseId={courseId} courseType={courseType} getAllAvailability={getAllAvailability} availabilityList={availabilityList} />}
-                        {selectedItem == 4 && <TheStudents courseId={courseId} courseType={courseType} />}
+                        {selectedItem == 4 && <TheStudents courseId={courseId} courseType={courseType} availabilityList={availabilityList} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} courseType={courseType} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} />}
                     </div>

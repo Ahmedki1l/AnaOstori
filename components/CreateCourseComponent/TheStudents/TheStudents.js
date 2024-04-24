@@ -9,7 +9,7 @@ import { getAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import Input from '../../antDesignCompo/Input'
 import { Form } from 'antd'
 import { getNewToken } from '../../../services/fireBaseAuthService'
-import { fullDate } from '../../../constants/DateConverter';
+import { dateRange, fullDate } from '../../../constants/DateConverter';
 import ProfilePicture from '../../CommonComponents/ProfilePicture';
 import { mediaUrl } from '../../../constants/DataManupulation'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
@@ -20,6 +20,9 @@ import Link from 'next/link'
 import { studentsExamsConst } from '../../../constants/adminPanelConst/studentsExamsConst/studentsExamsConst'
 import { useRouter } from 'next/router'
 import Spinner from '../../CommonComponents/spinner'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver';
+import { useSelector } from 'react-redux'
 
 const accountFoundFromList = [
     { value: '1', label: 'الأصدقاء', value: 'friends' },
@@ -46,6 +49,10 @@ const TheStudent = (props) => {
     const [showLoader, setShowLoader] = useState(false)
     const [showStudentInfo, setShowStudentInfo] = useState(false)
     const [showSelectedStudentInfo, setShowSelectedStudentInfo] = useState()
+    const storeData = useSelector((state) => state?.globalStore);
+    const editCourseData = storeData?.editCourseData;
+    const availabilityId = router?.query?.availabilityId
+    const selectedaAvailability = props?.availabilityList?.filter((item) => availabilityId?.includes(item.id))[0]
 
     useEffect(() => {
         if (router.query.availabilityId == undefined && courseType != 'onDemand')
@@ -66,12 +73,10 @@ const TheStudent = (props) => {
         }
         setExamList(updatedExamData)
     }
-
     const studentDetailsSuccessRes = (msg) => {
         toast.success(studentsExamsConst?.toastSuccess, { rtl: true, })
         setShowBtnLoader(false)
     }
-
     const saveStudentExamDetails = async () => {
         setShowBtnLoader(true)
         let createDataBody = []
@@ -192,7 +197,6 @@ const TheStudent = (props) => {
             }
         })
     }
-
     const selectGenderFilter = (value) => {
         const newStudentList = [...allStudentDetails]
         setDisplayedStudentList(newStudentList.filter((student) => value == student.userProfile.gender));
@@ -250,7 +254,6 @@ const TheStudent = (props) => {
         setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
         setSelectedStudent(student)
     }
-
     const showSelectedStudentInformation = (student, courseId) => {
         setShowStudentInfo(true);
         const studentInfoBasedOnCoursed = student?.userProfile?.studentInformations.length > 0 && student?.userProfile?.studentInformations.find(info => info.courseId === router.query.courseId);
@@ -282,9 +285,45 @@ const TheStudent = (props) => {
             return 'ثالث ثانوي'
         }
     }
+    const availabilityDateRange = (dateFrom, dateTo) => {
+        const fromDate = new Date(dateFrom)?.toLocaleDateString({ timeZone: "UTC", day: 'numeric', month: 'long' });
+        const toDate = new Date(dateTo)?.toLocaleDateString({ timeZone: "UTC", day: 'numeric', month: 'long' });
+        return `${fromDate} - ${toDate}`;
+    };
+    const downloadExcel = () => {
+        const downloadDataForExcel = displayedStudentList.map((student) => {
+            return {
+                "اسم الطالب": student?.userProfile?.fullName ? student?.userProfile?.fullName : student?.userProfile?.firstName ? student?.userProfile?.firstName : null,
+                "رقم الجوال": student?.userProfile?.phone ? student?.userProfile?.phone : null,
+                "الايميل": student?.userProfile?.email ? student?.userProfile?.email : null,
+                "تاريخ الاشتراك": fullDate(student?.userProfile?.createdAt) ? fullDate(student?.userProfile?.createdAt) : null,
+            }
+        });
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(downloadDataForExcel);
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Quiz Items');
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        if (selectedaAvailability?.dateFrom && selectedaAvailability?.dateTo) {
+            saveAs(blob, `${editCourseData.name}-${availabilityDateRange(selectedaAvailability.dateFrom, selectedaAvailability.dateTo)}.xlsx`);
+        } else {
+            saveAs(blob, `${editCourseData.name}.xlsx`);
+        }
+    }
 
     return (
         <div className='maxWidthDefault px-4'>
+            {(!showStudentDetails && !showStudentInfo) &&
+                <div style={{ direction: 'ltr', marginBottom: '2rem' }}>
+                    <CustomButton
+                        btnText='تنزيل بيانات الطلاب'
+                        width={190}
+                        height={40}
+                        fontSize={16}
+                        onClick={() => downloadExcel()}
+                    />
+                </div>
+            }
             {(!showStudentDetails && !showStudentInfo) &&
                 <div>
                     <Form form={studentDetailsForm}>
@@ -499,3 +538,4 @@ const TheStudent = (props) => {
 }
 
 export default TheStudent
+
