@@ -213,23 +213,46 @@ function MyApp({ Component, pageProps }) {
 						`,
 						}}
 					/>
-					{/* <Script
-					id="snap-pixel"
-					strategy="afterInteractive"
-					type='text/javascript'
-					dangerouslySetInnerHTML={{
-						__html: `
-						(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function() 
-							{a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)}; 
-							a.queue=[];var s='script';r=t.createElement(s);r.async=!0; r.src=n;
-							var u=t.getElementsByTagName(s)[0]; u.parentNode.insertBefore(r,u);})
-							(window,document, 'https://sc-static.net/scevent.min.js'); 
-							snaptr('init', 'be39bfb2-47f6-403e-be65-f75f7232436c', 
-							{ 'user_email': '__INSERT_USER_EMAIL__' }); 
-							snaptr('track', 'PAGE_VIEW');
+					<Script
+						id='tiktok-pixel'
+						strategy='afterInteractive'
+						dangerouslySetInnerHTML={{
+							__html: `
+						!function (w, d, t) {
+						w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
+						ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],
+						ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+						for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+						ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++
+						)ttq.setAndDefer(e,ttq.methods[n]);return e},
+						ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";
+						ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};
+						n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=i+"?sdkid="+e+"&lib="+t;
+						e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+						ttq.load('${process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID}');
+						ttq.page();
+						}(window, document, 'ttq');
 						`,
-					}}
-				/> */}
+						}}
+					/>
+					<Script
+						id='snap-pixel'
+						strategy='afterInteractive'
+						dangerouslySetInnerHTML={{
+							__html: `
+						(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()
+						{a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};
+						a.queue=[];var s='script';r=t.createElement(s);r.async=!0;
+						r.src=n;var u=t.getElementsByTagName(s)[0];
+						u.parentNode.insertBefore(r,u);})(window,document,
+						'https://sc-static.net/scevent.min.js');
+						snaptr('init','${process.env.NEXT_PUBLIC_SNAPCHAT_PIXEL_ID}', {
+						'user_email': '__INSERT_USER_EMAIL__'
+						});
+						snaptr('track', 'PAGE_VIEW');
+						`,
+						}}
+					/>
 					<noscript><img height="1" width="1" style={{ display: 'none' }}
 						src={`https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1`}
 						alt={'fbPixelNoScriptAlt'}
