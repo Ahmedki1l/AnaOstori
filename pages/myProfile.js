@@ -5,6 +5,9 @@ import styles from '../styles/MyProfile.module.scss'
 import { useSelector } from 'react-redux';
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
+import { getAuthRouteAPI } from "../services/apisService";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 
 
@@ -12,7 +15,26 @@ export default function MyProfile() {
 
 	const storeData = useSelector((state) => state?.globalStore);
 	const userDetails = storeData?.viewProfileData;
-	const myCourses = storeData?.myCourses
+	const [myCourses, setMyCourses] = useState([])
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (storeData?.viewProfileData) {
+			getMyCourseReq()
+		}
+	}, [])
+
+	const getMyCourseReq = async () => {
+		await getAuthRouteAPI({ routeName: 'myCourses' }).then((response) => {
+			setMyCourses(response?.data)
+			dispatch({
+				type: 'SET_ALL_MYCOURSE',
+				myCourses: response?.data,
+			});
+		}).catch((error) => {
+			console.log(error)
+		})
+	}
 
 	return (
 		<>
