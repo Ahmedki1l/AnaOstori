@@ -8,13 +8,13 @@ import AllIconsComponenet from '../../../../../Icons/AllIconsComponenet'
 export default function CCItemQuizComponent(props) {
 	const mediumScreen = useWindowSize().mediumScreen
 	const currentItemContent = props?.newSelectedCourseItem
-	const quizeStatus = currentItemContent.grade == null ? 'notAttempted' : currentItemContent.pass == true ? 'pass' : 'fail'
+	const quizeStatus = currentItemContent?.grade == null ? 'notAttempted' : currentItemContent?.pass == true ? 'pass' : 'fail'
 	const quizIcon = quizeStatus == 'pass' ? 'quizPassIcon' : quizeStatus == 'fail' ? 'quizFailIcon' : 'curriculumNewQuizIcon'
 	const iconHeight = quizeStatus == 'pass' ? (mediumScreen ? '72' : '107') : quizeStatus == 'fail' ? (mediumScreen ? '70' : '105') : (mediumScreen ? '65' : '97')
 	const quizText1 = quizeStatus == 'pass' ? 'مجتاز ' : quizeStatus == 'fail' ? 'الشاطر يتعلم من غلطه' : 'بعد ما تختبر، المدرب حيراجع حلك ويرصدلك الدرجة هنا'
 	// const quizText2 = quizeStatus == 'pass' ? 'رسالة المعلم هنا ' : quizeStatus == 'fail' ? 'رسالة المعلم هنا ' : 'بعد ما تختبر، المعلم رح يرصد لك الدرجة هنا'
 	const buttonText = quizeStatus == 'pass' ? 'برجع اختبر' : quizeStatus == 'fail' ? 'برجع اختبر ' : 'بختبر الآن'
-	const passedQuiz = currentItemContent.pass ? 'true' : 'false'
+	const passedQuiz = currentItemContent?.pass ? 'true' : 'false'
 	const itemId = currentItemContent?.id
 	const itemCompleteHendler = () => {
 		props.markItemCompleteHendler(itemId)
@@ -29,7 +29,7 @@ export default function CCItemQuizComponent(props) {
 					<Icon height={`${iconHeight}`} width={mediumScreen ? 72 : 107} iconName={`${quizIcon}`} alt={'Quiz Logo'} />
 				}
 				<h1 className={`fontBold ${styles.quizText1}`}>{quizText1}</h1>
-				<p className={`fontMedium ${styles.quizText2}`}>{currentItemContent.notes ? currentItemContent.notes : ''}</p>
+				<p className={`fontMedium ${styles.quizText2}`}>{currentItemContent?.notes ? currentItemContent?.notes : ''}</p>
 				<div className={styles.goQuizBtnBox}>
 					<Link href={`${currentItemContent?.quizLink}`} target='_blank' className='normalLinkText'>
 						{/* <button className='primaryStrockedBtn'>{buttonText}</button> */}
