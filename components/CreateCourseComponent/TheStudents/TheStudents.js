@@ -225,7 +225,7 @@ const TheStudent = (props) => {
     }
     const showSelectedStudentExamDetails = (student) => {
         setShowStudentDetails(true)
-        const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems.map((quiz, index) => {
+        const nonCompletedQuizItems = student?.userProfile?.nonCompletedQuizItems?.map((quiz, index) => {
             return {
                 key: quiz.id,
                 quizId: quiz.id,
@@ -238,7 +238,7 @@ const TheStudent = (props) => {
             }
         })
 
-        const completedQuizItems = student?.userProfile.quizExams.map((quiz, index) => {
+        const completedQuizItems = student?.userProfile?.quizExams?.map((quiz, index) => {
             return {
                 key: quiz.item.id,
                 quizId: quiz.item.id,
@@ -250,8 +250,10 @@ const TheStudent = (props) => {
                 old: true
             }
         })
-        setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
-        setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
+        // setOldExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
+        // setExamList(JSON.parse(JSON.stringify([...nonCompletedQuizItems, ...completedQuizItems])))
+        setOldExamList(JSON.parse(JSON.stringify([...(Array.isArray(nonCompletedQuizItems) ? nonCompletedQuizItems : []), ...(Array.isArray(completedQuizItems) ? completedQuizItems : [])])))
+        setExamList(JSON.parse(JSON.stringify([...(Array.isArray(nonCompletedQuizItems) ? nonCompletedQuizItems : []), ...(Array.isArray(completedQuizItems) ? completedQuizItems : [])])))
         setSelectedStudent(student)
     }
     const showSelectedStudentInformation = (student, courseId) => {
@@ -313,7 +315,7 @@ const TheStudent = (props) => {
 
     return (
         <div className='maxWidthDefault px-4'>
-            {(!showStudentDetails && !showStudentInfo) &&
+            {/* {(!showStudentDetails && !showStudentInfo) &&
                 <div style={{ direction: 'ltr', marginBottom: '2rem' }}>
                     <CustomButton
                         btnText='تنزيل بيانات الطلاب'
@@ -323,24 +325,33 @@ const TheStudent = (props) => {
                         onClick={() => downloadExcel()}
                     />
                 </div>
-            }
+            } */}
             {(!showStudentDetails && !showStudentInfo) &&
                 <div>
-                    <Form form={studentDetailsForm}>
-                        {courseType == 'online' &&
-                            <FormItem
-                                name={'selectgender'}
-                            >
-                                <Select
-                                    fontSize={16}
-                                    width={133}
-                                    height={40}
-                                    placeholder="اختر الجنس "
-                                    OptionData={genders}
-                                    onChange={selectGenderFilter}
-                                />
-                            </FormItem>}
-                    </Form>
+                    <div style={{ direction: 'ltr', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <CustomButton
+                            btnText='تنزيل بيانات الطلاب'
+                            width={190}
+                            height={40}
+                            fontSize={16}
+                            onClick={() => downloadExcel()}
+                        />
+                        <Form form={studentDetailsForm} className='pt-4  pr-4' >
+                            {courseType == 'online' &&
+                                <FormItem
+                                    name={'selectgender'}
+                                >
+                                    <Select
+                                        fontSize={16}
+                                        width={133}
+                                        height={40}
+                                        placeholder="اختر الجنس "
+                                        OptionData={genders}
+                                        onChange={selectGenderFilter}
+                                    />
+                                </FormItem>}
+                        </Form>
+                    </div>
                     {showLoader ?
                         <div className={styles.tableBodyArea}>
                             <div className={styles.noDataManiArea} >
