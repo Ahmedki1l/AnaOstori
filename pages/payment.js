@@ -92,7 +92,7 @@ export default function Payment(props) {
                 </div>
                 :
                 <>
-                    {(transactionDetails && isPaymentSuccess && invoiceUrl) ?
+                    {(transactionDetails && isPaymentSuccess) ?
                         <div className={`maxWidthDefault ${styles.mainArea}`}>
                             <div className={styles.paymentSuccessArea}>
                                 <div className='m-5'>
@@ -135,6 +135,7 @@ export default function Payment(props) {
                                             </button>
                                         </Link>
                                         :
+                                        invoiceUrl &&
                                         <Link target={'_blank'} href={invoiceUrl || ''} className={`${styles.btnsBox} no-underline`}>
                                             <button className='primaryStrockedBtn flex justify-center items-center'>
                                                 <div className='pl-2' style={{ height: '1.5rem' }}>
