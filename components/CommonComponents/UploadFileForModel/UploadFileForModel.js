@@ -64,9 +64,11 @@ const UploadFileForModel = ({
         const onUploadProgress = (percentCompleted) => {
             setUploadProgress(percentCompleted)
         }
+        let fileName = file.name
+        if (file.type === 'video/quicktime') {
+            file = new Blob([file], { type: 'video/mov' });
+        }
         await uploadFileSevices(file, onUploadProgress, source.token).then((res) => {
-            console.log(file);
-            console.log(res);
             const uploadFileBucket = res.split('.')[0].split('//')[1]
             const uploadFileKey = res.split('?')[0].split('/')[3]
             const uploadFileType = file.type
@@ -76,8 +78,8 @@ const UploadFileForModel = ({
                 mime: uploadFileType,
             })
             setUploadProgress(0)
-            setUploadedFileName(file.name)
-            setFileName(file.name)
+            setUploadedFileName(fileName)
+            setFileName(fileName)
             setUploadLoader(false)
             setShowBtnLoader(false)
         }).catch((error) => {
@@ -136,34 +138,56 @@ const UploadFileForModel = ({
 
 export default UploadFileForModel
 
-
-
-
-// const baseUrl = process.env.API_BASE_URL;
-//     const chunkSize = 5 * 1024 * 1024; // 5MB
-//     const getFileKey = async (e) => {
-//         const file = e.target.files[0];
-//         const fileName = Date.now().toString() + '_' + file.name;
-//         const totalChunks = Math.ceil(file.size / chunkSize);
-//         const requestedBody = { fileName }
-//         let body = {
-//             routeName: 'initiateupload',
-//             body: fileName
-//         }
-//         await postRouteAPI(body).then((res) => {
-//             console.log(res);
-//         }).catch((error) => {
-//             console.log(error);
-//         })
-//         // await fetch(`${baseUrl}/initiateupload`, {
-//         //     method: 'POST',
-//         //     body: JSON.stringify(requestedBody),
-//         //     headers: {
-//         //         'Content-Type': 'application/json',
-//         //     },
-//         // }).then((res) => {
-//         //     console.log(res);
-//         // }).catch((error) => {
-//         //     console.log(error);
-//         // })
+// const getFileKey = async (e) => {
+//     console.log(e.target.files[0]);
+//     setUploadedFileName()
+//     let file = e.target.files[0];
+//     if (accept == 'video') {
+//         const video = document.createElement('video');
+//         video.preload = 'metadata';
+//         video.onloadedmetadata = () => {
+//             window.URL.revokeObjectURL(video.src);
+//             setVideoDuration(video.duration);
+//         };
+//         video.src = URL.createObjectURL(file);
 //     }
+//     if (accept == 'file') {
+//         const pdfBytes = await new Promise((resolve, reject) => {
+//             const reader = new FileReader();
+//             reader.onload = () => {
+//                 resolve(reader.result);
+//             };
+//             reader.onerror = reject;
+//             reader.readAsArrayBuffer(file);
+//         });
+
+//         const pageCount = await getPageCount(pdfBytes);
+//     }
+//     setUploadLoader(true)
+//     setShowBtnLoader(true)
+
+//     const onUploadProgress = (percentCompleted) => {
+//         setUploadProgress(percentCompleted)
+//     }
+//     await uploadFileSevices(file, onUploadProgress, source.token).then((res) => {
+//         console.log(file);
+//         console.log(res);
+//         const uploadFileBucket = res.split('.')[0].split('//')[1]
+//         const uploadFileKey = res.split('?')[0].split('/')[3]
+//         const uploadFileType = file.type
+//         uploadResData({
+//             key: uploadFileKey,
+//             bucket: uploadFileBucket,
+//             mime: uploadFileType,
+//         })
+//         setUploadProgress(0)
+//         setUploadedFileName(file.name)
+//         setFileName(file.name)
+//         setUploadLoader(false)
+//         setShowBtnLoader(false)
+//     }).catch((error) => {
+//         console.log(error);
+//         setUploadLoader(false)
+//         setShowBtnLoader(false)
+//     })
+// }
