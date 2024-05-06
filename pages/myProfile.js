@@ -8,6 +8,7 @@ import { mediaUrl } from "../constants/DataManupulation";
 import { getAuthRouteAPI } from "../services/apisService";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Spinner from "../components/CommonComponents/spinner";
 
 
 
@@ -17,6 +18,7 @@ export default function MyProfile() {
 	const userDetails = storeData?.viewProfileData;
 	const [myCourses, setMyCourses] = useState([])
 	const dispatch = useDispatch();
+	const [loading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		if (storeData?.viewProfileData) {
@@ -25,13 +27,16 @@ export default function MyProfile() {
 	}, [])
 
 	const getMyCourseReq = async () => {
+		setIsLoading(true)
 		await getAuthRouteAPI({ routeName: 'myCourses' }).then((response) => {
 			setMyCourses(response?.data)
 			dispatch({
 				type: 'SET_ALL_MYCOURSE',
 				myCourses: response?.data,
 			});
+			setIsLoading(false)
 		}).catch((error) => {
+			setIsLoading(false)
 			console.log(error)
 		})
 	}
@@ -51,23 +56,27 @@ export default function MyProfile() {
 					<div className={styles.courseHeading}>
 						<p className={`font-bold ${styles.myCourseHeadingText}`}>اشتراكات الدورات</p>
 					</div>
-
-					{myCourses.length > 0 ?
-						<div className={`flex flex-wrap ${styles.courseCardsWrapper}`}>
-							{myCourses?.map((items, index) => {
-								return <CoursesCard data={items} key={index} />
-							})
-							}
+					{loading ?
+						<div className={`h-full`}>
+							<Spinner borderwidth={7} width={6} height={6} />
 						</div>
 						:
-						<div className={styles.noCourseWrapper}>
-							<AllIconsComponenet height={150} width={150} iconName={'noData'} color={''} />
-							<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
-							<p className={styles.paregraphText}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
-							<div className={`mt-4 ${styles.homeBtnBox}`}>
-								<button className="primarySolidBtn" onClick={() => Router.push('/?دوراتنا')}>تصفح المجالات</button>
+						myCourses && myCourses?.length > 0 ?
+							<div className={`flex flex-wrap ${styles.courseCardsWrapper}`}>
+								{myCourses?.map((items, index) => {
+									return <CoursesCard data={items} key={index} />
+								})
+								}
 							</div>
-						</div>
+							:
+							<div className={styles.noCourseWrapper}>
+								<AllIconsComponenet height={150} width={150} iconName={'noData'} color={''} />
+								<p className={`fontMedium pt-2 ${styles.noCourseText}`} >ما اشتركت بأي دورة</p>
+								<p className={styles.paregraphText}>تصفح مجالاتنا وسجّل معنا، متأكدين انك راح تستفيد وتكون أسطورتنا الجاي بإذن الله 🥇😎</p>
+								<div className={`mt-4 ${styles.homeBtnBox}`}>
+									<button className="primarySolidBtn" onClick={() => Router.push('/?دوراتنا')}>تصفح المجالات</button>
+								</div>
+							</div>
 					}
 				</div>
 			}
