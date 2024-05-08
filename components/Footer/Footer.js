@@ -59,13 +59,13 @@ export default function Footer() {
 								<p>رقم السجل التجاري 1010644475</p>
 							</div>
 						</Link>
-						<div className={styles.regiDetailsBox2}>
+						{/* <div className={styles.regiDetailsBox2}>
 							<Logo height={isMediumScreen ? 25 : 40} width={isMediumScreen ? 20 : 32} logoName={'tvtcLogo'} alt={'TVTC Logo'} />
 							<div className={styles.regiDetailsTextBox}>
 								<p>مرخص من المؤسسة العامة للتدريب المهني والتقني</p>
 								<p>رخصة رقم 4174536814</p>
 							</div>
-						</div>
+						</div> */}
 					</div>
 					<div className={styles.section}>
 						<h3 className={isSmallScreen ? `${styles.sectionWrapper}` : ''}>الروابط المهمة</h3>
