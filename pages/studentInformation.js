@@ -82,12 +82,12 @@ const StudentInformation = () => {
 
     const handleSaveInfo = async (values) => {
         values.courseId = courseId
-        values.reference = JSON.stringify(values.reference);
-        values.otherCity = values.city == 'other' ? values.otherCity : null;
-        values.otherDistrict = values.district == 'other' || values.otherDistrict ? values.otherDistrict : null;
-        values.otherSchoolName = values.schoolName == 'other' ? values.otherSchoolName : null;
-        values.otherSchoolLevel = values.schoolLevel == 'other' ? values.otherSchoolLevel : null;
-        values.otherReference = values.reference.includes('other') ? values.otherReference : null;
+        values.reference = JSON.stringify(values?.reference);
+        values.otherCity = values?.city == 'other' ? values?.otherCity : null;
+        values.otherDistrict = values?.district == 'other' || values?.otherDistrict ? values.otherDistrict : null;
+        values.otherSchoolName = values?.schoolName == 'other' ? values?.otherSchoolName : null;
+        values.otherSchoolLevel = values?.schoolLevel == 'other' ? values?.otherSchoolLevel : null;
+        values.otherReference = values?.reference?.includes('other') ? values?.otherReference : null;
         if (studentInformationId) {
             values.id = studentInformationId;
         }
