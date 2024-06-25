@@ -16,11 +16,11 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`)
 		.then((response) => (response.data)).catch((error) => error);
 
-	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.id}&gender=male`)
+	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`)
 
-	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.id}&gender=female`)
+	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`)
 
-	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails.id}&gender=mix`)
+	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`)
 
 	const [maleDates, femaleDates, mixDates] = await Promise.all([
 		maleDatesReq,
@@ -116,9 +116,8 @@ export default function Index(props) {
 		const data = [...studentsData]
 		const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		let isError = false
-
 		for (let i = 0; i < data.length; i++) {
-			if (data[i].gender == "") {
+			if (data[i]?.gender == "") {
 				data[i].genderCheck = inputErrorMessages.genderNotSelectErrorMsg
 				isError = true
 			}
@@ -126,7 +125,7 @@ export default function Index(props) {
 				data[i].genderCheck = ""
 			}
 
-			if (data[i].date == "" && courseType != "on-demand") {
+			if (data[i]?.date == "" && courseType != "on-demand") {
 				data[i].dateCheck = inputErrorMessages.appropriateDateErrorMsg
 				isError = true
 			}
@@ -134,18 +133,18 @@ export default function Index(props) {
 				data[i].dateCheck = ""
 			}
 
-			if (data[i].fullName == "") {
+			if (data[i]?.fullName == "") {
 				data[i].nameCheck = inputErrorMessages.fullNameErrorMsgForRegister
 				data[i].validName = ""
 				isError = true
 			}
-			else if (data[i].fullName.length < 3) {
+			else if (data[i]?.fullName.length < 3) {
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = inputErrorMessages.nameFormatErrorMsg
 				data[i].validName = ""
 				isError = true
 			}
-			else if ((data[i].fullName.split(" ").length - 1) < 1) {
+			else if ((data[i]?.fullName.split(" ").length - 1) < 1) {
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = ""
 				data[i].validName = inputErrorMessages.nameThreeFoldErrorMsg
@@ -163,13 +162,13 @@ export default function Index(props) {
 				data[i].validPhoneNumber = ""
 				isError = true
 			}
-			else if (!data[i].phoneNumber.startsWith("05")) {
+			else if (!data[i]?.phoneNumber?.startsWith("05")) {
 				data[i].phoneNoCheck = ""
 				data[i].phoneNoLengthCheck = inputErrorMessages.mobileNumberFormatErrorMsg
 				data[i].validPhoneNumber = ""
 				isError = true
 			}
-			else if (data[i].phoneNumber.length < 10) {
+			else if (data[i]?.phoneNumber?.length < 10) {
 				data[i].phoneNoCheck = ""
 				data[i].phoneNoLengthCheck = inputErrorMessages.phoneNumberLengthMsg
 				data[i].validPhoneNumber = ""
@@ -181,11 +180,11 @@ export default function Index(props) {
 				data[i].validPhoneNumber = ""
 			}
 
-			if (data[i].email == "") {
+			if (data[i]?.email == "") {
 				data[i].emailCheck = inputErrorMessages.noEmailErrorMsg
 				isError = true
 			}
-			else if (!(regexEmail.test(data[i].email))) {
+			else if (!(regexEmail.test(data[i]?.email))) {
 				data[i].emailCheck = ""
 				data[i].emailValidCheck = inputErrorMessages.enterEmailCorrectInputErrorMsg
 			}
