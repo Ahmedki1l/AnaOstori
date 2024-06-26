@@ -59,7 +59,6 @@ export default function Navbar() {
 	const catagoryName = (router.query.catagoryName)?.replace(/-/g, ' ')
 
 	const storeData = useSelector((state) => state?.globalStore);
-	console.log(storeData);
 	const userFullName = (storeData?.viewProfileData?.fullName) ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName
 
 	const isRegisterSocialMediaUser = router.pathname == "/registerSocialMediaUser" ? true : false

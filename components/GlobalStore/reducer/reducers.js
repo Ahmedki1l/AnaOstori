@@ -1,7 +1,7 @@
 var initialState = {
     viewProfileData: {},
     myCourses: [],
-    accessToken: "",
+    accessToken: null,
     loginWithoutPassword: false,
     isUserInstructor: false,
     catagories: [],
@@ -28,7 +28,7 @@ export const globalStore = (state = initialState, action) => {
                 viewProfileData: {},
                 myCourses: [],
                 editCourseData: {},
-                accessToken: ""
+                accessToken: null,
             }
         case 'ADD_AUTH_TOKEN':
             return {
