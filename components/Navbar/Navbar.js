@@ -76,6 +76,7 @@ export default function Navbar() {
 
 
 	const catagoryNoAuth = async () => {
+		console.log("noAuth");
 		await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then(res => {
 			setCatagories(res?.data.filter((item) => item.published == true))
 			dispatch({
@@ -88,6 +89,7 @@ export default function Navbar() {
 	};
 
 	const catagoryAuth = async () => {
+		console.log("Auth");
 		try {
 
 			const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
