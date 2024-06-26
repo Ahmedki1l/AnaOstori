@@ -50,9 +50,9 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 export default function Index(props) {
 
 	const courseDetails = props.courseDetails
-	const maleDates = props.maleDates
-	const femaleDates = props.femaleDates
-	const mixDates = props.mixDates
+	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+	const mixDates = props.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const [loading, setLoading] = useState(false)
 
 	const [changePage, setChangePage] = useState(false)
