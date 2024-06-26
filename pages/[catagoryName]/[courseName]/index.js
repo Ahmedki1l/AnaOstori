@@ -93,7 +93,6 @@ export default function Index(props) {
 	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const mixDates = props.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
-	console.log(maleDates, "maleDates");
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
