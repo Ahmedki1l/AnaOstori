@@ -90,9 +90,10 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	const courseDetail = props.courseDetails ? props.courseDetails : null
-	const maleDates = props.maleDates
-	const femaleDates = props.femaleDates
-	const mixDates = props.mixDates
+	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+	const mixDates = props.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+	console.log(maleDates, "maleDates");
 	const homeReviews = props.homeReviews
 	const courseCurriculum = props.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)

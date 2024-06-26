@@ -26,6 +26,8 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 viewProfileData: {},
+                myCourses: [],
+                editCourseData: {},
                 accessToken: ""
             }
         case 'ADD_AUTH_TOKEN':

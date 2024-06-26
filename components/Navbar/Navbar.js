@@ -59,7 +59,7 @@ export default function Navbar() {
 	const catagoryName = (router.query.catagoryName)?.replace(/-/g, ' ')
 
 	const storeData = useSelector((state) => state?.globalStore);
-
+	console.log(storeData);
 	const userFullName = (storeData?.viewProfileData?.fullName) ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName
 
 	const isRegisterSocialMediaUser = router.pathname == "/registerSocialMediaUser" ? true : false
@@ -68,12 +68,12 @@ export default function Navbar() {
 	const [catagories, setCatagories] = useState(storeData?.catagories?.data?.filter((item) => item.published == true) || [])
 
 	useEffect(() => {
-		if (localStorage.getItem("accessToken") !== null) {
+		if (storeData.accessToken !== null) {
 			catagoryAuth()
 		} else {
 			catagoryNoAuth()
 		}
-	}, [localStorage.getItem("accessToken")])
+	}, [storeData.accessToken])
 
 
 	const catagoryNoAuth = async () => {
