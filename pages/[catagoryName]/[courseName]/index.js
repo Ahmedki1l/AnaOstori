@@ -143,7 +143,7 @@ export default function Index(props) {
 	}
 
 	const handleUserLogin = async (query) => {
-		if (storeData?.accessToken == "") {
+		if (storeData?.accessToken === null) {
 			dispatch({
 				type: 'SET_RETURN_URL',
 				returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
