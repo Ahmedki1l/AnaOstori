@@ -133,6 +133,20 @@ const Index = () => {
             }
         }
     }
+
+    const downloadFileHandler = async (itemID) => {
+        if (courseID) {
+            let currentItemParams = {
+                routeName: 'getItemById',
+                courseId: courseID,
+                itemId: itemID,
+            }
+            await getAuthRouteAPI(currentItemParams).then((res) => {
+                router.push(`${res.data.url}`)
+            }).catch((error) => console.log(error))
+        }
+    }
+
     useEffect(() => {
         if (courseID) {
             const getPageProps = async () => {
