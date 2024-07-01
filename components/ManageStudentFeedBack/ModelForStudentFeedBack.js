@@ -91,6 +91,18 @@ const ModelForStudentFeedBack = ({
             setIsModelForStudentFeedBack(false)
             getStudetnFeedBackList();
         }).catch(async (err) => {
+            if (err.response.status == 401) {
+                await getNewToken().then(async (res) => {
+                    await postAuthRouteAPI(createReviewMedia).then((res) => {
+                        setIsModelForStudentFeedBack(false)
+                        getStudetnFeedBackList();
+                    }).catch(async (err) => {
+                        console.log(err);
+                    })
+                }).catch(async (err) => {
+                    console.log(err);
+                })
+            }
             console.log(err);
         })
     }
@@ -116,6 +128,25 @@ const ModelForStudentFeedBack = ({
                 })))
                 setUploadFileData(data)
             }).catch(async (err) => {
+                if (err.response.status == 401) {
+                    await getNewToken().then(async (res) => {
+                        await postAuthRouteAPI(createReviewBody).then(async (res) => {
+                            setEditReviewData(res.data)
+                            setEditStudetReviews(res.data)
+                            let data = [...uploadFileData]
+                            data.push(JSON.parse(JSON.stringify({
+                                contentFileKey: '',
+                                contentFileMime: '',
+                                contentFileBucket: ''
+                            })))
+                            setUploadFileData(data)
+                        }).catch(async (err) => {
+                            console.log(err);
+                        })
+                    }).catch(async (err) => {
+                        console.log(err);
+                    })
+                }
                 console.log(err);
             })
         } else {
@@ -129,6 +160,18 @@ const ModelForStudentFeedBack = ({
                     setEditReviewData(res.data)
                     setEditStudetReviews(res.data)
                 }).catch(async (err) => {
+                    if (err.response.status == 401) {
+                        await getNewToken().then(async (res) => {
+                            await postAuthRouteAPI(updateReviewBody).then(async (res) => {
+                                setEditReviewData(res.data)
+                                setEditStudetReviews(res.data)
+                            }).catch(async (err) => {
+                                console.log(err);
+                            })
+                        }).catch(async (err) => {
+                            console.log(err);
+                        })
+                    }
                     console.log(err);
                 })
             } else {

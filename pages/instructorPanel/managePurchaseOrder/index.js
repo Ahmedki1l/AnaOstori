@@ -315,7 +315,7 @@ const Index = () => {
                             fontSize={16}
                             width={180}
                             height={40}
-                            placeholder='اختار الجنس'
+                            placeholder='حالة الحجز'
                             OptionData={allPaymentStatus}
                             allowClear={true}
                             onChange={(value) => setSelectedStatus(value)}
@@ -328,7 +328,7 @@ const Index = () => {
                             fontSize={16}
                             width={180}
                             height={40}
-                            placeholder='اختار الجنس'
+                            placeholder='طريقة الدفع'
                             OptionData={paymentMode}
                             allowClear={true}
                             onChange={(value) => setSelectedPaymentMethod(value)}

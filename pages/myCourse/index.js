@@ -84,7 +84,7 @@ const Index = () => {
                 routeName: 'markItemComplete',
                 courseId: courseID,
                 itemId: currentItemId,
-                enrollmentId: selectedCourse.id,
+                enrollmentId: selectedCourse?.id,
                 type: 'markCourseComplete',
                 value: true
             }
@@ -100,7 +100,7 @@ const Index = () => {
                 routeName: 'markItemComplete',
                 courseId: courseID,
                 itemId: itemID,
-                enrollmentId: selectedCourse.id,
+                enrollmentId: selectedCourse?.id,
                 type: 'item',
                 value: false
             }
@@ -157,12 +157,12 @@ const Index = () => {
                 let courseProgressParams = {
                     routeName: 'userCourseProgress',
                     courseId: courseID,
-                    enrollmentId: selectedCourse.id,
+                    enrollmentId: selectedCourse?.id,
                 }
                 let completedCourseItemParams = {
                     routeName: 'CourseProgress',
                     courseId: courseID,
-                    enrollmentId: selectedCourse.id,
+                    enrollmentId: selectedCourse?.id,
                 }
                 try {
 

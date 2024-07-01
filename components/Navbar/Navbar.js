@@ -59,7 +59,6 @@ export default function Navbar() {
 	const catagoryName = (router.query.catagoryName)?.replace(/-/g, ' ')
 
 	const storeData = useSelector((state) => state?.globalStore);
-
 	const userFullName = (storeData?.viewProfileData?.fullName) ? storeData?.viewProfileData?.fullName : storeData?.viewProfileData?.firstName
 
 	const isRegisterSocialMediaUser = router.pathname == "/registerSocialMediaUser" ? true : false
@@ -68,15 +67,16 @@ export default function Navbar() {
 	const [catagories, setCatagories] = useState(storeData?.catagories?.data?.filter((item) => item.published == true) || [])
 
 	useEffect(() => {
-		if (localStorage.getItem("accessToken") !== null) {
+		if (storeData.accessToken !== null) {
 			catagoryAuth()
 		} else {
 			catagoryNoAuth()
 		}
-	}, [localStorage.getItem("accessToken")])
+	}, [storeData.accessToken])
 
 
 	const catagoryNoAuth = async () => {
+		console.log("noAuth");
 		await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then(res => {
 			setCatagories(res?.data.filter((item) => item.published == true))
 			dispatch({
@@ -89,6 +89,7 @@ export default function Navbar() {
 	};
 
 	const catagoryAuth = async () => {
+		console.log("Auth");
 		try {
 
 			const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
@@ -305,7 +306,7 @@ export default function Navbar() {
 						</div>
 					}
 					<div onClick={() => handleRouteChange()} className='pt-1'>
-						<Logo height={34} width={62} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
+						<Logo height={43} width={60} logoName={'newAnaostoriLogo'} alt={'Ana Ostori Logo'} />
 					</div>
 					{!isRegisterSocialMediaUser &&
 						<div className={`p-1 cursor-pointer ${styles.menuBtn}`} onClick={() => setIsMenuShow(!isMenuShow)}>
@@ -387,7 +388,7 @@ export default function Navbar() {
 					<div className='maxWidthDefault'>
 						<div className={styles.navbarInnerWrapper}>
 							<div onClick={() => handleRouteChange()} className={`pl-8 my-auto ${isRegisterSocialMediaUser && 'cursor-not-allowed'}`}>
-								<Logo height={38} width={68} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
+								<Logo height={60} width={83} logoName={'newAnaostoriLogo'} alt={'Ana Ostori Logo'} />
 							</div>
 							{!isRegisterSocialMediaUser &&
 								<>

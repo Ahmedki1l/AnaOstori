@@ -18,7 +18,7 @@ export default function Footer() {
 			<div className={`maxWidthDefault ${styles.footerSubWrapper}`}>
 				<div className={styles.footerMainBox}>
 					<div className={`${styles.section1} ${styles.section}`}>
-						<Logo height={isSmallScreen ? 49 : 98} width={isSmallScreen ? 89 : 177} logoName={'anaOstoriLogo'} alt={'Ana Ostori Logo'} />
+						<Logo height={isSmallScreen ? 75 : 102} width={isSmallScreen ? 103 : 140} logoName={'newAnaostoriLogo'} alt={'Ana Ostori Logo'} />
 						<p className={styles.footerSubText}>نقدم دورات القدرات والتحصيلي للجنسين بروح شبابية، عندنا طاقم متكامل من المدربين والمدربات والمشرفين والمشرفات</p>
 						<div className='pb-4'>
 							<Link href={`${linkConst.GoogleMap_Link}`} target='_blank' className='normalLinkText'>
@@ -53,7 +53,7 @@ export default function Footer() {
 					</div>
 					<div className={`mt-20 ${styles.section2} ${styles.section}`}>
 						<Link href={`${linkConst.VAT_Link}`} target='_blank' className={styles.regiDetailsBox1}>
-							<Logo height={isMediumScreen ? 25 : 32} width={isMediumScreen ? 20 : 32} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
+							<Logo height={isMediumScreen ? 25 : 40} width={isMediumScreen ? 20 : 32} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
 							<div className={styles.regiDetailsTextBox}>
 								<p>رقم التسجيل الضريبي 310646534500003</p>
 								<p>رقم السجل التجاري 1010644475</p>

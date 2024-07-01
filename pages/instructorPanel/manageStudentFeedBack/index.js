@@ -8,6 +8,7 @@ import ModelForStudentFeedBack from '../../../components/ManageStudentFeedBack/M
 import { fullDate } from '../../../constants/DateConverter'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
+import { getNewToken } from '../../../services/fireBaseAuthService'
 
 const Index = () => {
 
@@ -106,6 +107,18 @@ const Index = () => {
             getStudetnFeedBackList();
             setIsmodelForDeleteItems(false);
         }).catch(async (err) => {
+            if (err.response.status === 401) {
+                await getNewToken().then(async (res) => {
+                    await postAuthRouteAPI(createReviewMedia).then((res) => {
+                        setIsModelForStudentFeedBack(false)
+                        getStudetnFeedBackList();
+                    }).catch(async (err) => {
+                        console.log(err);
+                    })
+                }).catch(async (err) => {
+                    console.log(err);
+                })
+            }
             console.log(err);
         })
     }
