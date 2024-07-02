@@ -39,7 +39,6 @@ export default function Index(props) {
 	})
 	// const courseDetails = catagory?.courses?.length > 0 ? shortCourseOnType(catagory.courses) : null
 	const [coursesDetails, setCoursesDetails] = useState([])
-
 	const mainDescription = catagory.description?.split(':')[0]
 	const listDescription = catagory?.description?.split(':')[1]?.split('<list>').splice(1, catagory.description.length)
 	const storeData = useSelector((state) => state?.globalStore);
@@ -60,6 +59,7 @@ export default function Index(props) {
 			const courseDetails = shortCourseOnType(catagory.courses)
 			setCoursesDetails(courseDetails)
 		} else {
+			setPageLoading(true)
 			const getCourseDetails = async () => {
 				let data = {
 					routeName: 'categories'
@@ -90,7 +90,7 @@ export default function Index(props) {
 			}
 			getCourseDetails()
 		}
-	}, [storeData?.accessToken, isUserLogin])
+	}, [storeData?.accessToken, isUserLogin, catagoryName])
 
 	function shortCourseOnType(courses) {
 		const typeOrder = ['physical', 'online', 'on-demand'];
