@@ -398,7 +398,7 @@ export default function Navbar() {
 									<ul className={styles.navbarSubWrapper}>
 										{catagories?.map((menu, i = index) => {
 											return (
-												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
+												<li onClick={() => router.push(`/${menu.name.replace(/ /g, "-")}`)} className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
 													<p className={`${styles.mainMenuText} ${catagoryName == menu.name ? `fontBold` : `fontRegular`}`}>
 														{/* {menu.name} */}
 														{stringUpdation(menu.name, 30)}
