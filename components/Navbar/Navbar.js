@@ -169,6 +169,7 @@ export default function Navbar() {
 	}
 
 	const handleClickCourseName = (submenu, menu, lang) => {
+		handleClickOnLink();
 		setShowSubMenuShown()
 		setIsMenuShow(false)
 		if (submenu.type == "on-demand" && submenu.isEnrolled == true) {
@@ -362,7 +363,7 @@ export default function Navbar() {
 																return (
 																	<div key={`navSubMenu${j}`}>
 																		<div
-																			className={`block ${styles.subMenuText}`} onClick={() => { handleClickOnLink(); handleClickCourseName(subMenu, menu.name, subMenu.language) }}>
+																			className={`block ${styles.subMenuText}`} onClick={() => { handleClickCourseName(subMenu, menu.name, subMenu.language) }}>
 																			{subMenu.name.length > 30 ? (
 																				<span>{subMenu.name.slice(0, 30)}...</span>
 																			) :
@@ -398,8 +399,8 @@ export default function Navbar() {
 									<ul className={styles.navbarSubWrapper}>
 										{catagories?.map((menu, i = index) => {
 											return (
-												<li onClick={() => router.push(`/${menu.name.replace(/ /g, "-")}`)} className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
-													<p className={`${styles.mainMenuText} ${catagoryName == menu.name ? `fontBold` : `fontRegular`}`}>
+												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
+													<p onClick={() => router.push(`/${menu.name.replace(/ /g, "-")}`)} className={`${styles.mainMenuText} ${catagoryName == menu.name ? `fontBold` : `fontRegular`}`}>
 														{/* {menu.name} */}
 														{stringUpdation(menu.name, 30)}
 													</p>
