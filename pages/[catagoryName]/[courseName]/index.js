@@ -29,11 +29,11 @@ export async function getServerSideProps(ctx) {
 		return response.data
 	}).catch((error) => error);
 
-	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=male`)
+	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`)
 
-	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=female`)
+	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`)
 
-	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=mix`)
+	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`)
 
 
 	const [maleDates, femaleDates, mixDates] = await Promise.all([
@@ -78,6 +78,7 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Index(props) {
+	console.log("props", props);
 	const courseDetail = props.courseDetails ? props.courseDetails : null
 	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
