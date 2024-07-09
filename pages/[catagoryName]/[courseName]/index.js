@@ -5,7 +5,6 @@ import Icon from '../../../components/CommonComponents/Icon'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import CourseDates from '../../../components/CourseDescriptionPageComponents/CourseDates/CourseDates'
 import UserDetailForm1 from '../../../components/CourseDescriptionPageComponents/UserDetailForm1'
-import ReviewComponent from '../../../components/CommonComponents/ReviewsComponent/ReviewComponent'
 import axios from 'axios';
 import Link from 'next/link';
 import useWindowSize from '../../../hooks/useWindoSize'
@@ -26,17 +25,9 @@ import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/Mo
 export async function getServerSideProps(ctx) {
 	const lang = ctx?.resolvedUrl.split('/')[2].split('=')[1] == 'en' ? 'en' : 'ar'
 	const courseName = lang == 'en' ? ctx?.resolvedUrl.split('/')[2].split('?')[0].replace(/-/g, ' ') : ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ')
-	const courseDetailsReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`)
-	// const homeReviewsReq = axios.get(`${process.env.API_BASE_URL}/homeReviews`)
-
-
-	// const [courseDetails, homeReviews] = await Promise.all([
-	// 	courseDetailsReq,
-	// 	homeReviewsReq
-	// ])
-	const [courseDetails] = await Promise.all([
-		courseDetailsReq,
-	])
+	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`).then((response) => {
+		return response.data
+	}).catch((error) => error);
 
 	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.data?.id}&gender=male`)
 
@@ -50,25 +41,24 @@ export async function getServerSideProps(ctx) {
 		femaleDatesReq,
 		mixDatesReq,
 	])
-	if (courseDetails.data == null) {
+	if (courseDetails == null) {
 		return {
 			notFound: true,
 		}
 	}
-	if (courseDetails.data.isPurchasable == false) {
+	if (courseDetails.isPurchasable == false) {
 		return {
 			notFound: true,
 		}
 	}
-	if (courseDetails.data.type == 'on-demand') {
-		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.data.id}`)
+	if (courseDetails?.type == 'on-demand') {
+		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.id}`)
 			.then((response) => (response.data))
 			.catch((error) => error);
 
 		return {
 			props: {
-				courseDetails: courseDetails.data,
-				// homeReviews: homeReviews.data,
+				courseDetails: courseDetails,
 				maleDates: maleDates.data,
 				femaleDates: femaleDates.data,
 				mixDates: mixDates.data,
@@ -78,8 +68,7 @@ export async function getServerSideProps(ctx) {
 	} else {
 		return {
 			props: {
-				courseDetails: courseDetails.data,
-				// homeReviews: homeReviews.data,
+				courseDetails: courseDetails,
 				maleDates: maleDates.data,
 				femaleDates: femaleDates.data,
 				mixDates: mixDates.data,
