@@ -258,7 +258,7 @@ const TheStudent = (props) => {
     }
     const showSelectedStudentInformation = (student, courseId) => {
         setShowStudentInfo(true);
-        const studentInfoBasedOnCoursed = student?.userProfile?.studentInformations.length > 0 && student?.userProfile?.studentInformations.find(info => info.courseId === router.query.courseId);
+        const studentInfoBasedOnCoursed = student?.userProfile?.studentInformations?.length > 0 && student?.userProfile?.studentInformations?.find(info => info.courseId === router.query.courseId);
         if (studentInfoBasedOnCoursed) {
             const studentInfo = {
                 phone: `${student?.userProfile?.phone}`,
