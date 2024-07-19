@@ -1,15 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from '../styles/Login.module.scss'
 import { signupWithEmailAndPassword, signInWithApple, GoogleLogin } from '../services/fireBaseAuthService'
 import { useRouter } from 'next/router'
-import { getAuthRouteAPI, postAuthRouteAPI } from '../services/apisService'
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../services/apisService'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage } from '../constants/ar'
 
-
+const educationalLevelList = [
+	{ value: 'first_secondary_school', label: 'أول ثانوي' },
+	{ value: 'second_secondary_school', label: 'ثاني ثانوي' },
+	{ value: 'third_secondary_school', label: 'ثالث ثانوي' },
+];
 
 export default function Register() {
 
@@ -17,6 +21,7 @@ export default function Register() {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [phoneNumber, setPhoneNumber] = useState("");
+	const [parentsContct, setParentPhoneNumber] = useState("");
 	const [fullName, setFullName] = useState("")
 	const [gender, setGender] = useState("")
 	const [initPasswordError, setInitPasswordError] = useState({
@@ -27,6 +32,7 @@ export default function Register() {
 	});
 	const [fullNameError, setFullNameError] = useState(null);
 	const [phoneNumberError, setPhoneNumberError] = useState(null);
+	const [parentPhoneNumberError, setParentPhoneNumberError] = useState(null);
 	const [emailError, setEmailError] = useState(null);
 	const [isGenderError, setIsGenderError] = useState(null);
 	const [passwordError, setPasswordError] = useState(null);
@@ -35,6 +41,31 @@ export default function Register() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const storeData = useSelector((state) => state?.globalStore);
+	const [citiesList, setCitiesList] = useState('')
+	const [isOpenForCity, setIsOpenForCity] = useState(false);
+	const [isOpenForEducationLevel, setIsOpenForEducationLevel] = useState(false);
+	const [selectedCity, setSelectedCity] = useState('');
+	const [selectedEducationLevel, setSelectedEducationLevel] = useState('');
+	const dropdownRef = useRef(null);
+
+	useEffect(() => {
+		getCityList()
+	}, [])
+
+	const getCityList = async () => {
+		await getRouteAPI({ routeName: 'listCity' }).then((res) => {
+			const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
+				value: item.nameAr,
+				label: item.nameAr,
+				key: item.id,
+				cityCode: item.code
+			}));
+			formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
+			setCitiesList(formattedData);
+		}).catch((error) => {
+			console.log(error);
+		});
+	}
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
@@ -122,12 +153,7 @@ export default function Register() {
 
 	const regexEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
 
-	const regexPassword = useMemo(() => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, []);
-
 	const regexPhone = useMemo(() => /^(\+?\d{1,3}[- ]?)?\d{10}$/, []);
-
-	const namePattern = /^(?!.*  )\S+(?: \S+){0,2}$/;
-
 
 	useEffect(() => {
 		if (fullName && (fullName.split(" ").length - 1) < 2) {
@@ -147,6 +173,13 @@ export default function Register() {
 		} else {
 			setPhoneNumberError(null);
 		}
+		if (parentsContct && !(parentsContct.startsWith("05"))) {
+			setParentPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+		} else if (parentsContct && parentsContct.length < 10) {
+			setParentPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
+		} else {
+			setParentPhoneNumberError(null);
+		}
 		if (gender) {
 			setIsGenderError(null)
 		}
@@ -154,7 +187,7 @@ export default function Register() {
 			setPasswordError(null)
 		}
 
-	}, [fullName, email, phoneNumber, password, gender, regexEmail, regexPhone])
+	}, [fullName, email, phoneNumber, parentsContct, password, gender, regexEmail, regexPhone])
 
 	const handleSignup = async (e) => {
 		e.preventDefault()
@@ -195,12 +228,21 @@ export default function Register() {
 				if (!gender?.length) {
 					delete data?.gender
 				}
+				if (selectedCity) {
+					data.city = selectedCity
+				}
+				if (selectedEducationLevel) {
+					data.educationLevel = selectedEducationLevel
+				}
+				if (parentsContct) {
+					data.parentPhoneNo = parentsContct.replace(/[0-9]/, "+966")
+				}
 				const params = {
 					routeName: 'updateProfileHandler',
 					...data,
 				}
 				await postAuthRouteAPI(params).then(async (res) => {
-					router.push('/login');
+					// router.push('/login');
 					setLoading(false)
 					fbq.event('Sign up', { email: email });
 				}).catch(error => {
@@ -253,6 +295,36 @@ export default function Register() {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		}
 	}
+
+	const toggleDropdownforCities = () => {
+		setIsOpenForCity(!isOpenForCity);
+	};
+	const toggleDropdownForEducationLevel = () => {
+		setIsOpenForEducationLevel(!isOpenForEducationLevel);
+	}
+
+	const handleSelectCity = (city) => {
+		setSelectedCity(city.label);
+		setIsOpenForCity(false);
+	};
+
+	const handleSelectEducationLevel = (city) => {
+		setSelectedEducationLevel(city.label);
+		setIsOpenForEducationLevel(false);
+	}
+
+	const handleClickOutside = (event) => {
+		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+			setIsOpenForCity(false);
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
 	return (
 		<>
@@ -307,6 +379,67 @@ export default function Register() {
 							<label className={`formLabel ${styles.loginFormLabel} ${phoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="phone">رقم الجوال (اختياري)</label>
 						</div>
 						{!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
+
+						<div className='formInputBox'>
+							<div className='formInputIconDiv'>
+								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
+							</div>
+							<input className={`formInput ${styles.loginFormInput} ${parentPhoneNumberError && `${styles.inputError}`}`} name='parentPhoneNo' id='parentPhoneNo' type="number" inputMode='tel' value={parentsContct} onChange={(e) => { if (e.target.value.length > 10) return; setParentPhoneNumber(e.target.value) }} placeholder=' ' />
+							<label className={`formLabel ${styles.loginFormLabel} ${parentPhoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="parentPhoneNo">parent number</label>
+						</div>
+						{!parentsContct ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : parentPhoneNumberError && <p className={styles.errorText}>{parentPhoneNumberError}</p>}
+
+						<div className='formInputBox'>
+							<div className='formInputIconDiv'>
+								<AllIconsComponenet height={30} width={20} iconName={'graduate'} color={'#808080'} />
+							</div>
+							<div className="selectContainer" ref={dropdownRef}>
+								<div className={`customDropdown ${isOpenForEducationLevel ? 'open' : ''}`} onClick={toggleDropdownForEducationLevel}>
+									<div className="pr-8">
+										{selectedEducationLevel || 'اختار السنة الدراسية'}
+									</div>
+									<div className="icon pl-2 pt-2">
+										<AllIconsComponenet height={8} width={14} iconName={'dropDown'} color={'#808080'} />
+									</div>
+								</div>
+								{isOpenForEducationLevel && (
+									<ul className="dropdownMenu">
+										{educationalLevelList.map(educationLevel => (
+											<li key={educationLevel.value} onClick={() => handleSelectEducationLevel(educationLevel)} className="dropdownMenuItem">
+												{educationLevel.label}
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						</div>
+
+						<div className='formInputBox'>
+							<div className='formInputIconDiv'>
+								<AllIconsComponenet height={30} width={20} iconName={'location'} color={'#808080'} />
+							</div>
+							<div className="selectContainer" ref={dropdownRef}>
+								<div className={`customDropdown ${isOpenForCity ? 'open' : ''}`} onClick={toggleDropdownforCities}>
+									<div className="pr-8">
+										{selectedCity || 'ادخل المدينة والحي'}
+									</div>
+									<div className="icon pl-2 pt-2">
+										<AllIconsComponenet height={8} width={14} iconName={'dropDown'} color={'#808080'} />
+									</div>
+								</div>
+								{isOpenForCity && (
+									<ul className="dropdownMenu">
+										{citiesList.map(city => (
+											<li key={city.value} onClick={() => handleSelectCity(city)} className="dropdownMenuItem">
+												{city.label}
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						</div>
+
+
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'lock'} color={'#808080'} />
