@@ -242,7 +242,7 @@ export default function Register() {
 					...data,
 				}
 				await postAuthRouteAPI(params).then(async (res) => {
-					// router.push('/login');
+					router.push('/login');
 					setLoading(false)
 					fbq.event('Sign up', { email: email });
 				}).catch(error => {
