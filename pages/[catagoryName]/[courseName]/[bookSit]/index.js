@@ -116,7 +116,7 @@ export default function Index(props) {
 		const data = [...studentsData]
 		const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		let isError = false
-		for (let i = 0; i < data.length; i++) {
+		for (let i = 0; i < data?.length; i++) {
 			if (data[i]?.gender == "") {
 				data[i].genderCheck = inputErrorMessages.genderNotSelectErrorMsg
 				isError = true
@@ -156,7 +156,7 @@ export default function Index(props) {
 				data[i].validName = ""
 			}
 
-			if (data[i].phoneNumber == "") {
+			if (data[i]?.phoneNumber == "") {
 				data[i].phoneNoCheck = inputErrorMessages.mobileRequiredErrorMsg
 				data[i].phoneNoLengthCheck = ""
 				data[i].validPhoneNumber = ""
