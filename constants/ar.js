@@ -30,6 +30,7 @@ export const inputErrorMessages = {
     passwordIncludeSpecialCharMsg: 'علامة مميزة واحدة على الأقل مثلا هاشتاق #',//It must contain at least one special character
     phoneNoFormateMsg: 'بصيغة 05xxxxxxxx',//It must start with 05
     genderNotSelectErrorMsg: 'اختار الجنس',
+    parentsNoOptionalMsg: " رقم ولي الأمر (اختياري) ", //Parent's number (optional)
 }
 
 export const inputSuccessMessages = {
@@ -86,11 +87,20 @@ export const updateProfileConst = {
     phoneNumberPlaceHolder: 'رقم الجوال',
     phoneNumberHintMsg: 'مثال: 0500000000',
 
+    parentPhoneNumberPlaceHolder: 'ادخل رقم ولي الأمر',
+
     profileUpdateMsg: 'انحفظت بياناتك الجديدة 👍🏼',
+
 }
 
 export const contentAccessPopUPConst = {
     modalHeaderText: 'المحتوى مقفل حاليًا 🔒',
     modalDetailText: ' شيّك عليها بوقت ثاني',
     ctaBtnText: 'تمام',
+}
+
+export const profileInfoUpdateReminderPopUpConst = {
+    modalHeaderText: 'يُرجى تحديث معلومات ملفك الشخصي للحصول على تجربة أفضل 🧡',
+    updateInfoBtnText: 'تحديث المعلومات',
+    skipBtnText: 'تخطي',
 }
