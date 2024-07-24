@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage } from '../constants/ar'
+import { studentInformationConst } from '../constants/studentInformationConst'
 
 const educationalLevelList = [
 	{ value: 'first_secondary_school', label: 'أول ثانوي' },
 	{ value: 'second_secondary_school', label: 'ثاني ثانوي' },
 	{ value: 'third_secondary_school', label: 'ثالث ثانوي' },
+	{ value: 'other', label: 'أخرى' }
 ];
 
 export default function Register() {
@@ -47,6 +49,8 @@ export default function Register() {
 	const [selectedCity, setSelectedCity] = useState('');
 	const [selectedEducationLevel, setSelectedEducationLevel] = useState('');
 	const dropdownRef = useRef(null);
+	const [otherEducationLevel, setOtherEducationLevel] = useState(false);
+	const [otherEducation, setOtherEducation] = useState('');
 
 	useEffect(() => {
 		getCityList()
@@ -231,8 +235,10 @@ export default function Register() {
 				if (selectedCity) {
 					data.city = selectedCity
 				}
-				if (selectedEducationLevel) {
+				if (selectedEducationLevel && !otherEducationLevel) {
 					data.educationLevel = selectedEducationLevel
+				} else if (otherEducationLevel) {
+					data.educationLevel = otherEducation
 				}
 				if (parentsContct) {
 					data.parentPhoneNo = parentsContct.replace(/[0-9]/, "+966")
@@ -308,9 +314,16 @@ export default function Register() {
 		setIsOpenForCity(false);
 	};
 
-	const handleSelectEducationLevel = (city) => {
-		setSelectedEducationLevel(city.label);
-		setIsOpenForEducationLevel(false);
+	const handleSelectEducationLevel = (obj) => {
+		if (obj.value == 'other') {
+			setSelectedEducationLevel(obj.label);
+			setOtherEducationLevel(true);
+			setIsOpenForEducationLevel(false);
+		} else {
+			setSelectedEducationLevel(obj.label);
+			setIsOpenForEducationLevel(false);
+			setOtherEducationLevel(false);
+		}
 	}
 
 	const handleClickOutside = (event) => {
@@ -385,9 +398,9 @@ export default function Register() {
 								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput} ${parentPhoneNumberError && `${styles.inputError}`}`} name='parentPhoneNo' id='parentPhoneNo' type="number" inputMode='tel' value={parentsContct} onChange={(e) => { if (e.target.value.length > 10) return; setParentPhoneNumber(e.target.value) }} placeholder=' ' />
-							<label className={`formLabel ${styles.loginFormLabel} ${parentPhoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="parentPhoneNo">parent number</label>
+							<label className={`formLabel ${styles.loginFormLabel} ${parentPhoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="parentPhoneNo">{studentInformationConst.parentNumberPlaceHolder}</label>
 						</div>
-						{!parentsContct ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : parentPhoneNumberError && <p className={styles.errorText}>{parentPhoneNumberError}</p>}
+						{!parentsContct ? <p className={styles.passwordHintMsg}>{inputErrorMessages.parentsNoOptionalMsg}</p> : parentPhoneNumberError && <p className={styles.errorText}>{parentPhoneNumberError}</p>}
 
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>
@@ -413,6 +426,15 @@ export default function Register() {
 								)}
 							</div>
 						</div>
+						{otherEducationLevel &&
+							<div className='formInputBox'>
+								<div className='formInputIconDiv'>
+									<AllIconsComponenet height={24} width={24} iconName={'graduate'} color={'#808080'} />
+								</div>
+								<input className={`formInput ${styles.loginFormInput}`} name='educationLevel' id='educationLevel' type="text" value={otherEducation} onChange={(e) => setOtherEducation(e.target.value)} placeholder=' ' />
+								<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="educationLevel">السنة الدراسية</label>
+							</div>
+						}
 
 						<div className='formInputBox'>
 							<div className='formInputIconDiv'>

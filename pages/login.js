@@ -10,16 +10,15 @@ import { useRouter } from "next/router";
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar'
-
-
+import ModelForUpdateProfile from '../components/ModalForUpdateProfile/ModalForUpdateProfile'
 
 export default function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
-
 	const [emailError, setEmailError] = useState(null);
 	const [passwordError, setPasswordError] = useState(false);
+	const [updateProfileModalOpen, setUpdateProfileModalOpen] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -31,7 +30,6 @@ export default function Login() {
 
 	const storeData = useSelector((state) => state?.globalStore);
 	const router = useRouter()
-
 
 	useEffect(() => {
 
@@ -77,14 +75,20 @@ export default function Login() {
 					type: 'IS_USER_INSTRUCTOR',
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
-				// if (viewProfileData?.data.gender == null) {
-				// 	router.push('/registerSocialMediaUser')
-				if (viewProfileData?.data.gender == null || viewProfileData?.data.gender == '') {
-					router.push('/updateProfile')
+				if (viewProfileData?.data.gender == null) {
+					router.push('/registerSocialMediaUser')
+					if (viewProfileData?.data.gender == null || viewProfileData?.data.gender == '') {
+						router.push('/updateProfile')
+					}
 				} else {
 					if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
-						router.push('/')
-						toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+						if (storeData?.viewProfileData?.reminderPopUpAttempt === null || storeData?.viewProfileData?.reminderPopUpAttempt < 3) {
+							setUpdateProfileModalOpen(true)
+						}
+						else {
+							router.push('/')
+							toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+						}
 					}
 					else {
 						router.push(storeData?.returnUrl)
@@ -242,6 +246,12 @@ export default function Login() {
 						<Image src="/images/squarePattern2.svg" alt='Squre Pattern Image' layout='fill' objectFit="cover" priority />
 					</div>
 				</div>
+			}
+			{updateProfileModalOpen &&
+				<ModelForUpdateProfile
+					open={updateProfileModalOpen}
+					setUpdateProfileModalOpen={setUpdateProfileModalOpen}
+				/>
 			}
 		</>
 	)
