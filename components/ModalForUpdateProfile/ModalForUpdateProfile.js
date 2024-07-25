@@ -39,22 +39,20 @@ function ModalForUpdateProfile(props) {
             reminderPopUpAttempt: count
         };
         await postAuthRouteAPI(params).then(async (res) => {
-            toast.success(updateProfileConst.profileUpdateMsg, { rtl: true, })
             dispatch({
                 type: 'SET_PROFILE_DATA',
                 viewProfileData: res?.data,
             });
-            router.push('/myProfile')
+            router.push('/')
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postAuthRouteAPI(params).then(async (res) => {
-                        toast.success(updateProfileConst.profileUpdateMsg, { rtl: true, })
                         dispatch({
                             type: 'SET_PROFILE_DATA',
                             viewProfileData: res?.data,
                         });
-                        router.push('/myProfile')
+                        router.push('/')
                     })
                 })
             }
@@ -67,7 +65,7 @@ function ModalForUpdateProfile(props) {
         <Dialog open={open} onClick={() => setUpdateProfileModalOpen(false)} dir='rtl' >
             <StyledDialogContent className={styles.reminderPopup} onClick={handleContentClick}>
                 <div style={{ direction: 'ltr' }}>
-                    <CloseIcon style={{ position: 'inherit' }} className={`cursor-pointer ${styles.closeIconWrapper}`} onClick={() => setUpdateProfileModalOpen(false)} />
+                    <CloseIcon style={{ position: 'inherit' }} className={`cursor-pointer ${styles.closeIconWrapper}`} onClick={() => handleSkipInfo()} />
                 </div>
                 <div className='mt-6'>
                     <div className='text-center text-2xl' >
@@ -78,7 +76,7 @@ function ModalForUpdateProfile(props) {
                             <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.updateInfoBtnText}</button>
                         </div>
                         <div className={`${styles.buttonModalDiv} flex justify-center items-center`} onClick={() => handleSkipInfo()}>
-                            <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.s}</button>
+                            <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.skipBtnText}</button>
                         </div>
                     </div>
                 </div>

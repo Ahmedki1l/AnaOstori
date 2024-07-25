@@ -10,7 +10,7 @@ var initialState = {
     availabilityList: [],
     editCourseData: {},
     isCourseEdit: false,
-    returnUrl: "",
+    returnUrl: null,
     loginWithoutPassword: false,
 };
 
