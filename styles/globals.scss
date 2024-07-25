@@ -500,6 +500,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: -webkit-fill-available;
 
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {

@@ -3,8 +3,8 @@ import loader from '../public/icons/loader.svg'
 import loaderColor from '../public/icons/loaderColor.svg'
 import styles from '../styles/updateProfile.module.scss'
 import { toast } from "react-toastify";
-import { useEffect, useState } from 'react';
-import { postAuthRouteAPI, uploadProfileImage } from '../services/apisService';
+import { useEffect, useRef, useState } from 'react';
+import { getRouteAPI, postAuthRouteAPI, uploadProfileImage } from '../services/apisService';
 import Router, { useRouter } from "next/router";
 import ProfilePicture from '../components/CommonComponents/ProfilePicture';
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,8 +13,15 @@ import { inputErrorMessages, toastErrorMessage, toastSuccessMessage, updateProfi
 import { mediaUrl } from '../constants/DataManupulation';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 
+const educationalLevelList = [
+    { value: 'first_secondary_school', label: 'أول ثانوي' },
+    { value: 'second_secondary_school', label: 'ثاني ثانوي' },
+    { value: 'third_secondary_school', label: 'ثالث ثانوي' },
+    { value: 'other', label: 'أخرى' }
+];
 
 const UpdateProfile = () => {
+
     const storeData = useSelector((state) => state?.globalStore);
     const [fullName, setFullName] = useState(storeData?.viewProfileData?.fullName)
     const [showLoader, setShowLoader] = useState(false);
@@ -23,16 +30,49 @@ const UpdateProfile = () => {
     const [gender, setGender] = useState(storeData?.viewProfileData?.gender);
     const [fullNameError, setFullNameError] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(storeData?.viewProfileData?.phone?.replace('966', '0'));
+    const [parentPhoneNo, setParentPhoneNumber] = useState(storeData?.viewProfileData?.parentsContact?.replace('+966', '0') || null);
     const [phoneNumberError, setPhoneNumberError] = useState(null);
+    const [parentPhoneNumberError, setParentPhoneNumberError] = useState(null);
     const [isGenderError, setIsGenderError] = useState(null);
-
+    const [selectedCity, setSelectedCity] = useState(storeData?.viewProfileData?.city);
+    const [selectedEducationLevel, setSelectedEducationLevel] = useState(storeData?.viewProfileData?.educationLevel);
+    const dropdownRef = useRef(null);
+    const [isOpenForCity, setIsOpenForCity] = useState(false);
+    const [isOpenForEducationLevel, setIsOpenForEducationLevel] = useState(false);
+    const [citiesList, setCitiesList] = useState('')
+    const [otherEducationLevel, setOtherEducationLevel] = useState(false);
+    const [otherEducation, setOtherEducation] = useState('');
+    console.log('selectedEducationLevel', selectedEducationLevel);
     const initialState = {
         fullName: storeData?.viewProfileData?.fullName,
         phoneNumber: storeData?.viewProfileData?.phone?.replace('966', '0'),
-        gender: storeData?.viewProfileData?.gender
+        gender: storeData?.viewProfileData?.gender,
+        parentPhoneNo: storeData?.viewProfileData?.parentsContact?.replace('+966', '0'),
+        selectedCity: storeData?.viewProfileData?.city,
+        selectedEducationLevel: storeData?.viewProfileData?.educationLevel,
+        reminderPopUpAttempt: storeData?.viewProfileData?.reminderPopUpAttempt
     }
     const dispatch = useDispatch();
-    const router = useRouter()
+    const router = useRouter();
+
+    useEffect(() => {
+        getCityList()
+    }, [])
+
+    const getCityList = async () => {
+        await getRouteAPI({ routeName: 'listCity' }).then((res) => {
+            const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
+                value: item.nameAr,
+                label: item.nameAr,
+                key: item.id,
+                cityCode: item.code
+            }));
+            formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
+            setCitiesList(formattedData);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
     const uploadPhoto = async (e) => {
         setUploadLoader(true)
@@ -64,7 +104,6 @@ const UpdateProfile = () => {
         })
     };
 
-
     useEffect(() => {
         if (fullName && (fullName.split(" ").length - 1) < 2) {
             setFullNameError(inputErrorMessages.nameThreeFoldErrorMsg);
@@ -78,11 +117,39 @@ const UpdateProfile = () => {
         } else {
             setPhoneNumberError(null);
         }
+        if (parentPhoneNo && !(parentPhoneNo.startsWith("05"))) {
+            setParentPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+        } else if (parentPhoneNo && parentPhoneNo.length < 10) {
+            setParentPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
+        } else {
+            setParentPhoneNumberError(null);
+        }
         if (gender) {
             setIsGenderError(null)
         }
-    }, [fullName, phoneNumber, gender])
+    }, [fullName, phoneNumber, gender, parentPhoneNo])
 
+    const toggleDropdownforCities = () => {
+        setIsOpenForCity(!isOpenForCity);
+    };
+    const toggleDropdownForEducationLevel = () => {
+        setIsOpenForEducationLevel(!isOpenForEducationLevel);
+    }
+    const handleSelectEducationLevel = (obj) => {
+        if (obj.value == 'other') {
+            setSelectedEducationLevel(obj.label);
+            setOtherEducationLevel(true);
+            setIsOpenForEducationLevel(false);
+        } else {
+            setSelectedEducationLevel(obj.label);
+            setIsOpenForEducationLevel(false);
+            setOtherEducationLevel(false);
+        }
+    }
+    const handleSelectCity = (city) => {
+        setSelectedCity(city.label);
+        setIsOpenForCity(false);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -109,22 +176,28 @@ const UpdateProfile = () => {
         if ((!phoneNumber || phoneNumberError) || (!fullName || fullNameError) || (!gender || isGenderError)) {
             return
         }
-        if (JSON.stringify(initialState) === JSON.stringify({ fullName, phoneNumber, gender })) {
+        if (JSON.stringify(initialState) === JSON.stringify({ fullName, phoneNumber, gender, parentPhoneNo, selectedCity, selectedEducationLevel })) {
             router.push('/myProfile')
         } else {
             setShowLoader(true)
             const data = {
                 fullName: fullName,
                 phone: phoneNumber && phoneNumber.replace(/[0-9]/, '+966'),
-                gender: gender
+                gender: gender,
+                parentsContact: parentPhoneNo ? parentPhoneNo.replace(/[0-9]/, '+966') : null,
+                city: selectedCity ? selectedCity : null,
+                educationLevel: selectedEducationLevel ? selectedEducationLevel : null,
+                reminderPopUpAttempt: storeData?.viewProfileData?.reminderPopUpAttempt
             }
-            if (!phoneNumber?.length) {
-                delete data.phoneNumber;
+            if (Object.values(data).every((val) => val !== null)) {
+                data.reminderPopUpAttempt = 3
             }
+            console.log('data', data);
             const params = {
                 routeName: 'updateProfileHandler',
                 ...data,
             }
+            setShowLoader(false)
             await postAuthRouteAPI(params).then(async (res) => {
                 toast.success(updateProfileConst.profileUpdateMsg, { rtl: true, })
                 setShowLoader(false)
@@ -189,6 +262,77 @@ const UpdateProfile = () => {
                                     </div>
                                     {phoneNumberError ? <p className={styles.errorText}>{phoneNumberError}</p> : <p className={styles.noteText}>{inputErrorMessages.phoneNoFormateMsg}</p>}
                                 </div>
+                                <div className='w-full'>
+                                    <div className={`formInputBox`}>
+                                        <div className={`formInputIconDiv`}>
+                                            <AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#00000080'} />
+                                        </div>
+                                        <input className={`formInput ${styles.loginFormInput}  ${parentPhoneNumberError && styles.inputError}`} name='parentPhoneNo' inputMode='tel' id='parentPhoneNo' type="number" value={parentPhoneNo} onChange={(e) => { if (e.target.value.length > 10) return; setParentPhoneNumber(e.target.value) }} placeholder=' ' />
+                                        <label className={`formLabel  ${styles.loginFormLabel} ${parentPhoneNumberError && styles.inputPlaceHoldererror}`} htmlFor="parentPhoneNo">{updateProfileConst.parentPhoneNumberPlaceHolder}</label>
+                                    </div>
+                                    {parentPhoneNumberError ? <p className={styles.errorText}>{parentPhoneNumberError}</p> : <p className={styles.noteText}>{inputErrorMessages.phoneNoFormateMsg}</p>}
+                                </div>
+
+                                <div className='formInputBox'>
+                                    <div className='formInputIconDiv'>
+                                        <AllIconsComponenet height={30} width={20} iconName={'graduate'} color={'#808080'} />
+                                    </div>
+                                    <div className="selectContainer" ref={dropdownRef}>
+                                        <div className={`customDropdown ${isOpenForEducationLevel ? 'open' : ''}`} onClick={toggleDropdownForEducationLevel}>
+                                            <div className="pr-8">
+                                                {selectedEducationLevel || 'اختار السنة الدراسية'}
+                                            </div>
+                                            <div className="icon pl-2 pt-2">
+                                                <AllIconsComponenet height={8} width={14} iconName={'dropDown'} color={'#808080'} />
+                                            </div>
+                                        </div>
+                                        {isOpenForEducationLevel && (
+                                            <ul className="dropdownMenu">
+                                                {educationalLevelList.map(educationLevel => (
+                                                    <li key={educationLevel.value} onClick={() => handleSelectEducationLevel(educationLevel)} className="dropdownMenuItem">
+                                                        {educationLevel.label}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {otherEducationLevel &&
+                                    <div className='formInputBox'>
+                                        <div className='formInputIconDiv'>
+                                            <AllIconsComponenet height={24} width={24} iconName={'graduate'} color={'#808080'} />
+                                        </div>
+                                        <input className={`formInput ${styles.loginFormInput}`} name='educationLevel' id='educationLevel' type="text" value={otherEducation} onChange={(e) => setOtherEducation(e.target.value)} placeholder=' ' />
+                                        <label className={`formLabel ${styles.loginFormLabel}`} htmlFor="educationLevel">السنة الدراسية</label>
+                                    </div>
+                                }
+
+                                <div className='formInputBox'>
+                                    <div className='formInputIconDiv'>
+                                        <AllIconsComponenet height={30} width={20} iconName={'location'} color={'#808080'} />
+                                    </div>
+                                    <div className="selectContainer" ref={dropdownRef}>
+                                        <div className={`customDropdown ${isOpenForCity ? 'open' : ''}`} onClick={toggleDropdownforCities}>
+                                            <div className="pr-8">
+                                                {selectedCity || 'ادخل المدينة والحي'}
+                                            </div>
+                                            <div className="icon pl-2 pt-2">
+                                                <AllIconsComponenet height={8} width={14} iconName={'dropDown'} color={'#808080'} />
+                                            </div>
+                                        </div>
+                                        {isOpenForCity && (
+                                            <ul className="dropdownMenu">
+                                                {citiesList.map(city => (
+                                                    <li key={city.value} onClick={() => handleSelectCity(city)} className="dropdownMenuItem">
+                                                        {city.label}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
+
                                 {/* <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
                                     <div className={styles.genderBtnBox} >

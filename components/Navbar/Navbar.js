@@ -209,7 +209,7 @@ export default function Navbar() {
 		signOutUser();
 		dispatch({
 			type: 'SET_RETURN_URL',
-			returnUrl: ""
+			returnUrl: null
 		})
 	}
 
