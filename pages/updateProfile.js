@@ -30,7 +30,7 @@ const UpdateProfile = () => {
     const [gender, setGender] = useState(storeData?.viewProfileData?.gender);
     const [fullNameError, setFullNameError] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(storeData?.viewProfileData?.phone?.replace('966', '0'));
-    const [parentPhoneNo, setParentPhoneNumber] = useState(storeData?.viewProfileData?.parentsContact?.replace('+966', '0'));
+    const [parentPhoneNo, setParentPhoneNumber] = useState(storeData?.viewProfileData?.parentsContact?.replace('+966', '0') || null);
     const [phoneNumberError, setPhoneNumberError] = useState(null);
     const [parentPhoneNumberError, setParentPhoneNumberError] = useState(null);
     const [isGenderError, setIsGenderError] = useState(null);
@@ -50,6 +50,7 @@ const UpdateProfile = () => {
         parentPhoneNo: storeData?.viewProfileData?.parentsContact?.replace('+966', '0'),
         selectedCity: storeData?.viewProfileData?.city,
         selectedEducationLevel: storeData?.viewProfileData?.educationLevel,
+        reminderPopUpAttempt: storeData?.viewProfileData?.reminderPopUpAttempt
     }
     const dispatch = useDispatch();
     const router = useRouter();
@@ -182,22 +183,16 @@ const UpdateProfile = () => {
             const data = {
                 fullName: fullName,
                 phone: phoneNumber && phoneNumber.replace(/[0-9]/, '+966'),
-                gender: gender
+                gender: gender,
+                parentsContact: parentPhoneNo ? parentPhoneNo.replace(/[0-9]/, '+966') : null,
+                city: selectedCity ? selectedCity : null,
+                educationLevel: selectedEducationLevel ? selectedEducationLevel : null,
+                reminderPopUpAttempt: storeData?.viewProfileData?.reminderPopUpAttempt
             }
-            if (!phoneNumber?.length) {
-                delete data.phoneNumber;
+            if (Object.values(data).every((val) => val !== null)) {
+                data.reminderPopUpAttempt = 3
             }
-            if (parentPhoneNo) {
-                data.parentsContact = parentPhoneNo && parentPhoneNo.replace(/[0-9]/, '+966')
-            }
-            if (selectedCity) {
-                data.city = selectedCity
-            }
-            if (selectedEducationLevel && !otherEducationLevel) {
-                data.educationLevel = selectedEducationLevel
-            } else if (otherEducationLevel) {
-                data.educationLevel = otherEducation
-            }
+            console.log('data', data);
             const params = {
                 routeName: 'updateProfileHandler',
                 ...data,

@@ -81,8 +81,8 @@ export default function Login() {
 						router.push('/updateProfile')
 					}
 				} else {
-					if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
-						if (storeData?.viewProfileData?.reminderPopUpAttempt === null || storeData?.viewProfileData?.reminderPopUpAttempt < 3) {
+					if (!storeData?.returnUrl) {
+						if (viewProfileData?.data?.reminderPopUpAttempt === null || viewProfileData?.data?.reminderPopUpAttempt < 3) {
 							setUpdateProfileModalOpen(true)
 						}
 						else {

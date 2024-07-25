@@ -98,7 +98,7 @@ export default function Register() {
 				if (viewProfileData?.data.gender == null) {
 					router.push('/updateProfile')
 				}
-				if (storeData?.returnUrl == "" || storeData?.returnUrl == undefined) {
+				if (!storeData?.returnUrl) {
 					router.push('/')
 					toast.success(toastErrorMessage.successLoginMsg, { rtl: true })
 				}
