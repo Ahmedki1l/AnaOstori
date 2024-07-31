@@ -50,7 +50,7 @@ const Index = () => {
         }
     }
     const handleDateChange = (val) => {
-        console.log("val", val);
+
         if (val !== null && val.length === 2) {
             const startDate = dayjs(val[0]).format('YYYY-MM-DD');
             const endDate = dayjs(val[1]).format('YYYY-MM-DD');
