@@ -370,7 +370,6 @@ const Index = () => {
         dataSource: userList,
         paginationConfig: paginationConfig,
         handleTableChange: (pagination) => {
-            console.log(pagination);
             if (pagination.current !== currentPage) {
                 setCurrentPage(pagination.current)
             }

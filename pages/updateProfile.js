@@ -42,7 +42,7 @@ const UpdateProfile = () => {
     const [citiesList, setCitiesList] = useState('')
     const [otherEducationLevel, setOtherEducationLevel] = useState(false);
     const [otherEducation, setOtherEducation] = useState('');
-    console.log('selectedEducationLevel', selectedEducationLevel);
+
     const initialState = {
         fullName: storeData?.viewProfileData?.fullName,
         phoneNumber: storeData?.viewProfileData?.phone?.replace('966', '0'),
@@ -332,20 +332,6 @@ const UpdateProfile = () => {
                                         )}
                                     </div>
                                 </div>
-
-                                {/* <div className='w-full'>
-                                    <p className={styles.titleLabel}>الجنس</p>
-                                    <div className={styles.genderBtnBox} >
-                                        <button className={`${styles.maleBtn} ${gender == "male" ? `${styles.genderActiveBtn}` : `${styles.genderNotActiveBtn}`}`} onClick={(e) => { e.preventDefault(); setGender("male") }}>
-                                            <AllIconsComponenet height={24} width={24} iconName={'newMaleIcon'} color={gender == "male" ? '#F26722 ' : '#808080'} />
-                                            <span>ذكر</span>
-                                        </button>
-                                        <button className={`${styles.femaleBtn} ${gender == 'female' ? `${styles.genderActiveBtn}` : 'border-none'}`} onClick={(e) => { e.preventDefault(); setGender('female') }}>
-                                            <AllIconsComponenet height={24} width={24} iconName={'newFemaleIcon'} color={gender == "female" ? '#F26722 ' : '#808080'} />
-                                            <span>أنثى</span>
-                                        </button>
-                                    </div>
-                                </div> */}
                                 <div className='w-full'>
                                     <p className={styles.titleLabel}>الجنس</p>
                                     <div className={`${styles.genderBtnBox} ${isGenderError && `${styles.inputErrorBox}`}`} >
