@@ -630,7 +630,6 @@ const Appointments = ({
                     </Modal>
                 }
             </div>
-
         </div>
     )
 }

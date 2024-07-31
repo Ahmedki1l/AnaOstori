@@ -241,7 +241,7 @@ export default function Register() {
 					data.educationLevel = otherEducation
 				}
 				if (parentsContct) {
-					data.parentPhoneNo = parentsContct.replace(/[0-9]/, "+966")
+					data.parentsContact = parentsContct.replace(/[0-9]/, "+966")
 				}
 				const params = {
 					routeName: 'updateProfileHandler',
