@@ -1,7 +1,3 @@
-.reminderPopup {
-    width: 410px;
-}
-
 .buttonModalDiv {
     height: 46px;
     width: 100%;
@@ -19,14 +15,12 @@
     font-size: 18px;
 }
 
-@media(max-width: 664px) {
-    .commingSoonModalBox {
-        width: 358px;
-    }
+.reminderPopupModal {
+    width: 350px;
 }
 
 @media (max-width :450px) {
-    .commingSoonModalBox {
+    .reminderPopupModal {
         width: 100%;
     }
 }

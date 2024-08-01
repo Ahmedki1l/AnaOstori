@@ -243,6 +243,9 @@ export default function Register() {
 				if (parentsContct) {
 					data.parentsContact = parentsContct.replace(/[0-9]/, "+966")
 				}
+				if (parentsContct && educationalLevelList && selectedCity) {
+					data.reminderPopUpAttempt = 3
+				}
 				const params = {
 					routeName: 'updateProfileHandler',
 					...data,

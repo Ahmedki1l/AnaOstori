@@ -62,22 +62,18 @@ function ModalForUpdateProfile(props) {
     }
 
     return (
-        <Dialog open={open} onClick={() => setUpdateProfileModalOpen(false)} dir='rtl' >
-            <StyledDialogContent className={styles.reminderPopup} onClick={handleContentClick}>
+        <Dialog open={open} onClick={() => setCommingSoonModalOpen(false)} dir='rtl' >
+            <StyledDialogContent className={styles.reminderPopupModal} onClick={handleContentClick}>
                 <div style={{ direction: 'ltr' }}>
                     <CloseIcon style={{ position: 'inherit' }} className={`cursor-pointer ${styles.closeIconWrapper}`} onClick={() => handleSkipInfo()} />
                 </div>
-                <div className='mt-6'>
-                    <div className='text-center text-2xl' >
-                        <p>{profileInfoUpdateReminderPopUpConst.modalHeaderText}</p>
+                <p className='text-center py-6 text-xl'>{profileInfoUpdateReminderPopUpConst.modalHeaderText}</p>
+                <div className='flex flex-col items-center w-full gap-1'>
+                    <div className={`${styles.buttonModalDiv} flex justify-center items-center`} onClick={() => handleUpdateInfo()}>
+                        <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.updateInfoBtnText}</button>
                     </div>
-                    <div className='flex items-center w-full gap-4'>
-                        <div className={`${styles.buttonModalDiv} flex justify-center items-center`} onClick={() => handleUpdateInfo()}>
-                            <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.updateInfoBtnText}</button>
-                        </div>
-                        <div className={`${styles.buttonModalDiv} flex justify-center items-center`} onClick={() => handleSkipInfo()}>
-                            <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.skipBtnText}</button>
-                        </div>
+                    <div className={`${styles.buttonModalDiv} flex justify-center items-center`} onClick={() => handleSkipInfo()}>
+                        <button className={`primarySolidBtn ${styles.cancelBtn}`} >{profileInfoUpdateReminderPopUpConst.skipBtnText}</button>
                     </div>
                 </div>
             </StyledDialogContent>
