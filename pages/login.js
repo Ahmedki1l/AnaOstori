@@ -81,18 +81,34 @@ export default function Login() {
 						router.push('/updateProfile')
 					}
 				} else {
-					if (!storeData?.returnUrl) {
-						if (viewProfileData?.data?.reminderPopUpAttempt === null || viewProfileData?.data?.reminderPopUpAttempt < 3) {
-							setUpdateProfileModalOpen(true)
-						}
-						else {
+					const createdAt = new Date(viewProfileData?.data?.createdAt);
+					const currentDate = new Date();
+					const timeDifference = Math.abs(currentDate - createdAt);
+					const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+					const reminderPopUpCount = viewProfileData?.data?.reminderPopUpAttempt;
+
+					if (((dayDifference >= 7) || (reminderPopUpCount === null || reminderPopUpCount < 3))) {
+						setUpdateProfileModalOpen(true);
+					} else {
+						if (!storeData?.returnUrl) {
 							router.push('/')
-							toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+							// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+						} else {
+							router.push(storeData?.returnUrl)
 						}
 					}
-					else {
-						router.push(storeData?.returnUrl)
-					}
+					// if (!storeData?.returnUrl) {
+					// 	if (viewProfileData?.data?.reminderPopUpAttempt === null || viewProfileData?.data?.reminderPopUpAttempt < 3) {
+					// 		setUpdateProfileModalOpen(true)
+					// 	}
+					// 	else {
+					// 		router.push('/')
+					// 		toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+					// 	}
+					// }
+					// else {
+					// 	router.push(storeData?.returnUrl)
+					// }
 				}
 			} catch (error) {
 				console.log(error);
