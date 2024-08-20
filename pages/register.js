@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage } from '../constants/ar'
-import { studentInformationConst } from '../constants/studentInformationConst'
+import ModelForUpdateProfile from '../components/ModalForUpdateProfile/ModalForUpdateProfile'
 
 const educationalLevelList = [
 	{ value: 'first_secondary_school', label: 'أول ثانوي' },
@@ -23,7 +23,7 @@ export default function Register() {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [phoneNumber, setPhoneNumber] = useState("");
-	const [parentsContct, setParentPhoneNumber] = useState("");
+	// const [parentsContct, setParentPhoneNumber] = useState("");
 	const [fullName, setFullName] = useState("")
 	const [gender, setGender] = useState("")
 	const [initPasswordError, setInitPasswordError] = useState({
@@ -34,7 +34,7 @@ export default function Register() {
 	});
 	const [fullNameError, setFullNameError] = useState(null);
 	const [phoneNumberError, setPhoneNumberError] = useState(null);
-	const [parentPhoneNumberError, setParentPhoneNumberError] = useState(null);
+	// const [parentPhoneNumberError, setParentPhoneNumberError] = useState(null);
 	const [emailError, setEmailError] = useState(null);
 	const [isGenderError, setIsGenderError] = useState(null);
 	const [passwordError, setPasswordError] = useState(null);
@@ -43,33 +43,35 @@ export default function Register() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const storeData = useSelector((state) => state?.globalStore);
-	const [citiesList, setCitiesList] = useState('')
-	const [isOpenForCity, setIsOpenForCity] = useState(false);
-	const [isOpenForEducationLevel, setIsOpenForEducationLevel] = useState(false);
-	const [selectedCity, setSelectedCity] = useState('');
-	const [selectedEducationLevel, setSelectedEducationLevel] = useState('');
-	const dropdownRef = useRef(null);
-	const [otherEducationLevel, setOtherEducationLevel] = useState(false);
-	const [otherEducation, setOtherEducation] = useState('');
+	const [updateProfileModalOpen, setUpdateProfileModalOpen] = useState(false);
 
-	useEffect(() => {
-		getCityList()
-	}, [])
+	// const [citiesList, setCitiesList] = useState('')
+	// const [isOpenForCity, setIsOpenForCity] = useState(false);
+	// const [isOpenForEducationLevel, setIsOpenForEducationLevel] = useState(false);
+	// const [selectedCity, setSelectedCity] = useState('');
+	// const [selectedEducationLevel, setSelectedEducationLevel] = useState('');
+	// const dropdownRef = useRef(null);
+	// const [otherEducationLevel, setOtherEducationLevel] = useState(false);
+	// const [otherEducation, setOtherEducation] = useState('');
 
-	const getCityList = async () => {
-		await getRouteAPI({ routeName: 'listCity' }).then((res) => {
-			const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
-				value: item.nameAr,
-				label: item.nameAr,
-				key: item.id,
-				cityCode: item.code
-			}));
-			formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
-			setCitiesList(formattedData);
-		}).catch((error) => {
-			console.log(error);
-		});
-	}
+	// useEffect(() => {
+	// 	getCityList()
+	// }, [])
+
+	// const getCityList = async () => {
+	// 	await getRouteAPI({ routeName: 'listCity' }).then((res) => {
+	// 		const formattedData = res?.data?.sort((a, b) => parseInt(a.code) - parseInt(b.code)).map(item => ({
+	// 			value: item.nameAr,
+	// 			label: item.nameAr,
+	// 			key: item.id,
+	// 			cityCode: item.code
+	// 		}));
+	// 		formattedData?.push({ value: 'other', label: 'أخرى', value: 'other' });
+	// 		setCitiesList(formattedData);
+	// 	}).catch((error) => {
+	// 		console.log(error);
+	// 	});
+	// }
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
@@ -95,16 +97,33 @@ export default function Register() {
 					type: 'IS_USER_INSTRUCTOR',
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
+
 				if (viewProfileData?.data.gender == null) {
 					router.push('/updateProfile')
 				}
-				if (!storeData?.returnUrl) {
-					router.push('/')
-					toast.success(toastErrorMessage.successLoginMsg, { rtl: true })
+				const createdAt = new Date(viewProfileData?.data?.createdAt);
+				const currentDate = new Date();
+				const timeDifference = Math.abs(currentDate - createdAt);
+				const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+				const reminderPopUpCount = viewProfileData?.data?.reminderPopUpAttempt;
+
+				if (((dayDifference >= 7) || (reminderPopUpCount === null || reminderPopUpCount < 3))) {
+					setUpdateProfileModalOpen(true);
+				} else {
+					if (!storeData?.returnUrl) {
+						router.push('/')
+						// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+					} else {
+						router.push(storeData?.returnUrl)
+					}
 				}
-				else {
-					router.push(storeData?.returnUrl)
-				}
+				// if (!storeData?.returnUrl) {
+				// 	router.push('/')
+				// 	toast.success(toastErrorMessage.successLoginMsg, { rtl: true })
+				// }
+				// else {
+				// 	router.push(storeData?.returnUrl)
+				// }
 			}
 			catch (error) {
 				console.log(error);
@@ -177,13 +196,13 @@ export default function Register() {
 		} else {
 			setPhoneNumberError(null);
 		}
-		if (parentsContct && !(parentsContct.startsWith("05"))) {
-			setParentPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
-		} else if (parentsContct && parentsContct.length < 10) {
-			setParentPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
-		} else {
-			setParentPhoneNumberError(null);
-		}
+		// if (parentsContct && !(parentsContct.startsWith("05"))) {
+		// 	setParentPhoneNumberError(inputErrorMessages.mobileNumberFormatErrorMsg)
+		// } else if (parentsContct && parentsContct.length < 10) {
+		// 	setParentPhoneNumberError(inputErrorMessages.phoneNumberLengthMsg)
+		// } else {
+		// 	setParentPhoneNumberError(null);
+		// }
 		if (gender) {
 			setIsGenderError(null)
 		}
@@ -191,7 +210,7 @@ export default function Register() {
 			setPasswordError(null)
 		}
 
-	}, [fullName, email, phoneNumber, parentsContct, password, gender, regexEmail, regexPhone])
+	}, [fullName, email, phoneNumber, password, gender, regexEmail, regexPhone])
 
 	const handleSignup = async (e) => {
 		e.preventDefault()
@@ -232,20 +251,20 @@ export default function Register() {
 				if (!gender?.length) {
 					delete data?.gender
 				}
-				if (selectedCity) {
-					data.city = selectedCity
-				}
-				if (selectedEducationLevel && !otherEducationLevel) {
-					data.educationLevel = selectedEducationLevel
-				} else if (otherEducationLevel) {
-					data.educationLevel = otherEducation
-				}
-				if (parentsContct) {
-					data.parentsContact = parentsContct.replace(/[0-9]/, "+966")
-				}
-				if (parentsContct && educationalLevelList && selectedCity) {
-					data.reminderPopUpAttempt = 3
-				}
+				// if (selectedCity) {
+				// 	data.city = selectedCity
+				// }
+				// if (selectedEducationLevel && !otherEducationLevel) {
+				// 	data.educationLevel = selectedEducationLevel
+				// } else if (otherEducationLevel) {
+				// 	data.educationLevel = otherEducation
+				// }
+				// if (parentsContct) {
+				// 	data.parentsContact = parentsContct.replace(/[0-9]/, "+966")
+				// }
+				// if (parentsContct && educationalLevelList && selectedCity) {
+				// 	data.reminderPopUpAttempt = 3
+				// }
 				const params = {
 					routeName: 'updateProfileHandler',
 					...data,
@@ -305,42 +324,42 @@ export default function Register() {
 		}
 	}
 
-	const toggleDropdownforCities = () => {
-		setIsOpenForCity(!isOpenForCity);
-	};
-	const toggleDropdownForEducationLevel = () => {
-		setIsOpenForEducationLevel(!isOpenForEducationLevel);
-	}
+	// const toggleDropdownforCities = () => {
+	// 	setIsOpenForCity(!isOpenForCity);
+	// };
+	// const toggleDropdownForEducationLevel = () => {
+	// 	setIsOpenForEducationLevel(!isOpenForEducationLevel);
+	// }
 
-	const handleSelectCity = (city) => {
-		setSelectedCity(city.label);
-		setIsOpenForCity(false);
-	};
+	// const handleSelectCity = (city) => {
+	// 	setSelectedCity(city.label);
+	// 	setIsOpenForCity(false);
+	// };
 
-	const handleSelectEducationLevel = (obj) => {
-		if (obj.value == 'other') {
-			setSelectedEducationLevel(obj.label);
-			setOtherEducationLevel(true);
-			setIsOpenForEducationLevel(false);
-		} else {
-			setSelectedEducationLevel(obj.label);
-			setIsOpenForEducationLevel(false);
-			setOtherEducationLevel(false);
-		}
-	}
+	// const handleSelectEducationLevel = (obj) => {
+	// 	if (obj.value == 'other') {
+	// 		setSelectedEducationLevel(obj.label);
+	// 		setOtherEducationLevel(true);
+	// 		setIsOpenForEducationLevel(false);
+	// 	} else {
+	// 		setSelectedEducationLevel(obj.label);
+	// 		setIsOpenForEducationLevel(false);
+	// 		setOtherEducationLevel(false);
+	// 	}
+	// }
 
-	const handleClickOutside = (event) => {
-		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-			setIsOpenForCity(false);
-		}
-	};
+	// const handleClickOutside = (event) => {
+	// 	if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+	// 		setIsOpenForCity(false);
+	// 	}
+	// };
 
-	useEffect(() => {
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
+	// useEffect(() => {
+	// 	document.addEventListener('mousedown', handleClickOutside);
+	// 	return () => {
+	// 		document.removeEventListener('mousedown', handleClickOutside);
+	// 	};
+	// }, []);
 
 	return (
 		<>
@@ -396,16 +415,16 @@ export default function Register() {
 						</div>
 						{!phoneNumber ? <p className={styles.passwordHintMsg}>{inputErrorMessages.phoneNoFormateMsg}</p> : phoneNumberError && <p className={styles.errorText}>{phoneNumberError}</p>}
 
-						<div className='formInputBox'>
+						{/* <div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newMobileIcon'} color={'#808080'} />
 							</div>
 							<input className={`formInput ${styles.loginFormInput} ${parentPhoneNumberError && `${styles.inputError}`}`} name='parentPhoneNo' id='parentPhoneNo' type="number" inputMode='tel' value={parentsContct} onChange={(e) => { if (e.target.value.length > 10) return; setParentPhoneNumber(e.target.value) }} placeholder=' ' />
 							<label className={`formLabel ${styles.loginFormLabel} ${parentPhoneNumberError && `${styles.inputPlaceHoldererror}`}`} htmlFor="parentPhoneNo">{studentInformationConst.parentNumberPlaceHolder}</label>
 						</div>
-						{!parentsContct ? <p className={styles.passwordHintMsg}>{inputErrorMessages.parentsNoOptionalMsg}</p> : parentPhoneNumberError && <p className={styles.errorText}>{parentPhoneNumberError}</p>}
+						{!parentsContct ? <p className={styles.passwordHintMsg}>{inputErrorMessages.parentsNoOptionalMsg}</p> : parentPhoneNumberError && <p className={styles.errorText}>{parentPhoneNumberError}</p>} */}
 
-						<div className='formInputBox'>
+						{/* <div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={30} width={20} iconName={'graduate'} color={'#808080'} />
 							</div>
@@ -428,8 +447,8 @@ export default function Register() {
 									</ul>
 								)}
 							</div>
-						</div>
-						{otherEducationLevel &&
+						</div> */}
+						{/* {otherEducationLevel &&
 							<div className='formInputBox'>
 								<div className='formInputIconDiv'>
 									<AllIconsComponenet height={24} width={24} iconName={'graduate'} color={'#808080'} />
@@ -437,9 +456,9 @@ export default function Register() {
 								<input className={`formInput ${styles.loginFormInput}`} name='educationLevel' id='educationLevel' type="text" value={otherEducation} onChange={(e) => setOtherEducation(e.target.value)} placeholder=' ' />
 								<label className={`formLabel ${styles.loginFormLabel}`} htmlFor="educationLevel">السنة الدراسية</label>
 							</div>
-						}
+						} */}
 
-						<div className='formInputBox'>
+						{/* <div className='formInputBox'>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={30} width={20} iconName={'location'} color={'#808080'} />
 							</div>
@@ -462,7 +481,7 @@ export default function Register() {
 									</ul>
 								)}
 							</div>
-						</div>
+						</div> */}
 
 
 						<div className='formInputBox'>
@@ -549,6 +568,12 @@ export default function Register() {
 						</div>
 					</div>
 				</div >
+			}
+			{updateProfileModalOpen &&
+				<ModelForUpdateProfile
+					open={updateProfileModalOpen}
+					setUpdateProfileModalOpen={setUpdateProfileModalOpen}
+				/>
 			}
 		</>
 	)
