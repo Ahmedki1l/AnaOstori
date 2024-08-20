@@ -87,7 +87,7 @@ export default function Login() {
 					const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
 					const reminderPopUpCount = viewProfileData?.data?.reminderPopUpAttempt;
 
-					if (((dayDifference >= 7) || (reminderPopUpCount === null || reminderPopUpCount < 3))) {
+					if (((dayDifference >= 7) && (reminderPopUpCount === null || reminderPopUpCount < 3))) {
 						setUpdateProfileModalOpen(true);
 					} else {
 						if (!storeData?.returnUrl) {
