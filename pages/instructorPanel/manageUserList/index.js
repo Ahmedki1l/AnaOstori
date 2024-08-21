@@ -268,13 +268,13 @@ const Index = () => {
         }
         await getAuthRouteAPI(body).then(res => {
             toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
-            setIsModalForUserListReqOpen
+            setIsModalForUserListReqOpen(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getAuthRouteAPI(body).then(res => {
-                        console.log('res', res);
-
+                        toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
+                        setIsModalForUserListReqOpen(false)
                     })
                 })
             }
