@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { postAuthRouteAPI } from '../../services/apisService';
 import { toast } from 'react-toastify';
 import { getNewToken } from '../../services/fireBaseAuthService';
-import { profileInfoUpdateReminderPopUpConst, updateProfileConst } from '../../constants/ar';
+import { profileInfoUpdateReminderPopUpConst } from '../../constants/ar';
 
 const StyledDialogContent = styled(DialogContent)`
     padding: 14px !important;

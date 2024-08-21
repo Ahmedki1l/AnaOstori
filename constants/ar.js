@@ -73,6 +73,7 @@ export const toastSuccessMessage = {
     accountRestoreSuccessMsg: 'مبسوطين برجعتك', // We are happy to have you back
     appointmentSuccessHiddenMsg: 'تم إخفاء الموعد بنجاح', //The appointment has been successfully hidden
     appointmentSuccessShowMsg: 'تم إظهار الموعد بنجاح', //The appointment has been shown successfully
+    reportSendSuccessMsg: 'تم إرسال التقرير بنجاح', //The report has been sent successfully 
 }
 
 export const createAndEditBtnText = {
