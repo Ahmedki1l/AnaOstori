@@ -43,6 +43,7 @@ const Index = () => {
     const genders = PaymentConst.genders
     const [isModalForUserListReqOpen, setIsModalForUserListReqOpen] = useState(false)
     const [appointmentForm] = Form.useForm();
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         getUserList(1)
@@ -261,26 +262,37 @@ const Index = () => {
         setIsModalForUserListReqOpen(true)
     }
     const onFinish = async (values) => {
+        setIsLoading(true)
         let body = {
             routeName: 'studentExcelExport',
             startDate: dayjs(values?.startDate?.$d).startOf('day').format('YYYY-MM-DD'),
             endDate: dayjs(values?.endDate?.$d).endOf('day').format('YYYY-MM-DD')
         }
-        await getAuthRouteAPI(body).then(res => {
+        await getAuthRouteAPI(body).then((res) => {
+            setIsLoading(false)
             toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
             setIsModalForUserListReqOpen(false)
+            appointmentForm.resetFields();
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
-                    await getAuthRouteAPI(body).then(res => {
+                    await getAuthRouteAPI(body).then((res) => {
+                        setIsLoading(false)
                         toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
                         setIsModalForUserListReqOpen(false)
+                        appointmentForm.resetFields();
                     })
                 })
             }
             console.error("Error:", error);
         })
     }
+
+    const handleClose = () => {
+        setIsModalForUserListReqOpen(false)
+        appointmentForm.resetFields();
+    }
+
     return (
         <div className="maxWidthDefault px-4">
             <div style={{ height: 40 }}>
@@ -353,16 +365,16 @@ const Index = () => {
                 <Modal
                     className='addAppoinmentModal'
                     open={isModalForUserListReqOpen}
-                    onCancel={() => setIsModalForUserListReqOpen(false)}
+                    onCancel={handleClose}
                     closeIcon={false}
                     footer={false}
                 >
                     <div className='p-4'>
                         <div className={styles.modalHeader}>
-                            <button onClick={() => setIsModalForUserListReqOpen(false)} className={styles.closebutton}>
+                            <button onClick={handleClose} className={styles.closebutton}>
                                 <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
                             </button>
-                            <p className={`fontBold text-lg`}>select date range</p>
+                            <p className={`fontBold text-lg`}>تحديد الفترة الزمنية</p>
                         </div>
                         <Form form={appointmentForm} onFinish={onFinish}>
                             <div className='flex mt-3'>
@@ -397,8 +409,8 @@ const Index = () => {
                                 btnText={'حفظ'}
                                 width={80}
                                 height={37}
-                                showLoader={false}
                                 fontSize={16}
+                                showLoader={isLoading}
                             />
                         </Form>
                     </div>
