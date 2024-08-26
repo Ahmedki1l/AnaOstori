@@ -49,6 +49,18 @@ const Index = () => {
         getUserList(1)
     }, [])
 
+    const getUniqueCourses = (enrollments) => {
+        const uniqueCourses = enrollments?.reduce((acc, current) => {
+            const x = acc.find(record => record.courseId === current.courseId);
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, []);
+        return uniqueCourses.map(course => course.course.name);
+    };
+
     const tableColumns = [
         {
             title: 'اسم الطالب',
@@ -88,26 +100,16 @@ const Index = () => {
             dataIndex: 'enrolledCourse',
             align: 'center',
             render: (text, _record) => {
-                const uniqueCourses = _record?.enrollments?.reduce((acc, current) => {
-                    const x = acc.find(_record => _record.courseId === current.courseId
-                    );
-                    if (!x) {
-                        return acc.concat([current]);
-                    } else {
-                        return acc;
-                    }
-                }, []);
                 return (
-                    _record.enrollments.length == 0 ?
-                        <p className='p-2'>-</p>
-                        :
-                        <>
-                            {uniqueCourses.map((data, index) => {
-                                return (
-                                    <p key={index} className='p-2'>{data?.course?.name}</p>
-                                )
-                            })}
-                        </>
+                    <div className='p-2'>
+                        {getUniqueCourses(_record?.enrollments)?.length > 0
+                            ? getUniqueCourses(_record?.enrollments)?.map((courseName, index) => (
+                                <p key={index}>{courseName}</p>
+                            ))
+                            :
+                            '-'
+                        }
+                    </div>
                 )
             }
         },
@@ -240,15 +242,17 @@ const Index = () => {
         }
     };
     const downloadExcel = () => {
-        const downloadDataForExcel = userList.map((student) => {
+        const downloadDataForExcel = userList?.map((student) => {
             return {
                 "اسم الطالب": student?.fullName ? student?.fullName : student?.firstName ? student?.firstName : "-",
-                "رقم الجوال": student?.phone ? student?.phone : "-",
                 "الايميل": student?.email ? student?.email : "-",
-                "رقم ولي أمر الطالب": student?.parentsContact ? student?.parentsContact : "-",
+                "رقم الجوال": student?.phone ? student?.phone : "-",
+                "الجنس": student?.gender ? student?.gender : "-",
                 "المدينة": student?.city ? student?.city : "-",
-                "المرحلة الدراسية": student?.educationalLevel ? student?.educationalLevel : "-",
+                "رقم ولي أمر الطالب": student?.parentsContact ? student?.parentsContact : "-",
+                "المرحلة الدراسية": student?.educationLevel ? student?.educationLevel : "-",
                 "تاريخ الاشتراك": fullDate(student?.createdAt) ? fullDate(student?.createdAt) : "-",
+                "الدورات المشترك فيها": getUniqueCourses(student?.enrollments).join(' , ') ? getUniqueCourses(student?.enrollments).join(' , ') : '-',
             }
         });
         const workbook = XLSX.utils.book_new();
@@ -406,7 +410,7 @@ const Index = () => {
                                 </FormItem>
                             </div>
                             <CustomButton
-                                btnText={'حفظ'}
+                                btnText={'إرسال التقرير'}
                                 width={80}
                                 height={37}
                                 fontSize={16}
