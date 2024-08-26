@@ -411,7 +411,7 @@ const Index = () => {
                             </div>
                             <CustomButton
                                 btnText={'إرسال التقرير'}
-                                width={80}
+                                width={'max-content'}
                                 height={37}
                                 fontSize={16}
                                 showLoader={isLoading}
