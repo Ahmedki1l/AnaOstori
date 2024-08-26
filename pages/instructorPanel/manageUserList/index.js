@@ -255,13 +255,12 @@ const Index = () => {
                 "الدورات المشترك فيها": getUniqueCourses(student?.enrollments).join(' , ') ? getUniqueCourses(student?.enrollments).join(' , ') : '-',
             }
         });
-        console.log('downloadDataForExcel', downloadDataForExcel);
-        // const workbook = XLSX.utils.book_new();
-        // const worksheet = XLSX.utils.json_to_sheet(downloadDataForExcel);
-        // XLSX.utils.book_append_sheet(workbook, worksheet, 'Quiz Items');
-        // const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
-        // const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        // saveAs(blob, `student-list.xlsx`);
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(downloadDataForExcel);
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Quiz Items');
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `student-list.xlsx`);
     }
     const requestExcel = () => {
         setIsModalForUserListReqOpen(true)
