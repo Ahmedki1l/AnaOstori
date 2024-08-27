@@ -52,3 +52,8 @@ export const accountFoundFromList = [
     { value: 'tiktok_ad', label: 'إعلان تيك توك' },
     { value: 'other', label: 'غير ذلك' }
 ];
+
+export const buttonsTextConst = {
+    downloadReport: 'تنزيل التقرير',
+    requestReport: 'طلب التقرير',
+}

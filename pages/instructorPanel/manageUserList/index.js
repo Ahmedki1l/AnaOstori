@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { ConfigProvider, Drawer, Table } from 'antd'
+import { ConfigProvider, Drawer, Modal, Table } from 'antd'
 import { fullDate } from '../../../constants/DateConverter'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import styled from 'styled-components'
-import { postRouteAPI } from '../../../services/apisService'
+import { getAuthRouteAPI, postRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import Empty from '../../../components/CommonComponents/Empty'
 import Link from 'next/link'
@@ -12,18 +12,26 @@ import * as PaymentConst from '../../../constants/PaymentConst'
 import ProfilePicture from '../../../components/CommonComponents/ProfilePicture'
 import ManegeUserListDrawer from '../../../components/ManageUserList/ManegeUserListDrawer'
 import SearchInput from '../../../components/antDesignCompo/SearchInput'
-import { FormItem } from '../../../components/antDesignCompo/FormItem'
+import { Form, FormItem } from '../../../components/antDesignCompo/FormItem'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver';
+import { buttonsTextConst } from '../../../constants/studentInformationConst'
+import DatePicker from '../../../components/antDesignCompo/Datepicker'
+import CustomButton from '../../../components/CommonComponents/CustomButton'
+import styles from '../../../styles/InstructorPanelStyleSheets/ManageUserList.module.scss'
+import dayjs from 'dayjs'
+import { toastSuccessMessage } from '../../../constants/ar'
+import { toast } from 'react-toastify'
 
 const DrawerTiitle = styled.p`
     font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
 `
-
 const Index = () => {
 
     const [drawerForUsers, setDrawerForUsers] = useState(false)
     const [userList, setUserList] = useState()
     const [paginationConfig, setPaginationConfig] = useState({
-        pageSizeOptions: [],
+        pageSizeOptions: [10, 20],
         position: ['bottomCenter'],
         pageSize: 10,
     })
@@ -33,10 +41,25 @@ const Index = () => {
     const regexEmail = useMemo(() => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, []);
     const regexPhone = useMemo(() => /^\d+$/, []);
     const genders = PaymentConst.genders
+    const [isModalForUserListReqOpen, setIsModalForUserListReqOpen] = useState(false)
+    const [appointmentForm] = Form.useForm();
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         getUserList(1)
     }, [])
+
+    const getUniqueCourses = (enrollments) => {
+        const uniqueCourses = enrollments?.reduce((acc, current) => {
+            const x = acc.find(record => record.courseId === current.courseId);
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, []);
+        return uniqueCourses.map(course => course.course.name);
+    };
 
     const tableColumns = [
         {
@@ -77,26 +100,16 @@ const Index = () => {
             dataIndex: 'enrolledCourse',
             align: 'center',
             render: (text, _record) => {
-                const uniqueCourses = _record?.enrollments?.reduce((acc, current) => {
-                    const x = acc.find(_record => _record.courseId === current.courseId
-                    );
-                    if (!x) {
-                        return acc.concat([current]);
-                    } else {
-                        return acc;
-                    }
-                }, []);
                 return (
-                    _record.enrollments.length == 0 ?
-                        <p className='p-2'>-</p>
-                        :
-                        <>
-                            {uniqueCourses.map((data, index) => {
-                                return (
-                                    <p key={index} className='p-2'>{data?.course?.name}</p>
-                                )
-                            })}
-                        </>
+                    <div className='p-2'>
+                        {getUniqueCourses(_record?.enrollments)?.length > 0
+                            ? getUniqueCourses(_record?.enrollments)?.map((courseName, index) => (
+                                <p key={index}>{courseName}</p>
+                            ))
+                            :
+                            '-'
+                        }
+                    </div>
                 )
             }
         },
@@ -130,11 +143,17 @@ const Index = () => {
             }
         },
         {
-            title: 'تاريخ اخر تحديث',
-            dataIndex: 'updatedAt',
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+            title: 'المرحلة الدراسية',
+            dataIndex: 'educationLevel',
             render: (text, _date) => {
-                return (fullDate(_date.createdAt))
+                return (text)
+            }
+        },
+        {
+            title: 'المدينة',
+            dataIndex: 'city',
+            render: (text, _date) => {
+                return (text)
             }
         },
         {
@@ -161,11 +180,11 @@ const Index = () => {
             }
         },
     ]
-    const getUserList = async (currentPage, searchValue) => {
+    const getUserList = async (currentPage, searchValue, pageSize = 10) => {
         let body = {
             routeName: "userList",
             page: currentPage,
-            limit: 10,
+            limit: pageSize,
             order: "createdAt DESC"
         }
         if (searchValue) {
@@ -178,6 +197,7 @@ const Index = () => {
         await postRouteAPI(body).then((res) => {
             setPaginationConfig((prevConfig) => ({
                 ...prevConfig,
+                pageSize: pageSize,
                 total: res.data.totalItems,
                 current: res.data.currentPage,
             }));
@@ -206,7 +226,7 @@ const Index = () => {
         getUserList(currentPage, searchValue)
     };
     const handleTableChange = (pagination) => {
-        getUserList(pagination.current, searchValue)
+        getUserList(pagination.current, searchValue, pagination.pageSize)
         setCurrentPage(pagination.current)
     }
     const customEmptyComponent = (
@@ -221,6 +241,62 @@ const Index = () => {
             getUserList(1, e)
         }
     };
+    const downloadExcel = () => {
+        const downloadDataForExcel = userList?.map((student) => {
+            return {
+                "اسم الطالب": student?.fullName ? student?.fullName : student?.firstName ? student?.firstName : "-",
+                "الايميل": student?.email ? student?.email : "-",
+                "رقم الجوال": student?.phone ? student?.phone : "-",
+                "الجنس": student?.gender ? student?.gender : "-",
+                "المدينة": student?.city ? student?.city : "-",
+                "رقم ولي أمر الطالب": student?.parentsContact ? student?.parentsContact : "-",
+                "المرحلة الدراسية": student?.educationLevel ? student?.educationLevel : "-",
+                "تاريخ الاشتراك": fullDate(student?.createdAt) ? fullDate(student?.createdAt) : "-",
+                "الدورات المشترك فيها": getUniqueCourses(student?.enrollments).join(' , ') ? getUniqueCourses(student?.enrollments).join(' , ') : '-',
+            }
+        });
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(downloadDataForExcel);
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Quiz Items');
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `student-list.xlsx`);
+    }
+    const requestExcel = () => {
+        setIsModalForUserListReqOpen(true)
+    }
+    const onFinish = async (values) => {
+        setIsLoading(true)
+        let body = {
+            routeName: 'studentExcelExport',
+            startDate: dayjs(values?.startDate?.$d).startOf('day').format('YYYY-MM-DD'),
+            endDate: dayjs(values?.endDate?.$d).endOf('day').format('YYYY-MM-DD')
+        }
+        await getAuthRouteAPI(body).then((res) => {
+            setIsLoading(false)
+            toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
+            setIsModalForUserListReqOpen(false)
+            appointmentForm.resetFields();
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getAuthRouteAPI(body).then((res) => {
+                        setIsLoading(false)
+                        toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
+                        setIsModalForUserListReqOpen(false)
+                        appointmentForm.resetFields();
+                    })
+                })
+            }
+            console.error("Error:", error);
+        })
+    }
+
+    const handleClose = () => {
+        setIsModalForUserListReqOpen(false)
+        appointmentForm.resetFields();
+    }
+
     return (
         <div className="maxWidthDefault px-4">
             <div style={{ height: 40 }}>
@@ -235,17 +311,27 @@ const Index = () => {
                 />
             </div>
             <h1 className={`head2 pb-4`}>بيانات المستخدمين</h1>
-            <div style={{ width: '362px' }}>
-                <FormItem>
-                    <SearchInput
-                        fontSize={16}
-                        width={10}
-                        placeholder={'فلترة'}
-                        onSearch={(e) => handleSearchByEmail(e)}
-                        allowClear={true}
-                        onChange={(e) => handleSearchValueChange(e.target.value)}
-                    />
-                </FormItem>
+            <div className='flex justify-between'>
+                <div style={{ width: '362px' }}>
+                    <FormItem>
+                        <SearchInput
+                            fontSize={16}
+                            width={10}
+                            placeholder={'فلترة'}
+                            onSearch={(e) => handleSearchByEmail(e)}
+                            allowClear={true}
+                            onChange={(e) => handleSearchValueChange(e.target.value)}
+                        />
+                    </FormItem>
+                </div>
+                <div className='flex mb-2'>
+                    <div className='m-2'>
+                        <button className='primarySolidBtn' onClick={() => downloadExcel()}>{buttonsTextConst.downloadReport}</button>
+                    </div>
+                    <div className='m-2'>
+                        <button className='primarySolidBtn' onClick={() => requestExcel()}>{buttonsTextConst.requestReport}</button>
+                    </div>
+                </div>
             </div>
             <ConfigProvider direction="rtl">
                 <Table
@@ -279,7 +365,62 @@ const Index = () => {
                     </Drawer>
                 }
             </ConfigProvider>
-        </div >
+            {isModalForUserListReqOpen &&
+                <Modal
+                    className='addAppoinmentModal'
+                    open={isModalForUserListReqOpen}
+                    onCancel={handleClose}
+                    closeIcon={false}
+                    footer={false}
+                >
+                    <div className='p-4'>
+                        <div className={styles.modalHeader}>
+                            <button onClick={handleClose} className={styles.closebutton}>
+                                <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} />
+                            </button>
+                            <p className={`fontBold text-lg`}>تحديد الفترة الزمنية</p>
+                        </div>
+                        <Form form={appointmentForm} onFinish={onFinish}>
+                            <div className='flex mt-3'>
+                                <FormItem
+                                    name={'startDate'}
+                                    rules={[{ required: true, message: "ادخل تاريخ البداية" }]}
+                                >
+                                    <DatePicker
+                                        format={'YYYY-MM-DD'}
+                                        width={172}
+                                        height={40}
+                                        placeholder='تبدأ يوم'
+                                        suFFixIconName="calenderDoubleColorIcon"
+                                        isDateDisabled={false}
+                                    />
+                                </FormItem>
+                                <FormItem
+                                    name={'endDate'}
+                                    rules={[{ required: true, message: "ادخل تاريخ النهاية" }]}
+                                >
+                                    <DatePicker
+                                        format={'YYYY-MM-DD'}
+                                        width={172}
+                                        height={40}
+                                        placeholder='تنتهي يوم'
+                                        suFFixIconName="calenderDoubleColorIcon"
+                                        isDateDisabled={false}
+                                    />
+                                </FormItem>
+                            </div>
+                            <CustomButton
+                                btnText={'إرسال التقرير'}
+                                width={'max-content'}
+                                height={37}
+                                fontSize={16}
+                                showLoader={isLoading}
+                            />
+                        </Form>
+                    </div>
+                </Modal>
+            }
+        </div>
     )
 }
 
