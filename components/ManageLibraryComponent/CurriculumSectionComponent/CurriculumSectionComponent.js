@@ -19,7 +19,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 
 
 
-const CurriculumSectionComponent = ({ onclose, sectionList }) => {
+const CurriculumSectionComponent = ({ sectionList }) => {
     const [sectionDetails, setSectionDetails] = useState()
     const router = useRouter()
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
@@ -319,7 +319,6 @@ const CurriculumSectionComponent = ({ onclose, sectionList }) => {
                     isModelForAddCurriculum={isModelForAddCurriculum}
                     handleAddItemtoSection={handleAddItemtoSection}
                     setIsModelForAddCurriculum={setIsModelForAddCurriculum}
-                    onclose={onclose}
                 />
             }
 

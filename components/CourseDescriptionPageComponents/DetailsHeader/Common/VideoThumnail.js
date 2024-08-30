@@ -45,7 +45,7 @@ const VideoThumnail = (props) => {
 				closeIcon={false}
 				open={openVideo}
 				width={1200}
-				afterClose={onclose}
+				afterClose={handleClose}
 			>
 				<div className='videoCloseIcon' onClick={handleClose}>
 					<AllIconsComponenet iconName={'closeicon'} height={16} width={16} color={'#FFFFFF'} />

@@ -28,7 +28,6 @@ const StylesModal = styled(Modal)`
 const ModelForAddItemCurriculum = ({
     isModelForAddCurriculum,
     setIsModelForAddCurriculum,
-    onclose,
     handleAddItemtoSection,
 }) => {
 
@@ -260,6 +259,10 @@ const ModelForAddItemCurriculum = ({
         }
     }
 
+    const onclose = () => {
+        setIsModelForAddCurriculum(false)
+    }
+
     return (
         <div>
             <StylesModal
@@ -273,7 +276,7 @@ const ModelForAddItemCurriculum = ({
                     <div className={styles.curriculumHead}>
                         <div className={styles.modalHeader}>
                             <p className={`fontBold ${styles.createappointment}`}>إضافة عناصر</p>
-                            <button onClick={() => setIsModelForAddCurriculum(false)} className={styles.closebutton}>
+                            <button onClick={onclose} className={styles.closebutton}>
                                 <AllIconsComponenet iconName={'closeicon'} height={14} width={14} color={'#000000'} /></button>
                         </div>
                         <div className={styles.navItems}>

@@ -181,7 +181,6 @@ const CreateCoursePath = (props) => {
                         </Form>
                         {!(routeParams.createCoursePath == 'createCoursePath') &&
                             <CurriculumSectionComponent
-                                onclose={onclose}
                                 sectionList={sectionDetails}
                             />
                         }
