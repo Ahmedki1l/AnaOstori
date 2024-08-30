@@ -201,7 +201,6 @@ function Index() {
                         <div className='maxWidthDefault p-4'>
                             {(selectedItem == 'video' || selectedItem == 'file' || selectedItem == 'quiz') &&
                                 <ManageLibraryTableComponent
-                                    onclose={onclose}
                                     folderTableData={folderList}
                                     getItemList={getItemList}
                                     getFolderList={getfolderList}
@@ -210,10 +209,7 @@ function Index() {
                                     typeOfListdata={typeOfListdata}
                                     setTypeOfListData={setTypeOfListData}
                                     loading={loading}
-                                    setLoading={setLoading}
                                     handleCreateFolder={handleCreateFolder}
-                                    cancleUpload={cancleUpload}
-                                    setCancleUpload={setCancleUpload}
                                 />
                             }
                             {selectedItem == 'curriculum' &&
