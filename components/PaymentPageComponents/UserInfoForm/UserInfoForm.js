@@ -34,7 +34,8 @@ export default function UserInfoForm(props) {
 	const groupDiscountEligible = courseDetail.groupDiscountEligible
 	const smallScreen = useWindowSize().smallScreen
 	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
-	const [disabledRegion, setDisabledRegion] = useState()
+	// const [disabledRegion, setDisabledRegion] = useState()
+	const [disabledRegions, setDisabledRegions] = useState([]);
 	const userTemplet = {
 		gender: null,
 		date: null,
@@ -82,12 +83,6 @@ export default function UserInfoForm(props) {
 		getRegionAndBranchList()
 		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region))
 		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
-	}, [])
-
-	useEffect(() => {
-
-
-
 	}, [])
 
 	const handleTotalStudent = (value) => {
@@ -214,22 +209,21 @@ export default function UserInfoForm(props) {
 				return dates.regionId;
 			}));
 			const availableRegion = Array.from(availableRegionSet)
+			const disabledRegionsArray = res.data.filter((region) => !availableRegion.includes(region.id));
 
-			if (availableRegion?.length !== 2) {
-				const isRegionDisabled = res.data?.find((obj) => !availableRegion.includes(obj.id));
-				setDisabledRegion(isRegionDisabled?.id)
-			}
+			setDisabledRegions(disabledRegionsArray.map(region => region.id));
 		}).catch((err) => {
 			console.log(err)
 		})
 	}
 	const handleRegionChange = (event, index) => {
-		setSelectedRegionId(event.target.value)
+		const selectedRegionId = event.target.value
+		setSelectedRegionId(selectedRegionId)
 		let data = [...studentsData]
-		data[index]['region'] = event.target.value
+		data[index]['region'] = selectedRegionId
 		setStudentsData(data);
-		const regionDateListMale = initialMaleDate.filter((date) => date.regionId == event.target.value)
-		const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == event.target.value)
+		const regionDateListMale = initialMaleDate.filter((date) => date.regionId == selectedRegionId);
+		const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == selectedRegionId);
 		if (regionDateListMale.length > 0 && disabledGender == 'male') {
 			setDisabledGender(null)
 			setMaleDates(regionDateListMale)
@@ -330,17 +324,23 @@ export default function UserInfoForm(props) {
 										<div className={styles.genderWrapper}>
 											{/***************************************** FOR loop for radio button to select region ****************************************/}
 											{regionDataList?.map((region, j = index) => {
+												const isDisabled = disabledRegions.includes(region.id);
 												return (
 													<div className={styles.radioBtnBox} key={`region${j}`}>
-														<input id={`region${i}`} type="radio" name={`region${i}`} value={region.id} title="region"
-															className={`${styles.radioBtn}  ${disabledRegion == region.id ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+														<input
+															id={`region${i}`}
+															type="radio"
+															name={`region${i}`}
+															value={region.id}
+															title="region"
+															className={`${styles.radioBtn} ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 															checked={(selectedRegionId && i == 0 ? selectedRegionId == region.id : student.region == region.id)}
 															onChange={event => handleRegionChange(event, i)}
-															disabled={disabledRegion == region.id}
+															disabled={isDisabled}
 														/>
-														<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledRegion == region.id ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr}</label>
+														<label htmlFor={`region${i}`} className={` ${styles.lableName1} ${isDisabled ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr}</label>
 													</div>
-												)
+												);
 											})}
 										</div>
 									</>
