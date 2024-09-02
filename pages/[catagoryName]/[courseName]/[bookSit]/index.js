@@ -133,18 +133,17 @@ export default function Index(props) {
 				data[i].dateCheck = ""
 			}
 
-			if (data[i]?.fullName == "") {
+			if (data[i]?.fullName == "" || !data[i]?.fullName) {
 				data[i].nameCheck = inputErrorMessages.fullNameErrorMsgForRegister
 				data[i].validName = ""
 				isError = true
-			}
-			else if (data[i]?.fullName.length < 3) {
+			} else if (data[i]?.fullName?.length < 3) {
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = inputErrorMessages.nameFormatErrorMsg
 				data[i].validName = ""
 				isError = true
 			}
-			else if ((data[i]?.fullName.split(" ").length - 1) < 1) {
+			else if ((data[i]?.fullName.split(" ")?.length - 1) < 1) {
 				data[i].nameCheck = ""
 				data[i].nameLengthCheck = ""
 				data[i].validName = inputErrorMessages.nameThreeFoldErrorMsg
