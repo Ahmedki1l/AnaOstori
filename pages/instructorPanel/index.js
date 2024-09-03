@@ -63,9 +63,10 @@ export default function Index() {
                     <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إضافة وتعديل كوبونات الخصم</p>
                 </Link>
+                {/* this is used to add city */}
                 {/* <Link href={`/instructorPanel/manageBranches?region=all`} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='locationDoubleColor' color={'#000000'} />
-                    <p className={`fontMedium ${styles.dashboardItemName}`}>manage state and branch</p>
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>Manage state and branch</p>
                 </Link> */}
             </div>
 
