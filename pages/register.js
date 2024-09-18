@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from '../styles/Login.module.scss'
-import { signupWithEmailAndPassword, signInWithApple, GoogleLogin } from '../services/fireBaseAuthService'
+import { signupWithEmailAndPassword, signInWithApple, GoogleLogin, startEmailPasswordLogin } from '../services/fireBaseAuthService'
 import { useRouter } from 'next/router'
 import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../services/apisService'
 import { toast } from "react-toastify";
@@ -9,6 +9,8 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage } from '../constants/ar'
 import ModelForUpdateProfile from '../components/ModalForUpdateProfile/ModalForUpdateProfile'
+import * as fbq from '../lib/fpixel'
+
 
 const educationalLevelList = [
 	{ value: 'first_secondary_school', label: 'أول ثانوي' },
@@ -270,12 +272,37 @@ export default function Register() {
 					...data,
 				}
 				await postAuthRouteAPI(params).then(async (res) => {
-					router.push('/login');
-					setLoading(false)
+					await startEmailPasswordLogin(email, password).then(async (result) => {
+						const user = result.user;
+						localStorage.setItem("accessToken", user?.accessToken);
+						dispatch({
+							type: 'ADD_AUTH_TOKEN',
+							accessToken: user?.accessToken,
+						});
+						dispatch({
+							type: 'IS_USER_FROM_GOOGLE',
+							loginWithoutPassword: false,
+						});
+						await handleStoreUpdate(false)
+						// router.push('/')
+					}).catch((error) => {
+						setLoading(false)
+						console.log(error);
+						if (error.code == 'auth/wrong-password') {
+							toast.error(toastErrorMessage.passWordIncorrectErrorMsg, { rtl: true, })
+						} else if (error.code == 'auth/user-not-found') {
+							toast.error(toastErrorMessage.emailNotFoundMsg, { rtl: true, })
+						} else {
+							toast.error(toastErrorMessage.emailPasswordErrorMsg, { rtl: true, })
+						}
+					});
+					// router.push('/login');
+					// setLoading(false)
 					fbq.event('Sign up', { email: email });
 				}).catch(error => {
 					setSubmitBtnDisabled(false)
 					console.log(error)
+					setLoading(false)
 				});
 			}).catch((error) => {
 				console.log(error)

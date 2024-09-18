@@ -121,7 +121,7 @@ export default function Index(props) {
 
 	const [videoModalOpen, setVideoModalOpen] = useState(false)
 	const [fileSrc, setFileSrc] = useState()
-
+	const [coursePageUrl, setCoursePageUrl] = useState()
 
 	const handleSlectedItem = (data, id) => {
 		setSelectedNavItem(data)
@@ -136,7 +136,7 @@ export default function Index(props) {
 		if (storeData?.accessToken === null) {
 			dispatch({
 				type: 'SET_RETURN_URL',
-				returnUrl: `/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`
+				returnUrl: coursePageUrl
 			});
 			router.push({
 				pathname: "/login",
@@ -205,6 +205,7 @@ export default function Index(props) {
 
 	useEffect(() => {
 		if (!courseDetail) return
+		setCoursePageUrl(`/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`)
 		const getCourseByName = async () => {
 			let data = {
 				routeName: 'courseByName',
@@ -440,7 +441,7 @@ export default function Index(props) {
 												</ScrollContainer>
 												:
 												<div>
-													<UserDetailForm1 gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} lang={lang} />
+													<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} lang={lang} />
 												</div>
 											}
 											<div className='flex items-center pb-4 pt-6'>
@@ -459,7 +460,7 @@ export default function Index(props) {
 												</ScrollContainer>
 												:
 												<div>
-													<UserDetailForm1 gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} lang={lang} />
+													<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} lang={lang} />
 												</div>
 											}
 										</>
@@ -477,7 +478,7 @@ export default function Index(props) {
 												</ScrollContainer>
 												:
 												<div>
-													<UserDetailForm1 gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} lang={lang} />
+													<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} lang={lang} />
 												</div>
 											}
 										</>
