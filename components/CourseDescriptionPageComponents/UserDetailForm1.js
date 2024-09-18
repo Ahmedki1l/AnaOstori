@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { postAuthRouteAPI } from '../../services/apisService';
 import { toastErrorMessage } from '../../constants/ar';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -17,6 +18,8 @@ export default function UserDetailForm1(props) {
 	const [isSubscribed, setIsSubscribed] = useState(props.isSubscribed)
 	const isUserLogin = storeData?.accessToken
 	const lang = props.lang
+	const dispatch = useDispatch();
+
 
 	const submitUserData = async (gender) => {
 		const params = {
@@ -41,6 +44,14 @@ export default function UserDetailForm1(props) {
 			}
 		})
 	}
+
+	const handleNevigation = (route) => {
+		dispatch({
+			type: 'SET_RETURN_URL',
+			returnUrl: props.coursePageUrl
+		});
+		router.push(route)
+	}
 	return (
 		<>
 			{!isUserLogin ?
@@ -49,10 +60,10 @@ export default function UserDetailForm1(props) {
 					<p className={styles.formDiscription}>{lang == 'en' ? 'Kindly login and enable the notification so we can notify you once we update or expand more seats in the course ' : 'سجل دخولك وفعل خاصية التنبيه عشان ننبهك أول ما نوسع أو نضيف مواعيد جديدة'}</p>
 					<div>
 						<div className={`mb-3 ${styles.btnBox1}`}>
-							<button className='primaryStrockedBtn' onClick={() => router.push("/register")}>{lang == 'en' ? 'Create Account' : 'إنشاء حساب'}</button>
+							<button className='primaryStrockedBtn' onClick={() => handleNevigation("/register")}>{lang == 'en' ? 'Create Account' : 'إنشاء حساب'}</button>
 						</div>
 						<div className={styles.btnBox1}>
-							<button className='primaryStrockedBtn' onClick={() => router.push("/login")}>{lang == 'en' ? 'Login' : 'تسجيل الدخول'}</button>
+							<button className='primaryStrockedBtn' onClick={() => handleNevigation("/login")}>{lang == 'en' ? 'Login' : 'تسجيل الدخول'}</button>
 						</div>
 					</div>
 				</div>
