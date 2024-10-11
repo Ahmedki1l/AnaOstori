@@ -51,7 +51,7 @@ export default function Footer() {
 							</div>
 						</div>
 					</div>
-					<div className={`mt-20 ${styles.section2} ${styles.section}`}>
+					<div className={`${styles.section2} ${styles.section}`}>
 						<Link href={`${linkConst.VAT_Link}`} target='_blank' className={styles.regiDetailsBox1}>
 							<Logo height={isMediumScreen ? 25 : 40} width={isMediumScreen ? 20 : 32} logoName={'sanamCompamyLogo'} alt={'Sanam Company for Business Services Logo'} />
 							<div className={styles.regiDetailsTextBox}>
@@ -64,6 +64,13 @@ export default function Footer() {
 							<div className={styles.regiDetailsTextBox}>
 								<p>مرخص من المؤسسة العامة للتدريب المهني والتقني</p>
 								<p>رخصة رقم 4174536814</p>
+							</div>
+						</div>
+						<div className={styles.regiDetailsBox2}>
+							<div className={styles.regiDetailsTextBox}>
+								<p>شركة سنام لخدمات الاعمال</p>
+								<p>طريق الملك عبدالعزيز - حي الياسمين - الرياض <span>7344</span></p>
+								<p>الرمز البريدي : 13325</p>
 							</div>
 						</div>
 					</div>
