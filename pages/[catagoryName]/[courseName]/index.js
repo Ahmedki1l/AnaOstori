@@ -46,13 +46,13 @@ export async function getServerSideProps(ctx) {
 			notFound: true,
 		}
 	}
-	if (courseDetails.isPurchasable == false) {
+	if (courseDetails?.isPurchasable == false) {
 		return {
 			notFound: true,
 		}
 	}
 	if (courseDetails?.type == 'on-demand') {
-		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails.id}`)
+		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails?.id}`)
 			.then((response) => (response.data))
 			.catch((error) => error);
 
@@ -79,7 +79,7 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	console.log("props", props);
-	const courseDetail = props.courseDetails ? props.courseDetails : null
+	const courseDetail = props?.courseDetails ? props?.courseDetails : null
 	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const mixDates = props.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
