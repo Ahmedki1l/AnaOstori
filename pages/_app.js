@@ -34,6 +34,8 @@ function MyApp({ Component, pageProps }) {
 	const hasFooterShown = removeFooterFrom.some(value => router.asPath.includes(value)) ? true : false
 	const hasWhatsAppShown = removeWhatsAppFrom.some(value => pathName.includes(value)) ? true : false
 	const storeData = store?.getState()?.globalStore;
+	const isUserLogin = typeof window !== 'undefined' && localStorage?.getItem('accessToken') ? true : false;
+
 	const protectedRoutes = useMemo(() => [
 		'/myProfile',
 		'/updateProfile',
@@ -55,10 +57,10 @@ function MyApp({ Component, pageProps }) {
 	}, [router, isUserInstructor]);
 
 	useEffect(() => {
-		if (!storeData?.accessToken && protectedRoutes.includes(router.pathname)) {
+		if (!isUserLogin && protectedRoutes.includes(router.pathname)) {
 			router.replace('/login');
 		}
-	}, [router, router.pathname, storeData?.accessToken, protectedRoutes]);
+	}, [router, router.pathname, isUserLogin, protectedRoutes]);
 
 
 	useEffect(() => {
