@@ -16,7 +16,8 @@ export default function UserDetailForm1(props) {
 	const courseDetailId = props?.courseDetailId
 	const router = useRouter()
 	const [isSubscribed, setIsSubscribed] = useState(props.isSubscribed)
-	const isUserLogin = storeData?.accessToken
+	// const isUserLogin = storeData?.accessToken ? true : false
+	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 	const lang = props.lang
 	const dispatch = useDispatch();
 

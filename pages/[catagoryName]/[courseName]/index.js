@@ -12,7 +12,7 @@ import CoursePriceBox from '../../../components/CourseDescriptionPageComponents/
 import useScrollEvent from '../../../hooks/useScrollEvent'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getAuthRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
@@ -78,7 +78,6 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Index(props) {
-	console.log("props", props);
 	const courseDetail = props?.courseDetails ? props?.courseDetails : null
 	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
@@ -88,8 +87,9 @@ export default function Index(props) {
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
 	const [expandedSection, setExpandedSection] = useState(0);
 	const router = useRouter()
-	const storeData = useSelector((state) => state?.globalStore);
-	const isUserLogin = storeData?.accessToken ? true : false;
+	// const storeData = useSelector((state) => state?.globalStore);
+	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
+	// const isUserLogin = storeData?.accessToken ? true : false;
 	const lang = courseDetail.language
 	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
 	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
@@ -133,7 +133,8 @@ export default function Index(props) {
 	}
 
 	const handleUserLogin = async (query) => {
-		if (storeData?.accessToken === null) {
+		if (!isUserLogin) {
+			// if (storeData?.accessToken === null) {
 			dispatch({
 				type: 'SET_RETURN_URL',
 				returnUrl: coursePageUrl
@@ -242,8 +243,10 @@ export default function Index(props) {
 				}
 			})
 		}
-		getCourseByName()
-	}, [courseDetail])
+		if (isUserLogin) {
+			getCourseByName()
+		}
+	}, [courseDetail, isUserLogin])
 
 	useEffect(() => {
 		if (screenWidth < 768) {

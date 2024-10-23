@@ -65,18 +65,26 @@ export default function Navbar() {
 
 	const isUserInstructor = storeData?.isUserInstructor
 	const [catagories, setCatagories] = useState(storeData?.catagories?.data?.filter((item) => item.published == true) || [])
+	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 
 	useEffect(() => {
-		if (storeData.accessToken !== null) {
+		if (isUserLogin) {
 			catagoryAuth()
 		} else {
 			catagoryNoAuth()
 		}
-	}, [storeData.accessToken])
+	}, [isUserLogin])
+
+	// useEffect(() => {
+	// 	if (storeData.accessToken !== null) {
+	// 		catagoryAuth()
+	// 	} else {
+	// 		catagoryNoAuth()
+	// 	}
+	// }, [storeData.accessToken])
 
 
 	const catagoryNoAuth = async () => {
-		console.log("noAuth");
 		await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then(res => {
 			setCatagories(res?.data.filter((item) => item.published == true))
 			dispatch({
@@ -89,7 +97,6 @@ export default function Navbar() {
 	};
 
 	const catagoryAuth = async () => {
-		console.log("Auth");
 		try {
 
 			const getcatagoriReq = getAuthRouteAPI({ routeName: 'categories' })
@@ -291,7 +298,7 @@ export default function Navbar() {
 		<>
 			{isMediumScreen ?
 				<div className={styles.mobileLogoBar} id="navBar">
-					{(storeData?.accessToken && !isRegisterSocialMediaUser) &&
+					{(isUserLogin && !isRegisterSocialMediaUser) &&
 						<div className={styles.navLeftDivMO}>
 							<StyledDropdown
 								menu={{
@@ -331,7 +338,7 @@ export default function Navbar() {
 							>
 								<div className={styles.sildeBarMenu}>
 									<div className='border-b border-inherit mb-2'></div>
-									{!storeData?.accessToken &&
+									{!isUserLogin &&
 										<div className={styles.loginBtnsBox}>
 											<div className={styles.loginBtnBox} onClick={() => handleClickOnLink()}>
 												<Link href={"/register"} className='normalLinkText' >
@@ -425,7 +432,7 @@ export default function Navbar() {
 									</ul>
 								</>
 							}
-							{!storeData?.accessToken ?
+							{!isUserLogin ?
 								<div className={styles.loginBtnsBox}>
 									<div className={styles.loginBtnBox}>
 										<Link href={"/login"} className='normalLinkText'>
