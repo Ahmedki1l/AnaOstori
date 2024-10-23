@@ -1,12 +1,10 @@
 import styles from '../../styles/Courses.module.scss'
-import { useRouter } from 'next/router'
 import PhysicalCourseCard from '../../components/TypesOfCourseComponents/PhysicalCourseCard'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { getAuthRouteAPI } from '../../services/apisService';
 import Spinner from '../../components/CommonComponents/spinner';
-import { getNewToken, signOutUser } from '../../services/fireBaseAuthService';
+import { getNewToken } from '../../services/fireBaseAuthService';
 
 
 
@@ -41,8 +39,9 @@ export default function Index(props) {
 	const [coursesDetails, setCoursesDetails] = useState([])
 	const mainDescription = catagory.description?.split(':')[0]
 	const listDescription = catagory?.description?.split(':')[1]?.split('<list>').splice(1, catagory.description.length)
-	const storeData = useSelector((state) => state?.globalStore);
-	const isUserLogin = storeData?.accessToken ? true : false
+	// const storeData = useSelector((state) => state?.globalStore);
+	// const isUserLogin = storeData?.accessToken ? true : false
+	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 	const [pageLoading, setPageLoading] = useState(true)
 
 	useEffect(() => {
@@ -90,7 +89,7 @@ export default function Index(props) {
 			}
 			getCourseDetails()
 		}
-	}, [storeData?.accessToken, isUserLogin, catagoryName])
+	}, [isUserLogin, catagoryName, catagory.courses])
 
 	function shortCourseOnType(courses) {
 		const typeOrder = ['physical', 'online', 'on-demand'];
