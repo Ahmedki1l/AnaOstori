@@ -29,19 +29,38 @@ export async function getServerSideProps(ctx) {
 		return response.data
 	}).catch((error) => error);
 
-	const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`)
+	if (((courseDetails == null) || (courseDetails?.length == 0))) {
+		return {
+			notFound: true,
+		}
+	}
 
-	const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`)
+	// const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`)
 
-	const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`)
+	// const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`)
+
+	// const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`)
 
 
-	const [maleDates, femaleDates, mixDates] = await Promise.all([
-		maleDatesReq,
-		femaleDatesReq,
-		mixDatesReq,
-	])
-	if (courseDetails == null) {
+	// const [maleDates, femaleDates, mixDates] = await Promise.all([
+	// 	maleDatesReq,
+	// 	femaleDatesReq,
+	// 	mixDatesReq,
+	// ])
+	const requests = [];
+
+	if (courseDetails.type === 'physical') {
+		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
+		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
+		requests.push(maleDatesReq, femaleDatesReq);
+	} else if (courseDetails.type === 'online') {
+		const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`);
+		requests.push(mixDatesReq);
+	}
+
+	const [maleDates, femaleDates, mixDates] = await Promise.all(requests);
+
+	if (((courseDetails == null) || (courseDetails?.length == 0))) {
 		return {
 			notFound: true,
 		}
@@ -59,31 +78,35 @@ export async function getServerSideProps(ctx) {
 		return {
 			props: {
 				courseDetails: courseDetails,
-				maleDates: maleDates.data,
-				femaleDates: femaleDates.data,
-				mixDates: mixDates.data,
 				courseCurriculum: courseCurriculumReq
 			}
 		}
-	} else {
+	} else if (courseDetails?.type == 'physical') {
+		return {
+			props: {
+				courseDetails: courseDetails || null,
+				maleDates: maleDates?.data || [],
+				femaleDates: femaleDates?.data || [],
+			}
+		}
+	} else if (courseDetails?.type == 'online') {
 		return {
 			props: {
 				courseDetails: courseDetails,
-				maleDates: maleDates.data,
-				femaleDates: femaleDates.data,
-				mixDates: mixDates.data,
+				mixDates: mixDates?.data || [],
 			}
 		}
 	}
 }
 
 export default function Index(props) {
+
 	const courseDetail = props?.courseDetails ? props?.courseDetails : null
-	const maleDates = props.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
-	const femaleDates = props.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
-	const mixDates = props.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
-	const homeReviews = props.homeReviews
-	const courseCurriculum = props.courseCurriculum
+	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+	const homeReviews = props?.homeReviews
+	const courseCurriculum = props?.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
 	const [expandedSection, setExpandedSection] = useState(0);
 	const router = useRouter()

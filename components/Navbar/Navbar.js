@@ -73,7 +73,7 @@ export default function Navbar() {
 		} else {
 			catagoryNoAuth()
 		}
-	}, [isUserLogin])
+	}, [])
 
 	// useEffect(() => {
 	// 	if (storeData.accessToken !== null) {

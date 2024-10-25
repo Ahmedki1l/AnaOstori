@@ -12,6 +12,12 @@ export async function getServerSideProps(contex) {
 	const catagoryName = contex.query.catagoryName.replace(/-/g, ' ')
 	const catagories = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=categoriesNoAuth`).then((response) => (response.data)).catch((error) => error);
 
+	if (catagories && catagories?.length == 0) {
+		return {
+			notFound: true,
+		}
+	}
+
 	const catagoryNamePresent = catagories?.find((item) => item.name === catagoryName)
 	if (!catagoryNamePresent) {
 		return {
