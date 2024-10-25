@@ -104,7 +104,7 @@ export const getNewToken = async () => {
 		}
 	} else {
 		console.log('User is not signed in');
-		window.location.href = "/login";
+		signOutUser();
 		throw new Error("User is not signed in");
 	}
 };
