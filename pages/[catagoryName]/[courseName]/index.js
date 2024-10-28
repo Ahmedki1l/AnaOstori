@@ -35,53 +35,18 @@ export async function getServerSideProps(ctx) {
 		}
 	}
 
-	// const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`)
-
-	// const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`)
-
-	// const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`)
-
-
-	// const [maleDates, femaleDates, mixDates] = await Promise.all([
-	// 	maleDatesReq,
-	// 	femaleDatesReq,
-	// 	mixDatesReq,
-	// ])
-	const requests = [];
-
-	if (courseDetails.type === 'physical') {
-		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
-		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
-		requests.push(maleDatesReq, femaleDatesReq);
-	} else if (courseDetails.type === 'online') {
-		const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`);
-		requests.push(mixDatesReq);
-	}
-
-	const [maleDates, femaleDates, mixDates] = await Promise.all(requests);
-
-	if (((courseDetails == null) || (courseDetails?.length == 0))) {
-		return {
-			notFound: true,
-		}
-	}
 	if (courseDetails?.isPurchasable == false) {
 		return {
 			notFound: true,
 		}
 	}
-	if (courseDetails?.type == 'on-demand') {
-		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails?.id}`)
-			.then((response) => (response.data))
-			.catch((error) => error);
 
-		return {
-			props: {
-				courseDetails: courseDetails,
-				courseCurriculum: courseCurriculumReq
-			}
-		}
-	} else if (courseDetails?.type == 'physical') {
+	if (courseDetails.type === 'physical') {
+		const requests = [];
+		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
+		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
+		requests.push(maleDatesReq, femaleDatesReq);
+		const [maleDates, femaleDates] = await Promise.all(requests);
 		return {
 			props: {
 				courseDetails: courseDetails || null,
@@ -89,18 +54,43 @@ export async function getServerSideProps(ctx) {
 				femaleDates: femaleDates?.data || [],
 			}
 		}
-	} else if (courseDetails?.type == 'online') {
+	} else if (courseDetails.type === 'online') {
+		const mixDatesReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`).then((response) => {
+			return response
+		}).catch((error) => {
+			console.log("online course get availability error", error);
+			return {
+				notFound: true,
+			}
+		});
+
 		return {
 			props: {
 				courseDetails: courseDetails,
-				mixDates: mixDates?.data || [],
+				mixDates: mixDatesReq?.data || [],
+			}
+		}
+	} else if (courseDetails?.type == 'on-demand') {
+		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails?.id}`)
+			.then((response) => (response.data))
+			.catch((error) => {
+				console.log("on-demand course get curriculum error", error);
+
+				return {
+					notFound: true,
+				}
+			});
+
+		return {
+			props: {
+				courseDetails: courseDetails,
+				courseCurriculum: courseCurriculumReq
 			}
 		}
 	}
 }
 
 export default function Index(props) {
-
 	const courseDetail = props?.courseDetails ? props?.courseDetails : null
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
