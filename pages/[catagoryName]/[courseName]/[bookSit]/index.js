@@ -12,71 +12,28 @@ import WhatsAppLinkComponent from '../../../../components/CommonComponents/Whats
 import { toast } from 'react-toastify';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
+
 	const courseName = resolvedUrl.split('/')[2].replace(/-/g, ' ')
-	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`)
-		.then((response) => (response.data)).catch((error) => error);
+	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`).then((response) => (response.data)).catch((error) => error);
 
 	if (((courseDetails == null) || (courseDetails?.length == 0))) {
 		return {
 			notFound: true,
 		}
 	}
-	// const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`)
 
-	// const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`)
-
-	// const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`)
-
-	// const [maleDates, femaleDates, mixDates] = await Promise.all([
-	// 	maleDatesReq,
-	// 	femaleDatesReq,
-	// 	mixDatesReq,
-	// ])
-
-	// return {
-	// 	props: {
-	// 		courseDetails: courseDetails,
-	// 		maleDates: maleDates.data,
-	// 		femaleDates: femaleDates.data,
-	// 		mixDates: mixDates.data,
-	// 	}
-	// }
-
-	const requests = [];
-
-	if (courseDetails.type === 'physical') {
-		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
-		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
-		requests.push(maleDatesReq, femaleDatesReq);
-	} else if (courseDetails.type === 'online') {
-		const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`);
-		requests.push(mixDatesReq);
-	}
-
-	const [maleDates, femaleDates, mixDates] = await Promise.all(requests);
-
-	if (((courseDetails == null) || (courseDetails?.length == 0))) {
-		return {
-			notFound: true,
-		}
-	}
 	if (courseDetails?.isPurchasable == false) {
 		return {
 			notFound: true,
 		}
 	}
-	if (courseDetails?.type == 'on-demand') {
-		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails?.id}`)
-			.then((response) => (response.data))
-			.catch((error) => error);
 
-		return {
-			props: {
-				courseDetails: courseDetails,
-				courseCurriculum: courseCurriculumReq
-			}
-		}
-	} else if (courseDetails?.type == 'physical') {
+	if (courseDetails.type === 'physical') {
+		const requests = [];
+		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
+		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
+		requests.push(maleDatesReq, femaleDatesReq);
+		const [maleDates, femaleDates] = await Promise.all(requests);
 		return {
 			props: {
 				courseDetails: courseDetails || null,
@@ -84,11 +41,36 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 				femaleDates: femaleDates?.data || [],
 			}
 		}
-	} else if (courseDetails?.type == 'online') {
+	} else if (courseDetails.type === 'online') {
+		const mixDatesReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`).then((response) => {
+			return response
+		}).catch((error) => {
+			console.log("online course get availability error", error);
+			return {
+				notFound: true,
+			}
+		});
 		return {
 			props: {
 				courseDetails: courseDetails,
-				mixDates: mixDates?.data || [],
+				mixDates: mixDatesReq?.data || [],
+			}
+		}
+	} else if (courseDetails?.type == 'on-demand') {
+		const courseCurriculumReq = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=getCourseCurriculumNoAuth&courseId=${courseDetails?.id}`)
+			.then((response) => (response.data))
+			.catch((error) => {
+				console.log("on-demand course get curriculum error", error);
+
+				return {
+					notFound: true,
+				}
+			});
+
+		return {
+			props: {
+				courseDetails: courseDetails,
+				courseCurriculum: courseCurriculumReq
 			}
 		}
 	}
