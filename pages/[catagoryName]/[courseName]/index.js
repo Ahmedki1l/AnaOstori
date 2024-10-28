@@ -23,6 +23,7 @@ import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/Mo
 
 
 export async function getServerSideProps(ctx) {
+
 	const lang = ctx?.resolvedUrl.split('/')[2].split('=')[1] == 'en' ? 'en' : 'ar'
 	const courseName = lang == 'en' ? ctx?.resolvedUrl.split('/')[2].split('?')[0].replace(/-/g, ' ') : ctx?.resolvedUrl.split('/')[1].replace(/-/g, ' ')
 	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`).then((response) => {
@@ -63,7 +64,6 @@ export async function getServerSideProps(ctx) {
 				notFound: true,
 			}
 		});
-
 		return {
 			props: {
 				courseDetails: courseDetails,
@@ -75,7 +75,6 @@ export async function getServerSideProps(ctx) {
 			.then((response) => (response.data))
 			.catch((error) => {
 				console.log("on-demand course get curriculum error", error);
-
 				return {
 					notFound: true,
 				}
