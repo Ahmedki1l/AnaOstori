@@ -1,5 +1,5 @@
-// const WhatsApp_Link = "https://api.whatsapp.com/send/?phone=966502413980&text&type=phone_number&app_absent=0" // old number
-const WhatsApp_Link = "https://api.whatsapp.com/send/?phone=966581662145&text&type=phone_number&app_absent=0" // new number
+const WhatsApp_Link = "https://api.whatsapp.com/send/?phone=966502413980&text&type=phone_number&app_absent=0" // old number
+// const WhatsApp_Link = "https://api.whatsapp.com/send/?phone=966581662145&text&type=phone_number&app_absent=0" // new number
 const Youtube_Link = "https://www.youtube.com/@ana.ostori"
 const Twitter_Link = "https://twitter.com/Ana_Ostori/"
 const Instagram_Link = "https://www.instagram.com/ana.ostori/"
