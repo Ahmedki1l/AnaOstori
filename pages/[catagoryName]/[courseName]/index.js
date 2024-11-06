@@ -437,8 +437,8 @@ export default function Index(props) {
 								</div>
 								:
 								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }}>
-									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
-									{courseDetail?.type == 'physical' ?
+									{/*<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
+									 {courseDetail?.type == 'physical' ?
 										<>
 											<div className='flex items-center py-4'>
 												<AllIconsComponenet height={36} width={18} iconName={'male'} color={'#0C5D96'} />
@@ -497,7 +497,7 @@ export default function Index(props) {
 												</div>
 											}
 										</>
-									}
+									} */}
 								</div>
 							}
 							{/* <div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>

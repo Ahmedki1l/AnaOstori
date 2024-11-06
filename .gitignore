@@ -10,6 +10,7 @@ dist/
 
 # env files
 *.env.local
+*.env
 
 # Compiled Java class files
 *.class
