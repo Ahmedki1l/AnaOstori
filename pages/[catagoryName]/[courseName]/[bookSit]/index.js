@@ -311,9 +311,7 @@ export default function Index(props) {
 				</div>
 				:
 				<>
-					{changePage ? (
-						<PaymentInfoForm backToUserForm={backToUserForm} createdOrder={createdOrder} studentsData={studentsData} checkoutId={checkoutId} />
-					) : (
+					{ (
 						<UserInfoForm
 							isInfoFill={changePageFunction}
 							studentsData={studentsData}

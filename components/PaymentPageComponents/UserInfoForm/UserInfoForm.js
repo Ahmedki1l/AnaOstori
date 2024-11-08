@@ -202,6 +202,7 @@ export default function UserInfoForm(props) {
 		}
 		await getRouteAPI(body).then((res) => {
 			setRegionDataList(res.data)
+
 			if (!router.query.region) {
 				setSelectedRegionId(res.data[0].id)
 			}
@@ -319,7 +320,7 @@ export default function UserInfoForm(props) {
 								}
 								{(courseDetail.type == 'physical' && regionDataList?.length > 0) &&
 									<>
-										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المنطقة</p>
+										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المدينة</p>
 										<p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>
 										<div className={styles.genderWrapper}>
 											{/***************************************** FOR loop for radio button to select region ****************************************/}
@@ -338,7 +339,7 @@ export default function UserInfoForm(props) {
 															onChange={event => handleRegionChange(event, i)}
 															disabled={isDisabled}
 														/>
-														<label htmlFor={`region${i}`} className={` ${styles.lableName1} ${isDisabled ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr}</label>
+														<label htmlFor={`region${i}`} className={` ${styles.lableName1} ${isDisabled ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr === "الشرقية" ? "الدمام" : region.nameAr}</label>
 													</div>
 												);
 											})}
