@@ -68,7 +68,7 @@ export const startEmailPasswordLogin = async (email, password) => {
 export const signOutUser = async () => {
 	signOut(auth).then(() => {
 		localStorage.clear();
-		Router.push('/login')
+		Router.push('/register')
 	}).catch((error) => {
 		console.log(error);
 	});

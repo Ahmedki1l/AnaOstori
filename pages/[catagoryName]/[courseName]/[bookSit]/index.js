@@ -269,6 +269,7 @@ export default function Index(props) {
 				courseId: courseDetails.id,
 				people: createOrderData
 			}
+			
 			// const params = {
 			// 	orderData,
 			// }

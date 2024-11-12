@@ -235,12 +235,12 @@ export default function Register() {
 		}
 		if (!password) {
 			setPasswordError(inputErrorMessages.noPasswordMsg)
-		} else if (password && (password.length < 8 || !password.match(/[A-Z]/g) || !password.match(/[0-9]/g) || !password.match(/[!@#$%^&*]/g))) {
+		} else if (password && (password.length < 6)) {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
 		} else {
 			setPasswordError(null)
 		}
-		if (!fullName || (fullName && (fullName.split(" ").length - 1) < 2) || !gender || !email || !password || (password.length < 8 || !password.match(/[A-Z]/g) || !password.match(/[0-9]/g) || !password.match(/[!@#$%^&*]/g))) {
+		if (!fullName || (fullName && (fullName.split(" ").length - 1) < 2) || !gender || !email || !password || (password.length < 6)) {
 			return
 		} else {
 			await signupWithEmailAndPassword(email, password).then(async (result) => {
@@ -316,35 +316,16 @@ export default function Register() {
 	const handleUpdatePassword = (password) => {
 		setPassword(password)
 		let data = { ...initPasswordError }
-		if (password.length > 7) {
+
+		if (password.length >= 6) {
 			data.minLength = false
 			setInitPasswordError(data)
 		} else {
 			data.minLength = true
 			setInitPasswordError(data)
 		}
-		if (password.match(/[A-Z]/g)) {
-			data.capitalLetter = false
-			setInitPasswordError(data)
-		} else {
-			data.capitalLetter = true
-			setInitPasswordError(data)
-		}
-		if (password.match(/[0-9]/g)) {
-			data.number = false
-			setInitPasswordError(data)
-		} else {
-			data.number = true
-			setInitPasswordError(data)
-		}
-		if (password.match(/[!@#$%^&*]/g)) {
-			data.specialCharacter = false
-			setInitPasswordError(data)
-		} else {
-			data.specialCharacter = true
-			setInitPasswordError(data)
-		}
-		if (password.length > 7 && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[!@#$%^&*]/g)) {
+
+		if (password.length >= 6) {
 			setPasswordError(null)
 		} else {
 			setPasswordError(inputErrorMessages.passwordFormateMsg)
@@ -398,11 +379,11 @@ export default function Register() {
 				<div className={`relative ${styles.registerMainPage}`}>
 					<div className={styles.loginFormDiv}>
 						<h1 className={`fontMedium ${styles.signUpPageHead}`}>إنشاء حساب</h1>
-						<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
+						{/*<p className={`pb-2 ${styles.signUpPageSubText}`}>اكتب بياناتك بدقة، لأننا حنعتمدها وقت ما تسجل بالدورات</p>
 						<div className='flex'>
 							<p style={{ color: 'red' }}> ملاحظة: </p>
 							<p className='pr-1'> جميع البيانات مطلوبة ما عدا رقم الجوال</p>
-						</div>
+						</div>*/}
 						<div className={`formInputBox`}>
 							<div className='formInputIconDiv'>
 								<AllIconsComponenet height={24} width={24} iconName={'newPersonIcon'} color={'#808080'} />
@@ -529,7 +510,7 @@ export default function Register() {
 								}
 							</div>
 						</div>
-						{passwordError ? <p className={styles.errorText}>{passwordError}</p> : <p className={styles.passwordHintMsg}> {inputErrorMessages.passwordFormateMsg}</p>}
+						{/*{passwordError ? <p className={styles.errorText}>{passwordError}</p> : <p className={styles.passwordHintMsg}> {inputErrorMessages.passwordFormateMsg}</p>}
 						<div className={styles.errorMsgWraper}>
 							<>
 								<AllIconsComponenet
@@ -573,7 +554,7 @@ export default function Register() {
 								/>
 								<p className='p-1'>{inputErrorMessages.passwordIncludeSpecialCharMsg}</p>
 							</>
-						</div>
+						</div>*/}
 						<div className={styles.loginBtnBox}>
 							<button className='primarySolidBtn' type='submit' disabled={submitBtnDisabled ? true : false} onClick={handleSignup}>إنشاء حساب</button>
 						</div>

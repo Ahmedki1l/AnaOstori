@@ -145,40 +145,49 @@ export default function Index(props) {
 	}
 
 	const handleUserLogin = async (query) => {
-		if (!isUserLogin) {
-			// if (storeData?.accessToken === null) {
-			dispatch({
-				type: 'SET_RETURN_URL',
-				returnUrl: coursePageUrl
-			});
-			router.push({
-				pathname: "/login",
-			})
-		} else {
-			let data = {
-				routeName: 'categories'
-			}
-			await getAuthRouteAPI(data).then((res) => {
-				router.push({
-					pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
-					query: query ? query : "",
-				})
-			}).catch(async (error) => {
-				console.log(error);
-				if (error?.response?.status == 401) {
-					await getNewToken().then(async (token) => {
-						await getAuthRouteAPI(data).then((res) => {
-							router.push({
-								pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
-								query: query ? query : "",
-							})
-						})
-					}).catch(error => {
-						console.error("Error:", error);
-					});
-				}
-			})
+		// if (!isUserLogin) {
+		// 	// if (storeData?.accessToken === null) {
+		// 	dispatch({
+		// 		type: 'SET_RETURN_URL',
+		// 		returnUrl: coursePageUrl
+		// 	});
+		// 	router.push({
+		// 		pathname: "/login",
+		// 	})
+		// } else {
+		// 	let data = {
+		// 		routeName: 'categories'
+		// 	}
+		// 	await getAuthRouteAPI(data).then((res) => {
+		// 		router.push({
+		// 			pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
+		// 			query: query ? query : "",
+		// 		})
+		// 	}).catch(async (error) => {
+		// 		console.log(error);
+		// 		if (error?.response?.status == 401) {
+		// 			await getNewToken().then(async (token) => {
+		// 				await getAuthRouteAPI(data).then((res) => {
+		// 					router.push({
+		// 						pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
+		// 						query: query ? query : "",
+		// 					})
+		// 				})
+		// 			}).catch(error => {
+		// 				console.error("Error:", error);
+		// 			});
+		// 		}
+		// 	})
+		// }
+
+		let data = {
+			routeName: 'categories'
 		}
+		
+		router.push({
+			pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
+			query: query ? query : "",
+		})
 	}
 
 	const handleBookSit = async (date, gender, noOfSit, regionId) => {
