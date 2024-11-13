@@ -96,9 +96,9 @@ export default function Index(props) {
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 
 	// Check if there's data in localStorage on load and populate the state
-    useEffect(() => {
+	useEffect(() => {
 
-		if(localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')){
+		if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
 
 			console.log("there are some local storage data");
 
@@ -107,18 +107,15 @@ export default function Index(props) {
 			const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
 
 			changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
-			
-			// Clear the saved data from localStorage after it's loaded
-			return () => {
-				localStorage.removeItem('studentsData');
-				localStorage.removeItem('courseType');
-				localStorage.removeItem('userAgree');
-			};
+
+			localStorage.removeItem('studentsData');
+			localStorage.removeItem('courseType');
+			localStorage.removeItem('userAgree');
 		}
 		else {
 			console.log("there are no local storage data");
 		}
-    }, []);
+	}, []);
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
@@ -296,7 +293,7 @@ export default function Index(props) {
 				courseId: courseDetails.id,
 				people: createOrderData
 			}
-			
+
 			// const params = {
 			// 	orderData,
 			// }
