@@ -328,7 +328,7 @@ export default function Index(props) {
 						console.error("Error:", error);
 					});
 				}
-				toast.error(error.response.data.message, { rtl: true, })
+				toast.error("يجب عليك إنشاء حساب أولا", { rtl: true, })
 			})
 		}
 		setStudentsData(studentsData)
