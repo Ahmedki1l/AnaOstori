@@ -97,18 +97,22 @@ export default function Index(props) {
 
 	// Check if there's data in localStorage on load and populate the state
     useEffect(() => {
-        const savedStudentsData = localStorage.getItem('studentsData');
-        const savedCourseType = localStorage.getItem('courseType');
-        const savedUserAgree = localStorage.getItem('userAgree');
 
-        // Clear the saved data from localStorage after it's loaded
-        return () => {
-            localStorage.removeItem('studentsData');
-            localStorage.removeItem('courseType');
-            localStorage.removeItem('userAgree');
+		if(localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')){
 
-			changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
-        };
+			const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
+			const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
+			const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
+			
+			// Clear the saved data from localStorage after it's loaded
+			return () => {
+				localStorage.removeItem('studentsData');
+				localStorage.removeItem('courseType');
+				localStorage.removeItem('userAgree');
+				
+				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
+			};
+		}
     }, []);
 
 	useEffect(() => {
