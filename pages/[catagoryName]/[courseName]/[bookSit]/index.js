@@ -105,14 +105,14 @@ export default function Index(props) {
 			const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
 			const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
 			const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
+
+			changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
 			
 			// Clear the saved data from localStorage after it's loaded
 			return () => {
 				localStorage.removeItem('studentsData');
 				localStorage.removeItem('courseType');
 				localStorage.removeItem('userAgree');
-				
-				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
 			};
 		}
 		else {
