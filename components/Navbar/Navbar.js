@@ -216,7 +216,7 @@ export default function Navbar() {
 		signOutUser();
 		dispatch({
 			type: 'SET_RETURN_URL',
-			returnUrl: null
+			returnUrl: window.location.pathname,
 		})
 	}
 

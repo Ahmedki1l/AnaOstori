@@ -95,6 +95,22 @@ export default function Index(props) {
 
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 
+	// Check if there's data in localStorage on load and populate the state
+    useEffect(() => {
+        const savedStudentsData = localStorage.getItem('studentsData');
+        const savedCourseType = localStorage.getItem('courseType');
+        const savedUserAgree = localStorage.getItem('userAgree');
+
+        // Clear the saved data from localStorage after it's loaded
+        return () => {
+            localStorage.removeItem('studentsData');
+            localStorage.removeItem('courseType');
+            localStorage.removeItem('userAgree');
+
+			changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
+        };
+    }, []);
+
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [changePage])
@@ -275,6 +291,11 @@ export default function Index(props) {
 			// const params = {
 			// 	orderData,
 			// }
+
+			// Save data to localStorage before making the API call
+			localStorage.setItem('studentsData', JSON.stringify(studentsData));
+			localStorage.setItem('courseType', courseType);
+			localStorage.setItem('userAgree', JSON.stringify(userAgree));
 
 			await postAuthRouteAPI(orderData).then(res => {
 				setCreatedOrder(res.data)
