@@ -103,7 +103,7 @@ export const getNewToken = async () => {
 		}
 	} else {
 		console.log('User is not signed in');
-		signOutUser();
+		Router.push('/register')
 		throw new Error("User is not signed in");
 	}
 };

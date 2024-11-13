@@ -298,7 +298,7 @@ export default function Index(props) {
 
 			// Save data to localStorage before making the API call
 			localStorage.setItem('studentsData', JSON.stringify(studentsData));
-			localStorage.setItem('courseType', courseType);
+			localStorage.setItem('courseType', JSON.stringify(courseType));
 			localStorage.setItem('userAgree', JSON.stringify(userAgree));
 
 			await postAuthRouteAPI(orderData).then(res => {
