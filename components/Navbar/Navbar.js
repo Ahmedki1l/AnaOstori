@@ -213,10 +213,12 @@ export default function Navbar() {
 		dispatch({
 			type: 'EMPTY_STORE'
 		});
+
 		dispatch({
 			type: 'SET_RETURN_URL',
 			returnUrl: window.location.pathname,
-		})
+		});
+
 		signOutUser();
 
 		// Refresh the page
