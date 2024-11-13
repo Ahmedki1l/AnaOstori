@@ -301,10 +301,17 @@ export default function Navbar() {
 	}
 
 	const setReturnUrlAndNavigate = (path) => {
+		// Capture the current path and query parameters
+        const currentPath = window.location.pathname;
+        const currentQueryParams = window.location.search;
+
+        // Save the current full URL (path + params) as the returnUrl in Redux
+        const returnUrl = currentPath + currentQueryParams;
+
 		// Set the return URL based on the current page
 		dispatch({
 			type: 'SET_RETURN_URL',
-			returnUrl: window.location.pathname,
+			returnUrl: returnUrl,
 		});
 		// Navigate to the specified path
 		router.push(path);
