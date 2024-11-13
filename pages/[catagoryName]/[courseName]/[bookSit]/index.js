@@ -93,6 +93,8 @@ export default function Index(props) {
 	const storeData = useSelector((state) => state?.globalStore);
 	const dispatch = useDispatch();
 
+	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
+
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [changePage])
@@ -282,6 +284,12 @@ export default function Index(props) {
 			}).catch(async (error) => {
 				console.log(error)
 				if (error?.response?.status == 401) {
+
+					dispatch({
+						type: 'SET_RETURN_URL',
+						returnUrl: window.location.pathname,
+					});
+
 					await getNewToken().then(async (token) => {
 						await postAuthRouteAPI(orderData).then(res => {
 							setCreatedOrder(res.data)
