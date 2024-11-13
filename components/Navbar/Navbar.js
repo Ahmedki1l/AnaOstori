@@ -299,6 +299,18 @@ export default function Navbar() {
 			router.push('/')
 		}
 	}
+
+	const setReturnUrlAndNavigate = (path) => {
+		// Set the return URL based on the current page
+		dispatch({
+			type: 'SET_RETURN_URL',
+			returnUrl: window.location.pathname,
+		});
+		// Navigate to the specified path
+		router.push(path);
+	};
+
+
 	return (
 		<>
 			{isMediumScreen ?
@@ -440,14 +452,20 @@ export default function Navbar() {
 							{!isUserLogin ?
 								<div className={styles.loginBtnsBox}>
 									<div className={styles.loginBtnBox}>
-										<Link href={"/login"} className='normalLinkText'>
-											<button className={`primaryStrockedBtn ${styles.loginBtn}`}>تسجيل الدخول</button>
-										</Link>
+										<button
+											className={`primaryStrockedBtn ${styles.loginBtn}`}
+											onClick={() => setReturnUrlAndNavigate('/login')}
+										>
+											تسجيل الدخول
+										</button>
 									</div>
 									<div className={styles.signupBtnBox}>
-										<Link href={"/register"} className='normalLinkText'>
-											<button className={`primarySolidBtn ${styles.signupBtn}`}>إنشاء حساب</button>
-										</Link>
+										<button
+											className={`primarySolidBtn ${styles.signupBtn}`}
+											onClick={() => setReturnUrlAndNavigate('/register')}
+										>
+											إنشاء حساب
+										</button>
 									</div>
 								</div>
 								:
