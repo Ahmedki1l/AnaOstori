@@ -100,6 +100,8 @@ export default function Index(props) {
 
 		if(localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')){
 
+			console.log("there are some local storage data");
+
 			const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
 			const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
 			const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
@@ -112,6 +114,9 @@ export default function Index(props) {
 				
 				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
 			};
+		}
+		else {
+			console.log("there are no local storage data");
 		}
     }, []);
 
