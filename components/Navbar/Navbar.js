@@ -219,7 +219,8 @@ export default function Navbar() {
 		})
 		signOutUser();
 
-		router.push(window.location.pathname);
+		// Refresh the page
+		window.location.reload();
 	}
 
 	useEffect(() => {
