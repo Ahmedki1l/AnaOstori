@@ -814,8 +814,9 @@ input:-internal-autofill-selected {
 
     .whatsAppLogoWrapper {
         bottom: -16px;
-        left: 20px;
+        right: 20px;
         height: 80px;
+        max-width: 90%; /* Limits the width on mobile to avoid stretching */
     }
 
     .whatsAppLogoRoundWrapper {
@@ -823,6 +824,12 @@ input:-internal-autofill-selected {
         width: 55px;
     }
 
+    .whatsAppMessageWrapper {
+        max-width: 160px; /* Further limit width on mobile */
+        padding: 8px; /* Adjust padding for mobile */
+    }
+
+    /* Adjustments for different button states */
     .whatsAppLogoWrapperUp {
         bottom: 9.5rem;
     }
@@ -835,10 +842,7 @@ input:-internal-autofill-selected {
         bottom: 0;
     }
 
-    .notShowWrapperUP {
-        bottom: 7rem;
-    }
-
+    .notShowWrapperUP,
     .pageChangeLogoWrapper {
         bottom: 7rem;
     }

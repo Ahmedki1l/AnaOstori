@@ -77,12 +77,11 @@ export default function UserInfoForm(props) {
 			setStudentsData(props.studentsData)
 			setTotalStudent(studentsDataLength)
 		}
-		if (router.query.region) {
-			setSelectedRegionId(router.query.region)
-		}
-		getRegionAndBranchList()
-		setMaleDates(initialMaleDate.filter((date) => date.regionId == router.query.region))
-		setFemaleDates(initialFemaleDate.filter((date) => date.regionId == router.query.region))
+
+		getRegionAndBranchList();
+		console.log("Region ID: ", selectedRegionId);
+		console.log("females: ", initialFemaleDate);
+
 	}, [])
 
 	const handleTotalStudent = (value) => {
@@ -203,9 +202,14 @@ export default function UserInfoForm(props) {
 		await getRouteAPI(body).then((res) => {
 			setRegionDataList(res.data)
 
-			if (!router.query.region) {
-				setSelectedRegionId(res.data[0].id)
-			}
+			// if (!router.query.region) {
+			// 	setSelectedRegionId(res.data[0].id)
+			// }
+
+			setSelectedRegionId(res.data[0].id);
+
+			console.log("getRegionAndBranchList Region ID: ", res.data[0].id);
+
 			const availableRegionSet = new Set(initialMaleDate.concat(initialFemaleDate).map((dates) => {
 				return dates.regionId;
 			}));
@@ -213,10 +217,15 @@ export default function UserInfoForm(props) {
 			const disabledRegionsArray = res.data.filter((region) => !availableRegion.includes(region.id));
 
 			setDisabledRegions(disabledRegionsArray.map(region => region.id));
+
+			setMaleDates(initialMaleDate.filter((date) => date.regionId == res.data[0].id))
+			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == res.data[0].id))
+			setSelectedGender('male');
 		}).catch((err) => {
 			console.log(err)
 		})
 	}
+
 	const handleRegionChange = (event, index) => {
 		const selectedRegionId = event.target.value
 		setSelectedRegionId(selectedRegionId)
@@ -225,7 +234,7 @@ export default function UserInfoForm(props) {
 		setStudentsData(data);
 		const regionDateListMale = initialMaleDate.filter((date) => date.regionId == selectedRegionId);
 		const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == selectedRegionId);
-		if (regionDateListMale.length > 0 && disabledGender == 'male') {
+		if (regionDateListMale.length > 0) {
 			setDisabledGender(null)
 			setMaleDates(regionDateListMale)
 		} else if (regionDateListMale.length == 0) {
@@ -233,7 +242,7 @@ export default function UserInfoForm(props) {
 			data[index]['gender'] = 'female'
 			setDisabledGender('male')
 		}
-		if (regionDateListFemale.length > 0 && disabledGender == 'female') {
+		if (regionDateListFemale.length > 0) {
 			setDisabledGender(null)
 			setFemaleDates(regionDateListFemale)
 		} else if (regionDateListFemale.length == 0) {
@@ -245,6 +254,11 @@ export default function UserInfoForm(props) {
 			setMaleDates([])
 		} else {
 			setMaleDates(regionDateListMale)
+		}
+		if (regionDateListFemale.length == 0) {
+			setFemaleDates([])
+		} else {
+			setFemaleDates(regionDateListFemale)
 		}
 	}
 
@@ -411,12 +425,12 @@ export default function UserInfoForm(props) {
 											}
 										</div>
 									</ScrollContainer>
-									{i == 0 &&
+									{/*i == 0 &&
 										<div className='checkBoxDiv pt-4'>
 											<input id='enrollForMe' type='checkbox' name='enrollForMySelf' onChange={(event) => handleEnrollForMe(event)} />
 											<label htmlFor='enrollForMe' className={`fontMedium ${styles.checkboxText}`}>بسجل لنفسي</label>
 										</div>
-									}
+									*/}
 									{(totalStudent > 1 && i == 0 && (courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).length > 0) &&
 										<div className='checkBoxDiv pb-4'>
 											<input id='dateForAll' type='checkbox' name='agree' onChange={(event) => handleDateForAll(event)} />

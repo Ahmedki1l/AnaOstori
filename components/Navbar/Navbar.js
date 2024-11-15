@@ -313,6 +313,7 @@ export default function Navbar() {
 			type: 'SET_RETURN_URL',
 			returnUrl: returnUrl,
 		});
+		
 		// Navigate to the specified path
 		router.push(path);
 	};
