@@ -10,6 +10,7 @@ import * as fbq from '../../../../lib/fpixel'
 import { inputErrorMessages } from '../../../../constants/ar';
 import WhatsAppLinkComponent from '../../../../components/CommonComponents/WhatsAppLink';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 
@@ -93,15 +94,15 @@ export default function Index(props) {
 	const storeData = useSelector((state) => state?.globalStore);
 	const dispatch = useDispatch();
 
+	const router = useRouter();
+	const { asPath } = useRouter();
+
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 
 	// Check if there's data in localStorage on load and populate the state
 	useEffect(() => {
-		const referrer = document.referrer; // Get the URL of the previous page
 
-		console.log(referrer);
-
-		if (referrer.includes('/login') || referrer.includes('/register')) {
+		if (storeData?.isBackToUserForm) {
 			console.log('User navigated from login or register page.');
 
 			if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
@@ -117,6 +118,16 @@ export default function Index(props) {
 				localStorage.removeItem('studentsData');
 				localStorage.removeItem('courseType');
 				localStorage.removeItem('userAgree');
+
+				// Clear Dispatchers
+				dispatch({
+					type: 'IS_RETURNED_BACK_TO_USER_FORM',
+					isBackToUserForm: false,
+				});
+				dispatch({
+					type: 'IS_RETURNED_BACK_TO_USER_FORM',
+					isFromUserForm: false,
+				});
 			} else {
 				console.log("There are no local storage data");
 			}
@@ -161,6 +172,15 @@ export default function Index(props) {
 								setCreatedOrder(res.data)
 								setChangePage(true)
 								setLoading(false)
+
+								dispatch({
+									type: 'SET_RETURN_URL',
+									returnUrl: window.location.pathname,
+								});
+								dispatch({
+									type: 'IS_RETURNED_BACK_TO_USER_FORM',
+									isFromUserForm: true,
+								});
 								// generateCheckoutId(res.data.id)
 							})
 						}).catch(error => {

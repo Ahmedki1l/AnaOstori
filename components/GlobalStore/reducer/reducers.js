@@ -12,6 +12,8 @@ var initialState = {
     isCourseEdit: false,
     returnUrl: null,
     loginWithoutPassword: false,
+    isFromUserForm: false,
+    isBackToUserForm: false
 };
 
 export const globalStore = (state = initialState, action) => {
@@ -89,6 +91,16 @@ export const globalStore = (state = initialState, action) => {
             return {
                 ...state,
                 loginWithoutPassword: action?.loginWithoutPassword
+            }
+        case 'IS_RETURNED_FROM_USER_FORM':
+            return {
+                ...state,
+                isFromUserForm: action?.isFromUserForm
+            }
+        case 'IS_RETURNED_BACK_TO_USER_FORM':
+            return {
+                ...state,
+                isBackToUserForm: action?.isBackToUserForm
             }
 
         default: return state;
