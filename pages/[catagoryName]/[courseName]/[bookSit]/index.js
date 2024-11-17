@@ -97,24 +97,31 @@ export default function Index(props) {
 
 	// Check if there's data in localStorage on load and populate the state
 	useEffect(() => {
+		const referrer = document.referrer; // Get the URL of the previous page
 
-		if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
+		if (referrer.includes('/login') || referrer.includes('/register')) {
+			console.log('User navigated from login or register page.');
 
-			console.log("there are some local storage data");
+			if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
+				console.log("There are some local storage data");
 
-			const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
-			const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
-			const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
+				const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
+				const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
+				const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
 
-			changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
+				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
 
-			localStorage.removeItem('studentsData');
-			localStorage.removeItem('courseType');
-			localStorage.removeItem('userAgree');
+				// Remove saved data from localStorage
+				localStorage.removeItem('studentsData');
+				localStorage.removeItem('courseType');
+				localStorage.removeItem('userAgree');
+			} else {
+				console.log("There are no local storage data");
+			}
+		} else {
+			console.log('User navigated from another page.');
 		}
-		else {
-			console.log("there are no local storage data");
-		}
+		
 	}, []);
 
 	useEffect(() => {

@@ -220,7 +220,6 @@ export default function UserInfoForm(props) {
 
 			setMaleDates(initialMaleDate.filter((date) => date.regionId == res.data[0].id))
 			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == res.data[0].id))
-			setSelectedGender('male');
 		}).catch((err) => {
 			console.log(err)
 		})
