@@ -126,6 +126,12 @@ export default function Index(props) {
 				console.log("There are no local storage data");
 			}
 		} else {
+			// Remove saved data from localStorage
+			localStorage.removeItem('studentsData');
+			localStorage.removeItem('courseType');
+			localStorage.removeItem('userAgree');
+			localStorage.removeItem('isFromUserForm');
+			localStorage.removeItem('isBackToUserForm');
 			console.log('User navigated from another page.');
 		}
 
