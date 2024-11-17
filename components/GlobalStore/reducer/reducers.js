@@ -95,8 +95,8 @@ export const globalStore = (state = initialState, action) => {
         case 'IS_RETURNED_FROM_USER_FORM':
             return {
                 ...state,
-                isFromUserForm: action?.isFromUserForm
-            }
+                isFromUserForm: action?.isFromUserForm,
+            };
         case 'IS_RETURNED_BACK_TO_USER_FORM':
             return {
                 ...state,

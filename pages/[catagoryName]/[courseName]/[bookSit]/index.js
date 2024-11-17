@@ -101,8 +101,10 @@ export default function Index(props) {
 
 	// Check if there's data in localStorage on load and populate the state
 	useEffect(() => {
+		
+		console.log("flag: ", JSON.parse(localStorage.getItem('isFromUserForm')));
 
-		if (storeData?.isBackToUserForm) {
+		if (JSON.parse(localStorage.getItem('isBackToUserForm'))) {
 			console.log('User navigated from login or register page.');
 
 			if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
@@ -118,16 +120,8 @@ export default function Index(props) {
 				localStorage.removeItem('studentsData');
 				localStorage.removeItem('courseType');
 				localStorage.removeItem('userAgree');
-
-				// Clear Dispatchers
-				dispatch({
-					type: 'IS_RETURNED_BACK_TO_USER_FORM',
-					isBackToUserForm: false,
-				});
-				dispatch({
-					type: 'IS_RETURNED_BACK_TO_USER_FORM',
-					isFromUserForm: false,
-				});
+				localStorage.removeItem('isFromUserForm');
+				localStorage.removeItem('isBackToUserForm');
 			} else {
 				console.log("There are no local storage data");
 			}
@@ -173,14 +167,6 @@ export default function Index(props) {
 								setChangePage(true)
 								setLoading(false)
 
-								dispatch({
-									type: 'SET_RETURN_URL',
-									returnUrl: window.location.pathname,
-								});
-								dispatch({
-									type: 'IS_RETURNED_BACK_TO_USER_FORM',
-									isFromUserForm: true,
-								});
 								// generateCheckoutId(res.data.id)
 							})
 						}).catch(error => {
@@ -345,7 +331,7 @@ export default function Index(props) {
 						type: 'SET_RETURN_URL',
 						returnUrl: window.location.pathname,
 					});
-
+					localStorage.setItem('isFromUserForm', true);
 					await getNewToken().then(async (token) => {
 						await postAuthRouteAPI(orderData).then(res => {
 							setCreatedOrder(res.data)

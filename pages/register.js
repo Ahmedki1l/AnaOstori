@@ -120,11 +120,8 @@ export default function Register() {
 							router.push('/');
 						}
 						else {
-							if(storeData?.isFromUserForm){
-								dispatch({
-									type: 'IS_RETURNED_BACK_TO_USER_FORM',
-									isBackToUserForm: true,
-								});
+							if(JSON.parse(localStorage.getItem('isFromUserForm')) === "true"){
+								localStorage.setItem('isBackToUserForm', "true");
 							}
 							router.push(storeData?.returnUrl);
 						}
