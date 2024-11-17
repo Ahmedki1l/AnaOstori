@@ -120,8 +120,8 @@ export default function Register() {
 							router.push('/');
 						}
 						else {
-							if(JSON.parse(localStorage.getItem('isFromUserForm')) === "true"){
-								localStorage.setItem('isBackToUserForm', "true");
+							if(JSON.parse(localStorage.getItem('isFromUserForm'))){
+								localStorage.setItem('isBackToUserForm', true);
 							}
 							router.push(storeData?.returnUrl);
 						}
