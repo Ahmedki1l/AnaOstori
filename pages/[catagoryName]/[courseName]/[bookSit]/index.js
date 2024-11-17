@@ -99,6 +99,8 @@ export default function Index(props) {
 	useEffect(() => {
 		const referrer = document.referrer; // Get the URL of the previous page
 
+		console.log(referrer);
+
 		if (referrer.includes('/login') || referrer.includes('/register')) {
 			console.log('User navigated from login or register page.');
 
@@ -121,7 +123,7 @@ export default function Index(props) {
 		} else {
 			console.log('User navigated from another page.');
 		}
-		
+
 	}, []);
 
 	useEffect(() => {

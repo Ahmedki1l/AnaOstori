@@ -116,7 +116,12 @@ export default function Register() {
 						router.push('/')
 						// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
 					} else {
-						router.push(storeData?.returnUrl)
+						if(storeData?.returnUrl === "/login"){
+							router.push('/');
+						}
+						else {
+							router.push(storeData?.returnUrl);
+						}
 					}
 				}
 				// if (!storeData?.returnUrl) {

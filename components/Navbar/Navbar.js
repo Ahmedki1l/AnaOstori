@@ -68,11 +68,12 @@ export default function Navbar() {
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 
 	useEffect(() => {
-		if (isUserLogin) {
-			catagoryAuth()
-		} else {
-			catagoryNoAuth()
-		}
+		// if (isUserLogin) {
+		// 	catagoryAuth()
+		// } else {
+		// 	catagoryNoAuth()
+		// }
+		catagoryNoAuth();
 	}, [])
 
 	// useEffect(() => {
