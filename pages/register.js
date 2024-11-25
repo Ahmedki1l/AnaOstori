@@ -77,6 +77,9 @@ export default function Register() {
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
+			if(JSON.parse(localStorage.getItem('isFromUserForm'))){
+				localStorage.setItem('isBackToUserForm', true);
+			}
 			router.push('/updateProfile')
 			toast.success(toastErrorMessage.successRegisterMsg, { rtl: true, })
 		} else {
