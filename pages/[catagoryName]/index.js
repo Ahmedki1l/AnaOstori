@@ -79,6 +79,7 @@ export default function Index(props) {
 						if (catagory.name == catagoryName) {
 							setCoursesDetails(shortCourseOnType(catagory.courses))
 							console.log("courses: ", coursesDetails);
+							getCourseDetails();
 						}
 					})
 				}).catch(async (error) => {
@@ -90,6 +91,7 @@ export default function Index(props) {
 									if (catagory.name == catagoryName) {
 										setCoursesDetails(shortCourseOnType(catagory.courses))
 										console.log("courses: ", coursesDetails);
+										getCourseDetails();
 									}
 								})
 							})
@@ -101,7 +103,6 @@ export default function Index(props) {
 				})
 			}
 			getMyCourseReq();
-			getCourseDetails();
 		}
 	}, [isUserLogin, catagoryName, catagory.courses])
 
