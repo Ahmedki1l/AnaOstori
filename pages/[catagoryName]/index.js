@@ -165,8 +165,13 @@ export default function Index(props) {
 							if (myCourses?.length > 0) {
 								myCourses.map((myCourse, i) => {
 									if (myCourse?.course === course) {
-										return <CoursesCard data={myCourse} key={i} />
+										console.log("course matched: ", course);
+										return (
+											<CoursesCard data={myCourse} key={i} />
+										)
 									} else {
+										
+										console.log("course not matched: ", course);
 										return (
 											<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
 												<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
