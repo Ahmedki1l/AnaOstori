@@ -67,6 +67,7 @@ export default function Index(props) {
 		if (!isUserLogin) {
 			const courseDetails = shortCourseOnType(catagory.courses)
 			setCoursesDetails(courseDetails)
+			console.log("courses: ", coursesDetails);
 		} else {
 			setPageLoading(true)
 			const getCourseDetails = async () => {
@@ -77,6 +78,7 @@ export default function Index(props) {
 					res.data?.find((catagory) => {
 						if (catagory.name == catagoryName) {
 							setCoursesDetails(shortCourseOnType(catagory.courses))
+							console.log("courses: ", coursesDetails);
 						}
 					})
 				}).catch(async (error) => {
@@ -87,6 +89,7 @@ export default function Index(props) {
 								res.data?.find((catagory) => {
 									if (catagory.name == catagoryName) {
 										setCoursesDetails(shortCourseOnType(catagory.courses))
+										console.log("courses: ", coursesDetails);
 									}
 								})
 							})
@@ -160,7 +163,7 @@ export default function Index(props) {
 						{coursesDetails?.length > 0 && coursesDetails.map((course, index) => {
 							if (myCourses?.length > 0) {
 								myCourses.map((myCourse, i) => {
-									if (myCourse === course) {
+									if (myCourse?.course === course) {
 										return <CoursesCard data={myCourse} key={i} />
 									} else {
 										return (
