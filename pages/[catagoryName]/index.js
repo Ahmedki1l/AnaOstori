@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { getAuthRouteAPI } from '../../services/apisService';
 import Spinner from '../../components/CommonComponents/spinner';
 import { getNewToken } from '../../services/fireBaseAuthService';
+import { useDispatch } from "react-redux";
+import CoursesCard from "../../components/CommonComponents/CourseCard/CoursesCard";
 
 
 
@@ -49,6 +51,8 @@ export default function Index(props) {
 	// const isUserLogin = storeData?.accessToken ? true : false
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 	const [pageLoading, setPageLoading] = useState(true)
+	const [myCourses, setMyCourses] = useState([]);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (coursesDetails?.length > 0) {
@@ -93,7 +97,8 @@ export default function Index(props) {
 					}
 				})
 			}
-			getCourseDetails()
+			getMyCourseReq();
+			getCourseDetails();
 		}
 	}, [isUserLogin, catagoryName, catagory.courses])
 
@@ -114,6 +119,22 @@ export default function Index(props) {
 
 	const handleCoursePageNavigation = () => {
 		setPageLoading(true)
+	}
+
+	const getMyCourseReq = async () => {
+		setPageLoading(true)
+		await getAuthRouteAPI({ routeName: 'myCourses' }).then((response) => {
+			setMyCourses(response?.data)
+			console.log("my courses: ", response?.data);
+			dispatch({
+				type: 'SET_ALL_MYCOURSE',
+				myCourses: response?.data,
+			});
+			setPageLoading(false)
+		}).catch((error) => {
+			setPageLoading(false)
+			console.log(error)
+		})
 	}
 
 	return (
@@ -137,11 +158,26 @@ export default function Index(props) {
 
 					<div className={styles.coursesWrapper}>
 						{coursesDetails?.length > 0 && coursesDetails.map((course, index) => {
-							return (
-								<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
-									<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
-								</div>
-							)
+							if (myCourses?.length > 0) {
+								myCourses.map((myCourse, i) => {
+									if (myCourse === course) {
+										return <CoursesCard data={myCourse} key={i} />
+									} else {
+										return (
+											<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
+												<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
+											</div>
+										)
+									}
+								})
+							}
+							else {
+								return (
+									<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
+										<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
+									</div>
+								)
+							}
 						})}
 					</div>
 				</div>

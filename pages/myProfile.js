@@ -30,6 +30,7 @@ export default function MyProfile() {
 		setIsLoading(true)
 		await getAuthRouteAPI({ routeName: 'myCourses' }).then((response) => {
 			setMyCourses(response?.data)
+			console.log("my courses: ", response?.data);
 			dispatch({
 				type: 'SET_ALL_MYCOURSE',
 				myCourses: response?.data,
