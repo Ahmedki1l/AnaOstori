@@ -162,30 +162,27 @@ export default function Index(props) {
 
 					<div className={styles.coursesWrapper}>
 						{coursesDetails?.length > 0 && coursesDetails.map((course, index) => {
-							if (myCourses?.length > 0) {
-								myCourses.map((myCourse, i) => {
-									if (myCourse?.course === course) {
-										console.log("course matched: ", course);
-										return (
-											<CoursesCard data={myCourse} key={i} />
-										)
-									} else {
-										
-										console.log("course not matched: ", course);
-										return (
-											<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
-												<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
-											</div>
-										)
-									}
-								})
-							}
-							else {
+							// Check if the course is in myCourses
+							const enrolledCourse = myCourses?.find(myCourse => myCourse?.course?.id === course?.id);
+
+							if (enrolledCourse) {
+								// If the course is enrolled
 								return (
-									<div key={`courseDetaisl${index}`} className={styles.courseCardMetaDataWrapper}>
-										<PhysicalCourseCard courseDetails={course} catagoryName={catagoryName} handleCoursePageNavigation={handleCoursePageNavigation} />
+									<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
+										<CoursesCard data={enrolledCourse} />
 									</div>
-								)
+								);
+							} else {
+								// If the course is not enrolled
+								return (
+									<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
+										<PhysicalCourseCard
+											courseDetails={course}
+											catagoryName={catagoryName}
+											handleCoursePageNavigation={handleCoursePageNavigation}
+										/>
+									</div>
+								);
 							}
 						})}
 					</div>
