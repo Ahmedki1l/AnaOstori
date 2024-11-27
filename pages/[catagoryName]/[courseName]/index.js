@@ -109,7 +109,7 @@ export default function Index(props) {
 	const isSeatFullForMix = mixDates.length > 0 ? mixDates.every(obj => obj.numberOfSeats === 0) : false;
 
 	const bookSeatButtonENText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'Notify me' : (isSeatFullForMix ? 'Notify me' : 'Reserve your seat now')
-	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : 'احجز مقعدك الآن')
+	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : 'تصفح المواعيد')
 	const bookSeatButtonText = (lang == 'en' ? bookSeatButtonENText : bookSeatButtonARText)
 
 	const screenWidth = useWindowSize().width
@@ -200,7 +200,7 @@ export default function Index(props) {
 	}
 
 	const handleBookSitButtonClick = () => {
-		if (isDateAvailable == true && (bookSeatButtonText == "احجز مقعدك الآن" || bookSeatButtonText == "Reserve your seat now")) {
+		if (isDateAvailable == true && (bookSeatButtonText == "تصفح المواعيد" || bookSeatButtonText == "Reserve your seat now")) {
 			handleUserLogin()
 		}
 		else {

@@ -6,7 +6,7 @@ import { getAuthRouteAPI } from '../../services/apisService';
 import Spinner from '../../components/CommonComponents/spinner';
 import { getNewToken } from '../../services/fireBaseAuthService';
 import { useDispatch } from "react-redux";
-import CoursesCard from "../../components/CommonComponents/CourseCard/CoursesCard";
+import CoursesCardMixedButton from "../../components/CommonComponents/CourseCard/CoursesCardMixedButton";
 
 
 
@@ -169,7 +169,10 @@ export default function Index(props) {
 								// If the course is enrolled
 								return (
 									<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
-										<CoursesCard data={enrolledCourse} />
+										<CoursesCardMixedButton
+											data={enrolledCourse}
+											catagoryName={catagoryName}
+										/>
 									</div>
 								);
 							} else {

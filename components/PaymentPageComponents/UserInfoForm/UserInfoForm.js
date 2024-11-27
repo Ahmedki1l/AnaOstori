@@ -73,14 +73,7 @@ export default function UserInfoForm(props) {
 					: [userTemplet]))
 
 	useEffect(() => {
-		if (studentsDataLength && studentsDataLength > 0) {
-			setStudentsData(props.studentsData)
-			setTotalStudent(studentsDataLength)
-		}
-
 		getRegionAndBranchList();
-		console.log("Region ID: ", selectedRegionId);
-		console.log("females: ", initialFemaleDate);
 
 	}, [])
 
@@ -218,8 +211,6 @@ export default function UserInfoForm(props) {
 
 			setDisabledRegions(disabledRegionsArray.map(region => region.id));
 
-			setMaleDates(initialMaleDate.filter((date) => date.regionId == res.data[0].id))
-			setFemaleDates(initialFemaleDate.filter((date) => date.regionId == res.data[0].id))
 		}).catch((err) => {
 			console.log(err)
 		})
