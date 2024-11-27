@@ -1,5 +1,5 @@
 import styles from './CoursesCard.module.scss'
-import styles2 from '../../styles/Courses.module.scss';
+import styles2 from '../../../styles/Courses.module.scss';
 import Link from 'next/link';
 import CoverImg from '../CoverImg';
 import Router, { useRouter } from 'next/router';
