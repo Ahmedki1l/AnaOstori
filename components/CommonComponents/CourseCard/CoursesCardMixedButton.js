@@ -15,6 +15,7 @@ import { KeyboardReturn } from '@mui/icons-material';
 export default function CoursesCardMixedButton(props) {
 	const courseDetails = props?.data?.course
 	const lang = courseDetails?.language
+	const isEdit = props.isEdit
 	const catagoryName = props.catagoryName ? props.catagoryName : ""
 	const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState()
 	const contentAccess = props?.data?.availability?.contentAccess
