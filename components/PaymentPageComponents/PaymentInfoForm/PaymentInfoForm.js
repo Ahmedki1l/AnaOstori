@@ -90,7 +90,11 @@ export default function PaymentInfoForm(props) {
 
 				// Regenerate the checkout ID if a payment type is already selected
 				if (paymentType) {
-					generateCheckoutId(paymentType);
+					setPaymentType('')
+					var radio = document.querySelector('input[type=radio][name=paymentDetails]:checked');
+					if (radio) {
+						radio.checked = false;
+					}
 				}
 			}
 		} catch (error) {
