@@ -90,14 +90,11 @@ export default function PaymentInfoForm(props) {
             setCouponAppliedData(res.data);
             setCouponError(false);
 
-			var radio = document.querySelector('input[type=radio][name=paymentDetails]:checked');
-			if (radio) {
-				radio.checked = false;
-			}
-
             // Regenerate the checkout ID if a payment type is already selected
             if (paymentType) {
-                generateCheckoutId(paymentType);
+				let tempType = paymentType;
+				setPaymentType('');
+                generateCheckoutId(tempType);
             }
         }
     } catch (error) {
