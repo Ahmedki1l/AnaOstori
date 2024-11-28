@@ -37,22 +37,27 @@ export default function PaymentInfoForm(props) {
 
 
 	const generateCheckoutId = async (type) => {
-		if (type == paymentType) return
-		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type })
+		if (type === paymentType) return;
+	
+		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
+	
 		let data = {
 			orderId: createdOrder.id,
 			withcoupon: couponAppliedData ? true : false,
 			couponId: couponAppliedData ? couponAppliedData.id : null,
-			type: type
+			type: type,
+		};
+	
+		try {
+			const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
+			if (res.status === 200) {
+				setPaymentType(type);
+				setCheckoutId(res.data[0].id);
+			}
+		} catch (error) {
+			console.error("Error generating checkout ID:", error);
 		}
-		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data).then(res => {
-			if (res.status != 200) { return }
-			setPaymentType(type)
-			setCheckoutId(res.data[0].id)
-		}).catch(error => {
-			console.log(error)
-		});
-	}
+	};
 
 	const handleBankTransfer = async () => {
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' })
@@ -76,22 +81,26 @@ export default function PaymentInfoForm(props) {
 		let data = {
 			routeName: 'checkCouponValidity',
 			courseId: createdOrder.courseId,
-			coupon: couponCode
-		}
-		await getRouteAPI(data).then(res => {
-			if (res.status != 200) { return }
-			setCouponAppliedData(res.data)
-			setCouponError(false)
-			var radio = document.querySelector('input[type=radio][name=paymentDetails]:checked');
-			if (radio) {
-				radio.checked = false;
+			coupon: couponCode,
+		};
+	
+		try {
+			const res = await getRouteAPI(data);
+			if (res.status === 200) {
+				setCouponAppliedData(res.data);
+				setCouponError(false);
+	
+				// Regenerate the checkout ID if a payment type is already selected
+				if (paymentType) {
+					generateCheckoutId(paymentType);
+				}
 			}
-		}).catch(error => {
-			console.log(error);
-			setCouponAppliedData('');
+		} catch (error) {
+			console.error("Error checking coupon validity:", error);
+			setCouponAppliedData(null);
 			setCouponError(true);
-		});
-	}
+		}
+	};
 
 	useEffect(() => {
 		if (window.ApplePaySession) {
