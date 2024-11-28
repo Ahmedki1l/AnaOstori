@@ -37,17 +37,15 @@ export default function PaymentInfoForm(props) {
 
 
 	const generateCheckoutId = async (type) => {
-		if (type === paymentType) return;
-	
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
-	
+
 		let data = {
 			orderId: createdOrder.id,
 			withcoupon: couponAppliedData ? true : false,
 			couponId: couponAppliedData ? couponAppliedData.id : null,
 			type: type,
 		};
-	
+
 		try {
 			const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
 			if (res.status === 200) {
@@ -78,31 +76,29 @@ export default function PaymentInfoForm(props) {
 	}
 
 	const handleCheckCouponIsValid = async () => {
-    let data = {
-        routeName: 'checkCouponValidity',
-        courseId: createdOrder.courseId,
-        coupon: couponCode,
-    };
+		let data = {
+			routeName: 'checkCouponValidity',
+			courseId: createdOrder.courseId,
+			coupon: couponCode,
+		};
 
-    try {
-        const res = await getRouteAPI(data);
-        if (res.status === 200) {
-            setCouponAppliedData(res.data);
-            setCouponError(false);
+		try {
+			const res = await getRouteAPI(data);
+			if (res.status === 200) {
+				setCouponAppliedData(res.data);
+				setCouponError(false);
 
-            // Regenerate the checkout ID if a payment type is already selected
-            if (paymentType) {
-				let tempType = paymentType;
-				setPaymentType('');
-                generateCheckoutId(tempType);
-            }
-        }
-    } catch (error) {
-        console.error("Error checking coupon validity:", error);
-        setCouponAppliedData(null);
-        setCouponError(true);
-    }
-};
+				// Regenerate the checkout ID if a payment type is already selected
+				if (paymentType) {
+					generateCheckoutId(paymentType);
+				}
+			}
+		} catch (error) {
+			console.error("Error checking coupon validity:", error);
+			setCouponAppliedData(null);
+			setCouponError(true);
+		}
+	};
 
 	useEffect(() => {
 		if (window.ApplePaySession) {
