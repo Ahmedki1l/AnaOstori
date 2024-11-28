@@ -78,29 +78,34 @@ export default function PaymentInfoForm(props) {
 	}
 
 	const handleCheckCouponIsValid = async () => {
-		let data = {
-			routeName: 'checkCouponValidity',
-			courseId: createdOrder.courseId,
-			coupon: couponCode,
-		};
-	
-		try {
-			const res = await getRouteAPI(data);
-			if (res.status === 200) {
-				setCouponAppliedData(res.data);
-				setCouponError(false);
-	
-				// Regenerate the checkout ID if a payment type is already selected
-				if (paymentType) {
-					generateCheckoutId(paymentType);
-				}
+    let data = {
+        routeName: 'checkCouponValidity',
+        courseId: createdOrder.courseId,
+        coupon: couponCode,
+    };
+
+    try {
+        const res = await getRouteAPI(data);
+        if (res.status === 200) {
+            setCouponAppliedData(res.data);
+            setCouponError(false);
+
+			var radio = document.querySelector('input[type=radio][name=paymentDetails]:checked');
+			if (radio) {
+				radio.checked = false;
 			}
-		} catch (error) {
-			console.error("Error checking coupon validity:", error);
-			setCouponAppliedData(null);
-			setCouponError(true);
-		}
-	};
+
+            // Regenerate the checkout ID if a payment type is already selected
+            if (paymentType) {
+                generateCheckoutId(paymentType);
+            }
+        }
+    } catch (error) {
+        console.error("Error checking coupon validity:", error);
+        setCouponAppliedData(null);
+        setCouponError(true);
+    }
+};
 
 	useEffect(() => {
 		if (window.ApplePaySession) {
