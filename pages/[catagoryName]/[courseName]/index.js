@@ -200,7 +200,7 @@ export default function Index(props) {
 	}
 
 	const handleBookSitButtonClick = () => {
-		if (isDateAvailable == true && (bookSeatButtonText == "تصفح المواعيد" || bookSeatButtonText == "Reserve your seat now")) {
+		if (isDateAvailable == true && (bookSeatButtonText == "تصفح المواعيد" || bookSeatButtonText == 'اشترك الآن' || bookSeatButtonText == "Reserve your seat now" || bookSeatButtonText == "Explore shcedules")) {
 			handleUserLogin()
 		}
 		else {
