@@ -119,14 +119,14 @@ const Appointments = ({
     values.courseId = courseId;
     values.published = isAppointmentPublished;
     let whatsappGroupLinkForBoys = values.whatsappGroupLinkBoys ? values.whatsappGroupLinkBoys : "";
-    let whatsappGroupLinkForGirls = values.whatsappGroupLinkGilrs ? values.whatsappGroupLinkBoys : "";
+    let whatsappGroupLinkForGirls = values.whatsappGroupLinkGirls ? values.whatsappGroupLinkGirls : "";
     values.whatsappGroupLink = values.whatsappGroupLink
       ? values.whatsappGroupLink
-      : `${whatsappGroupLinkForBoys}\n${whatsappGroupLinkForGirls}`;
+      : whatsappGroupLinkForBoys + "    " + whatsappGroupLinkForGirls;
 
     if (values.whatsappGroupLinkBoys) delete values.whatsappGroupLinkBoys;
-    if (values.whatsappGroupLinkGilrs) delete values.whatsappGroupLinkGilrs;
-    
+    if (values.whatsappGroupLinkGirls) delete values.whatsappGroupLinkGirls;
+
     if (isAvailabilityEdit) values.contentAccess = isContentAccess;
     values.numberOfSeats = isAvailabilityEdit
       ? calculateNumberOfSeats(values.maxNumberOfSeats)
