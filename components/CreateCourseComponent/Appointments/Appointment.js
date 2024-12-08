@@ -118,6 +118,15 @@ const Appointments = ({
     values.timeTo = dayjs(values?.timeTo?.$d).format("HH:mm:ss");
     values.courseId = courseId;
     values.published = isAppointmentPublished;
+    let whatsappGroupLinkForBoys = values.whatsappGroupLinkBoys ? values.whatsappGroupLinkBoys : "";
+    let whatsappGroupLinkForGirls = values.whatsappGroupLinkGilrs ? values.whatsappGroupLinkBoys : "";
+    values.whatsappGroupLink = values.whatsappGroupLink
+      ? values.whatsappGroupLink
+      : `${whatsappGroupLinkForBoys}\n${whatsappGroupLinkForGirls}`;
+
+    if (values.whatsappGroupLinkBoys) delete values.whatsappGroupLinkBoys;
+    if (values.whatsappGroupLinkGilrs) delete values.whatsappGroupLinkGilrs;
+    
     if (isAvailabilityEdit) values.contentAccess = isContentAccess;
     values.numberOfSeats = isAvailabilityEdit
       ? calculateNumberOfSeats(values.maxNumberOfSeats)
@@ -459,13 +468,13 @@ const Appointments = ({
                             {appointment.numberOfSeats == 0
                               ? "جميع المقاعد محجوزة"
                               : appointment.numberOfSeats == 1
-                              ? "مقعد واحد متبقي"
-                              : appointment.numberOfSeats == 2
-                              ? "مقعدين متبقيين"
-                              : appointment.numberOfSeats > 3 &&
-                                appointment.numberOfSeats < 10
-                              ? `${appointment.numberOfSeats} مقاعد متبقية`
-                              : `${appointment.numberOfSeats} مقعد متبقي`}
+                                ? "مقعد واحد متبقي"
+                                : appointment.numberOfSeats == 2
+                                  ? "مقعدين متبقيين"
+                                  : appointment.numberOfSeats > 3 &&
+                                    appointment.numberOfSeats < 10
+                                    ? `${appointment.numberOfSeats} مقاعد متبقية`
+                                    : `${appointment.numberOfSeats} مقعد متبقي`}
                           </p>
                         </div>
                       </div>
@@ -496,14 +505,14 @@ const Appointments = ({
                                 alt={"avatar image"}
                                 pictureKey={
                                   instructor.avatarKey == null ||
-                                  instructor.avatarBucket == null ||
-                                  instructor.avatarKey == "" ||
-                                  instructor.avatarBucket == ""
+                                    instructor.avatarBucket == null ||
+                                    instructor.avatarKey == "" ||
+                                    instructor.avatarBucket == ""
                                     ? "/images/anaOstori.png"
                                     : `${mediaUrl(
-                                        instructor.avatarBucket,
-                                        instructor.avatarKey
-                                      )}`
+                                      instructor.avatarBucket,
+                                      instructor.avatarKey
+                                    )}`
                                 }
                               />
                             </div>
@@ -803,7 +812,7 @@ const Appointments = ({
                     <p className={`${styles.createappointmentFormFileds}`}>
                       رابط الواتساب للشباب
                     </p>
-                    <FormItem name={"whatsappGroupLink"}>
+                    <FormItem name={"whatsappGroupLinkBoys"}>
                       <Input
                         fontSize={16}
                         width={352}
@@ -816,7 +825,7 @@ const Appointments = ({
                     <p className={`${styles.createappointmentFormFileds}`}>
                       رابط الواتساب للبنات
                     </p>
-                    <FormItem name={"whatsappGroupLink"}>
+                    <FormItem name={"whatsappGroupLinkGirls"}>
                       <Input
                         fontSize={16}
                         width={352}
