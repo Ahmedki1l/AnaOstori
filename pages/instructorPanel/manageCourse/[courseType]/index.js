@@ -93,7 +93,7 @@ export default function Index() {
                     backPathArray={
                         [
                             { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                            { lable: 'إدارة وإضافة الدورات', link: '/instructorPanel/manageCourse/' },
+                            { lable: 'إضافة وإدارة الدورات', link: '/instructorPanel/manageCourse/' },
                             { lable: 'الدورات الحضورية', link: null }
                         ]
                     }

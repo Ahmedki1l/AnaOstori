@@ -28,7 +28,7 @@ function Index() {
                                     backPathArray={
                                         [
                                             { lable: 'صفحة الأدمن الرئيسية', link: '/instructorPanel' },
-                                            { lable: 'إضافة وتعديل الدورات', link: null },
+                                            { lable: 'إضافة وإدارة الدورات', link: null },
                                         ]
                                     }
                                 />
