@@ -803,7 +803,7 @@ const Appointments = ({
                     <p className={`${styles.createappointmentFormFileds}`}>
                       رابط الواتساب للشباب
                     </p>
-                    <FormItem name={"whatsappGroupLinkBoys"}>
+                    <FormItem name={"whatsappGroupLink"}>
                       <Input
                         fontSize={16}
                         width={352}
@@ -816,7 +816,7 @@ const Appointments = ({
                     <p className={`${styles.createappointmentFormFileds}`}>
                       رابط الواتساب للبنات
                     </p>
-                    <FormItem name={"whatsappGroupLinkGirls"}>
+                    <FormItem name={"whatsappGroupLink"}>
                       <Input
                         fontSize={16}
                         width={352}
