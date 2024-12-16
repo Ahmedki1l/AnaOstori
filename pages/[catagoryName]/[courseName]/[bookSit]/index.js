@@ -9,6 +9,7 @@ import Spinner from '../../../../components/CommonComponents/spinner';
 import * as fbq from '../../../../lib/fpixel'
 import { inputErrorMessages } from '../../../../constants/ar';
 import WhatsAppLinkComponent from '../../../../components/CommonComponents/WhatsAppLink';
+import { getAuthRouteAPI } from '../../../../services/apisService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
@@ -79,6 +80,7 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 
 export default function Index(props) {
 
+	console.log(props);
 	const courseDetails = props?.courseDetails
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
@@ -101,7 +103,7 @@ export default function Index(props) {
 
 	// Check if there's data in localStorage on load and populate the state
 	useEffect(() => {
-		
+
 		console.log("flag: ", JSON.parse(localStorage.getItem('isFromUserForm')));
 
 		if (JSON.parse(localStorage.getItem('isBackToUserForm'))) {
@@ -113,6 +115,7 @@ export default function Index(props) {
 				const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
 				const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
 				const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
+
 
 				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
 
@@ -340,6 +343,18 @@ export default function Index(props) {
 					localStorage.setItem('isFromUserForm', true);
 					await getNewToken().then(async (token) => {
 						await postAuthRouteAPI(orderData).then(res => {
+							let registeredDate;
+
+							if (studentsData[0].gender === "male") {
+								registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
+							}
+							else {
+								registeredDate = femaleDates.find((date) => date.id === studentsData[0].availabilityId);
+							}
+
+							console.log(registeredDate);
+
+							localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
 							setCreatedOrder(res.data)
 							setChangePage(true)
 							setLoading(false)
@@ -369,7 +384,12 @@ export default function Index(props) {
 				:
 				<>
 					{changePage ? (
-						<PaymentInfoForm backToUserForm={backToUserForm} createdOrder={createdOrder} studentsData={studentsData} checkoutId={checkoutId} />
+						<PaymentInfoForm
+							backToUserForm={backToUserForm}
+							createdOrder={createdOrder}
+							studentsData={studentsData}
+							checkoutId={checkoutId}
+						/>
 					) : (
 						<UserInfoForm
 							isInfoFill={changePageFunction}

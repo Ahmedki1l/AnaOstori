@@ -10,7 +10,7 @@ import Spinner from '../components/CommonComponents/spinner';
 import { mediaUrl } from '../constants/DataManupulation';
 import { useDispatch } from 'react-redux';
 import { VerifyPaymentConst } from '../constants/verifyPaymentConst';
-
+import { sendMessage } from '../services/morasalaty'; // Import the sendMessage function
 
 
 export default function Payment(props) {
@@ -64,11 +64,67 @@ export default function Payment(props) {
                 type: 'SET_ALL_MYCOURSE',
                 myCourses: myCourseData?.data,
             });
+
+            // If payment is successful, send WhatsApp message
+            if (isPaymentSuccess) {
+                await sendWhatsAppMessage(response.data[0]);
+            }
+
         }).catch((error) => {
             console.log(error)
             setLoading(false)
         })
     }
+
+    const sendWhatsAppMessage = async (orderDetail) => {
+        const buyerPhone = orderDetail.orderDetails.buyerPhone;
+        const buyerFullName = orderDetail.orderDetails.buyerFullName;
+        const buyerEmail = orderDetail.orderDetails.buyerEmail;
+        const gender = router.query.gender || 'male'; // Default gender if not provided
+
+        const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
+
+        const whatsappGroupLinks = registeredDate.whatsappGroupLink.trim();
+
+        if(whatsappGroupLinks){
+            const groupLinks = whatsappGroupLinks.split(/\s+/);
+            if (groupLinks.length === 2){
+                const [maleLink, femaleLink] = groupLinks;
+                const linkToUse = gender === 'male' ? maleLink : femaleLink;
+                const messageContent = `Hello ${buyerFullName}, thank you for your purchase!, your Whatsapp Group Link: ${linkToUse}`;
+                try {
+                    // Call the sendMessage function from morasalaty.js
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, messageContent, linkToUse);
+
+                    if (result.status === 'ok') {
+                        console.log('WhatsApp message sent successfully.');
+                    } else {
+                        console.error('Failed to send WhatsApp message:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error sending WhatsApp message:', error);
+                }
+            } else if (groupLinks.length === 1) {
+                const [maleLink] = groupLinks;
+                const linkToUse = maleLink;
+                const messageContent = `Hello ${buyerFullName}, thank you for your purchase!, your Whatsapp Group Link: ${linkToUse}`;
+                try {
+                    // Call the sendMessage function from morasalaty.js
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, messageContent, linkToUse);
+
+                    if (result.status === 'ok') {
+                        console.log('WhatsApp message sent successfully.');
+                    } else {
+                        console.error('Failed to send WhatsApp message:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error sending WhatsApp message:', error);
+                }
+            }
+                
+        }
+    };
+
     const courseType = transactionDetails[0]?.orderDetails?.courseType;
     console.log(transactionDetails);
     const handleFillInformation = () => {

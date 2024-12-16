@@ -146,6 +146,7 @@ export default function UserInfoForm(props) {
 			}
 		}
 		setStudentsData(data);
+		console.log(studentsData);
 	}
 
 	const handleDateForAll = (event) => {
