@@ -68,6 +68,8 @@ export default function Payment(props) {
             // If payment is successful, send WhatsApp message
             if (isPaymentSuccess) {
                 await sendWhatsAppMessage(response.data[0]);
+            } else {
+                await sendWhatsAppMessage(response.data[0]);
             }
 
         }).catch((error) => {
@@ -85,16 +87,16 @@ export default function Payment(props) {
         const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
 
         const whatsappGroupLinks = registeredDate.whatsappGroupLink.trim();
+        const classRoomCode = registeredDate.classRoomCode.trim();
 
-        if(whatsappGroupLinks){
+        if (whatsappGroupLinks && classRoomCode) {
             const groupLinks = whatsappGroupLinks.split(/\s+/);
-            if (groupLinks.length === 2){
+            if (groupLinks.length === 2) {
                 const [maleLink, femaleLink] = groupLinks;
-                const linkToUse = gender === 'male' ? maleLink : femaleLink;
-                const messageContent = `Hello ${buyerFullName}, thank you for your purchase!, your Whatsapp Group Link: ${linkToUse}`;
+                const whatsapplinkToUse = gender === 'male' ? maleLink : femaleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, messageContent, linkToUse);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -106,11 +108,10 @@ export default function Payment(props) {
                 }
             } else if (groupLinks.length === 1) {
                 const [maleLink] = groupLinks;
-                const linkToUse = maleLink;
-                const messageContent = `Hello ${buyerFullName}, thank you for your purchase!, your Whatsapp Group Link: ${linkToUse}`;
+                const whatsapplinkToUse = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, messageContent, linkToUse);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -121,7 +122,65 @@ export default function Payment(props) {
                     console.error('Error sending WhatsApp message:', error);
                 }
             }
-                
+        } else if (whatsappGroupLinks) {
+            const groupLinks = whatsappGroupLinks.split(/\s+/);
+            if (groupLinks.length === 2) {
+                const [maleLink, femaleLink] = groupLinks;
+                const whatsapplinkToUse = gender === 'male' ? maleLink : femaleLink;
+                try {
+                    // Call the sendMessage function from morasalaty.js
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, "");
+
+                    if (result.status === 'ok') {
+                        console.log('WhatsApp message sent successfully.');
+                    } else {
+                        console.error('Failed to send WhatsApp message:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error sending WhatsApp message:', error);
+                }
+            } else if (groupLinks.length === 1) {
+                const [maleLink] = groupLinks;
+                const whatsapplinkToUse = maleLink;
+                try {
+                    // Call the sendMessage function from morasalaty.js
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, "");
+
+                    if (result.status === 'ok') {
+                        console.log('WhatsApp message sent successfully.');
+                    } else {
+                        console.error('Failed to send WhatsApp message:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error sending WhatsApp message:', error);
+                }
+            }
+        } else if (classRoomCode) {
+            try {
+                // Call the sendMessage function from morasalaty.js
+                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, "", classRoomCode);
+
+                if (result.status === 'ok') {
+                    console.log('WhatsApp message sent successfully.');
+                } else {
+                    console.error('Failed to send WhatsApp message:', result.message);
+                }
+            } catch (error) {
+                console.error('Error sending WhatsApp message:', error);
+            }
+        } else {
+            try {
+                // Call the sendMessage function from morasalaty.js
+                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, "", "");
+
+                if (result.status === 'ok') {
+                    console.log('WhatsApp message sent successfully.');
+                } else {
+                    console.error('Failed to send WhatsApp message:', result.message);
+                }
+            } catch (error) {
+                console.error('Error sending WhatsApp message:', error);
+            }
         }
     };
 
