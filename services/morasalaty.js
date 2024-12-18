@@ -11,7 +11,7 @@ export const sendMessage = async (
     classRoomCode
 ) => {
     const apiToken = process.env.NEXT_PUBLIC_MORASALATY_API_TOKEN;
-    const baseURL = 'whatsapp.morasalaty.net';
+    const baseURL = 'https://whatsapp.morasalaty.net';
 
     try {
         const sendMessageResponse = await axios.post(`${baseURL}/rest/sendtemplate`, {
