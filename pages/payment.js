@@ -93,11 +93,12 @@ export default function Payment(props) {
 
         const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
 
-        const whatsappGroupLinks = registeredDate.whatsappGroupLink.trim();
-        const classRoomCode = registeredDate.classRoomCode.trim();
+        const whatsAppGroupLinks = registeredDate.whatsappGroupLink?.trim() || '';
+        const classRoomCode = registeredDate.classRoomCode?.trim() || '';
 
-        if (whatsappGroupLinks && classRoomCode) {
-            const groupLinks = whatsappGroupLinks.split(/\s+/);
+
+        if (whatsAppGroupLinks && classRoomCode) {
+            const groupLinks = whatsAppGroupLinks.split(/\s+/);
             if (groupLinks.length === 2) {
                 const [maleLink, femaleLink] = groupLinks;
                 const whatsapplinkToUse = gender === 'male' ? maleLink : femaleLink;
@@ -129,8 +130,8 @@ export default function Payment(props) {
                     console.error('Error sending WhatsApp message:', error);
                 }
             }
-        } else if (whatsappGroupLinks) {
-            const groupLinks = whatsappGroupLinks.split(/\s+/);
+        } else if (whatsAppGroupLinks) {
+            const groupLinks = whatsAppGroupLinks.split(/\s+/);
             if (groupLinks.length === 2) {
                 const [maleLink, femaleLink] = groupLinks;
                 const whatsapplinkToUse = gender === 'male' ? maleLink : femaleLink;
