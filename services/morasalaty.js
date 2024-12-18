@@ -12,7 +12,7 @@ export const sendMessage = async (
 ) => {
     try {
         // Call the proxy endpoint on your Flask server
-        const response = await axios.post('http://your-flask-server-domain/api/sendWhatsAppMessage', {
+        const response = await axios.post('https://sinsintro-api.vercel.app/api/sendWhatsAppMessage', {
             buyerPhone,
             buyerFullName,
             buyerEmail,
