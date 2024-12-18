@@ -355,6 +355,7 @@ export default function Index(props) {
 							console.log(registeredDate);
 
 							localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
+							console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 							setCreatedOrder(res.data)
 							setChangePage(true)
 							setLoading(false)
