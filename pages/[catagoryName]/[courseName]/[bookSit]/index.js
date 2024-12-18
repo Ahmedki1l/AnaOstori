@@ -346,10 +346,18 @@ export default function Index(props) {
 							let registeredDate;
 
 							if (studentsData[0].gender === "male") {
-								registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
+								if(maleDates.length){
+									registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
+								} else {
+									registeredDate = mixDates.find((date) => date.id === studentsData[0].availabilityId);
+								}
 							}
 							else {
-								registeredDate = femaleDates.find((date) => date.id === studentsData[0].availabilityId);
+								if(femaleDates.length){
+									registeredDate = femaleDates.find((date) => date.id === studentsData[0].availabilityId);
+								} else {
+									registeredDate = mixDates.find((date) => date.id === studentsData[0].availabilityId);
+								}
 							}
 
 							console.log(registeredDate);
