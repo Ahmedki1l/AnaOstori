@@ -79,7 +79,7 @@ export default function Payment(props) {
             } else if (error.response) {
                 console.error(error.response);
             } else {
-                console.error("no data provided");
+                console.error(error[0]);
             }
             setLoading(false)
         })
