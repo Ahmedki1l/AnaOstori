@@ -16,16 +16,19 @@ export const sendMessage = async (
     try {
         const sendMessageResponse = await axios.post(`${baseURL}/rest/sendtemplate`, {
             Token: apiToken,
-            Mobile:buyerPhone,
-            TemplateId:"9636451f-1adf-488c-9555-a06b21978153",
-            HeaderUrl:"https://rep.morasalaty.net/samples/myphoto.jpg",
+            Mobile: buyerPhone,
+            TemplateId: "9636451f-1adf-488c-9555-a06b21978153",
+            HeaderUrl: "https://rep.morasalaty.net/samples/myphoto.jpg",
             Params: [buyerFullName, linkToUse, classRoomCode]
         }, {
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiToken}`,
+                'Host': 'whatsapp.morasalaty.net',
+                'Accept': 'application / json',
+                'Content-Type': 'application/json'
             },
         });
+
+        console.log(sendMessageResponse);
 
         if (!sendMessageResponse.data.Sent) {
             return res.status(500).json({ status: 'error', message: sendMessageResponse.data.Message });
