@@ -101,10 +101,10 @@ export default function Payment(props) {
             const groupLinks = whatsAppGroupLinks.split(/\s+/);
             if (groupLinks.length === 2) {
                 const [maleLink, femaleLink] = groupLinks;
-                const whatsapplinkToUse = gender === 'male' ? maleLink : femaleLink;
+                const whatsapplink = gender === 'male' ? maleLink : femaleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, classRoomCode);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -116,10 +116,10 @@ export default function Payment(props) {
                 }
             } else if (groupLinks.length === 1) {
                 const [maleLink] = groupLinks;
-                const whatsapplinkToUse = maleLink;
+                const whatsapplink = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, classRoomCode);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -134,10 +134,10 @@ export default function Payment(props) {
             const groupLinks = whatsAppGroupLinks.split(/\s+/);
             if (groupLinks.length === 2) {
                 const [maleLink, femaleLink] = groupLinks;
-                const whatsapplinkToUse = gender === 'male' ? maleLink : femaleLink;
+                const whatsapplink = gender === 'male' ? maleLink : femaleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, "");
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, "");
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -149,10 +149,10 @@ export default function Payment(props) {
                 }
             } else if (groupLinks.length === 1) {
                 const [maleLink] = groupLinks;
-                const whatsapplinkToUse = maleLink;
+                const whatsapplink = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplinkToUse, "");
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, "");
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');

@@ -7,36 +7,31 @@ export const sendMessage = async (
     buyerFullName,
     buyerEmail,
     gender,
-    linkToUse,
+    whatsapplink,
     classRoomCode
 ) => {
-    const apiToken = process.env.NEXT_PUBLIC_MORASALATY_API_TOKEN;
-    const baseURL = 'https://whatsapp.morasalaty.net';
-
     try {
-        const sendMessageResponse = await axios.post(`${baseURL}/rest/sendtemplate`, {
-            Token: apiToken,
-            Mobile: buyerPhone,
-            TemplateId: "9636451f-1adf-488c-9555-a06b21978153",
-            HeaderUrl: "https://rep.morasalaty.net/samples/myphoto.jpg",
-            Params: [buyerFullName, linkToUse, classRoomCode]
+        // Call the proxy endpoint on your Flask server
+        const response = await axios.post('http://your-flask-server-domain/api/sendWhatsAppMessage', {
+            buyerPhone,
+            buyerFullName,
+            buyerEmail,
+            gender,
+            whatsapplink,
+            classRoomCode
         }, {
             headers: {
-                'Host': 'whatsapp.morasalaty.net',
-                'Accept': 'application / json',
                 'Content-Type': 'application/json'
             },
         });
 
-        console.log(sendMessageResponse);
-
-        if (!sendMessageResponse.data.Sent) {
-            return res.status(500).json({ status: 'error', message: sendMessageResponse.data.Message });
+        if (response.data.status !== 'ok') {
+            return { status: 'error', message: response.data.message || 'Unknown error' };
         }
 
-        return res.status(200).json({ status: 'ok', message: 'Message sent successfully' });
+        return { status: 'ok', message: 'Message sent successfully' };
     } catch (error) {
-        console.error('Error interacting with Morasalaty API:', error.response ? error.response.data : error.message);
-        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        console.error('Error interacting with the Flask API:', error.response ? error.response.data : error.message);
+        return { status: 'error', message: 'Internal Server Error' };
     }
-}
+};
