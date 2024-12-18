@@ -73,14 +73,8 @@ export default function Payment(props) {
             }
 
         }).catch(async (error) => {
-            console.log(error)
-            if (error.response && error.response.data) {
-                await sendWhatsAppMessage(error.response.data[0]);
-            } else if (error.response) {
-                console.error(error.response);
-            } else {
-                console.error(error[0]);
-            }
+            console.log(transactionDetails)
+            await sendWhatsAppMessage(transactionDetails[0]);
             setLoading(false)
         })
     }
