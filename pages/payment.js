@@ -72,9 +72,15 @@ export default function Payment(props) {
                 await sendWhatsAppMessage(response.data[0]);
             }
 
-        }).catch( async (error) => {
+        }).catch(async (error) => {
             console.log(error)
-            await sendWhatsAppMessage(error.data[0]);
+            if (error.response && error.response.data) {
+                // If it's an array, and you want the first element:
+                await sendWhatsAppMessage(error.response.data[0]);
+            } else {
+                // Handle the case where data isn't what you expected
+                console.error('No data found in error response');
+            }
             setLoading(false)
         })
     }
