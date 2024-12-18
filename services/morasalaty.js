@@ -10,8 +10,6 @@ export const sendMessage = async (
     linkToUse,
     classRoomCode
 ) => {
-    const { buyerPhone, buyerFullName, buyerEmail, gender, linkToUse, classRoomCode } = req.body;
-
     const apiToken = process.env.NEXT_PUBLIC_MORASALATY_API_TOKEN;
     const baseURL = 'whatsapp.morasalaty.net';
 
