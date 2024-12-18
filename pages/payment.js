@@ -52,9 +52,14 @@ export default function Payment(props) {
             orderId: router.query.orderId,
             transactionId: router.query.id,
         }
+
+        let paymentData;
+
         await getPaymentInfoAPI(data).then(async (response) => {
             ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
             setTransactionDetails(response.data)
+            console.log(response.data[0])
+            paymentData = response.data[0];
             setIsPaymentSuccess(response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false)
             setLoading(false)
             setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
@@ -67,19 +72,20 @@ export default function Payment(props) {
 
             // If payment is successful, send WhatsApp message
             if (isPaymentSuccess) {
-                await sendWhatsAppMessage(response.data[0]);
+                await sendWhatsAppMessage(paymentData);
             } else {
-                await sendWhatsAppMessage(response.data[0]);
+                await sendWhatsAppMessage(paymentData);
             }
 
         }).catch(async (error) => {
-            console.log(transactionDetails)
-            await sendWhatsAppMessage(transactionDetails[0]);
+            console.log(paymentData)
+            await sendWhatsAppMessage(paymentData);
             setLoading(false)
         })
     }
 
     const sendWhatsAppMessage = async (orderDetail) => {
+        console.log(orderDetail);
         const buyerPhone = orderDetail.orderDetails.buyerPhone;
         const buyerFullName = orderDetail.orderDetails.buyerFullName;
         const buyerEmail = orderDetail.orderDetails.buyerEmail;
