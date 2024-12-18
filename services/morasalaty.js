@@ -2,7 +2,14 @@
 
 import axios from 'axios';
 
-export const sendMessage = async function handler(req, res) {
+export const sendMessage = async (
+    buyerPhone,
+    buyerFullName,
+    buyerEmail,
+    gender,
+    linkToUse,
+    classRoomCode
+) => {
     const { buyerPhone, buyerFullName, buyerEmail, gender, linkToUse, classRoomCode } = req.body;
 
     const apiToken = process.env.NEXT_PUBLIC_MORASALATY_API_TOKEN;
