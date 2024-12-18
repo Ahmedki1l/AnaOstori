@@ -328,6 +328,27 @@ export default function Index(props) {
 			localStorage.setItem('userAgree', JSON.stringify(userAgree));
 
 			await postAuthRouteAPI(orderData).then(res => {
+				let registeredDate;
+
+				if (studentsData[0].gender === "male") {
+					if (maleDates.length) {
+						registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
+					} else {
+						registeredDate = mixDates.find((date) => date.id === studentsData[0].availabilityId);
+					}
+				}
+				else {
+					if (femaleDates.length) {
+						registeredDate = femaleDates.find((date) => date.id === studentsData[0].availabilityId);
+					} else {
+						registeredDate = mixDates.find((date) => date.id === studentsData[0].availabilityId);
+					}
+				}
+
+				console.log(registeredDate);
+
+				localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
+				console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 				setCreatedOrder(res.data)
 				setChangePage(true)
 				setLoading(false)
@@ -346,14 +367,14 @@ export default function Index(props) {
 							let registeredDate;
 
 							if (studentsData[0].gender === "male") {
-								if(maleDates.length){
+								if (maleDates.length) {
 									registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
 								} else {
 									registeredDate = mixDates.find((date) => date.id === studentsData[0].availabilityId);
 								}
 							}
 							else {
-								if(femaleDates.length){
+								if (femaleDates.length) {
 									registeredDate = femaleDates.find((date) => date.id === studentsData[0].availabilityId);
 								} else {
 									registeredDate = mixDates.find((date) => date.id === studentsData[0].availabilityId);
