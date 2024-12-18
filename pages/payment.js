@@ -76,8 +76,10 @@ export default function Payment(props) {
             console.log(error)
             if (error.response && error.response.data) {
                 await sendWhatsAppMessage(error.response.data[0]);
+            } else if (error.response) {
+                console.error(error.response);
             } else {
-                console.error('No data found in error response');
+                console.error("no data provided");
             }
             setLoading(false)
         })
