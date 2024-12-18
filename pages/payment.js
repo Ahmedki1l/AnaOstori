@@ -73,13 +73,9 @@ export default function Payment(props) {
             // If payment is successful, send WhatsApp message
             if (isPaymentSuccess) {
                 await sendWhatsAppMessage(paymentData);
-            } else {
-                await sendWhatsAppMessage(paymentData);
             }
 
         }).catch(async (error) => {
-            console.log(paymentData)
-            await sendWhatsAppMessage(paymentData);
             setLoading(false)
         })
     }
