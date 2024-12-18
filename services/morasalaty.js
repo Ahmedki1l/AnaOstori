@@ -3,10 +3,6 @@
 import axios from 'axios';
 
 export const sendMessage = async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ status: 'error', message: 'Method not allowed' });
-    }
-
     const { buyerPhone, buyerFullName, buyerEmail, gender, linkToUse, classRoomCode } = req.body;
 
     const apiToken = process.env.NEXT_PUBLIC_MORASALATY_API_TOKEN;
