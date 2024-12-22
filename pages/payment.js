@@ -60,7 +60,8 @@ export default function Payment(props) {
             setTransactionDetails(response.data)
             console.log(response.data[0])
             paymentData = response.data[0];
-            setIsPaymentSuccess(response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false)
+            const flag = response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false;
+            setIsPaymentSuccess(flag);
             setLoading(false)
             setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
             const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
@@ -71,8 +72,10 @@ export default function Payment(props) {
             });
 
             // If payment is successful, send WhatsApp message
-            if (isPaymentSuccess) {
+            if (flag) {
                 await sendWhatsAppMessage(paymentData);
+            } else {
+                console.log('Payment failed. WhatsApp message not sent.');
             }
 
         }).catch(async (error) => {
