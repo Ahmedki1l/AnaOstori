@@ -4,6 +4,7 @@ import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getAuthRouteAPI, getPaymentInfoAPI } from '../services/apisService';
+import { dateWithDay, timeDuration } from '../../../../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
@@ -91,10 +92,14 @@ export default function Payment(props) {
         const gender = router.query.gender || 'male'; // Default gender if not provided
 
         const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
+        const courseTitle = registeredDate.course.name?.trim() || '';
+        const locationText = registeredDate.course.locationName?.trim() || registeredDate.course.link?.trim() || '';
+        const locationURL = registeredDate.course.location?.trim() || '';
+        const date = `من ${dateWithDay(registeredDate.dateFrom)} إلى ${dateWithDay(registeredDate.dateTo)}`;
+        const duration = timeDuration(registeredDate.timeFrom, registeredDate.timeTo);
 
         const whatsAppGroupLinks = registeredDate.whatsappGroupLink?.trim() || '';
         const classRoomCode = registeredDate.classRoomCode?.trim() || '';
-
 
         if (whatsAppGroupLinks && classRoomCode) {
             const groupLinks = whatsAppGroupLinks.split(/\s+/);
@@ -103,7 +108,7 @@ export default function Payment(props) {
                 const whatsapplink = gender === 'male' ? maleLink : femaleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, classRoomCode);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration, gender, whatsapplink, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -118,7 +123,7 @@ export default function Payment(props) {
                 const whatsapplink = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, classRoomCode);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, whatsapplink, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -136,7 +141,7 @@ export default function Payment(props) {
                 const whatsapplink = gender === 'male' ? maleLink : femaleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, "");
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, whatsapplink, "");
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -151,7 +156,7 @@ export default function Payment(props) {
                 const whatsapplink = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, whatsapplink, "");
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, whatsapplink, "");
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -165,7 +170,7 @@ export default function Payment(props) {
         } else if (classRoomCode) {
             try {
                 // Call the sendMessage function from morasalaty.js
-                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, "", classRoomCode);
+                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, "", classRoomCode);
 
                 if (result.status === 'ok') {
                     console.log('WhatsApp message sent successfully.');
@@ -178,7 +183,7 @@ export default function Payment(props) {
         } else {
             try {
                 // Call the sendMessage function from morasalaty.js
-                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, gender, "", "");
+                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, "", "");
 
                 if (result.status === 'ok') {
                     console.log('WhatsApp message sent successfully.');

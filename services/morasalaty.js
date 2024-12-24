@@ -6,9 +6,14 @@ export const sendMessage = async (
     buyerPhone,
     buyerFullName,
     buyerEmail,
+    courseTitle,
+    locationText,
+    locationURL,
+    date,
+    duration,
     gender,
     whatsapplink,
-    classRoomCode
+    classRoomCode = ""
 ) => {
     try {
         // Call the proxy endpoint on your Flask server
@@ -16,6 +21,11 @@ export const sendMessage = async (
             buyerPhone,
             buyerFullName,
             buyerEmail,
+            courseTitle,
+            locationText,
+            locationURL,
+            date,
+            duration,
             gender,
             whatsapplink,
             classRoomCode
