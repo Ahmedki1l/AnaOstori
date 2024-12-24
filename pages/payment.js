@@ -4,7 +4,7 @@ import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getAuthRouteAPI, getPaymentInfoAPI } from '../services/apisService';
-import { dateWithDay, timeDuration } from '../../../../constants/DateConverter';
+import { dateWithDay, timeDuration } from '../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
