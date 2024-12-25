@@ -4,7 +4,7 @@ import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getAuthRouteAPI, getPaymentInfoAPI } from '../services/apisService';
-import { dateWithDay, timeDuration } from '../constants/DateConverter';
+import { dateWithDay, timeDuration2 } from '../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import Spinner from '../components/CommonComponents/spinner';
@@ -96,7 +96,7 @@ export default function Payment(props) {
         const locationText = registeredDate.course.locationName?.trim() || registeredDate.course.link?.trim() || '';
         const locationURL = registeredDate.course.location?.trim() || '';
         const date = `من ${dateWithDay(registeredDate.dateFrom)} إلى ${dateWithDay(registeredDate.dateTo)}`;
-        const duration = timeDuration(registeredDate.timeFrom, registeredDate.timeTo);
+        const duration = timeDuration2(registeredDate.timeFrom, registeredDate.timeTo);
 
         const whatsAppGroupLinks = registeredDate.whatsappGroupLink?.trim() || '';
         const classRoomCode = registeredDate.classRoomCode?.trim() || '';
