@@ -30,6 +30,24 @@ export const timeDuration = (timeFrom, timeTo) => {
     )
 }
 
+export const timeDuration2 = (timeFrom, timeTo) => {
+    const timeFromFormatted = new Date('1970-01-01T' + timeFrom + 'Z').toLocaleTimeString('ar-AE', {
+        timeZone: 'UTC',
+        hour12: true,
+        hour: 'numeric',
+        minute: 'numeric',
+    });
+
+    const timeToFormatted = new Date('1970-01-01T' + timeTo + 'Z').toLocaleTimeString('ar-AE', {
+        timeZone: 'UTC',
+        hour12: true,
+        hour: 'numeric',
+        minute: 'numeric',
+    });
+
+    return `${timeFromFormatted} إلى ${timeToFormatted}`;
+}
+
 export const enDateWithDay = (date) => {
     return new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric', weekday: 'long' })
 }
