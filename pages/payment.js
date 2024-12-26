@@ -91,8 +91,8 @@ export default function Payment(props) {
 
         const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
         const courseTitle = registeredDate.course.name?.trim() || '';
-        const locationText = registeredDate.course.locationName?.trim() || registeredDate.course.link?.trim() || '';
-        const locationURL = registeredDate.course.location?.trim() || '';
+        const locationText = registeredDate.locationName?.trim() || registeredDate.course.link?.trim() || '';
+        const locationURL = registeredDate.location?.trim() || '';
         const date = `من ${dateWithDay(registeredDate.dateFrom)} إلى ${dateWithDay(registeredDate.dateTo)}`;
         const duration = timeDuration2(registeredDate.timeFrom, registeredDate.timeTo);
 
