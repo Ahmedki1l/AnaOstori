@@ -165,18 +165,18 @@ export default function Index(props) {
 							// Check if the course is in myCourses
 							const enrolledCourse = myCourses?.find(myCourse => myCourse?.course?.id === course?.id);
 
-							if (enrolledCourse) {
-								// If the course is enrolled
-								return (
-									<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
-										<CoursesCardMixedButton
-											data={enrolledCourse}
-											catagoryName={catagoryName}
-										/>
-									</div>
-								);
-							} else {
-								// If the course is not enrolled
+							// if (enrolledCourse) {
+							// 	// If the course is enrolled
+							// 	return (
+							// 		<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
+							// 			<CoursesCardMixedButton
+							// 				data={enrolledCourse}
+							// 				catagoryName={catagoryName}
+							// 			/>
+							// 		</div>
+							// 	);
+							// } else {
+							// 	// If the course is not enrolled
 								return (
 									<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
 										<PhysicalCourseCard
@@ -186,7 +186,7 @@ export default function Index(props) {
 										/>
 									</div>
 								);
-							}
+							// }
 						})}
 					</div>
 				</div>

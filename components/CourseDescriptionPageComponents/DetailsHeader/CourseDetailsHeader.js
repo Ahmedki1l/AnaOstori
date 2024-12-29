@@ -11,6 +11,7 @@ import { mediaUrl } from '../../../constants/DataManupulation';
 export default function CourseDetailsHeader(props) {
 
 	const courseDetail = props.courseDetail
+	const locationURL = courseDetail?.link;
 	const handleBookSitButtonClick = props.handleBookSitButtonClick
 	const isMediumScreen = useWindowSize().mediumScreen
 	const screenWidth = useWindowSize().width
@@ -59,7 +60,9 @@ export default function CourseDetailsHeader(props) {
 								</div>
 								<div className='px-1'>
 									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
-									<p className='fontBold'>{courseDetail.type == "physical" ? courseDetail.locationName : lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
+									<a href={`${locationURL}`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue'}}>
+										<p className=''>{courseDetail.type == "physical" ? courseDetail.locationName : lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
+									</a>
 								</div>
 							</div>
 							: courseDetail.type == 'online' ?

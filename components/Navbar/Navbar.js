@@ -427,13 +427,13 @@ export default function Navbar() {
 							{!isRegisterSocialMediaUser &&
 								<>
 									<div className={`pl-6 my-auto`}>
-										<Link href={'/'} className='normalLinkText'><p className={styles.homeText}>الرئيسية</p></Link>
+										<Link href={'/'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>الرئيسية</p></Link>
 									</div>
 									<ul className={styles.navbarSubWrapper}>
 										{catagories?.map((menu, i = index) => {
 											return (
 												<li className={`${styles.navItem} ${styles.menuItem}`} key={`navMenu${i}`}>
-													<p onClick={() => router.push(`/${menu.name.replace(/ /g, "-")}`)} className={`${styles.mainMenuText} ${catagoryName == menu.name ? `fontBold` : `fontRegular`}`}>
+													<p onClick={() => router.push(`/${menu.name.replace(/ /g, "-")}`)} className={`${styles.mainMenuText} ${`fontBold`}`}>
 														{/* {menu.name} */}
 														{stringUpdation(menu.name, 30)}
 													</p>

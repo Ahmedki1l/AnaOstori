@@ -46,10 +46,13 @@ export default function BuyCourseComponent(props) {
 					discountShow={props.discountShow}
 					lang={lang} />
 				<div className='flex justify-center py-3.5'>
-					{isUserUseApple ?
+					{/* {isUserUseApple ?
 						<Logo height={isMediumScreen ? 30 : 40} width={isMediumScreen ? 290 : 322} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
 						:
 						<Logo height={isMediumScreen ? 38 : 42} width={isMediumScreen ? 272 : 257} logoName={'paymentMethodLogo'} alt={'Payment Methode Logo'} />
+					} */}
+					{
+						<Logo height={isMediumScreen ? 30 : 40} width={isMediumScreen ? 290 : 322} logoName={'paymentMethodLogoIOS'} alt={'Payment Methode Logo'} />
 					}
 				</div>
 				<p className={`fontBold ${styles.featureHead}`}>{lang == 'en' ? `Subscription Info` : `تفاصيل الاشتراك`}  </p>
