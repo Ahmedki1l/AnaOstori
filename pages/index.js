@@ -77,6 +77,25 @@ export default function Home(props) {
 	const videoObject = props.homeMetaData.find(obj => obj.key === "video");
 	const whatsAppLink = LinkConst.WhatsApp_Link
 
+	const sortedReviewsByCategory = homeReviews.reduce((acc, review) => {
+		const categoryName = review.course.catagory.name;
+
+		// Ensure the category key exists in the accumulator
+		if (!acc[categoryName]) {
+			acc[categoryName] = [];
+		}
+
+		// Add the review data to the correct category array
+		acc[categoryName].push(review);
+
+		return acc;
+	}, {});
+
+	// Sort each array by the newest date (assuming the review contains a `createdAt` field)
+	Object.keys(sortedReviewsByCategory).forEach(category => {
+		sortedReviewsByCategory[category].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+	});
+
 	const handleScrollToSection = (sectionName) => {
 
 		if (sectionName == 'refCourseSec') {

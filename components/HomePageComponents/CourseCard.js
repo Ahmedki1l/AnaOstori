@@ -12,7 +12,7 @@ export default function CourseCard(props) {
 		<>
 			<CoverImg height={imgHeight} url={props.pictureUrl} />
 			<div className={styles.courseDetailsBox}>
-				<h1 className={` text-center ${styles.courseTypeText}`}>{courseType}</h1>
+				<h1 className={` text-center fontBold ${styles.courseTypeText}`}>{courseType}</h1>
 			</div>
 		</>
 	)
