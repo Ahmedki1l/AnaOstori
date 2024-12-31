@@ -59,7 +59,7 @@ const Index = () => {
         }
     }
 
-    
+
 
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
@@ -152,7 +152,7 @@ const Index = () => {
         }
     }
 
-    useEffect(async () => {
+    useEffect(() => {
         if (courseID) {
             const getPageProps = async () => {
                 let couresCurriculumParams = {
@@ -188,6 +188,7 @@ const Index = () => {
                     markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
                     setNewSelectedCourseItem(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0])
                     getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+
                 } catch (error) {
                     if (error?.response?.status == 401) {
                         await getNewToken().then(async (token) => {
@@ -197,11 +198,8 @@ const Index = () => {
                 }
             }
             setExpandedSection(0)
-            await getPageProps()
+            getPageProps()
 
-            if (queryItemID) {
-                chagenCourseItemHendler(queryItemID); // If itemId exists, use it
-            }
         }
     }, [courseID])
 
@@ -209,6 +207,7 @@ const Index = () => {
         if (queryItemID) {
             // If queryItemID exists, use it
             setCurrentItemId(queryItemID);
+            chagenCourseItemHendler(queryItemID);
             return;
         }
 
