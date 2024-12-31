@@ -18,6 +18,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService'
 import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsAppLink'
 import { mediaUrl, secondsToMinutes } from '../../../constants/DataManupulation'
 import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/ModalForVideo'
+import ReviewComponent from '../../../components/CommonComponents/ReviewsComponent/ReviewComponent';
 
 
 
@@ -29,6 +30,10 @@ export async function getServerSideProps(ctx) {
 	const courseDetails = await axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=courseByNameNoAuth&name=${courseName}`).then((response) => {
 		return response.data
 	}).catch((error) => error);
+
+	const homeReviewsReq = await axios.post(`${process.env.API_BASE_URL}/route`, { routeName: `allReviews` });
+
+	console.log("homeReviewsReq: ", homeReviewsReq)
 
 	if (((courseDetails == null) || (courseDetails?.length == 0))) {
 		return {
@@ -53,6 +58,7 @@ export async function getServerSideProps(ctx) {
 				courseDetails: courseDetails || null,
 				maleDates: maleDates?.data || [],
 				femaleDates: femaleDates?.data || [],
+				homeReviews: homeReviewsReq.data
 			}
 		}
 	} else if (courseDetails.type === 'online') {
@@ -68,6 +74,7 @@ export async function getServerSideProps(ctx) {
 			props: {
 				courseDetails: courseDetails,
 				mixDates: mixDatesReq?.data || [],
+				homeReviews: homeReviewsReq.data
 			}
 		}
 	} else if (courseDetails?.type == 'on-demand') {
@@ -83,7 +90,8 @@ export async function getServerSideProps(ctx) {
 		return {
 			props: {
 				courseDetails: courseDetails,
-				courseCurriculum: courseCurriculumReq
+				courseCurriculum: courseCurriculumReq,
+				homeReviews: homeReviewsReq.data
 			}
 		}
 	}
@@ -91,10 +99,39 @@ export async function getServerSideProps(ctx) {
 
 export default function Index(props) {
 	const courseDetail = props?.courseDetails ? props?.courseDetails : null
+	const currentCategory = courseDetail?.catagory?.name;
+	const currentCourseName = courseDetail?.name;
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+
 	const homeReviews = props?.homeReviews
+
+	const sortedReviewsByCategory = homeReviews.reduce((acc, review) => {
+		// Safely access categoryName with optional chaining
+		const categoryName = review?.course?.catagory?.name;
+		const courseName = review?.course?.name;
+	
+		// Check if categoryName exists and matches the current category name
+		if (categoryName && categoryName === currentCategory && courseName === currentCourseName) {
+	
+			// Ensure the category key exists in the accumulator
+			if (!acc[categoryName]) {
+				acc[categoryName] = [];
+			}
+	
+			// Add the review data to the correct category array
+			acc[categoryName].push(review);
+		}
+	
+		return acc;
+	}, {});
+
+	// Sort each array by the newest date (assuming the review contains a `createdAt` field)
+	Object.keys(sortedReviewsByCategory).forEach(category => {
+		sortedReviewsByCategory[category].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+	});
+
 	const courseCurriculum = props?.courseCurriculum
 	const ccSections = courseCurriculum?.sections.sort((a, b) => a.order - b.order)
 	const [expandedSection, setExpandedSection] = useState(0);
@@ -109,7 +146,7 @@ export default function Index(props) {
 	const isSeatFullForMix = mixDates.length > 0 ? mixDates.every(obj => obj.numberOfSeats === 0) : false;
 
 	const bookSeatButtonENText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'Notify me' : (isSeatFullForMix ? 'Notify me' : courseDetail.type === 'on-demand' ? 'Reserve your seat now' : 'Explore shcedules');
-	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : courseDetail.type === 'on-demand' ? 'اشترك الآن' : 'تصفح المواعيد');
+	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : courseDetail.type === 'on-demand' ? 'اشترك الآن' : 'تصفّح المواعيد');
 	const bookSeatButtonText = (lang == 'en' ? bookSeatButtonENText : bookSeatButtonARText)
 
 	const screenWidth = useWindowSize().width
@@ -183,7 +220,7 @@ export default function Index(props) {
 		let data = {
 			routeName: 'categories'
 		}
-		
+
 		router.push({
 			pathname: `/${bookSit.replace(/ /g, "-")}/${(courseDetail.name).replace(/ /g, "-")}/${(courseDetail.catagory.name.replace(/ /g, "-"))}`,
 			query: query ? query : "",
@@ -200,12 +237,13 @@ export default function Index(props) {
 	}
 
 	const handleBookSitButtonClick = () => {
-		if (isDateAvailable == true && (bookSeatButtonText == "تصفح المواعيد" || bookSeatButtonText == 'اشترك الآن' || bookSeatButtonText == "Reserve your seat now" || bookSeatButtonText == "Explore shcedules")) {
-			handleUserLogin()
-		}
-		else {
-			handleSlectedItem(4, 'dates')
-		}
+		// if (isDateAvailable == true && (bookSeatButtonText == "تصفح المواعيد" || bookSeatButtonText == 'اشترك الآن' || bookSeatButtonText == "Reserve your seat now" || bookSeatButtonText == "Explore shcedules")) {
+		// 	handleUserLogin()
+		// }
+		// else {
+		// 	handleSlectedItem(4, 'dates')
+		// }
+		handleUserLogin();
 	}
 
 	const handleWheelEvent = (event) => {
@@ -311,7 +349,7 @@ export default function Index(props) {
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
 												:
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
-											} */} 
+											} */}
 											{courseDetail?.type == 'on-demand' &&
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
 											}
@@ -512,10 +550,10 @@ export default function Index(props) {
 									} */}
 								</div>
 							}
-							{/* <div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
+							<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
 								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
-								<ReviewComponent homeReviews={homeReviews} />
-							</div> */}
+								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
+							</div>
 						</div>
 					</div>
 					<WhatsAppLinkComponent isBookSeatPageOpen={true} courseDetail={courseDetail} discountShow={discountShow} />

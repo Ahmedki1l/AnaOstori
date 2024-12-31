@@ -82,6 +82,8 @@ export default function Index(props) {
 
 	console.log(props);
 	const courseDetails = props?.courseDetails
+	console.log(courseDetails);
+	const currentType = courseDetails?.type;
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
@@ -329,7 +331,6 @@ export default function Index(props) {
 
 			await postAuthRouteAPI(orderData).then(res => {
 				let registeredDate;
-
 				if (studentsData[0].gender === "male") {
 					if (maleDates.length) {
 						registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
@@ -347,7 +348,10 @@ export default function Index(props) {
 
 				console.log(registeredDate);
 
+				let courseType = currentType;
+
 				localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
+				localStorage.setItem('courseType', JSON.stringify(courseType));
 				console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 				setCreatedOrder(res.data)
 				setChangePage(true)

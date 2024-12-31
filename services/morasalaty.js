@@ -13,11 +13,13 @@ export const sendMessage = async (
     duration,
     gender,
     whatsapplink,
+    courseType,
     classRoomCode = ""
 ) => {
     try {
-        // Call the proxy endpoint on my Flask server
-        const response = await axios.post('https://sinsintro-api.vercel.app/api/sendWhatsAppMessage', {
+        // 3 categories: physical, online, on-demand
+
+        let payload = {
             buyerPhone,
             buyerFullName,
             buyerEmail,
@@ -28,8 +30,12 @@ export const sendMessage = async (
             duration,
             gender,
             whatsapplink,
+            courseType,
             classRoomCode
-        }, {
+        };
+
+        // Call the proxy endpoint on my Flask server
+        const response = await axios.post('https://sinsintro-api.vercel.app/api/sendWhatsAppMessage', payload, {
             headers: {
                 'Content-Type': 'application/json'
             },

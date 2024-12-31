@@ -60,9 +60,24 @@ export default function CourseDetailsHeader(props) {
 								</div>
 								<div className='px-1'>
 									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
-									<a href={`${locationURL}`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue'}}>
-										<p className=''>{courseDetail.type == "physical" ? courseDetail.locationName : lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
-									</a>
+									{courseDetail.type == "physical" ?
+										<div style={{ display: 'flex' }}>
+											<a href={`https://goo.gl/maps/p9V4qb6csGQGXWxb6`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>
+												<p className=''>الرياض</p>
+											</a>
+											<span style={{ margin: '0 8px' }}> - </span>
+											<a href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>
+												<p className=''>الدمام</p>
+											</a>
+											<span style={{ margin: '0 8px' }}> - </span>
+											<a href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>
+												<p className=''>جدة</p>
+											</a>
+										</div>
+										:
+										<p className=''>{lang == 'en' ? `Virtual ClassRoom` : 'يتم بثها عبر '}</p>
+									}
+
 								</div>
 							</div>
 							: courseDetail.type == 'online' ?
