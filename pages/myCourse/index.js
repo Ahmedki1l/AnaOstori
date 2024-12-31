@@ -199,6 +199,8 @@ const Index = () => {
     const getCurrentItemId = (watchedItems, ccSections) => {
         if (watchedItems.length == 0) {
             setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id)
+            console.log(ccSections);
+            console.log("current item id: ", ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id);
             router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
         }
         else {
