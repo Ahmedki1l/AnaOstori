@@ -198,6 +198,10 @@ const Index = () => {
             }
             setExpandedSection(0)
             getPageProps()
+
+            if (queryItemID) {
+                chagenCourseItemHendler(queryItemID); // If itemId exists, use it
+            }
         }
     }, [courseID])
 
@@ -224,12 +228,6 @@ const Index = () => {
             }
         }
     }
-
-    useEffect(() => {
-        if (queryItemID) {
-            chagenCourseItemHendler(queryItemID); // If itemId exists, use it
-        }
-    }, []);
 
     return (
         <>
