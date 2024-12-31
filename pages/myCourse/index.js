@@ -63,7 +63,7 @@ const Index = () => {
         if (queryItemID) {
             chagenCourseItemHendler(queryItemID); // If itemId exists, use it
         }
-    }, [queryItemID]); // Run whenever queryItemID changes
+    }, []);
 
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
