@@ -152,7 +152,7 @@ const Index = () => {
         }
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         if (courseID) {
             const getPageProps = async () => {
                 let couresCurriculumParams = {
@@ -197,7 +197,7 @@ const Index = () => {
                 }
             }
             setExpandedSection(0)
-            getPageProps()
+            await getPageProps()
 
             if (queryItemID) {
                 chagenCourseItemHendler(queryItemID); // If itemId exists, use it
