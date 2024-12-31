@@ -61,9 +61,9 @@ const Index = () => {
 
     useEffect(() => {
         if (queryItemID) {
-            chagenCourseItemHendler(queryItemID);
+            chagenCourseItemHendler(queryItemID); // If itemId exists, use it
         }
-    }, []);
+    }, [queryItemID]); // Run whenever queryItemID changes
 
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
@@ -206,37 +206,29 @@ const Index = () => {
     }, [courseID])
 
     const getCurrentItemId = (watchedItems, ccSections) => {
-        if (watchedItems.length == 0) {
-            setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0]?.id)
-            console.log(ccSections);
-            console.log("current item id: ", ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id);
-            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
+        if (queryItemID) {
+            // If queryItemID exists, use it
+            setCurrentItemId(queryItemID);
+            return;
         }
-        else {
-            for (let i = ccSections?.length; i > 0; i--) {
-                const itemInSection = ccSections[i - 1]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order);
-                for (let j = itemInSection?.length; j > 0; j--) {
-                    const itemId = itemInSection[j - 1]?.id;
-                    if (watchedItems?.some(watchedItem => watchedItem.itemId == itemId)) {
-                        if ((j - 1) == ((itemInSection?.length) - 1) && (i - 1) == ((ccSections?.length) - 1)) {
-                            setCurrentItemId(ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id)
-                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
-                            return
-                        } else if ((j - 1) == ((itemInSection?.length) - 1)) {
-                            setCurrentItemId(ccSections[i]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id)
-                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${ccSections[i]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0].id}`)
-                            return
-                        } else {
-                            setCurrentItemId(itemInSection[j]?.id)
-                            router.push(`/myCourse?courseId=${courseID}&enrollmentId=${enrollmentId}&itemId=${itemInSection[j]?.id}`)
-                        }
-                        return
+
+        // If no queryItemID, set the first item from the curriculum
+        if (watchedItems.length === 0) {
+            setCurrentItemId(ccSections[0]?.items[0]?.id);
+        } else {
+            for (let i = 0; i < ccSections.length; i++) {
+                const itemInSection = ccSections[i]?.items.sort((a, b) => a.sectionItem.order - b.sectionItem.order);
+                for (let j = 0; j < itemInSection.length; j++) {
+                    const itemId = itemInSection[j]?.id;
+                    if (watchedItems.some(watchedItem => watchedItem.itemId == itemId)) {
+                        setCurrentItemId(itemInSection[j]?.id);
+                        return;
                     }
                 }
             }
         }
-        return null;
     }
+
     return (
         <>
             {!courseCurriculum ?
