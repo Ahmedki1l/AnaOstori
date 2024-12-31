@@ -59,12 +59,6 @@ const Index = () => {
         }
     }
 
-    useEffect(() => {
-        if (queryItemID) {
-            chagenCourseItemHendler(queryItemID); // If itemId exists, use it
-        }
-    }, []);
-
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
     })
@@ -227,6 +221,10 @@ const Index = () => {
                 }
             }
         }
+    }
+    
+    if (queryItemID) {
+        chagenCourseItemHendler(queryItemID); // If itemId exists, use it
     }
 
     return (
