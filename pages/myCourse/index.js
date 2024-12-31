@@ -59,11 +59,11 @@ const Index = () => {
         }
     }
 
-    useEffect(()=>{
-        if(queryItemID){
+    useEffect(() => {
+        if (queryItemID) {
             chagenCourseItemHendler(queryItemID);
         }
-    })
+    }, []);
 
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
