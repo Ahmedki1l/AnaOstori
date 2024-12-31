@@ -16,7 +16,9 @@ import { getNewToken } from '../../services/fireBaseAuthService'
 
 const Index = () => {
     const router = useRouter()
-    const courseID = router?.query?.courseId
+    const courseID = router?.query?.courseId;
+    const queryEnrollmentID = router?.query?.enrollmentId;
+    const queryItemID = router?.query?.itemId;
     const storeData = useSelector((state) => state?.globalStore);
     const [courseCurriculum, setCourseCurriculum] = useState()
     const [currentItemId, setCurrentItemId] = useState()
@@ -56,6 +58,13 @@ const Index = () => {
             })
         }
     }
+
+    useEffect(()=>{
+        if(queryItemID){
+            chagenCourseItemHendler(queryItemID);
+        }
+    })
+
     const selectedCourse = storeData.myCourses.find((enrollment) => {
         return enrollment.courseId == courseID
     })
