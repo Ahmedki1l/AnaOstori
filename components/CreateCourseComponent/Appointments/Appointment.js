@@ -214,20 +214,61 @@ const Appointments = ({
     const instructorsList = appointment?.instructors?.map((obj) => {
       return obj.id;
     });
-    appointmentForm.setFieldsValue({
-      name: appointment?.name,
-      instructors: instructorsList,
-      location: appointment?.location,
-      locationName: appointment?.locationName,
-      gender: appointment?.gender,
-      description: appointment?.description,
-      maxNumberOfSeats: appointment?.maxNumberOfSeats,
-      dateFrom: dayjs(appointment?.dateFrom, "YYYY-MM-DD"),
-      dateTo: dayjs(appointment?.dateTo, "YYYY-MM-DD"),
-      timeFrom: dayjs(appointment?.timeFrom, "HH:mm:ss"),
-      timeTo: dayjs(appointment?.timeTo, "HH:mm:ss"),
-      regionId: appointment?.regionId,
-    });
+
+    const classRoomCode = appointment.classRoomCode?.trim() || '';
+    const whatsAppGroupLinks = appointment.whatsappGroupLink?.trim() || '';
+    const groupLinks = whatsAppGroupLinks.split(/\s+/);
+    const [maleLink, femaleLink] = groupLinks;
+    if (courseType === "online") {
+      appointmentForm.setFieldsValue({
+        name: appointment?.name,
+        instructors: instructorsList,
+        location: appointment?.location,
+        locationName: appointment?.locationName,
+        gender: appointment?.gender,
+        description: appointment?.description,
+        maxNumberOfSeats: appointment?.maxNumberOfSeats,
+        dateFrom: dayjs(appointment?.dateFrom, "YYYY-MM-DD"),
+        dateTo: dayjs(appointment?.dateTo, "YYYY-MM-DD"),
+        timeFrom: dayjs(appointment?.timeFrom, "HH:mm:ss"),
+        timeTo: dayjs(appointment?.timeTo, "HH:mm:ss"),
+        regionId: appointment?.regionId,
+        whatsappGroupLinkBoys: maleLink,
+        whatsappGroupLinkGirls: femaleLink,
+        classRoomCode: classRoomCode
+      });
+    } else if (courseType === "physical") {
+      appointmentForm.setFieldsValue({
+        name: appointment?.name,
+        instructors: instructorsList,
+        location: appointment?.location,
+        locationName: appointment?.locationName,
+        gender: appointment?.gender,
+        description: appointment?.description,
+        maxNumberOfSeats: appointment?.maxNumberOfSeats,
+        dateFrom: dayjs(appointment?.dateFrom, "YYYY-MM-DD"),
+        dateTo: dayjs(appointment?.dateTo, "YYYY-MM-DD"),
+        timeFrom: dayjs(appointment?.timeFrom, "HH:mm:ss"),
+        timeTo: dayjs(appointment?.timeTo, "HH:mm:ss"),
+        regionId: appointment?.regionId,
+        whatsappGroupLink: whatsAppGroupLinks,
+      });
+    } else {
+      appointmentForm.setFieldsValue({
+        name: appointment?.name,
+        instructors: instructorsList,
+        location: appointment?.location,
+        locationName: appointment?.locationName,
+        gender: appointment?.gender,
+        description: appointment?.description,
+        maxNumberOfSeats: appointment?.maxNumberOfSeats,
+        dateFrom: dayjs(appointment?.dateFrom, "YYYY-MM-DD"),
+        dateTo: dayjs(appointment?.dateTo, "YYYY-MM-DD"),
+        timeFrom: dayjs(appointment?.timeFrom, "HH:mm:ss"),
+        timeTo: dayjs(appointment?.timeTo, "HH:mm:ss"),
+        regionId: appointment?.regionId,
+      });
+    }
   };
 
   const handleCreateAvailability = () => {

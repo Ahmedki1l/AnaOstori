@@ -62,16 +62,31 @@ export default function CourseDetailsHeader(props) {
 									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
 									{courseDetail.type == "physical" ?
 										<div style={{ display: 'flex' }}>
-											<a href={`https://goo.gl/maps/p9V4qb6csGQGXWxb6`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>
-												<p className=''>الرياض</p>
+											<a
+												href={`https://goo.gl/maps/p9V4qb6csGQGXWxb6`}
+												target="_blank"
+												rel="noopener noreferrer"
+												style={{ color: '#1e90ff' }} // Brighter blue color
+											>
+												<p>الرياض</p>
 											</a>
-											<span style={{ margin: '0 8px' }}> - </span>
-											<a href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>
-												<p className=''>الدمام</p>
+											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
+											<a
+												href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`}
+												target="_blank"
+												rel="noopener noreferrer"
+												style={{ color: '#1e90ff' }} // Brighter blue color
+											>
+												<p>الدمام</p>
 											</a>
-											<span style={{ margin: '0 8px' }}> - </span>
-											<a href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>
-												<p className=''>جدة</p>
+											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
+											<a
+												href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`}
+												target="_blank"
+												rel="noopener noreferrer"
+												style={{ color: '#1e90ff' }} // Brighter blue color
+											>
+												<p>جدة</p>
 											</a>
 										</div>
 										:

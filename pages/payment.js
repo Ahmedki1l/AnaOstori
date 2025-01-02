@@ -77,8 +77,6 @@ export default function Payment(props) {
                 await sendWhatsAppMessage(paymentData);
             }
 
-            await sendWhatsAppMessage(paymentData);
-
         }).catch(async (error) => {
             setLoading(false)
         })
