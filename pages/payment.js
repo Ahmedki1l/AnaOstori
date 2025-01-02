@@ -89,7 +89,7 @@ export default function Payment(props) {
         const buyerPhone = orderDetail.orderDetails.buyerPhone;
         const buyerFullName = orderDetail.orderDetails.buyerFullName;
         const buyerEmail = orderDetail.orderDetails.buyerEmail;
-        const gender = router.query.gender || 'male'; // Default gender if not provided
+        const gender = JSON.parse(localStorage.getItem('courseType')) || "male";
 
         const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
         const courseType = JSON.parse(localStorage.getItem('courseType'));

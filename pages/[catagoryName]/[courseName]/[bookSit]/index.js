@@ -352,6 +352,7 @@ export default function Index(props) {
 
 				localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
 				localStorage.setItem('courseType', JSON.stringify(courseType));
+				localStorage.setItem('gender', JSON.stringify(studentsData[0].gender));
 				console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 				setCreatedOrder(res.data)
 				setChangePage(true)
