@@ -98,10 +98,12 @@ export default function Payment(props) {
         const duration = timeDuration2(registeredDate.timeFrom, registeredDate.timeTo);
 
         const whatsAppGroupLinks = registeredDate.whatsappGroupLink?.trim() || '';
+        console.log("whatsappGroupLink: ", whatsAppGroupLinks);
         const classRoomCode = registeredDate.classRoomCode?.trim() || '';
 
         if (whatsAppGroupLinks && classRoomCode) {
             const groupLinks = whatsAppGroupLinks.split(/\s+/);
+            console.log("groupLinks: ", groupLinks);
             if (groupLinks.length === 2) {
                 const [maleLink, femaleLink] = groupLinks;
                 const whatsapplink = gender === 'male' ? maleLink : femaleLink;
