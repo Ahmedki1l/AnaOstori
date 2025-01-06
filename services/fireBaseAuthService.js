@@ -37,7 +37,12 @@ export const signInWithApple = async () => {
 
 export const forgotPassword = async (email) => {
 	await sendPasswordResetEmail(auth, email).then((res) => {
-		toast.success(toastSuccessMessage.forgotPasswordLinkSend, { rtl: true, })
+		toast.success(toastSuccessMessage.forgotPasswordLinkSend, { rtl: true, });
+		// Clear localStorage
+		localStorage.clear();
+
+		// Clear sessionStorage
+		sessionStorage.clear();
 		Router.push('/login')
 	}).catch((error) => {
 		console.log(error);
