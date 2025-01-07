@@ -89,17 +89,17 @@ export default function Payment(props) {
         const buyerEmail = orderDetail.orderDetails.buyerEmail;
         const gender = JSON.parse(localStorage.getItem('gender')) || "male";
 
-        const registeredDate = JSON.parse(localStorage.getItem('registeredDate'));
+        const registeredDate = JSON.parse(localStorage.getItem('registeredDate')) ? JSON.parse(localStorage.getItem('registeredDate')) : "";
         const courseType = JSON.parse(localStorage.getItem('courseType'));
-        const courseTitle = registeredDate.course.name?.trim() || '';
-        const locationText = registeredDate.locationName?.trim() || registeredDate.course.link?.trim() || '';
-        const locationURL = registeredDate.location?.trim() || '';
-        const date = `من ${dateWithDay(registeredDate.dateFrom)} إلى ${dateWithDay(registeredDate.dateTo)}`;
-        const duration = timeDuration2(registeredDate.timeFrom, registeredDate.timeTo);
+        const courseTitle = registeredDate?.course.name?.trim() || '';
+        const locationText = registeredDate?.locationName?.trim() || registeredDate?.course?.link?.trim() || '';
+        const locationURL = registeredDate?.location?.trim() || '';
+        const date = `من ${dateWithDay(registeredDate?.dateFrom)} إلى ${dateWithDay(registeredDate?.dateTo)}`;
+        const duration = timeDuration2(registeredDate?.timeFrom, registeredDate?.timeTo);
 
-        const whatsAppGroupLinks = registeredDate.whatsappGroupLink?.trim() || '';
+        const whatsAppGroupLinks = registeredDate?.whatsappGroupLink?.trim() || '';
         console.log("whatsappGroupLink: ", whatsAppGroupLinks);
-        const classRoomCode = registeredDate.classRoomCode?.trim() || '';
+        const classRoomCode = registeredDate?.classRoomCode?.trim() || '';
 
         if (whatsAppGroupLinks && classRoomCode) {
             const groupLinks = whatsAppGroupLinks.split(/\s+/);
