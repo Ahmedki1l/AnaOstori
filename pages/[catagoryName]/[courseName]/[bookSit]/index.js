@@ -106,10 +106,10 @@ export default function Index(props) {
 	// Check if there's data in localStorage on load and populate the state
 	useEffect(() => {
 
-		console.log("isFromUserForm: ", JSON.parse(localStorage.getItem('isFromUserForm')));
-		console.log("isBackToUserForm: ", JSON.parse(localStorage.getItem('isBackToUserForm')));
 		const isFromUserForm = JSON.parse(localStorage.getItem('isFromUserForm'));
 		const isBackToUserForm = JSON.parse(localStorage.getItem('isBackToUserForm'));
+		console.log("isFromUserForm: ", isFromUserForm);
+		console.log("isBackToUserForm: ", isBackToUserForm);
 
 		if (isFromUserForm && isBackToUserForm) {
 			console.log('User navigated from login or register page.');
@@ -190,7 +190,7 @@ export default function Index(props) {
 				})
 			}
 		}
-		createOrder()
+		//createOrder()
 	}, [courseDetails, storeData.viewProfileData])
 
 	const validation = (studentsData, courseType, userAgree) => {
