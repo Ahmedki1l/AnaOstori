@@ -106,9 +106,12 @@ export default function Index(props) {
 	// Check if there's data in localStorage on load and populate the state
 	useEffect(() => {
 
-		console.log("flag: ", JSON.parse(localStorage.getItem('isFromUserForm')));
+		console.log("isFromUserForm: ", JSON.parse(localStorage.getItem('isFromUserForm')));
+		console.log("isBackToUserForm: ", JSON.parse(localStorage.getItem('isBackToUserForm')));
+		const isFromUserForm = JSON.parse(localStorage.getItem('isFromUserForm'));
+		const isBackToUserForm = JSON.parse(localStorage.getItem('isBackToUserForm'));
 
-		if (JSON.parse(localStorage.getItem('isBackToUserForm'))) {
+		if (isFromUserForm && isBackToUserForm) {
 			console.log('User navigated from login or register page.');
 
 			if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
@@ -117,7 +120,6 @@ export default function Index(props) {
 				const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
 				const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
 				const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
-
 
 				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
 
@@ -389,6 +391,8 @@ export default function Index(props) {
 							console.log(registeredDate);
 
 							localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
+							localStorage.setItem('courseType', JSON.stringify(courseType));
+							localStorage.setItem('gender', JSON.stringify(studentsData[0].gender));
 							console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 							setCreatedOrder(res.data)
 							setChangePage(true)
@@ -397,9 +401,9 @@ export default function Index(props) {
 						})
 					}).catch(error => {
 						console.error("Error:", error);
+						toast.error("يجب عليك إنشاء حساب أولا", { rtl: true, });
 					});
 				}
-				toast.error("يجب عليك إنشاء حساب أولا", { rtl: true, })
 			})
 		}
 		setStudentsData(studentsData)
