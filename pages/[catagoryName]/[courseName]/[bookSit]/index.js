@@ -349,13 +349,16 @@ export default function Index(props) {
 				}
 
 				console.log(registeredDate);
+				if(registeredDate){
+					localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
+					console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
+				}
 
 				let courseType = currentType;
 
-				localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
 				localStorage.setItem('courseType', JSON.stringify(courseType));
 				localStorage.setItem('gender', JSON.stringify(studentsData[0].gender));
-				console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
+				
 				setCreatedOrder(res.data)
 				setChangePage(true)
 				setLoading(false)
@@ -393,6 +396,9 @@ export default function Index(props) {
 								localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
 								console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 							}
+
+							let courseType = currentType;
+
 							localStorage.setItem('courseType', JSON.stringify(courseType));
 							localStorage.setItem('gender', JSON.stringify(studentsData[0].gender));
 							setCreatedOrder(res.data)
