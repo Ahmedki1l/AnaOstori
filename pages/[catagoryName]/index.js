@@ -223,7 +223,6 @@ export default function Index(props) {
 					) : (
 						<div className={`maxWidthDefault ${styles.mainArea}`}>
 							<div className="flex items-center justify-start gap-3 mb-4">
-								<h1 className='head1 mb-0'>{catagoryName} {selectedType}</h1>
 								<button
 									onClick={handleBack}
 									className="p-3 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors duration-200 shadow-sm flex-shrink-0"
@@ -231,8 +230,11 @@ export default function Index(props) {
 								>
 									<span
 										className="block w-4 h-4 border-t-2 border-r-2 border-gray-600 transform rotate-45"
-									/>
+									>
+										{">"}
+									</span>
 								</button>
+								<h1 className='head1 mb-0'>{catagoryName} {selectedType}</h1>
 							</div>
 							<p className={`py-2 md:py-3 fontMedium ${styles.tagline}`}> {mainDescription}</p>
 							<ul className='list-disc pr-9'>
