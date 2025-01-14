@@ -225,12 +225,12 @@ export default function Index(props) {
 							<div className="flex items-center justify-start gap-3 mb-4">
 								<button
 									onClick={handleBack}
-									className="p-3 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors duration-200 shadow-md flex-shrink-0"
+									className="p-3 rounded-full bg-gray-50 hover:bg-gray-200 transition-colors duration-200 shadow-md flex-shrink-0 cursor-pointer hover:shadow-lg group"
 									aria-label="Back"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										className="w-5 h-5"
+										className="w-5 h-5 text-gray-700 group-hover:text-gray-900 transition-colors duration-200"
 										viewBox="0 0 24 24"
 										fill="none"
 										stroke="currentColor"
