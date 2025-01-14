@@ -113,8 +113,10 @@ export default function Index(props) {
 			...(mixDates || [])
 		];
 
-		// Get unique locations using Set
-		const uniqueLocations = [...new Set(allDates.map(date => date.locationName))];
+		// Get unique full locations
+		const uniqueLocations = [...new Set(
+			allDates.map(date => date.locationName)
+		)];
 
 		return uniqueLocations;
 	};
@@ -134,9 +136,17 @@ export default function Index(props) {
 		// Define the desired city order
 		const cityOrder = ['الرياض', 'الدمام', 'جدة'];
 
-		// Sort based on the cityOrder array
+		// Sort based on the cityOrder array, with a secondary sort on district
 		return locationsObjects.sort((a, b) => {
-			return cityOrder.indexOf(a.city) - cityOrder.indexOf(b.city);
+			// First, sort by city order
+			const cityComparison = cityOrder.indexOf(a.city) - cityOrder.indexOf(b.city);
+
+			// If cities are the same or both not in cityOrder, sort by district
+			if (cityComparison === 0) {
+				return a.district.localeCompare(b.district);
+			}
+
+			return cityComparison;
 		});
 	};
 
@@ -146,7 +156,9 @@ export default function Index(props) {
 	console.log("Sorted Locations:", sortedLocations);
 
 	const [selectedGender, setSelectedGender] = useState('male');
-	const [selectedLocation, setSelectedLocation] = useState(sortedLocations[0].fullLocation);
+	const [selectedLocation, setSelectedLocation] = useState(
+		sortedLocations?.[0]?.city ?? null
+	);
 
 	const homeReviews = props?.homeReviews
 
@@ -496,7 +508,7 @@ export default function Index(props) {
 									</div>
 								)
 							})}
-							
+
 							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
 								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
 								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
@@ -564,7 +576,7 @@ export default function Index(props) {
 													{sortedLocations.map(loc => (
 														<button
 															key={loc.city}
-															className={`px-4 py-2 ${selectedLocation === loc.fullLocation
+															className={`px-4 py-2 ${selectedLocation === loc.city
 																? 'bg-[#F26722] text-white rounded-lg'
 																: 'bg-white rounded-lg'
 																} hover:opacity-90 transition-opacity`}
@@ -572,7 +584,7 @@ export default function Index(props) {
 																clipPath: 'inset(0 round 8px)',
 																filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
 															}}
-															onClick={() => setSelectedLocation(loc.fullLocation)}
+															onClick={() => setSelectedLocation(loc.city)}
 														>
 															<div className="flex flex-col items-center">
 																<div>{loc.city}</div>
@@ -619,7 +631,7 @@ export default function Index(props) {
 											<ScrollContainer className="flex">
 												{selectedGender === 'male' ?
 													maleDates
-														?.filter(date => date.locationName === selectedLocation)
+														?.filter(date => date.locationName.includes(selectedLocation))
 														.map((date, index) => (
 															<Fragment key={`maleDate${index}`}>
 																<CourseDates
@@ -631,7 +643,7 @@ export default function Index(props) {
 														))
 													:
 													femaleDates
-														?.filter(date => date.locationName === selectedLocation)
+														?.filter(date => date.locationName.includes(selectedLocation))
 														.map((date, index) => (
 															<Fragment key={`femaleDate${index}`}>
 																<CourseDates
