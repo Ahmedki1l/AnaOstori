@@ -104,6 +104,49 @@ export default function Index(props) {
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+	
+	const getUniqueLocations = () => {
+		// Combine all arrays and handle undefined/null cases
+		const allDates = [
+			...(maleDates || []),
+			...(femaleDates || []),
+			...(mixDates || [])
+		];
+		
+		// Get unique locations using Set
+		const uniqueLocations = [...new Set(allDates.map(date => date.locationName))];
+		
+		return uniqueLocations;
+	};
+	
+	const splitLocationIntoFields = (locations) => {
+		// First split the locations into objects
+		const locationsObjects = locations.map(location => {
+			const [district, city] = location.split(' - ').reverse();
+			return {
+				city,
+				district,
+				fullLocation: location,
+				displayText: `${city}\n${district}`
+			};
+		});
+		
+		// Define the desired city order
+		const cityOrder = ['الرياض', 'الدمام', 'جدة'];
+		
+		// Sort based on the cityOrder array
+		return locationsObjects.sort((a, b) => {
+			return cityOrder.indexOf(a.city) - cityOrder.indexOf(b.city);
+		});
+	};
+	
+	// Usage
+	const locations = getUniqueLocations();
+	const sortedLocations = splitLocationIntoFields(locations);
+	console.log("Sorted Locations:", sortedLocations);
+
+	const [selectedGender, setSelectedGender] = useState('male');
+	const [selectedLocation, setSelectedLocation] = useState(sortedLocations[0].fullLocation);
 
 	const homeReviews = props?.homeReviews
 
@@ -111,19 +154,19 @@ export default function Index(props) {
 		// Safely access categoryName with optional chaining
 		const categoryName = review?.course?.catagory?.name;
 		const courseName = review?.course?.name;
-	
+
 		// Check if categoryName exists and matches the current category name
 		if (categoryName && categoryName === currentCategory && courseName === currentCourseName) {
-	
+
 			// Ensure the category key exists in the accumulator
 			if (!acc[categoryName]) {
 				acc[categoryName] = [];
 			}
-	
+
 			// Add the review data to the correct category array
 			acc[categoryName].push(review);
 		}
-	
+
 		return acc;
 	}, {});
 
@@ -334,22 +377,22 @@ export default function Index(props) {
 									{/* <li onClick={() => handleSlectedItem(0, `header`)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 0 ? styles.activeItemMobile : ''}`}>{lang == 'en' ? 'Course features' : `مميزات الدورة`}</li>
 									<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li> */}
 									{courseDetail?.courseMetaData?.map((metaData, index) => {
-											return (
-												<div key={`datatitle${index}`}>
-													<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == (index + 1) ? styles.activeItemMobile : ''}`}>{metaData.title}</li>
-												</div>
-											)
-										})}
-										<div>
-											{/* {courseDetail?.type == 'on-demand' ?
+										return (
+											<div key={`datatitle${index}`}>
+												<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == (index + 1) ? styles.activeItemMobile : ''}`}>{metaData.title}</li>
+											</div>
+										)
+									})}
+									<div>
+										{/* {courseDetail?.type == 'on-demand' ?
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
 												:
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 											} */}
-											{courseDetail?.type == 'on-demand' &&
-												<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
-											}
-										</div>
+										{courseDetail?.type == 'on-demand' &&
+											<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
+										}
+									</div>
 								</ul>
 								:
 								<ul className={`${styles.courseDetailsNavbar} ${offset > 313 ? `${styles.courseDetailsNavbarFixed}` : ''}`}>
@@ -504,52 +547,104 @@ export default function Index(props) {
 								</div>
 								:
 								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }}>
-									{/*<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
-									 {courseDetail?.type == 'physical' ?
+									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
+									{courseDetail?.type == 'physical' ?
 										<>
-											<div className='flex items-center py-4'>
-												<AllIconsComponenet height={36} width={18} iconName={'male'} color={'#0C5D96'} />
-												<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#0C5D96' }}>{lang == "en" ? "Male Appointments" : "مواعيد الشباب"}</p>
+											{/* Location Selection */}
+											<div className="mb-6">
+												<h2 className="text-right mb-2 text-gray-600">الفرع</h2>
+												<p className="text-right text-sm mb-2">بناءً عليه يوريك المواعيد المتوفرة</p>
+												<div className="flex justify-start gap-2">
+													{sortedLocations.map(loc => (
+														<button
+															key={loc.city}
+															className={`px-4 py-2 ${selectedLocation === loc.fullLocation
+																? 'bg-[#F26722] text-white rounded-lg'
+																: 'bg-white rounded-lg'
+																} hover:opacity-90 transition-opacity`}
+															style={{
+																clipPath: 'inset(0 round 8px)',
+																filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
+															}}
+															onClick={() => setSelectedLocation(loc.fullLocation)}
+														>
+															<div className="flex flex-col items-center">
+																<div>{loc.city}</div>
+																<div className="text-sm">{loc.district}</div>
+															</div>
+														</button>
+													))}
+												</div>
 											</div>
-											{maleDates?.length > 0 && !isSeatFullForMale ?
-												<ScrollContainer className='flex'>
-													{maleDates?.map((maleDate, index) => {
-														return (
+
+											{/* Gender Selection */}
+											<div className="mb-6">
+												<h2 className="text-right mb-2">اختر الموعد المناسب لك</h2>
+												<div className="flex justify-start gap-2">
+													<button
+														className={`px-4 py-2 ${selectedGender === 'male'
+															? 'bg-[#F26722] text-white rounded-lg'
+															: 'bg-white rounded-lg'
+															} hover:opacity-90 transition-opacity`}
+														style={{
+															clipPath: 'inset(0 round 8px)',
+															filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
+														}}
+														onClick={() => setSelectedGender('male')}
+													>
+														مواعيد الشباب
+													</button>
+													<button
+														className={`px-4 py-2 ${selectedGender === 'female'
+															? 'bg-[#F26722] text-white rounded-lg'
+															: 'bg-white rounded-lg'
+															} hover:opacity-90 transition-opacity`}
+														style={{
+															clipPath: 'inset(0 round 8px)',
+															filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
+														}}
+														onClick={() => setSelectedGender('female')}
+													>
+														مواعيد البنات
+													</button>
+												</div>
+											</div>
+
+											<ScrollContainer className="flex">
+												{selectedGender === 'male' ?
+													maleDates
+														?.filter(date => date.locationName === selectedLocation)
+														.map((date, index) => (
 															<Fragment key={`maleDate${index}`}>
-																<CourseDates date={maleDate} handleBookSit={handleBookSit} lang={lang} />
+																<CourseDates
+																	date={date}
+																	handleBookSit={handleBookSit}
+																	lang={lang}
+																/>
 															</Fragment>
-														)
-													})}
-												</ScrollContainer>
-												:
-												<div>
-													<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'male'} courseDetailId={courseDetail?.id} isSubscribed={isMaleSubscribed} lang={lang} />
-												</div>
-											}
-											<div className='flex items-center pb-4 pt-6'>
-												<AllIconsComponenet height={36} width={18} iconName={'female'} color={'#E10768'} />
-												<p className={`fontBold ${styles.maleDateHead}`} style={{ color: '#E10768' }}>{lang == 'en' ? 'Female Appointments' : 'مواعيد البنات'}</p>
-											</div>
-											{femaleDates?.length > 0 && !isSeatFullForFemale ?
-												<ScrollContainer className='flex'>
-													{femaleDates?.map((femaleDate, index) => {
-														return (
+														))
+													:
+													femaleDates
+														?.filter(date => date.locationName === selectedLocation)
+														.map((date, index) => (
 															<Fragment key={`femaleDate${index}`}>
-																<CourseDates date={femaleDate} handleBookSit={handleBookSit} lang={lang} />
+																<CourseDates
+																	date={date}
+																	handleBookSit={handleBookSit}
+																	lang={lang}
+																/>
 															</Fragment>
-														)
-													})}
-												</ScrollContainer>
-												:
-												<div>
-													<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'female'} courseDetailId={courseDetail?.id} isSubscribed={isFemaleSubscribed} lang={lang} />
-												</div>
-											}
+														))
+												}
+											</ScrollContainer>
 										</>
 										:
 										<>
+											<div className="mb-6">
+												<h2 className="text-right mb-2">اختر الموعد المناسب لك</h2>
+											</div>
 											{mixDates?.length > 0 && !isSeatFullForMix ?
-												<ScrollContainer className='flex pt-4'>
+												<ScrollContainer className='flex'>
 													{mixDates?.map((mixDate, index) => {
 														return (
 															<Fragment key={`mixDate${index}`}>
@@ -564,13 +659,13 @@ export default function Index(props) {
 												</div>
 											}
 										</>
-									} */}
+									}
 								</div>
 							}
-							<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
+							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
 								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
 								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
-							</div>
+							</div>)}
 						</div>
 					</div>
 					<WhatsAppLinkComponent isBookSeatPageOpen={true} courseDetail={courseDetail} discountShow={discountShow} />

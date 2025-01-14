@@ -243,7 +243,11 @@
 
 .courseCardsWraper {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .courseCardWraper {

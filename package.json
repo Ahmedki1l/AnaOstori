@@ -23,6 +23,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^9.17.2",
     "jquery": "^3.6.3",
+    "lucide-react": "^0.471.1",
     "next": "^13.0.3",
     "node-fetch": "^3.3.0",
     "pdf-lib": "^1.17.1",

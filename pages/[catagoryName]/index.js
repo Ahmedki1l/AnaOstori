@@ -7,6 +7,7 @@ import Spinner from '../../components/CommonComponents/spinner';
 import { getNewToken } from '../../services/fireBaseAuthService';
 import { useDispatch } from "react-redux";
 import CoursesCardMixedButton from "../../components/CommonComponents/CourseCard/CoursesCardMixedButton";
+import Link from 'next/link';
 
 
 
@@ -35,6 +36,31 @@ export async function getServerSideProps(contex) {
 	}
 }
 
+
+const CourseTypeCard = ({ type, title, subtitle, locations, imageUrl, onClick }) => {
+	return (
+		<div
+			onClick={onClick}
+			className="relative overflow-hidden rounded-lg cursor-pointer transition-transform hover:-translate-y-1 max-w-md block"
+		>
+			<img
+				src={imageUrl}
+				alt={title}
+				className="w-full object-cover"
+			/>
+			<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+				<div className="flex flex-col gap-1">
+					<div className="flex items-center gap-2">
+						<h3 className="text-white text-lg font-hard">{title}</h3>
+					</div>
+					<p className="text-white text-sm mr-5">{subtitle}</p>
+					<p className="text-white text-sm mr-5">{locations}</p>
+				</div>
+			</div>
+		</div>
+	);
+};
+
 export default function Index(props) {
 	const catagoryName = props.catagoryName
 	const [loggedUserCourseDetails, setLoggedUserCourseDetails] = useState([])
@@ -53,6 +79,9 @@ export default function Index(props) {
 	const [pageLoading, setPageLoading] = useState(true)
 	const [myCourses, setMyCourses] = useState([]);
 	const dispatch = useDispatch();
+
+	const [showTypeCards, setShowTypeCards] = useState(true);
+	const [selectedType, setSelectedType] = useState(null);
 
 	useEffect(() => {
 		if (coursesDetails?.length > 0) {
@@ -141,54 +170,107 @@ export default function Index(props) {
 		})
 	}
 
+	const handleCardClick = (type) => {
+		setSelectedType(type);
+		setShowTypeCards(false);
+	};
+
+	const handleBack = () => {
+		setShowTypeCards(true);
+		setSelectedType(null);
+	};
+
 	return (
 		<>
 			{pageLoading ?
 				<div className={`relative ${styles.mainLoadingPage}`}>
 					<Spinner borderwidth={7} width={6} height={6} />
 				</div>
-				:
-				<div className={`maxWidthDefault ${styles.mainArea}`}>
-					<h1 className='head1'>{catagoryName}</h1>
-					<p className={`py-2 md:py-3 fontMedium ${styles.tagline}`}> {mainDescription}</p>
-					<ul className='list-disc pr-9'>
-						{listDescription?.map((list, index) => {
-							return (
-								<li key={`listDiscription${index}`} className={styles.descriptionList}>{list}</li>
-							)
-						})}
-					</ul>
-					<h1 className='head1 pt-8'>اختار الدورة المناسبة لك</h1>
+				: <div>
+					{showTypeCards ? (
+						<div className={`maxWidthDefault ${styles.mainArea}`}>
+							<h1 className='head1'>{catagoryName}</h1>
+							<p className={`py-2 md:py-3 fontMedium ${styles.tagline}`}> {mainDescription}</p>
+							<ul className='list-disc pr-9'>
+								{listDescription?.map((list, index) => {
+									return (
+										<li key={`listDiscription${index}`} className={styles.descriptionList}>{list}</li>
+									)
+								})}
+							</ul>
+							<h1 className='head1 pt-8'>كيف ودك تحضر الدورة؟</h1>
 
-					<div className={styles.coursesWrapper}>
-						{coursesDetails?.length > 0 && coursesDetails.map((course, index) => {
-							// Check if the course is in myCourses
-							const enrolledCourse = myCourses?.find(myCourse => myCourse?.course?.id === course?.id);
+							<div className="grid grid-cols-3 gap-2 justify-items-center mt-12 mb-40">
+								<CourseTypeCard
+									type="physical"
+									title="حضوري"
+									subtitle="للجنسين"
+									locations="الرياض، الدمام، جدة"
+									imageUrl="/images/physical.png"
+									onClick={() => handleCardClick('حضوري')}
+								/>
+								<CourseTypeCard
+									type="online"
+									title="عن بعد"
+									subtitle="للجنسين"
+									locations="المباشرة عن بعد"
+									imageUrl="/images/online.png"
+									onClick={() => handleCardClick('عن بعد')}
+								/>
+							</div>
+						</div>
 
-							// if (enrolledCourse) {
-							// 	// If the course is enrolled
-							// 	return (
-							// 		<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
-							// 			<CoursesCardMixedButton
-							// 				data={enrolledCourse}
-							// 				catagoryName={catagoryName}
-							// 			/>
-							// 		</div>
-							// 	);
-							// } else {
-							// 	// If the course is not enrolled
-								return (
-									<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
-										<PhysicalCourseCard
-											courseDetails={course}
-											catagoryName={catagoryName}
-											handleCoursePageNavigation={handleCoursePageNavigation}
-										/>
-									</div>
-								);
-							// }
-						})}
-					</div>
+					) : (
+						<div className={`maxWidthDefault ${styles.mainArea}`}>
+							<div className="flex items-center justify-end gap-3 mb-4">
+								<h1 className='head1 mb-0'>{catagoryName} {selectedType}</h1>
+								<button
+									onClick={handleBack}
+									className="p-3 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors duration-200 shadow-sm flex-shrink-0"
+									aria-label="Back"
+								>
+									<span
+										className="block w-4 h-4 border-t-2 border-r-2 border-gray-600 transform rotate-45"
+									/>
+								</button>
+							</div>
+							<p className={`py-2 md:py-3 fontMedium ${styles.tagline}`}> {mainDescription}</p>
+							<ul className='list-disc pr-9'>
+								{listDescription?.map((list, index) => {
+									return (
+										<li key={`listDiscription${index}`} className={styles.descriptionList}>{list}</li>
+									)
+								})}
+							</ul>
+							<h1 className='head1 pt-8'>الدورات</h1>
+
+							<div>
+								<div className={`${styles.coursesWrapper} mt-5`}>
+									{coursesDetails?.length > 0 && coursesDetails
+										.filter(course => {
+											// Filter based on selected type
+											if (selectedType === "حضوري") {
+												return course.type === "physical";
+											} else if (selectedType === "عن بعد") {
+												return course.type !== "physical";
+											}
+											return true; // If no type selected, show all
+										})
+										.map((course, index) => {
+											return (
+												<div key={`courseDetails${index}`} className={styles.courseCardMetaDataWrapper}>
+													<PhysicalCourseCard
+														courseDetails={course}
+														catagoryName={catagoryName}
+														handleCoursePageNavigation={handleCoursePageNavigation}
+													/>
+												</div>
+											);
+										})}
+								</div>
+							</div>
+						</div>
+					)}
 				</div>
 			}
 		</>
