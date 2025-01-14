@@ -104,7 +104,7 @@ export default function Index(props) {
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
-	
+
 	const getUniqueLocations = () => {
 		// Combine all arrays and handle undefined/null cases
 		const allDates = [
@@ -112,13 +112,13 @@ export default function Index(props) {
 			...(femaleDates || []),
 			...(mixDates || [])
 		];
-		
+
 		// Get unique locations using Set
 		const uniqueLocations = [...new Set(allDates.map(date => date.locationName))];
-		
+
 		return uniqueLocations;
 	};
-	
+
 	const splitLocationIntoFields = (locations) => {
 		// First split the locations into objects
 		const locationsObjects = locations.map(location => {
@@ -130,16 +130,16 @@ export default function Index(props) {
 				displayText: `${city}\n${district}`
 			};
 		});
-		
+
 		// Define the desired city order
 		const cityOrder = ['الرياض', 'الدمام', 'جدة'];
-		
+
 		// Sort based on the cityOrder array
 		return locationsObjects.sort((a, b) => {
 			return cityOrder.indexOf(a.city) - cityOrder.indexOf(b.city);
 		});
 	};
-	
+
 	// Usage
 	const locations = getUniqueLocations();
 	const sortedLocations = splitLocationIntoFields(locations);
@@ -496,6 +496,12 @@ export default function Index(props) {
 									</div>
 								)
 							})}
+							
+							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
+								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
+								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
+							</div>)}
+
 							{courseDetail?.type == 'on-demand' ?
 								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }} className={styles.courseCurriculumWrapper}>
 									<div className='flex justify-between items-center'>
@@ -662,10 +668,7 @@ export default function Index(props) {
 									}
 								</div>
 							}
-							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
-								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
-								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
-							</div>)}
+
 						</div>
 					</div>
 					<WhatsAppLinkComponent isBookSeatPageOpen={true} courseDetail={courseDetail} discountShow={discountShow} />
