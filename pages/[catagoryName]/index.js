@@ -222,7 +222,7 @@ export default function Index(props) {
 
 					) : (
 						<div className={`maxWidthDefault ${styles.mainArea}`}>
-							<div className="flex items-center justify-end gap-3 mb-4">
+							<div className="flex items-center justify-start gap-3 mb-4">
 								<h1 className='head1 mb-0'>{catagoryName} {selectedType}</h1>
 								<button
 									onClick={handleBack}
