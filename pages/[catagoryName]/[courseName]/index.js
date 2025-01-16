@@ -321,7 +321,7 @@ export default function Index(props) {
 		} else {
 			let query = { date: date, gender: gender, region: regionId }
 			console.log(query);
-			handleUserLogin(query);
+			//handleUserLogin(query);
 		}
 	}
 
