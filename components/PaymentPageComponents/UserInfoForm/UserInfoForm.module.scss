@@ -153,22 +153,114 @@
 
 
 
+// .datesMainArea {
+// 	display: flex;
+// 	justify-content: space-between;
+// }
+
+// .dateBox {
+// 	width: 400px !important;
+// 	border: 0.5px solid #808080;
+// 	border-radius: 5px;
+// 	overflow: hidden;
+// 	margin: 0 0 0 1rem;
+// }
+
+// .dateBoxHeader {
+// 	height: 80px;
+// 	border-bottom: 1px solid #808080;
+// }
+
+// .circle {
+// 	height: 26px;
+// 	width: 26px;
+// 	border-radius: 50%;
+// 	border: 1px solid black;
+// 	display: flex;
+// 	justify-content: center;
+// 	align-items: center;
+// 	margin-left: 5px;
+
+// 	div {
+// 		background-color: transparent;
+// 		height: 16px;
+// 		width: 16px;
+// 		border-radius: 50%;
+// 	}
+// }
+
+// .dateRadioBtnBox {
+// 	display: flex;
+// 	flex-direction: column;
+// 	justify-content: center;
+// 	align-items: center;
+// 	padding: 1rem 0;
+// }
+
+.personIcons {
+	font-size: 20px;
+}
+
 .datesMainArea {
 	display: flex;
 	justify-content: space-between;
+
+	/* Base styles for date box */
+	.dateBox {
+		width: 400px !important;
+		border: 0.5px solid #808080;
+		border-radius: 5px;
+		overflow: hidden;
+		margin: 0 0 0 1rem;
+		transition: all 0.3s ease;
+	}
+
+	/* Important: This is the direct modification needed */
+	input[type="radio"]+label {
+		border: 0.5px solid #808080;
+		border-radius: 5px;
+		display: block;
+		/* Add this to ensure the border shows */
+
+	}
+
+	/* Important: This is the direct modification needed */
+	input[type="radio"]:checked+label {
+		border: 0.5px solid $primary-color;
+		border-radius: 5px;
+		display: block;
+		/* Add this to ensure the border shows */
+
+		.label {
+			background-color: $primary-color;
+		}
+
+		.dateBoxHeaderText {
+			color: #ffffff;
+		}
+
+		.circle {
+			border-color: #ffffff;
+
+			div {
+				background-color: #ffffff;
+			}
+		}
+
+		.list {
+			border-bottom: 1px solid $primary-color;
+			border-top: 1px solid $primary-color;
+		}
+	}
 }
 
-.dateBox {
-	width: 400px !important;
-	border: 0.5px solid rgba(0, 0, 0, 0.5);
-	border-radius: 8px;
-	overflow: hidden;
-	margin: 0 0 0 1rem;
-}
-
-.dateBoxHeader {
-	height: 80px;
-	border-bottom: 1px solid #000000;
+/* Move the other styles outside to keep them clean */
+.dateRadioBtnBox {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem 0;
 }
 
 .circle {
@@ -189,36 +281,6 @@
 	}
 }
 
-.dateRadioBtnBox {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	padding: 1rem 0;
-}
-
-.personIcons {
-	font-size: 20px;
-}
-
-.datesMainArea input[type="radio"]:checked+label {
-	.label {
-		background-color: $primary-color;
-	}
-
-	.dateBoxHeaderText {
-		color: #ffffff;
-	}
-
-	.circle {
-		border-color: #ffffff;
-
-		div {
-			background-color: #ffffff;
-		}
-	}
-}
-
 .dateBoxHeaderText {
 	display: flex;
 	align-items: center;
@@ -227,6 +289,138 @@
 	font-size: 20px;
 	margin-top: 10px;
 }
+
+.disableDateBox {
+	background-color: #DEE1E9 !important;
+}
+
+.disableDateBoxHeader {
+	background-color: transparent !important;
+	border-bottom: 0.5px solid rgba(0, 0, 0, 0.5) !important;
+	cursor: not-allowed !important;
+}
+
+// .datesMainArea input[type="radio"]:checked+label {
+// 	.label {
+// 		background-color: $primary-color;
+// 	}
+
+// 	.dateBoxHeaderText {
+// 		color: #ffffff;
+// 	}
+
+// 	.circle {
+// 		border-color: #ffffff;
+
+// 		div {
+// 			background-color: #ffffff;
+// 		}
+// 	}
+
+// 	.dateBox {
+// 		border: 0.5px solid #ffffff;
+// 	}
+// }
+
+// .dateBoxHeaderText {
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	height: 100%;
+// 	font-size: 20px;
+// 	margin-top: 10px;
+// }
+
+// .datesMainArea {
+//     display: flex;
+//     justify-content: space-between;
+
+//     .dateBox {
+//         width: 400px !important;
+//         border: 0.5px solid #808080;
+//         border-radius: 5px;
+//         overflow: hidden;
+//         margin: 0 0 0 1rem;
+//         transition: all 0.2s ease;
+
+//         /* When the radio input is checked, target this specific dateBox */
+//         input[type="radio"]:checked ~ .dateBoxLabel {
+//             .label {
+//                 background-color: $primary-color;
+//             }
+
+//             .dateBoxHeaderText {
+//                 color: #ffffff;
+//             }
+
+//             .circle {
+//                 border-color: #ffffff;
+
+//                 div {
+//                     background-color: #ffffff;
+//                 }
+//             }
+//         }
+
+//         /* When radio is checked, style the parent dateBox */
+//         input[type="radio"]:checked {
+//             & + .dateBoxLabel {
+//                 background-color: #ffffff;
+//             }
+
+//             & ~ .dateBox {
+//                 border: 0.5px solid $primary-color;
+//             }
+//         }
+//     }
+
+//     .dateRadioBtnBox {
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: center;
+//         align-items: center;
+//         padding: 1rem 0;
+//     }
+
+//     .circle {
+//         height: 26px;
+//         width: 26px;
+//         border-radius: 50%;
+//         border: 1px solid black;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         margin-left: 5px;
+
+//         div {
+//             background-color: transparent;
+//             height: 16px;
+//             width: 16px;
+//             border-radius: 50%;
+//         }
+//     }
+// }
+
+// .dateBoxHeaderText {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     height: 100%;
+//     font-size: 20px;
+//     margin-top: 10px;
+// }
+
+// /* Disabled states */
+// .disableDateBox {
+//     background-color: #DEE1E9 !important;
+//     pointer-events: none;
+// }
+
+// .disableDateBoxHeader {
+//     background-color: transparent !important;
+//     border-bottom: 0.5px solid rgba(0, 0, 0, 0.5) !important;
+//     cursor: not-allowed !important;
+// }
 
 .list {
 	border-bottom: 1px solid #000000;
@@ -308,15 +502,15 @@
 	}
 }
 
-.disableDateBox {
-	background-color: #DEE1E9 !important;
-}
+// .disableDateBox {
+// 	background-color: #DEE1E9 !important;
+// }
 
-.disableDateBoxHeader {
-	background-color: transparent !important;
-	border-bottom: 0.5px solid rgba(0, 0, 0, 0.5) !important;
-	cursor: not-allowed !important;
-}
+// .disableDateBoxHeader {
+// 	background-color: transparent !important;
+// 	border-bottom: 0.5px solid rgba(0, 0, 0, 0.5) !important;
+// 	cursor: not-allowed !important;
+// }
 
 .disableRestSitsBox {
 	background: #000000 !important;

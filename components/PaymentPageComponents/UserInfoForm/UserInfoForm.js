@@ -385,14 +385,23 @@ export default function UserInfoForm(props) {
 														return (
 															<div key={`datecard${k}`}>
 																{date.numberOfSeats !== 0 &&
-																	<div className={`${styles.dateBox} ${date.numberOfSeats == 0 ? `${styles.disableDateBox}` : null}`}>
-																		<input type="radio" id={`date1_${k}_${i}`} name={`date${i}`} title="date" value={date.dateFrom}
-																			className="hidden peer" onChange={event => handleFormChange(event, i, date.id)}
+																	<div>
+																		<input
+																			type="radio"
+																			id={`date1_${k}_${i}`}
+																			name={`date${i}`}
+																			title="date"
+																			value={date.dateFrom}
+																			className="hidden peer"
+																			onChange={event => handleFormChange(event, i, date.id)}
 																			checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
 																			disabled={date.numberOfSeats == 0}
 																		/>
-																		<label htmlFor={`date1_${k}_${i}`} className="cursor-pointer">
-																			<div className={`relative ${styles.label} ${date.numberOfSeats == 0 ? `${styles.disableDateBoxHeader}` : null}`}>
+																		<label
+																			htmlFor={`date1_${k}_${i}`}
+																			className={`${styles.dateBox} cursor-pointer ${date.numberOfSeats == 0 ? styles.disableDateBox : ''}`}
+																		>
+																			<div className={`relative ${styles.label}`}>
 																				<div className={styles.dateRadioBtnBox}>
 																					<div className={styles.circle}><div></div></div>
 																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>

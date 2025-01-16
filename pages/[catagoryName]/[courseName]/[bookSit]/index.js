@@ -99,6 +99,45 @@ export default function Index(props) {
 	const dispatch = useDispatch();
 
 	const router = useRouter();
+	const { date: dateId, gender, region: regionId } = router.query;
+
+	// Find date by ID from the appropriate date array
+	const findDateById = (dateId) => {
+		if (!dateId) return null;
+
+		let foundDate;
+		if (props?.courseDetails?.type === 'physical') {
+			if (gender === 'male') {
+				foundDate = props?.maleDates?.find(date => date.id === dateId);
+			} else if (gender === 'female') {
+				foundDate = props?.femaleDates?.find(date => date.id === dateId);
+			}
+		} else if (props?.courseDetails?.type === 'online') {
+			foundDate = props?.mixDates?.find(date => date.id === dateId);
+		}
+
+		return foundDate;
+	};
+
+	// Example usage in useEffect
+	useEffect(() => {
+		if (dateId) {
+			const selectedDate = findDateById(dateId);
+			console.log('Selected Date:', selectedDate);
+
+			if (selectedDate) {
+				// Update your form state or other components with the selected date
+				const updatedStudentsData = [...studentsData];
+				updatedStudentsData[0] = {
+					...updatedStudentsData[0],
+					availabilityId: selectedDate.id,
+					date: selectedDate.dateFrom // or whatever date field you need
+				};
+				setStudentsData(updatedStudentsData);
+			}
+		}
+	}, [dateId, gender]);
+
 	const { asPath } = useRouter();
 
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
@@ -349,7 +388,7 @@ export default function Index(props) {
 				}
 
 				console.log(registeredDate);
-				if(registeredDate){
+				if (registeredDate) {
 					localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
 					console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 				}
@@ -358,7 +397,7 @@ export default function Index(props) {
 
 				localStorage.setItem('courseType', JSON.stringify(courseType));
 				localStorage.setItem('gender', JSON.stringify(studentsData[0].gender));
-				
+
 				setCreatedOrder(res.data)
 				setChangePage(true)
 				setLoading(false)
@@ -392,7 +431,7 @@ export default function Index(props) {
 							}
 
 							console.log(registeredDate);
-							if(registeredDate){
+							if (registeredDate) {
 								localStorage.setItem('registeredDate', JSON.stringify(registeredDate));
 								console.log("registeredDate: ", JSON.parse(localStorage.getItem('registeredDate')));
 							}

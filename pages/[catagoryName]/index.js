@@ -36,26 +36,25 @@ export async function getServerSideProps(contex) {
 	}
 }
 
-
 const CourseTypeCard = ({ type, title, subtitle, locations, imageUrl, onClick }) => {
 	return (
 		<div
 			onClick={onClick}
-			className="relative overflow-hidden rounded-lg cursor-pointer transition-transform hover:-translate-y-1 max-w-md block"
+			className="relative overflow-hidden rounded-lg cursor-pointer transition-transform hover:-translate-y-1 w-full block"
 		>
 			<img
 				src={imageUrl}
 				alt={title}
-				className="w-full object-cover"
+				className="w-full h-auto object-cover"
 			/>
 			<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-				<div className="flex flex-col gap-1">
+				{/* <div className="flex flex-col gap-1">
 					<div className="flex items-center gap-2">
 						<h3 className="text-white text-lg font-hard">{title}</h3>
 					</div>
 					<p className="text-white text-sm mr-5">{subtitle}</p>
 					<p className="text-white text-sm mr-5">{locations}</p>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);
@@ -200,7 +199,7 @@ export default function Index(props) {
 							</ul>
 							<h1 className='head1 pt-8'>كيف ودك تحضر الدورة؟</h1>
 
-							<div className="grid grid-cols-3 gap-2 justify-items-center mt-12 mb-40">
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center mt-8 mb-20 px-4 md:px-0">
 								<CourseTypeCard
 									type="physical"
 									title="حضوري"

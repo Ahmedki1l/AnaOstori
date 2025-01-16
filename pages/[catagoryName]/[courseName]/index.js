@@ -112,15 +112,49 @@ export default function Index(props) {
 			...(femaleDates || []),
 			...(mixDates || [])
 		];
-
+	
 		// Get unique full locations
 		const uniqueLocations = [...new Set(
 			allDates.map(date => date.locationName)
 		)];
-
-		return uniqueLocations;
+	
+		// Group locations by city
+		const cityGroups = uniqueLocations.reduce((acc, location) => {
+			const [district, city] = location.split(' - ').reverse();
+			if (!acc[city]) {
+				acc[city] = [];
+			}
+			acc[city].push(location);
+			return acc;
+		}, {});
+	
+		// Process each city group that has duplicates
+		const processedLocations = Object.entries(cityGroups).flatMap(([city, locations]) => {
+			// If no duplicates, return locations as is
+			if (locations.length <= 1) {
+				return locations;
+			}
+	
+			// Count locations with "حي"
+			const withHay = locations.filter(loc => loc.includes('حي')).length;
+			const withoutHay = locations.length - withHay;
+	
+			// Decide whether to keep "حي" versions based on majority
+			const keepHayVersion = withHay >= withoutHay;
+	
+			// Filter locations based on the decision
+			if (keepHayVersion) {
+				const hayLocation = locations.find(loc => loc.includes('حي'));
+				return hayLocation ? [hayLocation] : [locations[0]];
+			} else {
+				const nonHayLocation = locations.find(loc => !loc.includes('حي'));
+				return nonHayLocation ? [nonHayLocation] : [locations[0]];
+			}
+		});
+	
+		return processedLocations;
 	};
-
+	
 	const splitLocationIntoFields = (locations) => {
 		// First split the locations into objects
 		const locationsObjects = locations.map(location => {
@@ -132,28 +166,27 @@ export default function Index(props) {
 				displayText: `${city}\n${district}`
 			};
 		});
-
+	
 		// Define the desired city order
 		const cityOrder = ['الرياض', 'الدمام', 'جدة'];
-
+	
 		// Sort based on the cityOrder array, with a secondary sort on district
 		return locationsObjects.sort((a, b) => {
 			// First, sort by city order
 			const cityComparison = cityOrder.indexOf(a.city) - cityOrder.indexOf(b.city);
-
+	
 			// If cities are the same or both not in cityOrder, sort by district
 			if (cityComparison === 0) {
 				return a.district.localeCompare(b.district);
 			}
-
+	
 			return cityComparison;
 		});
 	};
-
+	
 	// Usage
 	const locations = getUniqueLocations();
 	const sortedLocations = splitLocationIntoFields(locations);
-	console.log("Sorted Locations:", sortedLocations);
 
 	const [selectedGender, setSelectedGender] = useState('male');
 	const [selectedLocation, setSelectedLocation] = useState(
@@ -201,7 +234,7 @@ export default function Index(props) {
 	const isSeatFullForMix = mixDates.length > 0 ? mixDates.every(obj => obj.numberOfSeats === 0) : false;
 
 	const bookSeatButtonENText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'Notify me' : (isSeatFullForMix ? 'Notify me' : courseDetail.type === 'on-demand' ? 'Reserve your seat now' : 'Explore shcedules');
-	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : courseDetail.type === 'on-demand' ? 'اشترك الآن' : 'تصفّح المواعيد');
+	const bookSeatButtonARText = (!isDateAvailable || (isSeatFullForMale && isSeatFullForFemale)) ? 'علمني عند توفر المقاعد' : (isSeatFullForMix ? 'علمني عند توفر المقاعد' : courseDetail.type === 'on-demand' ? 'اشترك الآن' : 'احجز مقعدك');
 	const bookSeatButtonText = (lang == 'en' ? bookSeatButtonENText : bookSeatButtonARText)
 
 	const screenWidth = useWindowSize().width
@@ -287,7 +320,8 @@ export default function Index(props) {
 			return
 		} else {
 			let query = { date: date, gender: gender, region: regionId }
-			handleUserLogin(query)
+			console.log(query);
+			handleUserLogin(query);
 		}
 	}
 
@@ -565,7 +599,7 @@ export default function Index(props) {
 								</div>
 								:
 								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }}>
-									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</h1>
+									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد المتوفرة`}</h1>
 									{courseDetail?.type == 'physical' ?
 										<>
 											{/* Location Selection */}
