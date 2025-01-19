@@ -416,15 +416,15 @@ export default function Index(props) {
 	const filterDates = (city) => {
 		const newMaleDates = maleDates?.filter(date => date.locationName.includes(city));
 		setFilteredMaleDates(newMaleDates);
-		
+
 		const newFemaleDates = femaleDates?.filter(date => date.locationName.includes(city));
 		setFilteredFemaleDates(newFemaleDates);
 
-		if(selectedGender == "male" && newMaleDates.length <= 0){
+		if (selectedGender == "male" && newMaleDates.length <= 0) {
 			setSelectedGender("female");
 		}
 
-		if(selectedGender == "female" && newFemaleDates.length <= 0){
+		if (selectedGender == "female" && newFemaleDates.length <= 0) {
 			setSelectedGender("male");
 		}
 	}
@@ -591,7 +591,7 @@ export default function Index(props) {
 							{(hasDates) &&
 								(courseDetail?.type == 'on-demand' ?
 									<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }} className={styles.courseCurriculumWrapper}>
-										<div className={`flex ${lang == "en" ? "justify-end" :"justify-start"} items-center`}>
+										<div className={`flex ${lang == "en" ? "justify-end" : "justify-start"} items-center`}>
 											<h1 className='head2'>{lang == "en" ? "Course Content" : "محتوى الدورة"}</h1>
 											{/* <p className='link'>إظهار جميع الأقسام</p> */}
 										</div>
@@ -626,7 +626,7 @@ export default function Index(props) {
 																			</div>
 																			<div className={styles.lockItemWrapper}>
 																				{item?.sectionItem?.freeUsage != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
-																				{item?.sectionItem?.freeUsage == true && <p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>{ lang == "en" ? "Watch for free" : "شاهد مجانًا"}</p>}
+																				{item?.sectionItem?.freeUsage == true && <p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>{lang == "en" ? "Watch for free" : "شاهد مجانًا"}</p>}
 																			</div>
 																		</div>
 																	)
@@ -654,7 +654,7 @@ export default function Index(props) {
 																className={`px-4 py-2 ${selectedLocation === loc.city
 																	? 'bg-[#F26722] text-white rounded-lg'
 																	: 'bg-white rounded-lg'
-																	} hover:opacity-90 transition-opacity`}
+																	} hover:opacity-90 transition-opacity w-full md:w-auto`}
 																style={{
 																	clipPath: 'inset(0 round 8px)',
 																	filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
@@ -676,26 +676,26 @@ export default function Index(props) {
 														<h2 className={`${lang == 'en' ? 'text-left' : 'text-right'}  mb-2`}>{lang == 'en' ? "Choose the date that suits you" : "اختر الموعد المناسب لك"}</h2>
 														<div className={`flex ${lang == 'en' ? 'justify-end' : 'justify-start'}  gap-2`}>
 															{
-																filteredMaleDates?.length > 0 && <button
-																	className={`px-4 py-2 ${selectedGender === 'male'
-																		? 'bg-[#F26722] text-white rounded-lg'
-																		: 'bg-white rounded-lg'
-																		} hover:opacity-90 transition-opacity`}
-																	style={{
-																		clipPath: 'inset(0 round 8px)',
-																		filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
-																	}}
-																	onClick={() => setSelectedGender('male')}
-																>
-																	{lang == "en" ? "Male dates" : "مواعيد الشباب"}
-																</button>
+																filteredMaleDates?.length > 0 && (
+																	<button
+																		className={`px-4 py-2 rounded-lg ${selectedGender === 'male' ? 'bg-[#F26722] text-white' : 'bg-white'
+																			} hover:opacity-90 transition-opacity w-full md:w-auto`}
+																		style={{
+																			clipPath: 'inset(0 round 8px)',
+																			filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))',
+																		}}
+																		onClick={() => setSelectedGender('male')}
+																	>
+																		{lang == "en" ? "Male dates" : "مواعيد الشباب"}
+																	</button>
+																)
 															}
 															{
 																filteredFemaleDates?.length > 0 && <button
 																	className={`px-4 py-2 ${selectedGender === 'female'
 																		? 'bg-[#F26722] text-white rounded-lg'
 																		: 'bg-white rounded-lg'
-																		} hover:opacity-90 transition-opacity`}
+																		} hover:opacity-90 transition-opacity w-full md:w-auto`}
 																	style={{
 																		clipPath: 'inset(0 round 8px)',
 																		filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
