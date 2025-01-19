@@ -651,11 +651,10 @@ export default function Index(props) {
 														{sortedLocations.map(loc => (
 															<button
 																key={loc.city}
-																className={`px-4 py-2 ${selectedLocation === loc.city
-																	? 'bg-[#F26722] text-white rounded-lg'
-																	: 'bg-white rounded-lg'
-																	} hover:opacity-90 transition-opacity`
-																}
+																className={`px-4 py-2 border border-black ${selectedLocation === loc.city
+																		? 'bg-[#F26722] text-white'
+																		: 'bg-white text-black'
+																	} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
 																onClick={() => { setSelectedLocation(loc.city); filterDates(loc.city); }}
 															>
 																<div className="flex flex-col items-center">
@@ -673,28 +672,31 @@ export default function Index(props) {
 														<h2 className={`${lang == 'en' ? 'text-left' : 'text-right'}  mb-2`}>{lang == 'en' ? "Choose the date that suits you" : "اختر الموعد المناسب لك"}</h2>
 														<div className={`flex ${lang == 'en' ? 'justify-end' : 'justify-start'}  gap-2`}>
 															{
-																filteredMaleDates?.length > 0 && <button
-																	className={`px-4 py-2 ${selectedGender === 'male'
-																		? 'bg-[#F26722] text-white rounded-lg'
-																		: 'bg-white rounded-lg'
-																		} hover:opacity-90 transition-opacity`
-																	}
-																	onClick={() => setSelectedGender('male')}
-																>
-																	{lang == "en" ? "Male dates" : "مواعيد الشباب"}
-																</button>
+																filteredMaleDates?.length > 0 && (
+																	<button
+																		className={`px-4 py-2 border border-black ${selectedGender === 'male'
+																			? 'bg-[#F26722] text-white'
+																			: 'bg-white text-black'
+																			} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
+																		onClick={() => setSelectedGender('male')}
+																	>
+																		{lang == "en" ? "Male dates" : "مواعيد الشباب"}
+																	</button>
+																)
 															}
+
 															{
-																filteredFemaleDates?.length > 0 && <button
-																	className={`px-4 py-2 ${selectedGender === 'female'
-																		? 'bg-[#F26722] text-white rounded-lg'
-																		: 'bg-white rounded-lg'
-																		} hover:opacity-90 transition-opacity`
-																	}
-																	onClick={() => setSelectedGender('female')}
-																>
-																	{lang == "en" ? "Female dates" : "مواعيد البنات"}
-																</button>
+																filteredFemaleDates?.length > 0 && (
+																	<button
+																		className={`px-4 py-2 border border-black ${selectedGender === 'female'
+																			? 'bg-[#F26722] text-white'
+																			: 'bg-white text-black'
+																			} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
+																		onClick={() => setSelectedGender('female')}
+																	>
+																		{lang == "en" ? "Female dates" : "مواعيد البنات"}
+																	</button>
+																)
 															}
 														</div>
 													</div>
