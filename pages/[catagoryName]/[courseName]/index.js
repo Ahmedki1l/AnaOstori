@@ -105,6 +105,8 @@ export default function Index(props) {
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 
+	const hasDates = maleDates.length > 0 || femaleDates.length > 0 || mixDates.length > 0;
+
 	const getUniqueLocations = () => {
 		// Combine all arrays and handle undefined/null cases
 		const allDates = [
@@ -112,12 +114,12 @@ export default function Index(props) {
 			...(femaleDates || []),
 			...(mixDates || [])
 		];
-	
+
 		// Get unique full locations
 		const uniqueLocations = [...new Set(
 			allDates.map(date => date.locationName)
 		)];
-	
+
 		// Group locations by city
 		const cityGroups = uniqueLocations.reduce((acc, location) => {
 			const [district, city] = location.split(' - ').reverse();
@@ -127,21 +129,21 @@ export default function Index(props) {
 			acc[city].push(location);
 			return acc;
 		}, {});
-	
+
 		// Process each city group that has duplicates
 		const processedLocations = Object.entries(cityGroups).flatMap(([city, locations]) => {
 			// If no duplicates, return locations as is
 			if (locations.length <= 1) {
 				return locations;
 			}
-	
+
 			// Count locations with "حي"
 			const withHay = locations.filter(loc => loc.includes('حي')).length;
 			const withoutHay = locations.length - withHay;
-	
+
 			// Decide whether to keep "حي" versions based on majority
 			const keepHayVersion = withHay >= withoutHay;
-	
+
 			// Filter locations based on the decision
 			if (keepHayVersion) {
 				const hayLocation = locations.find(loc => loc.includes('حي'));
@@ -151,10 +153,10 @@ export default function Index(props) {
 				return nonHayLocation ? [nonHayLocation] : [locations[0]];
 			}
 		});
-	
+
 		return processedLocations;
 	};
-	
+
 	const splitLocationIntoFields = (locations) => {
 		// First split the locations into objects
 		const locationsObjects = locations.map(location => {
@@ -166,24 +168,24 @@ export default function Index(props) {
 				displayText: `${city}\n${district}`
 			};
 		});
-	
+
 		// Define the desired city order
 		const cityOrder = ['الرياض', 'الدمام', 'جدة'];
-	
+
 		// Sort based on the cityOrder array, with a secondary sort on district
 		return locationsObjects.sort((a, b) => {
 			// First, sort by city order
 			const cityComparison = cityOrder.indexOf(a.city) - cityOrder.indexOf(b.city);
-	
+
 			// If cities are the same or both not in cityOrder, sort by district
 			if (cityComparison === 0) {
 				return a.district.localeCompare(b.district);
 			}
-	
+
 			return cityComparison;
 		});
 	};
-	
+
 	// Usage
 	const locations = getUniqueLocations();
 	const sortedLocations = splitLocationIntoFields(locations);
@@ -262,7 +264,7 @@ export default function Index(props) {
 
 	const handleSlectedItem = (data, id) => {
 		setSelectedNavItem(data)
-		setPaddingTop(7)
+		setPaddingTop(10)
 		const pageTitle = document.getElementById(id)
 		setTimeout(() => {
 			pageTitle.scrollIntoView({ behavior: 'smooth' })
@@ -404,6 +406,23 @@ export default function Index(props) {
 		}
 	}, [screenWidth])
 
+	const [filteredMaleDates, setFilteredMaleDates] = useState([]);
+	const [filteredFemaleDates, setFilteredFemaleDates] = useState([]);
+
+	useEffect(() => {
+		filterDates(selectedLocation);
+	}, []);
+
+	const filterDates = (city) => {
+		setFilteredMaleDates(maleDates
+			?.filter(date => date.locationName.includes(city))
+		);
+
+		setFilteredFemaleDates(femaleDates
+			?.filter(date => date.locationName.includes(city))
+		);
+	}
+
 	return (
 		<>
 			{(courseDetail) &&
@@ -429,6 +448,13 @@ export default function Index(props) {
 											</div>
 										)
 									})}
+									{
+										sortedReviewsByCategory[currentCategory] &&
+										<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
+									}
+									{hasDates &&
+										<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+									}
 									<div>
 										{/* {courseDetail?.type == 'on-demand' ?
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
@@ -436,7 +462,7 @@ export default function Index(props) {
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 											} */}
 										{courseDetail?.type == 'on-demand' &&
-											<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
+											<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
 										}
 									</div>
 								</ul>
@@ -450,14 +476,22 @@ export default function Index(props) {
 												</div>
 											)
 										})}
+										{
+											sortedReviewsByCategory[currentCategory] &&
+											<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
+										}
+										{hasDates &&
+											<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+										}
 										<div>
 											{/* {courseDetail?.type == 'on-demand' ?
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
 												:
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 											} */}
+
 											{courseDetail?.type == 'on-demand' &&
-												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
+												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
 											}
 										</div>
 										{/* <div>
@@ -543,130 +577,135 @@ export default function Index(props) {
 								)
 							})}
 
-							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} className='pb-8' style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
+							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
 								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
 								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
 							</div>)}
 
-							{courseDetail?.type == 'on-demand' ?
-								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }} className={styles.courseCurriculumWrapper}>
-									<div className='flex justify-between items-center'>
-										<h1 className='head2'>محتوى الدورة </h1>
-										{/* <p className='link'>إظهار جميع الأقسام</p> */}
+							{(hasDates) &&
+								(courseDetail?.type == 'on-demand' ?
+									<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }} className={styles.courseCurriculumWrapper}>
+										<div className={`flex ${lang == "en" ? "justify-end" :"justify-start"} items-center`}>
+											<h1 className='head2'>{lang == "en" ? "Course Content" : "محتوى الدورة"}</h1>
+											{/* <p className='link'>إظهار جميع الأقسام</p> */}
+										</div>
+										<p className={styles.courseContentDetailsText}>{noOfVideos > 0 && <span>{noOfVideos} فيديو</span>} {noOfQuizes > 0 && <span>{noOfQuizes} اختبارات</span>} {noOfFiles > 0 && <span>{noOfFiles} ملفات</span>} </p>
+										<div>
+											{ccSections?.map((section, i) => {
+												return (
+													<div key={`ccSection${i}`} className={styles.ccSectionWrapper}>
+														<div className={`${styles.ccSectionHeaders} ${expandedSection === i ? `${styles.borderBottom0}` : ''}`} onClick={() => setExpandedSection(expandedSection === i ? null : i)}>
+															<p className={`font-bold ${styles.ccSectionName}`}>{section.name}</p>
+															<div style={{ height: '20px' }} className={` ${expandedSection === i && 'rotate-180'}`}>
+																<AllIconsComponenet height={22} width={22} iconName={'keyBoardDownIcon'} color={'#FFFFFF'} />
+															</div>
+														</div>
+														{expandedSection === i &&
+															<div className={styles.ccSectionBodyWrapper}>
+																{section?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order).map((item, j) => {
+																	return (
+																		<div key={`ccSectionItem${j}`} className={styles.ccItemWrapper}>
+																			<div className='flex items-center'>
+																				<div>
+																					<AllIconsComponenet height={24} width={24} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
+																				</div>
+																				<div>
+																					<p className={styles.ccItemName}>{item.name}</p>
+																					<p className={styles.ccItemDiscription}>
+																						{item?.type == "video" ? `${secondsToMinutes(item?.duration)} ${lang == "en" ? "minutes" : "دقائق"} ` :
+																							item?.type == "quiz" ? `${item.numberOfQuestions} ${lang == "en" ? "question" : "سؤال"} سؤال` :
+																								`${item.discription}`}
+																					</p>
+																				</div>
+																			</div>
+																			<div className={styles.lockItemWrapper}>
+																				{item?.sectionItem?.freeUsage != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
+																				{item?.sectionItem?.freeUsage == true && <p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>{ lang == "en" ? "Watch for free" : "شاهد مجانًا"}</p>}
+																			</div>
+																		</div>
+																	)
+																})}
+															</div>
+														}
+													</div>
+												)
+											})}
+										</div>
 									</div>
-									<p className={styles.courseContentDetailsText}>{noOfVideos > 0 && <span>{noOfVideos} فيديو</span>} {noOfQuizes > 0 && <span>{noOfQuizes} اختبارات</span>} {noOfFiles > 0 && <span>{noOfFiles} ملفات</span>} </p>
-									<div>
-										{ccSections?.map((section, i) => {
-											return (
-												<div key={`ccSection${i}`} className={styles.ccSectionWrapper}>
-													<div className={`${styles.ccSectionHeaders} ${expandedSection === i ? `${styles.borderBottom0}` : ''}`} onClick={() => setExpandedSection(expandedSection === i ? null : i)}>
-														<p className={`font-bold ${styles.ccSectionName}`}>{section.name}</p>
-														<div style={{ height: '20px' }} className={` ${expandedSection === i && 'rotate-180'}`}>
-															<AllIconsComponenet height={22} width={22} iconName={'keyBoardDownIcon'} color={'#FFFFFF'} />
+									:
+									<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }}>
+										<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد المتوفرة`}</h1>
+										{courseDetail?.type == 'physical' ?
+											<>
+												{/* Location Selection */}
+												<div className="mb-6">
+													<h2 className="text-right mb-2 text-gray-600">{lang == 'en' ? "Branch" : "الفرع"}</h2>
+													<p className="text-right text-sm mb-2">{lang == 'en' ? "Accordingly, we will show you the available dates" : "بناءً عليه يوريك المواعيد المتوفرة"}</p>
+													<div className="flex justify-start gap-2">
+														{sortedLocations.map(loc => (
+															<button
+																key={loc.city}
+																className={`px-4 py-2 ${selectedLocation === loc.city
+																	? 'bg-[#F26722] text-white rounded-lg'
+																	: 'bg-white rounded-lg'
+																	} hover:opacity-90 transition-opacity`}
+																style={{
+																	clipPath: 'inset(0 round 8px)',
+																	filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
+																}}
+																onClick={() => { setSelectedLocation(loc.city); filterDates(loc.city); }}
+															>
+																<div className="flex flex-col items-center">
+																	<div>{loc.city}</div>
+																	<div className="text-sm">{loc.district}</div>
+																</div>
+															</button>
+														))}
+													</div>
+												</div>
+
+												{/* Gender Selection */}
+												{(filteredMaleDates?.length > 0 || filteredFemaleDates?.length > 0) &&
+													<div className="mb-6">
+														<h2 className={`${lang == 'en' ? 'text-left' : 'text-right'}  mb-2`}>{lang == 'en' ? "Choose the date that suits you" : "اختر الموعد المناسب لك"}</h2>
+														<div className={`flex ${lang == 'en' ? 'justify-end' : 'justify-start'}  gap-2`}>
+															{
+																filteredMaleDates?.length > 0 && <button
+																	className={`px-4 py-2 ${selectedGender === 'male'
+																		? 'bg-[#F26722] text-white rounded-lg'
+																		: 'bg-white rounded-lg'
+																		} hover:opacity-90 transition-opacity`}
+																	style={{
+																		clipPath: 'inset(0 round 8px)',
+																		filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
+																	}}
+																	onClick={() => setSelectedGender('male')}
+																>
+																	{lang == "en" ? "Male dates" : "مواعيد الشباب"}
+																</button>
+															}
+															{
+																filteredFemaleDates?.length > 0 && <button
+																	className={`px-4 py-2 ${selectedGender === 'female'
+																		? 'bg-[#F26722] text-white rounded-lg'
+																		: 'bg-white rounded-lg'
+																		} hover:opacity-90 transition-opacity`}
+																	style={{
+																		clipPath: 'inset(0 round 8px)',
+																		filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
+																	}}
+																	onClick={() => setSelectedGender('female')}
+																>
+																	{lang == "en" ? "Female dates" : "مواعيد البنات"}
+																</button>
+															}
 														</div>
 													</div>
-													{expandedSection === i &&
-														<div className={styles.ccSectionBodyWrapper}>
-															{section?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order).map((item, j) => {
-																return (
-																	<div key={`ccSectionItem${j}`} className={styles.ccItemWrapper}>
-																		<div className='flex items-center'>
-																			<div>
-																				<AllIconsComponenet height={24} width={24} iconName={`${item?.type == "video" ? 'curriculumNewVideoIcon' : item?.type == "file" ? 'curriculumNewFileIcon' : 'curriculumNewQuizIcon'}`} color={'#F26722'} />
-																			</div>
-																			<div>
-																				<p className={styles.ccItemName}>{item.name}</p>
-																				<p className={styles.ccItemDiscription}>
-																					{item?.type == "video" ? `${secondsToMinutes(item?.duration)} دقائق` :
-																						item?.type == "quiz" ? `${item.numberOfQuestions} سؤال` :
-																							`${item.discription}`}
-																				</p>
-																			</div>
-																		</div>
-																		<div className={styles.lockItemWrapper}>
-																			{item?.sectionItem?.freeUsage != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
-																			{item?.sectionItem?.freeUsage == true && <p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>شاهد مجانًا</p>}
-																		</div>
-																	</div>
-																)
-															})}
-														</div>
-													}
-												</div>
-											)
-										})}
-									</div>
-								</div>
-								:
-								<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }}>
-									<h1 className='head2'>{lang == 'en' ? `Upcoming appointments` : `المواعيد المتوفرة`}</h1>
-									{courseDetail?.type == 'physical' ?
-										<>
-											{/* Location Selection */}
-											<div className="mb-6">
-												<h2 className="text-right mb-2 text-gray-600">الفرع</h2>
-												<p className="text-right text-sm mb-2">بناءً عليه يوريك المواعيد المتوفرة</p>
-												<div className="flex justify-start gap-2">
-													{sortedLocations.map(loc => (
-														<button
-															key={loc.city}
-															className={`px-4 py-2 ${selectedLocation === loc.city
-																? 'bg-[#F26722] text-white rounded-lg'
-																: 'bg-white rounded-lg'
-																} hover:opacity-90 transition-opacity`}
-															style={{
-																clipPath: 'inset(0 round 8px)',
-																filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
-															}}
-															onClick={() => setSelectedLocation(loc.city)}
-														>
-															<div className="flex flex-col items-center">
-																<div>{loc.city}</div>
-																<div className="text-sm">{loc.district}</div>
-															</div>
-														</button>
-													))}
-												</div>
-											</div>
+												}
 
-											{/* Gender Selection */}
-											<div className="mb-6">
-												<h2 className="text-right mb-2">اختر الموعد المناسب لك</h2>
-												<div className="flex justify-start gap-2">
-													<button
-														className={`px-4 py-2 ${selectedGender === 'male'
-															? 'bg-[#F26722] text-white rounded-lg'
-															: 'bg-white rounded-lg'
-															} hover:opacity-90 transition-opacity`}
-														style={{
-															clipPath: 'inset(0 round 8px)',
-															filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
-														}}
-														onClick={() => setSelectedGender('male')}
-													>
-														مواعيد الشباب
-													</button>
-													<button
-														className={`px-4 py-2 ${selectedGender === 'female'
-															? 'bg-[#F26722] text-white rounded-lg'
-															: 'bg-white rounded-lg'
-															} hover:opacity-90 transition-opacity`}
-														style={{
-															clipPath: 'inset(0 round 8px)',
-															filter: 'drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.1))'
-														}}
-														onClick={() => setSelectedGender('female')}
-													>
-														مواعيد البنات
-													</button>
-												</div>
-											</div>
-
-											<ScrollContainer className="flex">
-												{selectedGender === 'male' ?
-													maleDates
-														?.filter(date => date.locationName.includes(selectedLocation))
-														.map((date, index) => (
+												<ScrollContainer className="flex">
+													{selectedGender === 'male' ?
+														filteredMaleDates.map((date, index) => (
 															<Fragment key={`maleDate${index}`}>
 																<CourseDates
 																	date={date}
@@ -675,10 +714,8 @@ export default function Index(props) {
 																/>
 															</Fragment>
 														))
-													:
-													femaleDates
-														?.filter(date => date.locationName.includes(selectedLocation))
-														.map((date, index) => (
+														:
+														filteredFemaleDates.map((date, index) => (
 															<Fragment key={`femaleDate${index}`}>
 																<CourseDates
 																	date={date}
@@ -687,32 +724,33 @@ export default function Index(props) {
 																/>
 															</Fragment>
 														))
-												}
-											</ScrollContainer>
-										</>
-										:
-										<>
-											<div className="mb-6">
-												<h2 className="text-right mb-2">اختر الموعد المناسب لك</h2>
-											</div>
-											{mixDates?.length > 0 && !isSeatFullForMix ?
-												<ScrollContainer className='flex'>
-													{mixDates?.map((mixDate, index) => {
-														return (
-															<Fragment key={`mixDate${index}`}>
-																<CourseDates date={mixDate} handleBookSit={handleBookSit} lang={lang} />
-															</Fragment>
-														)
-													})}
+													}
 												</ScrollContainer>
-												:
-												<div>
-													<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} lang={lang} />
+											</>
+											:
+											<>
+												<div className="mb-6 mt-6">
+													<h2 className={`${lang == 'en' ? 'text-left' : 'text-right'}  mb-2`}>{lang == 'en' ? "Choose the date that suits you" : "اختر الموعد المناسب لك"}</h2>
 												</div>
-											}
-										</>
-									}
-								</div>
+												{mixDates?.length > 0 && !isSeatFullForMix ?
+													<ScrollContainer className='flex'>
+														{mixDates?.map((mixDate, index) => {
+															return (
+																<Fragment key={`mixDate${index}`}>
+																	<CourseDates date={mixDate} handleBookSit={handleBookSit} lang={lang} />
+																</Fragment>
+															)
+														})}
+													</ScrollContainer>
+													:
+													<div>
+														<UserDetailForm1 coursePageUrl={coursePageUrl} gender={'mix'} courseDetailId={courseDetail?.id} isSubscribed={isMixSubscribed} lang={lang} />
+													</div>
+												}
+											</>
+										}
+									</div>
+								)
 							}
 
 						</div>

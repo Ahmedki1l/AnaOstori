@@ -68,7 +68,7 @@ export default function CourseDetailsHeader(props) {
 												rel="noopener noreferrer"
 												style={{ color: '#1e90ff' }} // Brighter blue color
 											>
-												<p>الرياض</p>
+												{lang == 'en' ? <p>Riyadh</p> : <p>الرياض</p>}
 											</a>
 											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
 											<a
@@ -77,7 +77,7 @@ export default function CourseDetailsHeader(props) {
 												rel="noopener noreferrer"
 												style={{ color: '#1e90ff' }} // Brighter blue color
 											>
-												<p>الدمام</p>
+												{lang == 'en' ? <p>Dammam</p> : <p>الرياض</p>}
 											</a>
 											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
 											<a
@@ -86,7 +86,7 @@ export default function CourseDetailsHeader(props) {
 												rel="noopener noreferrer"
 												style={{ color: '#1e90ff' }} // Brighter blue color
 											>
-												<p>جدة</p>
+												{lang == 'en' ? <p>Gadda</p> : <p>الرياض</p>}
 											</a>
 										</div>
 										:
