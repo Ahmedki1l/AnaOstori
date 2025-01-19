@@ -18,10 +18,26 @@ export default function UserInfoForm(props) {
 	const noOfUsersTag = PaymentConst.noOfUsersTag
 	const courseDetail = props.courseDetails
 	const genders = PaymentConst.genders
-	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates
-	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates
-	const [maleDates, setMaleDates] = useState([]);
-	const [femaleDates, setFemaleDates] = useState([]);
+
+	const router = useRouter();
+	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
+	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
+	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
+
+	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates;
+	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates;
+
+	let choosenQueryMaleDates = [];
+	let choosenQueryFemaleDates = [];
+
+	if (selectedDate && selectedGender && selectedRegionId) {
+		choosenQueryMaleDates = initialMaleDate.filter((date) => date.regionId == selectedRegionId);
+		choosenQueryFemaleDates = initialFemaleDate.filter((date) => date.regionId == selectedRegionId);
+	}
+
+	const [maleDates, setMaleDates] = useState([...choosenQueryMaleDates]);
+	const [femaleDates, setFemaleDates] = useState([...choosenQueryFemaleDates]);
+
 	const mixDates = props.mixDates.length > 0 && props.mixDates.every(obj => obj.numberOfSeats === 0) ? [] : props.mixDates;
 	const storeData = useSelector((state) => state?.globalStore);
 	const userPredefineEmail = storeData?.viewProfileData?.email
@@ -30,7 +46,6 @@ export default function UserInfoForm(props) {
 	const userPredefineGender = storeData?.viewProfileData?.gender
 	const [isDateForAllSelected, setIsDateForAllSelected] = useState(false)
 	const [regionDataList, setRegionDataList] = useState()
-	const router = useRouter()
 	const groupDiscountEligible = courseDetail.groupDiscountEligible
 	const smallScreen = useWindowSize().smallScreen
 	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
@@ -58,9 +73,7 @@ export default function UserInfoForm(props) {
 		{ iconName: 'studentTwoIcon', iconWidth: smallScreen ? '20' : '32', label1: 'شخصين', subLabel1: `${courseDetail.discountForTwo} ر.س على كل شخص`, label2: `${(courseDetail.discountForTwo) * 2} ر.س`, subLabel2: `وفر ${((courseDetail.price * 2) - (courseDetail.discountForTwo * 2))} ر.س`, oldPrice: '', singleDiscount: '' },
 		{ iconName: 'studentThreeIcon', iconWidth: smallScreen ? '22' : '40', label1: '3 اشخاص او اكثر', subLabel1: `${courseDetail.discountForThreeOrMore} ر.س على كل شخص`, label2: 'حسب العدد', oldPrice: '', singleDiscount: '' },
 	]
-	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
-	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
-	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
+
 
 	const preSelectTemplet = { gender: selectedGender, date: selectedDate, fullName: null, phoneNumber: null, email: null, availabilityId: router.query.date }
 	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
@@ -72,10 +85,11 @@ export default function UserInfoForm(props) {
 				: (router.query ? [preSelectTemplet]
 					: [userTemplet]))
 
+
 	useEffect(() => {
 		getRegionAndBranchList();
+	}, []);
 
-	}, [])
 
 	const handleTotalStudent = (value) => {
 		const newTotalStudent = value
@@ -190,19 +204,56 @@ export default function UserInfoForm(props) {
 	}
 
 	const getRegionAndBranchList = async () => {
+		console.log("selected initial region: ", selectedRegionId);
 		let body = {
 			routeName: 'listRegion',
 		}
 		await getRouteAPI(body).then((res) => {
 			setRegionDataList(res.data)
 
+			const currentRegion = selectedRegionId ? selectedRegionId : res.data[0].id;
+
 			// if (!router.query.region) {
 			// 	setSelectedRegionId(res.data[0].id)
 			// }
 
-			setSelectedRegionId(res.data[0].id);
+			setSelectedRegionId(currentRegion);
 
-			console.log("getRegionAndBranchList Region ID: ", res.data[0].id);
+			if (maleDates.length > 0 || femaleDates.length > 0) {
+				let data = [...studentsData]
+				data[0]['region'] = selectedRegionId;
+				setStudentsData(data);
+				const regionDateListMale = initialMaleDate.filter((date) => date.regionId == selectedRegionId);
+				const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == selectedRegionId);
+				if (regionDateListMale.length > 0) {
+					setDisabledGender(null)
+					setMaleDates(regionDateListMale)
+				} else if (regionDateListMale.length == 0) {
+					setSelectedGender('female')
+					data[0]['gender'] = 'female'
+					setDisabledGender('male')
+				}
+				if (regionDateListFemale.length > 0) {
+					setDisabledGender(null)
+					setFemaleDates(regionDateListFemale)
+				} else if (regionDateListFemale.length == 0) {
+					setSelectedGender('male')
+					data[0]['gender'] = 'male'
+					setDisabledGender('female')
+				}
+				if (regionDateListMale.length == 0) {
+					setMaleDates([])
+				} else {
+					setMaleDates(regionDateListMale)
+				}
+				if (regionDateListFemale.length == 0) {
+					setFemaleDates([])
+				} else {
+					setFemaleDates(regionDateListFemale)
+				}
+			}
+
+			console.log("getRegionAndBranchList Region ID: ", currentRegion);
 
 			const availableRegionSet = new Set(initialMaleDate.concat(initialFemaleDate).map((dates) => {
 				return dates.regionId;
@@ -219,6 +270,7 @@ export default function UserInfoForm(props) {
 
 	const handleRegionChange = (event, index) => {
 		const selectedRegionId = event.target.value
+		console.log("selected region: ", selectedRegionId);
 		setSelectedRegionId(selectedRegionId)
 		let data = [...studentsData]
 		data[index]['region'] = selectedRegionId

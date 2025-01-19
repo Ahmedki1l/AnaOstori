@@ -323,7 +323,7 @@ export default function Index(props) {
 		} else {
 			let query = { date: date, gender: gender, region: regionId }
 			console.log(query);
-			//handleUserLogin(query);
+			handleUserLogin(query);
 		}
 	}
 
@@ -414,13 +414,19 @@ export default function Index(props) {
 	}, []);
 
 	const filterDates = (city) => {
-		setFilteredMaleDates(maleDates
-			?.filter(date => date.locationName.includes(city))
-		);
+		const newMaleDates = maleDates?.filter(date => date.locationName.includes(city));
+		setFilteredMaleDates(newMaleDates);
+		
+		const newFemaleDates = femaleDates?.filter(date => date.locationName.includes(city));
+		setFilteredFemaleDates(newFemaleDates);
 
-		setFilteredFemaleDates(femaleDates
-			?.filter(date => date.locationName.includes(city))
-		);
+		if(selectedGender == "male" && newMaleDates.length <= 0){
+			setSelectedGender("female");
+		}
+
+		if(selectedGender == "female" && newFemaleDates.length <= 0){
+			setSelectedGender("male");
+		}
 	}
 
 	return (
@@ -450,10 +456,10 @@ export default function Index(props) {
 									})}
 									{
 										sortedReviewsByCategory[currentCategory] &&
-										<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
+										<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
 									}
 									{hasDates &&
-										<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+										<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
 									}
 									<div>
 										{/* {courseDetail?.type == 'on-demand' ?

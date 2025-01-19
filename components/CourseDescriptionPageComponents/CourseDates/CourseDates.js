@@ -34,7 +34,7 @@ export default function CourseDates(props) {
 						<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{dateWithDay(date?.dateFrom)}</p>
 					}
 				</div> */}
-				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => props.handleBookSit(date.id, date.gender, date.numberOfSeats, date.regionId)}>
+				<div className={`fontMedium relative ${styles.dateBoxHeader} `} onClick={() => { console.log(date.regionId); props.handleBookSit(date.id, date.gender, date.numberOfSeats, date.regionId)}}>
 					<p className={`fontMedium ${styles.dateBoxHeaderText} `}>{date?.course.type == 'physical' && date?.name ? date.name : dateWithDay(date?.dateFrom)}</p>
 				</div>
 				<ul className={styles.list}>

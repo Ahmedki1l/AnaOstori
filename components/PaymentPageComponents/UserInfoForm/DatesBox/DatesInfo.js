@@ -12,7 +12,7 @@ import { mediaUrl } from '../../../../constants/DataManupulation';
 
 export default function DatesInfo(props) {
 
-	const date = props.date
+	const date = props.date;
 
 	const isSmallScreen = useWindowSize().smallScreen
 
