@@ -687,6 +687,59 @@
 	.radioBtnHead {
 		font-size: 20px;
 	}
+	
+	.datesMainArea {
+		display: flex;
+		justify-content: space-between;
+	
+		/* Base styles for date box */
+		.dateBox {
+			width: 300px !important;
+			border: 0.5px solid #808080;
+			border-radius: 5px;
+			overflow: hidden;
+			margin: 0 0 0 1rem;
+			transition: all 0.3s ease;
+		}
+	
+		/* Important: This is the direct modification needed */
+		input[type="radio"]+label {
+			border: 0.5px solid #808080;
+			border-radius: 5px;
+			display: block;
+			/* Add this to ensure the border shows */
+	
+		}
+	
+		/* Important: This is the direct modification needed */
+		input[type="radio"]:checked+label {
+			border: 0.5px solid $primary-color;
+			border-radius: 5px;
+			display: block;
+			/* Add this to ensure the border shows */
+	
+			.label {
+				background-color: $primary-color;
+			}
+	
+			.dateBoxHeaderText {
+				color: #ffffff;
+			}
+	
+			.circle {
+				border-color: #ffffff;
+	
+				div {
+					background-color: #ffffff;
+				}
+			}
+	
+			.list {
+				border-bottom: 1px solid $primary-color;
+				border-top: 1px solid $primary-color;
+			}
+		}
+	}
 
 	.radioBtnDiscription {
 		font-size: 16px;
