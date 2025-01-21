@@ -124,7 +124,7 @@ export default function CourseDetailsHeader(props) {
 											>
 												<GoogleMapsIcon />
 											</a>
-											<p className="mr-2">{lang == 'en' ? "Riyadh": "الرياض، حي الياسمين"}</p>
+											<p className="mr-2">{lang == 'en' ? "Riyadh, Al-Yasmeen District": "الرياض، حي الياسمين"}</p>
 											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
 											<a
 												href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`}
@@ -135,7 +135,7 @@ export default function CourseDetailsHeader(props) {
 											>
 												<GoogleMapsIcon />
 											</a>
-											<p className="mr-2">{lang == 'en' ? "Dammam": "الدمام، حي الإتصالات"}</p>
+											<p className="mr-2">{lang == 'en' ? "Dammam, Al-Etisalat District": "الدمام، حي الإتصالات"}</p>
 											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
 											<a
 												href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`}
@@ -146,7 +146,7 @@ export default function CourseDetailsHeader(props) {
 											>
 												<GoogleMapsIcon />
 											</a>
-											<p className="mr-2">{lang == 'en' ? "Gadda": "جدة، حي السلامة"}</p>
+											<p className="mr-2">{lang == 'en' ? "Jeddah, Al Salamah District": "جدة، حي السلامة"}</p>
 										</div>
 										:
 										<p className=''>{lang == 'en' ? `Broadcast via` : 'يتم بثها عبر '}</p>
