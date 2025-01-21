@@ -40,21 +40,23 @@ const CourseTypeCard = ({ type, title, subtitle, locations, imageUrl, onClick })
 	return (
 		<div
 			onClick={onClick}
-			className="relative overflow-hidden rounded-lg cursor-pointer transition-transform hover:-translate-y-1 w-full block"
+			className="group relative overflow-hidden rounded-lg cursor-pointer transition-transform hover:-translate-y-1 w-full"
 		>
 			<img
 				src={imageUrl}
 				alt={title}
-				className="w-full h-auto object-cover"
+				className="w-full h-auto object-cover rounded-lg"
 			/>
-			<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-				{/* <div className="flex flex-col gap-1">
-					<div className="flex items-center gap-2">
-						<h3 className="text-white text-lg font-hard">{title}</h3>
-					</div>
-					<p className="text-white text-sm mr-5">{subtitle}</p>
-					<p className="text-white text-sm mr-5">{locations}</p>
-				</div> */}
+			<div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-lg">
+				{/* <div className="absolute bottom-0 left-0 right-0 p-3">
+			<div className="flex flex-col gap-1">
+			  <div className="flex items-center gap-2">
+				<h3 className="text-white text-lg font-hard">{title}</h3>
+			  </div>
+			  <p className="text-white text-sm mr-5">{subtitle}</p>
+			  <p className="text-white text-sm mr-5">{locations}</p>
+			</div>
+		  </div> */}
 			</div>
 		</div>
 	);

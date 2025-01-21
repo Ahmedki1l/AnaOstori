@@ -158,14 +158,24 @@ export default function Index(props) {
 	};
 
 	const splitLocationIntoFields = (locations) => {
-		// First split the locations into objects
+		// First split the locations into objects and ensure districts start with "حي"
 		const locationsObjects = locations.map(location => {
 			const [district, city] = location.split(' - ').reverse();
+
+			// Add "حي" prefix if the district doesn't start with it
+			let processedDistrict = district;
+			if (!district.startsWith('حي ')) {
+				processedDistrict = `حي ${district}`;
+			}
+
+			// Reconstruct the full location with the processed district
+			const fullLocation = `${processedDistrict} - ${city}`;
+
 			return {
 				city,
-				district,
-				fullLocation: location,
-				displayText: `${city}\n${district}`
+				district: processedDistrict,
+				fullLocation,
+				displayText: `${city}\n${processedDistrict}`
 			};
 		});
 
@@ -411,7 +421,7 @@ export default function Index(props) {
 
 	useEffect(() => {
 		filterDates(selectedLocation);
-	}, []);
+	}, [selectedLocation, window.location.href]);
 
 	const filterDates = (city) => {
 		const newMaleDates = maleDates?.filter(date => date.locationName.includes(city));
@@ -652,8 +662,8 @@ export default function Index(props) {
 															<button
 																key={loc.city}
 																className={`px-4 py-2 border border-black ${selectedLocation === loc.city
-																		? 'bg-[#F26722] text-white'
-																		: 'bg-white text-black'
+																	? 'bg-[#F26722] text-white'
+																	: 'bg-white text-black'
 																	} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
 																onClick={() => { setSelectedLocation(loc.city); filterDates(loc.city); }}
 															>
