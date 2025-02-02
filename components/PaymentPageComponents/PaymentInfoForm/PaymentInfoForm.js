@@ -17,7 +17,6 @@ import { mediaUrl } from '../../../constants/DataManupulation'
 import { getRouteAPI } from '../../../services/apisService'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import TabbyPaymentForm from './TabbyPaymentForm' // You'll need to create this component
-import { toast } from 'react-hot-toast'
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -56,11 +55,6 @@ export default function PaymentInfoForm(props) {
 				setTabbyUrl(res.data[0].url);
 			}
 		} catch (error) {
-			toast.error(
-				type === 'tabby'
-					? 'فشل في تهيئة الدفع عبر تابي. يرجى المحاولة مرة أخرى'
-					: 'فشل في تهيئة طريقة الدفع المحددة'
-			)
 			console.error("Error generating checkout ID:", error);
 		}
 	};
