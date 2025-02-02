@@ -33,6 +33,7 @@
     "react-dom": "18.2.0",
     "react-file-utils": "^1.2.0",
     "react-gtm-module": "^2.0.11",
+    "react-hot-toast": "^2.5.1",
     "react-indiana-drag-scroll": "^2.2.0",
     "react-pdf": "^7.3.3",
     "react-player": "^2.12.0",
