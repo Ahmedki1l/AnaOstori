@@ -168,7 +168,7 @@ const Index = () => {
                 render: (text, _record) => {
                     return (
                         <div>
-                            <p>{(Number(_record?.earning)).toFixed()} ر.س</p>
+                            <p>{(Number(_record?.earning)).toFixed(2)} ر.س</p>
                         </div>
                     )
                 }

@@ -96,7 +96,7 @@ const Index = () => {
     const adminDashBoardData = [
         {
             id: 1,
-            titleHead: Math.floor(dashBoardData?.orderStats.find(order => order.status === 'accepted')?.totalAcceptedPrice) || ' ر.س EarningMoney',
+            titleHead: parseFloat(dashBoardData?.orderStats.find(order => order.status === 'accepted')?.totalAcceptedPrice).toFixed(2) || ' ر.س EarningMoney',
             titleBody: 'إجمالي المبيعات',
             viewMoreInfo: 'عرض التفاصيل',
             nextPageLink: '/instructorPanel/manageAdminDashBoard/completedOrders',
