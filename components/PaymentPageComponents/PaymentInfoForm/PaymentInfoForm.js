@@ -16,7 +16,8 @@ import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import { getRouteAPI } from '../../../services/apisService'
 import * as PaymentConst from '../../../constants/PaymentConst'
-
+import TabbyPaymentForm from './TabbyPaymentForm' // You'll need to create this component
+import { toast } from 'react-hot-toast'
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -32,6 +33,7 @@ export default function PaymentInfoForm(props) {
 	const [couponError, setCouponError] = useState(false)
 	const [couponAppliedData, setCouponAppliedData] = useState()
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
+	const [tabbyUrl, setTabbyUrl] = useState('')
 	const [paymentType, setPaymentType] = useState('')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
@@ -51,8 +53,14 @@ export default function PaymentInfoForm(props) {
 			if (res.status === 200) {
 				setPaymentType(type);
 				setCheckoutId(res.data[0].id);
+				setTabbyUrl(res.data[0].url);
 			}
 		} catch (error) {
+			toast.error(
+				type === 'tabby'
+					? 'فشل في تهيئة الدفع عبر تابي. يرجى المحاولة مرة أخرى'
+					: 'فشل في تهيئة طريقة الدفع المحددة'
+			)
 			console.error("Error generating checkout ID:", error);
 		}
 	};
@@ -146,6 +154,40 @@ export default function PaymentInfoForm(props) {
 								</label>
 							</>
 						}
+						{/* Tabby Payment Option */}
+						{/* <input
+							type="radio"
+							id="tabbyPay"
+							name="paymentDetails"
+							className="hidden peer"
+							onClick={() => generateCheckoutId('tabby')}
+						/>
+						<label htmlFor="tabbyPay" className='relative'>
+							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
+								<div className='flex items-center'>
+									<div className={styles.circle}><div></div></div>
+									<p className={`fontMedium ${styles.labelText}`}>الدفع عبر تــابي</p>
+								</div>
+								<Logo
+									height={27}
+									width={80}
+									logoName={'tabbyPaymentLogo'}  // Add Tabby logo to your assets
+									alt={'Tabby payment logo'}
+								/>
+							</div>
+							<div className={styles.creditCardWrapper}>
+								{(checkoutID && paymentType === 'tabby') && (
+									<TabbyPaymentForm
+										checkoutID={checkoutID}
+										orderID={createdOrder.id}
+										redirectURL={tabbyUrl}
+										amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
+										couponAppliedData={couponAppliedData}
+										onError={(error) => toast.error(error.message)}
+									/>
+								)}
+							</div>
+						</label> */}
 						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
 						<label htmlFor="madaCardDetails" className='relative'>
 							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>

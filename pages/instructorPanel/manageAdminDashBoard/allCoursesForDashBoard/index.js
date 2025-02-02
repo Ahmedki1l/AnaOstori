@@ -175,7 +175,7 @@ const Index = () => {
             },
             {
                 title: 'إجمالي المشتركين',
-                dataIndex: 'enrollmentCount',
+                dataIndex: 'orderCount',
             },
             {
                 title: 'تاريخ الإنشاء',

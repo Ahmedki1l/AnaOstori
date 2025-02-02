@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getAuthRouteAPI, getPaymentInfoAPI } from '../services/apisService';
+import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI } from '../services/apisService';
 import { dateWithDay, timeDuration2 } from '../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
@@ -19,8 +19,14 @@ export default function Payment(props) {
     const [transactionDetails, setTransactionDetails] = useState([])
     const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
     const router = useRouter()
-    const orderID = router.asPath?.split("=")[1]?.split("&")[0]
-    const transactionID = router.asPath?.split("=")[2]?.split("&")[0]
+
+    const { orderId, id, type, payment_id } = router.query;
+
+    const orderID = orderId || orderId || router.query.orderId || null;
+    const transactionID = id || router.query.id || null;
+    const extractedType = type || null;
+    const extractedPaymentID = payment_id || null;
+
     const [loading, setLoading] = useState(true)
     const [invoiceUrl, setInvoiceUrl] = useState('')
     const dispatch = useDispatch()
@@ -49,37 +55,72 @@ export default function Payment(props) {
     }, [router.query.orderId, router.query.id])
 
     const getPaymentData = async () => {
-        let data = {
-            orderId: router.query.orderId,
-            transactionId: router.query.id,
-        }
-
-        let paymentData;
-
-        await getPaymentInfoAPI(data).then(async (response) => {
-            ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
-            setTransactionDetails(response.data)
-            console.log(response.data[0])
-            paymentData = response.data[0];
-            const flag = response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false;
-            setIsPaymentSuccess(flag);
-            setLoading(false)
-            setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
-            const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
-            const [myCourseData] = await Promise.all([getMyCourseReq])
-            dispatch({
-                type: 'SET_ALL_MYCOURSE',
-                myCourses: myCourseData?.data,
-            });
-
-            // If payment is successful, send WhatsApp message
-            if (flag) {
-                await sendWhatsAppMessage(paymentData);
+        if(!type && !payment_id){
+            let data = {
+                orderId: router.query.orderId,
+                transactionId: router.query.id,
             }
+    
+            let paymentData;
+    
+            await getPaymentInfoAPI(data).then(async (response) => {
+                ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
+                setTransactionDetails(response.data)
+                console.log(response.data[0])
+                paymentData = response.data[0];
+                const flag = response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false;
+                setIsPaymentSuccess(flag);
+                setLoading(false)
+                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
+                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
+                const [myCourseData] = await Promise.all([getMyCourseReq])
+                dispatch({
+                    type: 'SET_ALL_MYCOURSE',
+                    myCourses: myCourseData?.data,
+                });
+    
+                // If payment is successful, send WhatsApp message
+                if (flag) {
+                    await sendWhatsAppMessage(paymentData);
+                }
+    
+            }).catch(async (error) => {
+                setLoading(false)
+            })
+        }else if(type){
+            if(!payment_id){
+                console.log("payment_id not found");
+                return;
+            }
+            
+            let data = {
+                payment_id: payment_id,
+            }
+            let paymentData;
+            await getTabbyPaymentInfoAPI(data).then(async (response) => {
+                setTransactionDetails(response.data)
+                console.log(response.data[0])
+                paymentData = response.data[0];
+                const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
+                setIsPaymentSuccess(flag);
+                setLoading(false)
+                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
+                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
+                const [myCourseData] = await Promise.all([getMyCourseReq])
+                dispatch({
+                    type: 'SET_ALL_MYCOURSE',
+                    myCourses: myCourseData?.data,
+                });
 
-        }).catch(async (error) => {
-            setLoading(false)
-        })
+                // If payment is successful, send WhatsApp message
+                if (flag) {
+                    await sendWhatsAppMessage(paymentData);
+                }
+
+            }).catch(async (error) => {
+                setLoading(false)
+            })
+        }
     }
 
     const sendWhatsAppMessage = async (orderDetail) => {

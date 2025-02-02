@@ -43,6 +43,7 @@ export const uploadFileAPI = (data) => { return instance2.post('/file/upload', d
 // export const createOrderAPI = (data) => { return instance.post(`/createOrder`, data?.orderData) }
 // export const getMyOrderAPI = (data) => { return instance.get(`/order/query`) }
 export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment`, data) }
+export const getTabbyPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyTabbyPayment`, data) }
 // export const getCatagoriesAPI = () => { return instance.get(`/catagories`) }
 // export const courseCurriculumAPI = (data) => { return instance.get(`/course/curriculum/${data?.courseID}`) }
 // export const getCourseItemAPI = (data) => { return instance.get(`/course/${data?.courseID}/item/${data?.itemID}`) }

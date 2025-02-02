@@ -258,6 +258,27 @@
 	font-size: 19px;
 }
 
+.tabbyPaymentLogo {
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.tabby-loading-container {
+	padding: 2rem;
+	text-align: center;
+	font-size: 1.1rem;
+	color: #666;
+}
+
+// Ensure consistent radio button styling
+.radioBtnBox2 {
+
+	// Match existing styling
+	&.tabby-option {
+		background-color: #f8f9fa;
+		border-color: #e9ecef;
+	}
+}
+
 @media (max-width: 1350px) {
 
 	.paymentInfoMainArea {
