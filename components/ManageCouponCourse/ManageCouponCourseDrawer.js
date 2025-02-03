@@ -71,7 +71,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         // to store the numeric discount. We'll rename it to avoid confusion:
         let discountValue = values.percentage; // rename this in your form to "discountValue" for clarity
 
-        if (values.discountMode === 'amount') {
+        if (values.discountMode === 'قيمة') {
             // If you only allow 1 course for "amount"
             if (selectedCourse.length > 1) {
                 setShowBtnLoader(false);
