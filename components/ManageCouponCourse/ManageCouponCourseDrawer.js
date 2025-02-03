@@ -55,6 +55,10 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         setSelectedCouponType(selectedCoupon?.type)
     }, [selectedCoupon, couponCourseForm])
 
+    const handleSelectDiscountModeChange = (value) => {
+        setSelectedDiscountMode(value);
+    };
+
     const handleSaveCouponDetails = async (values) => {
         setShowBtnLoader(true)
         values.expires = dayjs(values?.expires?.$d).endOf('day').format('YYYY-MM-DD HH:mm:ss');
@@ -163,8 +167,8 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                 </p>
                 <FormItem
                     name="discountMode"
-                    initialValue="percentage"
-                    rules={[{ required: true, message: 'Select a discount mode' }]}
+                    initialValue="نسبة"
+                    rules={[{ required: true, message: 'إختر نوع الخصم' }]}
                 >
                     <Select
                         width={425}
