@@ -46,7 +46,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             percentage: selectedCoupon?.percentage,
             type: selectedCoupon?.type,
             limit: selectedCoupon?.limit,
-            discountMode: 'percentage',
+            discountMode: 'نسبة',
             courseIds: selectedCoupon?.couponCourses.map((item) => { return item.course.id }),
         })
         setSelectedCourse(selectedCoupon?.couponCourses.map((item) => {
