@@ -98,6 +98,9 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             }
         }
 
+        // Remove discountMode from the values object
+        delete values.discountMode;
+
         // else if 'percentage', we keep it as is
         let data = {
             routeName: selectedCoupon?.id ? "updateCoupon" : "createCoupon",
