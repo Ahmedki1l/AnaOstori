@@ -19,6 +19,10 @@ export const manageCouponConst = {
     couponPercantagePlaceHolder: 'نسبة الخصم',
     couponPercantageError: 'حدد نسبة الخصم',
 
+    couponAmountHead: 'قيمة الخصم*',
+    couponAmountPlaceHolder: 'قيمة الخصم',
+    couponAmountError: 'حدد قيمة الخصم',
+
     couponDiscountType: 'نوع الخصم*',
     couponDiscountTypePlaceHolder: 'اختار نوع الخصم',
     couponDiscountTypeError: 'حدد نوع الخصم',

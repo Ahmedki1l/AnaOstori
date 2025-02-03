@@ -4,7 +4,7 @@ import Empty from '../Empty'
 
 const CustomOrderListComponent = ({ data }) => {
     const customEmptyComponent = (
-        <Empty emptyText={'ا توجد بيانات'} containerhight={400} />
+        <Empty emptyText={'لا توجد بيانات'} containerhight={400} />
     )
     return (
         <div className='mt-4'>
