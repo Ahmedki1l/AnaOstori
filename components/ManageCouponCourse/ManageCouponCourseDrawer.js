@@ -34,7 +34,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         cat.courses.map((subItem) => ({
             value: subItem.id,
             label: subItem.name,
-            price: subItem.price, // be sure that the course object includes "price"
+            price: subItem.discount, // be sure that the course object includes "price"
         }))
     );
 
