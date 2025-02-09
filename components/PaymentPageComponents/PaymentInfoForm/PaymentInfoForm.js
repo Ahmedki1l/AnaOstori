@@ -149,7 +149,7 @@ export default function PaymentInfoForm(props) {
 							</>
 						}
 						{/* Tabby Payment Option */}
-						{/* <input
+						<input
 							type="radio"
 							id="tabbyPay"
 							name="paymentDetails"
@@ -160,7 +160,7 @@ export default function PaymentInfoForm(props) {
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
 								<div className='flex items-center'>
 									<div className={styles.circle}><div></div></div>
-									<p className={`fontMedium ${styles.labelText}`}>الدفع عبر تــابي</p>
+									<p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p>
 								</div>
 								<Logo
 									height={27}
@@ -181,7 +181,7 @@ export default function PaymentInfoForm(props) {
 									/>
 								)}
 							</div>
-						</label> */}
+						</label>
 						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
 						<label htmlFor="madaCardDetails" className='relative'>
 							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
