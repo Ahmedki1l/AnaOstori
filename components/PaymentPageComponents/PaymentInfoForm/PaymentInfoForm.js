@@ -48,15 +48,16 @@ export default function PaymentInfoForm(props) {
 		};
 
 		console.log("payload: ", data);
-
+		let res;
 		try {
-			const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
+			res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
 			if (res.status === 200) {
 				setPaymentType(type);
 				setCheckoutId(res.data[0].id);
 				setTabbyUrl(res.data[0].url);
 			}
 		} catch (error) {
+			console.log(res);
 			console.error("Error generating checkout ID:", error);
 		}
 	};
@@ -150,6 +151,22 @@ export default function PaymentInfoForm(props) {
 								</label>
 							</>
 						}
+						
+						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
+						<label htmlFor="madaCardDetails" className='relative'>
+							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
+								<div className='flex items-center'>
+									<div className={styles.circle}><div></div></div>
+									<p className={`fontMedium ${styles.labelText}`}>بطاقة مدى البنكية</p>
+								</div>
+								<Logo height={27} width={53} logoName={'madaPaymentLogo'} alt={'Payment Methode Logo'} />
+							</div>
+							<div className={styles.creditCardWrapper}>
+								{(checkoutID && paymentType == 'mada') &&
+									<MadaCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
+								}
+							</div>
+						</label>
 						{/* Tabby Payment Option */}
 						<input type="radio" id="tabbyPay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('tabby')}
 						/>
@@ -177,21 +194,6 @@ export default function PaymentInfoForm(props) {
 										onError={(error) => toast.error(error.message)}
 									/>
 								)}
-							</div>
-						</label>
-						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
-						<label htmlFor="madaCardDetails" className='relative'>
-							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
-								<div className='flex items-center'>
-									<div className={styles.circle}><div></div></div>
-									<p className={`fontMedium ${styles.labelText}`}>بطاقة مدى البنكية</p>
-								</div>
-								<Logo height={27} width={53} logoName={'madaPaymentLogo'} alt={'Payment Methode Logo'} />
-							</div>
-							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType == 'mada') &&
-									<MadaCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
-								}
 							</div>
 						</label>
 						<input type="radio" id="creditCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('credit')} />
