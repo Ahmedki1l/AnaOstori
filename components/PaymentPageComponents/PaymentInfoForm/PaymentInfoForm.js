@@ -38,7 +38,7 @@ export default function PaymentInfoForm(props) {
 
 
 	const generateCheckoutId = async (type) => {
-		// fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
+		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
 
 		let data = {
 			orderId: createdOrder.id,
@@ -47,7 +47,6 @@ export default function PaymentInfoForm(props) {
 			type: type,
 		};
 
-		console.log("payload: ", data);
 		let res;
 		try {
 			res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
@@ -184,7 +183,7 @@ export default function PaymentInfoForm(props) {
 								/>
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType && tabbyUrl === 'tabby') && (
+								{(checkoutID && paymentType === 'tabby') && (
 									<TabbyPaymentForm
 										checkoutID={checkoutID}
 										orderID={createdOrder.id}

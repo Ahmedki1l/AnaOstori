@@ -5,7 +5,14 @@ import { useRouter } from 'next/router'
 const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [countdown, setCountdown] = useState(null)
-  const router = useRouter()
+  const router = useRouter();
+
+  console.log("checkoutID: ", checkoutID);
+  console.log("orderID: ", orderID);
+  console.log("redirectURL: ", redirectURL);
+  console.log("amount: ", amount);
+  console.log("couponAppliedData: ", couponAppliedData);
+  console.log("onError: ", onError);
 
   // Countdown effect: Decrements every second and redirects when it reaches 0.
   useEffect(() => {
