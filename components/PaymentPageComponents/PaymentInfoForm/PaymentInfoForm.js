@@ -38,7 +38,7 @@ export default function PaymentInfoForm(props) {
 
 
 	const generateCheckoutId = async (type) => {
-		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
+		// fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
 
 		let data = {
 			orderId: createdOrder.id,
@@ -46,6 +46,8 @@ export default function PaymentInfoForm(props) {
 			couponId: couponAppliedData ? couponAppliedData.id : null,
 			type: type,
 		};
+
+		console.log("payload: ", data);
 
 		try {
 			const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
@@ -149,12 +151,7 @@ export default function PaymentInfoForm(props) {
 							</>
 						}
 						{/* Tabby Payment Option */}
-						<input
-							type="radio"
-							id="tabbyPay"
-							name="paymentDetails"
-							className="hidden peer"
-							onClick={() => generateCheckoutId('tabby')}
+						<input type="radio" id="tabbyPay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('tabby')}
 						/>
 						<label htmlFor="tabbyPay" className='relative'>
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
@@ -163,14 +160,14 @@ export default function PaymentInfoForm(props) {
 									<p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p>
 								</div>
 								<Logo
-									height={27}
-									width={80}
+									height={40}
+									width={70}
 									logoName={'tabbyPaymentLogo'}  // Add Tabby logo to your assets
 									alt={'Tabby payment logo'}
 								/>
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType === 'tabby') && (
+								{(checkoutID && paymentType && tabbyUrl === 'tabby') && (
 									<TabbyPaymentForm
 										checkoutID={checkoutID}
 										orderID={createdOrder.id}
