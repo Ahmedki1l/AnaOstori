@@ -95,7 +95,7 @@ export default function Payment(props) {
 
             let data = {
                 orderId: orderId,
-                transactionId: extractedPaymentID,
+                paymentId: extractedPaymentID,
             }
             console.log(data);
 
