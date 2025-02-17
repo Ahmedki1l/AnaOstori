@@ -55,14 +55,14 @@ export default function Payment(props) {
     }, [router.query.orderId, router.query.id])
 
     const getPaymentData = async () => {
-        if(!type && !payment_id){
+        if (!extractedType) {
             let data = {
                 orderId: router.query.orderId,
                 transactionId: router.query.id,
             }
-    
+
             let paymentData;
-    
+
             await getPaymentInfoAPI(data).then(async (response) => {
                 ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
                 setTransactionDetails(response.data)
@@ -78,35 +78,39 @@ export default function Payment(props) {
                     type: 'SET_ALL_MYCOURSE',
                     myCourses: myCourseData?.data,
                 });
-    
+
                 // If payment is successful, send WhatsApp message
                 if (flag) {
                     await sendWhatsAppMessage(paymentData);
                 }
-    
+
             }).catch(async (error) => {
                 setLoading(false)
             })
-        }else if(type){
-            if(!payment_id){
+        } else {
+            if (!extractedPaymentID) {
                 console.log("payment_id not found");
                 return;
             }
-            
+
             let data = {
-                payment_id: payment_id,
+                orderId: orderId,
+                transactionId: extractedPaymentID,
             }
+            console.log(data);
+
             let paymentData;
             await getTabbyPaymentInfoAPI(data).then(async (response) => {
                 setTransactionDetails(response.data)
-                console.log(response.data[0])
+                console.log("full response: ", response);
+                console.log("response.data[0]: ", response.data[0]);
                 paymentData = response.data[0];
                 const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
                 setIsPaymentSuccess(flag);
-                setLoading(false)
-                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
-                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
-                const [myCourseData] = await Promise.all([getMyCourseReq])
+                setLoading(false);
+                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
+                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
+                const [myCourseData] = await Promise.all([getMyCourseReq]);
                 dispatch({
                     type: 'SET_ALL_MYCOURSE',
                     myCourses: myCourseData?.data,
@@ -118,7 +122,7 @@ export default function Payment(props) {
                 }
 
             }).catch(async (error) => {
-                setLoading(false)
+                setLoading(false);
             })
         }
     }
@@ -165,7 +169,7 @@ export default function Payment(props) {
                 const whatsapplink = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, whatsapplink, courseType, classRoomCode);
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration, gender, whatsapplink, courseType, classRoomCode);
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -183,7 +187,7 @@ export default function Payment(props) {
                 const whatsapplink = gender === 'male' ? maleLink : femaleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, whatsapplink, courseType, "");
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration, gender, whatsapplink, courseType, "");
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -198,7 +202,7 @@ export default function Payment(props) {
                 const whatsapplink = maleLink;
                 try {
                     // Call the sendMessage function from morasalaty.js
-                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, whatsapplink, courseType, "");
+                    const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration, gender, whatsapplink, courseType, "");
 
                     if (result.status === 'ok') {
                         console.log('WhatsApp message sent successfully.');
@@ -212,7 +216,7 @@ export default function Payment(props) {
         } else if (classRoomCode) {
             try {
                 // Call the sendMessage function from morasalaty.js
-                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, "", courseType, classRoomCode);
+                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration, gender, "", courseType, classRoomCode);
 
                 if (result.status === 'ok') {
                     console.log('WhatsApp message sent successfully.');
@@ -225,7 +229,7 @@ export default function Payment(props) {
         } else {
             try {
                 // Call the sendMessage function from morasalaty.js
-                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration,  gender, "", courseType, "");
+                const result = await sendMessage(buyerPhone, buyerFullName, buyerEmail, courseTitle, locationText, locationURL, date, duration, gender, "", courseType, "");
 
                 if (result.status === 'ok') {
                     console.log('WhatsApp message sent successfully.');
