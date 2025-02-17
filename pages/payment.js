@@ -29,6 +29,7 @@ export default function Payment(props) {
 
     const [loading, setLoading] = useState(true)
     const [invoiceUrl, setInvoiceUrl] = useState('')
+    const [paymentMessage, setPaymentMessage] = useState('Payment Fail');
     const dispatch = useDispatch()
 
     const [isLoading, setIsLoading] = useState(true);
@@ -107,6 +108,7 @@ export default function Payment(props) {
                 paymentData = response.data[0];
                 const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
                 setIsPaymentSuccess(flag);
+                setPaymentMessage(paymentData.message);
                 setLoading(false);
                 setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
                 const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
@@ -323,7 +325,7 @@ export default function Payment(props) {
                         </div>
                         :
                         <div className={`maxWidthDefault ${styles.mainArea}`}>
-                            <h1>Payment Fail</h1>
+                            <h1>{paymentMessage}</h1>
                         </div>
                     }
                 </>
