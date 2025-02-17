@@ -49,8 +49,8 @@ export default function Payment(props) {
     }, [isLoading]);
 
     useEffect(() => {
-        if (router.query.orderId && router.query.id) {
-            getPaymentData()
+        if ( (!extractedType && (router.query.orderId && router.query.id)) || (extractedType && orderID && extractedPaymentID) ) {
+            getPaymentData();
         }
     }, [router.query.orderId, router.query.id])
 
