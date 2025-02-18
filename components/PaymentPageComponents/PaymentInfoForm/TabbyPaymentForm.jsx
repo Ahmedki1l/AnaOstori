@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useRouter } from 'next/router'
-import TabbyOnSiteMessaging from './TabbyOnSiteMessaging'
-import Script from 'next/script'
 
 const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
 
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
+  console.log("tabbyPublicKey", tabbyPublicKey);
 
-  console.log("checkoutID: ", checkoutID);
-  console.log("orderID: ", orderID);
-  console.log("redirectURL: ", redirectURL);
-  console.log("amount: ", amount);
-  console.log("couponAppliedData: ", couponAppliedData);
+  useEffect(() => {
+
+    const tabbyForm = document.createElement('script');
+    tabbyForm.src = `https://checkout.tabby.ai/tabby-promo.js`;
+    tabbyForm.async = true;
+    document.head.appendChild(tabbyForm);
+
+    return () => document.head.removeChild(tabbyForm);
+
+  }, [checkoutID]);
 
   useEffect(() => {
     const tabbyPromo = document.createElement('script');
@@ -26,6 +28,7 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
         publicKey: '${tabbyPublicKey}',
         merchantCode: 'anaastori'
      });`
+
     document.head.appendChild(tabbyPromo);
 
     return () => document.head.removeChild(tabbyPromo);
@@ -34,7 +37,6 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
   return (
     <>
       <div id="tabby"></div>
-      <script src="https://checkout.tabby.ai/tabby-promo.js"></script>
     </>
   )
 }
