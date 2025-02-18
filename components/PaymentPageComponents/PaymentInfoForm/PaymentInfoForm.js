@@ -17,7 +17,6 @@ import { mediaUrl } from '../../../constants/DataManupulation'
 import { getRouteAPI } from '../../../services/apisService'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import TabbyPaymentForm from './TabbyPaymentForm' // You'll need to create this component
-import Script from 'next/script'
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -117,9 +116,6 @@ export default function PaymentInfoForm(props) {
 		}
 	}, [setIsCanMakePayments])
 
-	
-	const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
-
 	return (
 		<div className='maxWidthDefault'>
 			{isSmallScreen &&
@@ -154,7 +150,7 @@ export default function PaymentInfoForm(props) {
 								</label>
 							</>
 						}
-
+						
 						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
 						<label htmlFor="madaCardDetails" className='relative'>
 							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
@@ -177,49 +173,16 @@ export default function PaymentInfoForm(props) {
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
 								<div className='flex items-center'>
 									<div className={styles.circle}><div></div></div>
-									{/* <p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p> */}
+									<p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p>
 								</div>
-								{/* <Logo
+								<Logo
 									height={40}
 									width={70}
 									logoName={'tabbyPaymentLogo'}  // Add Tabby logo to your assets
 									alt={'Tabby payment logo'}
-								/> */}
-								{/* <TabbyPaymentForm
-									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
-								/> */}
-								<div>
-									{/* The container where Tabby will place its widget */}
-									<div id="TabbyPromo" style={{ margin: '1rem 0' }} />
-
-									{/* 1) Load the Tabby promo script AFTER the page is interactive */}
-									<Script
-										src="https://checkout.tabby.ai/tabby-promo.js"
-										strategy="afterInteractive"
-									/>
-
-									{/* 2) Once the script is loaded, initialize TabbyPromo */}
-									<Script id="tabby-promo-init" strategy="afterInteractive">
-										{`
-											// Make sure TabbyPromo is available, then initialize it
-											if (typeof TabbyPromo !== 'undefined') {
-											new TabbyPromo({
-												selector: '#TabbyPromo',
-												currency: 'SAR',
-												price: '${Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}',   // If Tabby expects a numeric string
-												lang: 'ar',          // or 'en'
-												source: 'product',
-												publicKey: '${tabbyPublicKey}',
-												merchantCode: 'anaastori'
-											});
-											} else {
-											console.error("TabbyPromo is not defined. Check that the script loaded correctly.");
-											}
-										`}
-									</Script>
-								</div>
+								/>
 							</div>
-							{/* <div className={styles.creditCardWrapper}>
+							<div className={styles.creditCardWrapper}>
 								{(checkoutID && paymentType === 'tabby') && (
 									<TabbyPaymentForm
 										checkoutID={checkoutID}
@@ -230,7 +193,7 @@ export default function PaymentInfoForm(props) {
 										onError={(error) => toast.error(error.message)}
 									/>
 								)}
-							</div> */}
+							</div>
 						</label>
 						<input type="radio" id="creditCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('credit')} />
 						<label htmlFor="creditCardDetails" className='relative'>
