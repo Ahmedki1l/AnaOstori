@@ -7,7 +7,7 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
 
   return (
     <div>
-      <div id="TabbyPromo" style={{ margin: '1rem 0' }} />
+      <div id="TabbyPromo" />
 
       <Script
         src="https://checkout.tabby.ai/tabby-promo.js"
