@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Script from 'next/script'
 
-const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
+const TabbyPaymentForm = ({ amount, onError }) => {
 
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
 

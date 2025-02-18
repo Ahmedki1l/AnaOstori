@@ -150,7 +150,7 @@ export default function PaymentInfoForm(props) {
 								</label>
 							</>
 						}
-						
+
 						<input type="radio" id="madaCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('mada')} />
 						<label htmlFor="madaCardDetails" className='relative'>
 							<div className={`${styles.radioBtnBox} ${isCanMakePayments == true ? `${styles.radioBtnBox2}` : `${styles.radioBtnBox1}`}`}>
@@ -173,16 +173,21 @@ export default function PaymentInfoForm(props) {
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
 								<div className='flex items-center'>
 									<div className={styles.circle}><div></div></div>
-									<p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p>
+									{/* <p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p> */}
 								</div>
-								<Logo
+								{/* <Logo
 									height={40}
 									width={70}
 									logoName={'tabbyPaymentLogo'}  // Add Tabby logo to your assets
 									alt={'Tabby payment logo'}
+								/> */}
+								<TabbyPaymentForm
+									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
+									couponAppliedData={couponAppliedData}
+									onError={(error) => toast.error(error.message)}
 								/>
 							</div>
-							<div className={styles.creditCardWrapper}>
+							{/* <div className={styles.creditCardWrapper}>
 								{(checkoutID && paymentType === 'tabby') && (
 									<TabbyPaymentForm
 										checkoutID={checkoutID}
@@ -193,7 +198,7 @@ export default function PaymentInfoForm(props) {
 										onError={(error) => toast.error(error.message)}
 									/>
 								)}
-							</div>
+							</div> */}
 						</label>
 						<input type="radio" id="creditCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('credit')} />
 						<label htmlFor="creditCardDetails" className='relative'>
