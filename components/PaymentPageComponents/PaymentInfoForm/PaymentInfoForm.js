@@ -183,8 +183,6 @@ export default function PaymentInfoForm(props) {
 								/> */}
 								<TabbyPaymentForm
 									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
-									couponAppliedData={couponAppliedData}
-									onError={(error) => toast.error(error.message)}
 								/>
 							</div>
 							{/* <div className={styles.creditCardWrapper}>

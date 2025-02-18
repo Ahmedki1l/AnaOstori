@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Script from 'next/script'
 
-const TabbyPaymentForm = ({ amount, onError }) => {
+const TabbyPaymentForm = ({ amount }) => {
 
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
 
@@ -14,10 +14,6 @@ const TabbyPaymentForm = ({ amount, onError }) => {
       <Script
         src="https://checkout.tabby.ai/tabby-promo.js"
         strategy="afterInteractive"
-        onError={(e) => {
-          console.error('Failed to load Tabby script', e)
-          if (onError) onError(e)
-        }}
       />
 
       {/* 2) Once the script is loaded, initialize TabbyPromo */}
