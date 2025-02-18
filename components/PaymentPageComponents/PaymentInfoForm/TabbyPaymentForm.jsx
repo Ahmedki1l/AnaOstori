@@ -17,8 +17,8 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
   }, [checkoutID]);
 
   useEffect(() => {
-    const tabbyPromo = document.createElement('script');
-    tabbyPromo.innerHTML = `
+    const tabbyDesignScript = document.createElement('script');
+    tabbyDesignScript.innerHTML = `
       new TabbyPromo({
         selector: '#TabbyPromo',
         currency: 'SAR',
@@ -29,9 +29,9 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
         merchantCode: 'anaastori'
      });`
 
-    document.head.appendChild(tabbyPromo);
+    document.head.appendChild(tabbyDesignScript);
 
-    return () => document.head.removeChild(tabbyPromo);
+    return () => document.head.removeChild(tabbyDesignScript);
   }, [])
 
   return (
