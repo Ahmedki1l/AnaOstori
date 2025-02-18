@@ -7,34 +7,31 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
 
   return (
     <div>
-      {/* The container where Tabby will place its widget */}
       <div id="TabbyPromo" style={{ margin: '1rem 0' }} />
 
-      {/* 1) Load the Tabby promo script AFTER the page is interactive */}
       <Script
         src="https://checkout.tabby.ai/tabby-promo.js"
         strategy="afterInteractive"
+        /**
+         * onReady is called after the script has loaded
+         * AND executed, so globals like TabbyPromo are ready.
+         */
+        onReady={() => {
+          if (typeof window.TabbyPromo !== 'undefined') {
+            new window.TabbyPromo({
+              selector: '#TabbyPromo',
+              currency: 'SAR',
+              price: String(amount),
+              lang: 'ar',
+              source: 'product',
+              publicKey: tabbyPublicKey,
+              merchantCode: 'anaastori',
+            })
+          } else {
+            console.error('TabbyPromo is not defined. Check that the script loaded correctly.')
+          }
+        }}
       />
-
-      {/* 2) Once the script is loaded, initialize TabbyPromo */}
-      <Script id="tabby-promo-init" strategy="afterInteractive">
-        {`
-        // Make sure TabbyPromo is available, then initialize it
-        if (typeof TabbyPromo !== 'undefined') {
-          new TabbyPromo({
-            selector: '#TabbyPromo',
-            currency: 'SAR',
-            price: '${amount}',   // If Tabby expects a numeric string
-            lang: 'ar',          // or 'en'
-            source: 'product',
-            publicKey: '${tabbyPublicKey}',
-            merchantCode: 'anaastori'
-          });
-        } else {
-          console.error("TabbyPromo is not defined. Check that the script loaded correctly.");
-        }
-      `}
-      </Script>
     </div>
   );
 }
