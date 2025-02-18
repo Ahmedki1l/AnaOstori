@@ -5,6 +5,8 @@ import Script from 'next/script'
 const TabbyOnSiteMessaging = ({ price }) => {
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
 
+  console.log(tabbyPublicKey);
+
   return (
     <>
       {/* 
@@ -38,10 +40,7 @@ const TabbyOnSiteMessaging = ({ price }) => {
 
       {/* data-price tells Tabby how much to display in the “pay in 4” message */}
       <div data-price={price} style={{ margin: '1rem 0' }}>
-        {/* 
-          Optionally, show your normal price or any additional product details here.
-          Tabby's script will replace or inject its own text/HTML around this element.
-        */}
+        
         <p>السعر: {price} ريال</p>
       </div>
     </>
