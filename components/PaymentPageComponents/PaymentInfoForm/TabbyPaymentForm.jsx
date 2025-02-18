@@ -3,20 +3,13 @@ import React, { useState, useEffect } from 'react'
 const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
 
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
-  console.log("tabbyPublicKey", tabbyPublicKey);
 
   useEffect(() => {
-
     const tabbyForm = document.createElement('script');
     tabbyForm.src = `https://checkout.tabby.ai/tabby-promo.js`;
     tabbyForm.async = true;
     document.head.appendChild(tabbyForm);
 
-    return () => document.head.removeChild(tabbyForm);
-
-  }, [checkoutID]);
-
-  useEffect(() => {
     const tabbyDesignScript = document.createElement('script');
     tabbyDesignScript.innerHTML = `
       new TabbyPromo({
@@ -31,8 +24,11 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
 
     document.head.appendChild(tabbyDesignScript);
 
-    return () => document.head.removeChild(tabbyDesignScript);
-  }, [])
+    return () => {
+      document.head.removeChild(tabbyForm);
+      document.head.removeChild(tabbyDesignScript);
+    }
+  }, []);
 
   return (
     <>
