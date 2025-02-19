@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import Script from 'next/script'
 
-const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
+const TabbyCheckoutForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
 
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
 
   return (
     <div>
-      <div id="TabbyPromo" />
+      <div id="tabbyCard" />
 
       <Script
-        src="https://checkout.tabby.ai/tabby-promo.js"
+        src="https://checkout.tabby.ai/tabby-card.js"
         strategy="afterInteractive"
         /**
          * onReady is called after the script has loaded
-         * AND executed, so globals like TabbyPromo are ready.
+         * AND executed, so globals like TabbyCard are ready.
          */
         onReady={() => {
-          if (typeof window.TabbyPromo !== 'undefined') {
-            new window.TabbyPromo({
-              selector: '#TabbyPromo',
+          if (typeof window.TabbyCard !== 'undefined') {
+            new window.TabbyCard({
+              selector: '#tabbyCard',
               currency: 'SAR',
-              price: String(amount),
               lang: 'ar',
-              source: 'product',
-              publicKey: tabbyPublicKey,
-              merchantCode: 'anaastori',
+              price: String(amount),
+              size: 'narrow',
+              theme: 'black',
+              header: false
             })
           } else {
             console.error('TabbyPromo is not defined. Check that the script loaded correctly.')
@@ -36,4 +36,4 @@ const TabbyPaymentForm = ({ checkoutID, orderID, redirectURL, amount, couponAppl
   );
 }
 
-export default TabbyPaymentForm
+export default TabbyCheckoutForm
