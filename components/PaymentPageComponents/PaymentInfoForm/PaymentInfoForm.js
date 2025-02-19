@@ -197,12 +197,13 @@ export default function PaymentInfoForm(props) {
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
 								<div className='flex items-center'>
 									<div className={styles.circle}><div></div></div>
-									{/* <p className={`fontMedium ${styles.labelText}`}>{`الدفع عبر تــابي (بإنتظار التفعيل)`}</p> */}
+									<p className={`fontMedium ${styles.labelText}`}>{`قسّمها على 4. بدون أي فوائد، أو رسوم.`}</p>
 								</div>
+								<Logo height={27} width={53} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
 
-								<TabbyPomoForm
+								{/* <TabbyPomoForm
 									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
-								/>
+								/> */}
 							</div>
 							<div className={styles.creditCardWrapper}>
 								{(checkoutID && paymentType === 'tabby') && (
@@ -327,6 +328,10 @@ export default function PaymentInfoForm(props) {
 								</div>
 							</>
 						}
+
+						<TabbyPomoForm
+									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
+						/>
 					</div>
 				</div>
 			</div>
