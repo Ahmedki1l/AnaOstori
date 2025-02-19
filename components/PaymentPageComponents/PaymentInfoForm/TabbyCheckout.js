@@ -19,7 +19,7 @@ export default function TabbyCheckoutForm({
   }
 
   return (
-    <div className="w-full p-4"> 
+    <div className="w-full p-4">
       {/* Container for Tabby card, full width */}
       <div id="tabbyCard" className="w-full" />
 
@@ -54,7 +54,16 @@ export default function TabbyCheckoutForm({
         <div className="mt-4 text-left">
           <button
             onClick={handleComplete}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-base"
+            className="
+            bg-blue-600 
+            hover:bg-blue-700 
+            text-white 
+            px-6 
+            py-2 
+            rounded-md 
+            text-base 
+            cursor-pointer 
+          "
           >
             إتمام العملية
           </button>
