@@ -18,6 +18,7 @@ import { getRouteAPI } from '../../../services/apisService'
 import * as PaymentConst from '../../../constants/PaymentConst'
 import TabbyPomoForm from './TabbyPromo'
 import TabbyCheckoutForm from './TabbyCheckout'
+import { toast } from 'react-toastify';
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -33,7 +34,9 @@ export default function PaymentInfoForm(props) {
 	const [couponError, setCouponError] = useState(false)
 	const [couponAppliedData, setCouponAppliedData] = useState()
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
-	const [tabbyUrl, setTabbyUrl] = useState('')
+	const [tabbyUrl, setTabbyUrl] = useState('');
+	const [tabbyStatus, setTabbyStatus] = useState('');
+	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
 	const [paymentType, setPaymentType] = useState('')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
@@ -53,14 +56,34 @@ export default function PaymentInfoForm(props) {
 			res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
 			if (res.status === 200) {
 				setPaymentType(type);
-				setCheckoutId(res.data[0].id);
-				setTabbyUrl(res.data[0].url);
+				setCheckoutId(res.data[0]?.id);
+				if (type === "tabby") {
+					setTabbyUrl(res.data[0]?.url);
+					setTabbyStatus(res.data[0]?.status);
+					if(res.data[0]?.status === "rejected") {
+						setTabbyRejectionReason(res.data[0]?.rejection_reason);
+					}
+				}
 			}
 		} catch (error) {
 			console.log(res);
 			console.error("Error generating checkout ID:", error);
 		}
 	};
+
+	useEffect(() => {
+		if (tabbyRejectionReason) {
+			if (tabbyRejectionReason === "not_available") {
+				toast.error(`نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى.`);
+			} else if (tabbyRejectionReason === "order_amount_too_high") {
+				toast.error(`قيمة الطلب تفوق الحد الأقصى المسموح به حاليًا مع تابي. يُرجى تخفيض قيمة السلة أو استخدام وسيلة دفع أخرى.`);
+			} else if (tabbyRejectionReason === "order_amount_too_low") {
+				toast.error(`قيمة الطلب أقل من الحد الأدنى المطلوب لاستخدام خدمة تابي. يُرجى زيادة قيمة الطلب أو استخدام وسيلة دفع أخرى.`);
+			} else {
+				toast.error(`حاول مرة أخرى`);
+			}
+		}
+	}, [tabbyRejectionReason]);
 
 	const handleBankTransfer = async () => {
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' })
@@ -189,7 +212,6 @@ export default function PaymentInfoForm(props) {
 										redirectURL={tabbyUrl}
 										amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
 										couponAppliedData={couponAppliedData}
-										onError={(error) => toast.error(error.message)}
 									/>
 								)}
 							</div>

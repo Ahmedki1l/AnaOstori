@@ -4,7 +4,6 @@ import Script from 'next/script'
 export default function TabbyCheckoutForm({
   amount = 100,
   redirectURL,
-  onError
 }) {
   const [isTabbyReady, setIsTabbyReady] = useState(false)
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY
@@ -42,19 +41,11 @@ export default function TabbyCheckoutForm({
 
             setIsTabbyReady(true);
           } else {
-            console.error('TabbyCard is not defined. Check that the script loaded correctly.')
-            if (onError) {
-              onError({
-                message: 'فشل تحميل مكتبة تابي. يرجى المحاولة لاحقًا.'
-              })
-            }
+            console.error('TabbyCard is not defined. Check that the script loaded correctly.');
           }
         }}
         onError={(e) => {
-          console.error('Failed to load tabby-card.js', e)
-          if (onError) {
-            onError({ message: 'فشل تحميل مكتبة تابي. يرجى المحاولة لاحقًا.' })
-          }
+          console.error('Failed to load tabby-card.js', e);
         }}
       />
 
