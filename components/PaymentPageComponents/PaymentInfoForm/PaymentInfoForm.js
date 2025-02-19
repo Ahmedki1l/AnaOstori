@@ -199,7 +199,7 @@ export default function PaymentInfoForm(props) {
 									<div className={styles.circle}><div></div></div>
 									<p className={`fontMedium ${styles.labelText}`}>{`قسّمها على 4. بدون أي فوائد، أو رسوم.`}</p>
 								</div>
-								<Logo height={27} width={53} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
+								<Logo height={40} width={70} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
 
 								{/* <TabbyPomoForm
 									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
