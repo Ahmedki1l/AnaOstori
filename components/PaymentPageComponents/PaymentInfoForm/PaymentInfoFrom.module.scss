@@ -83,8 +83,8 @@
 }
 
 .creditCardWrapper {
-	display: none;
-	width: 35rem;
+	position: relative;
+	width: 100%;
 	border-width: 0 0.3px 0.3px 0.3px;
 	border-style: solid;
 	border-color: #a9a9a9;
