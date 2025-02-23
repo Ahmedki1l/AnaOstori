@@ -280,7 +280,6 @@ const Index = () => {
                     size="large"
                     placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                 />
-            </div>
             <div className='flex mb-2'>
                 <div className='m-2'>
                     <button className='primarySolidBtn' onClick={() => downloadExcel()}>{buttonsTextConst.downloadReport}</button>
@@ -288,6 +287,7 @@ const Index = () => {
                 {/* <div className='m-2'>
                     <button className='primarySolidBtn' onClick={() => requestExcel()}>{buttonsTextConst.requestReport}</button>
                 </div> */}
+            </div>
             </div>
             {dateRange === null ?
                 <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
