@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import Spinner from '../../../../components/CommonComponents/spinner';
 import Empty from '../../../../components/CommonComponents/Empty';
 import { buttonsTextConst } from '../../../../constants/studentInformationConst'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver';
 
 const Index = () => {
     const { RangePicker } = DatePicker;
