@@ -246,7 +246,10 @@ const Index = () => {
         // Generate Excel file and trigger a download
         const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, `courses.xlsx`);
+        
+        // Construct a dynamic file name: "purchase-order_{startDate}_to_{endDate}.xlsx"
+        const fileName = `courses_${dateRange.startDate}_to_${dateRange.endDate}.xlsx`;
+        saveAs(blob, fileName);
     };
 
     return (
@@ -280,14 +283,14 @@ const Index = () => {
                     size="large"
                     placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                 />
-            <div className='flex mb-2'>
-                <div className='m-2'>
-                    <button className='primarySolidBtn' onClick={() => downloadExcel()}>{buttonsTextConst.downloadReport}</button>
-                </div>
-                {/* <div className='m-2'>
+                <div className='flex mb-2'>
+                    <div className='m-2'>
+                        <button className='primarySolidBtn' onClick={() => downloadExcel()}>{buttonsTextConst.downloadReport}</button>
+                    </div>
+                    {/* <div className='m-2'>
                     <button className='primarySolidBtn' onClick={() => requestExcel()}>{buttonsTextConst.requestReport}</button>
                 </div> */}
-            </div>
+                </div>
             </div>
             {dateRange === null ?
                 <Empty emptyText={'لا توجد بيانات'} containerhight={500} />

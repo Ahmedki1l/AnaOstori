@@ -19,6 +19,9 @@ import * as PaymentConst from '../../../../constants/PaymentConst'
 import Spinner from '../../../../components/CommonComponents/spinner'
 import { getNewToken } from '../../../../services/fireBaseAuthService'
 import Empty from '../../../../components/CommonComponents/Empty'
+import { buttonsTextConst } from '../../../../constants/studentInformationConst'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver';
 
 const DrawerTiitle = styled.p`
     font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -397,6 +400,85 @@ const Index = () => {
             }
         }
     }
+
+    const downloadExcel = () => {
+        if (!purchaseOrderList || purchaseOrderList.length === 0) {
+            // Optionally notify the user there's no data
+            return;
+        }
+
+        // Build the header row using your table configuration
+        const headers = data.tableColumns.map(col => col.title);
+
+        // Build each data row from the purchaseOrderList based on the tableColumns keys
+        const rows = purchaseOrderList.map(item => {
+            return data.tableColumns.map(col => {
+                let value = item[col.dataIndex];
+
+                // Format dates using fullDate for createdAt and updatedAt
+                if (col.dataIndex === 'createdAt' || col.dataIndex === 'updatedAt') {
+                    value = fullDate(value);
+                }
+                // For the assistanceAquired column, output a text version (e.g., نعم / لا)
+                if (col.dataIndex === 'assistanceAquired') {
+                    value = value ? 'نعم' : 'لا';
+                }
+                // For the status column, convert the raw status to its label based on payment method
+                if (col.dataIndex === 'status') {
+                    let statusLabel;
+                    if (item.paymentMethod === 'bank_transfer') {
+                        statusLabel = paymentStatusBank.find(s => s.value === value);
+                    } else {
+                        statusLabel = paymentStatusOther.find(s => s.value === value);
+                    }
+                    value = statusLabel ? statusLabel.label : value;
+                }
+                // For the paymentMethod column, output a text identifier instead of an icon
+                if (col.dataIndex === 'paymentMethod') {
+                    let paymentMode;
+                    if (item.paymentMethod === 'hyperpay') {
+                        if (item.cardType === 'credit') {
+                            paymentMode = item.cardBrand === 'visa' ? 'visaPayment' : 'masterCardPayment';
+                        } else if (item.cardType === 'mada') {
+                            paymentMode = 'madaPayment';
+                        } else {
+                            paymentMode = 'applePayment';
+                        }
+                    } else if (item.paymentMethod === 'bank_transfer') {
+                        paymentMode = 'bankTransfer';
+                    } else {
+                        paymentMode = 'inAppPurchase';
+                    }
+                    value = paymentMode;
+                }
+                // The actions column is for UI only; we can leave it empty in Excel.
+                if (col.dataIndex === 'actions') {
+                    value = '';
+                }
+
+                return value || "-";
+            });
+        });
+
+        // Combine header and data rows into an array-of-arrays for XLSX conversion
+        const excelData = [headers, ...rows];
+
+        // Create a worksheet and workbook using XLSX utilities
+        const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Purchase Orders");
+
+        // Write the workbook to a binary buffer and trigger the download
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+        const blob = new Blob([excelBuffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+
+        // Construct a dynamic file name: "purchase-order_{startDate}_to_{endDate}.xlsx"
+        const fileName = `purchase-order_${dateRange.startDate}_to_${dateRange.endDate}.xlsx`;
+        saveAs(blob, fileName);
+    };
+
     return (
         <div className='maxWidthDefault px-4'>
             <div className='py-2'>
@@ -432,6 +514,14 @@ const Index = () => {
                     size="large"
                     placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                 />
+                <div className='flex mb-2'>
+                    <div className='m-2'>
+                        <button className='primarySolidBtn' onClick={() => downloadExcel()}>{buttonsTextConst.downloadReport}</button>
+                    </div>
+                    {/* <div className='m-2'>
+                                    <button className='primarySolidBtn' onClick={() => requestExcel()}>{buttonsTextConst.requestReport}</button>
+                                </div> */}
+                </div>
             </div>
             {dateRange === null ?
                 <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
