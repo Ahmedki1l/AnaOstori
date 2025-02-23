@@ -12,9 +12,9 @@ import { fullDate } from '../../../../constants/DateConverter';
 import dayjs from 'dayjs';
 import Spinner from '../../../../components/CommonComponents/spinner';
 import Empty from '../../../../components/CommonComponents/Empty';
+import { buttonsTextConst } from '../../../../constants/studentInformationConst'
 
 const Index = () => {
-
     const { RangePicker } = DatePicker;
     const [dates, setDates] = useState(null);
     const [allCourseList, setAllCourseList] = useState([]);
@@ -203,6 +203,50 @@ const Index = () => {
         }
     }
 
+    const downloadExcel = () => {
+        if (!allCourseList || allCourseList.length === 0) {
+            // Optionally, alert the user there's no data to download
+            return;
+        }
+
+        // Build header row from the table configuration
+        const headers = data.tableColumns.map(col => col.title);
+
+        // Build each data row by mapping tableColumns to the corresponding value in each course item
+        const rows = allCourseList.map(item => {
+            return data.tableColumns.map(col => {
+                let value = item[col.dataIndex];
+
+                // Apply custom formatting for specific columns if needed
+                if (col.dataIndex === 'createdAt' || col.dataIndex === 'updatedAt') {
+                    value = fullDate(value);
+                }
+                if (col.dataIndex === 'published') {
+                    value = item.published ? 'منشورة' : 'غير منشورة';
+                }
+                if (col.dataIndex === 'earning') {
+                    value = Number(item.earning).toFixed(2) + " ر.س";
+                }
+
+                // Fallback for missing data
+                return value || "-";
+            });
+        });
+
+        // Combine the header and data rows into one array (array-of-arrays)
+        const excelData = [headers, ...rows];
+
+        // Create a worksheet from the array-of-arrays
+        const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Courses");
+
+        // Generate Excel file and trigger a download
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `courses.xlsx`);
+    };
+
     return (
         <div className='maxWidthDefault px-4'>
             <div className='py-2'>
@@ -234,6 +278,14 @@ const Index = () => {
                     size="large"
                     placeholder={['تاريخ البداية', 'تاريخ النهاية']}
                 />
+            </div>
+            <div className='flex mb-2'>
+                <div className='m-2'>
+                    <button className='primarySolidBtn' onClick={() => downloadExcel()}>{buttonsTextConst.downloadReport}</button>
+                </div>
+                {/* <div className='m-2'>
+                    <button className='primarySolidBtn' onClick={() => requestExcel()}>{buttonsTextConst.requestReport}</button>
+                </div> */}
             </div>
             {dateRange === null ?
                 <Empty emptyText={'لا توجد بيانات'} containerhight={500} />
