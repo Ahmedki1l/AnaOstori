@@ -19,6 +19,7 @@ import Select from "../../../components/antDesignCompo/Select";
 import { FormItem } from "../../../components/antDesignCompo/FormItem";
 import dayjs from "dayjs";
 import * as PaymentConst from "../../../constants/PaymentConst";
+import Logo from '../../../components/CommonComponents/Logo';
 
 const DrawerTiitle = styled.p`
 font-size: ${props => (props.fontSize ? props.fontSize : '20')}px !important;
@@ -142,6 +143,12 @@ const Index = () => {
             title: 'طريقة الدفع',
             dataIndex: 'paymentMethod',
             render: (text, _record) => {
+                if(_record.paymentMethod == 'tabby') {
+                    return (
+                        <Logo height={20} width={30} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
+                    )
+                }
+
                 const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
                     _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
                     (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'inAppPurchaseIcon')

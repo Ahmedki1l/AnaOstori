@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import CoverImg from '../../../CommonComponents/CoverImg';
 import { mediaUrl } from '../../../../constants/DataManupulation';
 import VideoThumnail from '../Common/VideoThumnail'
+import TabbyPomoForm from '../../../PaymentPageComponents/PaymentInfoForm/TabbyPromo'
 
 
 
@@ -81,6 +82,9 @@ export default function BuyCourseComponent(props) {
 						)
 					})}
 				</ul>
+				<TabbyPomoForm
+					amount={courseDetail.discount}
+				/>
 			</div>
 			{/* <Link href={coursePlanUrl ?? ""} target='_blank' className={`flex items-center justify-center normalLinkText ${styles.downloadPlanBox}`} >
 				<SaveAltIcon className={`text-blue-500`} />
