@@ -145,7 +145,7 @@ const Index = () => {
             render: (text, _record) => {
                 if(_record.paymentMethod == 'tabby') {
                     return (
-                        <Logo height={35} width={35} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
+                        <Logo height={30} width={30} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
                     )
                 }
 
