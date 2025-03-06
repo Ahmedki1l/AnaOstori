@@ -14,7 +14,6 @@ import { couponTypes, manageCouponConst } from '../../../constants/adminPanelCon
 
 
 const Index = () => {
-
     const [drawerForCouponCourse, setDrawerForCouponCourse] = useState(false)
     const [listOfCoupon, setListOfCoupon] = useState()
     const [selectedCoupon, setSelectedCoupon] = useState()

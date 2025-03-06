@@ -102,7 +102,7 @@ export default function Payment(props) {
 
             let paymentData;
             await getTabbyPaymentInfoAPI(data).then(async (response) => {
-                setTransactionDetails(response.data)
+                setTransactionDetails(response.data);
                 console.log("full response: ", response);
                 console.log("response.data[0]: ", response.data[0]);
                 paymentData = response.data[0];
