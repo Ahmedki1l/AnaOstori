@@ -258,7 +258,7 @@ const PurchaseOrderDrawer = (props) => {
                 )
             })
             }
-            {selectedOrder.invoiceKey &&
+            {(selectedOrder.invoiceKey && selectedOrder.invoiceBucket) &&
                 <>
                     <div className={styles.borderedDiv}></div>
                     <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.invoiceCopyTitle}</p>
