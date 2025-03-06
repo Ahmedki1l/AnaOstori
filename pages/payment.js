@@ -107,43 +107,7 @@ export default function Payment(props) {
                 console.log("response.data[0]: ", response.data[0]);
                 paymentData = response.data[0];
                 const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
-                if (response.data[0].status === "AUTHORIZED") {
-                    // 1) Calculate the total price (example):
-                    let totalPrice = response.data[0].orderDetails?.basePrice - response.data[0].orderDetails?.totalDiscount;
-
-                    // 2) Build the Tabby endpoint:
-                    const endpoint = `https://api.tabby.ai/api/v2/payments/${extractedPaymentID}/captures`;
-
-                    try {
-                        // 3) Make a POST request to Tabby:
-                        const tabbyResponse = await fetch(endpoint, {
-                            method: 'POST',              // switch to POST
-                            headers: {
-                                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TABBY_SECRET_KEY}`,
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                // Include whatever fields Tabby expects in the body:
-                                amount: totalPrice,
-                                currency: 'SAR',
-                                // e.g. other fields from Tabby docs
-                            }),
-                        });
-
-                        // 4) Handle non-OK responses:
-                        if (!tabbyResponse.ok) {
-                            throw new Error(`Tabby payment capture failed, status: ${tabbyResponse.status}`);
-                        }
-
-                        // 5) Parse the response JSON:
-                        const data = await tabbyResponse.json();
-
-                        // TODO: handle success (e.g., store data, redirect, etc.)
-                    } catch (error) {
-                        console.error('Tabby payment capture error:', error);
-                        // TODO: handle error (retry, show user message, etc.)
-                    }
-                }
+                
                 setIsPaymentSuccess(flag);
                 setPaymentMessage(paymentData.messageAR);
                 setLoading(false);
