@@ -145,7 +145,7 @@ export default function Payment(props) {
                     }
                 }
                 setIsPaymentSuccess(flag);
-                setPaymentMessage(paymentData.message);
+                setPaymentMessage(paymentData.messageAR);
                 setLoading(false);
                 setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
                 const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
