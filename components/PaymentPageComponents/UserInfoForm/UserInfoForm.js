@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
 import * as PaymentConst from '../../../constants/PaymentConst';
+import TabbyPomoForm from '../PaymentInfoForm/TabbyPromo';
 
 export default function UserInfoForm(props) {
 	const studentsDataLength = props.studentsData?.length
@@ -318,7 +319,10 @@ export default function UserInfoForm(props) {
 								{/***************************************** FOR loop for radio button to select number of Users ******************************************/}
 								{noOfUsersLabelData.map((data, index) => {
 									return (
-										<div key={`noOfUsersRadoi${index}`}>
+										<div
+											key={`noOfUsersRadoi${index}`}
+											className={styles.userPriceWrapper}
+										>
 											<input type="radio" id={`user${index + 1}`} name='noOfUser' value={index + 1} className="hidden peer" defaultChecked={totalStudent == 1 ? (index === 0) : (totalStudent == 2 ? (index === 1) : (index === 2))} onChange={() => handleTotalStudent(index + 1)} />
 											<label htmlFor={`user${index + 1}`} className={styles.usersRadioWrapper}>
 												<div className={styles.circle}><div></div></div>
@@ -335,6 +339,10 @@ export default function UserInfoForm(props) {
 													</div>
 												</div>
 											</label>
+											{/* The promo widget is rendered below the radio content without affecting the parent's width */}
+											<div style={{ position: 'absolute', width: '100%', top:'100%' }}>
+												<TabbyPomoForm amount={parseFloat(data.label2)} />
+											</div>
 										</div>
 									)
 								})}

@@ -20,12 +20,24 @@ export default function Payment(props) {
     const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
     const router = useRouter()
 
-    const { orderId, id, type, payment_id } = router.query;
+    const [tabbyResponseMessages, setTabbyResponseMessages] = useState({
+        cancel: {
+            en: "You aborted the payment. Please retry or choose another payment method.",
+            ar: "لقد ألغيت الدفعة. فضلاً حاول مجددًا أو اختر طريقة دفع أخرى."
+        },
+        failure: {
+            en: "Sorry, Tabby is unable to approve this purchase. Please use an alternative payment method for your order.",
+            ar: "نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى."
+        }
+    });
+
+    const { orderId, id, type, payment_id, res } = router.query;
 
     const orderID = orderId || orderId || router.query.orderId || null;
     const transactionID = id || router.query.id || null;
     const extractedType = type || null;
     const extractedPaymentID = payment_id || null;
+    const tabbyResultedResponse = res || null;
 
     const [loading, setLoading] = useState(true)
     const [invoiceUrl, setInvoiceUrl] = useState('')
@@ -109,7 +121,15 @@ export default function Payment(props) {
                 const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
                 
                 setIsPaymentSuccess(flag);
-                setPaymentMessage(paymentData.messageAR);
+                if(tabbyResultedResponse !== "success"){
+                    if(tabbyResultedResponse === "cancel") {
+                        setPaymentMessage(tabbyResponseMessages.cancel.ar);
+                    } else {
+                        setPaymentMessage(tabbyResponseMessages.failure.ar);
+                    }
+                } else {
+                    setPaymentMessage(paymentData.messageAR);
+                }
                 setLoading(false);
                 setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
                 const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });

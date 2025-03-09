@@ -27,6 +27,17 @@
 	width: 77rem;
 }
 
+.userPriceWrapper {
+	position: relative;
+	display: flex;
+	margin-bottom: 5rem;
+	justify-content: space-between;
+}
+
+.userPriceWrapper:last-of-type {
+	margin-bottom: 0;
+}
+
 .usersRadioWrapper {
 	display: flex;
 	align-items: center;
@@ -671,6 +682,10 @@
 	.noOfUserWrapper {
 		width: 100%;
 		flex-direction: column;
+	}
+
+	.userPriceWrapper {
+		margin-bottom: 7rem;
 	}
 
 	.usersRadioWrapper {
