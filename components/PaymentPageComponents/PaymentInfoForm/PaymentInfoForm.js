@@ -356,9 +356,9 @@ export default function PaymentInfoForm(props) {
 							</>
 						}
 
-						<TabbyPomoForm
+						{/* <TabbyPomoForm
 							amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
-						/>
+						/> */}
 					</div>
 				</div>
 			</div>
