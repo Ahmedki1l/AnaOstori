@@ -34,12 +34,26 @@ export default function PaymentInfoForm(props) {
 	const [couponError, setCouponError] = useState(false)
 	const [couponAppliedData, setCouponAppliedData] = useState()
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
-	const [tabbyUrl, setTabbyUrl] = useState('');
+	const [tabbyUrl, setTabbyUrl] = useState(null);
 	const [tabbyStatus, setTabbyStatus] = useState('');
 	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
 	const [paymentType, setPaymentType] = useState('')
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
 
+	const [tabbyPreScoringMessages, setTabbyPreScoringMessages] = useState({
+		not_available: {
+			ar: "نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى.",
+			en: "Sorry, Tabby is unable to approve this purchase. Please use an alternative payment method for your order."
+		},
+		order_amount_too_high: {
+			ar: "قيمة الطلب تفوق الحد الأقصى المسموح به حاليًا مع تابي. يُرجى تخفيض قيمة السلة أو استخدام وسيلة دفع أخرى.",
+			en: "This purchase is above your current spending limit with Tabby, try a smaller cart or use another payment method."
+		},
+		order_amount_too_low: {
+			ar: "قيمة الطلب أقل من الحد الأدنى المطلوب لاستخدام خدمة تابي. يُرجى زيادة قيمة الطلب أو استخدام وسيلة دفع أخرى.",
+			en: "The purchase amount is below the minimum amount required to use Tabby, try adding more items or use another payment method."
+		}
+	})
 
 	const generateCheckoutId = async (type) => {
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
@@ -58,9 +72,13 @@ export default function PaymentInfoForm(props) {
 				setPaymentType(type);
 				setCheckoutId(res.data[0]?.id);
 				if (type === "tabby") {
-					setTabbyUrl(res.data[0]?.url);
+					if (res.data[0]?.url !== "") {
+						setTabbyUrl(res.data[0]?.url);
+					} else {
+						setTabbyUrl(null);
+					}
 					setTabbyStatus(res.data[0]?.status);
-					if(res.data[0]?.status === "rejected") {
+					if (res.data[0]?.status === "rejected") {
 						setTabbyRejectionReason(res.data[0]?.rejection_reason);
 					}
 				}
@@ -206,7 +224,7 @@ export default function PaymentInfoForm(props) {
 								/> */}
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType === 'tabby') && (
+								{(checkoutID && tabbyUrl && paymentType === 'tabby') && (
 									<TabbyCheckoutForm
 										checkoutID={checkoutID}
 										orderID={createdOrder.id}
@@ -330,7 +348,7 @@ export default function PaymentInfoForm(props) {
 						}
 
 						<TabbyPomoForm
-									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
+							amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
 						/>
 					</div>
 				</div>
