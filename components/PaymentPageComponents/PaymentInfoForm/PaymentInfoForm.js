@@ -78,8 +78,17 @@ export default function PaymentInfoForm(props) {
 						setTabbyUrl(null);
 					}
 					setTabbyStatus(res.data[0]?.status);
+					
 					if (res.data[0]?.status === "rejected") {
-						setTabbyRejectionReason(res.data[0]?.rejection_reason);
+						if (res.data[0]?.rejection_reason === "not_available") {
+							toast.error(`نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى.`);
+						} else if (res.data[0]?.rejection_reason === "order_amount_too_high") {
+							toast.error(`قيمة الطلب تفوق الحد الأقصى المسموح به حاليًا مع تابي. يُرجى تخفيض قيمة السلة أو استخدام وسيلة دفع أخرى.`);
+						} else if (res.data[0]?.rejection_reason === "order_amount_too_low") {
+							toast.error(`قيمة الطلب أقل من الحد الأدنى المطلوب لاستخدام خدمة تابي. يُرجى زيادة قيمة الطلب أو استخدام وسيلة دفع أخرى.`);
+						} else {
+							toast.error(`حاول مرة أخرى`);
+						}
 					}
 				}
 			}
@@ -89,19 +98,19 @@ export default function PaymentInfoForm(props) {
 		}
 	};
 
-	useEffect(() => {
-		if (tabbyRejectionReason) {
-			if (tabbyRejectionReason === "not_available") {
-				toast.error(`نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى.`);
-			} else if (tabbyRejectionReason === "order_amount_too_high") {
-				toast.error(`قيمة الطلب تفوق الحد الأقصى المسموح به حاليًا مع تابي. يُرجى تخفيض قيمة السلة أو استخدام وسيلة دفع أخرى.`);
-			} else if (tabbyRejectionReason === "order_amount_too_low") {
-				toast.error(`قيمة الطلب أقل من الحد الأدنى المطلوب لاستخدام خدمة تابي. يُرجى زيادة قيمة الطلب أو استخدام وسيلة دفع أخرى.`);
-			} else {
-				toast.error(`حاول مرة أخرى`);
-			}
-		}
-	}, [tabbyRejectionReason]);
+	// useEffect(() => {
+	// 	if (tabbyRejectionReason) {
+	// 		if (tabbyRejectionReason === "not_available") {
+	// 			toast.error(`نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى.`);
+	// 		} else if (tabbyRejectionReason === "order_amount_too_high") {
+	// 			toast.error(`قيمة الطلب تفوق الحد الأقصى المسموح به حاليًا مع تابي. يُرجى تخفيض قيمة السلة أو استخدام وسيلة دفع أخرى.`);
+	// 		} else if (tabbyRejectionReason === "order_amount_too_low") {
+	// 			toast.error(`قيمة الطلب أقل من الحد الأدنى المطلوب لاستخدام خدمة تابي. يُرجى زيادة قيمة الطلب أو استخدام وسيلة دفع أخرى.`);
+	// 		} else {
+	// 			toast.error(`حاول مرة أخرى`);
+	// 		}
+	// 	}
+	// }, [tabbyRejectionReason]);
 
 	const handleBankTransfer = async () => {
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' })
