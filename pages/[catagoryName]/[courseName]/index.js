@@ -272,9 +272,9 @@ export default function Index(props) {
 	const [fileSrc, setFileSrc] = useState()
 	const [coursePageUrl, setCoursePageUrl] = useState()
 
-	const handleSlectedItem = (data, id) => {
+	const handleSlectedItem = (data, id, paddingAmount) => {
 		setSelectedNavItem(data)
-		setPaddingTop(10)
+		setPaddingTop(paddingAmount || 10)
 		const pageTitle = document.getElementById(id)
 		setTimeout(() => {
 			pageTitle.scrollIntoView({ behavior: 'smooth' })
@@ -460,16 +460,16 @@ export default function Index(props) {
 									{courseDetail?.courseMetaData?.map((metaData, index) => {
 										return (
 											<div key={`datatitle${index}`}>
-												<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == (index + 1) ? styles.activeItemMobile : ''}`}>{metaData.title}</li>
+												<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`, 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == (index + 1) ? styles.activeItemMobile : ''}`}>{metaData.title}</li>
 											</div>
 										)
 									})}
 									{
 										sortedReviewsByCategory[currentCategory] &&
-										<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
+										<li onClick={() => handleSlectedItem(5, 'userFeedback', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 5 ? styles.activeItemMobile : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
 									}
 									{hasDates &&
-										<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+										<li onClick={() => handleSlectedItem(4, 'dates', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
 									}
 									<div>
 										{/* {courseDetail?.type == 'on-demand' ?
@@ -478,7 +478,7 @@ export default function Index(props) {
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
 											} */}
 										{courseDetail?.type == 'on-demand' &&
-											<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+											<li onClick={() => handleSlectedItem(4, 'dates', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
 										}
 									</div>
 								</ul>

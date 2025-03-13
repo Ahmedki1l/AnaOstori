@@ -115,38 +115,51 @@ export default function CourseDetailsHeader(props) {
 									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
 									{courseDetail.type == "physical" ?
 										<div style={{ display: 'flex' }}>
-											<a
-												href={`https://goo.gl/maps/p9V4qb6csGQGXWxb6`}
-												target="_blank"
-												rel="noopener noreferrer"
-												style={{ color: '#fff' }}
-												className="flex items-center hover:opacity-75 transition-opacity"
-											>
-												<GoogleMapsIcon />
-											</a>
-											<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District": "الرياض، حي الياسمين"}</p>
+											<div style={{ display: 'flex' }}>
+												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض:"}</p>
+												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "("}</p>
+												<div style={{ display: 'flex' }}>
+													<a
+														href={`https://goo.gl/maps/p9V4qb6csGQGXWxb6`}
+														target="_blank"
+														rel="noopener noreferrer"
+														style={{ color: '#fff' }}
+														className={`flex items-center hover:opacity-75 transition-opacity ${lang == 'en' ? "ml-2" : "mr-2"}`}
+													>
+														<GoogleMapsIcon />
+													</a>
+													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}</p>
+												</div>
+												{/* <p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "،"}</p> */}
+												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : ")"}</p>
+												{/* <p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض، حي الياسمين"}</p> */}
+											</div>
 											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
-											<a
-												href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`}
-												target="_blank"
-												rel="noopener noreferrer"
-												style={{ color: '#fff' }}
-												className="flex items-center hover:opacity-75 transition-opacity"
-											>
-												<GoogleMapsIcon />
-											</a>
-											<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Dammam, Al-Etisalat District": "الدمام، حي الإتصالات"}</p>
+											<div style={{ display: 'flex' }}>
+												<a
+													href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`}
+													target="_blank"
+													rel="noopener noreferrer"
+													style={{ color: '#fff' }}
+													className="flex items-center hover:opacity-75 transition-opacity"
+												>
+													<GoogleMapsIcon />
+												</a>
+												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Dammam, Al-Etisalat District" : "الدمام، حي الإتصالات"}</p>
+											</div>
 											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
-											<a
-												href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`}
-												target="_blank"
-												rel="noopener noreferrer"
-												style={{ color: '#fff' }}
-												className="flex items-center hover:opacity-75 transition-opacity"
-											>
-												<GoogleMapsIcon />
-											</a>
-											<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Jeddah, Al Salamah District": "جدة، حي السلامة"}</p>
+											<div style={{ display: 'flex' }}>
+												<a
+													href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`}
+													target="_blank"
+													rel="noopener noreferrer"
+													style={{ color: '#fff' }}
+													className="flex items-center hover:opacity-75 transition-opacity"
+												>
+													<GoogleMapsIcon />
+												</a>
+												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Jeddah, Al Salamah District" : "جدة، حي السلامة"}</p>
+											</div>
 										</div>
 										:
 										<p className=''>{lang == 'en' ? `Broadcast via` : 'يتم بثها عبر '}</p>
@@ -196,26 +209,28 @@ export default function CourseDetailsHeader(props) {
 								</div>
 							</div>
 						} */}
-						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
-							<div className='m-1'>
-								<AllIconsComponenet height={isMediumScreen ? 18 : 24} width={isMediumScreen ? 20 : 24} iconName={'starDoubleColoredIcon'} color={'#FFCD3C'} />
+						<div className={`${styles.analyticsBarWrapper2}`}>
+							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+								<div className='m-1'>
+									<AllIconsComponenet height={isMediumScreen ? 18 : 24} width={isMediumScreen ? 20 : 24} iconName={'starDoubleColoredIcon'} color={'#FFCD3C'} />
+								</div>
+								<div className='px-1'>
+									<p> {lang == 'en' ? `Course Review` : 'تقييم الدورة'} </p>
+									<p className='fontBold'>{courseDetail.reviewRate}</p>
+								</div>
 							</div>
-							<div className='px-1'>
-								<p> {lang == 'en' ? `Course Review` : 'تقييم الدورة'} </p>
-								<p className='fontBold'>{courseDetail.reviewRate}</p>
-							</div>
-						</div>
-						<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
-							<div className='m-1'>
-								<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'personDoubleColoredIcon'} color={'#FFFFFF'} />
-							</div>
-							<div className='px-1'>
-								{courseDetail.type == 'onDemand' ?
-									<p>{lang == 'en' ? 'Number of graduates subscriptions ' : 'عدد الاشتراكات'}</p>
-									:
-									<p>{lang == 'en' ? 'Number of graduates' : 'عدد المسجلين'} </p>
-								}
-								<p className='fontBold'>{courseDetail.numberOfGrarduates}</p>
+							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+								<div className='m-1'>
+									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'personDoubleColoredIcon'} color={'#FFFFFF'} />
+								</div>
+								<div className='px-1'>
+									{courseDetail.type == 'onDemand' ?
+										<p>{lang == 'en' ? 'Number of graduates subscriptions ' : 'عدد الاشتراكات'}</p>
+										:
+										<p>{lang == 'en' ? 'Number of graduates' : 'عدد المسجلين'} </p>
+									}
+									<p className='fontBold'>{courseDetail.numberOfGrarduates}</p>
+								</div>
 							</div>
 						</div>
 					</div>
