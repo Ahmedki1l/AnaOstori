@@ -179,12 +179,12 @@ function MyApp({ Component, pageProps }) {
 	const currentRoute = router.pathname;
 	const metaTags = (router.pathname == "/[catagoryName]/[courseName]" ? allMetaTags.metaTagsByCourse[router.query.catagoryName] : allMetaTags.metaTagsByRoute[currentRoute]) || defaultMetaTags
 
-	function generateSecureNonce(length) {
-		const array = new Uint8Array(length);
-		window.crypto.getRandomValues(array);
-		// Convert each byte to a hexadecimal string and join them together
-		return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
-	}
+	// function generateSecureNonce(length) {
+	// 	const array = new Uint8Array(length);
+	// 	window.crypto.getRandomValues(array);
+	// 	// Convert each byte to a hexadecimal string and join them together
+	// 	return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	// }
 
 	return (
 		<>
@@ -204,7 +204,7 @@ function MyApp({ Component, pageProps }) {
 						content={`
 						style-src 'self' https://eu-test.oppwa.com 'unsafe-inline' ;
 						frame-src 'self' https://eu-test.oppwa.com;
-						script-src 'self' https://eu-test.oppwa.com 'nonce-${generateSecureNonce(16)}' ;
+						script-src 'self' https://eu-test.oppwa.com 'nonce-${Math.random().toString(36).substring(2, 15)}' ;
 						connect-src 'self' https://eu-test.oppwa.com;
 						img-src 'self' https://eu-test.oppwa.com;
 						`}>

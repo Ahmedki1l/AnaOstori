@@ -18,16 +18,16 @@ export default function MadaCardDetailForm(props) {
 
 	}, [checkoutID]);
 
-	function generateSecureNonce(length) {
-		const array = new Uint8Array(length);
-		window.crypto.getRandomValues(array);
-		// Convert each byte to a hexadecimal string and join them together
-		return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
-	}
+	// function generateSecureNonce(length) {
+	// 	const array = new Uint8Array(length);
+	// 	window.crypto.getRandomValues(array);
+	// 	// Convert each byte to a hexadecimal string and join them together
+	// 	return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	// }
 
 	useEffect(() => {
 		const madaDesignScript = document.createElement('script');
-		madaDesignScript.nonce = generateSecureNonce(16);
+		madaDesignScript.nonce = Math.random().toString(36).substring(2, 15);
 		madaDesignScript.innerHTML = `
 		var wpwlOptions = {
 			style: "plain",

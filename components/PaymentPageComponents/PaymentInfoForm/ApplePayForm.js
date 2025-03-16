@@ -17,17 +17,17 @@ export default function ApplePayForm(props) {
 
 	}, [checkoutID]);
 
-	function generateSecureNonce(length) {
-		const array = new Uint8Array(length);
-		window.crypto.getRandomValues(array);
-		// Convert each byte to a hexadecimal string and join them together
-		return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
-	}
+	// function generateSecureNonce(length) {
+	// 	const array = new Uint8Array(length);
+	// 	window.crypto.getRandomValues(array);
+	// 	// Convert each byte to a hexadecimal string and join them together
+	// 	return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	// }
 
 
 	useEffect(() => {
 		const applePayDesignScript = document.createElement('script');
-		applePayDesignScript.nonce = generateSecureNonce(16);
+		applePayDesignScript.nonce = Math.random().toString(36).substring(2, 15);
 		applePayDesignScript.innerHTML = `
 		var wpwlOptions = {
 			applePay: {
