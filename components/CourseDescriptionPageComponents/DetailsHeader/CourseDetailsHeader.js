@@ -120,58 +120,59 @@ export default function CourseDetailsHeader(props) {
 												<p className={lang === 'en' ? "ml-2" : "mr-2"}>
 													{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض:"}
 												</p>
-												<p className={lang === 'en' ? "ml-2" : "mr-2"}>(</p>
+												<div className="flex items-center">
+													<p className={lang === 'en' ? "ml-2" : "mr-2"}>(</p>
+													<div className="flex items-center ml-2 mr-2">
+														<a
+															href="https://goo.gl/maps/p9V4qb6csGQGXWxb6"
+															target="_blank"
+															rel="noopener noreferrer"
+															style={{ color: '#fff' }}
+															className="flex items-center hover:opacity-75 transition-opacity"
+														>
+															<GoogleMapsIcon />
+														</a>
+														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}
+														</p>
+													</div>
 
-												<div className="flex items-center ml-2 mr-2">
-													<a
-														href="https://goo.gl/maps/p9V4qb6csGQGXWxb6"
-														target="_blank"
-														rel="noopener noreferrer"
-														style={{ color: '#fff' }}
-														className="flex items-center hover:opacity-75 transition-opacity"
-													>
-														<GoogleMapsIcon />
-													</a>
-													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
-														{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}
-													</p>
+													<span className="mx-2 text-gray-400">-</span>
+
+													<div className="flex items-center ml-2 mr-2">
+														<a
+															href="https://maps.app.goo.gl/Un9XNuHwCREta9CV6"
+															target="_blank"
+															rel="noopener noreferrer"
+															style={{ color: '#fff' }}
+															className="flex items-center hover:opacity-75 transition-opacity"
+														>
+															<GoogleMapsIcon />
+														</a>
+														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}
+														</p>
+													</div>
+
+													<span className="mx-2 text-gray-400">-</span>
+
+													<div className="flex items-center ml-2 mr-2">
+														<a
+															href="https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9"
+															target="_blank"
+															rel="noopener noreferrer"
+															style={{ color: '#fff' }}
+															className="flex items-center hover:opacity-75 transition-opacity"
+														>
+															<GoogleMapsIcon />
+														</a>
+														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}
+														</p>
+													</div>
+
+													<p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>
 												</div>
-
-												<span className="mx-2 text-gray-400">-</span>
-
-												<div className="flex items-center ml-2 mr-2">
-													<a
-														href="https://maps.app.goo.gl/Un9XNuHwCREta9CV6"
-														target="_blank"
-														rel="noopener noreferrer"
-														style={{ color: '#fff' }}
-														className="flex items-center hover:opacity-75 transition-opacity"
-													>
-														<GoogleMapsIcon />
-													</a>
-													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
-														{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}
-													</p>
-												</div>
-
-												<span className="mx-2 text-gray-400">-</span>
-
-												<div className="flex items-center ml-2 mr-2">
-													<a
-														href="https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9"
-														target="_blank"
-														rel="noopener noreferrer"
-														style={{ color: '#fff' }}
-														className="flex items-center hover:opacity-75 transition-opacity"
-													>
-														<GoogleMapsIcon />
-													</a>
-													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
-														{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}
-													</p>
-												</div>
-
-												<p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>
 											</div>
 
 											<span className="mx-2 text-gray-400">-</span>
