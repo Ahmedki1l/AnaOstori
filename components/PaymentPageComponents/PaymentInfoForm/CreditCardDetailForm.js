@@ -10,6 +10,8 @@ export default function CreditCardDetailForm(props) {
 		const creditCardForm = document.createElement('script');
 		// creditCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
 		creditCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`
+		creditCardForm.integrity = `${props.integrity}`;
+		creditCardForm.crossOrigin = "anonymous";
 		creditCardForm.async = true;
 		document.head.appendChild(creditCardForm);
 
@@ -17,8 +19,16 @@ export default function CreditCardDetailForm(props) {
 
 	}, [checkoutID]);
 
+	function generateSecureNonce(length) {
+		const array = new Uint8Array(length);
+		window.crypto.getRandomValues(array);
+		// Convert each byte to a hexadecimal string and join them together
+		return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	}
+
 	useEffect(() => {
 		const creditDesignScript = document.createElement('script');
+		creditDesignScript.nonce = generateSecureNonce(16);
 		creditDesignScript.innerHTML = `
 		var wpwlOptions = {
 			style: "plain",

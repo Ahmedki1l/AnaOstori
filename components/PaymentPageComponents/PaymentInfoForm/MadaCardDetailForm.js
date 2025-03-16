@@ -9,6 +9,8 @@ export default function MadaCardDetailForm(props) {
 		const madaCardForm = document.createElement('script');
 		// madaCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
 		madaCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`
+		madaCardForm.integrity = `${props.integrity}`;
+		madaCardForm.crossOrigin = "anonymous";
 		madaCardForm.async = true;
 		document.head.appendChild(madaCardForm);
 
@@ -16,8 +18,16 @@ export default function MadaCardDetailForm(props) {
 
 	}, [checkoutID]);
 
+	function generateSecureNonce(length) {
+		const array = new Uint8Array(length);
+		window.crypto.getRandomValues(array);
+		// Convert each byte to a hexadecimal string and join them together
+		return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	}
+
 	useEffect(() => {
 		const madaDesignScript = document.createElement('script');
+		madaDesignScript.nonce = generateSecureNonce(16);
 		madaDesignScript.innerHTML = `
 		var wpwlOptions = {
 			style: "plain",

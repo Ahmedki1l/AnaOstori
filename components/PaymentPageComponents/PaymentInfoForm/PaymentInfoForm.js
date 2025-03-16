@@ -30,15 +30,16 @@ export default function PaymentInfoForm(props) {
 	const screenWidth = useWindowSize().width
 	const isSmallScreen = useWindowSize().smallScreen
 
-	const [couponCode, setCouponCode] = useState()
-	const [couponError, setCouponError] = useState(false)
-	const [couponAppliedData, setCouponAppliedData] = useState()
-	const [checkoutID, setCheckoutId] = useState(props.checkoutId)
+	const [couponCode, setCouponCode] = useState();
+	const [couponError, setCouponError] = useState(false);
+	const [couponAppliedData, setCouponAppliedData] = useState();
+	const [checkoutID, setCheckoutId] = useState(props.checkoutId);
 	const [tabbyUrl, setTabbyUrl] = useState(null);
 	const [tabbyStatus, setTabbyStatus] = useState('');
 	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
-	const [paymentType, setPaymentType] = useState('')
-	const [isCanMakePayments, setIsCanMakePayments] = useState(false)
+	const [paymentType, setPaymentType] = useState('');
+	const [isCanMakePayments, setIsCanMakePayments] = useState(false);
+	const [hyperPayIntegrity, setHyperPayIntegrity] = useState(null);
 
 	const [tabbyPreScoringMessages, setTabbyPreScoringMessages] = useState({
 		not_available: {
@@ -90,6 +91,8 @@ export default function PaymentInfoForm(props) {
 							toast.error(`حاول مرة أخرى`);
 						}
 					}
+				} else {
+					setHyperPayIntegrity(res.data[2]);
 				}
 			}
 		} catch (error) {
@@ -182,7 +185,7 @@ export default function PaymentInfoForm(props) {
 				<div className={`px-4 ${styles.paymentInfoContainer}`}>
 					<h1 className='head2'>اختار طريقة الدفع</h1>
 					<div className={styles.paymentInfoDiv}>
-						{isCanMakePayments &&
+						{(isCanMakePayments) &&
 							<>
 								<input type="radio" id="applePay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('applepay')} />
 								<label htmlFor="applePay" className='relative'>
@@ -194,8 +197,8 @@ export default function PaymentInfoForm(props) {
 										<Logo height={27} width={53} logoName={'applePayLogo'} alt={'Payment Methode Logo'} />
 									</div>
 									<div className={styles.creditCardWrapper}>
-										{(checkoutID && paymentType == 'applepay') &&
-											<ApplePayForm checkoutID={checkoutID} orderID={createdOrder.id} />
+										{(checkoutID && paymentType == 'applepay' && hyperPayIntegrity) &&
+											<ApplePayForm checkoutID={checkoutID} orderID={createdOrder.id} integrity={hyperPayIntegrity} />
 										}
 									</div>
 								</label>
@@ -212,8 +215,8 @@ export default function PaymentInfoForm(props) {
 								<Logo height={27} width={53} logoName={'madaPaymentLogo'} alt={'Payment Methode Logo'} />
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType == 'mada') &&
-									<MadaCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
+								{(checkoutID && paymentType == 'mada' && hyperPayIntegrity) &&
+									<MadaCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} integrity={hyperPayIntegrity} />
 								}
 							</div>
 						</label>
@@ -254,8 +257,8 @@ export default function PaymentInfoForm(props) {
 								<Logo height={27} width={120} logoName={'creditCardPaymentLogo'} alt={'Payment Methode Logo'} />
 							</div>
 							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType == 'credit') &&
-									<CreditCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} />
+								{(checkoutID && paymentType == 'credit' && hyperPayIntegrity) &&
+									<CreditCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} integrity={hyperPayIntegrity} />
 								}
 							</div>
 						</label>

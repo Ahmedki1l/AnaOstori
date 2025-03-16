@@ -8,6 +8,8 @@ export default function ApplePayForm(props) {
 
 		const applePayCardForm = document.createElement('script');
 		applePayCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
+		applePayCardForm.integrity = `${props.integrity}`;
+		applePayCardForm.crossOrigin = "anonymous";
 		applePayCardForm.async = true;
 		document.head.appendChild(applePayCardForm);
 
@@ -15,9 +17,17 @@ export default function ApplePayForm(props) {
 
 	}, [checkoutID]);
 
+	function generateSecureNonce(length) {
+		const array = new Uint8Array(length);
+		window.crypto.getRandomValues(array);
+		// Convert each byte to a hexadecimal string and join them together
+		return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	}
+
 
 	useEffect(() => {
 		const applePayDesignScript = document.createElement('script');
+		applePayDesignScript.nonce = generateSecureNonce(16);
 		applePayDesignScript.innerHTML = `
 		var wpwlOptions = {
 			applePay: {

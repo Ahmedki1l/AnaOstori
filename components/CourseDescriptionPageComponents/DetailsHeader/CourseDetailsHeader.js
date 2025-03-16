@@ -130,6 +130,32 @@ export default function CourseDetailsHeader(props) {
 													</a>
 													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}</p>
 												</div>
+												<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
+												<div style={{ display: 'flex' }}>
+													<a
+														href={`https://maps.app.goo.gl/Un9XNuHwCREta9CV6`}
+														target="_blank"
+														rel="noopener noreferrer"
+														style={{ color: '#fff' }}
+														className={`flex items-center hover:opacity-75 transition-opacity ${lang == 'en' ? "ml-2" : "mr-2"}`}
+													>
+														<GoogleMapsIcon />
+													</a>
+													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}</p>
+												</div>
+												<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
+												<div style={{ display: 'flex' }}>
+													<a
+														href={`https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9`}
+														target="_blank"
+														rel="noopener noreferrer"
+														style={{ color: '#fff' }}
+														className={`flex items-center hover:opacity-75 transition-opacity ${lang == 'en' ? "ml-2" : "mr-2"}`}
+													>
+														<GoogleMapsIcon />
+													</a>
+													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}</p>
+												</div>
 												{/* <p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "،"}</p> */}
 												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : ")"}</p>
 												{/* <p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض، حي الياسمين"}</p> */}

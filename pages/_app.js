@@ -194,6 +194,15 @@ function MyApp({ Component, pageProps }) {
 					<meta property="og:url" content={`https://anaostori.com${router.asPath}`} />
 					<meta property="og:type" content={`https://anaostori.com}`} />
 					<meta property="og:image" content={`${metaTags.image}`} />
+					<meta http-equiv="Content-Security-Policy"
+						content="
+						style-src 'self' https://eu-test.oppwa.com 'unsafe-inline' ;
+						frame-src 'self' https://eu-test.oppwa.com;
+						script-src 'self' https://eu-test.oppwa.com 'nonce-${NONCE_ID}' ;
+						connect-src 'self' https://eu-test.oppwa.com;
+						img-src 'self' https://eu-test.oppwa.com;
+						">
+					</meta>
 				</Head>
 				<div dir='rtl'>
 					<GoogleAnalytics pathName={pathName} />
