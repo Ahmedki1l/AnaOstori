@@ -111,59 +111,75 @@ export default function CourseDetailsHeader(props) {
 								<div className='m-1'>
 									<AllIconsComponenet height={isMediumScreen ? 18 : 32} width={isMediumScreen ? 20 : 32} iconName={'locationDoubleColor'} color={'#FFFFFF'} />
 								</div>
-								<div className='px-1'>
-									<p>{lang == 'en' ? 'Location' : 'تقام الدورة في'}</p>
-									{courseDetail.type == "physical" ?
-										<div style={{ display: 'flex' }}>
-											<div style={{ display: 'flex' }}>
-												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض:"}</p>
-												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "("}</p>
-												<div style={{ display: 'flex' }}>
+								<div className="px-1">
+									<p>{lang === 'en' ? 'Location' : 'تقام الدورة في'}</p>
+									{courseDetail.type === "physical" ? (
+										<div className="flex flex-wrap items-center">
+											{/* First group of locations */}
+											<div className="flex flex-wrap items-center">
+												<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+													{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض:"}
+												</p>
+												<p className={lang === 'en' ? "ml-2" : "mr-2"}>(</p>
+
+												<div className="flex items-center ml-2 mr-2">
 													<a
-														href={`https://goo.gl/maps/p9V4qb6csGQGXWxb6`}
+														href="https://goo.gl/maps/p9V4qb6csGQGXWxb6"
 														target="_blank"
 														rel="noopener noreferrer"
 														style={{ color: '#fff' }}
-														className={`flex items-center hover:opacity-75 transition-opacity ${lang == 'en' ? "ml-2" : "mr-2"}`}
+														className="flex items-center hover:opacity-75 transition-opacity"
 													>
 														<GoogleMapsIcon />
 													</a>
-													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}</p>
+													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+														{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}
+													</p>
 												</div>
-												<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
-												<div style={{ display: 'flex' }}>
+
+												<span className="mx-2 text-gray-400">-</span>
+
+												<div className="flex items-center ml-2 mr-2">
 													<a
-														href={`https://maps.app.goo.gl/Un9XNuHwCREta9CV6`}
+														href="https://maps.app.goo.gl/Un9XNuHwCREta9CV6"
 														target="_blank"
 														rel="noopener noreferrer"
 														style={{ color: '#fff' }}
-														className={`flex items-center hover:opacity-75 transition-opacity ${lang == 'en' ? "ml-2" : "mr-2"}`}
+														className="flex items-center hover:opacity-75 transition-opacity"
 													>
 														<GoogleMapsIcon />
 													</a>
-													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}</p>
+													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+														{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}
+													</p>
 												</div>
-												<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
-												<div style={{ display: 'flex' }}>
+
+												<span className="mx-2 text-gray-400">-</span>
+
+												<div className="flex items-center ml-2 mr-2">
 													<a
-														href={`https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9`}
+														href="https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9"
 														target="_blank"
 														rel="noopener noreferrer"
 														style={{ color: '#fff' }}
-														className={`flex items-center hover:opacity-75 transition-opacity ${lang == 'en' ? "ml-2" : "mr-2"}`}
+														className="flex items-center hover:opacity-75 transition-opacity"
 													>
 														<GoogleMapsIcon />
 													</a>
-													<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}</p>
+													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+														{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}
+													</p>
 												</div>
-												{/* <p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "،"}</p> */}
-												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : ")"}</p>
-												{/* <p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Riyadh, Al-Yasmeen District" : "الرياض، حي الياسمين"}</p> */}
+
+												<p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>
 											</div>
-											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
-											<div style={{ display: 'flex' }}>
+
+											<span className="mx-2 text-gray-400">-</span>
+
+											{/* Second group */}
+											<div className="flex items-center ml-2 mr-2">
 												<a
-													href={`https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7`}
+													href="https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7"
 													target="_blank"
 													rel="noopener noreferrer"
 													style={{ color: '#fff' }}
@@ -171,12 +187,17 @@ export default function CourseDetailsHeader(props) {
 												>
 													<GoogleMapsIcon />
 												</a>
-												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Dammam, Al-Etisalat District" : "الدمام، حي الإتصالات"}</p>
+												<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+													{lang === 'en' ? "Dammam, Al-Etisalat District" : "الدمام، حي الإتصالات"}
+												</p>
 											</div>
-											<span style={{ margin: '0 8px', color: '#ccc' }}> - </span>
-											<div style={{ display: 'flex' }}>
+
+											<span className="mx-2 text-gray-400">-</span>
+
+											{/* Third group */}
+											<div className="flex items-center ml-2 mr-2">
 												<a
-													href={`https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6`}
+													href="https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6"
 													target="_blank"
 													rel="noopener noreferrer"
 													style={{ color: '#fff' }}
@@ -184,14 +205,16 @@ export default function CourseDetailsHeader(props) {
 												>
 													<GoogleMapsIcon />
 												</a>
-												<p className={`${lang == 'en' ? "ml-2" : "mr-2"}`}>{lang == 'en' ? "Jeddah, Al Salamah District" : "جدة، حي السلامة"}</p>
+												<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+													{lang === 'en' ? "Jeddah, Al Salamah District" : "جدة، حي السلامة"}
+												</p>
 											</div>
 										</div>
-										:
-										<p className=''>{lang == 'en' ? `Broadcast via` : 'يتم بثها عبر '}</p>
-									}
-
+									) : (
+										<p>{lang === 'en' ? "Broadcast via" : 'يتم بثها عبر '}</p>
+									)}
 								</div>
+
 							</div>
 							: courseDetail.type == 'online' ?
 								<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>

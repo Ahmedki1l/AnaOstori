@@ -202,13 +202,13 @@ function MyApp({ Component, pageProps }) {
 					<meta property="og:image" content={`${metaTags.image}`} />
 					{/* <meta http-equiv="Content-Security-Policy"
 						content={`
-						style-src 'self' https://eu-test.oppwa.com;
+						style-src 'self' https://eu-test.oppwa.com 'unsafe-inline' ;
 						frame-src 'self' https://eu-test.oppwa.com;
 						script-src 'self' https://eu-test.oppwa.com 'nonce-${Math.random().toString(36).substring(2, 15)}' ;
 						connect-src 'self' https://eu-test.oppwa.com;
 						img-src 'self' https://eu-test.oppwa.com;
-						`}>
-					</meta> */}
+						`}
+					/> */}
 				</Head>
 				<div dir='rtl'>
 					<GoogleAnalytics pathName={pathName} />
