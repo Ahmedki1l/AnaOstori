@@ -21,7 +21,7 @@ export default function UserInfoForm(props) {
 	const genders = PaymentConst.genders
 
 	const router = useRouter();
-	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : '')
+	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : 'male')
 	const [selectedDate, setSelectedDate] = useState(router.query.date ? router.query.date : "")
 	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
 
