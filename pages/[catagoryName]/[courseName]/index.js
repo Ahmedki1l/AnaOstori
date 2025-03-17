@@ -205,6 +205,122 @@ export default function Index(props) {
 		sortedLocations?.[0]?.city ?? null
 	);
 
+	// Helper function to extract unique district objects (with city and district) from all dates
+	const getUniqueDistrictsWithCity = () => {
+		// Combine all dates from male, female, and mix
+		const allDates = [
+			...(maleDates || []),
+			...(femaleDates || []),
+			...(mixDates || [])
+		];
+
+		const uniqueSet = new Set();
+		const uniqueLocations = [];
+
+		allDates.forEach(date => {
+			const location = date.locationName;
+			if (location) {
+				// Assuming a locationName is like "الرياض - طويق"
+				// The original code reversed the split, so that:
+				//   const [district, city] = location.split(' - ').reverse();
+				// In our example, splitting "الرياض - طويق" yields ["الرياض", "طويق"].
+				// Reversing it gives: district = "طويق", city = "الرياض".
+				const parts = location.split(' - ');
+				if (parts.length >= 2) {
+					const [districtRaw, cityRaw] = parts.reverse();
+					// Ensure the district starts with "حي "
+					let processedDistrict = districtRaw;
+					if (!districtRaw.startsWith('حي ')) {
+						processedDistrict = `حي ${districtRaw}`;
+					}
+					// Create a unique key combining city and processed district
+					const key = `${cityRaw}-${processedDistrict}`;
+					if (!uniqueSet.has(key)) {
+						uniqueSet.add(key);
+						uniqueLocations.push({ city: cityRaw, district: processedDistrict });
+					}
+				}
+			}
+		});
+		return uniqueLocations;
+	};
+
+	// Custom order for cities
+	const customCityOrder = ["الرياض", "الدمام", "جدة"];
+
+	// New getDistrictsByCity using the unique district objects
+	const getDistrictsByCity = () => {
+		const uniqueLocations = getUniqueDistrictsWithCity();
+		// Group by city: key is city, value is an array of unique districts
+		const districtsByCity = uniqueLocations.reduce((acc, { city, district }) => {
+			if (!acc[city]) {
+				acc[city] = [];
+			}
+			acc[city].push(district);
+			return acc;
+		}, {});
+
+		// Create a new mapping with cities in the specified order
+		const sortedMapping = {};
+		customCityOrder.forEach((city) => {
+			if (districtsByCity[city]) {
+				sortedMapping[city] = districtsByCity[city];
+			}
+		});
+
+		// Optionally, append any cities not in the custom order (e.g., in alphabetical order)
+		Object.keys(districtsByCity).forEach((city) => {
+			if (!customCityOrder.includes(city)) {
+				sortedMapping[city] = districtsByCity[city];
+			}
+		});
+
+		return sortedMapping;
+	};
+
+	// Usage:
+	const districtsMapping = getDistrictsByCity();
+	console.log("🚀 ~ districtsMapping:", districtsMapping);
+
+	// Extract cities from the mapping keys
+	const initialCities = Object.keys(districtsMapping);
+
+	// Initialize state variables:
+	const defaultCity = initialCities.includes("الرياض") ? "الرياض" : (initialCities[0] || null);
+	const [selectedCity, setSelectedCity] = useState(defaultCity);
+
+	// For districts, initialize with districts corresponding to the first city
+	const [districts, setDistricts] = useState(selectedCity ? districtsMapping[selectedCity] : []);
+	const [selectedDistrict, setSelectedDistrict] = useState(districts[0] || null);
+
+	// Also store cities in state if needed elsewhere
+	const [cities, setCities] = useState(initialCities);
+
+	console.log("🚀 ~ districtsMapping:", districtsMapping);
+	console.log("🚀 ~ cities:", cities);
+	console.log("🚀 ~ selectedCity:", selectedCity);
+	console.log("🚀 ~ districts:", districts);
+
+	// Optional: update districts and selected district when selectedCity changes
+	useEffect(() => {
+		if (selectedCity) {
+			const newDistricts = districtsMapping[selectedCity] || [];
+			setDistricts(newDistricts);
+			setSelectedDistrict(newDistricts[0] || null);
+		}
+	}, [selectedCity]);
+
+	// useEffect(() => {
+	// 	if (sortedLocations && sortedLocations.length > 0) {
+	// 		const cityList = sortedLocations.map(loc => loc.city);
+	// 		const districtList = sortedLocations.map(loc => loc.district);
+	// 		setCities([...new Set(cityList)]);      // Ensure cities are unique
+	// 		setDistricts([...new Set(districtList)]); // Ensure districts are unique
+	// 	}
+	// 	console.log("🚀 ~ cities:", cities);
+	// 	console.log("🚀 ~ districts:", districts);
+	// }, [sortedLocations]);
+
 	const homeReviews = props?.homeReviews
 
 	const sortedReviewsByCategory = homeReviews.reduce((acc, review) => {
@@ -420,24 +536,31 @@ export default function Index(props) {
 	const [filteredFemaleDates, setFilteredFemaleDates] = useState([]);
 
 	useEffect(() => {
-		filterDates(selectedLocation);
-	}, [selectedLocation, window.location.href]);
+		filterDates(selectedCity, selectedDistrict);
+	}, [selectedCity, selectedDistrict, window.location.href]);
 
-	const filterDates = (city) => {
-		const newMaleDates = maleDates?.filter(date => date.locationName.includes(city));
+	const filterDates = (city, district) => {
+		// Remove the 'حي ' prefix from the district for filtering purposes
+		const cleanedDistrict = district.replace(/^حي\s*/, '');
+
+		const newMaleDates = maleDates?.filter(date =>
+			date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
+		);
 		setFilteredMaleDates(newMaleDates);
 
-		const newFemaleDates = femaleDates?.filter(date => date.locationName.includes(city));
+		const newFemaleDates = femaleDates?.filter(date =>
+			date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
+		);
 		setFilteredFemaleDates(newFemaleDates);
 
-		if (selectedGender == "male" && newMaleDates.length <= 0) {
+		if (selectedGender === "male" && newMaleDates.length <= 0) {
 			setSelectedGender("female");
 		}
 
-		if (selectedGender == "female" && newFemaleDates.length <= 0) {
+		if (selectedGender === "female" && newFemaleDates.length <= 0) {
 			setSelectedGender("male");
 		}
-	}
+	};
 
 	return (
 		<>
@@ -655,25 +778,57 @@ export default function Index(props) {
 											<>
 												{/* Location Selection */}
 												<div className="mb-6">
-													<h2 className="text-right mb-2 text-gray-600">{lang == 'en' ? "Branch" : "الفرع"}</h2>
-													<p className="text-right text-sm mb-2">{lang == 'en' ? "Accordingly, we will show you the available dates" : "بناءً عليه يوريك المواعيد المتوفرة"}</p>
+													<h2 className="text-right mb-2 text-gray-600">
+														{lang === 'en' ? "Branch" : "الفرع"}
+													</h2>
+													<p className="text-right text-sm mb-2">
+														{lang === 'en'
+															? "Accordingly, we will show you the available dates"
+															: "بناءً عليه يوريك المواعيد المتوفرة"}
+													</p>
+
+													{/* City Selection */}
 													<div className="flex justify-start gap-2">
-														{sortedLocations.map(loc => (
+														{initialCities.map(city => (
 															<button
-																key={loc.city}
-																className={`px-4 py-2 border border-black ${selectedLocation === loc.city
+																key={city}
+																className={`px-4 py-2 border border-black ${selectedCity === city
 																	? 'bg-[#F26722] text-white'
 																	: 'bg-white text-black'
 																	} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
-																onClick={() => { setSelectedLocation(loc.city); filterDates(loc.city); }}
+																onClick={() => setSelectedCity(city)}
 															>
 																<div className="flex flex-col items-center">
-																	<div>{loc.city}</div>
-																	<div className="text-sm">{loc.district}</div>
+																	<div>{city}</div>
 																</div>
 															</button>
 														))}
 													</div>
+
+													{/* District Selection */}
+													{districts && districts.length > 0 && (
+														<div className="mt-4">
+															<h2 className="text-right mb-4 text-gray-600">
+																{lang === 'en' ? "District" : "الحي"}
+															</h2>
+															<div className="flex justify-start gap-2">
+																{districts.map(district => (
+																	<button
+																		key={district}
+																		className={`px-4 py-2 border border-black ${selectedDistrict === district
+																			? 'bg-[#F26722] text-white'
+																			: 'bg-white text-black'
+																			} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
+																		onClick={() => setSelectedDistrict(district)}
+																	>
+																		<div className="flex flex-col items-center">
+																			<div>{district}</div>
+																		</div>
+																	</button>
+																))}
+															</div>
+														</div>
+													)}
 												</div>
 
 												{/* Gender Selection */}

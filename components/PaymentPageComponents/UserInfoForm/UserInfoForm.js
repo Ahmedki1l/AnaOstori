@@ -306,6 +306,116 @@ export default function UserInfoForm(props) {
 		}
 	}
 
+	// States for filtered dates (by city & district)
+	const [filteredMaleDates, setFilteredMaleDates] = useState([]);
+	const [filteredFemaleDates, setFilteredFemaleDates] = useState([]);
+
+	// STATES for city and district selection
+	const [cities, setCities] = useState([]);
+	const [districtsMapping, setDistrictsMapping] = useState({});
+	const [selectedCity, setSelectedCity] = useState("");
+	const [selectedDistrict, setSelectedDistrict] = useState("");
+
+	// Helper: Extract unique city–district objects from all dates
+	const getUniqueDistrictsWithCity = () => {
+		// Combine the dates from all sources
+		const allDates = [...initialMaleDate, ...initialFemaleDate, ...mixDates];
+		const uniqueSet = new Set();
+		const uniqueLocations = [];
+
+		allDates.forEach(date => {
+			const location = date.locationName; // e.g., "الرياض - طويق"
+			if (location) {
+				const parts = location.split(' - ');
+				if (parts.length >= 2) {
+					// Reverse the parts so that:
+					// districtRaw = parts[0] and cityRaw = parts[1]
+					const [districtRaw, cityRaw] = parts.reverse();
+					// Remove "حي " prefix from district if present
+					let processedDistrict = districtRaw.replace(/^حي\s*/, '');
+					const key = `${cityRaw}-${processedDistrict}`;
+					if (!uniqueSet.has(key)) {
+						uniqueSet.add(key);
+						uniqueLocations.push({ city: cityRaw, district: processedDistrict });
+					}
+				}
+			}
+		});
+		return uniqueLocations;
+	};
+
+	// Custom order for cities
+	const customCityOrder = ["الرياض", "الدمام", "جدة"];
+
+	// New getDistrictsByCity using the unique district objects
+	const getDistrictsByCity = () => {
+		const uniqueLocations = getUniqueDistrictsWithCity();
+		// Group by city: key is city, value is an array of unique districts
+		const districtsByCity = uniqueLocations.reduce((acc, { city, district }) => {
+			if (!acc[city]) {
+				acc[city] = [];
+			}
+			acc[city].push(district);
+			return acc;
+		}, {});
+
+		// Create a new mapping with cities in the specified order
+		const sortedMapping = {};
+		customCityOrder.forEach((city) => {
+			if (districtsByCity[city]) {
+				sortedMapping[city] = districtsByCity[city];
+			}
+		});
+
+		// Optionally, append any cities not in the custom order (e.g., in alphabetical order)
+		Object.keys(districtsByCity).forEach((city) => {
+			if (!customCityOrder.includes(city)) {
+				sortedMapping[city] = districtsByCity[city];
+			}
+		});
+
+		return sortedMapping;
+	};
+
+	// When the dates change, compute the mapping and initialize city/district selection.
+	useEffect(() => {
+		const mapping = getDistrictsByCity();
+		setDistrictsMapping(mapping);
+		const initialCities = Object.keys(mapping);
+		setCities(initialCities);
+
+		// Select "الرياض" by default if available; otherwise, choose the first city.
+		const defaultCity = initialCities.includes("الرياض")
+			? "الرياض"
+			: initialCities[0] || "";
+		setSelectedCity(defaultCity);
+		if (mapping[defaultCity] && mapping[defaultCity].length > 0) {
+			setSelectedDistrict(mapping[defaultCity][0]);
+		} else {
+			setSelectedDistrict("");
+		}
+	}, [initialMaleDate, initialFemaleDate, mixDates]);
+
+	// Filter the dates based on the selected city and district.
+	useEffect(() => {
+		filterDates(selectedCity, selectedDistrict);
+	}, [selectedCity, selectedDistrict]);
+
+	const filterDates = (city, district) => {
+		// Use both city and district to filter the locationName.
+		const newMaleDates = initialMaleDate.filter(date =>
+			date.locationName.includes(city) && date.locationName.includes(district)
+		);
+		setFilteredMaleDates(newMaleDates);
+
+		const newFemaleDates = initialFemaleDate.filter(date =>
+			date.locationName.includes(city) && date.locationName.includes(district)
+		);
+		setFilteredFemaleDates(newFemaleDates);
+
+		// (Optional: Adjust selected gender if no dates are available)
+	};
+
 
 	return (
 		<>
@@ -340,7 +450,7 @@ export default function UserInfoForm(props) {
 												</div>
 											</label>
 											{/* The promo widget is rendered below the radio content without affecting the parent's width */}
-											<div style={{ position: 'absolute', width: '100%', top:'100%' }}>
+											<div style={{ position: 'absolute', width: '100%', top: '100%' }}>
 												<TabbyPomoForm amount={parseFloat(data.label2)} />
 											</div>
 										</div>
@@ -388,7 +498,7 @@ export default function UserInfoForm(props) {
 										<p className={`fontMedium text-xl ${styles.radioBtnHead}`}>المدينة</p>
 										<p className={`fontRegular ${styles.radioBtnDiscription}`}>بناءًا عليها بنوريك المواعيد المتوفرة</p>
 										<div className={styles.genderWrapper}>
-											{/***************************************** FOR loop for radio button to select region ****************************************/}
+											{/* **************************************** FOR loop for radio button to select region ***************************************
 											{regionDataList?.map((region, j = index) => {
 												const isDisabled = disabledRegions.includes(region.id);
 												return (
@@ -407,11 +517,56 @@ export default function UserInfoForm(props) {
 														<label htmlFor={`region${i}`} className={` ${styles.lableName1} ${isDisabled ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{region.nameAr === "الشرقية" ? "الدمام" : region.nameAr}</label>
 													</div>
 												);
-											})}
+											})} */}
+											{/* --- City and District Selection --- */}
+											<div className="mb-6">
+												<h2 className="text-right mb-2 text-gray-600">الفرع</h2>
+												<p className="text-right text-sm mb-2">بناءً عليه يوريك المواعيد المتوفرة</p>
+												{/* City Selection */}
+												<div className="flex justify-start gap-2">
+													{cities.map(city => (
+														<button
+															key={city}
+															className={`px-4 py-2 border border-black ${selectedCity === city
+																? 'bg-[#F26722] text-white'
+																: 'bg-white text-black'
+																} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
+															onClick={() => {
+																setSelectedCity(city);
+																// Automatically select the first district for the city.
+																setSelectedDistrict(districtsMapping[city][0]);
+															}}
+														>
+															{city}
+														</button>
+													))}
+												</div>
+
+												{/* District Selection */}
+												{districtsMapping[selectedCity] && (
+													<div className="mt-4">
+														<h2 className="text-right mb-4 text-gray-600">الحي</h2>
+														<div className="flex justify-start gap-2">
+															{districtsMapping[selectedCity].map(district => (
+																<button
+																	key={district}
+																	className={`px-4 py-2 border border-black ${selectedDistrict === district
+																		? 'bg-[#F26722] text-white'
+																		: 'bg-white text-black'
+																		} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
+																	onClick={() => setSelectedDistrict(district)}
+																>
+																	{district}
+																</button>
+															))}
+														</div>
+													</div>
+												)}
+											</div>
 										</div>
 									</>
 								}
-								<p className={`fontBold mt-6 ${styles.radioBtnHead}`}>الجنس</p>
+								<p className={`fontBold ${styles.radioBtnHead}`}>الجنس</p>
 								{/* {courseDetail.type == 'physical' && <p className={`fontRegular ${styles.radioBtnDiscription}`}>بناء عليها بنوريك المواعيد المتوفرة</p>} */}
 								<div className={styles.genderWrapper}>
 									{/***************************************** FOR loop for radio button to select Gender ****************************************/}
@@ -438,51 +593,64 @@ export default function UserInfoForm(props) {
 									<div style={{ color: 'red' }} className={styles.errorText}>{dateCheck}</div>
 									<ScrollContainer className='flex'>
 										<div className={styles.datesMainArea}>
-											{/***************************************** FOR loop for radio button to select date ****************************************/}
-											{((courseDetail.type == 'physical' && studentsData[i].gender !== null) ? ((studentsData[i].gender == 'female') ? femaleDates : maleDates) : mixDates).length > 0 ?
+											{((courseDetail.type === 'physical' && studentsData[i].gender !== null)
+												? (studentsData[i].gender === 'female' ? filteredFemaleDates : filteredMaleDates)
+												: mixDates
+											).length > 0 ? (
 												<>
-													{((courseDetail.type == 'physical' && studentsData[i].gender !== null) ? ((studentsData[i].gender == 'female') ? femaleDates : maleDates) : mixDates).map((date, k = index) => {
-														return (
-															<div key={`datecard${k}`}>
-																{date.numberOfSeats !== 0 &&
-																	<div>
-																		<input
-																			type="radio"
-																			id={`date1_${k}_${i}`}
-																			name={`date${i}`}
-																			title="date"
-																			value={date.dateFrom}
-																			className="hidden peer"
-																			onChange={event => handleFormChange(event, i, date.id)}
-																			checked={(selectedDate && i == 0 ? selectedDate == date.id : student.availabilityId == date.id)}
-																			disabled={date.numberOfSeats == 0}
-																		/>
-																		<label
-																			htmlFor={`date1_${k}_${i}`}
-																			className={`${styles.dateBox} cursor-pointer ${date.numberOfSeats == 0 ? styles.disableDateBox : ''}`}
-																		>
-																			<div className={`relative ${styles.label}`}>
-																				<div className={styles.dateRadioBtnBox}>
-																					<div className={styles.circle}><div></div></div>
-																					<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
-																						{(courseDetail.type == 'physical' && date.name) ? date.name : dateWithDay(date.dateFrom)}
-																					</p>
+													{((courseDetail.type === 'physical' && studentsData[i].gender !== null)
+														? (studentsData[i].gender === 'female' ? filteredFemaleDates : filteredMaleDates)
+														: mixDates
+													).map((date, k) => (
+														<div key={`datecard${k}`}>
+															{date.numberOfSeats !== 0 && (
+																<div>
+																	<input
+																		type="radio"
+																		id={`date1_${k}_${i}`}
+																		name={`date${i}`}
+																		title="date"
+																		value={date.dateFrom}
+																		className="hidden peer"
+																		onChange={event => handleFormChange(event, i, date.id)}
+																		checked={
+																			(selectedDate && i === 0
+																				? selectedDate === date.id
+																				: student.availabilityId === date.id)
+																		}
+																		disabled={date.numberOfSeats === 0}
+																	/>
+																	<label
+																		htmlFor={`date1_${k}_${i}`}
+																		className={`${styles.dateBox} cursor-pointer ${date.numberOfSeats === 0 ? styles.disableDateBox : ''
+																			}`}
+																	>
+																		<div className={`relative ${styles.label}`}>
+																			<div className={styles.dateRadioBtnBox}>
+																				<div className={styles.circle}>
+																					<div></div>
 																				</div>
+																				<p className={`fontMedium ${styles.dateBoxHeaderText}`}>
+																					{courseDetail.type === 'physical' && date.name
+																						? date.name
+																						: dateWithDay(date.dateFrom)}
+																				</p>
 																			</div>
-																			<DatesInfo date={date} />
-																		</label>
-																	</div>
-																}
-															</div>
-														)
-													})}
+																		</div>
+																		<DatesInfo date={date} />
+																	</label>
+																</div>
+															)}
+														</div>
+													))}
 												</>
-												:
-												(selectedGender && selectedRegionId) &&
-												<div>
-													<UserDetailForm1 gender={studentsData[i].gender} />
-												</div>
-											}
+											) : (
+												selectedGender && selectedRegionId && (
+													<div>
+														<UserDetailForm1 gender={studentsData[i].gender} />
+													</div>
+												)
+											)}
 										</div>
 									</ScrollContainer>
 									{/*i == 0 &&
