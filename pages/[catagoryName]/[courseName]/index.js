@@ -536,31 +536,32 @@ export default function Index(props) {
 	const [filteredFemaleDates, setFilteredFemaleDates] = useState([]);
 
 	useEffect(() => {
+		console.log("🚀 ~ handleUserLogin ~ selectedCity:", selectedCity);
+		console.log("🚀 ~ handleUserLogin ~ selectedDistrict:", selectedDistrict);
 		filterDates(selectedCity, selectedDistrict);
 	}, [selectedCity, selectedDistrict, window.location.href]);
 
 	const filterDates = (city, district) => {
-		// Remove the 'حي ' prefix from the district for filtering purposes
-		const cleanedDistrict = district.replace(/^حي\s*/, '');
-
+		// If district is null, use an empty string instead.
+		const cleanedDistrict = district ? district.replace(/^حي\s*/, '') : '';
+	  
 		const newMaleDates = maleDates?.filter(date =>
-			date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
+		  date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
 		);
 		setFilteredMaleDates(newMaleDates);
-
+	  
 		const newFemaleDates = femaleDates?.filter(date =>
-			date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
+		  date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
 		);
 		setFilteredFemaleDates(newFemaleDates);
-
+	  
 		if (selectedGender === "male" && newMaleDates.length <= 0) {
-			setSelectedGender("female");
+		  setSelectedGender("female");
 		}
-
 		if (selectedGender === "female" && newFemaleDates.length <= 0) {
-			setSelectedGender("male");
+		  setSelectedGender("male");
 		}
-	};
+	  };
 
 	return (
 		<>
