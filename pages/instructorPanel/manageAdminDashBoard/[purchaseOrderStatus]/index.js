@@ -381,7 +381,7 @@ const Index = () => {
                             <div className='pl-2 cursor-pointer' onClick={handleEditOrders}>
                                 <AllIconsComponenet iconName={'newEditIcon'} height={18} width={18} color={'#000000'} />
                             </div>
-                            {(pathNameForOrderStatus !== 'rejectedOrders') &&
+                            {(pathNameForOrderStatus !== 'rejectedOrders' && status && _record.invoiceKey && _record.invoiceBucket) &&
                                 <Link className='pr-2 cursor-pointer' href={mediaUrl(_record.invoiceBucket, _record.invoiceKey)} target='_blank'>
                                     <AllIconsComponenet height={18} width={18} iconName={'downloadIcon'} color={'#000000'} />
                                 </Link>
