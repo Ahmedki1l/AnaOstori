@@ -155,7 +155,7 @@ const Index = () => {
             routeName: "orderList",
             page: currentPage,
             limit: 10,
-            order: "createdAt DESC"
+            order: "updatedAt DESC"
         }
         if (pathNameForOrderStatus === 'completedOrders') {
             body.filterType = 'status'
