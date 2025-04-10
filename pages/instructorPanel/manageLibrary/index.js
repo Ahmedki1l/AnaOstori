@@ -219,12 +219,12 @@ function Index() {
                             }
                             {selectedItem == 'questions' &&
                                 <QuestionsBankComponent
-                                    questionsData={questionsData}
+                                    questionsData={folderList}
                                     typeOfListdata={typeOfListdata}
                                     setTypeOfListData={setTypeOfListData}
                                     setSelectedFolderId={setSelectedFolderId}
-                                    getQuestionsList={getQuestionsList}
-                                    getFolderList={getFolderList}
+                                    getQuestionsList={getfolderList}
+                                    getFolderList={getfolderList}
                                     loading={loading}
                                     handleCreateFolder={handleCreateFolder}
                                 />
