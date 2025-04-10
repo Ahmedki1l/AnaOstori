@@ -6,6 +6,7 @@ import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../service
 import { getNewToken } from '../../../services/fireBaseAuthService';
 import { useRouter } from 'next/router';
 import CoursePathLibrary from '../../../components/ManageLibraryComponent/CoursePathLibrary/CoursePathLibrary'
+import QuestionsBankComponent from '../../../components/ExamComponents/QuestionsBankComponent';
 import ManageLibraryTableComponent from '../../../components/ManageLibraryComponent/ManageLibraryTableComponent/ManageLibraryTableComponent';
 import ModelForAddItemLibrary from '../../../components/ManageLibraryComponent/ModelForAddItemLibrary/ModelForAddItemLibrary';
 import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOneInput/ModelWithOneInput';
@@ -192,6 +193,7 @@ function Index() {
                             <div className={styles.navItems}>
                                 <p onClick={() => handleItemSelect('video')} className={selectedItem == 'video' ? styles.activeItem : ""}> الفيديوهات</p>
                                 <p onClick={() => handleItemSelect('file')} className={selectedItem == 'file' ? styles.activeItem : ""}> الملفات </p>
+                                <p onClick={() => handleItemSelect('questions')} className={selectedItem == 'questions' ? styles.activeItem : ""}> بنك الأسئلة </p>
                                 <p onClick={() => handleItemSelect('quiz')} className={selectedItem == 'quiz' ? styles.activeItem : ""}>الاختبارات</p>
                                 <p onClick={() => handleItemSelect('curriculum')} className={selectedItem == 'curriculum' ? styles.activeItem : ""}>المقررات</p>
                             </div>
@@ -214,6 +216,18 @@ function Index() {
                             }
                             {selectedItem == 'curriculum' &&
                                 <CoursePathLibrary folderType={selectedItem} />
+                            }
+                            {selectedItem == 'questions' &&
+                                <QuestionsBankComponent
+                                    questionsData={questionsData}
+                                    typeOfListdata={typeOfListdata}
+                                    setTypeOfListData={setTypeOfListData}
+                                    setSelectedFolderId={setSelectedFolderId}
+                                    getQuestionsList={getQuestionsList}
+                                    getFolderList={getFolderList}
+                                    loading={loading}
+                                    handleCreateFolder={handleCreateFolder}
+                                />
                             }
                         </div>
                     </div>

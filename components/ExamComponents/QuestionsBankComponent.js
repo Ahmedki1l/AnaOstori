@@ -1,48 +1,38 @@
 import React, { useState } from 'react'
-import styles from './ManageLibraryTableComponent.module.scss'
-import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
-import { fullDate } from '../../../constants/DateConverter'
-import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
-import ModelForAddItemLibrary from '../ModelForAddItemLibrary/ModelForAddItemLibrary'
-import Spinner from '../../CommonComponents/spinner'
-import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { postRouteAPI } from '../../../services/apisService'
-import Empty from '../../CommonComponents/Empty'
-import BackToPath from '../../CommonComponents/BackToPath'
-import { getNewToken } from '../../../services/fireBaseAuthService'
-import ModalForVideo from '../../CommonComponents/ModalForVideo/ModalForVideo'
-import { mediaUrl } from '../../../constants/DataManupulation'
+import styles from './QuestionsBankComponent.module.scss'
+import AllIconsComponenet from '../../Icons/AllIconsComponenet'
+import { fullDate } from '../../constants/DateConverter'
+import ModelForDeleteItems from '../adminPanelComponents/ModelForDeleteItems/ModelForDeleteItems'
+import ModelForAddQuestion from './ModelForAddQuestion'
+import Spinner from '../CommonComponents/spinner'
+import ModelWithOneInput from '../CommonComponents/ModelWithOneInput/ModelWithOneInput'
+import { postRouteAPI } from '../../services/apisService'
+import Empty from '../CommonComponents/Empty'
+import BackToPath from '../CommonComponents/BackToPath'
+import { getNewToken } from '../../services/fireBaseAuthService'
 import { toast } from 'react-toastify'
-import { folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst'
+import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst'
 
-
-const ManageLibraryTableComponent = ({
-    folderTableData,
-    folderType,
+const QuestionsBankComponent = ({
+    questionsData,
     typeOfListdata,
     setTypeOfListData,
     setSelectedFolderId,
-    getItemList,
+    getQuestionsList,
     getFolderList,
     loading,
     handleCreateFolder,
 }) => {
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
-    const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
+    const [isModelForAddQuestionOpen, setIsModelForAddQuestionOpen] = useState(false)
     const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false)
-    const [selectedItem, setSelectedItem] = useState()
+    const [selectedQuestion, setSelectedQuestion] = useState()
     const [selectedFolder, setSelectedFolder] = useState()
     const tableDataType = typeOfListdata
     const [deleteItemType, setDeleteItemType] = useState('folder')
-    const [fileSrc, setFileSrc] = useState()
-    const [videoModalOpen, setVideoModalOpen] = useState(false)
     const [editFolder, setEditFolder] = useState(false)
-    const existingItemName = folderTableData?.map(item => item.name)
-    const { videoToastMsgConst } = videoFileConst
-    const { pdfToastMsgConst } = pdfFileConst
-    const { examToastMsgConst } = quizConst
-    const { folderToastMsgConst } = folderConst
-
+    const existingItemName = questionsData?.map(item => item.name)
+    const { folderToastMsgConst, questionToastMsgConst } = questionsConst
 
     const handleEditIconClick = async (item) => {
         if (tableDataType == "folder") {
@@ -50,10 +40,11 @@ const ManageLibraryTableComponent = ({
             setSelectedFolder(item)
             setEditFolder(true)
         } else {
-            setSelectedItem(item)
-            setIsModelForAddItemOpen(true)
+            setSelectedQuestion(item)
+            setIsModelForAddQuestionOpen(true)
         }
     };
+
     const handleEditFolder = async ({ name }) => {
         let editFolderBody = {
             id: selectedFolder?.id,
@@ -67,14 +58,14 @@ const ManageLibraryTableComponent = ({
         await postRouteAPI(data).then((res) => {
             toast.success(folderToastMsgConst.updateFolderSuccessMsg, { rtl: true, })
             setIsModelForAddFolderOpen(false)
-            getFolderList(folderType)
+            getFolderList('questions')
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(data).then(res => {
                         toast.success(folderToastMsgConst.updateFolderSuccessMsg, { rtl: true, })
                         setIsModelForAddFolderOpen(false)
-                        getFolderList(folderType)
+                        getFolderList('questions')
                     })
                 }).catch(error => {
                     console.error("Error:", error);
@@ -92,58 +83,53 @@ const ManageLibraryTableComponent = ({
         setIsmodelForDeleteItems(false)
     }
 
-    const onItemModelClose = () => {
-        // getItemList(folderId)
-        setSelectedItem()
-        setIsModelForAddItemOpen(false)
+    const onQuestionModelClose = () => {
+        setSelectedQuestion()
+        setIsModelForAddQuestionOpen(false)
     }
 
-    const showItemListOfSelectedFolder = async (item) => {
-        if (tableDataType == "item") return
-        setTypeOfListData("item")
+    const showQuestionsOfSelectedFolder = async (item) => {
+        if (tableDataType == "question") return
+        setTypeOfListData("question")
         setSelectedFolder(item)
         setSelectedFolderId(item.id)
-        getItemList(item.id)
+        getQuestionsList(item.id)
     }
 
     const showFolderList = () => {
         setTypeOfListData("folder")
-        getFolderList(folderType)
+        getFolderList('questions')
     }
 
     const handleDeleteFolderItems = (item) => {
-        if (tableDataType == 'item') {
-            setSelectedItem(item);
+        if (tableDataType == 'question') {
+            setSelectedQuestion(item);
         } else {
             setSelectedFolder(item)
         }
-        setDeleteItemType(tableDataType == 'folder' ? 'folder' : folderType == 'quiz' ? 'quiz' : folderType == 'file' ? 'file' : 'video')
+        setDeleteItemType(tableDataType == 'folder' ? 'folder' : 'question')
         setIsmodelForDeleteItems(true)
     }
 
     const handleDeleteFolderData = async () => {
-        if (tableDataType == 'item') {
+        if (tableDataType == 'question') {
             let deleteItemBody = {
-                id: selectedItem.id,
+                id: selectedQuestion.id,
                 isDeleted: true
             }
             let data = {
-                routeName: 'updateItemHandler',
+                routeName: 'updateQuestionHandler',
                 ...deleteItemBody
             }
             await postRouteAPI(data).then((res) => {
-                toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
-                    folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
-                        examToastMsgConst.deleteExamSuccessMsg, { rtl: true, })
-                getItemList(selectedFolder.id)
+                toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true, })
+                getQuestionsList(selectedFolder.id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(data).then(res => {
-                            toast.success(folderType == "video" ? videoToastMsgConst.deleteVideoSuccessMsg :
-                                folderType == "file" ? pdfToastMsgConst.deletePdfSuccessMsg :
-                                    examToastMsgConst.deleteExamSuccessMsg, { rtl: true, })
-                            getItemList(selectedFolder.id)
+                            toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true, })
+                            getQuestionsList(selectedFolder.id)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -162,12 +148,12 @@ const ManageLibraryTableComponent = ({
             }
             await postRouteAPI(data).then((res) => {
                 toast.success(folderToastMsgConst.deleteFolderSuccessMsg, { rtl: true, })
-                getFolderList(folderType)
+                getFolderList('questions')
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(data).then(res => {
-                            getFolderList(folderType)
+                            getFolderList('questions')
                             toast.success(folderToastMsgConst.deleteFolderSuccessMsg, { rtl: true, })
                         })
                     }).catch(error => {
@@ -179,37 +165,30 @@ const ManageLibraryTableComponent = ({
     }
 
     const handleAddModalOpen = () => {
-        if (tableDataType == "item") {
-            setIsModelForAddItemOpen(true)
+        if (tableDataType == "question") {
+            setIsModelForAddQuestionOpen(true)
         } else {
             setIsModelForAddFolderOpen(true)
         }
     }
 
-    const handlePreviewItem = (item) => {
-        if (item.type == 'quiz') {
-            window.open(item.quizLink)
-        }
-        else if (item.type == 'video') {
-            setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
-            setVideoModalOpen(true);
-        }
-        else {
-            window.open(mediaUrl(item.linkBucket, item.linkKey))
-        }
+    const handlePreviewQuestion = (question) => {
+        // Preview question implementation
+        console.log("Preview question:", question);
+        // Could open a modal to preview the question
     }
 
     return (
         <>
             <div className={styles.tableContainer}>
                 <div>
-                    {tableDataType == "item" &&
+                    {tableDataType == "question" &&
                         <div className={styles.folderDetailsTable}>
                             <BackToPath
                                 backpathForTabel={true}
                                 backPathArray={
                                     [
-                                        { lable: folderType == 'video' ? 'الفيديوهات' : folderType == 'file' ? 'الملفات' : folderType == 'quiz' ? 'الاختبارات' : 'بنك الأسئلة', handleClick: showFolderList },
+                                        { lable: 'بنك الأسئلة', handleClick: showFolderList },
                                         { lable: selectedFolder?.name, link: null },
                                     ]
                                 }
@@ -220,36 +199,41 @@ const ManageLibraryTableComponent = ({
                         <thead className={styles.tableHeaderArea}>
                             <tr>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>العنوان</th>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>تاريخ الإنشاء</th>
+                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>نوع السؤال</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ اخر تعديل</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
                             </tr>
                         </thead>
-                        {(folderTableData.length > 0 && !loading) &&
+                        {(questionsData.length > 0 && !loading) &&
                             <tbody className={styles.tableBodyArea}>
-                                {folderTableData.map((item, index) => {
+                                {questionsData.map((item, index) => {
                                     return (
                                         <tr className={styles.tableRow} key={item.id}>
                                             <td>
-                                                <div className={styles.videoFolderList} onClick={() => showItemListOfSelectedFolder(item)}>
+                                                <div className={styles.questionFolderList} onClick={() => showQuestionsOfSelectedFolder(item)}>
                                                     {tableDataType == "folder" ?
                                                         <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />
                                                         :
-                                                        <AllIconsComponenet iconName={folderType == 'quiz' ? 'quizNotAttemptIcon' : folderType == 'file' ? 'pdfIcon' : 'newVideoIcon'} height={24} width={24} />
+                                                        <AllIconsComponenet iconName={'quiz'} height={24} width={24} />
                                                     }
-                                                    <p className={`cursor-pointer ${styles.numberOfAddedVideoNames}`}>{item?.name}</p>
-                                                    {/* {tableDataType == "folder" && <p className={styles.numberOfAddedVideo}>{`(${item?.numberOfItem}  عنصر / عناصر)`}</p>} */}
+                                                    <p className={`cursor-pointer ${styles.numberOfAddedQuestionNames}`}>
+                                                        {tableDataType === "folder" 
+                                                            ? item?.name 
+                                                            : item?.text?.length > 50 
+                                                                ? `${item?.text.substring(0, 50)}...` 
+                                                                : item?.text}
+                                                    </p>
                                                 </div>
                                             </td>
-                                            <td>{fullDate(item?.createdAt)}</td>
+                                            <td>{tableDataType === "folder" ? "-" : item?.questionType || "متعدد الخيارات"}</td>
                                             <td>{fullDate(item?.updatedAt)}</td>
                                             <td>
                                                 <div className={styles.eventButtons}>
                                                     <div onClick={() => handleEditIconClick(item)}>
                                                         <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                                                     </div>
-                                                    {tableDataType == "item" &&
-                                                        <div onClick={() => handlePreviewItem(item)}>
+                                                    {tableDataType == "question" &&
+                                                        <div onClick={() => handlePreviewQuestion(item)}>
                                                             <AllIconsComponenet iconName={'newVisibleIcon'} height={24} width={24} color={'#000000'} />
                                                         </div>
                                                     }
@@ -264,12 +248,12 @@ const ManageLibraryTableComponent = ({
                             </tbody>
                         }
                     </table>
-                    {(folderTableData.length == 0 && !loading) &&
+                    {(questionsData.length == 0 && !loading) &&
                         <Empty
                             onClick={() => handleAddModalOpen()}
                             containerhight={448}
-                            emptyText={typeOfListdata == 'folder' ? 'ما أضفت مجلد' : folderType == 'video' ? 'ما أضفت فيديو' : folderType == 'file' ? 'ما أضفت ملف' : 'ما أضفت اختبار'}
-                            buttonText={typeOfListdata == 'folder' ? 'إضافة مجلد' : folderType == 'video' ? 'إضافة فيديو' : folderType == 'file' ? 'إضافة ملف' : 'إضافة اختبار'}
+                            emptyText={typeOfListdata == 'folder' ? 'ما أضفت مجلد' : 'ما أضفت سؤال'}
+                            buttonText={typeOfListdata == 'folder' ? 'إضافة مجلد' : 'إضافة سؤال'}
                         />
                     }
                     {loading &&
@@ -294,14 +278,13 @@ const ManageLibraryTableComponent = ({
                     curriCulumSection={'folder'}
                 />
             }
-            {isModelForAddItemOpen &&
-                <ModelForAddItemLibrary
-                    isModelForAddItemOpen={isModelForAddItemOpen}
-                    selectedItem={selectedItem}
+            {isModelForAddQuestionOpen &&
+                <ModelForAddQuestion
+                    isModelForAddQuestionOpen={isModelForAddQuestionOpen}
+                    selectedQuestion={selectedQuestion}
                     selectedFolder={selectedFolder}
-                    folderType={folderType}
-                    getItemList={getItemList}
-                    onCloseModal={onItemModelClose}
+                    getQuestionsList={getQuestionsList}
+                    onCloseModal={onQuestionModelClose}
                     onDelete={handleDeleteFolderData}
                     existingItemName={existingItemName}
                 />
@@ -314,15 +297,8 @@ const ManageLibraryTableComponent = ({
                     onDelete={handleDeleteFolderData}
                 />
             }
-            {videoModalOpen &&
-                <ModalForVideo
-                    videoModalOpen={videoModalOpen}
-                    setVideoModalOpen={setVideoModalOpen}
-                    sourceFile={fileSrc}
-                />
-            }
         </>
     )
 }
 
-export default ManageLibraryTableComponent
+export default QuestionsBankComponent
