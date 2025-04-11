@@ -15,6 +15,7 @@ const ModelForAddQuestion = ({
     onCloseModal,
     existingItemName = []
 }) => {
+    console.log("🚀 ~ selectedFolder:", selectedFolder);
     const [questionText, setQuestionText] = useState('');
     const [questionType, setQuestionType] = useState('multipleChoice');
     const [options, setOptions] = useState([
