@@ -26,8 +26,8 @@ const ModelForAddQuestion = ({
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [contextType, setContextType] = useState('');
     const [contextDescription, setContextDescription] = useState('');
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState('');
+    const [imageFiles, setImageFiles] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]);
     const [loading, setLoading] = useState(false);
     const [formError, setFormError] = useState('');
 
@@ -70,18 +70,6 @@ const ModelForAddQuestion = ({
         setOptions(newOptions);
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     const validateForm = () => {
         if (!questionText.trim()) {
             setFormError('يرجى إدخال نص السؤال');
@@ -112,7 +100,7 @@ const ModelForAddQuestion = ({
             questionType: questionType,
             context: contextType,
             contextDescription: contextDescription,
-            questionImages: [],
+            questionImages: imageFiles,
             options: options,
             correctAnswer: correctAnswer,
             folderId: selectedFolder?.id,
@@ -191,6 +179,23 @@ const ModelForAddQuestion = ({
             newOptions[optionIndex].images = newOptions[optionIndex].images.filter((_, i) => i !== imgIndex);
             return newOptions;
         });
+    };
+
+    // Handler to update the images array when file input changes
+    const handleImageChange = (e) => {
+        // Convert selected files into an array:
+        const files = Array.from(e.target.files);
+        // Map each file to a preview URL
+        const newPreviews = files.map((file) => URL.createObjectURL(file));
+        // Append these to our existing states
+        setImageFiles((prevFiles) => [...prevFiles, ...files]);
+        setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+    };
+
+    // Handler to remove an image by index
+    const handleRemoveImage = (index) => {
+        setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+        setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
     };
 
     return (
@@ -320,24 +325,26 @@ const ModelForAddQuestion = ({
                                 className={styles.fileInput}
                                 onChange={handleImageChange}
                                 accept="image/*"
+                                multiple  // Enable multiple file selection
                             />
                             <label htmlFor="question-image" className={styles.fileLabel}>
                                 <AllIconsComponenet iconName={'uploadFile'} height={24} width={24} />
                                 <span>اختر صورة</span>
                             </label>
-                            {imagePreview && (
-                                <div className={styles.imagePreview}>
-                                    <img src={imagePreview} alt="Preview" />
-                                    <button
-                                        type="button"
-                                        className={styles.removeImage}
-                                        onClick={() => {
-                                            setImageFile(null);
-                                            setImagePreview('');
-                                        }}
-                                    >
-                                        <AllIconsComponenet iconName={'closeicon'} height={16} width={16} />
-                                    </button>
+                            {imagePreviews && imagePreviews.length > 0 && (
+                                <div className={styles.imagePreviewContainer}>
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className={styles.imagePreview}>
+                                            <img src={preview} alt={`Preview ${index}`} />
+                                            <button
+                                                type="button"
+                                                className={styles.removeImage}
+                                                onClick={() => handleRemoveImage(index)}
+                                            >
+                                                <AllIconsComponenet iconName={'closeicon'} height={16} width={16} />
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
