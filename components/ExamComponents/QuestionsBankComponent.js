@@ -47,7 +47,7 @@ const QuestionsBankComponent = ({
 
     const handleEditFolder = async ({ name }) => {
         let editFolderBody = {
-            id: selectedFolder?.id,
+            id: selectedFolder?._id,
             name: name,
             type: selectedFolder?.type,
         }
@@ -92,8 +92,8 @@ const QuestionsBankComponent = ({
         if (tableDataType == "question") return
         setTypeOfListData("question")
         setSelectedFolder(item)
-        setSelectedFolderId(item.id)
-        getQuestionsList(item.id)
+        setSelectedFolderId(item._id)
+        getQuestionsList(item._id)
     }
 
     const showFolderList = () => {
@@ -123,13 +123,13 @@ const QuestionsBankComponent = ({
             }
             await postRouteAPI(data).then((res) => {
                 toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true, })
-                getQuestionsList(selectedFolder.id)
+                getQuestionsList(selectedFolder._id)
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(data).then(res => {
                             toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true, })
-                            getQuestionsList(selectedFolder.id)
+                            getQuestionsList(selectedFolder._id)
                         })
                     }).catch(error => {
                         console.error("Error:", error);
@@ -139,7 +139,7 @@ const QuestionsBankComponent = ({
         }
         else {
             let deleteFolderBody = {
-                id: selectedFolder.id,
+                id: selectedFolder._id,
                 isDeleted: true
             }
             let data = {

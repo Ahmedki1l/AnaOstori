@@ -15,7 +15,6 @@ const ModelForAddQuestion = ({
     onCloseModal,
     existingItemName = []
 }) => {
-    console.log("🚀 ~ selectedFolder:", selectedFolder);
     const [questionText, setQuestionText] = useState('');
     const [questionType, setQuestionType] = useState('multipleChoice');
     const [options, setOptions] = useState([
@@ -104,7 +103,7 @@ const ModelForAddQuestion = ({
             questionImages: imageFiles,
             options: options,
             correctAnswer: correctAnswer,
-            folderId: selectedFolder?.id,
+            folderId: selectedFolder?._id,
             type: "questions",
         };
 
@@ -127,7 +126,7 @@ const ModelForAddQuestion = ({
                     : questionToastMsgConst.addQuestionSuccessMsg,
                 { rtl: true }
             );
-            getQuestionsList(selectedFolder.id);
+            getQuestionsList(selectedFolder._id);
             onCloseModal();
         }).catch(async (error) => {
             if (error?.response?.status === 401) {
@@ -139,7 +138,7 @@ const ModelForAddQuestion = ({
                                 : questionToastMsgConst.addQuestionSuccessMsg,
                             { rtl: true }
                         );
-                        getQuestionsList(selectedFolder.id);
+                        getQuestionsList(selectedFolder._id);
                         onCloseModal();
                     });
                 }).catch((err) => {
