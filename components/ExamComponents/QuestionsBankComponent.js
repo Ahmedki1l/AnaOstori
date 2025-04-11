@@ -45,6 +45,7 @@ const QuestionsBankComponent = ({
     // { data: [...], totalDocuments, page, limit, totalPages }
     getFolderList('questions', pageNumber, limit)
       .then((response) => {
+        console.log("🚀 ~ .then ~ response1:", response);
         setPage(response.page);
         setTotalPages(response.totalPages);
       })
@@ -58,6 +59,7 @@ const QuestionsBankComponent = ({
     // { data: [...], totalDocuments, page, limit, totalPages }
     getQuestionsList(folderId, 'questions', pageNumber, limit)
       .then((response) => {
+        console.log("🚀 ~ .then ~ response2:", response);
         setPage(response.page);
         setTotalPages(response.totalPages);
       })
