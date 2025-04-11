@@ -139,7 +139,7 @@
   }
   
   .paginationContainer button {
-    background-color: #007bff; // Blue background
+    background-color: #b6b6b6; // Blue background
     color: #ffffff; // White text
     border: none;
     padding: 8px 16px;
@@ -150,7 +150,7 @@
   }
   
   .paginationContainer button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #4e4e4e;
   }
   
   .paginationContainer button:disabled {
