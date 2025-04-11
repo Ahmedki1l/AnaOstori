@@ -126,7 +126,7 @@ const ModelForAddQuestion = ({
                     : questionToastMsgConst.addQuestionSuccessMsg,
                 { rtl: true }
             );
-            getQuestionsList(selectedFolder._id);
+            getQuestionsList(selectedFolder._id, "questions");
             onCloseModal();
         }).catch(async (error) => {
             if (error?.response?.status === 401) {
@@ -138,7 +138,7 @@ const ModelForAddQuestion = ({
                                 : questionToastMsgConst.addQuestionSuccessMsg,
                             { rtl: true }
                         );
-                        getQuestionsList(selectedFolder._id);
+                        getQuestionsList(selectedFolder._id, "questions");
                         onCloseModal();
                     });
                 }).catch((err) => {
