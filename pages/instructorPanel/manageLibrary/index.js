@@ -50,13 +50,19 @@ function Index() {
         setLoading(true)
     }
 
-    const getfolderList = async (selectedItem) => {
+    const getfolderList = async (selectedItem, pageNumber = null, limit = null) => {
         setFolderList([])
         setLoading(true)
         let data = {
             routeName: 'getFolderByType',
             type: selectedItem
         }
+
+        if(pageNumber && limit) {
+            data.page = pageNumber;
+            data.limit = limit;
+        }
+
         await getAuthRouteAPI(data).then((res) => {
             if(selectedItem == 'questions'){
                 setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
@@ -83,7 +89,7 @@ function Index() {
         })
     }
 
-    const getItemList = async (folderId, type = null) => {
+    const getItemList = async (folderId, type = null, pageNumber = null, limit = null) => {
         setFolderList([])
         setLoading(true)
         let body = {
@@ -91,9 +97,11 @@ function Index() {
             folderId: folderId
         }
         
-        if(type) {
+        if(type && pageNumber && limit) {
             console.log("🚀 ~ getItemList ~ type:", type);
             body.type = type;
+            body.page = pageNumber;
+            body.limit = limit;
         }
 
         await getRouteAPI(body).then((res) => {
