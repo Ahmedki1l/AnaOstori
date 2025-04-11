@@ -59,8 +59,8 @@ const ModelForAddQuestion = ({
             setCorrectAnswer('');
             setContextType('');
             setContextDescription('');
-            setImageFile(null);
-            setImagePreview('');
+            setImageFiles([]);
+            setImagePreviews([]);
         }
     }, [selectedQuestion]);
 
