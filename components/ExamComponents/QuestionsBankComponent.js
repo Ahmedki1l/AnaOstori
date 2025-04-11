@@ -312,9 +312,9 @@ const QuestionsBankComponent = ({
           </table>
           {(!loading && questionsData.length > 0) && (
             <div className={styles.paginationContainer}>
-              <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
-              <span>Page {page} of {totalPages}</span>
-              <button onClick={handleNextPage} disabled={page === totalPages}>Next</button>
+              <button onClick={handlePrevPage} disabled={page === 1}>{"<"}</button>
+              <span>صفحة {page} من {totalPages}</span>
+              <button onClick={handleNextPage} disabled={page === totalPages}>{">"}</button>
             </div>
           )}
           {questionsData.length === 0 && !loading && (
