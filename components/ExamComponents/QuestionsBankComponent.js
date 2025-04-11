@@ -201,7 +201,7 @@ const QuestionsBankComponent = ({
                         <thead className={styles.tableHeaderArea}>
                             <tr>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>العنوان</th>
-                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>نوع السؤال</th>
+                                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>{tableDataType == "folder" ? "تاريخ الإنشاء" : "نوع السؤال"}</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ اخر تعديل</th>
                                 <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
                             </tr>
@@ -227,7 +227,7 @@ const QuestionsBankComponent = ({
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td>{tableDataType === "folder" ? "-" : item?.questionType || "متعدد الخيارات"}</td>
+                                            <td>{tableDataType === "folder" ? item?.createdAt : item?.questionType || "متعدد الخيارات"}</td>
                                             <td>{fullDate(item?.updatedAt)}</td>
                                             <td>
                                                 <div className={styles.eventButtons}>
