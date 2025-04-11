@@ -22,6 +22,8 @@ function Index() {
     const [selectedItem, setSelectedItem] = useState('');
     const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false)
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
+    const [isModelForAddQuestionFolderOpen, setIsModelForAddQuestionFolderOpen] = useState(false);
+    const [isModelForAddQuestionOpen, setIsModelForAddQuestionOpen] = useState(false);
     const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
     const [folderList, setFolderList] = useState([])
     const [selectedFolderId, setSelectedFolderId] = useState()
@@ -48,7 +50,7 @@ function Index() {
             pathname: '/instructorPanel/manageLibrary',
             query: { folderType: selcetedItem }
         })
-        setTypeOfListData("folder")
+        setTypeOfListData("questionsFolder")
         setLoading(true)
     }
 
@@ -142,9 +144,12 @@ function Index() {
     }
 
     const handleAddItemsOrFolder = () => {
-        if (typeOfListdata == 'item' || typeOfListdata == 'question') {
+        if (typeOfListdata == 'item') {
             setIsModelForAddItemOpen(true);
             setCancleUpload(false)
+        }
+        else if (typeOfListdata == 'question') {
+            setIsModelForAddQuestionOpen(true);
         }
         else {
             setIsModelForAddFolderOpen(true);
@@ -271,6 +276,10 @@ function Index() {
                                     setPage={setPage}
                                     totalPages={totalPages}
                                     setTotalPages={setTotalPages}
+                                    isModelForAddFolderOpen={isModelForAddQuestionFolderOpen}
+                                    setIsModelForAddFolderOpen={setIsModelForAddQuestionFolderOpen}
+                                    isModelForAddQuestionOpen={isModelForAddQuestionOpen}
+                                    setIsModelForAddQuestionOpen={setIsModelForAddQuestionOpen}
                                 />
                             }
                         </div>

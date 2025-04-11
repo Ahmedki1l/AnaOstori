@@ -26,9 +26,11 @@ const QuestionsBankComponent = ({
   setPage,
   totalPages, 
   setTotalPages,
+  isModelForAddFolderOpen, 
+  setIsModelForAddFolderOpen,
+  isModelForAddQuestionOpen,
+  setIsModelForAddQuestionOpen
 }) => {
-  const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false);
-  const [isModelForAddQuestionOpen, setIsModelForAddQuestionOpen] = useState(false);
   const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
   const [selectedFolder, setSelectedFolder] = useState();
