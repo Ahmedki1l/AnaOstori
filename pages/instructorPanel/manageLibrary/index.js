@@ -75,13 +75,18 @@ function Index() {
         })
     }
 
-    const getItemList = async (folderId) => {
+    const getItemList = async (folderId, type) => {
         setFolderList([])
         setLoading(true)
         let body = {
             routeName: 'getItem',
             folderId: folderId
         }
+
+        if(type) {
+            body.type = type
+        }
+
         await getRouteAPI(body).then((res) => {
             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             setLoading(false)
@@ -223,7 +228,7 @@ function Index() {
                                     typeOfListdata={typeOfListdata}
                                     setTypeOfListData={setTypeOfListData}
                                     setSelectedFolderId={setSelectedFolderId}
-                                    getQuestionsList={getfolderList}
+                                    getQuestionsList={getItemList}
                                     getFolderList={getfolderList}
                                     loading={loading}
                                     handleCreateFolder={handleCreateFolder}

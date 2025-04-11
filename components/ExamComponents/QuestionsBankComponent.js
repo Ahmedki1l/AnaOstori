@@ -178,6 +178,8 @@ const QuestionsBankComponent = ({
         // Could open a modal to preview the question
     }
 
+    console.log(questionsData);
+
     return (
         <>
             <div className={styles.tableContainer}>
