@@ -97,13 +97,21 @@ function Index() {
         }
 
         await getRouteAPI(body).then((res) => {
-            setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            if(type == 'questions'){
+                setFolderList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+            } else {
+                setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+            }
             setLoading(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getRouteAPI(body).then(res => {
-                        setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+                        if(type == 'questions'){
+                            setFolderList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                        } else {
+                            setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                        }
                         setLoading(false)
                     })
                 }).catch(error => {
