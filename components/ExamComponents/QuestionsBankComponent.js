@@ -22,6 +22,10 @@ const QuestionsBankComponent = ({
   getFolderList,    // should accept: (type, page, limit)
   loading,
   handleCreateFolder,
+  page, 
+  setPage,
+  totalPages, 
+  setTotalPages,
 }) => {
   const [isModelForAddFolderOpen, setIsModelForAddFolderOpen] = useState(false);
   const [isModelForAddQuestionOpen, setIsModelForAddQuestionOpen] = useState(false);
@@ -32,8 +36,6 @@ const QuestionsBankComponent = ({
   const [editFolder, setEditFolder] = useState(false);
 
   // Pagination state (applies to both folders and questions)
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const limit = 10; // Items per page
 
   const { folderToastMsgConst, questionToastMsgConst } = questionsConst;
@@ -43,29 +45,13 @@ const QuestionsBankComponent = ({
   const fetchFolderList = (pageNumber = 1) => {
     // Assume getFolderList returns a promise that resolves with
     // { data: [...], totalDocuments, page, limit, totalPages }
-    getFolderList('questions', pageNumber, limit)
-      .then((response) => {
-        console.log("🚀 ~ .then ~ response1:", response);
-        setPage(response.page);
-        setTotalPages(response.totalPages);
-      })
-      .catch((error) => {
-        console.error('Error fetching folder list', error);
-      });
+    getFolderList('questions', pageNumber, limit);
   };
 
   const fetchQuestionsList = (folderId, pageNumber = 1) => {
     // Assume getQuestionsList returns a promise that resolves with
     // { data: [...], totalDocuments, page, limit, totalPages }
-    getQuestionsList(folderId, 'questions', pageNumber, limit)
-      .then((response) => {
-        console.log("🚀 ~ .then ~ response2:", response);
-        setPage(response.page);
-        setTotalPages(response.totalPages);
-      })
-      .catch((error) => {
-        console.error('Error fetching questions list', error);
-      });
+    getQuestionsList(folderId, 'questions', pageNumber, limit);
   };
 
   const showQuestionsOfSelectedFolder = async (item) => {

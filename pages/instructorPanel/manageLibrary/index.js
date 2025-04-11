@@ -28,6 +28,8 @@ function Index() {
     const [loading, setLoading] = useState(false)
     const [existingItemName, setExistingItemName] = useState()
     const [cancleUpload, setCancleUpload] = useState(false)
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         setSelectedItem(router.query.folderType ? router.query.folderType : 'video')
@@ -58,14 +60,16 @@ function Index() {
             type: selectedItem
         }
 
-        if(pageNumber && limit) {
+        if (pageNumber && limit) {
             data.page = pageNumber;
             data.limit = limit;
         }
 
         await getAuthRouteAPI(data).then((res) => {
-            if(selectedItem == 'questions'){
+            if (selectedItem == 'questions') {
                 setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                setPage(res.data.page);
+                setTotalPages(res.data.totalPages);
             } else {
                 setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
             }
@@ -74,8 +78,10 @@ function Index() {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getAuthRouteAPI(data).then(res => {
-                        if(selectedItem == 'questions'){
+                        if (selectedItem == 'questions') {
                             setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                            setPage(res.data.page);
+                            setTotalPages(res.data.totalPages);
                         } else {
                             setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
                         }
@@ -96,8 +102,8 @@ function Index() {
             routeName: 'getItem',
             folderId: folderId
         }
-        
-        if(type && pageNumber && limit) {
+
+        if (type && pageNumber && limit) {
             console.log("🚀 ~ getItemList ~ type:", type);
             body.type = type;
             body.page = pageNumber;
@@ -105,8 +111,10 @@ function Index() {
         }
 
         await getRouteAPI(body).then((res) => {
-            if(type == 'questions'){
+            if (type == 'questions') {
                 setFolderList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                setPage(res.data.page);
+                setTotalPages(res.data.totalPages);
             } else {
                 setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
             }
@@ -115,8 +123,10 @@ function Index() {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getRouteAPI(body).then(res => {
-                        if(type == 'questions'){
+                        if (type == 'questions') {
                             setFolderList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                            setPage(res.data.page);
+                            setTotalPages(res.data.totalPages);
                         } else {
                             setFolderList(res.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
                         }
@@ -257,6 +267,10 @@ function Index() {
                                     getFolderList={getfolderList}
                                     loading={loading}
                                     handleCreateFolder={handleCreateFolder}
+                                    page={page}
+                                    setPage={setPage}
+                                    totalPages={totalPages}
+                                    setTotalPages={setTotalPages}
                                 />
                             }
                         </div>
