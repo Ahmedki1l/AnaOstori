@@ -58,13 +58,21 @@ function Index() {
             type: selectedItem
         }
         await getAuthRouteAPI(data).then((res) => {
-            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            if(selectedItem == 'questions'){
+                setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+            } else {
+                setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+            }
             setLoading(false)
         }).catch(async (error) => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getAuthRouteAPI(data).then(res => {
-                        setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+                        if(selectedItem == 'questions'){
+                            setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                        } else {
+                            setFolderList(res.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                        }
                         setLoading(false)
                     })
                 }).catch(error => {
