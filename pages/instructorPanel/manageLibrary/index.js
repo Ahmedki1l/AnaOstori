@@ -83,16 +83,17 @@ function Index() {
         })
     }
 
-    const getItemList = async (folderId, type) => {
+    const getItemList = async (folderId, type = null) => {
         setFolderList([])
         setLoading(true)
         let body = {
             routeName: 'getItem',
             folderId: folderId
         }
-
+        
         if(type) {
-            body.type = type
+            console.log("🚀 ~ getItemList ~ type:", type);
+            body.type = type;
         }
 
         await getRouteAPI(body).then((res) => {
