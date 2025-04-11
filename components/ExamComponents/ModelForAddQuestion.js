@@ -115,6 +115,8 @@ const ModelForAddQuestion = ({
             routeName,
             ...questionData
         };
+        console.log("🚀 ~ handleSubmit ~ dataPayload:", dataPayload);
+        
 
         // Submit the API call using promise chaining to match the "addItemToFolder" style
         await postRouteAPI(dataPayload).then((res) => {
