@@ -50,7 +50,7 @@ function Index() {
             pathname: '/instructorPanel/manageLibrary',
             query: { folderType: selcetedItem }
         })
-        setTypeOfListData("questionsFolder")
+        setTypeOfListData("folder")
         setLoading(true)
     }
 
