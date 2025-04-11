@@ -93,7 +93,7 @@ const QuestionsBankComponent = ({
         setTypeOfListData("question")
         setSelectedFolder(item)
         setSelectedFolderId(item._id)
-        getQuestionsList(item._id)
+        getQuestionsList(item._id, "questions")
     }
 
     const showFolderList = () => {
@@ -123,13 +123,13 @@ const QuestionsBankComponent = ({
             }
             await postRouteAPI(data).then((res) => {
                 toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true, })
-                getQuestionsList(selectedFolder._id)
+                getQuestionsList(selectedFolder._id, "questions")
             }).catch(async (error) => {
                 if (error?.response?.status == 401) {
                     await getNewToken().then(async (token) => {
                         await postRouteAPI(data).then(res => {
                             toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true, })
-                            getQuestionsList(selectedFolder._id)
+                            getQuestionsList(selectedFolder._id, "questions")
                         })
                     }).catch(error => {
                         console.error("Error:", error);
