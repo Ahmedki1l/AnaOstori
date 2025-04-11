@@ -142,7 +142,7 @@ function Index() {
     }
 
     const handleAddItemsOrFolder = () => {
-        if (typeOfListdata == 'item') {
+        if (typeOfListdata == 'item' || typeOfListdata == 'question') {
             setIsModelForAddItemOpen(true);
             setCancleUpload(false)
         }
