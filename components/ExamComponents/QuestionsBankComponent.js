@@ -227,7 +227,7 @@ const QuestionsBankComponent = ({
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td>{tableDataType === "folder" ? item?.createdAt : item?.questionType || "متعدد الخيارات"}</td>
+                                            <td>{tableDataType === "folder" ? fullDate(item?.createdAt) : item?.questionType || "متعدد الخيارات"}</td>
                                             <td>{fullDate(item?.updatedAt)}</td>
                                             <td>
                                                 <div className={styles.eventButtons}>
