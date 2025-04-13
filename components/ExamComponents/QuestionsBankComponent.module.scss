@@ -192,26 +192,21 @@
   }
 }
 
-/* Wrapper for the entire pagination block,
-   ensuring the left part is centered and the right part is aligned to the far right */
 .paginationWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  /* We use relative positioning so the .gotoPageContainer can be pinned absolutely */
+  position: relative;
   margin: 20px 0;
-  /* Adjust spacing above and below as needed */
+  /* text-align: center allows inline elements to be centered horizontally */
+  text-align: center;
 }
 
-/* Centered pagination controls */
+/* The main pagination area is inline-block so it can be centered by the parent’s text-align. */
 .paginationCenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  /* Adds space between the previous button, text, and next button */
+  display: inline-block;
+  vertical-align: middle; /* helps keep it aligned nicely if there's extra line-height */
 }
 
-/* Existing styles for button might remain, example: */
+/* Button styling – same as before */
 .paginationWrapper button {
   background-color: #b6b6b6;
   color: #ffffff;
@@ -221,6 +216,7 @@
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.2s ease-in-out;
+  margin: 0 4px; /* small horizontal margin between pagination buttons */
 }
 
 .paginationWrapper button:hover:not(:disabled) {
@@ -236,15 +232,19 @@
   font-size: 16px;
   color: #333;
   font-weight: bold;
-  text-align: center;
 }
 
-/* Styles for the direct page navigation part */
+/* The container for the “Go to page” portion is pinned absolutely to the right. */
 .gotoPageContainer {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%); /* vertically center relative to .paginationWrapper */
   display: flex;
-  align-items: center;
+  align-items: center; /* keep input & button aligned */
 }
 
+/* Input & button styles */
 .gotoPageInput {
   width: 150px;
   border: 1px solid #ccc;
@@ -261,6 +261,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s ease;
+  margin-left: 0.5rem;
 }
 
 .gotoPageButton:hover {
