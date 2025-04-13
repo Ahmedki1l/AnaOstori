@@ -6,6 +6,7 @@ import { postRouteAPI } from '../../services/apisService';
 import { getNewToken } from '../../services/fireBaseAuthService';
 import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst';
 import { toast } from 'react-toastify';
+import {uploadFileSevices} from '../../services/UploadFileSevices';
 
 const ModelForAddQuestion = ({
     isModelForAddQuestionOpen,
@@ -98,69 +99,110 @@ const ModelForAddQuestion = ({
         if (!validateForm()) return;
         setLoading(true);
 
-        // Prepare the question data payload
-        const questionData = {
-            text: questionText,
-            questionType: questionType,
-            context: contextType,
-            contextDescription: contextDescription,
-            questionImages: imageFiles,
-            options: options,
-            correctAnswer: correctAnswer,
-            folderId: selectedFolder?._id,
-            type: "questions",
-            skills: skills,
-            difficulty: difficulty
-        };
-
-        // Determine route name and add id property if updating an existing question
-        let routeName = 'createItem';
-
-        // Build the complete payload for postRouteAPI
-        const dataPayload = {
-            routeName,
-            ...questionData
-        };
-        console.log("🚀 ~ handleSubmit ~ dataPayload:", dataPayload);
-
-
-        // Submit the API call using promise chaining to match the "addItemToFolder" style
-        await postRouteAPI(dataPayload).then((res) => {
-            toast.success(
-                selectedQuestion
-                    ? questionToastMsgConst.updateQuestionSuccessMsg
-                    : questionToastMsgConst.addQuestionSuccessMsg,
-                { rtl: true }
+        try {
+            // --- Upload overall question images first ---
+            const uploadedQuestionImages = await Promise.all(
+                imageFiles.map(async (file) => {
+                    try {
+                        const s3Url = await uploadFileSevices(file, () => {}, null, "questions");
+                        return s3Url;
+                    } catch (error) {
+                        console.error('Error uploading overall question image:', error);
+                        toast.error('فشل تحميل صورة السؤال');
+                        return null;
+                    }
+                })
             );
-            getQuestionsList(selectedFolder._id, "questions");
-            onCloseModal();
-        }).catch(async (error) => {
-            if (error?.response?.status === 401) {
-                await getNewToken().then(async () => {
-                    await postRouteAPI(dataPayload).then(() => {
-                        toast.success(
-                            selectedQuestion
-                                ? questionToastMsgConst.updateQuestionSuccessMsg
-                                : questionToastMsgConst.addQuestionSuccessMsg,
-                            { rtl: true }
+            // Filter out any null responses
+            const finalQuestionImages = uploadedQuestionImages.filter(url => url);
+
+            // --- Process options images ---
+            const processedOptions = await Promise.all(
+                options.map(async (option) => {
+                    if (option.images && option.images.length > 0) {
+                        // Each image is stored as an object: { file, preview }
+                        const uploadedOptionImages = await Promise.all(
+                            option.images.map(async (imgObj) => {
+                                try {
+                                    const s3Url = await uploadFileSevices(imgObj.file, () => {}, null, "questions");
+                                    return s3Url;
+                                } catch (error) {
+                                    console.error('Error uploading option image:', error);
+                                    toast.error('فشل تحميل صورة الخيار');
+                                    return null;
+                                }
+                            })
                         );
-                        getQuestionsList(selectedFolder._id, "questions");
-                        onCloseModal();
-                    });
-                }).catch((err) => {
-                    console.error("Error during token refresh retry:", err);
-                });
-            } else {
-                toast.error(
+                        return { ...option, images: uploadedOptionImages.filter(url => url) };
+                    }
+                    return option;
+                })
+            );
+
+            // Prepare payload for API
+            const questionData = {
+                text: questionText,
+                questionType,
+                context: contextType,
+                contextDescription,
+                questionImages: finalQuestionImages, // S3 URLs from overall images
+                options: processedOptions,
+                correctAnswer,
+                folderId: selectedFolder?._id,
+                type: "questions",
+                skills,
+                difficulty
+            };
+
+            let routeName = 'createItem';
+            if (selectedQuestion && selectedQuestion.id) {
+                routeName = 'updateItemHandler';
+                questionData.id = selectedQuestion.id;
+            }
+
+            const dataPayload = {
+                routeName,
+                ...questionData
+            };
+
+            await postRouteAPI(dataPayload).then(() => {
+                toast.success(
                     selectedQuestion
-                        ? 'حدث خطأ أثناء تحديث السؤال'
-                        : 'حدث خطأ أثناء إضافة السؤال',
+                        ? questionToastMsgConst.updateQuestionSuccessMsg
+                        : questionToastMsgConst.addQuestionSuccessMsg,
                     { rtl: true }
                 );
-            }
-        });
+                getQuestionsList(selectedFolder._id, "questions");
+                onCloseModal();
+            }).catch(async (error) => {
+                if (error?.response?.status === 401) {
+                    await getNewToken().then(async () => {
+                        await postRouteAPI(dataPayload).then(() => {
+                            toast.success(
+                                selectedQuestion
+                                    ? questionToastMsgConst.updateQuestionSuccessMsg
+                                    : questionToastMsgConst.addQuestionSuccessMsg,
+                                { rtl: true }
+                            );
+                            getQuestionsList(selectedFolder._id, "questions");
+                            onCloseModal();
+                        });
+                    }).catch((err) => {
+                        console.error("Error during token refresh retry:", err);
+                    });
+                } else {
+                    toast.error(
+                        selectedQuestion
+                            ? 'حدث خطأ أثناء تحديث السؤال'
+                            : 'حدث خطأ أثناء إضافة السؤال',
+                        { rtl: true }
+                    );
+                }
+            });
+        } catch (overallError) {
+            console.error("Error during submit:", overallError);
+        }
 
-        // Optionally reset form fields if necessary, e.g., questionForm.resetFields();
         setLoading(false);
     };
 

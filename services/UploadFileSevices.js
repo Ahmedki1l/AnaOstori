@@ -11,12 +11,12 @@ const fileToBinary = (file) => {
 };
 
 
-export const uploadFileSevices = async (file, onUploadProgress, cancelToken) => {
+export const uploadFileSevices = async (file, onUploadProgress, cancelToken, dType = null) => {
     return new Promise(async (resolve, reject) => {
         const binaryData = await fileToBinary(file);
         const fileType = file.type.split('/')[1]
         let body = {
-            type: "signedUrl",
+            type: dType ? dType : "signedUrl",
             extention: fileType
         }
         await uploadFileAPI(body, cancelToken).then(async (res) => {
