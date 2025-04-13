@@ -442,7 +442,7 @@ const ModelForAddQuestion = ({
                                                 className={styles.removeImage}
                                                 onClick={() => handleRemoveImage(index)}
                                             >
-                                                <AllIconsComponenet iconName={'closeicon'} height={16} width={16} />
+                                                &#x2715;
                                             </button>
                                         </div>
                                     ))}
