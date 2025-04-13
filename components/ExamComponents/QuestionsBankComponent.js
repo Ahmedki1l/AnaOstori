@@ -326,7 +326,6 @@ const QuestionsBankComponent = ({
           </table>
           {(!loading && questionsData.length > 0) && (
             <div className={styles.paginationWrapper}>
-              <div></div>
               {/* Central pagination area */}
               <div className={styles.paginationCenter}>
                 <button onClick={handlePrevPage} disabled={page === 1}>{"<"}</button>
