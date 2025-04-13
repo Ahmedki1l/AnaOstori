@@ -341,7 +341,7 @@ const ModelForAddQuestion = ({
                                                 option.images.map((img, imgIndex) => (
                                                     <div key={imgIndex} className={styles.imageWrapper}>
                                                         <img
-                                                            src={img.preview}
+                                                            src={img.preview || img}
                                                             alt={`Option ${option.id} image ${imgIndex}`}
                                                             className={styles.imagePreview}
                                                         />
