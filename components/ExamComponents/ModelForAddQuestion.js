@@ -282,7 +282,8 @@ const ModelForAddQuestion = ({
             onCancel={onCloseModal}
             footer={null}
             closeIcon={null}
-            className={styles.modalContainer}
+            // className={styles.modalContainer}
+            width={1000}
         >
             <div className={styles.dialogContainer}>
                 <div className={styles.header}>
