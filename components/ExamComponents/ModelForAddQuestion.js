@@ -107,6 +107,8 @@ const ModelForAddQuestion = ({
             correctAnswer: correctAnswer,
             folderId: selectedFolder?._id,
             type: "questions",
+            skills: skills,
+            difficulty: difficulty
         };
 
         // Determine route name and add id property if updating an existing question
