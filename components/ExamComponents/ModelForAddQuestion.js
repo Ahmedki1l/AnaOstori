@@ -105,6 +105,7 @@ const ModelForAddQuestion = ({
                 imageFiles.map(async (file) => {
                     try {
                         const s3Url = await uploadFileSevices(file, () => {}, null, "questions");
+                        console.log("🚀 ~ imageFiles.map ~ s3Url:", s3Url);
                         return s3Url;
                     } catch (error) {
                         console.error('Error uploading overall question image:', error);
@@ -125,6 +126,7 @@ const ModelForAddQuestion = ({
                             option.images.map(async (imgObj) => {
                                 try {
                                     const s3Url = await uploadFileSevices(imgObj.file, () => {}, null, "questions");
+                                    console.log("🚀 ~ option.images.map ~ s3Url:", s3Url);
                                     return s3Url;
                                 } catch (error) {
                                     console.error('Error uploading option image:', error);
