@@ -194,73 +194,75 @@
 
 /* Wrapper for the entire pagination block,
    ensuring the left part is centered and the right part is aligned to the far right */
-   .paginationWrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0; /* Adjust spacing above and below as needed */
-  }
-  
-  /* Centered pagination controls */
-  .paginationCenter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;  /* Adds space between the previous button, text, and next button */
-  }
-  
-  /* Existing styles for button might remain, example: */
-  .paginationWrapper button {
-    background-color: #b6b6b6;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .paginationWrapper button:hover:not(:disabled) {
-    background-color: #f26722;
-  }
-  
-  .paginationWrapper button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .paginationWrapper span {
-    font-size: 16px;
-    color: #333;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  /* Styles for the direct page navigation part */
-  .gotoPageContainer {
-    display: flex;
-    align-items: center;
-  }
-  
-  .gotoPageInput {
-    width: 150px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0.3rem;
-    margin-right: 0.5rem;
-  }
-  
-  .gotoPageButton {
-    background: gray;
-    color: #fff;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .gotoPageButton:hover {
-    background: #f26722;
-  }
+.paginationWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  /* Adjust spacing above and below as needed */
+}
+
+/* Centered pagination controls */
+.paginationCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  /* Adds space between the previous button, text, and next button */
+}
+
+/* Existing styles for button might remain, example: */
+.paginationWrapper button {
+  background-color: #b6b6b6;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.paginationWrapper button:hover:not(:disabled) {
+  background-color: #f26722;
+}
+
+.paginationWrapper button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationWrapper span {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Styles for the direct page navigation part */
+.gotoPageContainer {
+  display: flex;
+  align-items: center;
+}
+
+.gotoPageInput {
+  width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.3rem;
+  margin-right: 0.5rem;
+}
+
+.gotoPageButton {
+  background: gray;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.gotoPageButton:hover {
+  background: #f26722;
+}
