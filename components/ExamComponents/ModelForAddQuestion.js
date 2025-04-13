@@ -139,13 +139,16 @@ const ModelForAddQuestion = ({
                 })
             );
 
+            console.log("questionsImages: ", finalQuestionImages);
+            console.log("optionsImages: ", processedOptions);
+
             // Prepare payload for API
             const questionData = {
                 text: questionText,
                 questionType,
                 context: contextType,
                 contextDescription,
-                questionImages: finalQuestionImages, // S3 URLs from overall images
+                questionImages: finalQuestionImages,
                 options: processedOptions,
                 correctAnswer,
                 folderId: selectedFolder?._id,
