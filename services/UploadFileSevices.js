@@ -32,7 +32,7 @@ export const uploadFileSevices = async (file, onUploadProgress, cancelToken, dTy
                 },
                 cancelToken: cancelToken
             }).then((res) => {
-                resolve(dType === "questions" ? res.data.publicUrl : signedUrl)
+                resolve(dType ? res.data.publicUrl : signedUrl)
             }).catch((err) => {
                 console.log(err);
                 reject(err)
