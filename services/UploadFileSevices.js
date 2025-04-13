@@ -21,6 +21,7 @@ export const uploadFileSevices = async (file, onUploadProgress, cancelToken, dTy
         }
         await uploadFileAPI(body, cancelToken).then(async (res) => {
             const signedUrl = res.data.signedUrl
+            const publicUrl = dType ? res.data.publicUrl : signedUrl
             await axios.put(signedUrl, binaryData, {
                 headers: {
                     'Content-Type': 'application/octet-stream',
@@ -32,7 +33,7 @@ export const uploadFileSevices = async (file, onUploadProgress, cancelToken, dTy
                 },
                 cancelToken: cancelToken
             }).then((res) => {
-                resolve(dType ? res.data.publicUrl : signedUrl)
+                resolve(publicUrl);
             }).catch((err) => {
                 console.log(err);
                 reject(err)
