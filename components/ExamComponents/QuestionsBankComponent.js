@@ -22,11 +22,11 @@ const QuestionsBankComponent = ({
   getFolderList,    // should accept: (type, page, limit)
   loading,
   handleCreateFolder,
-  page, 
+  page,
   setPage,
-  totalPages, 
+  totalPages,
   setTotalPages,
-  isModelForAddFolderOpen, 
+  isModelForAddFolderOpen,
   setIsModelForAddFolderOpen,
   isModelForAddQuestionOpen,
   setIsModelForAddQuestionOpen
@@ -297,8 +297,8 @@ const QuestionsBankComponent = ({
                           {typeOfListdata === "folder"
                             ? item?.name
                             : item?.text?.length > 50
-                            ? `${item?.text.substring(0, 50)}...`
-                            : item?.text}
+                              ? `${item?.text.substring(0, 50)}...`
+                              : item?.text}
                         </p>
                       </div>
                     </td>
@@ -325,10 +325,13 @@ const QuestionsBankComponent = ({
             )}
           </table>
           {(!loading && questionsData.length > 0) && (
-            <div className={styles.paginationContainer}>
-              <button onClick={handlePrevPage} disabled={page === 1}>{"<"}</button>
-              <span>صفحة {page} من {totalPages}</span>
-              <button onClick={handleNextPage} disabled={page === totalPages}>{">"}</button>
+            <div className={styles.paginationWrapper}>
+              {/* Central pagination area */}
+              <div className={styles.paginationCenter}>
+                <button onClick={handlePrevPage} disabled={page === 1}>{"<"}</button>
+                <span>صفحة {page} من {totalPages}</span>
+                <button onClick={handleNextPage} disabled={page === totalPages}>{">"}</button>
+              </div>
               {/* Direct page navigation field */}
               <div className={styles.gotoPageContainer}>
                 <input
