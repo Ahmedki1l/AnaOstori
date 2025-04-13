@@ -206,18 +206,19 @@ const ModelForAddQuestion = ({
         setLoading(false);
     };
 
+    
+    // Modified handler: store option image file and preview (do not upload yet)
     const handleOptionImageUpload = (optionIndex, event) => {
         const file = event.target.files[0];
         if (file) {
-            // Create a temporary URL (for preview) or upload the file as needed.
-            const imageUrl = URL.createObjectURL(file);
+            const previewUrl = URL.createObjectURL(file);
             setOptions(prevOptions => {
                 const newOptions = [...prevOptions];
-                // Ensure the images array exists:
                 if (!newOptions[optionIndex].images) {
                     newOptions[optionIndex].images = [];
                 }
-                newOptions[optionIndex].images.push(imageUrl);
+                // Instead of storing just a URL, we store an object with the file and preview
+                newOptions[optionIndex].images.push({ file, preview: previewUrl });
                 return newOptions;
             });
         }
@@ -231,21 +232,17 @@ const ModelForAddQuestion = ({
         });
     };
 
-    // Handler to update the images array when file input changes
+    // Modified handler: store overall question image files and generate preview URLs (do not upload yet)
     const handleImageChange = (e) => {
-        // Convert selected files into an array:
         const files = Array.from(e.target.files);
-        // Map each file to a preview URL
-        const newPreviews = files.map((file) => URL.createObjectURL(file));
-        // Append these to our existing states
-        setImageFiles((prevFiles) => [...prevFiles, ...files]);
-        setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+        const newPreviews = files.map(file => URL.createObjectURL(file));
+        setImageFiles(prev => [...prev, ...files]);
+        setImagePreviews(prev => [...prev, ...newPreviews]);
     };
 
-    // Handler to remove an image by index
     const handleRemoveImage = (index) => {
-        setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-        setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+        setImageFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+        setImagePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
     };
 
     // Handle editing a skill's text
