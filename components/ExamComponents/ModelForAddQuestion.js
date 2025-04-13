@@ -6,7 +6,7 @@ import { postRouteAPI } from '../../services/apisService';
 import { getNewToken } from '../../services/fireBaseAuthService';
 import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst';
 import { toast } from 'react-toastify';
-import {uploadFileSevices} from '../../services/UploadFileSevices';
+import { uploadFileSevices } from '../../services/UploadFileSevices';
 
 const ModelForAddQuestion = ({
     isModelForAddQuestionOpen,
@@ -100,42 +100,66 @@ const ModelForAddQuestion = ({
         setLoading(true);
 
         try {
-            // --- Upload overall question images first ---
-            const uploadedQuestionImages = await Promise.all(
-                imageFiles.map(async (file) => {
+            const existingImages = imagePreviews.filter(
+                (url) =>
+                    typeof url === "string" &&
+                    url.includes("https://phase2anaostori.s3.eu-central-1.amazonaws.com/questions/")
+            );
+            // Upload any new files, skipping those that already have the S3 URL from imagePreviews.
+            const uploadedNewImages = await Promise.all(
+                imageFiles.map(async (file, index) => {
+                    // Check if the corresponding preview already has the S3 URL:
+                    if (
+                        imagePreviews[index] &&
+                        imagePreviews[index].includes("https://phase2anaostori.s3.eu-central-1.amazonaws.com/questions/")
+                    ) {
+                        return imagePreviews[index];
+                    }
                     try {
-                        const s3Url = await uploadFileSevices(file, () => {}, null, "questions");
+                        const s3Url = await uploadFileSevices(file, () => { }, null, "questions");
                         console.log("🚀 ~ imageFiles.map ~ s3Url:", s3Url);
                         return s3Url;
                     } catch (error) {
-                        console.error('Error uploading overall question image:', error);
-                        toast.error('فشل تحميل صورة السؤال');
+                        console.error("Error uploading new question image during update:", error);
+                        toast.error("فشل تحميل صورة السؤال الجديدة");
                         return null;
                     }
                 })
             );
-            // Filter out any null responses
-            const finalQuestionImages = uploadedQuestionImages.filter(url => url);
+            const finalQuestionImages = [
+                ...existingImages,
+                ...uploadedNewImages.filter((url) => url)
+            ];
 
             // --- Process options images ---
             const processedOptions = await Promise.all(
                 options.map(async (option) => {
                     if (option.images && option.images.length > 0) {
-                        // Each image is stored as an object: { file, preview }
                         const uploadedOptionImages = await Promise.all(
-                            option.images.map(async (imgObj) => {
-                                try {
-                                    const s3Url = await uploadFileSevices(imgObj.file, () => {}, null, "questions");
-                                    console.log("🚀 ~ option.images.map ~ s3Url:", s3Url);
-                                    return s3Url;
-                                } catch (error) {
-                                    console.error('Error uploading option image:', error);
-                                    toast.error('فشل تحميل صورة الخيار');
-                                    return null;
+                            option.images.map(async (imgEntry) => {
+                                // If the image entry is already a URL containing the S3 folder, use it directly.
+                                if (
+                                    typeof imgEntry === "string" &&
+                                    imgEntry.includes("https://phase2anaostori.s3.eu-central-1.amazonaws.com/questions/")
+                                ) {
+                                    return imgEntry;
                                 }
+                                // Otherwise, if it's a new image object with a file property, upload it.
+                                if (typeof imgEntry === "object" && imgEntry.file) {
+                                    try {
+                                        const s3Url = await uploadFileSevices(imgEntry.file, () => { }, null, "questions");
+                                        console.log("🚀 ~ option.images.map ~ s3Url:", s3Url);
+                                        return s3Url;
+                                    } catch (error) {
+                                        console.error("Error uploading option image:", error);
+                                        toast.error("فشل تحميل صورة الخيار");
+                                        return null;
+                                    }
+                                }
+                                return null;
                             })
                         );
-                        return { ...option, images: uploadedOptionImages.filter(url => url) };
+                        return { ...option, images: uploadedOptionImages.filter((url) => url) };
                     }
                     return option;
                 })
@@ -159,10 +183,12 @@ const ModelForAddQuestion = ({
                 difficulty
             };
 
+            console.log("selectedQuestion: ", selectedQuestion);
+
             let routeName = 'createItem';
-            if (selectedQuestion && selectedQuestion.id) {
+            if (selectedQuestion) {
                 routeName = 'updateItemHandler';
-                questionData.id = selectedQuestion.id;
+                questionData.id = selectedQuestion._id;
             }
 
             const dataPayload = {
@@ -211,7 +237,7 @@ const ModelForAddQuestion = ({
         setLoading(false);
     };
 
-    
+
     // Modified handler: store option image file and preview (do not upload yet)
     const handleOptionImageUpload = (optionIndex, event) => {
         const file = event.target.files[0];
@@ -344,7 +370,6 @@ const ModelForAddQuestion = ({
                                                         <img
                                                             src={img.preview || img}
                                                             alt={`Option ${option.id} image ${imgIndex}`}
-                                                            className={styles.imagePreview}
                                                         />
                                                         <button
                                                             type="button"
