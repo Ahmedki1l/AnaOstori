@@ -265,50 +265,57 @@ const ModelForAddQuestion = ({
                     <div className={styles.formGroup}>
                         <label className={styles.label}>الخيارات</label>
                         {options.map((option, index) => (
-                            <div key={option.id} className={styles.optionRow}>
-                                <div className={styles.optionLabel}>{option.id}</div>
-                                <textarea
-                                    className={styles.textarea}
-                                    value={option.text}
-                                    onChange={(e) => handleOptionChange(index, e.target.value)}
-                                    placeholder={`الخيار ${option.id}`}
-                                    rows={3}
-                                />
-                                <div className={styles.optionRadio}>
-                                    <input
-                                        type="radio"
-                                        id={`correct-${option.id}`}
-                                        name="correctAnswer"
-                                        checked={correctAnswer === option.id}
-                                        onChange={() => setCorrectAnswer(option.id)}
+                            <div key={option.id} className={styles.optionItem}>
+                                {/* Top Row: Option ID and TextArea */}
+                                <div className={styles.optionMain}>
+                                    <div className={styles.optionLabel}>{option.id}</div>
+                                    <textarea
+                                        className={styles.textarea}
+                                        value={option.text}
+                                        onChange={(e) => handleOptionChange(index, e.target.value)}
+                                        placeholder={`الخيار ${option.id}`}
+                                        rows={3}
                                     />
-                                    <label htmlFor={`correct-${option.id}`}>الإجابة الصحيحة</label>
                                 </div>
-                                {/* New: Option images section */}
-                                <div className={styles.optionImages}>
-                                    <label className={styles.label}>صور الخيار:</label>
-                                    <div className={styles.imagesContainer}>
-                                        {option.images && option.images.map((img, imgIndex) => (
-                                            <div key={imgIndex} className={styles.imageWrapper}>
-                                                <img
-                                                    src={img}
-                                                    alt={`Option ${option.id} image ${imgIndex}`}
-                                                    className={styles.imagePreview}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleRemoveOptionImage(index, imgIndex)}
-                                                >
-                                                    حذف الصورة
-                                                </button>
-                                            </div>
-                                        ))}
+
+                                {/* Bottom Row: Radio Button and Images */}
+                                <div className={styles.optionExtras}>
+                                    <div className={styles.optionRadio}>
+                                        <input
+                                            type="radio"
+                                            id={`correct-${option.id}`}
+                                            name="correctAnswer"
+                                            checked={correctAnswer === option.id}
+                                            onChange={() => setCorrectAnswer(option.id)}
+                                        />
+                                        <label htmlFor={`correct-${option.id}`}>الإجابة الصحيحة</label>
                                     </div>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => handleOptionImageUpload(index, e)}
-                                    />
+                                    <div className={styles.optionImages}>
+                                        <label className={styles.label}>صور الخيار:</label>
+                                        <div className={styles.imagesContainer}>
+                                            {option.images &&
+                                                option.images.map((img, imgIndex) => (
+                                                    <div key={imgIndex} className={styles.imageWrapper}>
+                                                        <img
+                                                            src={img}
+                                                            alt={`Option ${option.id} image ${imgIndex}`}
+                                                            className={styles.imagePreview}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleRemoveOptionImage(index, imgIndex)}
+                                                        >
+                                                            حذف الصورة
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                        </div>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => handleOptionImageUpload(index, e)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ))}

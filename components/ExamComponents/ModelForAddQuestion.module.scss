@@ -1,3 +1,6 @@
+/* ----------------------
+   Dialog and Backdrop
+------------------------- */
 .dialog {
   position: fixed;
   top: 0;
@@ -47,6 +50,9 @@
   overflow: hidden;
 }
 
+/* ----------------------
+   Header and Actions
+------------------------- */
 .header {
   display: flex;
   justify-content: space-between;
@@ -71,12 +77,58 @@
   justify-content: center;
   padding: 4px;
   border-radius: 4px;
-
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
 }
 
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #E9E9E9;
+}
+
+.cancelButton,
+.saveButton {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton {
+  background-color: #FFFFFF;
+  color: #1a1a1a;
+  border: 1px solid #E9E9E9;
+  &:hover {
+    background-color: #F5F5F5;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.saveButton {
+  background-color: #F26722;
+  color: #FFFFFF;
+  border: none;
+  &:hover {
+    background-color: #d85d16;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* ----------------------
+   Content and Form Groups
+------------------------- */
 .content {
   padding: 24px;
   overflow-y: auto;
@@ -113,7 +165,6 @@
   border-radius: 4px;
   font-size: 14px;
   transition: border-color 0.2s;
-
   &:focus {
     outline: none;
     border-color: #F26722;
@@ -134,11 +185,27 @@
   padding-left: 36px;
 }
 
-.optionRow {
+/* ----------------------
+   Option Layout
+   ----------------------
+   Each option is grouped in an .optionItem container.
+   - .optionMain displays the option.id and the textarea side by side.
+   - .optionExtras shows the radio button and the images section underneath.
+------------------------- */
+.optionItem {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  padding: 8px;
+  border: 1px solid #E9E9E9;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.optionMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .optionLabel {
@@ -153,23 +220,78 @@
   font-size: 14px;
 }
 
+.optionExtras {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .optionRadio {
   display: flex;
   align-items: center;
   gap: 8px;
-
-  input[type="radio"] {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-  }
-
-  label {
-    font-size: 14px;
-    cursor: pointer;
-  }
 }
 
+.optionRadio input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.optionRadio label {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.optionImages {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.imagesContainer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #E9E9E9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageWrapper button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.imageWrapper button:hover {
+  background-color: #f26722;
+  color: #fff;
+}
+
+/* ----------------------
+   File Upload Styles
+------------------------- */
 .imageUpload {
   display: flex;
   flex-direction: column;
@@ -189,101 +311,22 @@
   border-radius: 4px;
   cursor: pointer;
   width: fit-content;
-
   &:hover {
     background-color: #EAEAEA;
   }
-
   span {
     font-size: 14px;
   }
 }
 
-.imagePreview {
-  position: relative;
-  width: 100%;
-  max-width: 300px;
-
-  img {
-    width: 100%;
-    border-radius: 4px;
-    border: 1px solid #E9E9E9;
-  }
-
-  .removeImage {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #ffffff;
-    }
-  }
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px;
-  border-top: 1px solid #E9E9E9;
-}
-
-.cancelButton,
-.saveButton {
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cancelButton {
-  background-color: #FFFFFF;
-  color: #1a1a1a;
-  border: 1px solid #E9E9E9;
-
-  &:hover {
-    background-color: #F5F5F5;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
-.saveButton {
-  background-color: #F26722;
-  color: #FFFFFF;
-  border: none;
-
-  &:hover {
-    background-color: darken(#F26722, 10%);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
+/* ----------------------
+   Loading Spinner
+------------------------- */
 .loading {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   &::before {
     content: "";
     display: block;
@@ -296,20 +339,24 @@
   }
 }
 
-/* Each skill row with input and remove icon */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ----------------------
+   Skill Row (if used elsewhere)
+------------------------- */
 .skillRow {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.optionLabel {
-  width: 20px;
-  text-align: center;
-  margin-right: 0.5rem;
-}
-
-/* Removal icon displayed per skill */
+/* ----------------------
+   Removal Buttons for Skills or Options
+------------------------- */
 .removeButton {
   background: transparent;
   border: none;
@@ -317,7 +364,6 @@
   font-size: 1rem;
   margin-left: 0.5rem;
   color: #a00;
-  /* For example, red or any desired removal color */
   transition: color 0.3s;
 }
 
@@ -325,13 +371,14 @@
   color: #f26722;
 }
 
-/* Button group for add and remove last buttons */
+/* ----------------------
+   Button Groups for Adding/Removing Items
+------------------------- */
 .buttonGroup {
   display: flex;
   margin-top: 1rem;
 }
 
-/* Plus icon button styles */
 .addButton {
   background: gray;
   border: none;
@@ -352,7 +399,6 @@
   background: #f26722;
 }
 
-/* Remove last button styling */
 .removeLastButton {
   background: transparent;
   border: 1px solid #ccc;
@@ -373,28 +419,95 @@
   border-color: #f26722;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* ----------------------
+   Pagination (if used in other components)
+------------------------- */
+.paginationWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
 }
 
-/* Mobile Responsive Styles */
+.paginationCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.paginationWrapper button {
+  background-color: #b6b6b6;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease-in-out;
+  margin: 0 4px;
+}
+
+.paginationWrapper button:hover:not(:disabled) {
+  background-color: #f26722;
+}
+
+.paginationWrapper button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationWrapper span {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Direct Page Navigation Styles */
+.gotoPageContainer {
+  display: flex;
+  align-items: center;
+}
+
+.gotoPageInput {
+  width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.3rem;
+  margin-left: 0.5rem;
+}
+
+.gotoPageButton {
+  background: gray;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-left: 0.5rem;
+}
+
+.gotoPageButton:hover {
+  background: #f26722;
+}
+
+/* ----------------------
+   Responsive Styles
+------------------------- */
 @media (max-width: 768px) {
   .dialogContainer {
     max-width: 95%;
   }
-
   .content {
     padding: 16px;
   }
-
   .optionRow {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-
   .optionRadio {
     margin-top: 4px;
   }
