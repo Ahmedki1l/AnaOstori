@@ -1,228 +1,256 @@
 .tableContainer {
-    width: 100%;
-    background-color: var(--table-bg-color, #ffffff);
-    border-radius: 12px;
-    border: 0.5px solid var(--table-border-color, #E9E9E9);
-    padding: 16px;
-    direction: rtl;
-  }
-  
-  .folderDetailsTable {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  
-  .tableArea {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .tableHeaderArea {
-    height: 48px;
-    background-color: var(--table-header-bg-color, #f5f5f5);
-    text-align: right;
-  }
-  
-  .tableHeadText {
-    font-size: 14px;
+  width: 100%;
+  background-color: var(--table-bg-color, #ffffff);
+  border-radius: 12px;
+  border: 0.5px solid var(--table-border-color, #E9E9E9);
+  padding: 16px;
+  direction: rtl;
+}
+
+.folderDetailsTable {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tableArea {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeaderArea {
+  height: 48px;
+  background-color: var(--table-header-bg-color, #f5f5f5);
+  text-align: right;
+}
+
+.tableHeadText {
+  font-size: 14px;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: var(--table-header-text-color, #707070);
+  text-align: right;
+}
+
+.tableHead1 {
+  width: 40%;
+}
+
+.tableHead2 {
+  width: 20%;
+}
+
+.tableHead3 {
+  width: 25%;
+}
+
+.tableHead4 {
+  width: 15%;
+}
+
+.tableBodyArea {
+  width: 100%;
+}
+
+.tableRow {
+  height: 56px;
+  border-bottom: 1px solid var(--table-border-color, #E9E9E9);
+  font-size: 14px;
+  color: var(--table-text-color, #1a1a1a);
+
+  td {
     padding: 12px 16px;
-    font-weight: 600;
-    color: var(--table-header-text-color, #707070);
     text-align: right;
-  }
-  
-  .tableHead1 {
-    width: 40%;
-  }
-  
-  .tableHead2 {
-    width: 20%;
-  }
-  
-  .tableHead3 {
-    width: 25%;
-  }
-  
-  .tableHead4 {
-    width: 15%;
-  }
-  
-  .tableBodyArea {
-    width: 100%;
-  }
-  
-  .tableRow {
-    height: 56px;
-    border-bottom: 1px solid var(--table-border-color, #E9E9E9);
-    font-size: 14px;
-    color: var(--table-text-color, #1a1a1a);
-  
-    td {
-      padding: 12px 16px;
-      text-align: right;
-    }
-  
-    &:hover {
-      background-color: var(--table-row-hover, rgba(233, 233, 233, 0.3));
-    }
-  }
-  
-  .questionFolderList {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-  }
-  
-  .numberOfAddedQuestionNames {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary, #1a1a1a);
-    margin: 0;
-  }
-  
-  .numberOfAddedQuestion {
-    font-size: 12px;
-    margin: 0;
-    color: var(--text-secondary, #707070);
-  }
-  
-  .eventButtons {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-  
-    div {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-  
-      &:hover {
-        background-color: var(--button-hover, rgba(233, 233, 233, 0.5));
-      }
-    }
-  }
-  
-  .noDataMainArea {
-    width: 100%;
-    height: 448px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .loadingWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
   }
 
-  .paginationContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px; // Adds space between the button, text, and button
-    margin: 20px 0; // Adjust spacing above and below the pagination block
+  &:hover {
+    background-color: var(--table-row-hover, rgba(233, 233, 233, 0.3));
   }
-  
-  .paginationContainer button {
-    background-color: #b6b6b6; // Blue background
-    color: #ffffff; // White text
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+}
+
+.questionFolderList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.numberOfAddedQuestionNames {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0;
+}
+
+.numberOfAddedQuestion {
+  font-size: 12px;
+  margin: 0;
+  color: var(--text-secondary, #707070);
+}
+
+.eventButtons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+
+  div {
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .paginationContainer button:hover:not(:disabled) {
-    background-color: #4e4e4e;
-  }
-  
-  .paginationContainer button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .paginationContainer span {
-    font-size: 16px;
-    color: #333;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  
-  /* Mobile Responsive Styles */
-  @media (max-width: 768px) {
-    .tableContainer {
-      padding: 12px;
-      border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--button-hover, rgba(233, 233, 233, 0.5));
     }
-  
-    .tableHeaderArea {
-      height: auto;
-    }
-  
-    .tableHeadText {
-      font-size: 12px;
+  }
+}
+
+.noDataMainArea {
+  width: 100%;
+  height: 448px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px; // Adds space between the button, text, and button
+  margin: 20px 0; // Adjust spacing above and below the pagination block
+}
+
+.paginationContainer button {
+  background-color: #b6b6b6; // Blue background
+  color: #ffffff; // White text
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.paginationContainer button:hover:not(:disabled) {
+  background-color: #f26722;
+}
+
+.paginationContainer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationContainer span {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .tableContainer {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .tableHeaderArea {
+    height: auto;
+  }
+
+  .tableHeadText {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .tableRow {
+    height: auto;
+    font-size: 12px;
+
+    td {
       padding: 10px;
     }
-  
-    .tableRow {
-      height: auto;
-      font-size: 12px;
-  
-      td {
-        padding: 10px;
-      }
-    }
-  
-    .questionFolderList {
-      gap: 8px;
-    }
-  
-    .numberOfAddedQuestionNames {
-      font-size: 12px;
-    }
-  
-    .eventButtons {
-      gap: 8px;
-  
-      div {
-        width: 28px;
-        height: 28px;
-      }
+  }
+
+  .questionFolderList {
+    gap: 8px;
+  }
+
+  .numberOfAddedQuestionNames {
+    font-size: 12px;
+  }
+
+  .eventButtons {
+    gap: 8px;
+
+    div {
+      width: 28px;
+      height: 28px;
     }
   }
-  
-  /* For very small screens */
-  @media (max-width: 480px) {
-    .tableHead3 {
-      display: none;
-    }
-  
-    .tableRow td:nth-child(3) {
-      display: none;
-    }
-  
-    .eventButtons {
-      div {
-        width: 24px;
-        height: 24px;
-      }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+  .tableHead3 {
+    display: none;
+  }
+
+  .tableRow td:nth-child(3) {
+    display: none;
+  }
+
+  .eventButtons {
+    div {
+      width: 24px;
+      height: 24px;
     }
   }
+}
+
+.gotoPageContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.gotoPageInput {
+  width: 100px;
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+.gotoPageButton {
+  background: gray;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.gotoPageButton:hover {
+  background: #f26722;
+}

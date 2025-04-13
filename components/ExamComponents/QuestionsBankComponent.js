@@ -36,6 +36,7 @@ const QuestionsBankComponent = ({
   const [selectedFolder, setSelectedFolder] = useState();
   const [deleteItemType, setDeleteItemType] = useState('folder');
   const [editFolder, setEditFolder] = useState(false);
+  const [gotoPage, setGotoPage] = useState("");
 
   // Pagination state (applies to both folders and questions)
   const limit = 10; // Items per page
@@ -94,6 +95,29 @@ const QuestionsBankComponent = ({
         fetchQuestionsList(selectedFolder._id, newPage);
       }
     }
+  };
+
+  // Handle direct page navigation
+  const handleGotoPage = () => {
+    const gotoPageNum = parseInt(gotoPage, 10);
+    if (isNaN(gotoPageNum) || gotoPageNum < 1) {
+      // Invalid page number; clear input and do nothing.
+      setGotoPage("");
+      return;
+    }
+    if (gotoPageNum > totalPages) {
+      // If entered page is greater than total pages, ignore.
+      setGotoPage(""); // Optionally, you could show a toast or error here.
+      return;
+    }
+    // Valid page number: update page state and fetch corresponding list.
+    setPage(gotoPageNum);
+    if (typeOfListdata === "folder") {
+      fetchFolderList(gotoPageNum);
+    } else if (selectedFolder) {
+      fetchQuestionsList(selectedFolder._id, gotoPageNum);
+    }
+    setGotoPage("");
   };
 
   const handleEditIconClick = async (item) => {
@@ -305,6 +329,21 @@ const QuestionsBankComponent = ({
               <button onClick={handlePrevPage} disabled={page === 1}>{"<"}</button>
               <span>صفحة {page} من {totalPages}</span>
               <button onClick={handleNextPage} disabled={page === totalPages}>{">"}</button>
+              {/* Direct page navigation field */}
+              <div className={styles.gotoPageContainer}>
+                <input
+                  type="number"
+                  min="1"
+                  max={totalPages}
+                  value={gotoPage}
+                  onChange={(e) => setGotoPage(e.target.value)}
+                  placeholder="ادخل رقم الصفحة"
+                  className={styles.gotoPageInput}
+                />
+                <button onClick={handleGotoPage} className={styles.gotoPageButton}>
+                  الذهاب للصفحة
+                </button>
+              </div>
             </div>
           )}
           {questionsData.length === 0 && !loading && (
