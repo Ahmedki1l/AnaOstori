@@ -46,8 +46,8 @@ const ModelForAddQuestion = ({
             setCorrectAnswer(selectedQuestion.correctAnswer || '');
             setContextType(selectedQuestion.contextType || '');
             setContextDescription(selectedQuestion.contextDescription || '');
-            if (selectedQuestion.imageUrl) {
-                setImagePreview(selectedQuestion.imageUrl);
+            if (selectedQuestion.questionImages.length > 0) {
+                setImagePreviews(selectedQuestion.questionImages);
             }
             setDifficulty(selectedQuestion.difficulty);
             setSkills(selectedQuestion.skills);
