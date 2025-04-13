@@ -23,6 +23,8 @@ const ModelForAddQuestion = ({
         { id: 'ج', text: '', images: [] },
         { id: 'د', text: '', images: [] }
     ]);
+    const [difficulty, setDifficulty] = useState('');
+    const [skills, setSkills] = useState([]);
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [contextType, setContextType] = useState('');
     const [contextDescription, setContextDescription] = useState('');
@@ -116,7 +118,7 @@ const ModelForAddQuestion = ({
             ...questionData
         };
         console.log("🚀 ~ handleSubmit ~ dataPayload:", dataPayload);
-        
+
 
         // Submit the API call using promise chaining to match the "addItemToFolder" style
         await postRouteAPI(dataPayload).then((res) => {
@@ -198,6 +200,32 @@ const ModelForAddQuestion = ({
     const handleRemoveImage = (index) => {
         setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
         setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+    };
+
+    // Handle editing a skill's text
+    const handleSkillChange = (index, value) => {
+        const updatedSkills = skills.map((skill, i) =>
+            i === index ? { ...skill, text: value } : skill
+        );
+        setSkills(updatedSkills);
+    };
+
+    // Add a new skill to the end of the array.
+    const handleAddSkill = () => {
+        const newId = skills.length > 0 ? skills[skills.length - 1].id + 1 : 1;
+        setSkills([...skills, { id: newId, text: '' }]);
+    };
+
+    // Remove a specific skill by its index.
+    const handleRemoveSkill = (indexToRemove) => {
+        setSkills(skills.filter((_, index) => index !== indexToRemove));
+    };
+
+    // Remove the last skill from the array.
+    const handleRemoveLastSkill = () => {
+        if (skills.length) {
+            setSkills(skills.slice(0, -1));
+        }
     };
 
     return (
@@ -318,6 +346,58 @@ const ModelForAddQuestion = ({
                             ))}
                         </div>
                     )}
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>صعوبة السؤال</label>
+                        <input
+                            type="text"
+                            className={styles.input}
+                            value={difficulty}
+                            onChange={(e) => setDifficulty(e.target.value)}
+                            placeholder="سهل"
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>المهارات</label>
+                        {skills.map((skill, index) => (
+                            <div key={skill.id} className={styles.skillRow}>
+                                <div className={styles.optionLabel}>{index + 1}</div>
+                                <input
+                                    type="text"
+                                    className={styles.input}
+                                    value={skill.text}
+                                    onChange={(e) => handleSkillChange(index, e.target.value)}
+                                    placeholder="أضف المهارة هنا"
+                                />
+                                <button
+                                    type="button"
+                                    className={styles.removeButton}
+                                    onClick={() => handleRemoveSkill(index)}
+                                >
+                                    &#x2715; {/* Cross icon */}
+                                </button>
+                            </div>
+                        ))}
+                        <div className={styles.buttonGroup}>
+                            <button
+                                type="button"
+                                onClick={handleAddSkill}
+                                className={styles.addButton}
+                            >
+                                &#43; {/* Plus icon */}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleRemoveLastSkill}
+                                className={styles.removeLastButton}
+                                disabled={skills.length === 0}
+                            >
+                                &#x2212; {/* Minus sign */}
+                            </button>
+                        </div>
+                    </div>
+
                     <div className={styles.formGroup}>
                         <label className={styles.label}>إضافة صورة (اختياري)</label>
                         <div className={styles.imageUpload}>
