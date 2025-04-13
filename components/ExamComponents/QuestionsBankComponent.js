@@ -57,6 +57,10 @@ const QuestionsBankComponent = ({
     getQuestionsList(folderId, 'questions', pageNumber, limit);
   };
 
+  const returnQuestionsList = (folderId, type) =>{
+    getQuestionsList(folderId, 'questions', page, limit);
+  }
+
   const showQuestionsOfSelectedFolder = async (item) => {
     if (typeOfListdata === "question") return;
     setTypeOfListData("question");
@@ -385,7 +389,7 @@ const QuestionsBankComponent = ({
           isModelForAddQuestionOpen={isModelForAddQuestionOpen}
           selectedQuestion={selectedQuestion}
           selectedFolder={selectedFolder}
-          getQuestionsList={getQuestionsList}
+          getQuestionsList={returnQuestionsList}
           onCloseModal={onQuestionModelClose}
           onDelete={handleDeleteFolderData}
           existingItemName={existingItemName}
