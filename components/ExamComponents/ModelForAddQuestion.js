@@ -261,18 +261,18 @@ const ModelForAddQuestion = ({
                             rows={3}
                         />
                     </div>
-                    
+
                     <div className={styles.formGroup}>
                         <label className={styles.label}>الخيارات</label>
                         {options.map((option, index) => (
                             <div key={option.id} className={styles.optionRow}>
                                 <div className={styles.optionLabel}>{option.id}</div>
-                                <input
-                                    type="text"
-                                    className={styles.input}
+                                <textarea
+                                    className={styles.textarea}
                                     value={option.text}
                                     onChange={(e) => handleOptionChange(index, e.target.value)}
                                     placeholder={`الخيار ${option.id}`}
+                                    rows={3}
                                 />
                                 <div className={styles.optionRadio}>
                                     <input
