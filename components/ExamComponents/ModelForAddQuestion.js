@@ -23,7 +23,7 @@ const ModelForAddQuestion = ({
         { id: 'ج', text: '', images: [] },
         { id: 'د', text: '', images: [] }
     ]);
-    const [difficulty, setDifficulty] = useState('');
+    const [difficulty, setDifficulty] = useState("");
     const [skills, setSkills] = useState([]);
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [contextType, setContextType] = useState('');
@@ -38,7 +38,7 @@ const ModelForAddQuestion = ({
     useEffect(() => {
         if (selectedQuestion) {
             setQuestionText(selectedQuestion.text || '');
-            setQuestionType(selectedQuestion.questionType || 'multipleChoice');
+            setQuestionType(selectedQuestion.questionType || '');
             if (selectedQuestion.options && selectedQuestion.options.length > 0) {
                 setOptions(selectedQuestion.options);
             }
@@ -48,10 +48,12 @@ const ModelForAddQuestion = ({
             if (selectedQuestion.imageUrl) {
                 setImagePreview(selectedQuestion.imageUrl);
             }
+            setDifficulty(selectedQuestion.difficulty);
+            setSkills(selectedQuestion.skills);
         } else {
             // Reset state when there's no selected question (i.e. new question)
             setQuestionText('');
-            setQuestionType('multipleChoice');
+            setQuestionType('');
             setOptions([
                 { id: 'أ', text: '', images: [] },
                 { id: 'ب', text: '', images: [] },
@@ -250,18 +252,6 @@ const ModelForAddQuestion = ({
                 <div className={styles.content}>
                     {formError && <div className={styles.errorMessage}>{formError}</div>}
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>نوع السؤال</label>
-                        <select
-                            className={styles.select}
-                            value={questionType}
-                            onChange={(e) => setQuestionType(e.target.value)}
-                        >
-                            <option value="multipleChoice">متعدد الخيارات</option>
-                            <option value="contextual">سياقي</option>
-                            <option value="numerical">عددي</option>
-                        </select>
-                    </div>
-                    <div className={styles.formGroup}>
                         <label className={styles.label}>نص السؤال</label>
                         <textarea
                             className={styles.textarea}
@@ -271,83 +261,58 @@ const ModelForAddQuestion = ({
                             rows={3}
                         />
                     </div>
-                    {questionType === 'contextual' && (
-                        <>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>نوع السياق</label>
+                    
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>الخيارات</label>
+                        {options.map((option, index) => (
+                            <div key={option.id} className={styles.optionRow}>
+                                <div className={styles.optionLabel}>{option.id}</div>
                                 <input
                                     type="text"
                                     className={styles.input}
-                                    value={contextType}
-                                    onChange={(e) => setContextType(e.target.value)}
-                                    placeholder="مثال: الخطأ السياقي"
+                                    value={option.text}
+                                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                                    placeholder={`الخيار ${option.id}`}
                                 />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>وصف السياق</label>
-                                <textarea
-                                    className={styles.textarea}
-                                    value={contextDescription}
-                                    onChange={(e) => setContextDescription(e.target.value)}
-                                    placeholder="أدخل وصف السياق هنا"
-                                    rows={3}
-                                />
-                            </div>
-                        </>
-                    )}
-                    {questionType === 'multipleChoice' && (
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>الخيارات</label>
-                            {options.map((option, index) => (
-                                <div key={option.id} className={styles.optionRow}>
-                                    <div className={styles.optionLabel}>{option.id}</div>
+                                <div className={styles.optionRadio}>
                                     <input
-                                        type="text"
-                                        className={styles.input}
-                                        value={option.text}
-                                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                                        placeholder={`الخيار ${option.id}`}
+                                        type="radio"
+                                        id={`correct-${option.id}`}
+                                        name="correctAnswer"
+                                        checked={correctAnswer === option.id}
+                                        onChange={() => setCorrectAnswer(option.id)}
                                     />
-                                    <div className={styles.optionRadio}>
-                                        <input
-                                            type="radio"
-                                            id={`correct-${option.id}`}
-                                            name="correctAnswer"
-                                            checked={correctAnswer === option.id}
-                                            onChange={() => setCorrectAnswer(option.id)}
-                                        />
-                                        <label htmlFor={`correct-${option.id}`}>الإجابة الصحيحة</label>
-                                    </div>
-                                    {/* New: Option images section */}
-                                    <div className={styles.optionImages}>
-                                        <label className={styles.label}>صور الخيار:</label>
-                                        <div className={styles.imagesContainer}>
-                                            {option.images && option.images.map((img, imgIndex) => (
-                                                <div key={imgIndex} className={styles.imageWrapper}>
-                                                    <img
-                                                        src={img}
-                                                        alt={`Option ${option.id} image ${imgIndex}`}
-                                                        className={styles.imagePreview}
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleRemoveOptionImage(index, imgIndex)}
-                                                    >
-                                                        حذف الصورة
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => handleOptionImageUpload(index, e)}
-                                        />
-                                    </div>
+                                    <label htmlFor={`correct-${option.id}`}>الإجابة الصحيحة</label>
                                 </div>
-                            ))}
-                        </div>
-                    )}
+                                {/* New: Option images section */}
+                                <div className={styles.optionImages}>
+                                    <label className={styles.label}>صور الخيار:</label>
+                                    <div className={styles.imagesContainer}>
+                                        {option.images && option.images.map((img, imgIndex) => (
+                                            <div key={imgIndex} className={styles.imageWrapper}>
+                                                <img
+                                                    src={img}
+                                                    alt={`Option ${option.id} image ${imgIndex}`}
+                                                    className={styles.imagePreview}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveOptionImage(index, imgIndex)}
+                                                >
+                                                    حذف الصورة
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => handleOptionImageUpload(index, e)}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>صعوبة السؤال</label>
