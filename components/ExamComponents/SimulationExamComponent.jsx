@@ -293,7 +293,7 @@ const SimulationExamComponent = ({
     setExamQuestions(reordered);
   };
 
-  console.log("questionsData", questionsData);
+  console.log("Exams Data: ", questionsData);
 
   return (
     <>

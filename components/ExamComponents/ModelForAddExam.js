@@ -77,7 +77,9 @@ const ModelForAddExam = ({
     // Add this function to fetch questions by their IDs
     const fetchQuestionsByIds = async (questions) => {
         if (!questions || questions.length === 0) return [];
+        console.log("🚀 ~ fetchQuestionsByIds ~ questions:", questions);
         const questionIds = questions.map(q => q._id);
+        console.log("🚀 ~ fetchQuestionsByIds ~ questionIds:", questionIds)
         const payload = {
             routeName: 'getItem',
             type: 'questions',
@@ -106,6 +108,7 @@ const ModelForAddExam = ({
     // If editing, prefill fields and selected exam questions
     useEffect(() => {
         if (selectedExam) {
+            console.log("🚀 ~ useEffect ~ selectedExam:", selectedExam);
             setExamTitle(selectedExam.title || '');
             setExamInstructions(selectedExam.instructions || '');
             setExamDuration(selectedExam.duration || '');
