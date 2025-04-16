@@ -74,6 +74,35 @@ const ModelForAddExam = ({
         }
     };
 
+    // Add this function to fetch questions by their IDs
+    const fetchQuestionsByIds = async (questions) => {
+        if (!questions || questions.length === 0) return [];
+        const questionIds = questions.map(q => q._id);
+        const payload = {
+            routeName: 'getItem',
+            type: 'questions',
+            ids: questionIds
+        };
+
+        try {
+            const response = await getRouteAPI(payload);
+            if (response?.data) {
+                return response.data.data;
+            }
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                await getNewToken();
+                const response = await getRouteAPI(payload);
+                if (response?.data) {
+                    return response.data.data;
+                }
+            } else {
+                toast.error('حدث خطأ أثناء جلب الأسئلة');
+            }
+        }
+        return [];
+    };
+
     // If editing, prefill fields and selected exam questions
     useEffect(() => {
         if (selectedExam) {
@@ -85,7 +114,12 @@ const ModelForAddExam = ({
                 setCoverImagePreview(selectedExam.coverImage);
             }
             if (selectedExam.questions) {
-                setExamQuestions(selectedExam.questions);
+                // Fetch full question objects using their IDs
+                fetchQuestionsByIds(selectedExam.questions).then(questions => {
+                    if (questions) {
+                        setExamQuestions(questions);
+                    }
+                });
             }
         } else {
             setExamTitle('');
@@ -97,6 +131,8 @@ const ModelForAddExam = ({
             setExamQuestions([]);
         }
     }, [selectedExam]);
+
+
 
     const validateForm = () => {
         if (!examTitle.trim()) {
