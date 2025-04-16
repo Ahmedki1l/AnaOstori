@@ -5,7 +5,6 @@ import ModelForAddQuestion from './ModelForAddQuestion'; // reused for new quest
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { postRouteAPI } from '../../services/apisService';
 import { getNewToken } from '../../services/fireBaseAuthService';
-import { examsConst } from '../../constants/adminPanelConst/examsConst'; // adjust to your constants
 import { toast } from 'react-toastify';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import styles from './ModelForAddExam.module.scss';
@@ -38,7 +37,7 @@ const ModelForAddExam = ({
   const [isAddQuestionSubModalOpen, setIsAddQuestionSubModalOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
 
-  const { examToastMsgConst } = examsConst || {
+  const { examToastMsgConst } = {
     examToastMsgConst: {
       addExamSuccessMsg: "تم إضافة الامتحان بنجاح",
       updateExamSuccessMsg: "تم تحديث الامتحان بنجاح"
