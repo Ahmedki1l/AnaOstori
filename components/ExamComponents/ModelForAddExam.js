@@ -77,8 +77,6 @@ const ModelForAddExam = ({
     // Add this function to fetch questions by their IDs
     const fetchQuestionsByIds = async (questionIds) => {
         if (!questionIds || questionIds.length === 0) return [];
-        console.log("🚀 ~ fetchQuestionsByIds ~ questions:", questions);
-        console.log("🚀 ~ fetchQuestionsByIds ~ questionIds:", questionIds)
         const payload = {
             routeName: 'getItem',
             type: 'questions',
@@ -189,7 +187,8 @@ const ModelForAddExam = ({
             routeName: 'getItem',
             page,
             limit: itemsPerPage,
-            type: 'questions'
+            type: 'questions',
+            isForExams: true
         };
 
         if (selectedFolderId !== 'all') {
