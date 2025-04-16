@@ -69,7 +69,7 @@ function Index() {
         }
 
         await getAuthRouteAPI(data).then((res) => {
-            if (selectedItem == 'questions') {
+            if (selectedItem == 'questions' || selectedItem == 'simulationExam') {
                 setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
                 setPage(res.data.page);
                 setTotalPages(res.data.totalPages);
@@ -114,7 +114,7 @@ function Index() {
         }
 
         await getRouteAPI(body).then((res) => {
-            if (type == 'questions') {
+            if (type == 'questions' || type == 'simulationExam') {
                 setFolderList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
                 setPage(res.data.page);
                 setTotalPages(res.data.totalPages);
@@ -126,7 +126,7 @@ function Index() {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await getRouteAPI(body).then(res => {
-                        if (type == 'questions') {
+                        if (type == 'questions' || type == 'simulationExam') {
                             setFolderList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
                             setPage(res.data.page);
                             setTotalPages(res.data.totalPages);
