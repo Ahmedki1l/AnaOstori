@@ -82,9 +82,9 @@ const ModelForAddExam = ({
         const payload = {
             routeName: 'getItem',
             type: 'questions',
+            limit: itemsPerPage,
             ids: questionIds
         };
-
         try {
             const response = await getRouteAPI(payload);
             if (response?.data) {
