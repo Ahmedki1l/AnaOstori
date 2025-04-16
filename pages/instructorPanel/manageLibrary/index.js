@@ -285,7 +285,24 @@ function Index() {
                                 />
                             }
                             {selectedItem == 'simulationExam' &&
-                                <SimulationExamComponent />
+                                <SimulationExamComponent
+                                    questionsData={folderList}
+                                    typeOfListdata={typeOfListdata}
+                                    setTypeOfListData={setTypeOfListData}
+                                    setSelectedFolderId={setSelectedFolderId}
+                                    getQuestionsList={getItemList}
+                                    getFolderList={getfolderList}
+                                    loading={loading}
+                                    handleCreateFolder={handleCreateFolder}
+                                    page={page}
+                                    setPage={setPage}
+                                    totalPages={totalPages}
+                                    setTotalPages={setTotalPages}
+                                    isModelForAddFolderOpen={isModelForAddQuestionFolderOpen}
+                                    setIsModelForAddFolderOpen={setIsModelForAddQuestionFolderOpen}
+                                    isModelForAddQuestionOpen={isModelForAddQuestionOpen}
+                                    setIsModelForAddQuestionOpen={setIsModelForAddQuestionOpen}
+                                />
                             }
                         </div>
                     </div>
