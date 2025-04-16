@@ -153,7 +153,7 @@ function Index() {
         else if (typeOfListdata == 'question') {
             setIsModelForAddQuestionOpen(true);
         }
-        else if (typeOfListdata == 'simulationExam') {
+        else if (typeOfListdata == 'exam') {
             setExamModalOpen(true);
         }
         else {
