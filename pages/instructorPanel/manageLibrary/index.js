@@ -13,6 +13,7 @@ import ModelWithOneInput from '../../../components/CommonComponents/ModelWithOne
 import BackToPath from '../../../components/CommonComponents/BackToPath';
 import { toast } from 'react-toastify';
 import { commonLibraryConst, folderConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
+import SimulationExamComponent from '../../../components/ExamComponents/SimulationExamComponent';
 
 
 function Index() {
@@ -239,6 +240,7 @@ function Index() {
                                 <p onClick={() => handleItemSelect('video')} className={selectedItem == 'video' ? styles.activeItem : ""}> الفيديوهات</p>
                                 <p onClick={() => handleItemSelect('file')} className={selectedItem == 'file' ? styles.activeItem : ""}> الملفات </p>
                                 <p onClick={() => handleItemSelect('questions')} className={selectedItem == 'questions' ? styles.activeItem : ""}> بنك الأسئلة </p>
+                                <p onClick={() => handleItemSelect('simulationExam')} className={selectedItem == 'simulationExam' ? styles.activeItem : ""}> الإختبار المحاكي </p>
                                 <p onClick={() => handleItemSelect('quiz')} className={selectedItem == 'quiz' ? styles.activeItem : ""}>الاختبارات</p>
                                 <p onClick={() => handleItemSelect('curriculum')} className={selectedItem == 'curriculum' ? styles.activeItem : ""}>المقررات</p>
                             </div>
@@ -281,6 +283,9 @@ function Index() {
                                     isModelForAddQuestionOpen={isModelForAddQuestionOpen}
                                     setIsModelForAddQuestionOpen={setIsModelForAddQuestionOpen}
                                 />
+                            }
+                            {selectedItem == 'simulationExam' &&
+                                <SimulationExamComponent />
                             }
                         </div>
                     </div>
