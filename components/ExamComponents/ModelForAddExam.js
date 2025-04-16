@@ -73,10 +73,6 @@ const ModelForAddExam = ({
       setFormError('يرجى إدخال عنوان الامتحان');
       return false;
     }
-    if (existingExamNames.includes(examTitle)) {
-      setFormError('تم استخدام هذا العنوان مسبقاً');
-      return false;
-    }
     setFormError('');
     return true;
   };

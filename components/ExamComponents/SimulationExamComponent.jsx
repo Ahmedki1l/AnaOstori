@@ -36,6 +36,7 @@ const SimulationExamComponent = ({
 }) => {
   const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false);
   const [isExamModalOpen, setExamModalOpen] = useState(false);
+  const [selectedExam, setSelectedExam] = useState();
   const [selectedQuestion, setSelectedQuestion] = useState();
   const [selectedFolder, setSelectedFolder] = useState(); // exam folder
   const [deleteItemType, setDeleteItemType] = useState('folder');
@@ -44,8 +45,10 @@ const SimulationExamComponent = ({
   // When in exam mode, we store and manage exam questions here.
   const [examQuestions, setExamQuestions] = useState([]);
 
+  // Available questions that can be added to an exam (might come from your question bank)
+  const [existingQuestions, setExistingQuestions] = useState([]);
+
   const { folderToastMsgConst, questionToastMsgConst } = questionsConst;
-  const existingItemName = questionsData?.map(item => item.name);
 
   // If we are in exam mode, update our examQuestions local state.
   useEffect(() => {
@@ -137,7 +140,8 @@ const SimulationExamComponent = ({
       setSelectedFolder(item);
       setEditFolder(true);
     } else {
-      setSelectedQuestion(item);
+    //   setSelectedQuestion(item);
+      setSelectedExam(item);
     //   setIsModelForAddQuestionOpen(true);
       setExamModalOpen(true);
     }
@@ -452,7 +456,7 @@ const SimulationExamComponent = ({
           curriCulumSection={'folder'}
         />
       )}
-      {isModelForAddQuestionOpen && (
+      {/* {isModelForAddQuestionOpen && (
         <ModelForAddQuestion
           isModelForAddQuestionOpen={isModelForAddQuestionOpen}
           selectedQuestion={selectedQuestion}
@@ -462,7 +466,7 @@ const SimulationExamComponent = ({
           onDelete={handleDeleteFolderData}
           existingItemName={existingItemName}
         />
-      )}
+      )} */}
       {isExamModalOpen && (
         <ModelForAddExam
           isModelForAddExamOpen={isExamModalOpen}
@@ -470,7 +474,6 @@ const SimulationExamComponent = ({
           selectedFolder={selectedFolder}
           getExamsList={getExamsList}
           onCloseModal={handleCloseModal}
-          existingExamNames={existingExamNames}
           existingQuestions={existingQuestions}
         />
       )}
