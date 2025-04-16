@@ -82,6 +82,7 @@ const ModelForAddExam = ({
         const payload = {
             routeName: 'getItem',
             type: 'questions',
+            page: 1,
             limit: itemsPerPage,
             ids: questionIds
         };
