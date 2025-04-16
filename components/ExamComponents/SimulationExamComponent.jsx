@@ -14,6 +14,7 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 import { toast } from 'react-toastify';
 import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst';
 import styles from './SimulationExamComponent.module.scss';
+import ModelForAddExam from './ModelForAddExam';
 
 const SimulationExamComponent = ({
   questionsData,          // Contains both exam folders and exam questions
