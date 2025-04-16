@@ -112,19 +112,19 @@ const ModelForAddExam = ({
     const [pageInput, setPageInput] = useState(1);
     const [itemsPerPage] = useState(10);
     const [questions, setQuestions] = useState([]);
-    const [selectedFolderId, setSelectedFolderId] = useState('all');    
+    const [selectedFolderId, setSelectedFolderId] = useState('all');
     // Function to fetch questions from API
     const fetchQuestions = async (page = 1) => {
         setLoading(true);
         try {
             const payload = {
-                routeName: 'getItems',
+                routeName: 'getItem',
                 page,
                 limit: itemsPerPage,
                 type: 'questions'
             }
 
-            if(selectedFolderId !== 'all') {
+            if (selectedFolderId !== 'all') {
                 payload.folderId = selectedFolderId;
             }
 
@@ -137,12 +137,17 @@ const ModelForAddExam = ({
         } catch (error) {
             if (error?.response?.status === 401) {
                 await getNewToken();
-                const response = await getRouteAPI({
+                const payload = {
                     routeName: 'getItem',
                     page,
                     limit: itemsPerPage,
                     type: 'questions'
-                });
+                }
+
+                if (selectedFolderId !== 'all') {
+                    payload.folderId = selectedFolderId;
+                }
+                const response = await getRouteAPI(payload);
 
                 if (response?.data) {
                     setQuestions(response.data.data);
