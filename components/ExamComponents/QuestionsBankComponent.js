@@ -18,8 +18,8 @@ const QuestionsBankComponent = ({
   typeOfListdata,
   setTypeOfListData,
   setSelectedFolderId,
-  getQuestionsList, // should accept: (folderId, type, page, limit) 
-  getFolderList,    // should accept: (type, page, limit)
+  getQuestionsList,
+  getFolderList,
   loading,
   handleCreateFolder,
   page,

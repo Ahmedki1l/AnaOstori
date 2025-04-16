@@ -1,6 +1,7 @@
 /* SimulationExamComponent.module.scss */
 
-.simulationExamWrapper {
+/* Container for the whole component (same as tableContainer) */
+.tableContainer {
     width: 100%;
     background-color: var(--table-bg-color, #ffffff);
     border-radius: 12px;
@@ -11,27 +12,162 @@
     margin: 0 auto;
   }
   
-  .toolbar {
+  /* Folder view (for exam folders) header style */
+  .folderDetailsTable {
+    width: 100%;
     display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
   
-    button {
-      padding: 8px 16px;
-      font-size: 14px;
-      color: #fff;
-      background-color: #1890ff;
-      border: none;
-      border-radius: 4px;
+  /* Standard table styles */
+  .tableArea {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableHeaderArea {
+    height: 48px;
+    background-color: var(--table-header-bg-color, #f5f5f5);
+    text-align: right;
+  }
+  
+  .tableHeadText {
+    font-size: 14px;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: var(--table-header-text-color, #707070);
+    text-align: right;
+  }
+  
+  .tableHead1 {
+    width: 40%;
+  }
+  
+  .tableHead2 {
+    width: 20%;
+  }
+  
+  .tableHead3 {
+    width: 25%;
+  }
+  
+  .tableHead4 {
+    width: 15%;
+  }
+  
+  .tableBodyArea {
+    width: 100%;
+  }
+  
+  .tableRow {
+    height: 56px;
+    border-bottom: 1px solid var(--table-border-color, #E9E9E9);
+    font-size: 14px;
+    color: var(--table-text-color, #1a1a1a);
+  
+    td {
+      padding: 12px 16px;
+      text-align: right;
+    }
+  
+    &:hover {
+      background-color: var(--table-row-hover, rgba(233, 233, 233, 0.3));
+    }
+  }
+  
+  .questionFolderList {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+  
+  .numberOfAddedQuestionNames {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0;
+  }
+  
+  .numberOfAddedQuestion {
+    font-size: 12px;
+    margin: 0;
+    color: var(--text-secondary, #707070);
+  }
+  
+  .eventButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  
+    div {
       cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
   
       &:hover {
-        background-color: #40a9ff;
+        background-color: var(--button-hover, rgba(233, 233, 233, 0.5));
       }
     }
   }
   
+  /* Exam-specific drag-and-drop list styling */
+  .examDragAndDropWrapper {
+    margin-top: 20px;
+  }
+  
+  .examQuestionsList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .examQuestionItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background-color: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+  
+    span {
+      flex-grow: 1;
+      font-size: 14px;
+      color: #444;
+    }
+  
+    button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+  }
+  
+  .removeQuestionButton {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  
+  /* Modal form (for adding/editing exam/folder details) */
   .examForm {
     padding: 20px;
   
@@ -70,7 +206,6 @@
       }
     }
   
-    // This resets the default list styling for any list inside a form group.
     ul {
       list-style: none;
       margin: 0;
@@ -128,81 +263,133 @@
     }
   }
   
-  .selectedQuestionsList {
-    padding: 0;
-    list-style: none;
-    margin: 0;
-  
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      background-color: #fafafa;
-      border: 1px solid #f0f0f0;
-      border-radius: 4px;
-  
-      span {
-        flex-grow: 1;
-        font-size: 14px;
-        color: #444;
-      }
-  
-      button {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-      }
-    }
+  /* Pagination styles */
+  .paginationWrapper {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
   }
   
-  .selectedQuestionItem {
+  .paginationCenter {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .paginationWrapper button {
+    background-color: #b6b6b6;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease-in-out;
+    margin: 0 4px;
+  }
+  
+  .paginationWrapper button:hover:not(:disabled) {
+    background-color: #f26722;
+  }
+  
+  .paginationWrapper button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .paginationWrapper span {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .gotoPageContainer {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
   }
   
-  .removeQuestionButton {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
+  .gotoPageInput {
+    width: 150px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.3rem;
+    margin-left: 0.5rem;
+  }
   
-    &:hover {
-      opacity: 0.7;
+  .gotoPageButton {
+    background: gray;
+    color: #fff;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-left: 0.5rem;
+  }
+  
+  .gotoPageButton:hover {
+    background: #f26722;
+  }
+  
+  /* Responsive Styles */
+  
+  @media (max-width: 768px) {
+    .tableContainer {
+      padding: 12px;
+      border-radius: 8px;
+    }
+  
+    .tableHeaderArea {
+      height: auto;
+    }
+  
+    .tableHeadText {
+      font-size: 12px;
+      padding: 10px;
+    }
+  
+    .tableRow {
+      height: auto;
+      font-size: 12px;
+  
+      td {
+        padding: 10px;
+      }
+    }
+  
+    .questionFolderList {
+      gap: 8px;
+    }
+  
+    .numberOfAddedQuestionNames {
+      font-size: 12px;
+    }
+  
+    .eventButtons {
+      gap: 8px;
+  
+      div {
+        width: 28px;
+        height: 28px;
+      }
     }
   }
   
-  .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
-    margin-top: 24px;
+  @media (max-width: 480px) {
+    .tableHead3 {
+      display: none;
+    }
   
-    button {
-      padding: 8px 16px;
-      font-size: 14px;
-      color: #fff;
-      background-color: #1890ff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
+    .tableRow td:nth-child(3) {
+      display: none;
+    }
   
-      &:hover {
-        background-color: #40a9ff;
-      }
-  
-      &:first-child {
-        background-color: #f5222d;
-  
-        &:hover {
-          background-color: #ff4d4f;
-        }
-      }
+    .eventButtons div {
+      width: 24px;
+      height: 24px;
     }
   }
   

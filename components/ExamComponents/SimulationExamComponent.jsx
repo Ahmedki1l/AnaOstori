@@ -1,232 +1,473 @@
-// SimulationExamComponent.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd'; // or use open if your version supports it
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import ModelForAddQuestion from './ModelForAddQuestion'; // Reuse your question modal component
-import AllIconsComponent from '../../Icons/AllIconsComponenet'; // Make sure the path and name match your project
-import styles from './SimulationExamComponent.module.scss';
-import { toast } from 'react-toastify';
+import ModelForAddQuestion from './ModelForAddQuestion'; // reuse your question modal component
+import ModelWithOneInput from '../CommonComponents/ModelWithOneInput/ModelWithOneInput';
+import ModelForDeleteItems from '../ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems';
+import AllIconsComponenet from '../../Icons/AllIconsComponenet';
+import BackToPath from '../CommonComponents/BackToPath';
+import Spinner from '../CommonComponents/spinner';
+import Empty from '../CommonComponents/Empty';
+import { fullDate } from '../../constants/DateConverter';
 import { postRouteAPI } from '../../services/apisService';
 import { getNewToken } from '../../services/fireBaseAuthService';
+import { toast } from 'react-toastify';
+import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst';
+import styles from './SimulationExamComponent.module.scss';
 
-const SimulationExamComponent = () => {
-  // Modal state to open the exam/folder form
-  const [isExamModalOpen, setIsExamModalOpen] = useState(false);
-  // Toggle between adding a folder or an exam:
-  // For example, if true we’re in “folder mode” (just grouping exams), if false then “exam mode” (with questions)
-  const [isFolderMode, setIsFolderMode] = useState(false);
-  const [examName, setExamName] = useState('');
-  // When in exam mode, you may want to select a folder in which the exam is stored – adjust as needed.
-  const [selectedFolder, setSelectedFolder] = useState(null);
-  // This list simulates fetching available questions from your bank.
-  const [availableQuestions, setAvailableQuestions] = useState([]);
-  // The list of questions selected (or added) to be included in the exam.
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
-  // State for controlling the “create new question” modal
-  const [isAddQuestionModalOpen, setIsAddQuestionModalOpen] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState(null);
+const SimulationExamComponent = ({
+  questionsData,          // Contains both exam folders and exam questions
+  typeOfListdata,         // "folder" for exam folders; "simulationExam" for simulation exams (with questions)
+  setTypeOfListData,
+  setSelectedFolderId,
+  getQuestionsList,       // Should accept: (folderId, type, page, limit)
+  getFolderList,          // Should accept: (type, page, limit)
+  loading,
+  handleCreateFolder,
+  page,
+  setPage,
+  totalPages,
+  setTotalPages,
+  isModelForAddFolderOpen,
+  setIsModelForAddFolderOpen,
+  isModelForAddQuestionOpen,
+  setIsModelForAddQuestionOpen
+}) => {
+  const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState();
+  const [selectedFolder, setSelectedFolder] = useState(); // exam folder
+  const [deleteItemType, setDeleteItemType] = useState('folder');
+  const [editFolder, setEditFolder] = useState(false);
+  const [gotoPage, setGotoPage] = useState("");
+  // When in exam mode, we store and manage exam questions here.
+  const [examQuestions, setExamQuestions] = useState([]);
 
-  // Simulate fetching available questions when the component mounts.
+  const { folderToastMsgConst, questionToastMsgConst } = questionsConst;
+  const existingItemName = questionsData?.map(item => item.name);
+
+  // If we are in exam mode, update our examQuestions local state.
   useEffect(() => {
-    // Replace this with a real API call if needed.
-    setAvailableQuestions([
-      { id: 'q1', text: 'What is React?' },
-      { id: 'q2', text: 'Explain the useState hook.' },
-      { id: 'q3', text: 'What is Redux used for?' },
-      // Add more questions as required...
-    ]);
-  }, []);
-
-  // Drag-and-drop handler for reordering the selected questions
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
-    const reordered = Array.from(selectedQuestions);
-    const [removed] = reordered.splice(result.source.index, 1);
-    reordered.splice(result.destination.index, 0, removed);
-    setSelectedQuestions(reordered);
-  };
-
-  // Add an available question to the exam (ignores duplicates)
-  const addQuestionToExam = (question) => {
-    if (!selectedQuestions.find(q => q.id === question.id)) {
-      setSelectedQuestions([...selectedQuestions, question]);
-      toast.success('Question added.');
-    } else {
-      toast.info('This question is already selected.');
+    if (typeOfListdata === 'exam') {
+      setExamQuestions(questionsData);
     }
+  }, [questionsData, typeOfListdata]);
+
+  // Wrapper functions to fetch list data and update pagination (using a limit of 10)
+  const limit = 10;
+
+  const fetchFolderList = (pageNumber = 1) => {
+    // Assume getFolderList returns a promise that resolves with { data: [...], totalDocuments, page, limit, totalPages }
+    getFolderList('exams', pageNumber, limit);
   };
 
-  // Remove a question from the exam by its ID.
-  const removeQuestionFromExam = (questionId) => {
-    setSelectedQuestions(selectedQuestions.filter(q => q.id !== questionId));
-    toast.info('Question removed.');
+  const fetchQuestionsList = (folderId, pageNumber = 1) => {
+    // Assume getQuestionsList returns a promise that resolves with exam questions list
+    getQuestionsList(folderId, 'exams', pageNumber, limit);
   };
 
-  // Handler for saving the exam or folder.
-  const handleCreateExam = async () => {
-    // Build your payload – adjust the fields to match your API.
-    const examPayload = {
-      name: examName,
-      type: isFolderMode ? 'folder' : 'exam',
-      folderId: selectedFolder ? selectedFolder._id : null,
-      questions: !isFolderMode ? selectedQuestions.map(q => q.id) : []  // Only exams have questions
-    };
+  const returnQuestionsList = (folderId, type) => {
+    getQuestionsList(folderId, 'exams', page, limit);
+  };
 
-    try {
-      await postRouteAPI({ routeName: 'createExamHandler', ...examPayload });
-      toast.success(isFolderMode ? 'Folder created successfully!' : 'Exam created successfully!');
-      // Reset states after success
-      setExamName('');
-      setSelectedQuestions([]);
-      setIsExamModalOpen(false);
-    } catch (error) {
-      if (error?.response?.status === 401) {
-        await getNewToken();
-        await postRouteAPI({ routeName: 'createExamHandler', ...examPayload });
-        toast.success(isFolderMode ? 'Folder created successfully after token refresh!' : 'Exam created successfully after token refresh!');
-        setExamName('');
-        setSelectedQuestions([]);
-        setIsExamModalOpen(false);
-      } else {
-        toast.error('An error occurred while creating the exam/folder.');
+  const showQuestionsOfSelectedFolder = async (item) => {
+    // Switch from folder view to exam mode
+    if (typeOfListdata === "exam") return;
+    setTypeOfListData("exam");
+    setSelectedFolder(item);
+    setSelectedFolderId(item._id);
+    setPage(1);
+    fetchQuestionsList(item._id, 1);
+  };
+
+  const showFolderList = () => {
+    setTypeOfListData("folder");
+    setPage(1);
+    fetchFolderList(1);
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      const newPage = page - 1;
+      setPage(newPage);
+      if (typeOfListdata === "folder") {
+        fetchFolderList(newPage);
+      } else if (selectedFolder) {
+        fetchQuestionsList(selectedFolder._id, newPage);
       }
     }
   };
 
-  // Handler for when a new question is created in the modal.
-  // You can optionally update your available questions list as needed.
-  const handleNewQuestionCreated = (newQuestion) => {
-    setAvailableQuestions(prev => [...prev, newQuestion]);
-    addQuestionToExam(newQuestion);
-    setIsAddQuestionModalOpen(false);
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      const newPage = page + 1;
+      setPage(newPage);
+      if (typeOfListdata === "folder") {
+        fetchFolderList(newPage);
+      } else if (selectedFolder) {
+        fetchQuestionsList(selectedFolder._id, newPage);
+      }
+    }
   };
 
+  // Handle direct page navigation.
+  const handleGotoPage = () => {
+    const gotoPageNum = parseInt(gotoPage, 10);
+    if (isNaN(gotoPageNum) || gotoPageNum < 1) {
+      setGotoPage("");
+      return;
+    }
+    if (gotoPageNum > totalPages) {
+      setGotoPage("");
+      return;
+    }
+    setPage(gotoPageNum);
+    if (typeOfListdata === "folder") {
+      fetchFolderList(gotoPageNum);
+    } else if (selectedFolder) {
+      fetchQuestionsList(selectedFolder._id, gotoPageNum);
+    }
+    setGotoPage("");
+  };
+
+  const handleEditIconClick = async (item) => {
+    if (typeOfListdata === "folder") {
+      setIsModelForAddFolderOpen(true);
+      setSelectedFolder(item);
+      setEditFolder(true);
+    } else {
+      setSelectedQuestion(item);
+      setIsModelForAddQuestionOpen(true);
+    }
+  };
+
+  const handleEditFolder = async ({ name }) => {
+    let editFolderBody = {
+      id: selectedFolder?._id,
+      name: name,
+      type: selectedFolder?.type,
+    };
+    let data = {
+      routeName: 'updateFolderHandler',
+      ...editFolderBody,
+    };
+    await postRouteAPI(data)
+      .then(() => {
+        toast.success(folderToastMsgConst.updateFolderSuccessMsg, { rtl: true });
+        setIsModelForAddFolderOpen(false);
+        showFolderList();
+      })
+      .catch(async (error) => {
+        if (error?.response?.status === 401) {
+          await getNewToken().then(async () => {
+            await postRouteAPI(data).then(() => {
+              toast.success(folderToastMsgConst.updateFolderSuccessMsg, { rtl: true });
+              setIsModelForAddFolderOpen(false);
+              showFolderList();
+            });
+          });
+        } else {
+          toast.error('حدث خطأ أثناء تحديث المجلد', { rtl: true });
+        }
+      });
+  };
+
+  const hendleCreateFolder = (name) => {
+    handleCreateFolder(name);
+    setIsModelForAddFolderOpen(false);
+  };
+
+  const onCloseModal = () => {
+    setIsmodelForDeleteItems(false);
+  };
+
+  const onQuestionModelClose = () => {
+    setSelectedQuestion();
+    setIsModelForAddQuestionOpen(false);
+  };
+
+  const handleDeleteFolderItems = (item) => {
+    if (typeOfListdata === 'exam') {
+      setSelectedQuestion(item);
+    } else {
+      setSelectedFolder(item);
+    }
+    setDeleteItemType(typeOfListdata === 'folder' ? 'folder' : 'exam');
+    setIsmodelForDeleteItems(true);
+  };
+
+  const handleDeleteFolderData = async () => {
+    if (typeOfListdata === 'exam') {
+      let deleteItemBody = {
+        id: selectedQuestion.id,
+        isDeleted: true,
+      };
+      let data = {
+        routeName: 'updateExamHandler', // exam-specific route
+        ...deleteItemBody,
+      };
+      await postRouteAPI(data)
+        .then(() => {
+          toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true });
+          fetchQuestionsList(selectedFolder._id, page);
+        })
+        .catch(async (error) => {
+          if (error?.response?.status === 401) {
+            await getNewToken().then(async () => {
+              await postRouteAPI(data).then(() => {
+                toast.success(questionToastMsgConst.deleteQuestionSuccessMsg, { rtl: true });
+                fetchQuestionsList(selectedFolder._id, page);
+              });
+            }).catch((error) => {
+              console.error("Error:", error);
+            });
+          }
+        });
+    } else {
+      let deleteFolderBody = {
+        id: selectedFolder._id,
+        isDeleted: true,
+      };
+      let data = {
+        routeName: 'updateFolderHandler',
+        ...deleteFolderBody,
+      };
+      await postRouteAPI(data)
+        .then(() => {
+          toast.success(folderToastMsgConst.deleteFolderSuccessMsg, { rtl: true });
+          showFolderList();
+        })
+        .catch(async (error) => {
+          if (error?.response?.status === 401) {
+            await getNewToken().then(async () => {
+              await postRouteAPI(data).then(() => {
+                showFolderList();
+                toast.success(folderToastMsgConst.deleteFolderSuccessMsg, { rtl: true });
+              });
+            }).catch((error) => {
+              console.error("Error:", error);
+            });
+          }
+        });
+    }
+  };
+
+  const handleAddModalOpen = () => {
+    if (typeOfListdata === "exam") {
+      setIsModelForAddQuestionOpen(true);
+    } else {
+      setIsModelForAddFolderOpen(true);
+    }
+  };
+
+  const handlePreviewQuestion = (question) => {
+    // Here you can implement preview functionality for an exam question.
+    console.log("Preview question:", question);
+  };
+
+  // Drag-and-drop handler for reordering exam questions (only used if in exam mode)
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+    const reordered = Array.from(examQuestions);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+    setExamQuestions(reordered);
+  };
+
+  console.log("questionsData", questionsData);
+
   return (
-    <div className={styles.simulationExamWrapper}>
-      <h1>Simulation Exams</h1>
-      <div className={styles.toolbar}>
-        <button onClick={() => {
-          setIsFolderMode(true);
-          setIsExamModalOpen(true);
-        }}>
-          Add Folder
-        </button>
-        <button onClick={() => {
-          setIsFolderMode(false);
-          setIsExamModalOpen(true);
-        }}>
-          Add Exam
-        </button>
-      </div>
-
-      {/* Exam/Folder Form Modal */}
-      <Modal
-        visible={isExamModalOpen}
-        onCancel={() => setIsExamModalOpen(false)}
-        footer={null}
-        width={800}
-      >
-        <div className={styles.examForm}>
-          <h2>{isFolderMode ? 'Add Folder' : 'Add Exam'}</h2>
-          <div className={styles.formGroup}>
-            <label>Name:</label>
-            <input 
-              type="text"
-              value={examName}
-              onChange={(e) => setExamName(e.target.value)}
-              placeholder="Enter name"
-            />
-          </div>
-
-          { !isFolderMode && (
-            <>
-              {/* Section for selecting an existing question */}
-              <div className={styles.formGroup}>
-                <h3>Available Questions</h3>
-                <ul className={styles.availableQuestions}>
-                  {availableQuestions.map((q) => (
-                    <li key={q.id} className={styles.questionItem}>
-                      <span>{q.text}</span>
-                      <button onClick={() => addQuestionToExam(q)}>Add</button>
-                    </li>
+    <>
+      <div className={styles.tableContainer}>
+        <div>
+          {/* If we are in exam mode, show a back navigation */}
+          {typeOfListdata === "exam" && (
+            <div className={styles.folderDetailsTable}>
+              <BackToPath
+                backpathForTabel={true}
+                backPathArray={[
+                  { lable: 'قائمة الامتحانات', handleClick: showFolderList },
+                  { lable: selectedFolder?.name, link: null },
+                ]}
+              />
+            </div>
+          )}
+          {typeOfListdata === "folder" && (
+            <table className={styles.tableArea}>
+              <thead className={styles.tableHeaderArea}>
+                <tr>
+                  <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>العنوان</th>
+                  <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>
+                    {typeOfListdata === "folder" ? "تاريخ الإنشاء" : "نوع الامتحان"}
+                  </th>
+                  <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ اخر تعديل</th>
+                  <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
+                </tr>
+              </thead>
+              {questionsData.length > 0 && !loading && (
+                <tbody className={styles.tableBodyArea}>
+                  {questionsData.map((item) => (
+                    <tr className={styles.tableRow} key={item.id}>
+                      <td>
+                        <div
+                          className={styles.questionFolderList}
+                          onClick={() => showQuestionsOfSelectedFolder(item)}
+                        >
+                          {typeOfListdata === "folder" ? (
+                            <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />
+                          ) : (
+                            <AllIconsComponenet iconName={'quiz'} height={24} width={24} />
+                          )}
+                          <p className={`cursor-pointer ${styles.numberOfAddedQuestionNames}`}>
+                            {typeOfListdata === "folder"
+                              ? item?.name
+                              : item?.text?.length > 50
+                              ? `${item?.text.substring(0, 50)}...`
+                              : item?.text}
+                          </p>
+                        </div>
+                      </td>
+                      <td>
+                        {typeOfListdata === "folder"
+                          ? fullDate(item?.createdAt)
+                          : item?.examType || "امتحان متدرج"}
+                      </td>
+                      <td>{fullDate(item?.updatedAt)}</td>
+                      <td>
+                        <div className={styles.eventButtons}>
+                          <div onClick={() => handleEditIconClick(item)}>
+                            <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
+                          </div>
+                          {typeOfListdata === "exam" && (
+                            <div onClick={() => handlePreviewQuestion(item)}>
+                              <AllIconsComponenet iconName={'newVisibleIcon'} height={24} width={24} color={'#000000'} />
+                            </div>
+                          )}
+                          <div onClick={() => handleDeleteFolderItems(item)}>
+                            <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
                   ))}
-                </ul>
-                <button 
-                  className={styles.createQuestionButton}
-                  onClick={() => {
-                    setEditingQuestion(null);
-                    setIsAddQuestionModalOpen(true);
-                  }}
-                >
-                  Create New Question
-                </button>
-              </div>
-
-              {/* Section for reordering the exam questions */}
-              <div className={styles.formGroup}>
-                <h3>Selected Questions (Drag to reorder)</h3>
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="selectedQuestions">
-                    {(provided) => (
-                      <ul
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className={styles.selectedQuestionsList}
-                      >
-                        {selectedQuestions.map((question, index) => (
-                          <Draggable key={question.id} draggableId={question.id} index={index}>
-                            {(provided) => (
-                              <li
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={styles.selectedQuestionItem}
+                </tbody>
+              )}
+            </table>
+          )}
+          {typeOfListdata === "exam" && (
+            <div className={styles.examDragAndDropWrapper}>
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="examQuestions">
+                  {(provided) => (
+                    <ul
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={styles.examQuestionsList}
+                    >
+                      {examQuestions.map((question, index) => (
+                        <Draggable key={question.id} draggableId={question.id} index={index}>
+                          {(provided) => (
+                            <li
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={styles.examQuestionItem}
+                            >
+                              <span>{question.text}</span>
+                              <button
+                                className={styles.removeQuestionButton}
+                                onClick={() => {
+                                  setExamQuestions(examQuestions.filter(q => q.id !== question.id));
+                                  toast.info('تم إزالة السؤال من الامتحان');
+                                }}
                               >
-                                <span>{question.text}</span>
-                                <button 
-                                  className={styles.removeQuestionButton}
-                                  onClick={() => removeQuestionFromExam(question.id)}
-                                >
-                                  <AllIconsComponent iconName="cross" height={16} width={16} />
-                                </button>
-                              </li>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </ul>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </div>
-            </>
+                                <AllIconsComponenet iconName={'cross'} height={16} width={16} />
+                              </button>
+                            </li>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </div>
           )}
 
-          <div className={styles.modalActions}>
-            <button onClick={() => setIsExamModalOpen(false)}>Cancel</button>
-            <button onClick={handleCreateExam}>
-              {isFolderMode ? 'Create Folder' : 'Create Exam'}
-            </button>
-          </div>
-        </div>
-      </Modal>
+          {(!loading && questionsData.length > 0) && (
+            <div className={styles.paginationWrapper}>
+              <div className={styles.paginationCenter}>
+                <button onClick={handlePrevPage} disabled={page === 1}>{"<"}</button>
+                <span>صفحة {page} من {totalPages}</span>
+                <button onClick={handleNextPage} disabled={page === totalPages}>{">"}</button>
+              </div>
+              <div className={styles.gotoPageContainer}>
+                <input
+                  type="number"
+                  min="1"
+                  max={totalPages}
+                  value={gotoPage}
+                  onChange={(e) => setGotoPage(e.target.value)}
+                  placeholder="ادخل رقم الصفحة"
+                  className={styles.gotoPageInput}
+                />
+                <button onClick={handleGotoPage} className={styles.gotoPageButton}>
+                  الذهاب للصفحة
+                </button>
+              </div>
+            </div>
+          )}
 
-      {/* The model for adding a new question */}
-      {isAddQuestionModalOpen && (
-        <ModelForAddQuestion
-          isModelForAddQuestionOpen={isAddQuestionModalOpen}
-          selectedQuestion={editingQuestion}
-          selectedFolder={selectedFolder}
-          // Optionally adjust getQuestionsList if required in your use-case
-          getQuestionsList={() => {}}
-          onCloseModal={() => setIsAddQuestionModalOpen(false)}
-          existingItemName={availableQuestions.map(q => q.text)}
-          // You can pass a callback for when a new question is created
-          onSaveNewQuestion={handleNewQuestionCreated}  
+          {questionsData.length === 0 && !loading && (
+            <Empty
+              onClick={handleAddModalOpen}
+              containerhight={448}
+              emptyText={typeOfListdata === 'folder' ? 'لم يتم إضافة مجلد' : 'لم يتم إضافة امتحان'}
+              buttonText={typeOfListdata === 'folder' ? 'إضافة مجلد' : 'إضافة امتحان'}
+            />
+          )}
+          {loading && (
+            <div className={styles.tableBodyArea}>
+              <div className={styles.noDataMainArea}>
+                <div className={`relative ${styles.loadingWrapper}`}>
+                  <Spinner borderwidth={7} width={6} height={6} />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      {isModelForAddFolderOpen && (
+        <ModelWithOneInput
+          open={isModelForAddFolderOpen}
+          setOpen={setIsModelForAddFolderOpen}
+          onSave={editFolder ? handleEditFolder : hendleCreateFolder}
+          isEdit={editFolder}
+          itemName={selectedFolder?.name}
+          onDelete={handleDeleteFolderData}
+          curriCulumSection={'folder'}
         />
       )}
-    </div>
+      {isModelForAddQuestionOpen && (
+        <ModelForAddQuestion
+          isModelForAddQuestionOpen={isModelForAddQuestionOpen}
+          selectedQuestion={selectedQuestion}
+          selectedFolder={selectedFolder}
+          getQuestionsList={returnQuestionsList}
+          onCloseModal={onQuestionModelClose}
+          onDelete={handleDeleteFolderData}
+          existingItemName={existingItemName}
+        />
+      )}
+      {ismodelForDeleteItems && (
+        <ModelForDeleteItems
+          ismodelForDeleteItems={ismodelForDeleteItems}
+          onCloseModal={onCloseModal}
+          deleteItemType={deleteItemType}
+          onDelete={handleDeleteFolderData}
+        />
+      )}
+    </>
   );
 };
 
