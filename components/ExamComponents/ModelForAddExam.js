@@ -450,7 +450,7 @@ const ModelForAddExam = ({
               {questions.length > 0 ? (
                 <>
                   <ul className={styles.availableQuestions}>
-                    {questions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((question) => (
+                    {questions.map((question) => (
                       <li key={question.id} className={styles.questionItem}>
                         <span>{question.text}</span>
                         <button
