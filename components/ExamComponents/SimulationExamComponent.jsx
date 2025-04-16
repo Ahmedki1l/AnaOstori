@@ -365,7 +365,7 @@ const SimulationExamComponent = ({
                                                 {/* Copy Link (only for exams, not folders) */}
                                                 {typeOfListdata === 'exam' && (
                                                     <div onClick={() => handleCopyLink(item._id)}>
-                                                        <AllIconsComponenet iconName='linkIcon' height={24} width={24} />
+                                                        <AllIconsComponenet iconName='copy' height={24} width={24} />
                                                     </div>
                                                 )}
                                                 <div onClick={() => handleDeleteFolderItems(item)}>
