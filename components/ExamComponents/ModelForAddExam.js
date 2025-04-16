@@ -123,6 +123,9 @@ const ModelForAddExam = ({
                     }
                 });
             }
+            if(selectedExam.type) {
+                setExamType(selectedExam.type);
+            }
         } else {
             setExamTitle('');
             setExamInstructions('');
