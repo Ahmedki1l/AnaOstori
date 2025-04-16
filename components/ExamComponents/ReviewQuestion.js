@@ -3,6 +3,7 @@ import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 const ReviewQuestion = ({
+    CurrentExam,
     examData,
     onCompleteExam,
     currentTime,
@@ -86,9 +87,9 @@ const ReviewQuestion = ({
                             </defs>
                         </svg>
                     </div>
-                    <span className={styles.timerText}>{currentTime || "25:00"}</span>
+                    <span className={styles.timerText}>{CurrentExam?.duration + ":00" || "25:00"}</span>
                 </div>
-                <h1 className={styles.examTitle}>عنوان الاختبار هنا</h1>
+                <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
                     className={`${styles.markQuestionBtn} ${isCurrentQuestionMarked ? styles.markQuestionBtnActive : ''}`}
                     onClick={handleMarkQuestion}

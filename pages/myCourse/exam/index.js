@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
+import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
 // import { getAuthRouteAPI } from '../../../services/apisService';
 // import { getNewToken } from '../../../services/fireBaseAuthService';
 import styles from '../../../styles/ExamPage.module.scss';
@@ -16,71 +17,27 @@ import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
 
 const ExamPage = () => {
     const router = useRouter();
-    const { courseId, examId } = router.query;
-    const storeData = useSelector((state) => state?.globalStore);
+    const { examId } = router.query;
 
-    // const [loading, setLoading] = useState(true);
-    const [loading, setLoading] = useState(false); // Set to false for now to skip loading state
+    const [loading, setLoading] = useState(false);
     const [examData, setExamData] = useState(null);
-    const [examStage, setExamStage] = useState('introduction'); // introduction, sections, questions, review, results
+    const [selectedExam, setSelectedExam] = useState();
+    const [examQuestions, setExamQuestions] = useState();
+    const [examStage, setExamStage] = useState('introduction');
     const [examTimer, setExamTimer] = useState('25:00');
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionAnswers, setQuestionAnswers] = useState({});
     const [markedQuestions, setMarkedQuestions] = useState([]);
 
-    /*
-    const selectedCourse = storeData?.myCourses?.find((enrollment) => {
-      return enrollment.courseId === courseId;
-    });
-    
-    useEffect(() => {
-      if (courseId && examId) {
-        fetchExamData();
-      } else if (courseId) {
-        // If we have courseId but not examId, we can use default or first exam
-        setLoading(false);
-      }
-    }, [courseId, examId]);
-    
-    const fetchExamData = async () => {
-      setLoading(true);
-      try {
-        const params = {
-          routeName: 'getExamById',
-          courseId: courseId,
-          examId: examId,
-        };
-        
-        const response = await getAuthRouteAPI(params);
-        setExamData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        if (error?.response?.status === 401) {
-          try {
-            await getNewToken();
-            fetchExamData();
-          } catch (tokenError) {
-            console.log(tokenError);
-            setLoading(false);
-          }
-        } else {
-          setLoading(false);
-        }
-      }
-    };
-    */
-
-
     // Mock exam data for testing (remove this when connecting to real API)
-    const mockExamData = {
+    const [mockExamData, setMockExamData] = useState({
         title: "عنوان الاختبار هنا",
         duration: "25:00",
         subTitle: "تعليمات الاختبار",
         instructions: "(هذا النص قابل للتعديل. هنا تكتب توضيح عن تعليمات الاختبار عشان الطالب يفهم الطريقة وراح تلاحظ انه في بعض الاشياء مختلفة شوي عن تصميم المنصف في القدرات)",
-    };
+    });
 
-    const mockExamData1 = {
+    const [mockExamData1, setMockExamData1] = useState({
         title: "عنوان الاختبار هنا",
         duration: "25:00",
         subTitle: "القسم الأول",
@@ -94,9 +51,9 @@ const ExamPage = () => {
                 title: "مدة الاختبار: 25 دقيقة",
             },
         ]
-    };
+    });
 
-    const mockExamData2 = {
+    const [mockExamData2, setMockExamData2] = useState({
         questions: [
             {
                 id: 1,
@@ -155,26 +112,160 @@ const ExamPage = () => {
                 correctAnswer: 'ج'
             },
         ],
-    };
+    });
+    
+    const [reviewSpecificQuestions, setReviewSpecificQuestions] = useState(mockExamData2);
 
-    // Mock questions for review section
-    const mockReviewQuestions = [
-        { id: 1, answered: false, isMarked: true },
-        { id: 2, answered: true, isMarked: true },
-        { id: 3, answered: false, isMarked: true },
-        { id: 4, answered: false, isMarked: false },
-        { id: 5, answered: false, isMarked: false },
-    ];
+    const [displayExamData, setDisplayExamData] = useState(mockExamData);
 
     const initialReviewQuestions = mockExamData2.questions.map((question, index) => ({
-        id: question.id,
+        id: question._id,
         answered: false,
         isMarked: false,
         selectedAnswer: null
     }));
+    console.log("🚀 ~ initialReviewQuestions ~ mockExamData2:", mockExamData2);
+    console.log("🚀 ~ initialReviewQuestions ~ initialReviewQuestions:", initialReviewQuestions);
 
     const [reviewQuestions, setReviewQuestions] = useState(initialReviewQuestions);
-    const [reviewSpecificQuestions, setReviewSpecificQuestions] = useState(mockExamData2);
+
+    console.log("🚀 ~ ExamPage ~ reviewQuestions:", reviewQuestions);
+
+    useEffect(() => {
+        if (examId) {
+            fetchQuestions();
+        }
+    }, [examId]);
+
+    useEffect(() => {
+        const initialReviewQuestions2 = mockExamData2.questions.map((question, index) => ({
+            id: question._id,
+            answered: false,
+            isMarked: false,
+            selectedAnswer: null
+        }));
+
+        setReviewQuestions(initialReviewQuestions2);
+
+    }, [mockExamData2]);
+
+    useEffect(() => {
+        if (selectedExam) {
+            setMockExamData({
+                title: selectedExam.title || "عنوان الاختبار هنا",
+                duration: (selectedExam.duration ? `${selectedExam.duration}:00` : "25:00"),
+                subTitle: "تعليمات الاختبار",
+                instructions:
+                    selectedExam.instructions ||
+                    "(هذا النص قابل للتعديل. هنا تكتب توضيح …)"
+            });
+            setMockExamData1({
+                title: selectedExam.title || "عنوان الاختبار هنا",
+                duration: (selectedExam.duration ? `${selectedExam.duration}:00` : "25:00"),
+                subTitle: "القسم الأول",
+                details: [
+                    {
+                        iconName: "questionIcon",
+                        title: `عدد الأسئلة: ${selectedExam.questions.length || 5} سؤال`,
+                    },
+                    {
+                        iconName: "clockIcon",
+                        title: `مدة الاختبار: ${(selectedExam.duration ? `${selectedExam.duration}` : "25")} دقيقة`,
+                    },
+                ]
+            })
+            const fetchWithAsync = async () => {
+                const questions = await fetchQuestionsByIds(selectedExam?.questions);
+                setExamQuestions(questions);
+                setMockExamData2({
+                    questions: questions
+                });
+                setReviewSpecificQuestions({
+                    questions: questions
+                });
+            }
+            fetchWithAsync();
+        }
+    }, [selectedExam]);
+
+    useEffect(() => {
+        setDisplayExamData(mockExamData);
+    }, [mockExamData]);
+
+    // Function to fetch questions from API
+    const fetchQuestions = async (page = 1, searchQuery = null) => {
+        setLoading(true);
+        const payload = {
+            routeName: 'getItem',
+            page,
+            limit: 10,
+            type: 'simulationExam',
+            itemId: examId,
+        };
+
+        if (searchQuery) {
+            payload.search = searchQuery;
+        }
+
+        try {
+            const response = await getRouteAPI(payload);
+            if (response?.data) {
+                setSelectedExam(response.data.data[0]);
+            }
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                await getNewToken();
+                const response = await getRouteAPI(payload);
+                if (response?.data) {
+                    setSelectedExam(response.data.data[0]);
+                }
+            } else {
+                toast.error('حدث خطأ أثناء جلب الأسئلة');
+            }
+        }
+        setLoading(false);
+    };
+
+    // Add this function to fetch questions by their IDs
+    const fetchQuestionsByIds = async (questionIds) => {
+        if (!questionIds || questionIds.length === 0) return [];
+        const payload = {
+            routeName: 'getItem',
+            type: 'questions',
+            page: 1,
+            limit: 10,
+            ids: questionIds
+        };
+        try {
+            const response = await getRouteAPI(payload);
+            if (response?.data) {
+                return response.data.data;
+            }
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                await getNewToken();
+                const response = await getRouteAPI(payload);
+                if (response?.data) {
+                    return response.data.data;
+                }
+            } else {
+                toast.error('حدث خطأ أثناء جلب الأسئلة');
+                console.log(error);
+            }
+        }
+        return [];
+    };
+
+    // // Mock questions for review section
+    // const mockReviewQuestions = [
+    //     { id: 1, answered: false, isMarked: true },
+    //     { id: 2, answered: true, isMarked: true },
+    //     { id: 3, answered: false, isMarked: true },
+    //     { id: 4, answered: false, isMarked: false },
+    //     { id: 5, answered: false, isMarked: false },
+    // ];
+
+
 
     // Review section text content
     const reviewSectionTexts = {
@@ -207,7 +298,6 @@ const ExamPage = () => {
         completeLabel: "مكتمل"
     };
 
-    const [displayExamData, setDisplayExamData] = useState(mockExamData);
 
     const handleIntroductionBtn = () => {
         setDisplayExamData(mockExamData1);
@@ -242,7 +332,7 @@ const ExamPage = () => {
             // Filter mockExamData2.questions to get only the incomplete questions
             const incompleteQuestions = {
                 questions: mockExamData2.questions.filter(q =>
-                    incompleteIds.includes(q.id)
+                    incompleteIds.includes(q._id)
                 )
             }
 
@@ -271,7 +361,7 @@ const ExamPage = () => {
             // Filter mockExamData2.questions to get only the incomplete questions
             const markedQuestions = {
                 questions: mockExamData2.questions.filter(q =>
-                    markedIds.includes(q.id)
+                    markedIds.includes(q._id)
                 )
             }
             console.log("🚀 ~ handleReviewMarked ~ markedQuestions:", markedQuestions);
@@ -308,6 +398,9 @@ const ExamPage = () => {
         }
     };
 
+    console.log("examQuestions: ", examQuestions);
+    console.log("selectedExam: ", selectedExam);
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-full">
@@ -334,6 +427,7 @@ const ExamPage = () => {
 
             {examStage === 'questions' && (
                 <ExamQuestions
+                    CurrentExam={selectedExam}
                     examData={displayExamData}
                     onCompleteExam={handleCompleteExam}
                     currentTime={examTimer}
@@ -366,6 +460,7 @@ const ExamPage = () => {
 
             {examStage === 'reviewQuestion' && (
                 <ReviewQuestion
+                    CurrentExam={selectedExam}
                     examData={reviewSpecificQuestions}
                     onCompleteExam={handleCompleteExam}
                     currentTime={examTimer}
@@ -390,7 +485,7 @@ const ExamPage = () => {
                     examData={examData}
                     onRetakeExam={() => setExamStage('introduction')}
                     onViewResults={() => setExamStage('review')}
-                    handleQuestionClick={()=> setExamStage('reviewAnswers')}
+                    handleQuestionClick={() => setExamStage('reviewAnswers')}
                 />
             )}
 
@@ -402,8 +497,8 @@ const ExamPage = () => {
                     reviewQuestions={reviewQuestions}
                     setReviewQuestions={setReviewQuestions}
                     currentQuestionIndex={currentQuestionIndex}
-                    showReviewSection={() => {  }}
-                    finishReview={() => {  }}
+                    showReviewSection={() => { }}
+                    finishReview={() => { }}
                 />
             )}
         </div>

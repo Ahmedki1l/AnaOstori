@@ -393,17 +393,6 @@ const ModelForAddExam = ({
                             placeholder="مثال: 90 دقيقة"
                         />
                     </div>
-                    {/* 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>تاريخ الامتحان</label>
-            <input
-              type="date"
-              className={styles.input}
-              value={examDate}
-              onChange={(e) => setExamDate(e.target.value)}
-            />
-          </div>
-          */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>نوع الامتحان</label>
                         <select

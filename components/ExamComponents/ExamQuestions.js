@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
-const ExamQuestions = ({ examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions }) => {
+const ExamQuestions = ({ CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState({});
 
@@ -26,6 +26,7 @@ const ExamQuestions = ({ examData, onCompleteExam, currentTime, reviewQuestions,
 
     const questions = examData?.questions || mockQuestions;
     const currentQuestion = questions[currentQuestionIndex] || {};
+    console.log("🚀 ~ ExamQuestions ~ currentQuestion:", currentQuestion);
     const totalQuestions = questions.length;
 
     const handleSelectAnswer = (questionId, optionId) => {
@@ -61,7 +62,7 @@ const ExamQuestions = ({ examData, onCompleteExam, currentTime, reviewQuestions,
     const handleMarkQuestion = () => {
         setReviewQuestions((prev) => {
             const updatedQuestions = [...prev];
-            const questionIndex = updatedQuestions.findIndex(q => q.id === currentQuestion.id);
+            const questionIndex = updatedQuestions.findIndex(q => q.id === currentQuestion._id);
             if (questionIndex !== -1) {
                 updatedQuestions[questionIndex] = {
                     ...updatedQuestions[questionIndex],
@@ -72,7 +73,9 @@ const ExamQuestions = ({ examData, onCompleteExam, currentTime, reviewQuestions,
         });
     };
 
-    const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion.id)?.isMarked || false;
+    const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
+    console.log("🚀 ~ ExamQuestions ~ reviewQuestions:", reviewQuestions);
+    
 
     return (
         <div className={styles.examContainer}>
@@ -93,9 +96,9 @@ const ExamQuestions = ({ examData, onCompleteExam, currentTime, reviewQuestions,
                             </defs>
                         </svg>
                     </div>
-                    <span className={styles.timerText}>{currentTime || "25:00"}</span>
+                    <span className={styles.timerText}>{CurrentExam?.duration + ":00" || "25:00"}</span>
                 </div>
-                <h1 className={styles.examTitle}>عنوان الاختبار هنا</h1>
+                <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
                     className={`${styles.markQuestionBtn} ${isCurrentQuestionMarked ? styles.markQuestionBtnActive : ''}`}
                     onClick={handleMarkQuestion}
@@ -135,14 +138,14 @@ const ExamQuestions = ({ examData, onCompleteExam, currentTime, reviewQuestions,
                                 <div
                                     key={option.id}
                                     className={styles.optionRow}
-                                    onClick={() => handleSelectAnswer(currentQuestion.id, option.id)}
+                                    onClick={() => handleSelectAnswer(currentQuestion._id, option.id)}
                                 >
                                     <input
                                         type="radio"
                                         id={`option-${option.id}`}
                                         name="question-option"
                                         className={styles.optionRadio}
-                                        checked={reviewQuestions.find(q => q.id === currentQuestion.id)?.selectedAnswer === option.id}
+                                        checked={reviewQuestions.find(q => q.id === currentQuestion._id)?.selectedAnswer === option.id}
                                         onChange={() => { }}
                                     />
                                     <label className={styles.optionLabel} htmlFor={`option-${option.id}`}>
