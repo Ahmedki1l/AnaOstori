@@ -58,7 +58,7 @@ const SimulationExamComponent = ({
 
   const fetchFolderList = (pageNumber = 1) => {
     // Assume getFolderList returns a promise that resolves with { data: [...], totalDocuments, page, limit, totalPages }
-    getFolderList('exams', pageNumber, limit);
+    getFolderList('simulationExam', pageNumber, limit);
   };
 
   const fetchQuestionsList = (folderId, pageNumber = 1) => {
