@@ -25,9 +25,12 @@ const ModelForAddExam = ({
     const [examDate, setExamDate] = useState('');
     const [coverImageFile, setCoverImageFile] = useState(null);
     const [coverImagePreview, setCoverImagePreview] = useState('');
+    // Add exam type state
+    const [examType, setExamType] = useState('');
 
     // Manage exam questions (to be arranged)
     const [examQuestions, setExamQuestions] = useState([]);
+    const [folders, setFolders] = useState([]);
 
     // Loading and error state
     const [loading, setLoading] = useState(false);
@@ -102,6 +105,89 @@ const ModelForAddExam = ({
         setExamQuestions(examQuestions.filter(q => q.id !== questionId));
         toast.info("تم إزالة السؤال من الامتحان");
     };
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [pageInput, setPageInput] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const [questions, setQuestions] = useState([]);
+    const [selectedFolderId, setSelectedFolderId] = useState('all');    
+    // Function to fetch questions from API
+    const fetchQuestions = async (page = 1) => {
+        setLoading(true);
+        try {
+            const payload = {
+                routeName: 'getItems',
+                page,
+                limit: itemsPerPage,
+                type: 'questions'
+            }
+            
+            if(selectedFolderId !== 'all') {
+                payload.folderId = selectedFolderId;
+            }
+
+            const response = await getRouteAPI(payload);
+
+            if (response?.data) {
+                setQuestions(response.data.data);
+                setTotalPages(response.data.totalPages);
+            }
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                await getNewToken();
+                const response = await getRouteAPI({
+                    routeName: 'getItem',
+                    page,
+                    limit: itemsPerPage,
+                    type: 'questions'
+                });
+
+                if (response?.data) {
+                    setQuestions(response.data.data);
+                    setTotalPages(response.data.totalPages);
+                }
+            } else {
+                toast.error('حدث خطأ أثناء جلب الأسئلة');
+            }
+        }
+        setLoading(false);
+    };
+
+    // Effect to fetch questions on page change
+    useEffect(() => {
+        fetchQuestions(currentPage);
+    }, [currentPage, selectedFolderId]);
+
+    const getfolderList = async () => {
+        setFolders([])
+        setLoading(true)
+        let data = {
+            routeName: 'getFolderByType',
+            type: "simulationExam"
+        }
+
+        await getAuthRouteAPI(data).then((res) => {
+            setFolders(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+            setLoading(false)
+        }).catch(async (error) => {
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    await getAuthRouteAPI(data).then(res => {
+                        setFolders(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+                        setLoading(false)
+                    })
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            setLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        getfolderList();
+    }, [])
 
     // Handle drag and drop reordering of exam questions
     const onDragEnd = (result) => {
@@ -139,11 +225,12 @@ const ModelForAddExam = ({
             title: examTitle,
             instructions: examInstructions,
             duration: examDuration,
-            date: examDate,
+            // date: examDate,
             coverImage: coverImageUrl,
             folderId: selectedFolder?._id,
             questions: examQuestions.map(q => q.id),
-            type: "exams"
+            examType: examType,
+            type: "simulationExam"
         };
 
         let routeName = 'createItem';
@@ -226,14 +313,14 @@ const ModelForAddExam = ({
                     <div className={styles.formGroup}>
                         <label className={styles.label}>مدة الامتحان</label>
                         <input
-                            type="text"
+                            type="number"
                             className={styles.input}
                             value={examDuration}
                             onChange={(e) => setExamDuration(e.target.value)}
                             placeholder="مثال: 90 دقيقة"
                         />
                     </div>
-                    <div className={styles.formGroup}>
+                    {/* <div className={styles.formGroup}>
                         <label className={styles.label}>تاريخ الامتحان</label>
                         <input
                             type="date"
@@ -241,6 +328,20 @@ const ModelForAddExam = ({
                             value={examDate}
                             onChange={(e) => setExamDate(e.target.value)}
                         />
+                    </div> */}
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>نوع الامتحان</label>
+                        <select
+                            className={styles.input}
+                            value={examType}
+                            onChange={(e) => setExamType(e.target.value)}
+                        >
+                            <option value="">اختر نوع الامتحان</option>
+                            <option value="simulationExam">امتحان محاكاة</option>
+                            <option value="practiceExam">امتحان تدريبي</option>
+                            <option value="finalExam">امتحان نهائي</option>
+                        </select>
                     </div>
                     <div className={styles.formGroup}>
                         <label className={styles.label}>صورة الغلاف (اختياري)</label>
@@ -281,23 +382,102 @@ const ModelForAddExam = ({
                         {/* Available Questions List */}
                         <div className={styles.availableQuestionsContainer}>
                             <h4 className={styles.subTitle}>اختر من الأسئلة الموجودة</h4>
-                            {existingQuestions.length > 0 ? (
-                                <ul className={styles.availableQuestions}>
-                                    {existingQuestions.map((question) => (
-                                        <li key={question.id} className={styles.questionItem}>
-                                            <span>{question.text}</span>
-                                            <button
-                                                className={styles.addButton}
-                                                onClick={() => addExistingQuestion(question)}
-                                            >
-                                                إضافة
-                                            </button>
-                                        </li>
+
+                            {/* Search and Filter Section */}
+                            <div className={styles.searchFilterContainer}>
+                                <input
+                                    type="text"
+                                    className={styles.searchInput}
+                                    placeholder="ابحث عن سؤال بالعنوان..."
+                                    onChange={(e) => {
+                                        // Add search logic here
+                                    }}
+                                />
+                                <select
+                                    className={styles.folderSelect}
+                                    value={selectedFolderId}
+                                    onChange={(e) => {
+                                        // Add folder filter logic here
+                                        const folderId = e.target.value;
+                                        setSelectedFolderId(folderId);
+                                    }}
+                                >
+                                    <option value='all'>كل المجلدات</option>
+                                    {folders.map(folder => (
+                                        <option key={folder._id} value={folder._id}>
+                                            {folder.name}
+                                        </option>
                                     ))}
-                                </ul>
+                                </select>
+                            </div>
+
+                            {existingQuestions.length > 0 ? (
+                                <>
+                                    <ul className={styles.availableQuestions}>
+                                        {existingQuestions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((question) => (
+                                            <li key={question.id} className={styles.questionItem}>
+                                                <span>{question.text}</span>
+                                                <button
+                                                    className={styles.addButton}
+                                                    onClick={() => addExistingQuestion(question)}
+                                                >
+                                                    إضافة
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <div className={styles.pagination}>
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            disabled={currentPage === 1}
+                                        >
+                                            السابق
+                                        </button>
+
+                                        <div className={styles.pageNumbers}>
+                                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
+                                                <button
+                                                    key={pageNum}
+                                                    onClick={() => setCurrentPage(pageNum)}
+                                                    className={currentPage === pageNum ? styles.activePage : ''}
+                                                >
+                                                    {pageNum}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <div className={styles.pageJump}>
+                                            <input
+                                                type="number"
+                                                min={1}
+                                                max={totalPages}
+                                                value={pageInput}
+                                                onChange={(e) => setPageInput(e.target.value)}
+                                                onKeyPress={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        const page = parseInt(pageInput);
+                                                        if (page >= 1 && page <= totalPages) {
+                                                            setCurrentPage(page);
+                                                        }
+                                                    }
+                                                }}
+                                            />
+                                            <span>من {totalPages}</span>
+                                        </div>
+
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            disabled={currentPage === totalPages}
+                                        >
+                                            التالي
+                                        </button>
+                                    </div>
+                                </>
                             ) : (
                                 <p className={styles.noQuestionsText}>لا توجد أسئلة متوفرة</p>
                             )}
+
                             <button
                                 className={styles.createQuestionButton}
                                 onClick={() => {
@@ -307,9 +487,7 @@ const ModelForAddExam = ({
                             >
                                 إنشاء سؤال جديد
                             </button>
-                        </div>
-                        {/* Drag-and-Drop List of Selected Questions */}
-                        {examQuestions.length > 0 && (
+                        </div>                        {examQuestions.length > 0 && (
                             <div className={styles.selectedQuestionsSection}>
                                 <h4 className={styles.subTitle}>الأسئلة المحددة (اسحب لترتيبها)</h4>
                                 <DragDropContext onDragEnd={onDragEnd}>
