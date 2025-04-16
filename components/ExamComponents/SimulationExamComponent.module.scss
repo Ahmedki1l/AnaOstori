@@ -1,0 +1,204 @@
+// SimulationExamComponent.module.scss
+
+.simulationExamWrapper {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .toolbar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      color: #fff;
+      background-color: #1890ff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+      
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
+  }
+  
+  .examForm {
+    padding: 20px;
+  
+    h2 {
+      margin-bottom: 16px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+  
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    
+    input[type='text'],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      
+      &:focus {
+        border-color: #1890ff;
+      }
+    }
+  
+    // Used for the available questions list below
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
+  .availableQuestions {
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid #f0f0f0;
+      border-radius: 4px;
+      background-color: #fafafa;
+      margin-bottom: 8px;
+      
+      span {
+        font-size: 14px;
+        color: #555;
+      }
+      
+      button {
+        padding: 4px 10px;
+        font-size: 12px;
+        color: #fff;
+        background-color: #52c41a;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        
+        &:hover {
+          background-color: #73d13d;
+        }
+      }
+    }
+  }
+  
+  .createQuestionButton {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #faad14;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: #ffc069;
+    }
+  }
+  
+  .selectedQuestionsList {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+    
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      background-color: #fafafa;
+      border: 1px solid #f0f0f0;
+      border-radius: 4px;
+      
+      span {
+        flex-grow: 1;
+        font-size: 14px;
+        color: #444;
+      }
+      
+      button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+      }
+    }
+  }
+  
+  .selectedQuestionItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .removeQuestionButton {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  
+  .modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+    
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      color: #fff;
+      background-color: #1890ff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #40a9ff;
+      }
+      
+      &:first-child {
+        background-color: #f5222d;
+        
+        &:hover {
+          background-color: #ff4d4f;
+        }
+      }
+    }
+  }
+  
