@@ -216,6 +216,10 @@ const ModelForAddExam = ({
     getfolderList();
   }, []);
 
+  useEffect(() => {
+    console.log("🚀 ~ questions:", questions);
+  }, [questions]);
+
   // Handle drag and drop reordering of exam questions
   const onDragEnd = (result) => {
     if (!result.destination) return;
