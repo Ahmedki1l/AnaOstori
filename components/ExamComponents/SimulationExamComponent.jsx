@@ -34,6 +34,7 @@ const SimulationExamComponent = ({
   setIsModelForAddQuestionOpen
 }) => {
   const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false);
+  const [isExamModalOpen, setExamModalOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
   const [selectedFolder, setSelectedFolder] = useState(); // exam folder
   const [deleteItemType, setDeleteItemType] = useState('folder');
@@ -62,11 +63,11 @@ const SimulationExamComponent = ({
 
   const fetchQuestionsList = (folderId, pageNumber = 1) => {
     // Assume getQuestionsList returns a promise that resolves with exam questions list
-    getQuestionsList(folderId, 'exams', pageNumber, limit);
+    getQuestionsList(folderId, 'simulationExam', pageNumber, limit);
   };
 
   const returnQuestionsList = (folderId, type) => {
-    getQuestionsList(folderId, 'exams', page, limit);
+    getQuestionsList(folderId, 'simulationExam', page, limit);
   };
 
   const showQuestionsOfSelectedFolder = async (item) => {
@@ -136,7 +137,8 @@ const SimulationExamComponent = ({
       setEditFolder(true);
     } else {
       setSelectedQuestion(item);
-      setIsModelForAddQuestionOpen(true);
+    //   setIsModelForAddQuestionOpen(true);
+      setExamModalOpen(true);
     }
   };
 
@@ -183,6 +185,17 @@ const SimulationExamComponent = ({
   const onQuestionModelClose = () => {
     setSelectedQuestion();
     setIsModelForAddQuestionOpen(false);
+  };
+
+  // Handler to open the modal for adding a new exam
+  const openExamModal = () => {
+    setSelectedExam(null); // clear if you're not editing an exam
+    setExamModalOpen(true);
+  };
+
+  // Handler to close the modal
+  const handleCloseModal = () => {
+    setExamModalOpen(false);
   };
 
   const handleDeleteFolderItems = (item) => {
@@ -253,7 +266,8 @@ const SimulationExamComponent = ({
 
   const handleAddModalOpen = () => {
     if (typeOfListdata === "exam") {
-      setIsModelForAddQuestionOpen(true);
+    //   setIsModelForAddQuestionOpen(true);
+      setExamModalOpen(true);
     } else {
       setIsModelForAddFolderOpen(true);
     }
@@ -457,6 +471,17 @@ const SimulationExamComponent = ({
           onCloseModal={onQuestionModelClose}
           onDelete={handleDeleteFolderData}
           existingItemName={existingItemName}
+        />
+      )}
+      {isExamModalOpen && (
+        <ModelForAddExam
+          isModelForAddExamOpen={isExamModalOpen}
+          selectedExam={selectedExam}
+          selectedFolder={selectedFolder}
+          getExamsList={getExamsList}
+          onCloseModal={handleCloseModal}
+          existingExamNames={existingExamNames}
+          existingQuestions={existingQuestions}
         />
       )}
       {ismodelForDeleteItems && (
