@@ -156,7 +156,7 @@ const ModelForAddExam = ({
 
     // Add an existing question (from available list) to the exam
     const addExistingQuestion = (question) => {
-        const exists = examQuestions.find(q => q.id === question.id);
+        const exists = examQuestions.find(q => q._id === question._id);
         if (!exists) {
             setExamQuestions([...examQuestions, question]);
             toast.success("تمت إضافة السؤال");
