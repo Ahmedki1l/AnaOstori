@@ -305,69 +305,58 @@ const SimulationExamComponent = ({
               />
             </div>
           )}
-          {typeOfListdata === "folder" && (
-            <table className={styles.tableArea}>
-              <thead className={styles.tableHeaderArea}>
-                <tr>
-                  <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>العنوان</th>
-                  <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>
-                    {typeOfListdata === "folder" ? "تاريخ الإنشاء" : "نوع الامتحان"}
-                  </th>
-                  <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ اخر تعديل</th>
-                  <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
-                </tr>
-              </thead>
-              {questionsData.length > 0 && !loading && (
-                <tbody className={styles.tableBodyArea}>
-                  {questionsData.map((item) => (
-                    <tr className={styles.tableRow} key={item.id}>
-                      <td>
-                        <div
-                          className={styles.questionFolderList}
-                          onClick={() => showQuestionsOfSelectedFolder(item)}
-                        >
-                          {typeOfListdata === "folder" ? (
-                            <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />
-                          ) : (
-                            <AllIconsComponenet iconName={'quiz'} height={24} width={24} />
-                          )}
-                          <p className={`cursor-pointer ${styles.numberOfAddedQuestionNames}`}>
-                            {typeOfListdata === "folder"
-                              ? item?.name
-                              : item?.text?.length > 50
-                              ? `${item?.text.substring(0, 50)}...`
-                              : item?.text}
-                          </p>
+          <table className={styles.tableArea}>
+            <thead className={styles.tableHeaderArea}>
+              <tr>
+                <th className={`${styles.tableHeadText} ${styles.tableHead1}`}>العنوان</th>
+                <th className={`${styles.tableHeadText} ${styles.tableHead2}`}>{typeOfListdata === "folder" ? "تاريخ الإنشاء" : "نوع السؤال"}</th>
+                <th className={`${styles.tableHeadText} ${styles.tableHead3}`}>تاريخ اخر تعديل</th>
+                <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
+              </tr>
+            </thead>
+            {questionsData.length > 0 && !loading && (
+              <tbody className={styles.tableBodyArea}>
+                {questionsData.map((item) => (
+                  <tr className={styles.tableRow} key={item.id}>
+                    <td>
+                      <div className={styles.questionFolderList} onClick={() => showQuestionsOfSelectedFolder(item)}>
+                        {typeOfListdata === "folder" ? (
+                          <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} />
+                        ) : (
+                          <AllIconsComponenet iconName={'quiz'} height={24} width={24} />
+                        )}
+                        <p className={`cursor-pointer ${styles.numberOfAddedQuestionNames}`}>
+                          {typeOfListdata === "folder"
+                            ? item?.name
+                            : item?.title?.length > 50
+                              ? `${item?.title.substring(0, 50)}...`
+                              : item?.title}
+                        </p>
+                      </div>
+                    </td>
+                    <td>{typeOfListdata === "folder" ? fullDate(item?.createdAt) : item?.questionType || "متعدد الخيارات"}</td>
+                    <td>{fullDate(item?.updatedAt)}</td>
+                    <td>
+                      <div className={styles.eventButtons}>
+                        <div onClick={() => handleEditIconClick(item)}>
+                          <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
                         </div>
-                      </td>
-                      <td>
-                        {typeOfListdata === "folder"
-                          ? fullDate(item?.createdAt)
-                          : item?.examType || "امتحان متدرج"}
-                      </td>
-                      <td>{fullDate(item?.updatedAt)}</td>
-                      <td>
-                        <div className={styles.eventButtons}>
-                          <div onClick={() => handleEditIconClick(item)}>
-                            <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
+                        {typeOfListdata === "question" && (
+                          <div onClick={() => handlePreviewQuestion(item)}>
+                            <AllIconsComponenet iconName={'newVisibleIcon'} height={24} width={24} color={'#000000'} />
                           </div>
-                          {typeOfListdata === "exam" && (
-                            <div onClick={() => handlePreviewQuestion(item)}>
-                              <AllIconsComponenet iconName={'newVisibleIcon'} height={24} width={24} color={'#000000'} />
-                            </div>
-                          )}
-                          <div onClick={() => handleDeleteFolderItems(item)}>
-                            <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
-                          </div>
+                        )}
+                        <div onClick={() => handleDeleteFolderItems(item)}>
+                          <AllIconsComponenet iconName={'newDeleteIcon'} height={24} width={24} color={'#000000'} />
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-            </table>
-          )}
-          {typeOfListdata === "exam" && (
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
+          </table>
+          {/* {typeOfListdata === "exam" && (
             <div className={styles.examDragAndDropWrapper}>
               <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="examQuestions">
@@ -406,7 +395,7 @@ const SimulationExamComponent = ({
                 </Droppable>
               </DragDropContext>
             </div>
-          )}
+          )} */}
 
           {(!loading && questionsData.length > 0) && (
             <div className={styles.paginationWrapper}>
