@@ -202,6 +202,7 @@ const SimulationExamComponent = ({
   // Handler to close the modal
   const handleCloseModal = () => {
     setExamModalOpen(false);
+    setSelectedExam(null);
   };
 
   const handleDeleteFolderItems = (item) => {
