@@ -170,7 +170,7 @@ const ModelForAddExam = ({
         setLoading(true)
         let data = {
             routeName: 'getFolderByType',
-            type: "simulationExam"
+            type: "questions"
         }
 
         await getAuthRouteAPI(data).then((res) => {
@@ -417,10 +417,10 @@ const ModelForAddExam = ({
                                 </select>
                             </div>
 
-                            {existingQuestions.length > 0 ? (
+                            {questions.length > 0 ? (
                                 <>
                                     <ul className={styles.availableQuestions}>
-                                        {existingQuestions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((question) => (
+                                        {questions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((question) => (
                                             <li key={question.id} className={styles.questionItem}>
                                                 <span>{question.text}</span>
                                                 <button
