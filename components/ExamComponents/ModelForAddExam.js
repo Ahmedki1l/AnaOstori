@@ -99,6 +99,7 @@ const ModelForAddExam = ({
                 }
             } else {
                 toast.error('حدث خطأ أثناء جلب الأسئلة');
+                console.log(error);
             }
         }
         return [];
