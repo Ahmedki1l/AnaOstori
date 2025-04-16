@@ -313,7 +313,7 @@ const ModelForAddExam = ({
                     selectedExam ? examToastMsgConst.updateExamSuccessMsg : examToastMsgConst.addExamSuccessMsg,
                     { rtl: true }
                 );
-                getExamsList(selectedFolder?._id, "simulationExam");
+                getExamsList(selectedFolder?._id);
                 onCloseModal();
             });
         } catch (error) {
@@ -324,7 +324,7 @@ const ModelForAddExam = ({
                         selectedExam ? examToastMsgConst.updateExamSuccessMsg : examToastMsgConst.addExamSuccessMsg,
                         { rtl: true }
                     );
-                    getExamsList(selectedFolder?._id, "simulationExam");
+                    getExamsList(selectedFolder?._id);
                     onCloseModal();
                 });
             } else {
