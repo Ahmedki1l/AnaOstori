@@ -113,20 +113,26 @@ const ModelForAddExam = ({
     const [itemsPerPage] = useState(10);
     const [questions, setQuestions] = useState([]);
     const [selectedFolderId, setSelectedFolderId] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
     // Function to fetch questions from API
-    const fetchQuestions = async (page = 1) => {
+    const fetchQuestions = async (page = 1, searchQuery = null) => {
         setLoading(true);
-        try {
-            const payload = {
-                routeName: 'getItem',
-                page,
-                limit: itemsPerPage,
-                type: 'questions'
-            }
+        const payload = {
+            routeName: 'getItem',
+            page,
+            limit: itemsPerPage,
+            type: 'questions'
+        }
 
-            if (selectedFolderId !== 'all') {
-                payload.folderId = selectedFolderId;
-            }
+        if (selectedFolderId !== 'all') {
+            payload.folderId = selectedFolderId;
+        }
+
+        if(searchQuery) {
+            payload.search = searchQuery;
+        }
+
+        try {
 
             const response = await getRouteAPI(payload);
 
@@ -137,16 +143,6 @@ const ModelForAddExam = ({
         } catch (error) {
             if (error?.response?.status === 401) {
                 await getNewToken();
-                const payload = {
-                    routeName: 'getItem',
-                    page,
-                    limit: itemsPerPage,
-                    type: 'questions'
-                }
-
-                if (selectedFolderId !== 'all') {
-                    payload.folderId = selectedFolderId;
-                }
                 const response = await getRouteAPI(payload);
 
                 if (response?.data) {
@@ -395,8 +391,16 @@ const ModelForAddExam = ({
                                     type="text"
                                     className={styles.searchInput}
                                     placeholder="ابحث عن سؤال بالعنوان..."
-                                    onChange={(e) => {
-                                        // Add search logic here
+                                    defaultValue={searchQuery}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            setSearchQuery(e.target.value);
+                                            fetchQuestions(1, e.target.value);
+                                        }
+                                    }}
+                                    onBlur={(e) => {
+                                        setSearchQuery(e.target.value);
+                                        fetchQuestions(1, e.target.value);
                                     }}
                                 />
                                 <select
