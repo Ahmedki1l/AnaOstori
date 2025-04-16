@@ -472,7 +472,7 @@ const SimulationExamComponent = ({
           isModelForAddExamOpen={isExamModalOpen}
           selectedExam={selectedExam}
           selectedFolder={selectedFolder}
-          getExamsList={getExamsList}
+          getExamsList={getQuestionsList}
           onCloseModal={handleCloseModal}
           existingQuestions={existingQuestions}
         />
