@@ -32,10 +32,11 @@ const SimulationExamComponent = ({
   isModelForAddFolderOpen,
   setIsModelForAddFolderOpen,
   isModelForAddQuestionOpen,
-  setIsModelForAddQuestionOpen
+  setIsModelForAddQuestionOpen,
+  isExamModalOpen,
+  setExamModalOpen
 }) => {
   const [ismodelForDeleteItems, setIsmodelForDeleteItems] = useState(false);
-  const [isExamModalOpen, setExamModalOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState();
   const [selectedQuestion, setSelectedQuestion] = useState();
   const [selectedFolder, setSelectedFolder] = useState(); // exam folder

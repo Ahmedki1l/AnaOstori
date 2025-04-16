@@ -25,6 +25,7 @@ function Index() {
     const [isModelForAddItemOpen, setIsModelForAddItemOpen] = useState(false)
     const [isModelForAddQuestionFolderOpen, setIsModelForAddQuestionFolderOpen] = useState(false);
     const [isModelForAddQuestionOpen, setIsModelForAddQuestionOpen] = useState(false);
+    const [isExamModalOpen, setExamModalOpen] = useState(false);
     const [typeOfListdata, setTypeOfListData] = useState('folder') // folder or item
     const [folderList, setFolderList] = useState([])
     const [selectedFolderId, setSelectedFolderId] = useState()
@@ -151,6 +152,9 @@ function Index() {
         }
         else if (typeOfListdata == 'question') {
             setIsModelForAddQuestionOpen(true);
+        }
+        else if (typeOfListdata == 'simulationExam') {
+            setExamModalOpen(true);
         }
         else {
             setIsModelForAddFolderOpen(true);
@@ -302,6 +306,8 @@ function Index() {
                                     setIsModelForAddFolderOpen={setIsModelForAddQuestionFolderOpen}
                                     isModelForAddQuestionOpen={isModelForAddQuestionOpen}
                                     setIsModelForAddQuestionOpen={setIsModelForAddQuestionOpen}
+                                    isExamModalOpen={isExamModalOpen}
+                                    setExamModalOpen={setExamModalOpen}
                                 />
                             }
                         </div>
