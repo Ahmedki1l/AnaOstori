@@ -97,7 +97,7 @@ const ModelForAddQuestion = ({
         "الدائرة",
         "أفكار خاصة بالهندسة",
         "الإحصاء"
-      ];
+    ];
 
     const complementarySkills = complementary.map((skill) => {
         return "كمي - " + skill;
@@ -432,13 +432,16 @@ const ModelForAddQuestion = ({
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>صعوبة السؤال</label>
-                        <input
-                            type="text"
+                        <select
                             className={styles.input}
                             value={difficulty}
-                            onChange={(e) => setDifficulty(e.target.value)}
-                            placeholder="سهل"
-                        />
+                            onChange={e => setDifficulty(e.target.value)}
+                        >
+                            <option value="" disabled>اختر مستوى الصعوبة</option>
+                            <option value="سهل">سهل</option>
+                            <option value="متوسط">متوسط</option>
+                            <option value="صعب">صعب</option>
+                        </select>
                     </div>
 
                     <div className={styles.formGroup}>
