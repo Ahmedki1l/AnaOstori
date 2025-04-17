@@ -182,7 +182,7 @@ export default function CourseDetailsHeader(props) {
 													{lang === 'en' ? "Dammam:" : "الدمام:"}
 												</p>
 												{/* Second group */}
-												<div className={`flex items-center ${(screenWidth > 767) ? "" : `ml-6 mr-6 mt-2 mb-2`}`}>
+												<div className={`flex items-center ${(screenWidth > 767) ? "ml-2 mr-2" : `ml-6 mr-6 mt-2 mb-2`}`}>
 													<a
 														href="https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7"
 														target="_blank"
@@ -205,7 +205,7 @@ export default function CourseDetailsHeader(props) {
 													{lang === 'en' ? "Jeddah:" : "جدة:"}
 												</p>
 												{/* Third group */}
-												<div className={`flex items-center ${(screenWidth > 767) ? "" : `ml-6 mr-6 mt-2 mb-2`}`}>
+												<div className={`flex items-center ${(screenWidth > 767) ? "ml-2 mr-2" : `ml-6 mr-6 mt-2 mb-2`}`}>
 													<a
 														href="https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6"
 														target="_blank"
