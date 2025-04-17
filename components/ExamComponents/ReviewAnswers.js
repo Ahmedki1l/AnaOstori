@@ -55,7 +55,7 @@ const ReviewAnswers = ({
     const handleMarkQuestion = () => {
         setReviewQuestions((prev) => {
             const updatedQuestions = [...prev];
-            const questionIndex = updatedQuestions.findIndex(q => q.id === currentQuestion.id);
+            const questionIndex = updatedQuestions.findIndex(q => q.id === currentQuestion._id);
             if (questionIndex !== -1) {
                 updatedQuestions[questionIndex] = {
                     ...updatedQuestions[questionIndex],
@@ -66,13 +66,13 @@ const ReviewAnswers = ({
         });
     };
 
-    const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion.id)?.isMarked || false;
+    const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
 
     return (
         <div className={styles.examContainer}>
             <div className={styles.examHeader}>
                 <div className={styles.timerContainer}>
-                    <div style={{ width: '28px', height: '28px' }} >
+                    {/* <div style={{ width: '28px', height: '28px' }} >
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="29" viewBox="0 0 28 29" fill="none">
                             <g clip-path="url(#clip0_194_3803)">
                                 <path opacity="0.3" d="M14.0007 7.5C9.48565 7.5 5.83398 11.1517 5.83398 15.6667C5.83398 20.1817 9.48565 23.8333 14.0007 23.8333C18.5157 23.8333 22.1673 20.1817 22.1673 15.6667C22.1673 11.1517 18.5157 7.5 14.0007 7.5ZM15.1673 16.8333H12.834V9.83333H15.1673V16.8333Z" fill="#19A337" />
@@ -87,12 +87,12 @@ const ReviewAnswers = ({
                             </defs>
                         </svg>
                     </div>
-                    <span className={styles.timerText}>{CurrentExam?.duration + ":00" || "25:00"}</span>
+                    <span className={styles.timerText}>{CurrentExam?.duration + ":00" || "25:00"}</span> */}
                 </div>
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
                     className={`${styles.markQuestionBtn} ${isCurrentQuestionMarked ? styles.markQuestionBtnActive : ''}`}
-                    onClick={handleMarkQuestion}
+                    // onClick={handleMarkQuestion}
                 >
                     <div style={{ width: '15px', height: '17px' }} >
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 15 18" fill="none">

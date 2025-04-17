@@ -1,40 +1,155 @@
 import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamResults = ({ examData, onReviewAnswers, onRetakeExam }) => {
+const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onReviewAnswers, onRetakeExam }) => {
     // Mock data - replace with actual data from props
-    const results = {
-        score: 70,
-        totalTime: 25,
-        timeSpent: 15,
-        correctQuestions: 24,
-        wrongQuestions: 8,
-        unansweredQuestions: 3,
-        markedQuestions: 6,
-        sections: [
-            {
-                title: "القسم اللفظي",
-                score: 70,
-                skills: [
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 }
-                ]
-            },
-            {
-                title: "القسم الكمي",
-                score: 70,
-                skills: [
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 },
-                    { title: "عنوان المهارة هنا", score: 24.5 }
-                ]
+    // Calculate score based on examData and reviewQuestions
+    const totalQuestions = reviewQuestions.length;
+
+    const calculateScore = (examData, reviewQuestions) => {
+        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+            return 0;
+        }
+
+        let correctAnswers = 0;
+
+        reviewQuestions.forEach((question, i) => {
+            if (question.selectedAnswer === examData[i].correctAnswer) {
+                correctAnswers++;
             }
-        ],
+        });
+
+        return Math.round((correctAnswers / totalQuestions) * 100);
+    };
+
+    const getCorrectAnswers = (examData, reviewQuestions) => {
+        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+            return 0;
+        }
+
+        let correctAnswers = 0;
+
+        reviewQuestions.forEach((question, i) => {
+            if (question.selectedAnswer === examData[i].correctAnswer) {
+                correctAnswers++;
+            }
+        });
+
+        return correctAnswers;
+    };
+
+    const getNotAnsweredQuestions = () => {
+        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+            return 0;
+        }
+
+        let answers = 0;
+
+        reviewQuestions.forEach((question, i) => {
+            if (!question.answered) {
+                answers++;
+            }
+        });
+
+        return answers;
+    }
+
+    const getMarkedQuestions = () => {
+        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+            return 0;
+        }
+
+        let answers = 0;
+
+        reviewQuestions.forEach((question, i) => {
+            if (question.isMarked) {
+                answers++;
+            }
+        });
+
+        return answers;
+    }
+
+    const getSections = (examData, reviewQuestions) => {
+        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+            return [];
+        }
+
+        // Group questions by section (text before "-")
+        const sectionMap = new Map();
+
+        examData.forEach((question, index) => {
+            question.skills.forEach(skill => {
+                const sectionTitle = skill.text.split('-')[0].trim();
+
+                if (!sectionMap.has(sectionTitle)) {
+                    sectionMap.set(sectionTitle, {
+                        title: sectionTitle,
+                        questions: [],
+                        skills: new Map()
+                    });
+                }
+
+                const section = sectionMap.get(sectionTitle);
+                section.questions.push({
+                    question,
+                    selectedAnswer: reviewQuestions[index].selectedAnswer,
+                    skill: skill.text
+                });
+
+                // Group by skill within section
+                if (!section.skills.has(skill.text)) {
+                    section.skills.set(skill.text, []);
+                }
+                section.skills.get(skill.text).push({
+                    question,
+                    selectedAnswer: reviewQuestions[index].selectedAnswer
+                });
+            });
+        });
+
+        // Calculate scores for sections and skills
+        return Array.from(sectionMap.values()).map(section => {
+            const correctInSection = section.questions.filter(q =>
+                q.selectedAnswer === q.question.correctAnswer
+            ).length;
+
+            const sectionScore = Math.round((correctInSection / section.questions.length) * 100);
+
+            const skills = Array.from(section.skills.entries()).map(([skillTitle, questions]) => {
+                const correctInSkill = questions.filter(q =>
+                    q.selectedAnswer === q.question.correctAnswer
+                ).length;
+
+                return {
+                    title: skillTitle,
+                    score: Math.round((correctInSkill / questions.length) * 100)
+                };
+            });
+
+            return {
+                title: section.title,
+                score: sectionScore,
+                skills: skills
+            };
+        });
+    };
+
+    const score = calculateScore(examData, reviewQuestions);
+    const correctAnswers = getCorrectAnswers(examData, reviewQuestions);
+    const unAnswered = getNotAnsweredQuestions();
+    const marked = getMarkedQuestions();
+    const sections = getSections(examData, reviewQuestions);
+
+    const results = {
+        score: score,
+        totalTime: totalTime,
+        timeSpent: elapsedTime,
+        correctQuestions: correctAnswers,
+        wrongQuestions: totalQuestions - correctAnswers,
+        unansweredQuestions: unAnswered,
+        markedQuestions: marked,
+        sections: sections,
         sectionDetails: [
             { title: "القسم X", score: 24.5, time: "x دقيقة" },
             { title: "القسم X", score: 24.5, time: "x دقيقة" },
@@ -42,6 +157,7 @@ const ExamResults = ({ examData, onReviewAnswers, onRetakeExam }) => {
             { title: "القسم X", score: 24.5, time: "x دقيقة" }
         ]
     };
+    console.log("🚀 ~ ExamResults ~ results:", results)
 
     // Render progress circle with percentage
     const ProgressCircle = ({ percentage, size = 100, displayText = true }) => {

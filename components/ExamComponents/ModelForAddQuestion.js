@@ -69,6 +69,45 @@ const ModelForAddQuestion = ({
         }
     }, [selectedQuestion]);
 
+    const verbal = [
+        "إكمال الجمل",
+        "الخطأ السياقي",
+        "التناظر اللفظي",
+        "الارتباط والاختلاف",
+        "استيعاب المقروء",
+        "المفردة الشاذة"
+    ];
+
+    const verbalSkills = verbal.map((skill) => {
+        return "لفظي - " + skill;
+    });
+
+    const complementary = [
+        "العمليات الأساسية",
+        "الكسور الاعتيادية",
+        "الكسور العشرية",
+        "أفكار خاصة بالقدرات",
+        "النسب والتناسب",
+        "الأنسس والمتطابقات",
+        "الجذور",
+        "المعادلات والمتباينات",
+        "الزوايا والمضلعات",
+        "المثلث",
+        "المضلعات الرباعية",
+        "الدائرة",
+        "أفكار خاصة بالهندسة",
+        "الإحصاء"
+      ];
+
+    const complementarySkills = complementary.map((skill) => {
+        return "كمي - " + skill;
+    })
+
+    const ALL_SKILLS = [
+        ...verbalSkills,
+        ...complementarySkills,
+    ];
+
     const handleOptionChange = (index, value) => {
         const newOptions = [...options];
         newOptions[index].text = value;
@@ -404,32 +443,46 @@ const ModelForAddQuestion = ({
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>المهارات</label>
-                        {skills.map((skill, index) => (
-                            <div key={skill.id} className={styles.skillRow}>
-                                <div className={styles.optionLabel}>{index + 1}</div>
-                                <input
-                                    type="text"
-                                    className={styles.input}
-                                    value={skill.text}
-                                    onChange={(e) => handleSkillChange(index, e.target.value)}
-                                    placeholder="أضف المهارة هنا"
-                                />
-                                <button
-                                    type="button"
-                                    className={styles.removeButton}
-                                    onClick={() => handleRemoveSkill(index)}
-                                >
-                                    &#x2715; {/* Cross icon */}
-                                </button>
-                            </div>
-                        ))}
+
+                        {skills.map((skill, index) => {
+                            // compute which skills are still available for this slot:
+                            const used = skills.map((s) => s.text).filter((t) => t && t !== skill.text);
+                            const options = ALL_SKILLS.filter((s) => !used.includes(s));
+
+                            return (
+                                <div key={skill.id} className={styles.skillRow}>
+                                    <div className={styles.optionLabel}>{index + 1}</div>
+                                    <select
+                                        className={styles.input}
+                                        value={skill.text}
+                                        onChange={(e) => handleSkillChange(index, e.target.value)}
+                                    >
+                                        <option value="">اختر مهارة...</option>
+                                        {options.map((opt) => (
+                                            <option key={opt} value={opt}>
+                                                {opt}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        type="button"
+                                        className={styles.removeButton}
+                                        onClick={() => handleRemoveSkill(index)}
+                                    >
+                                        &#x2715;
+                                    </button>
+                                </div>
+                            );
+                        })}
+
                         <div className={styles.buttonGroup}>
                             <button
                                 type="button"
                                 onClick={handleAddSkill}
                                 className={styles.addButton}
+                                disabled={skills.length >= ALL_SKILLS.length}
                             >
-                                &#43; {/* Plus icon */}
+                                &#43;
                             </button>
                             <button
                                 type="button"
@@ -437,7 +490,7 @@ const ModelForAddQuestion = ({
                                 className={styles.removeLastButton}
                                 disabled={skills.length === 0}
                             >
-                                &#x2212; {/* Minus sign */}
+                                &#x2212;
                             </button>
                         </div>
                     </div>

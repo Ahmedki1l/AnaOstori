@@ -3,6 +3,7 @@ import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 const ReviewQuestion = ({
+    timeLeft,
     CurrentExam,
     examData,
     onCompleteExam,
@@ -11,7 +12,8 @@ const ReviewQuestion = ({
     setReviewQuestions,
     currentQuestionIndex,
     showReviewSection,
-    finishReview
+    finishReview,
+    formatTime
 }) => {
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [currentReviewQuestionIndex, setCurrentReviewQuestionIndex] = useState(currentQuestionIndex);
@@ -55,7 +57,7 @@ const ReviewQuestion = ({
     const handleMarkQuestion = () => {
         setReviewQuestions((prev) => {
             const updatedQuestions = [...prev];
-            const questionIndex = updatedQuestions.findIndex(q => q.id === currentQuestion.id);
+            const questionIndex = updatedQuestions.findIndex(q => q.id === currentQuestion._id);
             if (questionIndex !== -1) {
                 updatedQuestions[questionIndex] = {
                     ...updatedQuestions[questionIndex],
@@ -65,8 +67,8 @@ const ReviewQuestion = ({
             return updatedQuestions;
         });
     };
-    
-    const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion.id)?.isMarked || false;
+
+    const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
 
     return (
         <div className={styles.examContainer}>
@@ -87,7 +89,7 @@ const ReviewQuestion = ({
                             </defs>
                         </svg>
                     </div>
-                    <span className={styles.timerText}>{CurrentExam?.duration + ":00" || "25:00"}</span>
+                    <span className={styles.timerText}>{formatTime(timeLeft)}</span>
                 </div>
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
@@ -129,14 +131,14 @@ const ReviewQuestion = ({
                                 <div
                                     key={option.id}
                                     className={styles.optionRow}
-                                    onClick={() => handleSelectAnswer(currentQuestion.id, option.id)}
+                                    onClick={() => handleSelectAnswer(currentQuestion._id, option.id)}
                                 >
                                     <input
                                         type="radio"
                                         id={`option-${option.id}`}
                                         name="question-option"
                                         className={styles.optionRadio}
-                                        checked={reviewQuestions.find(q => q.id === currentQuestion.id)?.selectedAnswer === option.id}
+                                        checked={reviewQuestions.find(q => q.id === currentQuestion._id)?.selectedAnswer === option.id}
                                         onChange={() => { }}
                                     />
                                     <label className={styles.optionLabel} htmlFor={`option-${option.id}`}>
@@ -163,13 +165,14 @@ const ReviewQuestion = ({
                         </button>
                     }
 
-                    <button
-                        className={styles.nextButton}
-                        onClick={handleNextQuestion}
-                    >
-                        <span>التالي</span>
-                        <AllIconsComponenet iconName="arrowLeft" height={16} width={16} color="#FFFFFF" />
-                    </button>
+                    {(currentReviewQuestionIndex + 1) < totalQuestions &&
+                        <button
+                            className={styles.nextButton}
+                            onClick={handleNextQuestion}
+                        >
+                            <span>التالي</span>
+                            <AllIconsComponenet iconName="arrowLeft" height={16} width={16} color="#FFFFFF" />
+                        </button>}
                 </div>
 
                 <div className={styles.examActions2}>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
-const ExamQuestions = ({ CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions }) => {
+const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions, formatTime }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState({});
 
@@ -96,7 +96,7 @@ const ExamQuestions = ({ CurrentExam, examData, onCompleteExam, currentTime, rev
                             </defs>
                         </svg>
                     </div>
-                    <span className={styles.timerText}>{CurrentExam?.duration + ":00" || "25:00"}</span>
+                    <span className={styles.timerText}>{ formatTime(timeLeft) }</span>
                 </div>
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
@@ -174,7 +174,7 @@ const ExamQuestions = ({ CurrentExam, examData, onCompleteExam, currentTime, rev
                     className={styles.nextButton}
                     onClick={handleNextQuestion}
                 >
-                    <span>التالي</span>
+                    <span>{(currentQuestionIndex + 1 < totalQuestions) ? "التالي" : "شاشة المراجعة"}</span>
                     <AllIconsComponenet iconName="arrowLeft" height={16} width={16} color="#FFFFFF" />
                 </button>
 

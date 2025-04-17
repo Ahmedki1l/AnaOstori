@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamSectionsReview = ({ examData, onRetakeExam, onViewResults, handleQuestionClick }) => {
+const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, onRetakeExam, onViewResults, handleQuestionClick }) => {
     const [expandedSections, setExpandedSections] = useState([0]); // First section expanded by default
 
     const toggleSection = (index) => {
@@ -12,80 +12,53 @@ const ExamSectionsReview = ({ examData, onRetakeExam, onViewResults, handleQuest
         }
     };
 
+    const totalQuestions = reviewQuestions.length;
+
+    const calculateScore = (examData, reviewQuestions) => {
+        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+            return 0;
+        }
+
+        let correctAnswers = 0;
+
+        reviewQuestions.forEach((question, i) => {
+            if (question.selectedAnswer === examData[i].correctAnswer) {
+                correctAnswers++;
+            }
+        });
+
+        return {
+            percentage: Math.round((correctAnswers / totalQuestions) * 100),
+            score: `${correctAnswers} / ${totalQuestions}`
+        };
+    };
+
+    const percentage = calculateScore(examData, reviewQuestions).percentage;
+    const score = calculateScore(examData, reviewQuestions).score;
+
+    const sectionQuestions = examData.map((question, i) => {
+        const status = reviewQuestions[i].selectedAnswer === question.correctAnswer ? 'correct' :
+            reviewQuestions[i].selectedAnswer === null ? 'incomplete' : 'wrong';
+
+        return {
+            id: i+1,
+            status: status,
+            isMarked: reviewQuestions[i].isMarked || false
+        };
+    });
+
     // Mock data - replace with actual data from props
     const sections = [
         {
             title: "القسم الأول",
-            time: "5 دقائق",
-            score: "24/5",
-            percentage: 70,
-            questions: [
-                { id: 1, status: "wrong", isMarked: true },
-                { id: 1, status: "wrong", isMarked: false },
-                { id: 1, status: "incomplete", isMarked: true },
-                { id: 1, status: "incomplete", isMarked: false },
-                { id: 1, status: "correct", isMarked: true },
-                { id: 1, status: "correct", isMarked: false }
-            ]
-        },
-        {
-            title: "القسم الثاني",
-            time: "10 دقائق",
-            score: "24/5",
-            percentage: 70,
-            questions: [
-                { id: 1, status: "wrong", isMarked: true },
-                { id: 1, status: "wrong", isMarked: false },
-                { id: 1, status: "incomplete", isMarked: true },
-                { id: 1, status: "incomplete", isMarked: false },
-                { id: 1, status: "correct", isMarked: true },
-                { id: 1, status: "correct", isMarked: false }
-            ]
-        },
-        {
-            title: "القسم الثالث",
-            time: "3 دقائق",
-            score: "24/5",
-            percentage: 70,
-            questions: [
-                { id: 1, status: "wrong", isMarked: true },
-                { id: 1, status: "wrong", isMarked: false },
-                { id: 1, status: "incomplete", isMarked: true },
-                { id: 1, status: "incomplete", isMarked: false },
-                { id: 1, status: "correct", isMarked: true },
-                { id: 1, status: "correct", isMarked: false }
-            ]
-        },
-        {
-            title: "القسم الرابع",
-            time: "11 دقيقة",
-            score: "24/5",
-            percentage: 70,
-            questions: [
-                { id: 1, status: "wrong", isMarked: true },
-                { id: 1, status: "wrong", isMarked: false },
-                { id: 1, status: "incomplete", isMarked: true },
-                { id: 1, status: "incomplete", isMarked: false },
-                { id: 1, status: "correct", isMarked: true },
-                { id: 1, status: "correct", isMarked: false }
-            ]
-        },
-        {
-            title: "القسم الخامس",
-            time: "20 دقيقة",
-            score: "24/5",
-            percentage: 70,
-            questions: [
-                { id: 1, status: "wrong", isMarked: true },
-                { id: 1, status: "wrong", isMarked: false },
-                { id: 1, status: "incomplete", isMarked: true },
-                { id: 1, status: "incomplete", isMarked: false },
-                { id: 1, status: "correct", isMarked: true },
-                { id: 1, status: "correct", isMarked: false }
-            ]
+            time: elapsedTime,
+            score: score,
+            percentage: percentage,
+            questions: sectionQuestions
         }
     ];
 
+    console.log("🚀 ~ ExamSectionsReview ~ sections:", sections);
     // Status indicator based on question status
     const StatusIcon = ({ status }) => {
         switch (status) {

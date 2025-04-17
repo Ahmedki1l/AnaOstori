@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
@@ -28,6 +28,18 @@ const ExamPage = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionAnswers, setQuestionAnswers] = useState({});
     const [markedQuestions, setMarkedQuestions] = useState([]);
+
+    // near the top of your component
+    // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
+    const [timeLeft, setTimeLeft] = useState(0);
+    const timerRef = useRef(null);
+
+    // format seconds → "MM:SS"
+    const formatTime = secs => {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    };
 
     // Mock exam data for testing (remove this when connecting to real API)
     const [mockExamData, setMockExamData] = useState({
@@ -113,7 +125,7 @@ const ExamPage = () => {
             },
         ],
     });
-    
+
     const [reviewSpecificQuestions, setReviewSpecificQuestions] = useState(mockExamData2);
 
     const [displayExamData, setDisplayExamData] = useState(mockExamData);
@@ -185,12 +197,49 @@ const ExamPage = () => {
                 });
             }
             fetchWithAsync();
+
+            setTimeLeft(selectedExam.duration * 60);
         }
     }, [selectedExam]);
 
     useEffect(() => {
         setDisplayExamData(mockExamData);
     }, [mockExamData]);
+
+    useEffect(() => {
+        if (timeLeft <= 0 || examStage == 'introduction' || examStage == 'sections' || examStage == 'results') return;
+        timerRef.current = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timerRef.current);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [timeLeft, examStage]);
+
+    // ────── 4) When we transition to 'results', stop timer & compute elapsed ──────
+    const [elapsedSeconds, setElapsedSeconds] = useState(null);
+    const [elapsedFormatted, setElapsedFormatted] = useState(null);
+
+    useEffect(() => {
+        if (examStage !== 'results') return;
+        // kill interval if still running
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+        // initial total
+        const initial = (selectedExam?.duration || 0) * 60;
+        const used = initial - timeLeft;
+        setElapsedSeconds(used);
+        setElapsedFormatted(formatTime(used));
+    }, [examStage]);
 
     // Function to fetch questions from API
     const fetchQuestions = async (page = 1, searchQuery = null) => {
@@ -255,17 +304,6 @@ const ExamPage = () => {
         }
         return [];
     };
-
-    // // Mock questions for review section
-    // const mockReviewQuestions = [
-    //     { id: 1, answered: false, isMarked: true },
-    //     { id: 2, answered: true, isMarked: true },
-    //     { id: 3, answered: false, isMarked: true },
-    //     { id: 4, answered: false, isMarked: false },
-    //     { id: 5, answered: false, isMarked: false },
-    // ];
-
-
 
     // Review section text content
     const reviewSectionTexts = {
@@ -382,8 +420,11 @@ const ExamPage = () => {
         setExamStage('results');
     };
 
+
+
     const handleQuestionClick = (index) => {
         console.log("🚀 ~ handleQuestionClick ~ index:", index);
+        setReviewSpecificQuestions(mockExamData2);
         setCurrentQuestionIndex(index);
         setExamStage('reviewQuestion');
     };
@@ -397,6 +438,11 @@ const ExamPage = () => {
             setReviewQuestions(updatedQuestions);
         }
     };
+
+    const handleRetakeExam = () => {
+        setDisplayExamData(mockExamData);
+        setExamStage('introduction')
+    }
 
     console.log("examQuestions: ", examQuestions);
     console.log("selectedExam: ", selectedExam);
@@ -427,6 +473,8 @@ const ExamPage = () => {
 
             {examStage === 'questions' && (
                 <ExamQuestions
+                    formatTime={formatTime}
+                    timeLeft={timeLeft}
                     CurrentExam={selectedExam}
                     examData={displayExamData}
                     onCompleteExam={handleCompleteExam}
@@ -438,6 +486,7 @@ const ExamPage = () => {
 
             {examStage === 'review' && (
                 <ReviewSection
+                    timeLeft={timeLeft}
                     title={reviewSectionTexts.title}
                     examTitle={reviewSectionTexts.examTitle}
                     currentTime={reviewSectionTexts.currentTime}
@@ -460,6 +509,8 @@ const ExamPage = () => {
 
             {examStage === 'reviewQuestion' && (
                 <ReviewQuestion
+                    formatTime={formatTime}
+                    timeLeft={timeLeft}
                     CurrentExam={selectedExam}
                     examData={reviewSpecificQuestions}
                     onCompleteExam={handleCompleteExam}
@@ -474,16 +525,21 @@ const ExamPage = () => {
 
             {examStage === 'results' && (
                 <ExamResults
-                    examData={examData}
+                    elapsedTime={elapsedFormatted}
+                    totalTime={selectedExam.duration + ":00" || "25:00"}
+                    examData={examQuestions}
+                    reviewQuestions={reviewQuestions}
                     onReviewAnswers={() => setExamStage('sectionsReview')}
-                    onRetakeExam={() => setExamStage('introduction')}
+                    onRetakeExam={() => handleRetakeExam()}
                 />
             )}
 
             {examStage === 'sectionsReview' && (
                 <ExamSectionsReview
-                    examData={examData}
-                    onRetakeExam={() => setExamStage('introduction')}
+                    examData={examQuestions}
+                    elapsedTime={elapsedFormatted}
+                    reviewQuestions={reviewQuestions}
+                    onRetakeExam={() => handleRetakeExam()}
                     onViewResults={() => setExamStage('review')}
                     handleQuestionClick={() => setExamStage('reviewAnswers')}
                 />
