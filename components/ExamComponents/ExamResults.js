@@ -381,7 +381,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
             </div>
 
             {/* Section details */}
-            <div className={styles.sectionDetailsContainer}>
+            {/* <div className={styles.sectionDetailsContainer}>
                 <table className={styles.detailsTable}>
                     <thead >
                         تفاصيل الأقسام
@@ -403,7 +403,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div> */}
 
             {/* Action buttons */}
             <div className={styles.actionButtons}>

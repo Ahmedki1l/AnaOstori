@@ -212,6 +212,7 @@ const ExamPage = () => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
                     clearInterval(timerRef.current);
+                    setExamStage('results');
                     return 0;
                 }
                 return prev - 1;
