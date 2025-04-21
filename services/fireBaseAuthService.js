@@ -110,6 +110,5 @@ export const getNewToken = async () => {
 		console.log('User is not signed in');
 		await signOutUser();
 		Router.push('/login');
-		throw new Error("User is not signed in");
 	}
 };
