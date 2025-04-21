@@ -321,7 +321,25 @@ const Index = () => {
                         }
                     </>
                     :
-                    <div>Please Enrolled Your self to access this course</div>
+                    <div
+                        style="
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            padding: 1rem 2rem;
+                            background: #fff;
+                            border: 2px solid #060E15;
+                            border-radius: 8px;
+                            font-size: 1.5rem;
+                            font-weight: bold;
+                            color: #060E15;
+                            text-align: center;
+                            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                        "
+                    >
+                        نرجو منك التسجيل في الدورة
+                    </div>
             }
         </>
     )
