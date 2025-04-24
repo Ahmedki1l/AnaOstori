@@ -44,6 +44,9 @@ const QuestionsBankComponent = ({
   const { folderToastMsgConst, questionToastMsgConst } = questionsConst;
   const existingItemName = questionsData?.map((item) => item.name);
 
+  // Categories
+  const categories = ["قدرات", "تحصيلي", "عام"];
+
   // Wrapper functions to fetch list data and update pagination
   const fetchFolderList = (pageNumber = 1) => {
     // Assume getFolderList returns a promise that resolves with
@@ -57,7 +60,7 @@ const QuestionsBankComponent = ({
     getQuestionsList(folderId, 'questions', pageNumber, limit);
   };
 
-  const returnQuestionsList = (folderId, type) =>{
+  const returnQuestionsList = (folderId, type) => {
     getQuestionsList(folderId, 'questions', page, limit);
   }
 
@@ -264,6 +267,18 @@ const QuestionsBankComponent = ({
 
   return (
     <>
+      {/* Categories Tab Bar */}
+      <div className={styles.categoriesTabBar}>
+        {categories.map((category) => (
+          <div
+            key={category}
+            className={`${styles.categoryTab} ${selectedCategory === category ? styles.activeTab : ''}`}
+            onClick={() => handleCategoryChange(category)}
+          >
+            {category}
+          </div>
+        ))}
+      </div>
       <div className={styles.tableContainer}>
         <div>
           {typeOfListdata === "question" && (

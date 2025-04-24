@@ -412,6 +412,9 @@ export default function Navbar() {
 											)
 										})}
 									</ul>
+									{/* <div className={`p-4 ${styles.mainMenuWrapper}`}>
+										<Link href={'/blog'} onClick={() => handleClickOnLink()} className={styles.homeText}>المدونة</Link>
+									</div> */}
 								</div>
 							</StyledDrawer>
 						</ConfigProvider>
@@ -456,6 +459,9 @@ export default function Navbar() {
 											)
 										})}
 									</ul>
+									{/* <div className={`pl-6 my-auto`}>
+										<Link href={'/blog'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>المدونة</p></Link>
+									</div> */}
 								</>
 							}
 							{!isUserLogin ?

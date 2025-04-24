@@ -28,7 +28,8 @@ function MyApp({ Component, pageProps }) {
 	const router = useRouter();
 	const [pageTitle, setPageTitle] = useState('الرئيسية')
 	const [isBookSeatPageOpen, setIsBookSeatPageOpen] = useState(false)
-	const pathName = router.pathname
+	const pathName = router.pathname;
+	const query = router.query;
 	const removeFooterFrom = ['watchCourse', 'updateProfile', 'accountInformation', 'myCourse', 'instructorPanel']
 	const removeWhatsAppFrom = ['watchCourse', 'login', 'register', 'forgotPassword', 'updateProfile', 'accountInformation', 'forgot-password', 'myCourse', 'instructorPanel', '/[catagoryName]/[courseName]', '/[catagoryName]/[courseName]/[bookSit]']
 	const hasFooterShown = removeFooterFrom.some(value => router.asPath.includes(value)) ? true : false
@@ -73,6 +74,13 @@ function MyApp({ Component, pageProps }) {
 
 	useEffect(() => {
 		switch (pathName) {
+			case "/blog":
+				console.log("🚀 ~ useEffect ~ pathName:", pathName)
+				setPageTitle('المدونة')
+				break;
+			case '/blog/[id]':
+				setPageTitle(`مقالة #${query.id}`)
+				break
 			case "/[catagoryName]": setPageTitle(router.query.catagoryName)
 				break;
 			case "/[catagoryName]/[courseName]": setPageTitle(router.query.catagoryName)
@@ -209,6 +217,10 @@ function MyApp({ Component, pageProps }) {
 						img-src 'self' https://eu-test.oppwa.com;
 						`}
 					/> */}
+					<link
+						href="https://fonts.googleapis.com/css2?family=Material+Icons+Two+Tone"
+						rel="stylesheet"
+					/>
 				</Head>
 				<div dir='rtl'>
 
@@ -222,7 +234,7 @@ function MyApp({ Component, pageProps }) {
 					<Script
 						id="google-analytics"
 						strategy="afterInteractive"
-								>{`
+					>{`
 						window.dataLayer = window.dataLayer || [];
 						function gtag(){dataLayer.push(arguments);}
 						gtag('js', new Date());
@@ -236,7 +248,7 @@ function MyApp({ Component, pageProps }) {
 						id="google-tag-manager"
 						strategy="afterInteractive"
 						dangerouslySetInnerHTML={{
-										__html: `
+							__html: `
 							(function(w,d,s,l,i){w[l]=w[l]||[];
 							w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
 							var f=d.getElementsByTagName(s)[0],
