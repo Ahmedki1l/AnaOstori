@@ -46,6 +46,7 @@ const QuestionsBankComponent = ({
 
   // Categories
   const categories = ["قدرات", "تحصيلي", "عام"];
+  const [selectedCategory, setSelectedCategory] = useState("عام");
 
   // Wrapper functions to fetch list data and update pagination
   const fetchFolderList = (pageNumber = 1) => {
@@ -261,6 +262,13 @@ const QuestionsBankComponent = ({
     // Preview question implementation
     console.log("Preview question:", question);
     // This could open a modal to preview the question
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setTypeOfListData("folder");
+    setPage(1);
+    fetchFolderList(1, category);
   };
 
   console.log("questionsData", questionsData);
