@@ -45,7 +45,7 @@ const QuestionsBankComponent = ({
   const existingItemName = questionsData?.map((item) => item.name);
 
   // Categories
-  const categories = ["قدرات", "تحصيلي", "عام"];
+  const categories = [ "عام", "قدرات", "تحصيلي"];
   const [selectedCategory, setSelectedCategory] = useState("عام");
 
   // Wrapper functions to fetch list data and update pagination

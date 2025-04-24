@@ -1,9 +1,6 @@
 .tableContainer {
   width: 100%;
   background-color: var(--table-bg-color, #ffffff);
-  border-radius: 12px;
-  border: 0.5px solid var(--table-border-color, #E9E9E9);
-  padding: 16px;
   direction: rtl;
 }
 
@@ -280,7 +277,6 @@
 }
 
 .categoryTab {
-  padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   position: relative;
