@@ -275,11 +275,12 @@
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;
+  margin-top: -20px;
   direction: rtl;
 }
 
 .categoryTab {
-  padding: 0 20px;
+  padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   position: relative;
