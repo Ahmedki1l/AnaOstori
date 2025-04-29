@@ -534,7 +534,7 @@ const ModelForAddExam = ({
                     <div className={styles.sectionsContainer}>
 
                         {sections.map((sec, idx) => (
-                            <div key={idx} className={styles.section}>
+                            <div key={sec.id} className={styles.section}>
 
                                 {/* Section Header */}
                                 <div className={styles.sectionHeader}>
@@ -560,7 +560,7 @@ const ModelForAddExam = ({
 
                                         {/* — Drag & Drop for questions within this section — */}
                                         <DragDropContext onDragEnd={result => reorderInSection(idx, result)}>
-                                            <Droppable droppableId={idx}>
+                                            <Droppable droppableId={sec.id}>
                                                 {provided => (
                                                     <ul ref={provided.innerRef} {...provided.droppableProps}>
                                                         {sec.questions.map((q, qIdx) => (
