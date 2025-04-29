@@ -292,17 +292,9 @@
 }
 
 .sectionDivHeaders {
-    flex: 1;
-    border: none;
+    display: flex;
+    flex-direction: row;
     background: transparent;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-right: 8px;
-
-    &:focus {
-        outline: none;
-    }
 }
 
 /* Editable Title Input */
