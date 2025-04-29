@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Modal } from 'antd';
 import styles from './ModelForAddQuestion.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
@@ -147,7 +147,17 @@ const ModelForAddQuestion = ({
     const [selectedLesson, setSelectedLesson] = useState('');
     const [availableSkills, setAvailableSkills] = useState([]);
 
+    // refs to track first run
+    const firstLangRun = useRef(true);
+    const firstSectRun = useRef(true);
+    const firstLessonRun = useRef(true);
+
     useEffect(() => {
+        if (firstLangRun.current) {
+          firstLangRun.current = false;
+          if (selectedQuestion) return;
+        }
+
         if (selectedLanguage === 'اللغة العربية') {
             setAvailableSections(sectionsAR);
         } else {
@@ -161,6 +171,11 @@ const ModelForAddQuestion = ({
     }, [selectedLanguage]);
 
     useEffect(() => {
+        if (firstLangRun.current) {
+          firstLangRun.current = false;
+          if (selectedQuestion) return;
+        }
+
         if (selectedLanguage === 'اللغة العربية') {
             if (selectedSection === 'قدرات') {
                 setAvailableLessons(lessonGATAR);
@@ -184,6 +199,11 @@ const ModelForAddQuestion = ({
     }, [selectedSection]);
 
     useEffect(() => {
+        if (firstLangRun.current) {
+          firstLangRun.current = false;
+          if (selectedQuestion) return;
+        }
+
         if (selectedLanguage === 'اللغة العربية') {
             if (selectedLesson) {
                 if (selectedSection === 'قدرات') {
@@ -205,33 +225,6 @@ const ModelForAddQuestion = ({
         }
         setSkills([]);
     }, [selectedLesson]);
-
-    // useEffect(() => {
-    //     if (selectedLesson) {
-    //         let skillsList = [];
-    //         if (selectedSection === 'قدرات') {
-    //             skillsList = selectedLesson === 'كمي'
-    //                 ? quantitativeARSkills
-    //                 : selectedLesson === 'لفظي'
-    //                     ? verbalARSkills
-    //                     : [];
-    //         } else if (selectedSection === 'تحصيلي') {
-    //             // if you have subject-specific arrays for SAAT:
-    //             skillsList = [];
-    //         }
-    //         setAvailableSkills(skillsList);
-
-    //         // only wipe out skills if this is NOT edit mode:
-    //         if (!selectedQuestion) {
-    //             setSkills([]);
-    //         }
-    //     } else {
-    //         setAvailableSkills([]);
-    //         if (!selectedQuestion) {
-    //             setSkills([]);
-    //         }
-    //     }
-    // }, [selectedLesson, selectedSection, selectedQuestion]);
 
     useEffect(() => {
         if (selectedQuestion) {
