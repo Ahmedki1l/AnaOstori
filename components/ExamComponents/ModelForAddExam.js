@@ -9,6 +9,7 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 import { toast } from 'react-toastify';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import styles from './ModelForAddExam.module.scss';
+import { v4 as uuid } from 'uuid';
 
 // Helper function to compute visible pages (max 15)
 const getVisiblePages = (currentPage, totalPages, maxVisible = 15) => {
@@ -56,7 +57,26 @@ const ModelForAddExam = ({
     const [examType, setExamType] = useState('');
 
     // Manage exam questions (to be arranged)
-    const [examQuestions, setExamQuestions] = useState([]);
+    const [sections, setSections] = useState(() => {
+        if (selectedExam?.sections) {
+            // If editing, prefill from the existing exam
+            return selectedExam.sections.map(sec => ({
+                id: uuid(),
+                title: sec.title,
+                expanded: true,
+                questions: []  // we’ll fetch the full question objects in useEffect
+            }));
+        }
+
+        // New exam: start with one empty section
+        return [{
+            id: uuid(),
+            title: 'القسم الأول',
+            expanded: true,
+            questions: []
+        }];
+    });
+
     const [folders, setFolders] = useState([]);
 
     // Loading and error state
@@ -115,15 +135,20 @@ const ModelForAddExam = ({
             if (selectedExam.coverImage) {
                 setCoverImagePreview(selectedExam.coverImage);
             }
-            if (selectedExam.questions) {
-                // Fetch full question objects using their IDs
-                fetchQuestionsByIds(selectedExam.questions).then(questions => {
-                    if (questions) {
-                        setExamQuestions(questions);
-                    }
-                });
-            }
-            if(selectedExam.type) {
+
+            Promise.all(
+                selectedExam.sections.map(async (sec) => {
+                    const fetched = await fetchQuestionsByIds(sec.questions);
+                    return {
+                        id: uuid(),
+                        title: sec.title,
+                        expanded: true,
+                        questions: fetched
+                    };
+                })
+            ).then(prefilled => setSections(prefilled));
+
+            if (selectedExam.type) {
                 setExamType(selectedExam.type);
             }
         } else {
@@ -136,8 +161,6 @@ const ModelForAddExam = ({
             setExamQuestions([]);
         }
     }, [selectedExam]);
-
-
 
     const validateForm = () => {
         if (!examTitle.trim()) {
@@ -301,7 +324,10 @@ const ModelForAddExam = ({
             // date: examDate,
             coverImage: coverImageUrl,
             folderId: selectedFolder?._id,
-            questions: examQuestions.map(q => q._id),
+            sections: sections.map(sec => ({
+                title: sec.title,
+                questions: sec.questions.map(q => q._id)
+              })),
             examType: examType,
             type: "simulationExam"
         };
@@ -342,6 +368,68 @@ const ModelForAddExam = ({
         }
         setLoading(false);
     };
+
+    // Toggle expand/collapse
+    function toggleExpand(idx) {
+        const s = [...sections];
+        s[idx].expanded = !s[idx].expanded;
+        setSections(s);
+    }
+
+    // Add a fresh section
+    function addSection() {
+        setSections([
+            ...sections,
+            { id: uuid(), title: `Section ${sections.length + 1}`, expanded: true, questions: [] }
+        ]);
+    }
+
+    // Remove section
+    function removeSection(idx) {
+        setSections(sections.filter((_, i) => i !== idx));
+    }
+
+    // Add existing question object q to section idx
+    function addToSection(idx, q) {
+        const s = [...sections];
+        if (!s[idx].questions.find(x => x._id === q._id)) {
+            s[idx].questions.push(q);
+            setSections(s);
+        }
+    }
+
+    // Remove by questionId
+    function removeFromSection(idx, questionId) {
+        const s = [...sections];
+        s[idx].questions = s[idx].questions.filter(q => q._id !== questionId);
+        setSections(s);
+    }
+
+    // Handle reordering in one section
+    function reorderInSection(idx, result) {
+        if (!result.destination) return;
+        const s = [...sections];
+        const list = Array.from(s[idx].questions);
+        const [moved] = list.splice(result.source.index, 1);
+        list.splice(result.destination.index, 0, moved);
+        s[idx].questions = list;
+        setSections(s);
+    }
+
+    // When clicking “New Question” inside a section
+    function openNewQuestionModal(idx) {
+        setEditingQuestion({ forSection: idx });
+        setIsAddQuestionSubModalOpen(true);
+    }
+
+    // After new question created:
+    function handleNewQuestionCreated(newQ) {
+        const s = [...sections];
+        s[editingQuestion.forSection].questions.push(newQ);
+        setSections(s);
+        setIsAddQuestionSubModalOpen(false);
+    }
+
 
     return (
         <Modal
@@ -439,6 +527,88 @@ const ModelForAddExam = ({
                             )}
                         </div>
                     </div>
+
+                    <div className={styles.sectionsContainer}>
+
+                        {sections.map((sec, idx) => (
+                            <div key={sec.id} className={styles.section}>
+
+                                {/* Section Header */}
+                                <div className={styles.sectionHeader}>
+                                    <input
+                                        type="text"
+                                        value={sec.title}
+                                        onChange={e => {
+                                            const newSecs = [...sections];
+                                            newSecs[idx].title = e.target.value;
+                                            setSections(newSecs);
+                                        }}
+                                        className={styles.sectionTitleInput}
+                                    />
+                                    <button onClick={() => toggleExpand(idx)}>
+                                        {sec.expanded ? '–' : '+'}
+                                    </button>
+                                    <button onClick={() => removeSection(idx)}>×</button>
+                                </div>
+
+                                {/* Section Body */}
+                                {sec.expanded && (
+                                    <div className={styles.sectionBody}>
+
+                                        {/* — Drag & Drop for questions within this section — */}
+                                        <DragDropContext onDragEnd={result => reorderInSection(idx, result)}>
+                                            <Droppable droppableId={sec.id}>
+                                                {provided => (
+                                                    <ul ref={provided.innerRef} {...provided.droppableProps}>
+                                                        {sec.questions.map((q, qIdx) => (
+                                                            <Draggable key={q._id} draggableId={q._id} index={qIdx}>
+                                                                {prov => (
+                                                                    <li
+                                                                        ref={prov.innerRef}
+                                                                        {...prov.draggableProps}
+                                                                        {...prov.dragHandleProps}
+                                                                        className={styles.questionItem}
+                                                                    >
+                                                                        {q.text}
+                                                                        <button onClick={() => removeFromSection(idx, q._id)}>–</button>
+                                                                    </li>
+                                                                )}
+                                                            </Draggable>
+                                                        ))}
+                                                        {provided.placeholder}
+                                                    </ul>
+                                                )}
+                                            </Droppable>
+                                        </DragDropContext>
+
+                                        {/* — Add Existing Question to this section — */}
+                                        <div className={styles.addExisting}>
+                                            {questions.map(q => (
+                                                <button
+                                                    key={q._id}
+                                                    onClick={() => addToSection(idx, q)}
+                                                >
+                                                    + {q.text.substring(0, 20)}…
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        {/* — Or Open “New Question” Sub‐Modal — */}
+                                        <button onClick={() => openNewQuestionModal(idx)}>
+                                            إنشاء سؤال جديد في هذا القسم
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+
+                        {/* Add another empty section */}
+                        <button onClick={addSection} className={styles.addSectionBtn}>
+                            + إضافة قسم
+                        </button>
+                    </div>
+
+
                     {/* Exam Questions Section */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>أسئلة الامتحان</label>
