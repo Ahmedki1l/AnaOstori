@@ -9,6 +9,7 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 import { toast } from 'react-toastify';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import styles from './ModelForAddExam.module.scss';
+import { duration } from '@mui/material';
 
 // Helper function to compute visible pages (max 15)
 const getVisiblePages = (currentPage, totalPages, maxVisible = 15) => {
@@ -76,6 +77,7 @@ const ModelForAddExam = ({
             return selectedExam.sections.map(sec => ({
                 id: generateId(10),
                 title: sec.title,
+                duration: sec.duration,
                 expanded: true,
                 questions: []  // we’ll fetch the full question objects in useEffect
             }));
@@ -85,6 +87,7 @@ const ModelForAddExam = ({
         return [{
             id: generateId(10),
             title: 'القسم الأول',
+            duration: 5,
             expanded: true,
             questions: []
         }];
@@ -383,7 +386,7 @@ const ModelForAddExam = ({
     function addSection() {
         setSections([
             ...sections,
-            { id: generateId(10), title: `Section ${sections.length + 1}`, expanded: true, questions: [] }
+            { id: generateId(10), title: `Section ${sections.length + 1}`, duration: 5, expanded: true, questions: [] }
         ]);
     }
 
@@ -548,6 +551,19 @@ const ModelForAddExam = ({
                                         }}
                                         className={styles.sectionTitleInput}
                                     />
+
+                                    <input
+                                        type="number"
+                                        value={sec.duration}
+                                        onChange={e => {
+                                            const newSecs = [...sections];
+                                            newSecs[idx].duration = e.target.value;
+                                            setSections(newSecs);
+                                        }}
+                                        className={styles.sectionDurationInput}
+                                    />
+
+
                                     <button
                                         className={`${styles.toggleButton} ${sec.expanded ? styles.expanded : ''}`}
                                         onClick={() => toggleExpand(idx)}

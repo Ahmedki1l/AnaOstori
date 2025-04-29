@@ -306,6 +306,21 @@
     }
 }
 
+/* Editable Title Input */
+.sectionDurationInput {
+    flex: 2;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-right: 8px;
+
+    &:focus {
+        outline: none;
+    }
+}
+
 /* Section Body */
 .sectionBody {
     padding: 12px 16px;
