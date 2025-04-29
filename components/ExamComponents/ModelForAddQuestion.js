@@ -155,7 +155,9 @@ const ModelForAddQuestion = ({
             setAvailableSections(sectionsEN);
         }
         setSelectedLesson('');
+        setAvailableLessons([]);
         setAvailableSkills([]);
+        setSkills([]);
     }, [selectedLanguage]);
 
     useEffect(() => {
@@ -178,6 +180,7 @@ const ModelForAddQuestion = ({
         }
         setSelectedLesson('');
         setAvailableSkills([]);
+        setSkills([]);
     }, [selectedSection]);
 
     // 3️⃣ When lesson changes, update skills
@@ -203,7 +206,7 @@ const ModelForAddQuestion = ({
                 setAvailableSkills([]);
             }
         }
-        setSkills([]); // clear any previously picked skills
+        setSkills([]);
     }, [selectedLesson]);
 
     useEffect(() => {
