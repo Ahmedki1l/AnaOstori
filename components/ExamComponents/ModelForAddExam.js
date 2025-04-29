@@ -158,7 +158,6 @@ const ModelForAddExam = ({
             setExamDate('');
             setCoverImageFile(null);
             setCoverImagePreview('');
-            setExamQuestions([]);
         }
     }, [selectedExam]);
 
@@ -184,7 +183,6 @@ const ModelForAddExam = ({
     const addExistingQuestion = (question) => {
         const exists = examQuestions.find(q => q._id === question._id);
         if (!exists) {
-            setExamQuestions([...examQuestions, question]);
             toast.success("تمت إضافة السؤال");
         } else {
             toast.info("هذا السؤال مُضاف مسبقاً");
@@ -193,7 +191,6 @@ const ModelForAddExam = ({
 
     // Remove a question from the exam list using its ID
     const removeExamQuestion = (questionId) => {
-        setExamQuestions(examQuestions.filter(q => q.id !== questionId));
         toast.info("تم إزالة السؤال من الامتحان");
     };
 
@@ -292,12 +289,10 @@ const ModelForAddExam = ({
         const newOrder = Array.from(examQuestions);
         const [removed] = newOrder.splice(result.source.index, 1);
         newOrder.splice(result.destination.index, 0, removed);
-        setExamQuestions(newOrder);
     };
 
     // Callback when a new question is successfully created in the sub-modal
     const handleNewQuestionCreated = (newQuestion) => {
-        setExamQuestions([...examQuestions, newQuestion]);
         setIsAddQuestionSubModalOpen(false);
     };
 
@@ -721,44 +716,7 @@ const ModelForAddExam = ({
                                 إنشاء سؤال جديد
                             </button>
                         </div>
-                        {examQuestions.length > 0 && (
-                            <div className={styles.selectedQuestionsSection}>
-                                <h4 className={styles.subTitle}>الأسئلة المحددة (اسحب لترتيبها)</h4>
-                                <DragDropContext onDragEnd={onDragEnd}>
-                                    <Droppable droppableId="examQuestions">
-                                        {(provided) => (
-                                            <ul
-                                                ref={provided.innerRef}
-                                                {...provided.droppableProps}
-                                                className={styles.examQuestionsList}
-                                            >
-                                                {examQuestions.map((question, index) => (
-                                                    <Draggable key={question._id} draggableId={question._id} index={index}>
-                                                        {(provided) => (
-                                                            <li
-                                                                ref={provided.innerRef}
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                className={styles.examQuestionItem}
-                                                            >
-                                                                <span>{question.text}</span>
-                                                                <button
-                                                                    className={styles.removeQuestionButton}
-                                                                    onClick={() => removeExamQuestion(question._id)}
-                                                                >
-                                                                    <AllIconsComponenet iconName={'cross'} height={16} width={16} />
-                                                                </button>
-                                                            </li>
-                                                        )}
-                                                    </Draggable>
-                                                ))}
-                                                {provided.placeholder}
-                                            </ul>
-                                        )}
-                                    </Droppable>
-                                </DragDropContext>
-                            </div>
-                        )}
+                        
                     </div>
                 </div>
                 <div className={styles.actions}>
