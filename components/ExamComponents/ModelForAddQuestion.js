@@ -154,6 +154,7 @@ const ModelForAddQuestion = ({
         } else {
             setAvailableSections(sectionsEN);
         }
+        setSelectedSection('');
         setSelectedLesson('');
         setAvailableLessons([]);
         setAvailableSkills([]);
