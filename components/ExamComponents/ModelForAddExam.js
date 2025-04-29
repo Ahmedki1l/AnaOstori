@@ -9,7 +9,6 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 import { toast } from 'react-toastify';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
 import styles from './ModelForAddExam.module.scss';
-import { v4 as uuid } from 'uuid';
 
 // Helper function to compute visible pages (max 15)
 const getVisiblePages = (currentPage, totalPages, maxVisible = 15) => {
@@ -521,7 +520,7 @@ const ModelForAddExam = ({
                     <div className={styles.sectionsContainer}>
 
                         {sections.map((sec, idx) => (
-                            <div key={sec.id} className={styles.section}>
+                            <div key={idx} className={styles.section}>
 
                                 {/* Section Header */}
                                 <div className={styles.sectionHeader}>
@@ -547,7 +546,7 @@ const ModelForAddExam = ({
 
                                         {/* — Drag & Drop for questions within this section — */}
                                         <DragDropContext onDragEnd={result => reorderInSection(idx, result)}>
-                                            <Droppable droppableId={sec.id}>
+                                            <Droppable droppableId={idx}>
                                                 {provided => (
                                                     <ul ref={provided.innerRef} {...provided.droppableProps}>
                                                         {sec.questions.map((q, qIdx) => (
