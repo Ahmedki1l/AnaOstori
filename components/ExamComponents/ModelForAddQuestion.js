@@ -171,8 +171,8 @@ const ModelForAddQuestion = ({
     }, [selectedLanguage]);
 
     useEffect(() => {
-        if (firstLangRun.current) {
-          firstLangRun.current = false;
+        if (firstSectRun.current) {
+            firstSectRun.current = false;
           if (selectedQuestion) return;
         }
 
@@ -199,8 +199,8 @@ const ModelForAddQuestion = ({
     }, [selectedSection]);
 
     useEffect(() => {
-        if (firstLangRun.current) {
-          firstLangRun.current = false;
+        if (firstLessonRun.current) {
+            firstLessonRun.current = false;
           if (selectedQuestion) return;
         }
 
