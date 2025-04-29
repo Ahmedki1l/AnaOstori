@@ -36,6 +36,20 @@ const getVisiblePages = (currentPage, totalPages, maxVisible = 15) => {
     return pages;
 };
 
+/**
+ * Generate a random alphanumeric string.
+ * @param {number} length — desired length of the ID (default 8).
+ * @returns {string}
+ */
+const generateId = (length = 8) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let id = '';
+    for (let i = 0; i < length; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
+};
+
 const ModelForAddExam = ({
     isModelForAddExamOpen,
     selectedExam,            // if editing an exam, pass it here
@@ -60,6 +74,7 @@ const ModelForAddExam = ({
         if (selectedExam?.sections) {
             // If editing, prefill from the existing exam
             return selectedExam.sections.map(sec => ({
+                id: generateId(10),
                 title: sec.title,
                 expanded: true,
                 questions: []  // we’ll fetch the full question objects in useEffect
@@ -68,6 +83,7 @@ const ModelForAddExam = ({
 
         // New exam: start with one empty section
         return [{
+            id: generateId(10),
             title: 'القسم الأول',
             expanded: true,
             questions: []
@@ -314,7 +330,7 @@ const ModelForAddExam = ({
             sections: sections.map(sec => ({
                 title: sec.title,
                 questions: sec.questions.map(q => q._id)
-              })),
+            })),
             examType: examType,
             type: "simulationExam"
         };
@@ -367,7 +383,7 @@ const ModelForAddExam = ({
     function addSection() {
         setSections([
             ...sections,
-            {title: `Section ${sections.length + 1}`, expanded: true, questions: [] }
+            { id: generateId(10), title: `Section ${sections.length + 1}`, expanded: true, questions: [] }
         ]);
     }
 
@@ -708,7 +724,7 @@ const ModelForAddExam = ({
                                 إنشاء سؤال جديد
                             </button>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div className={styles.actions}>
