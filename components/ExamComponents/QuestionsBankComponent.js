@@ -284,9 +284,6 @@ const QuestionsBankComponent = ({
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    setTypeOfListData("folder");
-    setPage(1);
-    fetchFolderList(1, category);
   };
 
   console.log("questionsData", questionsData);
