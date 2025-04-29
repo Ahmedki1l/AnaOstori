@@ -148,14 +148,14 @@ const ModelForAddQuestion = ({
     const [availableSkills, setAvailableSkills] = useState([]);
 
     // refs to track first run
-    const firstLangRun = useRef(true);
-    const firstSectRun = useRef(true);
-    const firstLessonRun = useRef(true);
+    const firstLangRun = useRef(2);
+    const firstSectRun = useRef(2);
+    const firstLessonRun = useRef(2);
 
     useEffect(() => {
-        if (firstLangRun.current) {
-          firstLangRun.current = false;
-          if (selectedQuestion) return;
+        if (firstLangRun.current > 0) {
+          firstLangRun.current--;
+          if (firstLangRun.current === 0 && selectedQuestion) return;
         }
 
         if (selectedLanguage === 'اللغة العربية') {
@@ -171,9 +171,9 @@ const ModelForAddQuestion = ({
     }, [selectedLanguage]);
 
     useEffect(() => {
-        if (firstSectRun.current) {
-            firstSectRun.current = false;
-          if (selectedQuestion) return;
+        if (firstSectRun.current > 0) {
+            firstSectRun.current--;
+          if (firstSectRun.current === 0 && selectedQuestion) return;
         }
 
         if (selectedLanguage === 'اللغة العربية') {
@@ -199,9 +199,9 @@ const ModelForAddQuestion = ({
     }, [selectedSection]);
 
     useEffect(() => {
-        if (firstLessonRun.current) {
-            firstLessonRun.current = false;
-          if (selectedQuestion) return;
+        if (firstLessonRun.current > 0) {
+            firstLessonRun.current--;
+          if (firstLessonRun.current === 0 && selectedQuestion) return;
         }
 
         if (selectedLanguage === 'اللغة العربية') {
