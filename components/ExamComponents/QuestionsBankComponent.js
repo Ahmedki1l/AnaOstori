@@ -366,7 +366,7 @@ const QuestionsBankComponent = ({
               </tbody>
             )}
           </table>
-          {(!loading && questionsData.length > 0) && (
+          {(!loading && filteredQuestions.length > 0) && (
             <div className={styles.paginationWrapper}>
               {/* Central pagination area */}
               <div className={styles.paginationCenter}>
