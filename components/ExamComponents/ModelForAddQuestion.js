@@ -102,14 +102,6 @@ const ModelForAddQuestion = ({
     });
 
     const quantitativeAR = [
-        "Algebra",
-        "Geometry",
-        "Arithmetic",
-        "Statistics",
-        "Comparison",
-    ];
-
-    const quantitativeEN = [
         "العمليات الأساسية",
         "الكسور الاعتيادية",
         "الكسور العشرية",
@@ -124,6 +116,14 @@ const ModelForAddQuestion = ({
         "الدائرة",
         "أفكار خاصة بالهندسة",
         "الإحصاء"
+    ];
+
+    const quantitativeEN = [
+        "Algebra",
+        "Geometry",
+        "Arithmetic",
+        "Statistics",
+        "Comparison",
     ];
 
     const quantitativeARSkills = quantitativeAR.map((skill) => {
@@ -147,7 +147,6 @@ const ModelForAddQuestion = ({
     const [selectedLesson, setSelectedLesson] = useState('');
     const [availableSkills, setAvailableSkills] = useState([]);
 
-    // 2️⃣ When section changes, update lessons
     useEffect(() => {
         if (selectedLanguage === 'اللغة العربية') {
             setAvailableSections(sectionsAR);
@@ -184,15 +183,13 @@ const ModelForAddQuestion = ({
         setSkills([]);
     }, [selectedSection]);
 
-    // 3️⃣ When lesson changes, update skills
     useEffect(() => {
-        if (selectedLanguage === 'اللغة العربية') { 
+        if (selectedLanguage === 'اللغة العربية') {
             if (selectedLesson) {
                 if (selectedSection === 'قدرات') {
                     if (selectedLesson === 'كمي') setAvailableSkills(quantitativeARSkills);
                     else if (selectedLesson === 'لفظي') setAvailableSkills(verbalARSkills);
                 }
-                // else if you have SAAT-specific skills, handle them here...
             } else {
                 setAvailableSkills([]);
             }
@@ -202,7 +199,6 @@ const ModelForAddQuestion = ({
                     if (selectedLesson === 'Quantitative') setAvailableSkills(quantitativeENSkills);
                     else if (selectedLesson === 'Verbal') setAvailableSkills(verbalENSkills);
                 }
-                // else if you have SAAT-specific skills, handle them here...
             } else {
                 setAvailableSkills([]);
             }
@@ -210,32 +206,32 @@ const ModelForAddQuestion = ({
         setSkills([]);
     }, [selectedLesson]);
 
-    useEffect(() => {
-        if (selectedLesson) {
-            let skillsList = [];
-            if (selectedSection === 'قدرات') {
-                skillsList = selectedLesson === 'كمي'
-                    ? quantitativeARSkills
-                    : selectedLesson === 'لفظي'
-                        ? verbalARSkills
-                        : [];
-            } else if (selectedSection === 'تحصيلي') {
-                // if you have subject-specific arrays for SAAT:
-                skillsList = [];
-            }
-            setAvailableSkills(skillsList);
+    // useEffect(() => {
+    //     if (selectedLesson) {
+    //         let skillsList = [];
+    //         if (selectedSection === 'قدرات') {
+    //             skillsList = selectedLesson === 'كمي'
+    //                 ? quantitativeARSkills
+    //                 : selectedLesson === 'لفظي'
+    //                     ? verbalARSkills
+    //                     : [];
+    //         } else if (selectedSection === 'تحصيلي') {
+    //             // if you have subject-specific arrays for SAAT:
+    //             skillsList = [];
+    //         }
+    //         setAvailableSkills(skillsList);
 
-            // only wipe out skills if this is NOT edit mode:
-            if (!selectedQuestion) {
-                setSkills([]);
-            }
-        } else {
-            setAvailableSkills([]);
-            if (!selectedQuestion) {
-                setSkills([]);
-            }
-        }
-    }, [selectedLesson, selectedSection, selectedQuestion]);
+    //         // only wipe out skills if this is NOT edit mode:
+    //         if (!selectedQuestion) {
+    //             setSkills([]);
+    //         }
+    //     } else {
+    //         setAvailableSkills([]);
+    //         if (!selectedQuestion) {
+    //             setSkills([]);
+    //         }
+    //     }
+    // }, [selectedLesson, selectedSection, selectedQuestion]);
 
     useEffect(() => {
         if (selectedQuestion) {
