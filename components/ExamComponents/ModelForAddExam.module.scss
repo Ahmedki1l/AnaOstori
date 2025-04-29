@@ -341,6 +341,65 @@
     }
 }
 
+/* Toggle Expand/Collapse Button */
+.toggleButton {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.toggleButton::after {
+    content: '^';
+    font-size: 18px;
+    line-height: 1;
+    transition: inherit;
+}
+
+/* When expanded, rotate arrow 180deg */
+.toggleButton.expanded {
+    transform: rotate(180deg);
+}
+
+/* Remove Question Button */
+.removeQuestionButton {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #ff4d4f;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+        color: #d9363e;
+    }
+}
+
+/* Remove Section Button */
+.removeSectionButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #ff4d4f;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+        color: #d9363e;
+    }
+}
+
 /* Actions (cancel/save buttons) */
 .actions {
     display: flex;

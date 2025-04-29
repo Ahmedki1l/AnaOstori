@@ -548,10 +548,16 @@ const ModelForAddExam = ({
                                         }}
                                         className={styles.sectionTitleInput}
                                     />
-                                    <button onClick={() => toggleExpand(idx)}>
-                                        {sec.expanded ? '–' : '+'}
+                                    <button
+                                        className={`${styles.toggleButton} ${sec.expanded ? styles.expanded : ''}`}
+                                        onClick={() => toggleExpand(idx)}
+                                    />
+                                    <button
+                                        className={styles.removeSectionButton}
+                                        onClick={() => removeSection(idx)}
+                                    >
+                                        ×
                                     </button>
-                                    <button onClick={() => removeSection(idx)}>×</button>
                                 </div>
 
                                 {/* Section Body */}
@@ -573,7 +579,12 @@ const ModelForAddExam = ({
                                                                         className={styles.questionItem}
                                                                     >
                                                                         {q.text}
-                                                                        <button onClick={() => removeFromSection(idx, q._id)}>–</button>
+                                                                        <button
+                                                                            className={styles.removeQuestionButton}
+                                                                            onClick={() => removeFromSection(idx, q._id)}
+                                                                        >
+                                                                            –
+                                                                        </button>
                                                                     </li>
                                                                 )}
                                                             </Draggable>
@@ -583,23 +594,6 @@ const ModelForAddExam = ({
                                                 )}
                                             </Droppable>
                                         </DragDropContext>
-
-                                        {/* — Add Existing Question to this section — */}
-                                        {/* <div className={styles.addExisting}>
-                                            {questions.map(q => (
-                                                <button
-                                                    key={q._id}
-                                                    onClick={() => addToSection(idx, q)}
-                                                >
-                                                    + {q.text.substring(0, 20)}…
-                                                </button>
-                                            ))}
-                                        </div> */}
-
-                                        {/* — Or Open “New Question” Sub‐Modal — */}
-                                        {/* <button onClick={() => openNewQuestionModal(idx)}>
-                                            إنشاء سؤال جديد في هذا القسم
-                                        </button> */}
 
                                         {/* Exam Questions Section */}
                                         <div className={styles.formGroup}>
