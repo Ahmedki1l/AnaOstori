@@ -574,17 +574,18 @@ const ModelForAddExam = ({
                                         />
                                     </div>
 
-
-                                    <button
-                                        className={`${styles.toggleButton} ${sec.expanded ? styles.expanded : ''}`}
-                                        onClick={() => toggleExpand(idx)}
-                                    />
-                                    <button
-                                        className={styles.removeSectionButton}
-                                        onClick={() => removeSection(idx)}
-                                    >
-                                        ×
-                                    </button>
+                                    <div className={styles.sectionDivHeaders}>
+                                        <button
+                                            className={`${styles.toggleButton} ${sec.expanded ? styles.expanded : ''}`}
+                                            onClick={() => toggleExpand(idx)}
+                                        />
+                                        <button
+                                            className={styles.removeSectionButton}
+                                            onClick={() => removeSection(idx)}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Section Body */}
