@@ -291,11 +291,6 @@ const ModelForAddExam = ({
         newOrder.splice(result.destination.index, 0, removed);
     };
 
-    // Callback when a new question is successfully created in the sub-modal
-    const handleNewQuestionCreated = (newQuestion) => {
-        setIsAddQuestionSubModalOpen(false);
-    };
-
     // Submission handler to prepare payload and post data
     const handleSubmit = async () => {
         if (!validateForm()) return;
