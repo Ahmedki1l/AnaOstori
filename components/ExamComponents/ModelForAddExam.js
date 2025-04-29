@@ -332,6 +332,7 @@ const ModelForAddExam = ({
             folderId: selectedFolder?._id,
             sections: sections.map(sec => ({
                 title: sec.title,
+                duration: sec.duration,
                 questions: sec.questions.map(q => q._id)
             })),
             examType: examType,
