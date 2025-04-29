@@ -542,27 +542,31 @@ const ModelForAddExam = ({
 
                                 {/* Section Header */}
                                 <div className={styles.sectionHeader}>
-                                    <input
-                                        type="text"
-                                        value={sec.title}
-                                        onChange={e => {
-                                            const newSecs = [...sections];
-                                            newSecs[idx].title = e.target.value;
-                                            setSections(newSecs);
-                                        }}
-                                        className={styles.sectionTitleInput}
-                                    />
+                                    <div className={styles.sectionDivHeaders}>
+                                        <input
+                                            type="text"
+                                            value={sec.title}
+                                            onChange={e => {
+                                                const newSecs = [...sections];
+                                                newSecs[idx].title = e.target.value;
+                                                setSections(newSecs);
+                                            }}
+                                            className={styles.sectionTitleInput}
+                                        />
+                                    </div>
 
-                                    <input
-                                        type="number"
-                                        value={sec.duration}
-                                        onChange={e => {
-                                            const newSecs = [...sections];
-                                            newSecs[idx].duration = e.target.value;
-                                            setSections(newSecs);
-                                        }}
-                                        className={styles.sectionDurationInput}
-                                    />
+                                    <div className={styles.sectionDivHeaders}>
+                                        <input
+                                            type="number"
+                                            value={sec.duration}
+                                            onChange={e => {
+                                                const newSecs = [...sections];
+                                                newSecs[idx].duration = e.target.value;
+                                                setSections(newSecs);
+                                            }}
+                                            className={styles.sectionDurationInput}
+                                        />
+                                    </div>
 
 
                                     <button

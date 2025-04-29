@@ -291,11 +291,25 @@
     cursor: pointer;
 }
 
+.sectionDivHeaders {
+    flex: 1;
+    border: none;
+    background: white;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-right: 8px;
+
+    &:focus {
+        outline: none;
+    }
+}
+
 /* Editable Title Input */
 .sectionTitleInput {
     flex: 1;
     border: none;
-    background: transparent;
+    background: white;
     font-size: 16px;
     font-weight: 600;
     color: #333;
