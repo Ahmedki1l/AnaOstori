@@ -591,10 +591,9 @@ const ModelForAddQuestion = ({
                         <label className={styles.label}>اللغة</label>
                         <select
                             className={styles.input}
-                            value={selectedSection}
+                            value={selectedLanguage}
                             onChange={e => setSelectedLanguage(e.target.value)}
                         >
-                            <option value="" disabled>اختر اللغة</option>
                             {languages.map(sec => (
                                 <option key={sec} value={sec}>{sec}</option>
                             ))}
@@ -610,7 +609,7 @@ const ModelForAddQuestion = ({
                             onChange={e => setSelectedSection(e.target.value)}
                         >
                             <option value="" disabled>اختر القسم</option>
-                            {availableLessons.map(sec => (
+                            {availableSections.map(sec => (
                                 <option key={sec} value={sec}>{sec}</option>
                             ))}
                         </select>
