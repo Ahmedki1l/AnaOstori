@@ -249,14 +249,19 @@ const ModelForAddQuestion = ({
             setDifficulty(selectedQuestion.difficulty);
 
             // ↓↓↓ new ↓↓↓
-            const { section = '', lesson = '' } = selectedQuestion;
+            const { section = '', lesson = '', language = '' } = selectedQuestion;
+            setSelectedLanguage(language)
             setSelectedSection(section);
             // manually populate the lessons dropdown so selectedLesson can bind
             const lessons = section === 'قدرات'
                 ? lessonGATAR
-                : section === 'تحصيلي'
-                    ? lessonSAATAR
-                    : [];
+                : section === 'GAT'
+                    ? lessonGATEN
+                    : section === 'SAAT'
+                        ? lessonSAATEN
+                        : section === 'تحصيلي'
+                            ? lessonSAATAR
+                            : [];
             setAvailableLessons(lessons);
             setSelectedLesson(lesson);
 
