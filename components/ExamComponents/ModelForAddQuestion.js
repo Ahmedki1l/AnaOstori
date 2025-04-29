@@ -7,6 +7,7 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst';
 import { toast } from 'react-toastify';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
+import { Language } from '@mui/icons-material';
 
 const ModelForAddQuestion = ({
     isModelForAddQuestionOpen,
@@ -36,40 +37,46 @@ const ModelForAddQuestion = ({
 
     const { questionToastMsgConst } = questionsConst;
 
-    useEffect(() => {
-        if (selectedQuestion) {
-            setQuestionText(selectedQuestion.text || '');
-            setQuestionType(selectedQuestion.questionType || '');
-            if (selectedQuestion.options && selectedQuestion.options.length > 0) {
-                setOptions(selectedQuestion.options);
-            }
-            setCorrectAnswer(selectedQuestion.correctAnswer || '');
-            setContextType(selectedQuestion.contextType || '');
-            setContextDescription(selectedQuestion.contextDescription || '');
-            if (selectedQuestion.questionImages.length > 0) {
-                setImagePreviews(selectedQuestion.questionImages);
-            }
-            setDifficulty(selectedQuestion.difficulty);
-            setSkills(selectedQuestion.skills);
-        } else {
-            // Reset state when there's no selected question (i.e. new question)
-            setQuestionText('');
-            setQuestionType('');
-            setOptions([
-                { id: 'أ', text: '', images: [] },
-                { id: 'ب', text: '', images: [] },
-                { id: 'ج', text: '', images: [] },
-                { id: 'د', text: '', images: [] }
-            ]);
-            setCorrectAnswer('');
-            setContextType('');
-            setContextDescription('');
-            setImageFiles([]);
-            setImagePreviews([]);
-        }
-    }, [selectedQuestion]);
+    const languages = [
+        "اللغة العربية",
+        "اللغة الإنجليزية"
+    ]
 
-    const verbal = [
+    const sectionsAR = [
+        "قدرات",
+        "تحصيلي"
+    ];
+
+    const sectionsEN = [
+        "GAT",
+        "SAAT"
+    ];
+
+    const lessonGATAR = [
+        "كمي",
+        "لفظي"
+    ];
+
+    const lessonSAATAR = [
+        "كيمياء",
+        "رياضيات",
+        "فيزياء",
+        "أحياء",
+    ];
+
+    const lessonGATEN = [
+        "Quantitative",
+        "Verbal"
+    ];
+
+    const lessonSAATEN = [
+        "Chemistry",
+        "Mathematics",
+        "Physics",
+        "Biology",
+    ];
+
+    const verbalAR = [
         "إكمال الجمل",
         "الخطأ السياقي",
         "التناظر اللفظي",
@@ -78,11 +85,31 @@ const ModelForAddQuestion = ({
         "المفردة الشاذة"
     ];
 
-    const verbalSkills = verbal.map((skill) => {
-        return "لفظي - " + skill;
+    const verbalEN = [
+        "Analogy",
+        "Sentence Completion",
+        "Contextual Error",
+        "Atypical word",
+        "Reading comprehension",
+    ];
+
+    const verbalARSkills = verbalAR.map((skill) => {
+        return skill;
     });
 
-    const complementary = [
+    const verbalENSkills = verbalEN.map((skill) => {
+        return skill;
+    });
+
+    const quantitativeAR = [
+        "Algebra",
+        "Geometry",
+        "Arithmetic",
+        "Statistics",
+        "Comparison",
+    ];
+
+    const quantitativeEN = [
         "العمليات الأساسية",
         "الكسور الاعتيادية",
         "الكسور العشرية",
@@ -99,14 +126,164 @@ const ModelForAddQuestion = ({
         "الإحصاء"
     ];
 
-    const complementarySkills = complementary.map((skill) => {
-        return "كمي - " + skill;
-    })
+    const quantitativeARSkills = quantitativeAR.map((skill) => {
+        return skill;
+    });
+
+    const quantitativeENSkills = quantitativeEN.map((skill) => {
+        return skill;
+    });
 
     const ALL_SKILLS = [
-        ...verbalSkills,
-        ...complementarySkills,
+        ...verbalARSkills,
+        ...quantitativeARSkills,
     ];
+
+    // 1️⃣ New state at the top
+    const [selectedLanguage, setSelectedLanguage] = useState('اللغة العربية');
+    const [availableSections, setAvailableSections] = useState([]);
+    const [selectedSection, setSelectedSection] = useState('');
+    const [availableLessons, setAvailableLessons] = useState([]);
+    const [selectedLesson, setSelectedLesson] = useState('');
+    const [availableSkills, setAvailableSkills] = useState([]);
+
+    // 2️⃣ When section changes, update lessons
+    useEffect(() => {
+        if (selectedLanguage === 'اللغة العربية') {
+            setAvailableSections(sectionsAR);
+        } else {
+            setAvailableSections(sectionsEN);
+        }
+        setSelectedLesson('');
+        setAvailableSkills([]);
+    }, [selectedLanguage]);
+
+    useEffect(() => {
+        if (selectedLanguage === 'اللغة العربية') {
+            if (selectedSection === 'قدرات') {
+                setAvailableLessons(lessonGATAR);
+            } else if (selectedSection === 'تحصيلي') {
+                setAvailableLessons(lessonSAATAR);
+            } else {
+                setAvailableLessons([]);
+            }
+        } else {
+            if (selectedSection === 'GAT') {
+                setAvailableLessons(lessonGATEN);
+            } else if (selectedSection === 'SAAT') {
+                setAvailableLessons(lessonSAATEN);
+            } else {
+                setAvailableLessons([]);
+            }
+        }
+        setSelectedLesson('');
+        setAvailableSkills([]);
+    }, [selectedSection]);
+
+    // 3️⃣ When lesson changes, update skills
+    useEffect(() => {
+        if (selectedLanguage === 'اللغة العربية') { 
+            if (selectedLesson) {
+                if (selectedSection === 'قدرات') {
+                    if (selectedLesson === 'كمي') setAvailableSkills(quantitativeARSkills);
+                    else if (selectedLesson === 'لفظي') setAvailableSkills(verbalARSkills);
+                }
+                // else if you have SAAT-specific skills, handle them here...
+            } else {
+                setAvailableSkills([]);
+            }
+        } else {
+            if (selectedLesson) {
+                if (selectedSection === 'GAT') {
+                    if (selectedLesson === 'Quantitative') setAvailableSkills(quantitativeENSkills);
+                    else if (selectedLesson === 'Verbal') setAvailableSkills(verbalENSkills);
+                }
+                // else if you have SAAT-specific skills, handle them here...
+            } else {
+                setAvailableSkills([]);
+            }
+        }
+        setSkills([]); // clear any previously picked skills
+    }, [selectedLesson]);
+
+    useEffect(() => {
+        if (selectedLesson) {
+            let skillsList = [];
+            if (selectedSection === 'قدرات') {
+                skillsList = selectedLesson === 'كمي'
+                    ? quantitativeARSkills
+                    : selectedLesson === 'لفظي'
+                        ? verbalARSkills
+                        : [];
+            } else if (selectedSection === 'تحصيلي') {
+                // if you have subject-specific arrays for SAAT:
+                skillsList = [];
+            }
+            setAvailableSkills(skillsList);
+
+            // only wipe out skills if this is NOT edit mode:
+            if (!selectedQuestion) {
+                setSkills([]);
+            }
+        } else {
+            setAvailableSkills([]);
+            if (!selectedQuestion) {
+                setSkills([]);
+            }
+        }
+    }, [selectedLesson, selectedSection, selectedQuestion]);
+
+    useEffect(() => {
+        if (selectedQuestion) {
+            setQuestionText(selectedQuestion.text || '');
+            setQuestionType(selectedQuestion.questionType || '');
+            if (selectedQuestion.options && selectedQuestion.options.length > 0) {
+                setOptions(selectedQuestion.options);
+            }
+            setCorrectAnswer(selectedQuestion.correctAnswer || '');
+            setContextType(selectedQuestion.contextType || '');
+            setContextDescription(selectedQuestion.contextDescription || '');
+            if (selectedQuestion.questionImages.length > 0) {
+                setImagePreviews(selectedQuestion.questionImages);
+            }
+            setDifficulty(selectedQuestion.difficulty);
+
+            // ↓↓↓ new ↓↓↓
+            const { section = '', lesson = '' } = selectedQuestion;
+            setSelectedSection(section);
+            // manually populate the lessons dropdown so selectedLesson can bind
+            const lessons = section === 'قدرات'
+                ? lessonGATAR
+                : section === 'تحصيلي'
+                    ? lessonSAATAR
+                    : [];
+            setAvailableLessons(lessons);
+            setSelectedLesson(lesson);
+
+            // and finally re-apply the saved skills
+            setSkills(selectedQuestion.skills || []);
+        } else {
+            // Reset state when there's no selected question (i.e. new question)
+            setQuestionText('');
+            setQuestionType('');
+            setOptions([
+                { id: 'أ', text: '', images: [] },
+                { id: 'ب', text: '', images: [] },
+                { id: 'ج', text: '', images: [] },
+                { id: 'د', text: '', images: [] }
+            ]);
+            setCorrectAnswer('');
+            setContextType('');
+            setContextDescription('');
+            setImageFiles([]);
+            setImagePreviews([]);
+            setSelectedSection('');
+            setSelectedLesson('');
+            setAvailableLessons([]);
+            setAvailableSkills([]);
+            setSkills([]);
+        }
+    }, [selectedQuestion]);
 
     const handleOptionChange = (index, value) => {
         const newOptions = [...options];
@@ -211,6 +388,9 @@ const ModelForAddQuestion = ({
             const questionData = {
                 text: questionText,
                 questionType,
+                language: selectedLanguage,
+                section: selectedSection,
+                lesson: selectedLesson,
                 context: contextType,
                 contextDescription,
                 questionImages: finalQuestionImages,
@@ -373,7 +553,148 @@ const ModelForAddQuestion = ({
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>الخيارات</label>
+                        <label className={styles.label}>إضافة صورة (اختياري)</label>
+                        <div className={styles.imageUpload}>
+                            <input
+                                type="file"
+                                id="question-image"
+                                className={styles.fileInput}
+                                onChange={handleImageChange}
+                                accept="image/*"
+                                multiple  // Enable multiple file selection
+                            />
+                            <label htmlFor="question-image" className={styles.fileLabel}>
+                                <AllIconsComponenet iconName={'uploadFile'} height={24} width={24} />
+                                <span>اختر صورة</span>
+                            </label>
+                            {imagePreviews && imagePreviews.length > 0 && (
+                                <div className={styles.imagePreviewContainer}>
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className={styles.imagePreview}>
+                                            <img src={preview} alt={`Preview ${index}`} />
+                                            <button
+                                                type="button"
+                                                className={styles.removeImage}
+                                                onClick={() => handleRemoveImage(index)}
+                                            >
+                                                &#x2715;
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* — language Select — */}
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>اللغة</label>
+                        <select
+                            className={styles.input}
+                            value={selectedSection}
+                            onChange={e => setSelectedLanguage(e.target.value)}
+                        >
+                            <option value="" disabled>اختر اللغة</option>
+                            {languages.map(sec => (
+                                <option key={sec} value={sec}>{sec}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* — Section Select — */}
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>القسم</label>
+                        <select
+                            className={styles.input}
+                            value={selectedSection}
+                            onChange={e => setSelectedSection(e.target.value)}
+                        >
+                            <option value="" disabled>اختر القسم</option>
+                            {availableLessons.map(sec => (
+                                <option key={sec} value={sec}>{sec}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* — Lesson Select — */}
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>الدرس</label>
+                        <select
+                            className={styles.input}
+                            value={selectedLesson}
+                            onChange={e => setSelectedLesson(e.target.value)}
+                            disabled={!availableLessons.length}
+                        >
+                            <option value="" disabled>اختر الدرس</option>
+                            {availableLessons.map(lesson => (
+                                <option key={lesson} value={lesson}>{lesson}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {availableSkills.length > 0 &&
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>المهارات</label>
+
+                            {skills.map((skill, index) => {
+                                const usedTexts = skills.map(s => s.text).filter(t => t && t !== skill.text);
+                                const options = availableSkills.filter(s => !usedTexts.includes(s));
+
+                                return (
+                                    <div key={skill.id} className={styles.skillRow}>
+                                        <div className={styles.optionLabel}>{index + 1}</div>
+                                        <select
+                                            className={styles.input}
+                                            value={skill.text}
+                                            onChange={e => handleSkillChange(index, e.target.value)}
+                                        >
+                                            <option value="">اختر مهارة...</option>
+                                            {options.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
+                                        …
+                                    </div>
+                                );
+                            })}
+
+                            <div className={styles.buttonGroup}>
+                                <button
+                                    type="button"
+                                    onClick={handleAddSkill}
+                                    className={styles.addButton}
+                                    disabled={skills.length >= availableSkills.length}
+                                >
+                                    &#43;
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveLastSkill}
+                                    className={styles.removeLastButton}
+                                    disabled={skills.length === 0}
+                                >
+                                    &#x2212;
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>مستوى الصعوبة</label>
+                        <select
+                            className={styles.input}
+                            value={difficulty}
+                            onChange={e => setDifficulty(e.target.value)}
+                        >
+                            <option value="" disabled>اختر المستوى</option>
+                            <option value="سهل">سهل</option>
+                            <option value="متوسط">متوسط</option>
+                            <option value="صعب">صعب</option>
+                        </select>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>الاختيارات</label>
                         {options.map((option, index) => (
                             <div key={option.id} className={styles.optionItem}>
                                 {/* Top Row: Option ID and TextArea */}
@@ -430,107 +751,8 @@ const ModelForAddQuestion = ({
                         ))}
                     </div>
 
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>صعوبة السؤال</label>
-                        <select
-                            className={styles.input}
-                            value={difficulty}
-                            onChange={e => setDifficulty(e.target.value)}
-                        >
-                            <option value="" disabled>اختر مستوى الصعوبة</option>
-                            <option value="سهل">سهل</option>
-                            <option value="متوسط">متوسط</option>
-                            <option value="صعب">صعب</option>
-                        </select>
-                    </div>
 
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>المهارات</label>
 
-                        {skills.map((skill, index) => {
-                            // compute which skills are still available for this slot:
-                            const used = skills.map((s) => s.text).filter((t) => t && t !== skill.text);
-                            const options = ALL_SKILLS.filter((s) => !used.includes(s));
-
-                            return (
-                                <div key={skill.id} className={styles.skillRow}>
-                                    <div className={styles.optionLabel}>{index + 1}</div>
-                                    <select
-                                        className={styles.input}
-                                        value={skill.text}
-                                        onChange={(e) => handleSkillChange(index, e.target.value)}
-                                    >
-                                        <option value="">اختر مهارة...</option>
-                                        {options.map((opt) => (
-                                            <option key={opt} value={opt}>
-                                                {opt}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <button
-                                        type="button"
-                                        className={styles.removeButton}
-                                        onClick={() => handleRemoveSkill(index)}
-                                    >
-                                        &#x2715;
-                                    </button>
-                                </div>
-                            );
-                        })}
-
-                        <div className={styles.buttonGroup}>
-                            <button
-                                type="button"
-                                onClick={handleAddSkill}
-                                className={styles.addButton}
-                                disabled={skills.length >= ALL_SKILLS.length}
-                            >
-                                &#43;
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleRemoveLastSkill}
-                                className={styles.removeLastButton}
-                                disabled={skills.length === 0}
-                            >
-                                &#x2212;
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>إضافة صورة (اختياري)</label>
-                        <div className={styles.imageUpload}>
-                            <input
-                                type="file"
-                                id="question-image"
-                                className={styles.fileInput}
-                                onChange={handleImageChange}
-                                accept="image/*"
-                                multiple  // Enable multiple file selection
-                            />
-                            <label htmlFor="question-image" className={styles.fileLabel}>
-                                <AllIconsComponenet iconName={'uploadFile'} height={24} width={24} />
-                                <span>اختر صورة</span>
-                            </label>
-                            {imagePreviews && imagePreviews.length > 0 && (
-                                <div className={styles.imagePreviewContainer}>
-                                    {imagePreviews.map((preview, index) => (
-                                        <div key={index} className={styles.imagePreview}>
-                                            <img src={preview} alt={`Preview ${index}`} />
-                                            <button
-                                                type="button"
-                                                className={styles.removeImage}
-                                                onClick={() => handleRemoveImage(index)}
-                                            >
-                                                &#x2715;
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
                 </div>
                 <div className={styles.actions}>
                     <button
