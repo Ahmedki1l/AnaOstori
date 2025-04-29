@@ -585,7 +585,7 @@ const ModelForAddExam = ({
                                         </DragDropContext>
 
                                         {/* — Add Existing Question to this section — */}
-                                        <div className={styles.addExisting}>
+                                        {/* <div className={styles.addExisting}>
                                             {questions.map(q => (
                                                 <button
                                                     key={q._id}
@@ -594,12 +594,130 @@ const ModelForAddExam = ({
                                                     + {q.text.substring(0, 20)}…
                                                 </button>
                                             ))}
-                                        </div>
+                                        </div> */}
 
                                         {/* — Or Open “New Question” Sub‐Modal — */}
-                                        <button onClick={() => openNewQuestionModal(idx)}>
+                                        {/* <button onClick={() => openNewQuestionModal(idx)}>
                                             إنشاء سؤال جديد في هذا القسم
-                                        </button>
+                                        </button> */}
+
+                                        {/* Exam Questions Section */}
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>أسئلة الامتحان</label>
+                                            {/* Available Questions List */}
+                                            <div className={styles.availableQuestionsContainer}>
+                                                <h4 className={styles.subTitle}>اختر من الأسئلة الموجودة</h4>
+                                                {/* Search and Filter Section */}
+                                                <div className={styles.searchFilterContainer}>
+                                                    <input
+                                                        type="text"
+                                                        className={styles.searchInput}
+                                                        placeholder="ابحث عن سؤال بالعنوان..."
+                                                        defaultValue={searchQuery}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                setSearchQuery(e.target.value);
+                                                                fetchQuestions(1, e.target.value);
+                                                            }
+                                                        }}
+                                                        onBlur={(e) => {
+                                                            setSearchQuery(e.target.value);
+                                                            fetchQuestions(1, e.target.value);
+                                                        }}
+                                                    />
+                                                    <select
+                                                        className={styles.folderSelect}
+                                                        value={selectedFolderId}
+                                                        onChange={(e) => {
+                                                            const folderId = e.target.value;
+                                                            setSelectedFolderId(folderId);
+                                                        }}
+                                                    >
+                                                        <option value="all">كل المجلدات</option>
+                                                        {folders.map(folder => (
+                                                            <option key={folder._id} value={folder._id}>
+                                                                {folder.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                {questions.length > 0 ? (
+                                                    <>
+                                                        <ul className={styles.availableQuestions}>
+                                                            {questions.map((question) => (
+                                                                <li key={question.id} className={styles.questionItem}>
+                                                                    <span>{question.text}</span>
+                                                                    <button
+                                                                        className={styles.addButton}
+                                                                        onClick={() => addToSection(idx, question)}
+                                                                    >
+                                                                        إضافة
+                                                                    </button>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                        <div className={styles.pagination}>
+                                                            <button
+                                                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                                                disabled={currentPage === 1}
+                                                            >
+                                                                السابق
+                                                            </button>
+                                                            <div className={styles.pageNumbers}>
+                                                                {getVisiblePages(currentPage, totalPages).map(pageNum => (
+                                                                    <button
+                                                                        key={pageNum}
+                                                                        onClick={() => setCurrentPage(pageNum)}
+                                                                        className={currentPage === pageNum ? styles.activePage : ''}
+                                                                    >
+                                                                        {pageNum}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                            <div className={styles.pageJump}>
+                                                                <input
+                                                                    type="number"
+                                                                    min={1}
+                                                                    max={totalPages}
+                                                                    value={pageInput}
+                                                                    onChange={(e) => setPageInput(e.target.value)}
+                                                                    onKeyPress={(e) => {
+                                                                        if (e.key === 'Enter') {
+                                                                            const page = parseInt(pageInput, 10);
+                                                                            if (page >= 1 && page <= totalPages) {
+                                                                                setCurrentPage(page);
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <span>من {totalPages}</span>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                                                disabled={currentPage === totalPages}
+                                                            >
+                                                                التالي
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <p className={styles.noQuestionsText}>لا توجد أسئلة متوفرة</p>
+                                                )}
+                                                <button
+                                                    className={styles.createQuestionButton}
+                                                    onClick={() => {
+                                                        setEditingQuestion(null);
+                                                        setIsAddQuestionSubModalOpen(true);
+                                                    }}
+                                                >
+                                                    إنشاء سؤال جديد
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+
+
                                     </div>
                                 )}
                             </div>
@@ -612,120 +730,7 @@ const ModelForAddExam = ({
                     </div>
 
 
-                    {/* Exam Questions Section */}
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>أسئلة الامتحان</label>
-                        {/* Available Questions List */}
-                        <div className={styles.availableQuestionsContainer}>
-                            <h4 className={styles.subTitle}>اختر من الأسئلة الموجودة</h4>
-                            {/* Search and Filter Section */}
-                            <div className={styles.searchFilterContainer}>
-                                <input
-                                    type="text"
-                                    className={styles.searchInput}
-                                    placeholder="ابحث عن سؤال بالعنوان..."
-                                    defaultValue={searchQuery}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            setSearchQuery(e.target.value);
-                                            fetchQuestions(1, e.target.value);
-                                        }
-                                    }}
-                                    onBlur={(e) => {
-                                        setSearchQuery(e.target.value);
-                                        fetchQuestions(1, e.target.value);
-                                    }}
-                                />
-                                <select
-                                    className={styles.folderSelect}
-                                    value={selectedFolderId}
-                                    onChange={(e) => {
-                                        const folderId = e.target.value;
-                                        setSelectedFolderId(folderId);
-                                    }}
-                                >
-                                    <option value="all">كل المجلدات</option>
-                                    {folders.map(folder => (
-                                        <option key={folder._id} value={folder._id}>
-                                            {folder.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            {questions.length > 0 ? (
-                                <>
-                                    <ul className={styles.availableQuestions}>
-                                        {questions.map((question) => (
-                                            <li key={question.id} className={styles.questionItem}>
-                                                <span>{question.text}</span>
-                                                <button
-                                                    className={styles.addButton}
-                                                    onClick={() => addExistingQuestion(question)}
-                                                >
-                                                    إضافة
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div className={styles.pagination}>
-                                        <button
-                                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            disabled={currentPage === 1}
-                                        >
-                                            السابق
-                                        </button>
-                                        <div className={styles.pageNumbers}>
-                                            {getVisiblePages(currentPage, totalPages).map(pageNum => (
-                                                <button
-                                                    key={pageNum}
-                                                    onClick={() => setCurrentPage(pageNum)}
-                                                    className={currentPage === pageNum ? styles.activePage : ''}
-                                                >
-                                                    {pageNum}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <div className={styles.pageJump}>
-                                            <input
-                                                type="number"
-                                                min={1}
-                                                max={totalPages}
-                                                value={pageInput}
-                                                onChange={(e) => setPageInput(e.target.value)}
-                                                onKeyPress={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        const page = parseInt(pageInput, 10);
-                                                        if (page >= 1 && page <= totalPages) {
-                                                            setCurrentPage(page);
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                            <span>من {totalPages}</span>
-                                        </div>
-                                        <button
-                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            التالي
-                                        </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <p className={styles.noQuestionsText}>لا توجد أسئلة متوفرة</p>
-                            )}
-                            <button
-                                className={styles.createQuestionButton}
-                                onClick={() => {
-                                    setEditingQuestion(null);
-                                    setIsAddQuestionSubModalOpen(true);
-                                }}
-                            >
-                                إنشاء سؤال جديد
-                            </button>
-                        </div>
 
-                    </div>
                 </div>
                 <div className={styles.actions}>
                     <button
