@@ -45,8 +45,26 @@ const QuestionsBankComponent = ({
   const existingItemName = questionsData?.map((item) => item.name);
 
   // Categories
-  const categories = [ "عام", "قدرات", "تحصيلي"];
+  const categories = ["عام", "قدرات", "تحصيلي"];
   const [selectedCategory, setSelectedCategory] = useState("عام");
+
+  // Only filter when we're showing questions
+  const filteredQuestions = typeOfListdata === "question"
+    ? (
+      // “عام” means “all” → show everything
+      selectedCategory === "عام"
+        ? questionsData
+        : questionsData.filter(q => {
+          if (q.section) {
+            if (selectedCategory === "تحصيلي") {
+              return (q.section === selectedCategory || q.section === "SAAT")
+            } else if (selectedCategory === "قدرات") {
+              return (q.section === selectedCategory || q.section === "GAT")
+            }
+          }
+        })
+    )
+    : questionsData;
 
   // Wrapper functions to fetch list data and update pagination
   const fetchFolderList = (pageNumber = 1) => {
@@ -309,9 +327,9 @@ const QuestionsBankComponent = ({
                 <th className={`${styles.tableHeadText} ${styles.tableHead4}`}>الإجراءات</th>
               </tr>
             </thead>
-            {questionsData.length > 0 && !loading && (
+            {filteredQuestions.length > 0 && !loading && (
               <tbody className={styles.tableBodyArea}>
-                {questionsData.map((item) => (
+                {filteredQuestions.map((item) => (
                   <tr className={styles.tableRow} key={item.id}>
                     <td>
                       <div className={styles.questionFolderList} onClick={() => showQuestionsOfSelectedFolder(item)}>
@@ -377,7 +395,7 @@ const QuestionsBankComponent = ({
             </div>
           )}
 
-          {questionsData.length === 0 && !loading && (
+          {filteredQuestions.length === 0 && !loading && (
             <Empty
               onClick={handleAddModalOpen}
               containerhight={448}
