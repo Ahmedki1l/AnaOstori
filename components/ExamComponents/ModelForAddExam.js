@@ -543,6 +543,9 @@ const ModelForAddExam = ({
                                 {/* Section Header */}
                                 <div className={styles.sectionHeader}>
                                     <div className={styles.sectionDivHeaders}>
+                                        <h3>
+                                            عنوان القسم
+                                        </h3>
                                         <input
                                             type="text"
                                             value={sec.title}
@@ -556,6 +559,9 @@ const ModelForAddExam = ({
                                     </div>
 
                                     <div className={styles.sectionDivHeaders}>
+                                        <h3>
+                                            المدة الزمنية
+                                        </h3>
                                         <input
                                             type="number"
                                             value={sec.duration}
