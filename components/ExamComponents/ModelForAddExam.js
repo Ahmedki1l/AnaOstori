@@ -367,7 +367,7 @@ const ModelForAddExam = ({
     function addSection() {
         setSections([
             ...sections,
-            { id: uuid(), title: `Section ${sections.length + 1}`, expanded: true, questions: [] }
+            {title: `Section ${sections.length + 1}`, expanded: true, questions: [] }
         ]);
     }
 
