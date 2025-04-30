@@ -1,0 +1,1180 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    /* Arabic-friendly fonts */
+    text-align: right;
+}
+
+.header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.stagesIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+    direction: rtl;
+}
+
+.stage {
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #666;
+    background-color: #f0f0f0;
+}
+
+.activeStage {
+    background-color: #F26722;
+    color: white;
+}
+
+.stageDivider {
+    width: 3rem;
+    height: 2px;
+    background-color: #ccc;
+    margin: 0 0.5rem;
+}
+
+.courseSelectionStage {
+    width: 100%;
+
+    h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        margin-bottom: 1.5rem;
+        color: #666;
+    }
+}
+
+.coursesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.courseCard {
+    border: 2px solid #eaeaea;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: right;
+
+    &:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+    }
+
+    h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .courseDate,
+    .courseCost {
+        margin: 0.5rem 0;
+        color: #555;
+    }
+
+    .courseCost {
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: #F26722;
+    }
+}
+
+.selected {
+    border-color: #F26722;
+    background-color: rgba(0, 102, 204, 0.05);
+
+    .selectionIndicator {
+        background-color: #F26722;
+        color: white;
+    }
+}
+
+.selectionIndicator {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    background-color: #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.selectionSummary {
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: row;
+    /* RTL support */
+    justify-content: space-between;
+
+    p {
+        margin: 0;
+        font-weight: 500;
+    }
+}
+
+.proceedButton,
+.checkoutButton {
+    background-color: #F26722;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #F26722;
+    }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+}
+
+.backButton {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #e0e0e0;
+    }
+}
+
+.backArrow {
+    margin-left: 0.5rem;
+    transform: scaleX(-1);
+    /* Flip the arrow for RTL */
+}
+
+/* Payment Stage Styles */
+
+.reviewAndPaymentStage {
+    width: 100%;
+}
+
+.reviewAndPaymentContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.paymentSection {
+    flex: 2;
+
+    h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.orderSummarySection {
+    flex: 1;
+    background-color: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    align-self: flex-start;
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.paymentOptions {
+    display: flex;
+    flex-direction: column;
+}
+
+.paymentRadio {
+    display: none;
+
+    &:checked+.paymentMethod {
+        border-color: #0066cc;
+
+        .radioCircle {
+            border-color: #0066cc;
+
+            &:before {
+                transform: scale(1);
+            }
+        }
+    }
+
+    &:checked+.paymentMethod .paymentForm {
+        display: block;
+    }
+}
+
+.paymentMethod {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.paymentMethodHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.paymentMethodInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.radioCircle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #999;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: #F26722;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.2s ease;
+    }
+}
+
+.paymentMethodName {
+    font-weight: 500;
+    margin: 0;
+}
+
+.paymentLogo {
+    img {
+        max-height: 40px;
+        max-width: 100px;
+    }
+}
+
+.paymentForm {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.cardForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    input {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+        text-align: right;
+        direction: rtl;
+    }
+}
+
+.formRow {
+    display: flex;
+    gap: 1rem;
+
+    .formGroup {
+        flex: 1;
+    }
+}
+
+.payButton {
+    background-color: #F26722;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #F26722;
+    }
+}
+
+.applePayButton {
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+
+    &:hover {
+        background-color: #333;
+    }
+}
+
+.bankTransferNote {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.highlightText {
+    color: #f26722;
+    font-weight: 600;
+}
+
+.bankTransferTitle {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.bankTransferNotes {
+    padding-right: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    li {
+        margin-bottom: 0.75rem;
+        line-height: 1.6;
+    }
+}
+
+.boldText {
+    font-weight: 600;
+}
+
+.underlineText {
+    text-decoration: underline;
+}
+
+.bankAccounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.bankAccount {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    gap: 1rem;
+}
+
+.bankLogo {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.bankInfo {
+    h4 {
+        margin: 0 0 0.5rem 0;
+    }
+
+    p {
+        margin: 0 0 0.25rem 0;
+        font-size: 0.9rem;
+    }
+}
+
+.bankTransferButton {
+    background-color: #f26722;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #e05a17;
+    }
+}
+
+.selectedCoursesPreview {
+    margin-bottom: 1.5rem;
+}
+
+.selectedCoursePreviewItem {
+    display: flex;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.courseImage {
+    width: 60px;
+    margin-left: 1rem;
+}
+
+.courseImagePlaceholder {
+    width: 60px;
+    height: 60px;
+    background-color: #e0e0e0;
+    border-radius: 0.25rem;
+}
+
+.coursePreviewDetails {
+    flex: 1;
+
+    h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+    }
+
+    p {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+}
+
+.couponSection {
+    margin: 1.5rem 0;
+}
+
+.couponInputContainer {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.couponInput {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem 0 0 0.25rem;
+    font-size: 1rem;
+    text-align: right;
+}
+
+.couponButton {
+    background-color: #F26722;
+    color: white;
+    border: none;
+    border-radius: 0 0.25rem 0.25rem 0;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.disabledButton {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.errorText {
+    color: #e53935;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.successText {
+    color: #00bd5d;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.orderTotals {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.orderRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.orderTotalRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+}
+
+.orderDiscountRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    color: #00bd5d;
+}
+
+.orderFinalRow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    font-weight: 600;
+    color: #f26722;
+}
+
+.tabbyPromo {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+.tabbyPromoText {
+    margin: 0;
+    color: #666;
+}
+
+.tabbyInstallments {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1.5rem 0;
+}
+
+.installment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.installmentAmount {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.installmentLabel {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.installmentDivider {
+    height: 1px;
+    width: 1.5rem;
+    background-color: #ddd;
+}
+
+.backBtnContainer {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* RTL specific styles */
+[dir="rtl"] {
+
+    .courseCard,
+    .selectionSummary,
+    .orderRow,
+    .orderTotalRow,
+    .orderDiscountRow,
+    .orderFinalRow {
+        text-align: right;
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    .reviewAndPaymentContainer {
+        flex-direction: column;
+    }
+
+    .orderSummarySection {
+        width: 100%;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .coursesGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .bankAccounts {
+        flex-direction: column;
+    }
+
+    .tabbyInstallments {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .installmentDivider {
+        width: 50%;
+        height: 1px;
+        margin: 0.5rem 0;
+    }
+
+    .formRow {
+        flex-direction: column;
+    }
+}
+
+// Payment Section
+
+@import "../styles//variables.module.scss";
+
+.paymentInfoMainArea {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+}
+
+.backBarWrapper {
+    position: relative;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.backArrowIcon {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+.paymentInfoDiv {
+    min-width: 500px;
+    margin: 1rem 0 1rem 0;
+}
+
+.radioBtnBox {
+    display: flex;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.radioBtnBox1 {
+    border-width: 0.3px 0.3px 0.3px 0.3px;
+    border-color: #a9a9a9;
+    border-style: solid;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0;
+}
+
+.radioBtnBox2 {
+    border-width: 0 0.3px 0.3px 0.3px;
+    border-color: #a9a9a9;
+    border-style: solid;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.disableBox {
+    position: absolute;
+    background-color: #0000007a;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px 8px 0 0;
+    cursor: not-allowed;
+}
+
+.radioBtnBox3 {
+    border-radius: 0 0 8px 8px;
+    border-width: 0 0.3px 0.3px 0.3px;
+    border-style: solid;
+    border-color: #a9a9a9
+}
+
+.labelText {
+    font-size: 20px;
+}
+
+.circle {
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    border: 1px solid #a9a9a9;
+    margin: 0 0.5rem;
+
+    div {
+        background-color: transparent;
+        height: 14px;
+        width: 14px;
+        margin: 5px;
+        border-radius: 50%;
+    }
+}
+
+.creditCardWrapper {
+    display: none;
+    position: relative;
+    width: 100%;
+    border-width: 0 0.3px 0.3px 0.3px;
+    border-style: solid;
+    border-color: #a9a9a9;
+}
+
+.bankDetailWrapper {
+    width: auto;
+    padding: 1rem;
+}
+
+.paymentInfoDiv input[type="radio"]:checked+label {
+    .radioBtnBox3 {
+        border-radius: 0;
+    }
+
+    .creditCardWrapper {
+        display: block;
+    }
+
+    .circle {
+        div {
+            background-color: #000000;
+        }
+    }
+}
+
+.inputDiv {
+    width: 100%;
+    height: 3.5rem;
+    margin: 0 0 2rem 0;
+}
+
+.inputDivShort {
+    width: 49%;
+}
+
+.inputBox {
+    height: 100%;
+    width: 100%;
+    border: 1px solid #a9a9a9;
+    outline: none;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+
+
+.courseInfoBox {
+    margin: 2rem 0;
+    border: 1px solid #a9a9a9;
+    border-radius: 9px;
+    padding: 1rem;
+    height: fit-content;
+    min-width: 29rem;
+}
+
+.courseCover {
+    width: 189px;
+    height: 113px;
+}
+
+.courseTitle {
+    font-size: 20px;
+}
+
+.downloadIcon {
+    font-size: 25px;
+}
+
+.couponCodeInputBox {
+    display: flex;
+    margin: 0.5rem 0;
+    height: 44px !important;
+}
+
+.couponCodeInput {
+    width: 100%;
+    height: 100%;
+    padding: 1rem 1rem 0 0;
+    border: 1px solid #a9a9a9;
+    overflow: hidden;
+}
+
+.couponCodeBtn {
+    background: transparent;
+    color: $primary-color;
+    padding: 0.5rem 1rem;
+    border: 1px solid $primary-color;
+    border-radius: 4px;
+    outline: none;
+    height: 44px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.couponCodeLabel {
+    top: 0.5rem;
+
+}
+
+.DisCouponCodeBtn {
+    border: 1px solid #a9a9a9;
+    color: #0000007a;
+    cursor: not-allowed;
+}
+
+.priceDetailsBox {
+    margin: 1rem 0 0 0;
+    padding: 1rem 0 0 0;
+    border-top: 1px solid #a9a9a9;
+}
+
+.paymentBtnBox {
+    margin: 1rem 0;
+
+    button {
+        font-size: 18px
+    }
+}
+
+.list {
+    list-style: none;
+    width: 755px;
+}
+
+.link {
+    color: #0671E0;
+    text-decoration: underline;
+}
+
+.backBtnBox {
+    margin: 0 0 1rem 0;
+    width: 13rem;
+    height: 3rem;
+
+    button {
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem 0.5rem;
+
+        .arrowIcon {
+            height: 20px;
+            width: 30px;
+            // margin: 0 0 0 0.2rem;
+        }
+    }
+}
+
+.errorText {
+    color: #ff0000;
+    font-size: 14px;
+}
+
+.sucessText {
+    font-size: 14px;
+    color: #00bd5d;
+}
+
+.bankDetailSubWrapper {
+    width: 755px;
+}
+
+.bankDetailsBox {
+    width: 48%;
+    margin-left: 10px;
+}
+
+.creditcardWrapperText {
+    font-size: 19px;
+}
+
+.tabbyPaymentLogo {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.tabby-loading-container {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+// Ensure consistent radio button styling
+.radioBtnBox2 {
+
+    // Match existing styling
+    &.tabby-option {
+        background-color: #f8f9fa;
+        border-color: #e9ecef;
+    }
+}
+
+@media (max-width: 1350px) {
+
+    .paymentInfoMainArea {
+        justify-content: space-evenly;
+    }
+
+    .paymentInfoContainer {
+        width: 50%;
+    }
+
+    .bankDetailSubWrapper {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bankDetailsBox {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .creditCardWrapper {
+        width: auto;
+    }
+
+    .courseTitle {
+        font-size: 18px;
+    }
+
+    .dateAndName {
+        font-size: 15px;
+    }
+
+    .downloadIcon {
+        font-size: 22px;
+    }
+
+    .couponCodeBtn,
+    .couponCodeInputBox {
+        font-size: 15px;
+    }
+
+    .priceDetailsBox {
+        p {
+            font-size: 15px;
+        }
+    }
+
+    .list {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1084px) {
+    .courseCover {
+        width: 134px;
+        height: 81px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .paymentInfoMainArea {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .paymentInfoContainer {
+        max-width: 39rem;
+        width: 90%;
+        margin-top: 2rem;
+    }
+
+
+
+    .bankDetailSubWrapper {
+        justify-content: flex-start;
+    }
+
+    .courseInfoBox {
+        width: 39rem;
+        padding: 1rem 0.5rem;
+    }
+
+    .labelText {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 640px) {
+    .courseInfoBox {
+        width: 100%;
+        max-width: none;
+        border: none;
+        margin: 0;
+        padding: 1rem;
+
+        h1 {
+            padding-bottom: 0.5rem;
+        }
+    }
+
+    .priceDetailsBox {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        padding: 1rem 1rem 0 2rem;
+        background-color: #ffffff;
+        border: none;
+        z-index: 10;
+        margin: 0;
+        box-shadow: 0px -3px 7px #00000029;
+    }
+
+    .couponCodeInputDiv {
+        padding-top: 1rem;
+    }
+
+    .paymentInfoContainer {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        border-top: 10px solid #8080804d;
+        margin: 0;
+
+        h1 {
+            padding: 1rem 1rem 0 1rem;
+        }
+    }
+
+    .radioBtnBox1 {
+        border-width: 1px 0 1px 0;
+        border-radius: 0;
+    }
+
+    .disableBox {
+        border-radius: 0;
+    }
+
+    .radioBtnBox2 {
+        border-width: 0 0 1px 0;
+    }
+
+    .radioBtnBox3 {
+        border-width: 0 0 1px 0;
+        border-radius: 0;
+    }
+
+    .labelText {
+        font-size: 16px;
+    }
+
+    .creditCardWrapper {
+        border-width: 0 0 1px 0;
+    }
+
+    .creditcardWrapperText {
+        font-size: 13px;
+    }
+
+    .backBtnBox {
+        padding-right: 1rem;
+        height: auto;
+        width: 12rem;
+
+        button {
+            .arrowIcon {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .dateAndName {
+        font-size: 14px;
+    }
+
+    .courseTitle {
+        font-size: 12px;
+    }
+
+    .downloadIcon {
+        font-size: 20px;
+    }
+
+    .couponCodeBtn,
+    .couponCodeInputBox {
+        font-size: 13px;
+    }
+
+    .noOfUsersTagText {
+        font-size: 14px;
+    }
+
+    .paymentInfoDiv {
+        margin-bottom: 2rem;
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 476px) {
+    .couponCodeInput {
+        width: calc(100vw - 100px);
+    }
+
+    .paymentInfoMainArea {
+        align-items: flex-start;
+    }
+}

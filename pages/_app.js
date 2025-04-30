@@ -74,8 +74,10 @@ function MyApp({ Component, pageProps }) {
 
 	useEffect(() => {
 		switch (pathName) {
+			case "/customeCourses":
+				setPageTitle('دورات خاصة');
+				break;
 			case "/blog":
-				console.log("🚀 ~ useEffect ~ pathName:", pathName)
 				setPageTitle('المدونة')
 				break;
 			case '/blog/[id]':

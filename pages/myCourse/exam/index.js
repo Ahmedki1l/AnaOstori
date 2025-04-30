@@ -163,29 +163,40 @@ const ExamPage = () => {
 
     useEffect(() => {
         if (selectedExam) {
+            // format HH:MM for display
+            const examDurationDisplay = selectedExam.duration
+                ? `${selectedExam.duration}:00`
+                : '25:00';
+
             setMockExamData({
                 title: selectedExam.title || "عنوان الاختبار هنا",
-                duration: (selectedExam.duration ? `${selectedExam.duration}:00` : "25:00"),
+                duration: examDurationDisplay,
                 subTitle: "تعليمات الاختبار",
                 instructions:
                     selectedExam.instructions ||
                     "(هذا النص قابل للتعديل. هنا تكتب توضيح …)"
             });
-            setMockExamData1({
-                title: selectedExam.title || "عنوان الاختبار هنا",
-                duration: (selectedExam.duration ? `${selectedExam.duration}:00` : "25:00"),
-                subTitle: "القسم الأول",
+
+            // map your new sections shape
+            const formattedSections = (selectedExam.sections || []).map(sec => ({
+                subTitle: sec.title,
                 details: [
                     {
-                        iconName: "questionIcon",
-                        title: `عدد الأسئلة: ${selectedExam.questions.length || 5} سؤال`,
+                        iconName: 'questionIcon',
+                        title: `عدد الأسئلة: ${sec.questions.length} سؤال`
                     },
                     {
-                        iconName: "clockIcon",
-                        title: `مدة الاختبار: ${(selectedExam.duration ? `${selectedExam.duration}` : "25")} دقيقة`,
-                    },
+                        iconName: 'clockIcon',
+                        title: `مدة القسم: ${sec.duration || 25} دقيقة`
+                    }
                 ]
-            })
+            }));
+
+            setMockExamData1({
+                title: selectedExam.title || 'عنوان الاختبار هنا',
+                duration: examDurationDisplay,
+                sections: formattedSections
+            });
             const fetchWithAsync = async () => {
                 const questions = await fetchQuestionsByIds(selectedExam?.questions);
                 setExamQuestions(questions);

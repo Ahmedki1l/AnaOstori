@@ -51,6 +51,38 @@ const ExamSections = ({ examData, onStartExam }) => {
                 ))}
             </div>
 
+            {/* **NEW** — Render each section in sequence */}
+            {examData?.sections?.map((sec, sIdx) => (
+                <div key={sIdx} className={styles.examSection}>
+                    <h2 className={styles.sectionTitle}>
+                        {sec.subTitle}
+                    </h2>
+
+                    <div className={styles.examDetails}>
+                        {sec.details.map((detail, dIdx) => (
+                            <div key={dIdx} className={styles.detailItem}>
+                                <div className={styles.detailIcon}>
+                                    <AllIconsComponenet
+                                        iconName={detail.iconName}
+                                        height={20}
+                                        width={20}
+                                        color="#00A3FF"
+                                    />
+                                </div>
+                                <div className={styles.detailText}>
+                                    <p className={styles.detailTitle}>{detail.title}</p>
+                                    {detail.description && (
+                                        <p className={styles.detailDescription}>
+                                            {detail.description}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
             <div className={styles.examActions}>
                 <button className={styles.nextButton} onClick={onStartExam}>
                     <span>التالي</span>
