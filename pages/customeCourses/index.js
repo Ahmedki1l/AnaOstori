@@ -159,10 +159,10 @@ const CustomeCourses = () => {
     };
 
     const generateCheckoutId = async (type) => {
-        fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
+        fbq.event('Initiate checkout', { orderId: createdOrder.orderId, paymentMode: type });
 
         let data = {
-            orderId: createdOrder.id,
+            orderId: createdOrder.orderId,
             withcoupon: false,
             couponId: null,
             type: type,
