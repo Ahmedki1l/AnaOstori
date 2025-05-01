@@ -1178,3 +1178,31 @@
         align-items: flex-start;
     }
 }
+
+.appointmentList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.appointmentItem {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+
+    &:hover {
+        background-color: #f8f8f8;
+    }
+}
+
+.appointmentItemSelected {
+    background-color: #F26722;
+    border-color: #F26722;
+    color: white;
+}
+
+.appointmentTime {
+    font-size: 0.9rem;
+}

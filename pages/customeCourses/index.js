@@ -42,8 +42,9 @@ const CustomeCourses = () => {
 
     const bankDetails = PaymentConst.bankDetails;
 
-    // Selection & stage
+    // ─── selection & stage ────────────────────────────────────
     const [selectedCourses, setSelectedCourses] = useState([]);
+    const [selectedAppointments, setSelectedAppointments] = useState({}); // courseId → apptId
     const [currentStage, setCurrentStage] = useState(1);
 
     // Payment
@@ -67,17 +68,33 @@ const CustomeCourses = () => {
         setIsCanMakeApplePay(!!window.ApplePaySession);
     }, []);
 
-    const toggleCourseSelection = (courseId) => {
-        setSelectedCourses(prev =>
-            prev.includes(courseId)
-                ? prev.filter(id => id !== courseId)
-                : [...prev, courseId]
-        );
+    // ─── helpers ───────────────────────────────────────────────
+    const toggleCourseSelection = courseId => {
+        setSelectedCourses(prev => {
+            if (prev.includes(courseId)) {
+                // deselect removes appointment too
+                setSelectedAppointments(apps => {
+                    const { [courseId]: _, ...rest } = apps;
+                    return rest;
+                });
+                return prev.filter(id => id !== courseId);
+            }
+            return [...prev, courseId];
+        });
     };
+
+    const handleAppointmentSelect = (courseId, apptId) => {
+        // set this appt, and ensure course is selected
+        setSelectedAppointments(prev => ({ ...prev, [courseId]: apptId }));
+        if (!selectedCourses.includes(courseId)) {
+            setSelectedCourses(prev => [...prev, courseId]);
+        }
+    };
+
 
     const calculateTotalCost = () =>
         selectedCourses.reduce((sum, id) => {
-            const c = courses.find(x => x.id === id);
+            const c = courses.find(x => x._id === id);
             return sum + (c?.cost || 0);
         }, 0);
 
@@ -109,9 +126,14 @@ const CustomeCourses = () => {
             phone: userPhone,
         };
 
+        const organizedSelectedCourses = selectedCourses.map(courseId => ({
+            courseId: courseId,
+            appointmentId: selectedAppointments[courseId]
+        }));
+        
         let orderPayload = {
             routeName: 'createOrder',
-            courseIds: selectedCourses,
+            courses: organizedSelectedCourses,
             people: order,
             customeCourses: true
         }
@@ -201,21 +223,45 @@ const CustomeCourses = () => {
         });
     }
 
+    // ─── CourseCard with selectable & styled appointments ───────
     const CourseCard = ({ course }) => {
-        const sel = selectedCourses.includes(course.id);
+        const courseSelected = selectedCourses.includes(course._id);
+        const chosenAppt = selectedAppointments[course._id];
+
         return (
             <div
-                className={`${styles.courseCard} ${sel ? styles.selected : ''}`}
-                onClick={() => toggleCourseSelection(course.id)}
+                className={`${styles.courseCard} ${courseSelected ? styles.selected : ""}`}
                 dir="rtl"
             >
                 <div className={styles.courseDetails}>
-                    <h3>{course.name}</h3>
-                    <p className={styles.courseDate}>التاريخ: {course.date}</p>
+                    <h3>{course.title}</h3>
+                    <p className={styles.courseDate}>اليوم: {course.day}</p>
+                    <p className={styles.courseDate}>المواعيد:</p>
+
+                    <div className={styles.appointmentList}>
+                        {course.appointments.map(a => (
+                            <div
+                                key={a.id}
+                                className={`
+                                ${styles.appointmentItem}
+                                ${chosenAppt === a.id ? styles.appointmentItemSelected : ""}
+                                `}
+                                onClick={() => handleAppointmentSelect(course._id, a.id)}
+                            >
+                                <span className={styles.appointmentTime}>
+                                    {a.from} – {a.to}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+
                     <p className={styles.courseCost}>{course.cost} ر.س</p>
                 </div>
-                <div className={styles.selectionIndicator}>
-                    {sel ? 'تم الاختيار' : 'اختر'}
+
+                <div className={styles.selectionIndicator}
+                    onClick={() => courseSelected ? toggleCourseSelection(course._id) : {}}
+                >
+                    {courseSelected ? "تم الاختيار" : "اختر موعداً"}
                 </div>
             </div>
         );
