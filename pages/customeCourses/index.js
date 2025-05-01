@@ -203,9 +203,9 @@ const CustomeCourses = () => {
     };
 
     const handleBankTransfer = async () => {
-        fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' })
+        fbq.event('Initiate checkout', { orderId: createdOrder.orderId, paymentMode: 'Bank Transfer' })
         let data = {
-            orderId: createdOrder.id,
+            orderId: createdOrder.orderId,
             withcoupon: false,
             couponId: null,
             customePage: true
