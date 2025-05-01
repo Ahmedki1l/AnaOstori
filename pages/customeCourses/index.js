@@ -370,7 +370,7 @@ const CustomeCourses = () => {
                     )}
                 </label>
 
-                <input type="radio" id="bankDetails" name="paymentDetails" />
+                <input type="radio" id="bankDetails" name="paymentDetails" className="hidden peer" />
                 <label htmlFor="bankDetails">
                     <div className={`${styles.radioBtnBox} ${styles.radioBtnBox3}`}>
                         <div className={styles.circle}><div /></div>

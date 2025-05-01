@@ -687,6 +687,16 @@
     }
 }
 
+/* hide the bank-transfer block by default */
+.bankDetailWrapper {
+    display: none;
+}
+
+/* when the #bankDetails radio is checked, show its sibling label’s .bankDetailWrapper */
+#bankDetails:checked+label .bankDetailWrapper {
+    display: block;
+}
+
 // Payment Section
 
 @import "../styles//variables.module.scss";
