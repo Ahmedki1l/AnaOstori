@@ -268,7 +268,7 @@ const CustomeCourses = () => {
     const renderPaymentStage = () => (
         <div className={styles.paymentStage}>
             <h2>اختر طريقة الدفع</h2>
-            <div className={styles.paymentOptions}>
+            <div className={styles.paymentInfoDiv}>
                 {isCanMakeApplePay && (
                     <>
                         <input
