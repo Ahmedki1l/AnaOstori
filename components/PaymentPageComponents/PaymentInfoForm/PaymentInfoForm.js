@@ -79,7 +79,7 @@ export default function PaymentInfoForm(props) {
 						setTabbyUrl(null);
 					}
 					setTabbyStatus(res.data[0]?.status);
-					
+
 					if (res.data[0]?.status === "rejected") {
 						if (res.data[0]?.rejection_reason === "not_available") {
 							toast.error(`نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى.`);

@@ -130,7 +130,7 @@ const CustomeCourses = () => {
             courseId: courseId,
             appointmentId: selectedAppointments[courseId]
         }));
-        
+
         let orderPayload = {
             routeName: 'createOrder',
             courses: organizedSelectedCourses,
@@ -269,142 +269,124 @@ const CustomeCourses = () => {
         <div className={styles.paymentStage}>
             <h2>اختر طريقة الدفع</h2>
             <div className={styles.paymentOptions}>
+
                 {isCanMakeApplePay && (
-                    <>
+                    <label className={`${styles.radioBtnBox} ${paymentType === 'applepay' ? styles.selected : ''}`}>
                         <input
                             type="radio"
-                            id="applePay"
                             name="paymentDetails"
-                            className="hidden peer"
-                            onClick={() => generateCheckoutId('applepay')}
+                            value="applepay"
+                            hidden
+                            checked={paymentType === 'applepay'}
+                            onChange={() => generateCheckoutId('applepay')}
                         />
-                        <label htmlFor="applePay" className="relative">
-                            <div className={`${styles.radioBtnBox} ${styles.radioBtnBox1}`}>
-                                <div className="flex items-center">
-                                    <div className={styles.circle}><div /></div>
-                                    <p className={`fontMedium ${styles.labelText}`}>ابل باي (Apple Pay)</p>
-                                </div>
-                                <Logo height={27} width={53} logoName="applePayLogo" alt="Apple Pay" />
-                            </div>
-                            {checkoutID && paymentType === 'applepay' && hyperPayIntegrity && (
-                                <ApplePayForm
-                                    checkoutID={checkoutID}
-                                    orderID={createdOrder.id}
-                                    integrity={hyperPayIntegrity}
-                                />
-                            )}
-                        </label>
-                    </>
+                        <div className="flex items-center">
+                            <div className={styles.circle}><div /></div>
+                            <p className={`fontMedium ${styles.labelText}`}>ابل باي (Apple Pay)</p>
+                            <Logo height={27} width={53} logoName="applePayLogo" alt="Apple Pay" />
+                        </div>
+                        {paymentType === 'applepay' && checkoutID && hyperPayIntegrity && (
+                            <ApplePayForm
+                                checkoutID={checkoutID}
+                                orderID={createdOrder.orderId}
+                                integrity={hyperPayIntegrity}
+                            />
+                        )}
+                    </label>
                 )}
 
-                <input
-                    type="radio"
-                    id="madaCardDetails"
-                    name="paymentDetails"
-                    className="hidden peer"
-                    onClick={() => generateCheckoutId('mada')}
-                />
-                <label htmlFor="madaCardDetails" className="relative">
-                    <div className={`${styles.radioBtnBox} ${isCanMakeApplePay ? styles.radioBtnBox2 : styles.radioBtnBox1}`}>
-                        <div className="flex items-center">
-                            <div className={styles.circle}><div /></div>
-                            <p className={`fontMedium ${styles.labelText}`}>بطاقة مدى البنكية</p>
-                        </div>
+                <label className={`${styles.radioBtnBox} ${paymentType === 'mada' ? styles.selected : ''}`}>
+                    <input
+                        type="radio"
+                        name="paymentDetails"
+                        value="mada"
+                        hidden
+                        checked={paymentType === 'mada'}
+                        onChange={() => generateCheckoutId('mada')}
+                    />
+                    <div className="flex items-center">
+                        <div className={styles.circle}><div /></div>
+                        <p className={`fontMedium ${styles.labelText}`}>بطاقة مدى البنكية</p>
                         <Logo height={27} width={53} logoName="madaPaymentLogo" alt="Mada" />
                     </div>
-                    {checkoutID && paymentType === 'mada' && hyperPayIntegrity && (
+                    {paymentType === 'mada' && checkoutID && hyperPayIntegrity && (
                         <MadaCardDetailForm
                             checkoutID={checkoutID}
-                            orderID={createdOrder.id}
+                            orderID={createdOrder.orderId}
                             integrity={hyperPayIntegrity}
                         />
                     )}
                 </label>
 
-                <input
-                    type="radio"
-                    id="tabbyPay"
-                    name="paymentDetails"
-                    className="hidden peer"
-                    onClick={() => generateCheckoutId('tabby')}
-                />
-                <label htmlFor="tabbyPay" className="relative">
-                    <div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
-                        <div className="flex items-center">
-                            <div className={styles.circle}><div /></div>
-                            <p className={`fontMedium ${styles.labelText}`}>قسّمها على 4. بدون فوائد</p>
-                        </div>
-                        <Logo height={40} width={70} logoName="tabbyPaymentLogo" alt="Tabby" />
-                    </div>
-                    {checkoutID && tabbyUrl && paymentType === 'tabby' && (
-                        <TabbyCheckoutForm
-                            checkoutID={checkoutID}
-                            orderID={createdOrder.id}
-                            redirectURL={tabbyUrl}
-                            amount={calculateTotal()}
-                        />
-                    )}
-                </label>
-
-                <input
-                    type="radio"
-                    id="creditCardDetails"
-                    name="paymentDetails"
-                    className="hidden peer"
-                    onClick={() => generateCheckoutId('credit')}
-                />
-                <label htmlFor="creditCardDetails" className="relative">
-                    <div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
-                        <div className="flex items-center">
-                            <div className={styles.circle}><div /></div>
-                            <p className={`fontMedium ${styles.labelText}`}>بطاقة ائتمانية</p>
-                        </div>
+                <label className={`${styles.radioBtnBox} ${paymentType === 'credit' ? styles.selected : ''}`}>
+                    <input
+                        type="radio"
+                        name="paymentDetails"
+                        value="credit"
+                        hidden
+                        checked={paymentType === 'credit'}
+                        onChange={() => generateCheckoutId('credit')}
+                    />
+                    <div className="flex items-center">
+                        <div className={styles.circle}><div /></div>
+                        <p className={`fontMedium ${styles.labelText}`}>بطاقة ائتمانية</p>
                         <Logo height={27} width={120} logoName="creditCardPaymentLogo" alt="Credit" />
                     </div>
-                    {checkoutID && paymentType === 'credit' && hyperPayIntegrity && (
+                    {paymentType === 'credit' && checkoutID && hyperPayIntegrity && (
                         <CreditCardDetailForm
                             checkoutID={checkoutID}
-                            orderID={createdOrder.id}
+                            orderID={createdOrder.orderId}
                             integrity={hyperPayIntegrity}
                         />
                     )}
                 </label>
 
-                <input type="radio" id="bankDetails" name="paymentDetails" className="hidden peer" />
-                <label htmlFor="bankDetails">
-                    <div className={`${styles.radioBtnBox} ${styles.radioBtnBox3}`}>
+                <label className={`${styles.radioBtnBox} ${paymentType === 'bank' ? styles.selected : ''}`}>
+                    <input
+                        type="radio"
+                        name="paymentDetails"
+                        value="bank"
+                        hidden
+                        checked={paymentType === 'bank'}
+                        onChange={() => { setPaymentType('bank'); }}
+                    />
+                    <div className="flex items-center">
                         <div className={styles.circle}><div /></div>
                         <p className={`fontMedium ${styles.labelText}`}>تحويل بنكي</p>
                     </div>
-                    <div className={`${styles.creditCardWrapper} ${styles.bankDetailWrapper}`}>
-                        <p className={styles.creditcardWrapperText}>
-                            نرجوا إتمام عملية التحويل خلال <span className="text-red-500 fontBold">24 ساعة كحد أقصى</span>
-                        </p>
-                        <ul className={styles.list}>
-                            <li className={`pt-2 ${styles.creditcardWrapperText}`}>
-                                ١. بضغطك على زر <span className="fontMedium">“إرسال الطلب”</span> مقعدك محجوز مؤقتاً حتى إتمام التحويل.
-                            </li>
-                            <li className={`pt-2 ${styles.creditcardWrapperText}`}>
-                                ٢. بعد التحويل ارفق الإيصال من صفحة <span className="underline">استعلام المشتريات</span>.
-                            </li>
-                        </ul>
-                        <div className={`flex flex-wrap ${styles.bankDetailSubWrapper}`}>
-                            {bankDetails.map((bank, idx) => (
-                                <div key={idx} className={`py-4 ${styles.bankDetailsBox}`}>
-                                    <BankDetailsCard bank={bank} index={idx} />
-                                </div>
-                            ))}
+                    {paymentType === 'bank' && (
+                        <div className={`${styles.creditCardWrapper} ${styles.bankDetailWrapper}`}>
+                            <p className={styles.creditcardWrapperText}> نرجوا إتمام عملية التحويل خلال <span className='text-red-500 fontBold'>24 ساعة كحد أقصى</span></p>
+                            <p className={`fontBold ${styles.creditcardWrapperText}`}>ملاحظات:</p>
+                            <ul className={styles.list}>
+                                <li className={`pt-2 ${styles.creditcardWrapperText}`}>
+                                    ١. بضغطك على زر <span className='fontMedium'>“إرسال الطلب”</span> مقعدك رح يكون محجوز بشكل مؤقت الى ما تحولنا المبلغ.
+                                </li>
+                                <li className={`pt-2 ${styles.creditcardWrapperText}`}>
+                                    ٢. بعد التحويل ارفق ايصال الحوالة من صفحة <span className='underline'>استعلام المشتريات</span> او من خلال الرابط اللي بيوصلك بالايميل و الواتس
+                                </li>
+
+                            </ul>
+                            <div className={`flex flex-wrap ${styles.bankDetailSubWrapper}`}>
+                                {bankDetails.map((bank, index) => {
+                                    return (
+                                        <div key={`bank${index}`} className={`py-4 ${styles.bankDetailsBox}`}>
+                                            <BankDetailsCard bank={bank} index={index} />``
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            <div className={styles.paymentBtnBox}>
+                                <button className='primarySolidBtn' onClick={() => handleBankTransfer()}>إرسال الطلب</button>
+                            </div>
                         </div>
-                        <div className={styles.paymentBtnBox}>
-                            <button className="primarySolidBtn" onClick={handleBankTransfer}>
-                                إرسال الطلب
-                            </button>
-                        </div>
-                    </div>
+                    )}
                 </label>
+
             </div>
         </div>
     );
+
 
     return (
         <div className={styles.mainContainer} dir="rtl">
