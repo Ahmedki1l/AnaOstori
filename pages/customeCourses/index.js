@@ -153,8 +153,6 @@ const CustomeCourses = () => {
                 });
             }
         });
-
-        setCreatedOrder(order);
         setIsDetailsSubmitted(true);
     };
 
