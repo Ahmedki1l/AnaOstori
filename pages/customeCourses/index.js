@@ -497,15 +497,21 @@ const CustomeCourses = () => {
                                     <h2>ملخص الطلب</h2>
                                     <div className={styles.selectedCoursesPreview}>
                                         {selectedCourses.map(id => {
-                                            const c = courses.find(x => x.id === id);
+                                            const c = courses.find(x => x._id === id);
+                                            const appointmentId = selectedAppointments[id];
+                                            const appointment = c.appointments.find(x => x.id === appointmentId);
                                             return (
                                                 <div key={id} className={styles.selectedCoursePreviewItem}>
                                                     <div className={styles.courseImage}>
                                                         <div className={styles.courseImagePlaceholder} />
                                                     </div>
                                                     <div className={styles.coursePreviewDetails}>
-                                                        <h3>{c.name}</h3>
-                                                        <p>التاريخ: {c.date}</p>
+                                                        <h3>{c.title}</h3>
+                                                        <p>اليوم: {c.day}</p>
+                                                    </div>
+                                                    <div className={styles.coursePreviewDetails}>
+                                                        <h3>من: {appointment.from}</h3>
+                                                        <p>إلى: {appointment.to}</p>
                                                     </div>
                                                 </div>
                                             );
