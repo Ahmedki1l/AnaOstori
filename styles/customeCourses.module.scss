@@ -225,92 +225,6 @@
     flex-direction: column;
 }
 
-.paymentRadio {
-    display: none;
-
-    &:checked+.paymentMethod {
-        border-color: #0066cc;
-
-        .radioCircle {
-            border-color: #0066cc;
-
-            &:before {
-                transform: scale(1);
-            }
-        }
-    }
-
-    &:checked+.paymentMethod .paymentForm {
-        display: block;
-    }
-}
-
-.paymentMethod {
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.paymentMethodHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.paymentMethodInfo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.radioCircle {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #999;
-    border-radius: 50%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:before {
-        content: "";
-        width: 10px;
-        height: 10px;
-        background-color: #F26722;
-        border-radius: 50%;
-        transform: scale(0);
-        transition: transform 0.2s ease;
-    }
-}
-
-.paymentMethodName {
-    font-weight: 500;
-    margin: 0;
-}
-
-.paymentLogo {
-    img {
-        max-height: 40px;
-        max-width: 100px;
-    }
-}
-
-.paymentForm {
-    display: none;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
-}
-
-.cardForm {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
 .formGroup {
     display: flex;
     flex-direction: column;
@@ -340,64 +254,9 @@
     }
 }
 
-.payButton {
-    background-color: #F26722;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
-
-    &:hover {
-        background-color: #F26722;
-    }
-}
-
-.applePayButton {
-    background-color: #000;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
-    width: 100%;
-
-    &:hover {
-        background-color: #333;
-    }
-}
-
-.bankTransferNote {
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
 .highlightText {
     color: #f26722;
     font-weight: 600;
-}
-
-.bankTransferTitle {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.bankTransferNotes {
-    padding-right: 1.5rem;
-    margin-bottom: 1.5rem;
-
-    li {
-        margin-bottom: 0.75rem;
-        line-height: 1.6;
-    }
 }
 
 .boldText {
@@ -406,64 +265,6 @@
 
 .underlineText {
     text-decoration: underline;
-}
-
-.bankAccounts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.bankAccount {
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    flex: 1;
-    min-width: 250px;
-    display: flex;
-    gap: 1rem;
-}
-
-.bankLogo {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-        max-width: 100%;
-        max-height: 100%;
-    }
-}
-
-.bankInfo {
-    h4 {
-        margin: 0 0 0.5rem 0;
-    }
-
-    p {
-        margin: 0 0 0.25rem 0;
-        font-size: 0.9rem;
-    }
-}
-
-.bankTransferButton {
-    background-color: #f26722;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.3s ease;
-
-    &:hover {
-        background-color: #e05a17;
-    }
 }
 
 .selectedCoursesPreview {
@@ -586,49 +387,6 @@
     margin-top: 0.75rem;
     font-weight: 600;
     color: #f26722;
-}
-
-.tabbyPromo {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: #f8f8f8;
-    border-radius: 0.25rem;
-    text-align: center;
-}
-
-.tabbyPromoText {
-    margin: 0;
-    color: #666;
-}
-
-.tabbyInstallments {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 1.5rem 0;
-}
-
-.installment {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.installmentAmount {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.installmentLabel {
-    font-size: 0.8rem;
-    color: #666;
-}
-
-.installmentDivider {
-    height: 1px;
-    width: 1.5rem;
-    background-color: #ddd;
 }
 
 .backBtnContainer {
@@ -784,7 +542,7 @@
 }
 
 .creditCardWrapper {
-    display: none;
+    display: block;
     position: relative;
     width: 100%;
     border-width: 0 0.3px 0.3px 0.3px;
