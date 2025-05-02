@@ -141,7 +141,10 @@ function MyApp({ Component, pageProps }) {
 				setPageTitle('استعلام المشتريات')
 				break;
 			case "/instructorPanel/manageCustomeCoursesOrders":
-				setPageTitle('استعلام طلبات الدورات الخاصة')
+				setPageTitle('إدارة طلبات الدورات الخاصة')
+				break;
+			case "/instructorPanel/manageCustomeCourses":
+				setPageTitle('إدارة الدورات الخاصة')
 				break;
 			case "/instructorPanel/manageNews":
 				setPageTitle('إضافة وتعديل الشريط التسويقي')

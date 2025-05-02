@@ -1,0 +1,182 @@
+/* styles/customeCoursesView.module.scss */
+
+.coursesViewContainer,
+.ordersViewContainer {
+    /* name kept for compatibility */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Tajawal', 'Cairo', Arial, sans-serif;
+}
+
+.pageTitle {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: right;
+    color: #333;
+}
+
+.loadingIndicator,
+.noOrders {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f8f8;
+    border-radius: 0.5rem;
+    color: #666;
+    font-size: 1.2rem;
+}
+
+.ordersTable {
+    width: 100%;
+    border: 1px solid #eaeaea;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 0.9fr 1.2fr 1.1fr 1fr 1.5fr 0.5fr 0.5fr 0.3fr;
+    background-color: #f0f7ff;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.headerCell {
+    padding: 1rem;
+    text-align: right;
+    color: #333;
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.5fr 0.5fr 0.5fr 0fr;
+    border-bottom: 1px solid #eaeaea;
+    transition: background-color 0.2s ease;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.tableRow:hover {
+    background-color: #f8f8f8;
+}
+
+.cell {
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell:first-child{
+    justify-content: right;
+}
+
+.cell:last-child{
+    justify-content: left;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.viewButton,
+.editButton,
+.deleteButton {
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.viewButton {
+    background-color: #F26722;
+    color: white;
+}
+
+.editButton {
+    background-color: #f8f8f8;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.deleteButton {
+    background-color: rgb(255, 30, 30);
+    color: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.viewButton:hover {
+    background-color: #e05e1d;
+}
+
+.editButton:hover {
+    background-color: #eee;
+}
+
+.deleteButton:hover {
+    background-color: #eee;
+}
+
+.ordersSummary {
+    display: flex;
+    gap: 2rem;
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.summaryItem {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.summaryLabel {
+    font-weight: bold;
+    color: #666;
+}
+
+.summaryValue {
+    color: #0066cc;
+    font-weight: bold;
+}
+
+/* responsive tweaks */
+@media (max-width: 1100px) {
+
+    .tableHeader,
+    .tableRow {
+        grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.2fr 0.8fr 0.8fr 0.8fr;
+    }
+}
+
+@media (max-width: 992px) {
+
+    .tableHeader,
+    .tableRow {
+        grid-template-columns: 0.8fr 1fr 1.2fr 1fr 1fr 0.8fr 0.8fr 0.8fr;
+        font-size: 0.9rem;
+    }
+
+    .headerCell,
+    .cell {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .ordersTable {
+        overflow-x: auto;
+    }
+
+    .tableHeader,
+    .tableRow {
+        min-width: 1000px;
+    }
+}
