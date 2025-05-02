@@ -1,0 +1,274 @@
+.ordersViewContainer {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Tajawal', 'Cairo', Arial, sans-serif;
+}
+
+.pageTitle {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: right;
+    color: #333;
+}
+
+/* Filter and Search Styles */
+.filterAndSearch {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.statusFilter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filterButton {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    background-color: #f8f8f8;
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+    background-color: #eee;
+}
+
+.activeFilter {
+    background-color: #F26722;
+    color: white;
+    border-color: #F26722;
+}
+
+.searchContainer {
+    position: relative;
+    max-width: 100%;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    text-align: right;
+    direction: rtl;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+/* Loading and No Results Styles */
+.loadingIndicator,
+.noOrders {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f8f8;
+    border-radius: 0.5rem;
+    color: #666;
+    font-size: 1.2rem;
+}
+
+/* Table Styles */
+.ordersTable {
+    width: 100%;
+    border: 1px solid #eaeaea;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr 1fr 1fr 0.5fr 0.8fr 0.8fr 1fr;
+    background-color: #f0f7ff;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.headerCell {
+    padding: 1rem;
+    text-align: right;
+    color: #333;
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr 1fr 1fr 0.5fr 0.8fr 0.8fr 1fr;
+    border-bottom: 1px solid #eaeaea;
+    transition: background-color 0.2s ease;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.tableRow:hover {
+    background-color: #f8f8f8;
+}
+
+.cell {
+    padding: 1rem;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    overflow-wrap: break-word;
+}
+
+.headerCell,
+.cell {
+    box-sizing: border-box;
+    /* allow the grid track to size purely by the fr unit */
+    min-width: 0;
+}
+
+/* Course List Styles */
+.coursesList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.courseItem {
+    background-color: #f0f7ff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+/* Status Badge Styles */
+.statusBadge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Action Button Styles */
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.viewButton,
+.editButton {
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.viewButton {
+    background-color: #F26722;
+    color: white;
+}
+
+.viewButton:hover {
+    background-color: #F26722;
+}
+
+.editButton {
+    background-color: #f8f8f8;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.editButton:hover {
+    background-color: #eee;
+}
+
+/* Summary Section Styles */
+.ordersSummary {
+    display: flex;
+    gap: 2rem;
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.summaryItem {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.summaryLabel {
+    font-weight: bold;
+    color: #666;
+}
+
+.summaryValue {
+    color: #0066cc;
+    font-weight: bold;
+}
+
+/* Responsive Styles */
+@media (max-width: 1100px) {
+
+    .tableHeader,
+    .tableRow {
+        grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.2fr 0.8fr 0.8fr 0.8fr;
+    }
+}
+
+@media (max-width: 992px) {
+
+    .tableHeader,
+    .tableRow {
+        grid-template-columns: 0.8fr 1fr 1.2fr 1fr 1fr 0.8fr 0.8fr 0.8fr;
+        font-size: 0.9rem;
+    }
+
+    .headerCell,
+    .cell {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .ordersTable {
+        overflow-x: auto;
+    }
+
+    .tableHeader,
+    .tableRow {
+        min-width: 1000px;
+    }
+}
+
+@media (max-width: 576px) {
+    .filterAndSearch {
+        gap: 0.75rem;
+    }
+
+    .statusFilter {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        flex-wrap: nowrap;
+    }
+
+    .filterButton {
+        white-space: nowrap;
+    }
+
+    .ordersSummary {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

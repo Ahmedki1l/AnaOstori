@@ -51,11 +51,11 @@ function MyApp({ Component, pageProps }) {
 	], []);
 
 	const isUserInstructor = storeData?.isUserInstructor
-	useEffect(() => {
-		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
-			router.replace('/');
-		}
-	}, [router, isUserInstructor]);
+	// useEffect(() => {
+	// 	if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
+	// 		router.replace('/');
+	// 	}
+	// }, [router, isUserInstructor]);
 
 	useEffect(() => {
 		if (!isUserLogin && protectedRoutes.includes(router.pathname)) {
@@ -139,6 +139,9 @@ function MyApp({ Component, pageProps }) {
 				break;
 			case "/instructorPanel/managePurchaseOrder":
 				setPageTitle('استعلام المشتريات')
+				break;
+			case "/instructorPanel/manageCustomeCoursesOrders":
+				setPageTitle('استعلام طلبات الدورات الخاصة')
 				break;
 			case "/instructorPanel/manageNews":
 				setPageTitle('إضافة وتعديل الشريط التسويقي')
