@@ -130,7 +130,7 @@ const CustomeCourses = () => {
             courseId: courseId,
             appointmentId: selectedAppointments[courseId]
         }));
-        
+
         let orderPayload = {
             routeName: 'createOrder',
             courses: organizedSelectedCourses,
@@ -244,11 +244,18 @@ const CustomeCourses = () => {
                                 ${styles.appointmentItem}
                                 ${chosenAppt === a.id ? styles.appointmentItemSelected : ""}
                                 `}
-                                onClick={() => handleAppointmentSelect(course._id, a.id)}
+                                onClick={() => a.availableSeats > 0 && handleAppointmentSelect(course._id, a.id)}
                             >
-                                <span className={styles.appointmentTime}>
-                                    {a.from} – {a.to}
-                                </span>
+                                <div className={`${styles.appointmentInnerItems}`}>
+                                    <span className={styles.appointmentTime}>
+                                        {a.from} – {a.to}
+                                    </span>
+                                    <span className={styles.appointmentSeats}>
+                                        {a.availableSeats > 0
+                                            ? `${a.availableSeats} مقعد متبقي`
+                                            : `نفدت المقاعد`}
+                                    </span>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -370,7 +377,7 @@ const CustomeCourses = () => {
                     )}
                 </label>
 
-                <input type="radio" id="bankDetails" name="paymentDetails" className="hidden peer" onClick={()=>{setPaymentType('');}} />
+                <input type="radio" id="bankDetails" name="paymentDetails" className="hidden peer" onClick={() => { setPaymentType(''); }} />
                 <label htmlFor="bankDetails">
                     <div className={`${styles.radioBtnBox} ${styles.radioBtnBox3}`}>
                         <div className={styles.circle}><div /></div>
