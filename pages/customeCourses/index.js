@@ -516,17 +516,9 @@ const CustomeCourses = () => {
                                         })}
                                     </div>
                                     <div className={styles.orderTotals}>
-                                        <div className={styles.orderRow}>
-                                            <span className={styles.orderRowLabel}>سعر الدورة</span>
-                                            <span className={styles.orderRowValue}>{formatPrice(calculateTotalCost())} ر.س</span>
-                                        </div>
-                                        <div className={styles.orderRow}>
-                                            <span className={styles.orderRowLabel}>ضريبة القيمة المضافة (15%)</span>
-                                            <span className={styles.orderRowValue}>{formatPrice(calculateVAT())} ر.س</span>
-                                        </div>
                                         <div className={styles.orderTotalRow}>
                                             <span className={styles.orderRowLabel}>المبلغ الإجمالي</span>
-                                            <span className={styles.orderRowValue}>{formatPrice(calculateTotal())} ر.س</span>
+                                            <span className={styles.orderRowValue}>{formatPrice(calculateTotalCost())} ر.س</span>
                                         </div>
                                     </div>
                                 </div>
