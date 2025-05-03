@@ -5,7 +5,7 @@ import ConfirmDeleteModal from './ConfirmDeleteModal'
 import styles from './BlogList.module.scss';
 import { formatFullDate } from '../../constants/DateConverter';
 
-export default function BlogList({ blogs, setBlogs, categories }) {
+export default function BlogList({ blogs, setBlogs, categories, refresh }) {
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [creating, setCreating] = useState(false)
@@ -15,13 +15,11 @@ export default function BlogList({ blogs, setBlogs, categories }) {
   }
 
   const handleCreate = async data => {
-    const res = await axios.post('/blogs', data)
-    setBlogs(bs => [res.data, ...bs])
+    refresh();
   }
 
   const handleUpdate = async (id, data) => {
-    const res = await axios.put(`/blogs/${id}`, data)
-    setBlogs(bs => bs.map(b => b._id === id ? res.data : b))
+    refresh();
   }
 
   const handleDelete = async id => {
@@ -30,6 +28,7 @@ export default function BlogList({ blogs, setBlogs, categories }) {
       { blogId: id }
     );
     setBlogs(bs => bs.filter(b => b._id !== id))
+    refresh();
   }
 
   return (

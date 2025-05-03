@@ -4,14 +4,16 @@ import CategoryModal from './CategoryModal'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import styles from './CategoryList.module.scss';
 
-export default function CategoryList({ categories, setCategories }) {
+export default function CategoryList({ categories, setCategories, refresh }) {
     const [editing, setEditing] = useState(null)
     const [deleting, setDeleting] = useState(null)
     const [creating, setCreating] = useState(false)
 
     const handleCreate = async data => {
+        refresh();
     }
     const handleUpdate = async (id, data) => {
+        refresh();
     }
     const handleDelete = async id => {
         await axios.put(
@@ -19,6 +21,7 @@ export default function CategoryList({ categories, setCategories }) {
             { categoryId: id }
         );
         setCategories(cs => cs.filter(c => c._id !== id))
+        refresh();
     }
 
     return (

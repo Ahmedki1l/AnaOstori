@@ -71,7 +71,7 @@ export default function Index() {
                     <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة الدورات الخاصة</p>
                 </Link>
-                <Link href={'/instructorPanel/manageCustomeCourses'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                <Link href={'/instructorPanel/manageBlogs'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة المدونات</p>
                 </Link>
