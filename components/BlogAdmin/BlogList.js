@@ -10,10 +10,6 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
   const [deleting, setDeleting] = useState(null)
   const [creating, setCreating] = useState(false)
 
-  const refresh = () => {
-    // refetch or just keep local state
-  }
-
   const handleCreate = async data => {
     refresh();
   }
@@ -83,7 +79,7 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
         <BlogModal
           categories={categories}
           onSave={data => { handleCreate(data); setCreating(false) }}
-          onClose={() => setCreating(false)}
+          onClose={() => {setCreating(false); handleUpdate()}}
         />
       )}
       {editing && (
@@ -91,14 +87,14 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
           blog={editing}
           categories={categories}
           onSave={data => { handleUpdate(editing._id, data); setEditing(null) }}
-          onClose={() => setEditing(null)}
+          onClose={() => {setEditing(null); handleUpdate()}}
         />
       )}
       {deleting && (
         <ConfirmDeleteModal
           title={`حذف المقال "${deleting.title}"؟`}
           onConfirm={() => { handleDelete(deleting._id); setDeleting(null) }}
-          onClose={() => setDeleting(null)}
+          onClose={() => {setDeleting(null); handleUpdate()}}
         />
       )}
     </div>
