@@ -6,7 +6,7 @@ import BlogCard from './BlogCard';
 const BlogComponent = ({ articles, categories }) => {
     const router = useRouter();
     const [filteredArticles, setFilteredArticles] = useState([]);
-    const [activeCategory, setActiveCategory] = useState('all');
+    const [activeCategory, setActiveCategory] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const articlesPerPage = 6;
@@ -15,8 +15,8 @@ const BlogComponent = ({ articles, categories }) => {
         // Filter articles based on active category and search term
         let filtered = articles;
 
-        if (activeCategory && activeCategory !== 'all') {
-            filtered = filtered.filter(article => article.category === activeCategory);
+        if (activeCategory && activeCategory !== 0) {
+            filtered = filtered.filter(article => article.categoryId === activeCategory);
         }
 
         if (searchTerm) {
@@ -88,19 +88,19 @@ const BlogComponent = ({ articles, categories }) => {
             {/* Categories */}
             <div className={styles.categoriesContainer}>
                 <button
-                    className={`${styles.categoryButton} ${activeCategory === 'all' ? styles.activeCategory : ''}`}
-                    onClick={() => handleCategoryClick('all')}
+                    className={`${styles.categoryButton} ${activeCategory === 0 ? styles.activeCategory : ''}`}
+                    onClick={() => handleCategoryClick(0)}
                 >
-                    الشائعات العامة
+                    جميع المقالات
                 </button>
 
                 {categories.map((category) => (
                     <button
-                        key={category.id}
-                        className={`${styles.categoryButton} ${activeCategory === category.id ? styles.activeCategory : ''}`}
-                        onClick={() => handleCategoryClick(category.id)}
+                        key={category._id}
+                        className={`${styles.categoryButton} ${activeCategory === category._id ? styles.activeCategory : ''}`}
+                        onClick={() => handleCategoryClick(category._id)}
                     >
-                        {category.name}
+                        {category.title}
                     </button>
                 ))}
             </div>
@@ -109,7 +109,7 @@ const BlogComponent = ({ articles, categories }) => {
             <div className={styles.articlesGrid}>
                 {currentArticles.map((article) => (
                     <BlogCard
-                        key={article.id}
+                        key={article._id}
                         article={article}
                         onClick={handleArticleClick}
                     />

@@ -51,11 +51,11 @@ function MyApp({ Component, pageProps }) {
 	], []);
 
 	const isUserInstructor = storeData?.isUserInstructor
-	// useEffect(() => {
-	// 	if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
-	// 		router.replace('/');
-	// 	}
-	// }, [router, isUserInstructor]);
+	useEffect(() => {
+		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
+			router.replace('/');
+		}
+	}, [router, isUserInstructor]);
 
 	useEffect(() => {
 		if (!isUserLogin && protectedRoutes.includes(router.pathname)) {
@@ -157,6 +157,9 @@ function MyApp({ Component, pageProps }) {
 				break;
 			case "/instructorPanel/manageLibrary":
 				setPageTitle('إدارة المكتبة الرقمية')
+				break;
+			case "/instructorPanel/manageBlogs":
+				setPageTitle('إدارة المدونات')
 				break;
 			case "/forgot-password":
 				setPageTitle(' نسيت كلمة السر')

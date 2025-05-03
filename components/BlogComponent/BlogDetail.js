@@ -2,13 +2,13 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './BlogDetail.module.scss';
-import styles2 from '../../styles/Home.module.scss';
 import CourseCard from '../../components/HomePageComponents/CourseCard';
 import BlogCard from './BlogCard';
 import { HomeConst } from '../../constants/HomeConst';
 import { useRouter } from 'next/router';
 import { mediaUrl } from '../../constants/DataManupulation';
 import useWindowSize from '../../hooks/useWindoSize';
+import { formatFullDate } from '../../constants/DateConverter';
 
 export default function BlogDetail(props) {
     console.log("🚀 ~ BlogDetail ~ props:", props)
@@ -17,6 +17,12 @@ export default function BlogDetail(props) {
     const article = props?.article ? props?.article : []
     const relatedArticles = props?.relatedArticles ? props?.relatedArticles : []
     const windowScreen = useWindowSize().width;
+
+    const tableOfContents = article.sections.map((sec) => {
+        return {
+            title: sec.head,
+        }
+    });
 
     const handleArticleClick = (articleId) => {
         router.push(`/blog/${articleId}`);
@@ -45,22 +51,14 @@ export default function BlogDetail(props) {
 
                         {/* Hero image */}
                         <div className={styles.articleHeroImage}>
-                            {article.heroImage ? (
+                            {article.image && (
                                 <Image
-                                    src={article.heroImage}
+                                    src={article.image}
                                     alt={article.title}
                                     width={942}
                                     height={416}
                                     className={styles.heroImage}
                                 />
-                            ) : (
-                                <div className={styles.placeholderImage}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                        <polyline points="21 15 16 10 5 21"></polyline>
-                                    </svg>
-                                </div>
                             )}
                         </div>
 
@@ -73,52 +71,48 @@ export default function BlogDetail(props) {
                                     <line x1="8" y1="2" x2="8" y2="6"></line>
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
-                                {article.date}
+                                {formatFullDate(article.updatedAt)}
                             </div>
                             <h1 className={styles.articleTitle}>{article.title}</h1>
                         </div>
 
-                        {/* Article body content */}
+                        {/* Article sections */}
                         <div className={styles.articleBody}>
-                            {article.content?.map((section, index) => {
-                                if (section.type === 'paragraph') {
-                                    return (
-                                        <p key={`paragraph-${index}`} className={styles.paragraph}>
-                                            {section.text}
-                                        </p>
-                                    );
-                                } else if (section.type === 'heading') {
-                                    return (
-                                        <h2 key={`heading-${index}`} className={styles.heading}>
-                                            {section.text}
-                                        </h2>
-                                    );
-                                } else if (section.type === 'list') {
-                                    return (
-                                        <ol key={`list-${index}`} className={styles.numberedList}>
-                                            {section.items.map((item, itemIndex) => (
-                                                <li key={`list-item-${itemIndex}`} className={styles.listItem}>
-                                                    {item.title && <span className={styles.listItemTitle}>{item.title}</span>}
-                                                    {item.description && <p className={styles.listItemDescription}>{item.description}</p>}
-                                                </li>
-                                            ))}
-                                        </ol>
-                                    );
-                                } else if (section.type === 'image') {
-                                    return (
-                                        <div key={`image-${index}`} className={styles.contentImage}>
-                                            <Image
-                                                src={section.src}
-                                                alt={section.alt || ''}
-                                                width={600}
-                                                height={300}
-                                                className={styles.image}
-                                            />
-                                            {section.caption && <p className={styles.imageCaption}>{section.caption}</p>}
-                                        </div>
-                                    );
-                                }
-                                return null;
+                            {article.sections?.map((section) => {
+                                console.log("🚀 ~ BlogDetail ~ section:", section);
+                                return Object.entries(section).map(([key, value], index) => {
+                                    console.log("🚀 ~ {section.map ~ key:", key);
+                                    if (key === 'content' && value) {
+                                        console.log("🚀 ~ section.map ~ value:", value);
+                                        return (
+                                            <p key={`paragraph-${index}`} className={styles.paragraph}>
+                                                {value}
+                                            </p>
+                                        );
+                                    } else if (key === 'head' && value) {
+                                        console.log("🚀 ~ section.map ~ value:", value);
+                                        return (
+                                            <h2 key={`heading-${index}`} className={styles.heading}>
+                                                {value}
+                                            </h2>
+                                        );
+                                    } else if (key === 'image' && value) {
+                                        console.log("🚀 ~ section.map ~ value:", value);
+                                        return (
+                                            <div key={`image-${index}`} className={styles.contentImage}>
+                                                <Image
+                                                    src={value}
+                                                    alt={section.head || ''}
+                                                    width={600}
+                                                    height={300}
+                                                    className={styles.image}
+                                                />
+                                                {section.head && <p className={styles.imageCaption}>{section.head}</p>}
+                                            </div>
+                                        );
+                                    }
+                                    return <></>;
+                                })
                             })}
                         </div>
                     </div>
@@ -128,7 +122,7 @@ export default function BlogDetail(props) {
                         <div className={styles.tocContainer}>
                             <h3 className={styles.tocTitle}>مواضيع المقالة</h3>
                             <ul className={styles.tocList}>
-                                {article.tableOfContents?.map((item, index) => (
+                                {tableOfContents?.map((item, index) => (
                                     <li key={`toc-${index}`} className={styles.tocItem}>
                                         <Link href={`#section-${index}`}>
                                             <span className={item.highlighted ? styles.tocItemHighlighted : ''}>{item.title}</span>
@@ -161,7 +155,7 @@ export default function BlogDetail(props) {
                     <div className={styles.relatedArticlesGrid}>
                         {relatedArticles.map((article) => (
                             <BlogCard
-                                key={article.id}
+                                key={article._id}
                                 article={article}
                                 onClick={handleArticleClick}
                             />

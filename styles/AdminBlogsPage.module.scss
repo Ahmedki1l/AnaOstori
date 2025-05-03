@@ -1,0 +1,33 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+}
+
+.header {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tabButton {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.tabButton:hover {
+    background-color: #e0e0e0;
+}
+
+.tabButtonActive {
+    background-color: #f26722;
+    color: #fff;
+}

@@ -1,12 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 import styles from './BlogCard.module.scss';
+import {formatFullDate} from '../../constants/DateConverter';
 
 const BlogCard = ({ article, onClick }) => {
+
     return (
         <div
             className={styles.articleCard}
-            onClick={() => onClick(article.id)}
+            onClick={() => onClick(article._id)}
         >
             <div className={styles.articleImageContainer}>
                 {article.image ? (
@@ -32,11 +34,11 @@ const BlogCard = ({ article, onClick }) => {
                 <span className={`material-icons-two-tone ${styles.calendarIcon}`}>
                     calendar_today
                 </span>
-                {article.date}
+                {formatFullDate(article.updatedAt)}
             </div>
 
             <h3 className={styles.articleTitle}>{article.title}</h3>
-            <p className={styles.articleExcerpt}>{article.excerpt}</p>
+            <p className={styles.articleExcerpt}>{article.description}</p>
         </div>
     );
 };
