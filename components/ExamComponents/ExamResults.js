@@ -2,18 +2,28 @@ import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
 const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onReviewAnswers, onRetakeExam }) => {
-    // Mock data - replace with actual data from props
-    // Calculate score based on examData and reviewQuestions
-    const totalQuestions = reviewQuestions.length;
+    const allReviews = reviewQuestions;
+    const flatReviews = allReviews.flat();
+    const flatQuestions = examData.flat();
+    
+    const totalQuestions = allReviews.reduce(
+        (sum, block) => sum + block.length,
+        0
+    );
+    
+    console.log("🚀 ~ ExamResults ~ examData:", examData)
+    console.log("🚀 ~ ExamResults ~ flatQuestions:", flatQuestions)
+    console.log("🚀 ~ ExamResults ~ reviewQuestions:", allReviews)
+    console.log("🚀 ~ ExamResults ~ flatReviews:", flatReviews)
 
-    const calculateScore = (examData, reviewQuestions) => {
-        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+    const calculateScore = (examData, allReviews) => {
+        if (!examData || !allReviews || allReviews.length === 0) {
             return 0;
         }
 
         let correctAnswers = 0;
 
-        reviewQuestions.forEach((question, i) => {
+        allReviews.forEach((question, i) => {
             if (question.selectedAnswer === examData[i].correctAnswer) {
                 correctAnswers++;
             }
@@ -22,14 +32,14 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         return Math.round((correctAnswers / totalQuestions) * 100);
     };
 
-    const getCorrectAnswers = (examData, reviewQuestions) => {
-        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+    const getCorrectAnswers = (examData, allReviews) => {
+        if (!examData || !allReviews || allReviews.length === 0) {
             return 0;
         }
 
         let correctAnswers = 0;
 
-        reviewQuestions.forEach((question, i) => {
+        allReviews.forEach((question, i) => {
             if (question.selectedAnswer === examData[i].correctAnswer) {
                 correctAnswers++;
             }
@@ -39,13 +49,13 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
     };
 
     const getNotAnsweredQuestions = () => {
-        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+        if (!examData || !flatReviews || flatReviews.length === 0) {
             return 0;
         }
 
         let answers = 0;
 
-        reviewQuestions.forEach((question, i) => {
+        flatReviews.forEach((question, i) => {
             if (!question.answered) {
                 answers++;
             }
@@ -55,13 +65,13 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
     }
 
     const getMarkedQuestions = () => {
-        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+        if (!examData || !flatReviews || flatReviews.length === 0) {
             return 0;
         }
 
         let answers = 0;
 
-        reviewQuestions.forEach((question, i) => {
+        flatReviews.forEach((question, i) => {
             if (question.isMarked) {
                 answers++;
             }
@@ -70,8 +80,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         return answers;
     }
 
-    const getSections = (examData, reviewQuestions) => {
-        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
+    const getSections = (examData, allReviews) => {
+        if (!examData || !allReviews || allReviews.length === 0) {
             return [];
         }
 
@@ -93,7 +103,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
                 const section = sectionMap.get(sectionTitle);
                 section.questions.push({
                     question,
-                    selectedAnswer: reviewQuestions[index].selectedAnswer,
+                    selectedAnswer: allReviews[index].selectedAnswer,
                     skill: skill.text
                 });
 
@@ -103,7 +113,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
                 }
                 section.skills.get(skill.text).push({
                     question,
-                    selectedAnswer: reviewQuestions[index].selectedAnswer
+                    selectedAnswer: allReviews[index].selectedAnswer
                 });
             });
         });
@@ -135,11 +145,11 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         });
     };
 
-    const score = calculateScore(examData, reviewQuestions);
-    const correctAnswers = getCorrectAnswers(examData, reviewQuestions);
+    const score = calculateScore(flatQuestions, flatReviews);
+    const correctAnswers = getCorrectAnswers(flatQuestions, flatReviews);
     const unAnswered = getNotAnsweredQuestions();
     const marked = getMarkedQuestions();
-    const sections = getSections(examData, reviewQuestions);
+    const sections = getSections(flatQuestions, flatReviews);
 
     const results = {
         score: score,

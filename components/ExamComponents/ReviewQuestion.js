@@ -13,7 +13,8 @@ const ReviewQuestion = ({
     currentQuestionIndex,
     showReviewSection,
     finishReview,
-    formatTime
+    formatTime,
+    section
 }) => {
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [currentReviewQuestionIndex, setCurrentReviewQuestionIndex] = useState(currentQuestionIndex);
@@ -118,7 +119,7 @@ const ReviewQuestion = ({
                 <div className={styles.mainQuestionArea}>
                     <div className={styles.questionHeader}>
                         <div className={styles.wrapper}>
-                            <span className={styles.sectionTitle}>القسم الأول</span>
+                            <span className={styles.sectionTitle}>{section.title}</span>
                         </div>
                         <span className={styles.questionNumber}>سؤال {currentReviewQuestionIndex + 1} من {totalQuestions}</span>
                     </div>

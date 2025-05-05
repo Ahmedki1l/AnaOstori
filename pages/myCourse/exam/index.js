@@ -14,25 +14,37 @@ import ReviewQuestion from '../../../components/ExamComponents/ReviewQuestion';
 import ExamResults from '../../../components/ExamComponents/ExamResults';
 import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsReview';
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
+import toast from 'react-hot-toast';
 
 const ExamPage = () => {
     const router = useRouter();
     const { examId } = router.query;
+    const isFirstRun = useRef(true);
 
     const [loading, setLoading] = useState(false);
     const [examData, setExamData] = useState(null);
     const [selectedExam, setSelectedExam] = useState();
+    const [selectedSectionId, setSelectedSectionId] = useState(0);
+    const [selectedSection, setSelectedSection] = useState(null);
     const [examQuestions, setExamQuestions] = useState();
+    const [allExamQuestions, setAllExamQuestions] = useState([]);
     const [examStage, setExamStage] = useState('introduction');
     const [examTimer, setExamTimer] = useState('25:00');
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionAnswers, setQuestionAnswers] = useState({});
     const [markedQuestions, setMarkedQuestions] = useState([]);
 
+    const [selectedSectionidForReview, setSelectedSectionidForReview] = useState([]);
+
     // near the top of your component
     // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
     const [timeLeft, setTimeLeft] = useState(0);
     const timerRef = useRef(null);
+
+    // ────── 4) When we transition to 'results', stop timer & compute elapsed ──────
+    const [elapsedSeconds, setElapsedSeconds] = useState(null);
+    const [elapsedFormatted, setElapsedFormatted] = useState(null);
+    const [allElapsedFormatted, setAllElapsedFormatted] = useState([]);
 
     // format seconds → "MM:SS"
     const formatTime = secs => {
@@ -68,7 +80,7 @@ const ExamPage = () => {
     const [mockExamData2, setMockExamData2] = useState({
         questions: [
             {
-                id: 1,
+                _id: 1,
                 text: "الجهل بثقافة الآخرين يشكل تلقائيًا نظرة رديئة عنهم.",
                 type: "contextual",
                 context: "الخطأ السياقي",
@@ -82,7 +94,7 @@ const ExamPage = () => {
                 correctAnswer: 'ج'
             },
             {
-                id: 2,
+                _id: 2,
                 text: "الجهل بثقافة الآخرين يشكل تلقائيًا نظرة رديئة عنهم.",
                 type: "contextual",
                 context: "الخطأ السياقي",
@@ -96,7 +108,7 @@ const ExamPage = () => {
                 correctAnswer: 'ج'
             },
             {
-                id: 3,
+                _id: 3,
                 text: "الجهل بثقافة الآخرين يشكل تلقائيًا نظرة رديئة عنهم.",
                 type: "contextual",
                 context: "الخطأ السياقي",
@@ -110,7 +122,7 @@ const ExamPage = () => {
                 correctAnswer: 'ج'
             },
             {
-                id: 4,
+                _id: 4,
                 text: "الجهل بثقافة الآخرين يشكل تلقائيًا نظرة رديئة عنهم.",
                 type: "contextual",
                 context: "الخطأ السياقي",
@@ -127,21 +139,12 @@ const ExamPage = () => {
     });
 
     const [reviewSpecificQuestions, setReviewSpecificQuestions] = useState(mockExamData2);
+    const [reviewSpecificQuestionsAnswers, setReviewSpecificQuestionsAnswers] = useState(mockExamData2);
 
     const [displayExamData, setDisplayExamData] = useState(mockExamData);
 
-    const initialReviewQuestions = mockExamData2.questions.map((question, index) => ({
-        id: question._id,
-        answered: false,
-        isMarked: false,
-        selectedAnswer: null
-    }));
-    console.log("🚀 ~ initialReviewQuestions ~ mockExamData2:", mockExamData2);
-    console.log("🚀 ~ initialReviewQuestions ~ initialReviewQuestions:", initialReviewQuestions);
-
-    const [reviewQuestions, setReviewQuestions] = useState(initialReviewQuestions);
-
-    console.log("🚀 ~ ExamPage ~ reviewQuestions:", reviewQuestions);
+    const [reviewQuestions, setReviewQuestions] = useState({});
+    const [allReviewQuestions, setAllReviewQuestions] = useState([]);
 
     useEffect(() => {
         if (examId) {
@@ -150,7 +153,7 @@ const ExamPage = () => {
     }, [examId]);
 
     useEffect(() => {
-        const initialReviewQuestions2 = mockExamData2.questions.map((question, index) => ({
+        const initialReviewQuestions2 = mockExamData2.questions.map((question) => ({
             id: question._id,
             answered: false,
             isMarked: false,
@@ -162,10 +165,18 @@ const ExamPage = () => {
     }, [mockExamData2]);
 
     useEffect(() => {
+        console.log("🚀 ~ ExamPage ~ allReviewQuestions:", allReviewQuestions);
+    }, [allReviewQuestions]);
+
+    useEffect(() => {
         if (selectedExam) {
             // format HH:MM for display
             const examDurationDisplay = selectedExam.duration
                 ? `${selectedExam.duration}:00`
+                : '25:00';
+
+            const sectionDurationDisplay = selectedExam?.sections[selectedSectionId].duration
+                ? `${selectedExam?.sections[selectedSectionId].duration}:00`
                 : '25:00';
 
             setMockExamData({
@@ -192,16 +203,13 @@ const ExamPage = () => {
                 ]
             }));
 
-            setMockExamData1({
-                title: selectedExam.title || 'عنوان الاختبار هنا',
-                duration: examDurationDisplay,
-                sections: formattedSections
-            });
             const fetchWithAsync = async () => {
-                const questions = await fetchQuestionsByIds(selectedExam?.questions);
+                const questions = await fetchQuestionsByIds(selectedExam?.sections[selectedSectionId].questions);
                 setExamQuestions(questions);
+                setAllExamQuestions((prev) => [...prev, questions]);
+                setSelectedSection(selectedExam?.sections[selectedSectionId]);
                 setMockExamData2({
-                    questions: questions
+                    questions: questions,
                 });
                 setReviewSpecificQuestions({
                     questions: questions
@@ -209,16 +217,22 @@ const ExamPage = () => {
             }
             fetchWithAsync();
 
-            setTimeLeft(selectedExam.duration * 60);
+            setMockExamData1({
+                title: selectedExam?.sections[selectedSectionId].title || 'عنوان الاختبار هنا',
+                duration: sectionDurationDisplay,
+                sections: formattedSections
+            });
+
+            setTimeLeft(selectedExam?.sections[selectedSectionId].duration * 60);
         }
-    }, [selectedExam]);
+    }, [selectedExam, selectedSectionId]);
 
     useEffect(() => {
         setDisplayExamData(mockExamData);
     }, [mockExamData]);
 
     useEffect(() => {
-        if (timeLeft <= 0 || examStage == 'introduction' || examStage == 'sections' || examStage == 'results') return;
+        if (examStage == 'introduction' || examStage == 'sections' || examStage == 'results') return;
         timerRef.current = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
@@ -230,16 +244,17 @@ const ExamPage = () => {
             });
         }, 1000);
 
-        return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
-        };
-    }, [timeLeft, examStage]);
+        return () => clearInterval(timerRef.current);
+    }, [examStage]);
 
-    // ────── 4) When we transition to 'results', stop timer & compute elapsed ──────
-    const [elapsedSeconds, setElapsedSeconds] = useState(null);
-    const [elapsedFormatted, setElapsedFormatted] = useState(null);
 
     useEffect(() => {
+        if (selectedSectionId - 1 >= 0) {
+            const initial = (selectedExam?.sections[selectedSectionId - 1].duration || 0) * 60;
+            const used = initial - timeLeft;
+            setAllElapsedFormatted((prev) => [...prev, formatTime(used)]);
+        }
+
         if (examStage !== 'results') return;
         // kill interval if still running
         if (timerRef.current) {
@@ -429,10 +444,23 @@ const ExamPage = () => {
     };
 
     const handleFinishReview = () => {
-        setExamStage('results');
+        if (selectedSectionId < selectedExam.sections.length - 1) {
+            setDisplayExamData(mockExamData1);
+            setExamStage('sections');
+            setSelectedSectionId(selectedSectionId + 1);
+            setAllReviewQuestions(prev => {
+                return [...prev, reviewQuestions];
+            });
+        } else {
+            if(isFirstRun.current) {
+                setAllReviewQuestions(prev => {
+                    return [...prev, reviewQuestions];
+                });
+                isFirstRun.current = false;
+            }
+            setExamStage('results');
+        }
     };
-
-
 
     const handleQuestionClick = (index) => {
         console.log("🚀 ~ handleQuestionClick ~ index:", index);
@@ -456,8 +484,24 @@ const ExamPage = () => {
         setExamStage('introduction')
     }
 
-    console.log("examQuestions: ", examQuestions);
-    console.log("selectedExam: ", selectedExam);
+    const handleSectionsReviewQuestionClick = async (sectionIndex, qId) => {
+        console.log("🚀 ~ handleSectionsReviewQuestionClick ~ sectionIndex:", sectionIndex, qId);
+        const fetchWithAsync = async () => {
+            const questions = await fetchQuestionsByIds(selectedExam?.sections[sectionIndex].questions);
+            console.log("🚀 ~ fetchWithAsync ~ questions:", questions);
+            setReviewSpecificQuestionsAnswers({
+                questions: questions
+            });
+            setCurrentQuestionIndex(qId);
+            setSelectedSectionidForReview(sectionIndex);
+        }
+        await fetchWithAsync();
+        setExamStage('reviewAnswers');
+    }
+
+    useEffect(()=>{
+        console.log("🚀 ~ ExamPage ~ selectedSectionidForReview:", selectedSectionidForReview);
+    }, [selectedSectionidForReview])
 
     if (loading) {
         return (
@@ -493,6 +537,7 @@ const ExamPage = () => {
                     currentTime={examTimer}
                     reviewQuestions={reviewQuestions}
                     setReviewQuestions={setReviewQuestions}
+                    section={selectedExam.sections[selectedSectionId]}
                 />
             )}
 
@@ -532,6 +577,7 @@ const ExamPage = () => {
                     currentQuestionIndex={currentQuestionIndex}
                     showReviewSection={() => { setExamStage('review'); }}
                     finishReview={() => { setExamStage('results'); }}
+                    section={selectedExam.sections[selectedSectionId]}
                 />
             )}
 
@@ -539,8 +585,8 @@ const ExamPage = () => {
                 <ExamResults
                     elapsedTime={elapsedFormatted}
                     totalTime={selectedExam.duration + ":00" || "25:00"}
-                    examData={examQuestions}
-                    reviewQuestions={reviewQuestions}
+                    examData={allExamQuestions}
+                    reviewQuestions={allReviewQuestions}
                     onReviewAnswers={() => setExamStage('sectionsReview')}
                     onRetakeExam={() => handleRetakeExam()}
                 />
@@ -548,25 +594,27 @@ const ExamPage = () => {
 
             {examStage === 'sectionsReview' && (
                 <ExamSectionsReview
-                    examData={examQuestions}
-                    elapsedTime={elapsedFormatted}
-                    reviewQuestions={reviewQuestions}
+                    examData={allExamQuestions}
+                    elapsedTime={allElapsedFormatted}
+                    reviewQuestions={allReviewQuestions}
+                    examSections={selectedExam?.sections}
                     onRetakeExam={() => handleRetakeExam()}
                     onViewResults={() => setExamStage('review')}
-                    handleQuestionClick={() => setExamStage('reviewAnswers')}
+                    handleQuestionClick={(i, q) => handleSectionsReviewQuestionClick(i, q)}
                 />
             )}
 
             {examStage === 'reviewAnswers' && (
                 <ReviewAnswers
-                    examData={reviewSpecificQuestions}
-                    onCompleteExam={handleCompleteExam}
+                    examData={reviewSpecificQuestionsAnswers}
+                    onCompleteExam={()=>setExamStage('sectionsReview')}
                     currentTime={examTimer}
-                    reviewQuestions={reviewQuestions}
+                    reviewQuestions={allReviewQuestions[selectedSectionidForReview || 0]}
                     setReviewQuestions={setReviewQuestions}
                     currentQuestionIndex={currentQuestionIndex}
                     showReviewSection={() => { }}
                     finishReview={() => { }}
+                    section={selectedExam.sections[selectedSectionidForReview]}
                 />
             )}
         </div>

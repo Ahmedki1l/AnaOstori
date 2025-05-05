@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
-const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions, formatTime }) => {
+const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions, formatTime, section }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState({});
 
@@ -25,6 +25,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
     ];
 
     const questions = examData?.questions || mockQuestions;
+    console.log("🚀 ~ ExamQuestions ~ examData:", examData)
     const currentQuestion = questions[currentQuestionIndex] || {};
     console.log("🚀 ~ ExamQuestions ~ currentQuestion:", currentQuestion);
     const totalQuestions = questions.length;
@@ -75,7 +76,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
 
     const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
     console.log("🚀 ~ ExamQuestions ~ reviewQuestions:", reviewQuestions);
-    
+
 
     return (
         <div className={styles.examContainer}>
@@ -96,7 +97,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                             </defs>
                         </svg>
                     </div>
-                    <span className={styles.timerText}>{ formatTime(timeLeft) }</span>
+                    <span className={styles.timerText}>{formatTime(timeLeft)}</span>
                 </div>
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
@@ -125,7 +126,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                 <div className={styles.mainQuestionArea}>
                     <div className={styles.questionHeader}>
                         <div className={styles.wrapper}>
-                            <span className={styles.sectionTitle}>القسم الأول</span>
+                            <span className={styles.sectionTitle}>{section.title}</span>
                         </div>
                         <span className={styles.questionNumber}>سؤال {currentQuestionIndex + 1} من {totalQuestions}</span>
                     </div>

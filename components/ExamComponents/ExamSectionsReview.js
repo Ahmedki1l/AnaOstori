@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, onRetakeExam, onViewResults, handleQuestionClick }) => {
+const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSections, onRetakeExam, onViewResults, handleQuestionClick }) => {
     const [expandedSections, setExpandedSections] = useState([0]); // First section expanded by default
 
     const toggleSection = (index) => {
@@ -11,52 +11,99 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, onRetakeEx
             setExpandedSections([...expandedSections, index]);
         }
     };
+    const allreviews = reviewQuestions;
+    console.log("🚀 ~ ExamSectionsReview ~ examData:", examData);
+    console.log("🚀 ~ ExamSectionsReview ~ allreviews:", allreviews)
 
-    const totalQuestions = reviewQuestions.length;
+    function calculateScore(examData, allReviewQuestions) {
+        // normalize to an array-of-arrays of question objects
+        const sections = Array.isArray(examData)
+            ? examData           // you already have [[q,q],[q,q]]
+            : examData.sections; // or { sections:[ [q…], [q…] ] }
 
-    const calculateScore = (examData, reviewQuestions) => {
-        if (!examData || !reviewQuestions || reviewQuestions.length === 0) {
-            return 0;
+        if (
+            !Array.isArray(sections) ||
+            !Array.isArray(allReviewQuestions)
+        ) {
+            return [];
         }
 
-        let correctAnswers = 0;
+        // for each section
+        return sections.map((questionList, idx) => {
+            console.log("🚀 ~ returnsections.map ~ questionList:", questionList)
+            const reviews = allReviewQuestions[idx] || [];
+            console.log("🚀 ~ returnsections.map ~ reviews:", reviews)
+            const total = reviews.length;
 
-        reviewQuestions.forEach((question, i) => {
-            if (question.selectedAnswer === examData[i].correctAnswer) {
-                correctAnswers++;
-            }
+            // count how many selectedAnswer === correctAnswer
+            const correctCount = reviews.reduce((sum, rev) => {
+                const orig = questionList.find(q => q._id === rev.id);
+                return sum + (orig && rev.selectedAnswer === orig.correctAnswer ? 1 : 0);
+            }, 0);
+            console.log("🚀 ~ correctCount ~ correctCount:", correctCount)
+
+            const percentage = total > 0
+                ? Math.round((correctCount / total) * 100)
+                : 0;
+            console.log("🚀 ~ returnsections.map ~ percentage:", percentage)
+
+            const score = `${correctCount} / ${total}`;
+            console.log("🚀 ~ returnsections.map ~ score:", score)
+
+            return {
+                percentage,
+                score
+            };
         });
+    }
 
-        return {
-            percentage: Math.round((correctAnswers / totalQuestions) * 100),
-            score: `${correctAnswers} / ${totalQuestions}`
-        };
-    };
 
-    const percentage = calculateScore(examData, reviewQuestions).percentage;
-    const score = calculateScore(examData, reviewQuestions).score;
+    const sectionsData = calculateScore(examData, allreviews);
+    console.log("🚀 ~ ExamSectionsReview ~ sectionsData:", sectionsData)
 
-    const sectionQuestions = examData.map((question, i) => {
-        const status = reviewQuestions[i].selectedAnswer === question.correctAnswer ? 'correct' :
-            reviewQuestions[i].selectedAnswer === null ? 'incomplete' : 'wrong';
+    /**
+     * Format each section’s questions into {id, status, isMarked} objects.
+     *
+     * @param {Array<Array<Object>>} examData         — [[q,q],[q,q],…]
+     * @param {Array<Array<Object>>} reviewQuestions  — [[r,r],[r,r],…]
+     * @returns {Array<Array<{id:number,status:string,isMarked:boolean}>>}
+     */
+    function formatSectionQuestions(examData, reviewQuestions) {
+        return examData.map((sectionQs, secIdx) => {
+            // Map each question in the section
+            return sectionQs.map((q, qIdx) => {
+                const rev = (reviewQuestions[secIdx] || [])[qIdx] || {};
 
-        return {
-            id: i+1,
-            status: status,
-            isMarked: reviewQuestions[i].isMarked || false
-        };
-    });
+                // Determine status
+                let status;
+                if (rev.selectedAnswer === q.correctAnswer) {
+                    status = 'correct';
+                } else if (rev.selectedAnswer == null) {
+                    status = 'incomplete';
+                } else {
+                    status = 'wrong';
+                }
 
-    // Mock data - replace with actual data from props
-    const sections = [
-        {
-            title: "القسم الأول",
-            time: elapsedTime,
-            score: score,
-            percentage: percentage,
-            questions: sectionQuestions
-        }
-    ];
+                return {
+                    id: qIdx,
+                    status,
+                    isMarked: rev.isMarked || false
+                };
+            });
+        });
+    }
+
+    // Usage:
+    const sectionsFormatted = formatSectionQuestions(examData, allreviews);
+    console.log("🚀 ~ ExamSectionsReview ~ sectionsFormatted:", sectionsFormatted);
+
+    const sections = examSections.map((section, i) => ({
+        title: section.title,
+        time: elapsedTime[i],
+        score: sectionsData[i].score,
+        percentage: sectionsData[i].percentage,
+        questions: sectionsFormatted[i]
+    }))
 
     console.log("🚀 ~ ExamSectionsReview ~ sections:", sections);
     // Status indicator based on question status
@@ -265,13 +312,13 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, onRetakeEx
                                         <button
                                             key={qIndex}
                                             className={styles.figmaQuestionItem}
-                                            onClick={() => handleQuestionClick(question.id)}
-                                            aria-label={`سؤال ${question.id}`}
+                                            onClick={() => handleQuestionClick(index, question.id)}
+                                            aria-label={`سؤال ${qIndex+1}`}
                                             type="button"
                                         >
                                             <StatusIcon status={question.status} />
                                             <div className={styles.figmaQuestionText}>
-                                                سؤال {question.id}
+                                                سؤال {qIndex+1}
                                             </div>
                                             <FlagIcon isMarked={question.isMarked} />
                                         </button>

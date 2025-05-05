@@ -187,16 +187,6 @@
     align-items: center;
 }
 
-.sectionTitle {
-    font-size: 18px;
-    font-weight: 500;
-    color: #000000;
-    margin: 0;
-    display: flex;
-    // justify-content: space-between;
-    align-items: center;
-}
-
 .questionNumber {
     font-size: 16px;
     margin: 0 10px;
@@ -579,14 +569,15 @@
 
 .examSection {
     margin-bottom: 24px;
+    margin-right: 40px;
 }
 
 .sectionTitle {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     margin-bottom: 12px;
     text-align: right;
-    color: #333;
+    color: #000000;
 }
 
 .skillsList {
@@ -689,11 +680,6 @@
         padding: 0 10px;
         text-align: right;
     }
-}
-
-.sectionTitle {
-    font-weight: 500;
-    color: #333;
 }
 
 .sectionScore {

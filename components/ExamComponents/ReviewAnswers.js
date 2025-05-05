@@ -11,8 +11,11 @@ const ReviewAnswers = ({
     setReviewQuestions,
     currentQuestionIndex,
     showReviewSection,
-    finishReview
+    finishReview,
+    section
 }) => {
+    console.log("🚀 ~ section:", section)
+    console.log("🚀 ~ reviewQuestions:", reviewQuestions)
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [currentReviewQuestionIndex, setCurrentReviewQuestionIndex] = useState(currentQuestionIndex);
 
@@ -92,7 +95,7 @@ const ReviewAnswers = ({
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button
                     className={`${styles.markQuestionBtn} ${isCurrentQuestionMarked ? styles.markQuestionBtnActive : ''}`}
-                    // onClick={handleMarkQuestion}
+                // onClick={handleMarkQuestion}
                 >
                     <div style={{ width: '15px', height: '17px' }} >
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 15 18" fill="none">
@@ -116,7 +119,7 @@ const ReviewAnswers = ({
                 <div className={styles.mainQuestionArea}>
                     <div className={styles.questionHeader}>
                         <div className={styles.wrapper}>
-                            <span className={styles.sectionTitle}>القسم الأول</span>
+                            <span className={styles.sectionTitle}>{section.title}</span>
                         </div>
                         <span className={styles.questionNumber}>سؤال {currentReviewQuestionIndex + 1} من {totalQuestions}</span>
                     </div>
@@ -129,7 +132,7 @@ const ReviewAnswers = ({
                                 <div
                                     key={option.id}
                                     className={`${styles.optionRow} ${currentQuestion.correctAnswer === option.id ? styles.optionRowCorrect : reviewQuestions.find(q => q.id === currentQuestion._id)?.selectedAnswer === option.id && currentQuestion.correctAnswer !== option.id ? styles.optionRowFalse : ''}`}
-                                    onClick={() => handleSelectAnswer(currentQuestion._id, option.id)}
+                                    
                                 >
                                     <input
                                         type="radio"
