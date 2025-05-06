@@ -48,7 +48,7 @@ export default function OrderDetailModal({ order, courses, onClose }) {
                             <li key={idx}>
                                 {found?.title || found?.name || ci.courseId}
                                 {" — "}
-                                من {appointment.from} إلى {appointment.to}
+                                من {appointment?.from} إلى {appointment?.to}
                             </li>
                         );
                     })}
