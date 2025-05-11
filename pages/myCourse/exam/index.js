@@ -14,7 +14,7 @@ import ReviewQuestion from '../../../components/ExamComponents/ReviewQuestion';
 import ExamResults from '../../../components/ExamComponents/ExamResults';
 import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsReview';
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 const ExamPage = () => {
     const router = useRouter();
