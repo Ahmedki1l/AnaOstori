@@ -300,10 +300,10 @@ const ModelForAddQuestion = ({
                 setFormError('يرجى إدخال جميع الخيارات');
                 return false;
             }
-            if (!correctAnswer) {
-                setFormError('يرجى تحديد الإجابة الصحيحة');
-                return false;
-            }
+        }
+        if (!correctAnswer) {
+            setFormError('يرجى تحديد الإجابة الصحيحة');
+            return false;
         }
         setFormError('');
         return true;
