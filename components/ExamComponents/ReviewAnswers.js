@@ -127,12 +127,24 @@ const ReviewAnswers = ({
                     <div className={styles.questionBody}>
                         <p className={styles.questionText}>{currentQuestion.text}</p>
 
+                        {/* — Question‐level image, if any — */}
+                        {currentQuestion.questionImages && (
+                            currentQuestion.questionImages.map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={image}
+                                    alt={`Question ${currentQuestionIndex + 1} illustration`}
+                                    className={styles.questionImage}
+                                />
+                            ))
+                        )}
+
                         <div className={styles.optionsContainer}>
                             {currentQuestion.options && currentQuestion.options.map((option) => (
                                 <div
                                     key={option.id}
                                     className={`${styles.optionRow} ${currentQuestion.correctAnswer === option.id ? styles.optionRowCorrect : reviewQuestions.find(q => q.id === currentQuestion._id)?.selectedAnswer === option.id && currentQuestion.correctAnswer !== option.id ? styles.optionRowFalse : ''}`}
-                                    
+
                                 >
                                     <input
                                         type="radio"
@@ -146,6 +158,19 @@ const ReviewAnswers = ({
                                         {option.id}
                                     </label>
                                     <div className={styles.optionText}>{option.text}</div>
+
+                                    {/* — Option‐level image, if any — */}
+                                    {option.images && (
+                                        option.images.map((image, index) => (
+                                            <img
+                                                key={index}
+                                                src={image}
+                                                alt={`Option ${option.id}`}
+                                                className={styles.optionImage}
+                                            />
+                                        ))
+                                    )}
+
                                     {currentQuestion.correctAnswer === option.id &&
                                         <div className={styles.optionIconMark}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

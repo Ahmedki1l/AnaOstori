@@ -2,15 +2,16 @@ import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
 const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onReviewAnswers, onRetakeExam }) => {
+    console.log("🚀 ~ ExamResults ~ elapsedTime:", elapsedTime);
     const allReviews = reviewQuestions;
     const flatReviews = allReviews.flat();
     const flatQuestions = examData.flat();
-    
+
     const totalQuestions = allReviews.reduce(
         (sum, block) => sum + block.length,
         0
     );
-    
+
     console.log("🚀 ~ ExamResults ~ examData:", examData)
     console.log("🚀 ~ ExamResults ~ flatQuestions:", flatQuestions)
     console.log("🚀 ~ ExamResults ~ reviewQuestions:", allReviews)
@@ -90,7 +91,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
 
         examData.forEach((question, index) => {
             question.skills.forEach(skill => {
-                const sectionTitle = skill.text.split('-')[0].trim();
+                const sectionTitle = question.section + " - " + question.lesson;
 
                 if (!sectionMap.has(sectionTitle)) {
                     sectionMap.set(sectionTitle, {
@@ -145,6 +146,24 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         });
     };
 
+    const calculateTime = () => {
+        let totalMinutes, totalSeconds;
+        totalMinutes = 0;
+        totalSeconds = 0;
+        
+        elapsedTime.map((time) => {
+            const [minutes, seconds] = time.split(':').map(Number);
+            totalMinutes += minutes;
+            totalSeconds += seconds;
+        });
+        
+        console.log("🚀 ~ calculateTime ~ totalMinutes:", totalMinutes)
+        
+        console.log("🚀 ~ calculateTime ~ totalSeconds:", totalSeconds)
+
+        return `${totalMinutes}:${totalSeconds}`
+    }
+
     const score = calculateScore(flatQuestions, flatReviews);
     const correctAnswers = getCorrectAnswers(flatQuestions, flatReviews);
     const unAnswered = getNotAnsweredQuestions();
@@ -154,18 +173,12 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
     const results = {
         score: score,
         totalTime: totalTime,
-        timeSpent: elapsedTime,
+        timeSpent: calculateTime(),
         correctQuestions: correctAnswers,
         wrongQuestions: totalQuestions - correctAnswers,
         unansweredQuestions: unAnswered,
         markedQuestions: marked,
-        sections: sections,
-        sectionDetails: [
-            { title: "القسم X", score: 24.5, time: "x دقيقة" },
-            { title: "القسم X", score: 24.5, time: "x دقيقة" },
-            { title: "القسم X", score: 24.5, time: "x دقيقة" },
-            { title: "القسم X", score: 24.5, time: "x دقيقة" }
-        ]
+        sections: sections
     };
     console.log("🚀 ~ ExamResults ~ results:", results)
 

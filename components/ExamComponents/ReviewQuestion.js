@@ -127,6 +127,18 @@ const ReviewQuestion = ({
                     <div className={styles.questionBody}>
                         <p className={styles.questionText}>{currentQuestion.text}</p>
 
+                        {/* — Question‐level image, if any — */}
+                        {currentQuestion.questionImages && (
+                            currentQuestion.questionImages.map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={image}
+                                    alt={`Question ${currentQuestionIndex + 1} illustration`}
+                                    className={styles.questionImage}
+                                />
+                            ))
+                        )}
+
                         <div className={styles.optionsContainer}>
                             {currentQuestion.options && currentQuestion.options.map((option) => (
                                 <div
@@ -146,6 +158,18 @@ const ReviewQuestion = ({
                                         {option.id}
                                     </label>
                                     <div className={styles.optionText}>{option.text}</div>
+                                    
+                                    {/* — Option‐level image, if any — */}
+                                    {option.images && (
+                                        option.images.map((image, index) => (
+                                            <img
+                                                key={index}
+                                                src={image}
+                                                alt={`Option ${option.id}`}
+                                                className={styles.optionImage}
+                                            />
+                                        ))
+                                    )}
                                 </div>
                             ))}
                         </div>

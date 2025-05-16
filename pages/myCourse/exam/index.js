@@ -20,12 +20,16 @@ const ExamPage = () => {
     const router = useRouter();
     const { examId } = router.query;
     const isFirstRun = useRef(true);
+    const isAbleToAddTime = useRef(false);
+    const sectionsCounterRef = useRef(0);
+    const sectionIDRef = useRef(0);
 
     const [loading, setLoading] = useState(false);
     const [examData, setExamData] = useState(null);
     const [selectedExam, setSelectedExam] = useState();
     const [selectedSectionId, setSelectedSectionId] = useState(0);
     const [selectedSection, setSelectedSection] = useState(null);
+    const [examSections, setExamSections] = useState(0);
     const [examQuestions, setExamQuestions] = useState();
     const [allExamQuestions, setAllExamQuestions] = useState([]);
     const [examStage, setExamStage] = useState('introduction');
@@ -203,10 +207,18 @@ const ExamPage = () => {
                 ]
             }));
 
+            setExamSections(selectedExam?.sections?.length);
+
             const fetchWithAsync = async () => {
                 const questions = await fetchQuestionsByIds(selectedExam?.sections[selectedSectionId].questions);
                 setExamQuestions(questions);
-                setAllExamQuestions((prev) => [...prev, questions]);
+                setAllExamQuestions((prev) => {
+                    const exists = prev.some(q => q === questions);
+                    if (!exists) {
+                        return [...prev, questions];
+                    }
+                    return prev;
+                });
                 setSelectedSection(selectedExam?.sections[selectedSectionId]);
                 setMockExamData2({
                     questions: questions,
@@ -232,27 +244,40 @@ const ExamPage = () => {
     }, [mockExamData]);
 
     useEffect(() => {
-        if (examStage == 'introduction' || examStage == 'sections' || examStage == 'results') return;
-        timerRef.current = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    clearInterval(timerRef.current);
-                    setExamStage('results');
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+        if (examStage == 'questions' || examStage == 'review') {
+            timerRef.current = setInterval(() => {
+                setTimeLeft(prev => {
+                    if (prev <= 1) {
+                        clearInterval(timerRef.current);
+                        setExamStage('results');
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
 
         return () => clearInterval(timerRef.current);
     }, [examStage]);
 
+    useEffect(()=>{
+        console.log("🚀 ~ ExamPage ~ allElapsedFormatted:", allElapsedFormatted);
+        console.log("🚀 ~ ExamPage ~ timeLeft:", timeLeft);
+    }, [timeLeft, allElapsedFormatted])
+
 
     useEffect(() => {
-        if (selectedSectionId - 1 >= 0) {
-            const initial = (selectedExam?.sections[selectedSectionId - 1].duration || 0) * 60;
+        if (sectionIDRef.current >= 0 && sectionsCounterRef.current < examSections && isAbleToAddTime.current) {
+            const initial = (selectedExam?.sections[sectionIDRef.current].duration || 0) * 60;
+            console.log("🚀 ~ useEffect ~ selectedSectionId:", sectionIDRef.current);
+            console.log("🚀 ~ useEffect ~ initial:", initial);
+            console.log("🚀 ~ useEffect ~ timeLeft:", timeLeft);
             const used = initial - timeLeft;
+            console.log("🚀 ~ useEffect ~ used:", used);
             setAllElapsedFormatted((prev) => [...prev, formatTime(used)]);
+            sectionsCounterRef.current += 1;
+            isAbleToAddTime.current = false;
+            sectionIDRef.current += 1;
         }
 
         if (examStage !== 'results') return;
@@ -309,7 +334,7 @@ const ExamPage = () => {
             routeName: 'getItem',
             type: 'questions',
             page: 1,
-            limit: 10,
+            limit: 9999,
             ids: questionIds
         };
         try {
@@ -444,6 +469,7 @@ const ExamPage = () => {
     };
 
     const handleFinishReview = () => {
+        isAbleToAddTime.current = true;
         if (selectedSectionId < selectedExam.sections.length - 1) {
             setDisplayExamData(mockExamData1);
             setExamStage('sections');
@@ -452,7 +478,7 @@ const ExamPage = () => {
                 return [...prev, reviewQuestions];
             });
         } else {
-            if(isFirstRun.current) {
+            if (isFirstRun.current) {
                 setAllReviewQuestions(prev => {
                     return [...prev, reviewQuestions];
                 });
@@ -499,7 +525,7 @@ const ExamPage = () => {
         setExamStage('reviewAnswers');
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log("🚀 ~ ExamPage ~ selectedSectionidForReview:", selectedSectionidForReview);
     }, [selectedSectionidForReview])
 
@@ -583,7 +609,7 @@ const ExamPage = () => {
 
             {examStage === 'results' && (
                 <ExamResults
-                    elapsedTime={elapsedFormatted}
+                    elapsedTime={allElapsedFormatted}
                     totalTime={selectedExam.duration + ":00" || "25:00"}
                     examData={allExamQuestions}
                     reviewQuestions={allReviewQuestions}
@@ -607,7 +633,7 @@ const ExamPage = () => {
             {examStage === 'reviewAnswers' && (
                 <ReviewAnswers
                     examData={reviewSpecificQuestionsAnswers}
-                    onCompleteExam={()=>setExamStage('sectionsReview')}
+                    onCompleteExam={() => setExamStage('sectionsReview')}
                     currentTime={examTimer}
                     reviewQuestions={allReviewQuestions[selectedSectionidForReview || 0]}
                     setReviewQuestions={setReviewQuestions}
