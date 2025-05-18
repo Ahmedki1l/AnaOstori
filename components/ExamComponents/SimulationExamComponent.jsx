@@ -220,9 +220,10 @@ const SimulationExamComponent = ({
             let deleteItemBody = {
                 id: selectedQuestion.id,
                 isDeleted: true,
+                type: 'simulationExam'
             };
             let data = {
-                routeName: 'updateExamHandler', // exam-specific route
+                routeName: 'updateItemHandler', // exam-specific route
                 ...deleteItemBody,
             };
             await postRouteAPI(data)
