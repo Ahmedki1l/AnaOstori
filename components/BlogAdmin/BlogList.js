@@ -19,7 +19,7 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
   }
 
   const handleDelete = async id => {
-    await axios.put(
+    await axios.delete(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/delete-blog`,
       { blogId: id }
     );

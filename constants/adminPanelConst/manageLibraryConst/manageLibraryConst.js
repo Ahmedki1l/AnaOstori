@@ -128,6 +128,55 @@ export const quizConst = {
     }
 }
 
+export const questionConst = {
+    addQuestionModelConst: {
+        addQuestionModelTitle: 'إضافة سؤال',
+        editQuestionModelTitle: 'تعديل السؤال',
+        questionTitleInputPlaceholder: 'عنوان السؤال*',
+        questionTitleInputError: 'لازم تكتب العنوان',
+        questionDiscriptionInputPlaceholder: 'الوصف',
+        questionDiscriptionInputError: 'لازم تكتب وصف',
+    },
+    deleteQuestionModelConst: {
+        deletePopUpTitle: 'تأكيد حذف السؤال',
+        deletePopUpText: 'متأكد انك تبي تحذف السؤال؟',
+        deleteBtnText: 'تأكيد الحذف',
+        cancelBtnText: 'تراجع',
+    },
+    questionToastMsgConst: {
+        addQuestionSuccessMsg: 'تم إضافة السؤال بنجاح',
+        updateQuestionSuccessMsg: 'تم تحديث بيانات السؤال بنجاح',
+        deleteQuestionSuccessMsg: 'تم حذف السؤال بنجاح',
+        questionNameDuplicateErrorMsg: 'ما ينفع تستخدم نفس العنوان'
+    }
+}
+
+export const blogConst = {
+    addBlogModelConst: {
+        addBlogModelTitle: 'إضافة مقال',
+        editBlogModelTitle: 'تعديل المقال',
+        blogTitleInputPlaceholder: 'عنوان المقال*',
+        blogTitleInputError: 'لازم تكتب العنوان',
+        blogDiscriptionInputPlaceholder: 'محتوى المقال',
+        blogDiscriptionInputError: 'لازم تكتب المحتوى',
+        blogImageInputPlaceholder: 'الصورة*',
+        blogImageBtnText: 'ارفق صورة',
+        blogImageInputError: 'لازم ترفق صورة'
+    },
+    deleteBlogModelConst: {
+        deletePopUpTitle: 'تأكيد حذف المقال',
+        deletePopUpText: 'متأكد انك تبي تحذف المقال؟',
+        deleteBtnText: 'تأكيد الحذف',
+        cancelBtnText: 'تراجع',
+    },
+    blogToastMsgConst: {
+        addBlogSuccessMsg: 'تم إضافة المقال بنجاح',
+        updateBlogSuccessMsg: 'تم تحديث بيانات المقال بنجاح',
+        deleteBlogSuccessMsg: 'تم حذف المقال بنجاح',
+        blogNameDuplicateErrorMsg: 'ما ينفع تستخدم نفس العنوان'
+    }
+}
+
 export const curriculumConst = {
     addCurriculumConst: {
         addCurriculumTitle: 'عنوان المقرر*',

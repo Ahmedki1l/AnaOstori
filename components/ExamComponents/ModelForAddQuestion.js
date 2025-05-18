@@ -148,9 +148,9 @@ const ModelForAddQuestion = ({
     const [availableSkills, setAvailableSkills] = useState([]);
 
     // refs to track first run
-    const firstLangRun = useRef(2);
-    const firstSectRun = useRef(2);
-    const firstLessonRun = useRef(2);
+    const firstLangRun = useRef(3);
+    const firstSectRun = useRef(3);
+    const firstLessonRun = useRef(3);
 
     useEffect(() => {
         if (firstLangRun.current > 0) {
@@ -229,7 +229,8 @@ const ModelForAddQuestion = ({
     useEffect(() => {
         if (selectedQuestion) {
             setQuestionText(selectedQuestion.text || '');
-            setQuestionType(selectedQuestion.questionType || '');
+            setQuestionType(selectedQuestion.questionType || 'multipleChoice');
+            setMarkedWordIndices(selectedQuestion.contextualErrorIndices || []);
             if (selectedQuestion.options && selectedQuestion.options.length > 0) {
                 setOptions(selectedQuestion.options);
             }
@@ -243,7 +244,7 @@ const ModelForAddQuestion = ({
 
             // ↓↓↓ new ↓↓↓
             const { section = '', lesson = '', language = '' } = selectedQuestion;
-            setSelectedLanguage(language)
+            setSelectedLanguage(language);
             setSelectedSection(section);
             // manually populate the lessons dropdown so selectedLesson can bind
             const lessons = section === 'قدرات'
@@ -395,6 +396,7 @@ const ModelForAddQuestion = ({
                 text: questionText,
                 questionType,
                 contextualErrorWords: errorWords,
+                contextualErrorIndices: markedWordIndices,
                 language: selectedLanguage,
                 section: selectedSection,
                 lesson: selectedLesson,

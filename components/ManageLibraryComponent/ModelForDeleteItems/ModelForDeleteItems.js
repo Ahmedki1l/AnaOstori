@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'antd';
 import styles from './ModelForDeleteItems.module.scss'
-import { curriculumConst, folderConst, pdfFileConst, quizConst, videoFileConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
+import { curriculumConst, folderConst, pdfFileConst, quizConst, videoFileConst, questionConst, blogConst } from '../../../constants/adminPanelConst/manageLibraryConst/manageLibraryConst';
 import { instructorConst } from '../../../constants/adminPanelConst/instructorConst';
 import { deleteReviewsConst } from '../../../constants/adminPanelConst/manageStudentFeedBackConst/manageStudentFeedBackConst';
 import { manageUserListConst } from '../../../constants/adminPanelConst/manageUserListConst/manageUserListConst';
@@ -18,6 +18,21 @@ const ModelForDeleteItems = ({
             title: folderConst.deleteFolderModelConst.deletePopUpTitle,
             messageText: folderConst.deleteFolderModelConst.deletePopUpText,
             btnText: folderConst.deleteFolderModelConst.deleteBtnText,
+        },
+        question: {
+            title: questionConst.deleteQuestionModelConst.deletePopUpTitle,
+            messageText: questionConst.deleteQuestionModelConst.deletePopUpText,
+            btnText: questionConst.deleteQuestionModelConst.deleteBtnText,
+        },
+        exam: {
+            title: quizConst.deleteExamModelConst.deletePopUpTitle,
+            messageText: quizConst.deleteExamModelConst.deletePopUpText,
+            btnText: quizConst.deleteExamModelConst.deleteBtnText,
+        },
+        blog: {
+            title: blogConst.deleteBlogModelConst.deletePopUpTitle,
+            messageText: blogConst.deleteBlogModelConst.deletePopUpText,
+            btnText: blogConst.deleteBlogModelConst.deleteBtnText,
         },
         video: {
             title: videoFileConst.deleteVideoModelConst.deletePopUpTitle,
