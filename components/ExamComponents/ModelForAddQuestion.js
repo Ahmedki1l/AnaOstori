@@ -229,7 +229,7 @@ const ModelForAddQuestion = ({
     useEffect(() => {
         if (selectedQuestion) {
             setQuestionText(selectedQuestion.text || '');
-            setQuestionType(selectedQuestion.questionType || 'multipleChoice');
+            setQuestionType(selectedQuestion.type || 'multipleChoice');
             setMarkedWordIndices(selectedQuestion.contextualErrorIndices || []);
             if (selectedQuestion.options && selectedQuestion.options.length > 0) {
                 setOptions(selectedQuestion.options);
@@ -313,7 +313,15 @@ const ModelForAddQuestion = ({
         else if (selectedSection === 'قدرات' && selectedLesson === 'لفظي') pool = verbalARSkills;
         else if (selectedSection === 'GAT' && selectedLesson === 'Quantitative') pool = quantitativeENSkills;
         else if (selectedSection === 'GAT' && selectedLesson === 'Verbal') pool = verbalENSkills;
-        // add other branches for SAAT…
+
+        else if (selectedSection === 'تحصيلي' && selectedLesson === 'كيمياء') pool = [];
+        else if (selectedSection === 'تحصيلي' && selectedLesson === 'رياضيات') pool = [];
+        else if (selectedSection === 'تحصيلي' && selectedLesson === 'فيزياء') pool = [];
+        else if (selectedSection === 'تحصيلي' && selectedLesson === 'أحياء') pool = [];
+        else if (selectedSection === 'SAAT' && selectedLesson === 'Chemistry') pool = [];
+        else if (selectedSection === 'SAAT' && selectedLesson === 'Mathematics') pool = [];
+        else if (selectedSection === 'SAAT' && selectedLesson === 'Physics') pool = [];
+        else if (selectedSection === 'SAAT' && selectedLesson === 'Biology') pool = [];
 
         setAvailableSkills(pool);
         // restore the saved skills array
