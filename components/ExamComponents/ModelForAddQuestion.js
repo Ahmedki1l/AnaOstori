@@ -711,31 +711,33 @@ const ModelForAddQuestion = ({
                         </select>
                     </div>
 
-                    <div className={styles.contextualWrapper}>
-                        <label className={styles.contextualLabel}>
-                            اختيار الكلمات الخاطئة
-                        </label>
-                        <div className={styles.contextualEditor}>
-                            {questionText.split(/\s+/).map((word, idx) => {
-                                const isMarked = markedWordIndices.includes(idx);
-                                return (
-                                    <span
-                                        key={idx}
-                                        className={isMarked ? styles.marked : ''}
-                                        onClick={() => {
-                                            setMarkedWordIndices(prev =>
-                                                prev.includes(idx)
-                                                    ? prev.filter(i => i !== idx)
-                                                    : [...prev, idx]
-                                            );
-                                        }}
-                                    >
-                                        {word}
-                                    </span>
-                                );
-                            })}
+                    {questionType === 'contextualError' && (
+                        <div className={styles.contextualWrapper}>
+                            <label className={styles.contextualLabel}>
+                                اختيار الكلمات الخاطئة
+                            </label>
+                            <div className={styles.contextualEditor}>
+                                {questionText.split(/\s+/).map((word, idx) => {
+                                    const isMarked = markedWordIndices.includes(idx);
+                                    return (
+                                        <span
+                                            key={idx}
+                                            className={isMarked ? styles.marked : ''}
+                                            onClick={() => {
+                                                setMarkedWordIndices(prev =>
+                                                    prev.includes(idx)
+                                                        ? prev.filter(i => i !== idx)
+                                                        : [...prev, idx]
+                                                );
+                                            }}
+                                        >
+                                            {word}
+                                        </span>
+                                    );
+                                })}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>الاختيارات</label>
