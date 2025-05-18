@@ -538,6 +538,7 @@
 /* each "clickable word" stays inline, no extra margins */
 .contextualEditor span {
   display: inline;
+  cursor: pointer;
   padding: 0 2px;
   margin: 0;
 }
