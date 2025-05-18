@@ -215,7 +215,7 @@ const QuestionsBankComponent = ({
   const handleDeleteFolderData = async () => {
     if (typeOfListdata === 'question') {
       let deleteItemBody = {
-        id: selectedQuestion.id,
+        id: selectedQuestion._id,
         isDeleted: true,
       };
       let data = {
