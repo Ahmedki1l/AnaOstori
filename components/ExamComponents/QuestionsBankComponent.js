@@ -216,6 +216,7 @@ const QuestionsBankComponent = ({
     if (typeOfListdata === 'question') {
       let deleteItemBody = {
         id: selectedQuestion._id,
+        type: 'question',
         isDeleted: true,
       };
       let data = {
