@@ -157,9 +157,9 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
             totalSeconds += seconds;
         });
         
-        console.log("🚀 ~ calculateTime ~ totalMinutes:", totalMinutes)
+        console.log("🚀 ~ calculateTime ~ totalMinutes: ", totalMinutes)
         
-        console.log("🚀 ~ calculateTime ~ totalSeconds:", totalSeconds)
+        console.log("🚀 ~ calculateTime ~ totalSeconds: ", totalSeconds)
 
         return `${totalMinutes}:${totalSeconds}`
     }

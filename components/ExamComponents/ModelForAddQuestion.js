@@ -7,7 +7,6 @@ import { getNewToken } from '../../services/fireBaseAuthService';
 import { questionsConst } from '../../constants/adminPanelConst/questionsBank/questionsConst';
 import { toast } from 'react-toastify';
 import { uploadFileSevices } from '../../services/UploadFileSevices';
-import { Language } from '@mui/icons-material';
 
 const ModelForAddQuestion = ({
     isModelForAddQuestionOpen,
@@ -19,6 +18,7 @@ const ModelForAddQuestion = ({
 }) => {
     const [questionText, setQuestionText] = useState('');
     const [questionType, setQuestionType] = useState('multipleChoice');
+    const [markedWordIndices, setMarkedWordIndices] = useState([]);
     const [options, setOptions] = useState([
         { id: 'أ', text: '', images: [] },
         { id: 'ب', text: '', images: [] },
@@ -154,8 +154,8 @@ const ModelForAddQuestion = ({
 
     useEffect(() => {
         if (firstLangRun.current > 0) {
-          firstLangRun.current--;
-          if (firstLangRun.current === 0 && selectedQuestion) return;
+            firstLangRun.current--;
+            if (firstLangRun.current === 0 && selectedQuestion) return;
         }
 
         if (selectedLanguage === 'اللغة العربية') {
@@ -173,7 +173,7 @@ const ModelForAddQuestion = ({
     useEffect(() => {
         if (firstSectRun.current > 0) {
             firstSectRun.current--;
-          if (firstSectRun.current === 0 && selectedQuestion) return;
+            if (firstSectRun.current === 0 && selectedQuestion) return;
         }
 
         if (selectedLanguage === 'اللغة العربية') {
@@ -201,7 +201,7 @@ const ModelForAddQuestion = ({
     useEffect(() => {
         if (firstLessonRun.current > 0) {
             firstLessonRun.current--;
-          if (firstLessonRun.current === 0 && selectedQuestion) return;
+            if (firstLessonRun.current === 0 && selectedQuestion) return;
         }
 
         if (selectedLanguage === 'اللغة العربية') {
@@ -305,6 +305,12 @@ const ModelForAddQuestion = ({
             setFormError('يرجى تحديد الإجابة الصحيحة');
             return false;
         }
+
+        if (questionType === 'contextualError' && markedWordIndices.length === 0) {
+            setFormError('يرجى تحديد الكلمة المحتوية على الخطأ السياقي');
+            return false;
+        }
+
         setFormError('');
         return true;
     };
@@ -382,10 +388,13 @@ const ModelForAddQuestion = ({
             console.log("questionsImages: ", finalQuestionImages);
             console.log("optionsImages: ", processedOptions);
 
+            const errorWords = markedWordIndices.map(i => questionText.split(/\s+/)[i]);
+
             // Prepare payload for API
             const questionData = {
                 text: questionText,
                 questionType,
+                contextualErrorWords: errorWords,
                 language: selectedLanguage,
                 section: selectedSection,
                 lesson: selectedLesson,
@@ -689,6 +698,49 @@ const ModelForAddQuestion = ({
                             <option value="صعب">صعب</option>
                         </select>
                     </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>نوع السؤال</label>
+                        <select
+                            className={styles.input}
+                            value={questionType}
+                            onChange={e => setQuestionType(e.target.value)}
+                        >
+                            <option value="multipleChoice">اختيار من متعدد</option>
+                            <option value="contextualError">الخطأ السياقي</option>
+                        </select>
+                    </div>
+
+                    {questionType === 'contextualError' && (
+                        <div className={styles.contextualEditor}>
+                            {questionText
+                                .split(/\s+/)
+                                .map((word, idx) => {
+                                    const isMarked = markedWordIndices.includes(idx);
+                                    return (
+                                        <span
+                                            key={idx}
+                                            onClick={() => {
+                                                setMarkedWordIndices(prev =>
+                                                    prev.includes(idx)
+                                                        ? prev.filter(i => i !== idx)
+                                                        : [...prev, idx]
+                                                );
+                                            }}
+                                            style={{
+                                                cursor: 'pointer',
+                                                backgroundColor: isMarked ? '#fffa65' : 'transparent',
+                                                padding: '0 2px',
+                                                margin: '0 1px',
+                                                borderRadius: isMarked ? '4px' : '0',
+                                            }}
+                                        >
+                                            {word}
+                                        </span>
+                                    );
+                                })}
+                        </div>
+                    )}
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>الاختيارات</label>
