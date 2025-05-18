@@ -522,26 +522,29 @@
   color: #1a1a1a;
 }
 
-/* make the word-picker look like a text field */
+/* make the container preserve spacing & wrap naturally */
 .contextualEditor {
-  min-height: 100px;
   border: 1px solid #E9E9E9;
   border-radius: 4px;
+  min-height: 100px;
   padding: 8px;
-  background-color: #fff;
+  background: #fff;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  /* preserve your line breaks & spaces */
+  word-break: break-word;
+  /* wrap long words */
 }
 
+/* each "clickable word" stays inline, no extra margins */
 .contextualEditor span {
-  cursor: pointer;
+  display: inline;
   padding: 0 2px;
-  margin: 0 1px;
+  margin: 0;
 }
 
-/* only a red underline on marked words */
+/* now a red border-bottom instead of text-decoration */
 .marked {
-  text-decoration: underline 2px red;
+  border-bottom: 2px solid red;
 }
 
 /* ----------------------

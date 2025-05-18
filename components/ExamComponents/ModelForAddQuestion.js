@@ -717,7 +717,10 @@ const ModelForAddQuestion = ({
                                 اختيار الكلمات الخاطئة
                             </label>
                             <div className={styles.contextualEditor}>
-                                {questionText.split(/\s+/).map((word, idx) => {
+                                {questionText.split(/(\s+)/).map((word, idx) => {
+                                    // if it's pure whitespace, just render it
+                                    if (/^\s+$/.test(word)) return word;
+
                                     const isMarked = markedWordIndices.includes(idx);
                                     return (
                                         <span
