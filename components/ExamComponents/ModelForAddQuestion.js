@@ -711,7 +711,10 @@ const ModelForAddQuestion = ({
                         </select>
                     </div>
 
-                    {questionType === 'contextualError' && (
+                    <div className={styles.contextualWrapper}>
+                        <label className={styles.contextualLabel}>
+                            اختيار الكلمات الخاطئة
+                        </label>
                         <div className={styles.contextualEditor}>
                             {questionText.split(/\s+/).map((word, idx) => {
                                 const isMarked = markedWordIndices.includes(idx);
@@ -732,7 +735,7 @@ const ModelForAddQuestion = ({
                                 );
                             })}
                         </div>
-                    )}
+                    </div>
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>الاختيارات</label>
