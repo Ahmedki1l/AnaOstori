@@ -498,6 +498,7 @@
   background: #f26722;
 }
 
+/* Contextual-Error Editor */
 .contextualEditor {
   display: flex;
   flex-wrap: wrap;
@@ -506,15 +507,15 @@
 
   span {
     cursor: pointer;
-    padding: 2px 4px;
-    margin: 0 2px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-
-    &.marked {
-      background-color: #fffa65;
-    }
+    padding: 0 2px;
+    margin: 0 1px;
   }
+}
+
+/* When a word is marked, give it a red underline */
+.marked {
+  text-decoration: underline;
+  text-decoration-color: red;
 }
 
 /* ----------------------

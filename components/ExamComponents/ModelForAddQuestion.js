@@ -713,32 +713,24 @@ const ModelForAddQuestion = ({
 
                     {questionType === 'contextualError' && (
                         <div className={styles.contextualEditor}>
-                            {questionText
-                                .split(/\s+/)
-                                .map((word, idx) => {
-                                    const isMarked = markedWordIndices.includes(idx);
-                                    return (
-                                        <span
-                                            key={idx}
-                                            onClick={() => {
-                                                setMarkedWordIndices(prev =>
-                                                    prev.includes(idx)
-                                                        ? prev.filter(i => i !== idx)
-                                                        : [...prev, idx]
-                                                );
-                                            }}
-                                            style={{
-                                                cursor: 'pointer',
-                                                backgroundColor: isMarked ? '#fffa65' : 'transparent',
-                                                padding: '0 2px',
-                                                margin: '0 1px',
-                                                borderRadius: isMarked ? '4px' : '0',
-                                            }}
-                                        >
-                                            {word}
-                                        </span>
-                                    );
-                                })}
+                            {questionText.split(/\s+/).map((word, idx) => {
+                                const isMarked = markedWordIndices.includes(idx);
+                                return (
+                                    <span
+                                        key={idx}
+                                        className={isMarked ? styles.marked : ''}
+                                        onClick={() => {
+                                            setMarkedWordIndices(prev =>
+                                                prev.includes(idx)
+                                                    ? prev.filter(i => i !== idx)
+                                                    : [...prev, idx]
+                                            );
+                                        }}
+                                    >
+                                        {word}
+                                    </span>
+                                );
+                            })}
                         </div>
                     )}
 
