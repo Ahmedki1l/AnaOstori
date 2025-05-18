@@ -219,7 +219,7 @@ const QuestionsBankComponent = ({
         isDeleted: true,
       };
       let data = {
-        routeName: 'updateQuestionHandler',
+        routeName: 'updateItemHandler',
         ...deleteItemBody,
       };
       await postRouteAPI(data)
