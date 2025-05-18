@@ -344,7 +344,7 @@ const QuestionsBankComponent = ({
                         </p>
                       </div>
                     </td>
-                    <td>{typeOfListdata === "folder" ? fullDate(item?.createdAt) : item?.questionType || "متعدد الخيارات"}</td>
+                    <td>{typeOfListdata === "folder" ? fullDate(item?.createdAt) : (item?.type && item?.type === "contextualError" ? "الخطأ السياقي" : "متعدد الخيارات" ) || "متعدد الخيارات"}</td>
                     <td>{fullDate(item?.updatedAt)}</td>
                     <td>
                       <div className={styles.eventButtons}>
