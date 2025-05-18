@@ -218,7 +218,7 @@ const SimulationExamComponent = ({
     const handleDeleteFolderData = async () => {
         if (typeOfListdata === 'exam') {
             let deleteItemBody = {
-                id: selectedQuestion.id,
+                id: selectedQuestion._id,
                 isDeleted: true,
                 type: 'simulationExam'
             };
