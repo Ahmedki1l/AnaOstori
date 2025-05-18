@@ -148,9 +148,9 @@ const ModelForAddQuestion = ({
     const [availableSkills, setAvailableSkills] = useState([]);
 
     // refs to track first run
-    const firstLangRun = useRef(3);
-    const firstSectRun = useRef(3);
-    const firstLessonRun = useRef(3);
+    const firstLangRun = useRef(2);
+    const firstSectRun = useRef(2);
+    const firstLessonRun = useRef(2);
 
     useEffect(() => {
         if (firstLangRun.current > 0) {
@@ -283,6 +283,42 @@ const ModelForAddQuestion = ({
             setSkills([]);
         }
     }, [selectedQuestion]);
+
+    // ──────────────────────────────────────────────────
+    // Effect B: when section is set, derive lessons & restore saved lesson
+    useEffect(() => {
+        if (!selectedQuestion || !selectedSection) return;
+
+        let lessons = [];
+        switch (selectedSection) {
+            case 'قدرات': lessons = lessonGATAR; break;
+            case 'GAT': lessons = lessonGATEN; break;
+            case 'تحصيلي': lessons = lessonSAATAR; break;
+            case 'SAAT': lessons = lessonSAATEN; break;
+            default: lessons = []; break;
+        }
+
+        setAvailableLessons(lessons);
+        // now restore the original lesson from the question
+        setSelectedLesson(selectedQuestion.lesson);
+    }, [selectedSection, selectedQuestion]);
+
+    // ──────────────────────────────────────────────────
+    // Effect C: when lesson is set, derive skills & restore saved skills
+    useEffect(() => {
+        if (!selectedQuestion || !selectedLesson) return;
+
+        let pool = [];
+        if (selectedSection === 'قدرات' && selectedLesson === 'كمي') pool = quantitativeARSkills;
+        else if (selectedSection === 'قدرات' && selectedLesson === 'لفظي') pool = verbalARSkills;
+        else if (selectedSection === 'GAT' && selectedLesson === 'Quantitative') pool = quantitativeENSkills;
+        else if (selectedSection === 'GAT' && selectedLesson === 'Verbal') pool = verbalENSkills;
+        // add other branches for SAAT…
+
+        setAvailableSkills(pool);
+        // restore the saved skills array
+        setSkills(selectedQuestion.skills || []);
+    }, [selectedLesson, selectedSection, selectedQuestion]);
 
     const handleOptionChange = (index, value) => {
         const newOptions = [...options];
