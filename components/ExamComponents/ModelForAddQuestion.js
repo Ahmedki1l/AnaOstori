@@ -388,7 +388,7 @@ const ModelForAddQuestion = ({
             console.log("questionsImages: ", finalQuestionImages);
             console.log("optionsImages: ", processedOptions);
 
-            const errorWords = markedWordIndices.map(i => questionText.split(/\s+/)[i]);
+            const errorWords = questionType === 'contextualError' ? markedWordIndices.map(i => questionText.split(/\s+/)[i]) : [];
 
             // Prepare payload for API
             const questionData = {

@@ -1021,6 +1021,10 @@
     color: #fff;
 }
 
+.marked {
+  border-bottom: 2px solid red;
+}
+
 @media (max-width: 1024px) {
     .figmaSectionHeader {
         flex-wrap: wrap;

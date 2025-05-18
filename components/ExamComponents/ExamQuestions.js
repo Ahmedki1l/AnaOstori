@@ -74,6 +74,35 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
         });
     };
 
+    // helper to split & wrap the error word
+    const renderQuestionText = () => {
+        if (currentQuestion.type !== "contextualError") {
+            return currentQuestion.text;
+        }
+
+        // pull the error‐words array you previously saved
+        const errorWords = currentQuestion.contextualErrorWords || [];
+
+        // preserve spaces when splitting
+        const tokens = currentQuestion.text.split(/(\s+)/);
+
+        return tokens.map((token, i) => {
+            // render whitespace “as is”
+            if (/^\s+$/.test(token)) return token;
+
+            // if this token matches any of the error‐words, wrap it
+            if (errorWords.includes(token)) {
+                return (
+                    <span key={i} className={styles.marked}>
+                        {token}
+                    </span>
+                );
+            }
+
+            return token;
+        });
+    };
+
     const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
     console.log("🚀 ~ ExamQuestions ~ reviewQuestions:", reviewQuestions);
 
@@ -132,7 +161,9 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                     </div>
 
                     <div className={styles.questionBody}>
-                        <p className={styles.questionText}>{currentQuestion.text}</p>
+                        <p className={styles.questionText}>
+                            {renderQuestionText()}
+                        </p>
 
                         {/* — Question‐level image, if any — */}
                         {currentQuestion.questionImages && (
