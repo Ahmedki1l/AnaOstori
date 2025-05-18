@@ -630,8 +630,8 @@
 }
 
 .showMoreBtn {
-  margin-top: auto;
-  
+    margin-top: auto;
+
     width: 100%;
     padding: 10px 8px;
     background-color: transparent;
@@ -1022,7 +1022,8 @@
 }
 
 .marked {
-  border-bottom: 2px solid red;
+    margin: 0 3px;
+    border-bottom: 2px solid red;
 }
 
 @media (max-width: 1024px) {
