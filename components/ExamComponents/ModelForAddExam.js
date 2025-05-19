@@ -156,7 +156,7 @@ const ModelForAddExam = ({
                 selectedExam.sections.map(async (sec) => {
                     const fetched = await fetchQuestionsByIds(sec.questions);
                     return {
-                        id: uuid(),
+                        id: generateId(10),
                         title: sec.title,
                         expanded: true,
                         questions: fetched

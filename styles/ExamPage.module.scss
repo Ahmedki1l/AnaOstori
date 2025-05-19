@@ -95,6 +95,7 @@
 .instructionsText {
     font-size: 16px;
     line-height: 1.6;
+    white-space: pre-wrap;
     // margin: 0 20px;
     color: #3D3D3D;
     margin-top: 16px;
@@ -290,26 +291,27 @@
 }
 
 .examActions {
-    padding: 16px 24px 24px;
-    display: flex;
-    justify-content: flex-end;
-    direction: rtl;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #FFFFFF;
-}
-
-.examActions2 {
     padding: 16px 24px 24px;
     display: flex;
     justify-content: flex-end;
     direction: rtl;
-    position: absolute;
+    z-index: 1000;
+}
+
+.examActions2 {
+    position: fixed;
     bottom: 0;
+    left: 0;
     right: 0;
-    background-color: #FFFFFF;
+    padding: 16px 24px 24px;
+    display: flex;
+    justify-content: flex-end;
+    direction: rtl;
+    z-index: 1000;
 }
 
 .buttonsContainer {

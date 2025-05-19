@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
+import ImageLightbox from './ImageLightbox';
 
 const ReviewQuestion = ({
     timeLeft,
@@ -161,12 +162,11 @@ const ReviewQuestion = ({
                         {/* — Question‐level image, if any — */}
                         {currentQuestion.questionImages && (
                             currentQuestion.questionImages.map((image, index) => (
-                                <img
-                                    key={index}
+                                <ImageLightbox
                                     src={image}
-                                    alt={`Question ${currentQuestionIndex + 1} illustration`}
-                                    className={styles.questionImage}
+                                    alt={`Question ${index + 1}`}
                                 />
+                                
                             ))
                         )}
 
@@ -193,12 +193,11 @@ const ReviewQuestion = ({
                                     {/* — Option‐level image, if any — */}
                                     {option.images && (
                                         option.images.map((image, index) => (
-                                            <img
-                                                key={index}
+                                            <ImageLightbox
                                                 src={image}
                                                 alt={`Option ${option.id}`}
-                                                className={styles.optionImage}
                                             />
+                                            
                                         ))
                                     )}
                                 </div>

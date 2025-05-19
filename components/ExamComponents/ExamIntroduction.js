@@ -27,7 +27,7 @@ const ExamIntroduction = ({ examData, onStartExam }) => {
                     <span className={styles.timerText}>{examData?.duration || "25:00"}</span>
                 </div>
             </div>
-
+            
             {<div className={styles.examInstructions}>
                 <h2 className={styles.instructionsTitle}>{examData?.subTitle || "تعليمات الاختبار"}</h2>
                 {examData?.instructions &&

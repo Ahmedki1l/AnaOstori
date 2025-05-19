@@ -1,0 +1,49 @@
+/* Thumbnail container */
+.imageContainer {
+  max-width: 400px;      /* whatever “small” means to you */
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #E9E9E9;
+  border-radius: 4px;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* Full-screen overlay */
+.lightboxOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* The big image */
+.lightboxImage {
+  max-width: 90%;
+  max-height: 90%;
+  box-shadow: 0 0 16px rgba(0,0,0,0.5);
+  border-radius: 4px;
+}
+
+/* Close button */
+.lightboxClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
