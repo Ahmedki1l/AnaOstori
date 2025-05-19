@@ -155,10 +155,12 @@ const ModelForAddExam = ({
             Promise.all(
                 selectedExam.sections.map(async (sec) => {
                     const fetched = await fetchQuestionsByIds(sec.questions);
+                    console.log("🚀 ~ selectedExam.sections.map ~ fetched:", fetched);
                     return {
                         id: generateId(10),
                         title: sec.title,
-                        expanded: true,
+                        duration: sec.duration,
+                        expanded: false,
                         questions: fetched
                     };
                 })
