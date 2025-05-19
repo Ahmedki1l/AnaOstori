@@ -303,15 +303,13 @@
 }
 
 .examActions2 {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     padding: 16px 24px 24px;
     display: flex;
     justify-content: flex-end;
     direction: rtl;
-    z-index: 1000;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .buttonsContainer {

@@ -161,6 +161,11 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         
         console.log("🚀 ~ calculateTime ~ totalSeconds: ", totalSeconds)
 
+        while (totalSeconds > 59) {
+            totalMinutes++;
+            totalSeconds -= 60;
+        }
+
         return `${totalMinutes}:${totalSeconds}`
     }
 
