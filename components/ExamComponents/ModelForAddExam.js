@@ -117,7 +117,7 @@ const ModelForAddExam = ({
             routeName: 'getItem',
             type: 'questions',
             page: 1,
-            limit: itemsPerPage,
+            limit: questionIds.length,
             ids: questionIds
         };
         try {
