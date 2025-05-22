@@ -577,6 +577,7 @@ const ExamPage = () => {
                     instructions={reviewSectionTexts.instructions}
                     sectionTitle={reviewSectionTexts.sectionTitle}
                     questions={reviewQuestions}
+                    CurrentExam={selectedExam}
                     buttonLabels={reviewSectionTexts.buttonLabels}
                     questionLabel={reviewSectionTexts.questionLabel}
                     incompleteLabel={reviewSectionTexts.incompleteLabel}
@@ -587,6 +588,7 @@ const ExamPage = () => {
                     onFinishReview={handleFinishReview}
                     onQuestionClick={handleQuestionClick}
                     onMarkQuestion={handleMarkQuestion}
+                    formatTime={formatTime}
                 />
             )}
 
@@ -612,6 +614,7 @@ const ExamPage = () => {
                     elapsedTime={allElapsedFormatted}
                     totalTime={selectedExam.duration + ":00" || "25:00"}
                     examData={allExamQuestions}
+                    CurrentExam={selectedExam}
                     reviewQuestions={allReviewQuestions}
                     onReviewAnswers={() => setExamStage('sectionsReview')}
                     onRetakeExam={() => handleRetakeExam()}

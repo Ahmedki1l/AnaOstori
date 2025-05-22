@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onReviewAnswers, onRetakeExam }) => {
+const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQuestions, onReviewAnswers, onRetakeExam }) => {
     console.log("🚀 ~ ExamResults ~ elapsedTime:", elapsedTime);
     const allReviews = reviewQuestions;
     const flatReviews = allReviews.flat();
@@ -150,15 +150,15 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         let totalMinutes, totalSeconds;
         totalMinutes = 0;
         totalSeconds = 0;
-        
+
         elapsedTime.map((time) => {
             const [minutes, seconds] = time.split(':').map(Number);
             totalMinutes += minutes;
             totalSeconds += seconds;
         });
-        
+
         console.log("🚀 ~ calculateTime ~ totalMinutes: ", totalMinutes)
-        
+
         console.log("🚀 ~ calculateTime ~ totalSeconds: ", totalSeconds)
 
         while (totalSeconds > 59) {
@@ -175,6 +175,34 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
     const marked = getMarkedQuestions();
     const sections = getSections(flatQuestions, flatReviews);
 
+    const getSectionDetails = (allReviews, examData) => {
+        if (!allReviews || !examData || allReviews.length === 0) {
+            return [];
+        }
+
+        return allReviews.map((sectionQuestions, index) => {
+            // Calculate score for section
+            let correctAnswers = 0;
+            sectionQuestions.forEach((question, i) => {
+                const questionIndex = examData.findIndex(q => q.id === question.id);
+                if (questionIndex >= 0 && question.selectedAnswer === examData[questionIndex].correctAnswer) {
+                    correctAnswers++;
+                }
+            });
+
+            const sectionScore = Math.round((correctAnswers / sectionQuestions.length) * 100);
+
+            return {
+                title: CurrentExam.sections[index].title,
+                score: sectionScore,
+                time: elapsedTime[index]
+            };
+        });
+    };
+
+    const sectionDetails = getSectionDetails(allReviews, examData)
+
+    // Add to results object
     const results = {
         score: score,
         totalTime: totalTime,
@@ -183,8 +211,10 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
         wrongQuestions: totalQuestions - correctAnswers,
         unansweredQuestions: unAnswered,
         markedQuestions: marked,
-        sections: sections
+        sections: sections,
+        sectionDetails: sectionDetails
     };
+
     console.log("🚀 ~ ExamResults ~ results:", results)
 
     // Render progress circle with percentage
@@ -311,10 +341,6 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
                             <div className={styles.statsText}>سؤال خاطئ</div>
                         </div>
                     </div>
-                </div>
-
-                {/* Second row - Time and marked questions */}
-                <div className={styles.statsSummary}>
                     {/* Marked question */}
                     <div className={styles.statsItem}>
                         <div className={styles.statsTopRow}>
@@ -403,13 +429,13 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
                                 </div>
                             ))}
                         </div>
-                        <button className={styles.showMoreBtn}>عرض باقي المهارات</button>
+                        {/* <button className={styles.showMoreBtn}>عرض باقي المهارات</button> */}
                     </div>
                 ))}
             </div>
 
             {/* Section details */}
-            {/* <div className={styles.sectionDetailsContainer}>
+            <div className={styles.sectionDetailsContainer}>
                 <table className={styles.detailsTable}>
                     <thead >
                         تفاصيل الأقسام
@@ -426,12 +452,29 @@ const ExamResults = ({ elapsedTime, totalTime, examData, reviewQuestions, onRevi
                                 <td >
                                     <span>{detail.score}</span>
                                 </td>
-                                <td >{detail.time}</td>
+                                <td className={styles.timer}>
+                                    <div style={{ width: '28px', height: '28px' }} >
+                                        <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_207_14210)">
+                                                <path opacity="0.3" d="M9.00117 4.5C6.09867 4.5 3.75117 6.8475 3.75117 9.75C3.75117 12.6525 6.09867 15 9.00117 15C11.9037 15 14.2512 12.6525 14.2512 9.75C14.2512 6.8475 11.9037 4.5 9.00117 4.5ZM9.75117 10.5H8.25117V6H9.75117V10.5Z" fill="black" />
+                                                <path d="M11.25 0.75H6.75V2.25H11.25V0.75Z" fill="black" />
+                                                <path d="M14.2725 5.5425L15.3375 4.4775C15.015 4.095 14.6625 3.735 14.28 3.42L13.215 4.485C12.0525 3.555 10.59 3 9 3C5.2725 3 2.25 6.0225 2.25 9.75C2.25 13.4775 5.265 16.5 9 16.5C12.735 16.5 15.75 13.4775 15.75 9.75C15.75 8.16 15.195 6.6975 14.2725 5.5425ZM9 15C6.0975 15 3.75 12.6525 3.75 9.75C3.75 6.8475 6.0975 4.5 9 4.5C11.9025 4.5 14.25 6.8475 14.25 9.75C14.25 12.6525 11.9025 15 9 15Z" fill="black" />
+                                                <path d="M9.75117 6H8.25117V10.5H9.75117V6Z" fill="black" />
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_207_14210">
+                                                    <rect width="18" height="18" fill="white" />
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    {detail.time}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div> */}
+            </div>
 
             {/* Action buttons */}
             <div className={styles.actionButtons}>

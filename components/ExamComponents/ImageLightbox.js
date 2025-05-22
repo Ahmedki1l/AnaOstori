@@ -7,11 +7,13 @@ export default function ImageLightbox({ src, alt }) {
   return (
     <>
       {/* 1) Thumbnail */}
-      <div
-        className={styles.imageContainer}
-        onClick={() => setOpen(true)}
-      >
-        <img src={src} alt={alt} />
+      <div className={styles.mainContainer}>
+        <div
+          className={styles.imageContainer}
+          onClick={() => setOpen(true)}
+        >
+          <img src={src} alt={alt} />
+        </div>
       </div>
 
       {/* 2) Overlay when open */}

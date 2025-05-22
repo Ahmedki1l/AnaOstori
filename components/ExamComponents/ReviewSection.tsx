@@ -38,7 +38,7 @@ interface ReviewSectionProps {
     onMarkQuestion: () => void;
 }
 
-const ReviewSection: React.FC<ReviewSectionProps> = ({
+const ReviewSection = ({
     title,
     examTitle,
     currentTime,
@@ -55,10 +55,41 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
     onReviewMarked,
     onFinishReview,
     onQuestionClick,
-    onMarkQuestion
+    onMarkQuestion, 
+    formatTime,
+    timeLeft,
+    CurrentExam
 }) => {
     return (
         <div className={styles.div}>
+            <div className={styles.frameParent3}>
+                <div className={styles.frameParent4}>
+                    <div className={styles.group}>
+                        <span className={styles.timerText}>{formatTime(timeLeft)}</span>
+                        <div style={{ width: '28px', height: '28px' }} >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="29" viewBox="0 0 28 29" fill="none">
+                                <g clip-path="url(#clip0_194_3803)">
+                                    <path opacity="0.3" d="M14.0007 7.5C9.48565 7.5 5.83398 11.1517 5.83398 15.6667C5.83398 20.1817 9.48565 23.8333 14.0007 23.8333C18.5157 23.8333 22.1673 20.1817 22.1673 15.6667C22.1673 11.1517 18.5157 7.5 14.0007 7.5ZM15.1673 16.8333H12.834V9.83333H15.1673V16.8333Z" fill="#19A337" />
+                                    <path d="M17.5 1.66602H10.5V3.99935H17.5V1.66602Z" fill="#19A337" />
+                                    <path d="M22.2017 9.12102L23.8583 7.46435C23.3567 6.86935 22.8083 6.30935 22.2133 5.81935L20.5567 7.47602C18.7483 6.02935 16.4733 5.16602 14 5.16602C8.20167 5.16602 3.5 9.86768 3.5 15.666C3.5 21.4643 8.19 26.166 14 26.166C19.81 26.166 24.5 21.4643 24.5 15.666C24.5 13.1927 23.6367 10.9177 22.2017 9.12102ZM14 23.8327C9.485 23.8327 5.83333 20.181 5.83333 15.666C5.83333 11.151 9.485 7.49935 14 7.49935C18.515 7.49935 22.1667 11.151 22.1667 15.666C22.1667 20.181 18.515 23.8327 14 23.8327Z" fill="#19A337" />
+                                    <path d="M15.1673 9.83203H12.834V16.832H15.1673V9.83203Z" fill="#19A337" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_194_3803">
+                                        <rect width="28" height="28" fill="white" transform="translate(0 0.5)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                    {/* <div className={styles.textParent11} onClick={onMarkQuestion}>
+                        <div className={styles.text}>{buttonLabels.markQuestion}</div>
+                        <Image className={styles.frameIcon} width={24} height={24} alt="" src="/icons/bookmark-outline.svg" />
+                    </div> */}
+                </div>
+                <div className={styles.div5}>{CurrentExam?.title}</div>
+                <div className={styles.frameChild}></div>
+            </div>
             <div className={styles.inner}>
                 <div className={styles.parent}>
                     <b className={styles.b}>{title}</b>
@@ -179,20 +210,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className={styles.frameParent3}>
-                <div className={styles.frameParent4}>
-                    <div className={styles.group}>
-                        <div className={styles.div4}>{currentTime}</div>
-                        <Image className={styles.timer24dp5f63681Icon} width={28} height={28} alt="" src="/icons/timer.svg" />
-                    </div>
-                    <div className={styles.textParent11} onClick={onMarkQuestion}>
-                        <div className={styles.text}>{buttonLabels.markQuestion}</div>
-                        <Image className={styles.frameIcon} width={24} height={24} alt="" src="/icons/bookmark-outline.svg" />
-                    </div>
-                </div>
-                <div className={styles.div5}>{examTitle}</div>
-                <div className={styles.frameChild}></div>
             </div>
         </div>
     );
