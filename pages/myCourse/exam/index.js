@@ -165,12 +165,18 @@ const ExamPage = () => {
         }));
 
         setReviewQuestions(initialReviewQuestions2);
+        
+        console.log("🚀 ~ useEffect ~ initialReviewQuestions2:", initialReviewQuestions2);
 
     }, [mockExamData2]);
 
     useEffect(() => {
         console.log("🚀 ~ ExamPage ~ allReviewQuestions:", allReviewQuestions);
     }, [allReviewQuestions]);
+
+    useEffect(()=>{
+        console.log("🚀 ~ ExamPage ~ displayExamData:", displayExamData);
+    }, [displayExamData]);
 
     useEffect(() => {
         if (selectedExam) {
@@ -211,7 +217,9 @@ const ExamPage = () => {
 
             const fetchWithAsync = async () => {
                 const questions = await fetchQuestionsByIds(selectedExam?.sections[selectedSectionId].questions);
-                setExamQuestions(questions);
+                setExamQuestions({
+                    questions: questions,
+                });
                 setAllExamQuestions((prev) => {
                     const exists = prev.some(q => q === questions);
                     if (!exists) {
@@ -558,7 +566,7 @@ const ExamPage = () => {
                     formatTime={formatTime}
                     timeLeft={timeLeft}
                     CurrentExam={selectedExam}
-                    examData={displayExamData}
+                    examData={examQuestions}
                     onCompleteExam={handleCompleteExam}
                     currentTime={examTimer}
                     reviewQuestions={reviewQuestions}
@@ -604,7 +612,7 @@ const ExamPage = () => {
                     setReviewQuestions={setReviewQuestions}
                     currentQuestionIndex={currentQuestionIndex}
                     showReviewSection={() => { setExamStage('review'); }}
-                    finishReview={() => { setExamStage('results'); }}
+                    finishReview={handleFinishReview}
                     section={selectedExam.sections[selectedSectionId]}
                 />
             )}
@@ -641,7 +649,7 @@ const ExamPage = () => {
                     reviewQuestions={allReviewQuestions[selectedSectionidForReview || 0]}
                     setReviewQuestions={setReviewQuestions}
                     currentQuestionIndex={currentQuestionIndex}
-                    showReviewSection={() => { }}
+                    showReviewSection={() => { setExamStage('sectionsReview') }}
                     finishReview={() => { }}
                     section={selectedExam.sections[selectedSectionidForReview]}
                 />

@@ -203,6 +203,7 @@
     font-size: 16px;
     color: #000000;
     margin-bottom: 30px;
+    flex-wrap: wrap;
     line-height: 1.6;
     display: flex;
     direction: rtl;
@@ -307,9 +308,10 @@
     display: flex;
     justify-content: flex-end;
     direction: rtl;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
+    z-index: 1000;
 }
 
 .buttonsContainer {
@@ -331,6 +333,7 @@
 .nextButton {
     display: flex;
     align-items: center;
+    align-content: center;
     justify-content: space-between;
     gap: 8px;
     padding: 16px 25px;
@@ -688,13 +691,14 @@
     gap: 8px;
 }
 
-.timer > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.timer>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .timer svg {
-  display: block;
+    display: block;
 }
 
 .detailsTitle {
@@ -1137,6 +1141,42 @@
         /* no grow/shrink, base width ≈33.3% minus gap */
         max-width: calc(50% - 20px);
         box-sizing: border-box;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .nextButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .examActions {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        direction: rtl;
+        z-index: 1000;
+        width: 100%;
+    }
+
+    .examActions2 {
+        position: fixed;
+        bottom: 70px;
+        left: 10px;
+        right: 0;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        direction: rtl;
+        z-index: 1000;
+        width: 100%;
+        gap: 20px;
     }
 }
 
