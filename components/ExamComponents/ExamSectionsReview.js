@@ -267,7 +267,7 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
 
                                 {/* Score */}
                                 <div className={styles.figmaSectionScore}>
-                                    <span className={styles.figmaScoreNumber}>{section.percentage}</span>
+                                    <span className={styles.figmaScoreNumber}>{section.score}</span>
                                 </div>
 
                                 {/* Time */}

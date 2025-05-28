@@ -631,6 +631,15 @@
     order: 2;
 }
 
+.scoreContainer {
+    display: flex;
+    align-items: center;
+    /* vertical centering */
+    justify-content: center;
+    /* horizontal centering as a group */
+    gap: 12px;
+}
+
 .scoreCircle {
     width: 36px;
     height: 36px;
@@ -930,10 +939,14 @@
 .figmaSectionScore {
     font-size: 20px;
     color: #000;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .figmaScoreNumber {
     font-weight: 500;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 /* Percentage circle */
@@ -1103,9 +1116,20 @@
         max-width: calc(50% - 20px);
         /* For 2 items per row on medium screens */
     }
+
+    .figmaSectionInfo {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: left;
+        margin-top: 10px;
+        gap: 10px;
+        /* ← less space between every item */
+    }
 }
 
 @media (max-width: 768px) {
+
     .figmaSectionsHeader {
         padding: 16px;
     }
@@ -1115,9 +1139,13 @@
     }
 
     .figmaSectionInfo {
+        display: flex;
         width: 100%;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: left;
         margin-top: 10px;
+        gap: 6px;
+        /* ← less space between every item */
     }
 
     .figmaQuestionItem {

@@ -13,6 +13,7 @@ const ReviewAnswers = ({
     currentQuestionIndex,
     showReviewSection,
     finishReview,
+    showResults,
     section
 }) => {
     console.log("🚀 ~ section:", section)
@@ -265,7 +266,7 @@ const ReviewAnswers = ({
                 <div className={styles.examActions2}>
                     <button
                         className={styles.nextButton}
-                        onClick={finishReview}
+                        onClick={showResults}
                     >
                         <div style={{ width: '28px', height: '28px' }} >
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -308,7 +309,7 @@ const ReviewAnswers = ({
 
                     <button
                         className={styles.nextButton}
-                        onClick={showReviewSection}
+                        onClick={finishReview}
                     >
                         <div style={{ width: '28px', height: '28px' }} >
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
