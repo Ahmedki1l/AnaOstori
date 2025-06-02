@@ -121,7 +121,7 @@ export default function CourseDetailsHeader(props) {
 													{lang === 'en' ? "Riyadh:" : "الرياض:"}
 												</p>
 												<div className={`flex items-center ${(screenWidth > 767) ? "" : `ml-4 mr-4 mt-2 mb-2`}`}>
-													{(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>(</p>}
+													{/* {(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>(</p>} */}
 													<div className="flex items-center ml-2 mr-2">
 														<a
 															href="https://goo.gl/maps/p9V4qb6csGQGXWxb6"
@@ -171,7 +171,7 @@ export default function CourseDetailsHeader(props) {
 														</p>
 													</div> */}
 
-													{(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>}
+													{/* {(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>} */}
 												</div>
 											</div>
 
