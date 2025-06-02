@@ -137,7 +137,7 @@ export default function CourseDetailsHeader(props) {
 														</p>
 													</div>
 
-													{(screenWidth > 767) && <span className="mx-2 text-gray-400">-</span>}
+													{/* {(screenWidth > 767) && <span className="mx-2 text-gray-400">-</span>}
 
 													<div className="flex items-center ml-2 mr-2">
 														<a
@@ -169,7 +169,7 @@ export default function CourseDetailsHeader(props) {
 														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
 															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}
 														</p>
-													</div>
+													</div> */}
 
 													{(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>}
 												</div>

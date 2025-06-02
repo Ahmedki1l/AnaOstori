@@ -142,7 +142,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
 
             return {
                 title: section.title,
-                score: sectionScore,
+                score: correctInSection,
+                totalQuestions: section.questions.length,
                 skills: skills
             };
         });
@@ -209,6 +210,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     // Add to results object
     const results = {
         score: score,
+        totalQuestions: totalQuestions,
         totalTime: totalTime,
         timeSpent: calculateTime(),
         correctQuestions: correctAnswers,
@@ -222,10 +224,12 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     console.log("🚀 ~ ExamResults ~ results:", results)
 
     // Render progress circle with percentage
-    const ProgressCircle = ({ percentage, size = 100, displayText = true }) => {
+    const ProgressCircle = ({ score, totalQuestions, size = 100, displayText = true }) => {
         const radius = 45;
         const circumference = 2 * Math.PI * radius;
-        const strokeDashoffset = circumference - (percentage / 100) * circumference;
+        const strokeDashoffset = circumference - (score / totalQuestions) * circumference;
+
+        const percentage = Math.round((score / totalQuestions) * 100);
 
         return (
             <div className={styles.progressCircleContainer}>
@@ -258,7 +262,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                     </text>
                     {displayText &&
                         <text x="50" y="65" textAnchor="middle" fontSize="12">
-                            {percentage}/{100}
+                            {score}/{totalQuestions}
                         </text>
                     }
                 </svg>
@@ -274,7 +278,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
 
             {/* Main score */}
             <div className={styles.mainScoreContainer}>
-                <ProgressCircle percentage={results.score} size={120} />
+                <ProgressCircle score={results.correctQuestions} totalQuestions={results.totalQuestions} size={120} />
                 <div className={styles.scoreLabel}>درجة الاختبار</div>
             </div>
 
@@ -299,7 +303,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                             </svg>
                         </div>
                         <div className={styles.statsTextItem}>
-                            <div className={styles.statsCount}>× {results.unansweredQuestions}</div>
+                            <div className={styles.statsCount}>{results.unansweredQuestions}</div>
                             <div className={styles.statsText}>سؤال غير مكتمل</div>
                         </div>
                     </div>
@@ -320,7 +324,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                             </svg>
                         </div>
                         <div className={styles.statsTextItem}>
-                            <div className={styles.statsCount}>× {results.correctQuestions}</div>
+                            <div className={styles.statsCount}>{results.correctQuestions}</div>
                             <div className={styles.statsText}>سؤال صحيح</div>
                         </div>
                     </div>
@@ -341,7 +345,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                             </svg>
                         </div>
                         <div className={styles.statsTextItem}>
-                            <div className={styles.statsCount}>× {results.wrongQuestions}</div>
+                            <div className={styles.statsCount}>{results.wrongQuestions}</div>
                             <div className={styles.statsText}>سؤال خاطئ</div>
                         </div>
                     </div>
@@ -361,7 +365,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                             </svg>
                         </div>
                         <div className={styles.statsTextItem}>
-                            <div className={styles.statsCount}>× {results.markedQuestions}</div>
+                            <div className={styles.statsCount}>{results.markedQuestions}</div>
                             <div className={styles.statsText}>سؤال مميز بعلامة</div>
                         </div>
                     </div>
@@ -420,7 +424,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 {results.sections.map((section, index) => (
                     <div key={index} className={styles.sectionBox}>
                         <div className={styles.sectionHeader}>
-                            <ProgressCircle percentage={section.score} size={80} />
+                            <ProgressCircle score={section.score} totalQuestions={section.totalQuestions} size={80} />
                             <h3>{section.title}</h3>
                         </div>
                         <div className={styles.skillsList}>
@@ -430,7 +434,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                                     <div className={styles.scoreContainer}>
                                         <div className={styles.skillScore}>{skill.correctAnswers} / {skill.numberOfQuestions}</div>
                                         <div className={styles.skillScore}>
-                                            <ProgressCircle percentage={skill.score} size={35} displayText={false} />
+                                            <ProgressCircle score={skill.correctAnswers} totalQuestions={skill.numberOfQuestions} size={35} displayText={false} />
                                         </div>
                                     </div>
                                 </div>
@@ -453,7 +457,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                                 <td >{detail.title}</td>
                                 <td >
                                     <div className={styles.skillScore}>
-                                        <ProgressCircle percentage={detail.score} size={35} displayText={false} />
+                                        <ProgressCircle score={detail.correctAnswers} totalQuestions={detail.numberOfQuestions} size={35} displayText={false} />
                                     </div>
                                 </td>
                                 <td >

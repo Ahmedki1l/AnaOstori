@@ -1101,6 +1101,11 @@
     border-bottom: 2px solid red;
 }
 
+.imageContainer{
+    display: block;
+    margin-bottom: 5px;
+}
+
 @media (max-width: 1024px) {
     .figmaSectionHeader {
         flex-wrap: nowrap;
@@ -1306,5 +1311,130 @@
     .statsItem,
     .timeItem {
         flex-basis: 45%;
+    }
+}
+
+
+@media (max-height: 700px) {
+    .examContainer {
+        min-height: 100vh;
+    }
+
+    .questionContent {
+        margin: 20px 0;
+        max-height: 65vh;
+    }
+
+    .questionSidebar,
+    .mainQuestionArea {
+        min-height: 65vh;
+        padding: 10px;
+    }
+
+    .examHeader {
+        padding: 8px 16px;
+    }
+
+    .examTitle {
+        font-size: 14px;
+    }
+
+    .timerText {
+        font-size: 16px;
+    }
+
+    .contextTitle {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .contextDescription {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .questionText {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .optionsContainer {
+        gap: 5px;
+    }
+
+    .optionRow {
+        padding: 4px;
+    }
+
+    .optionText {
+        font-size: 14px;
+    }
+
+    .examActions {
+        padding: 8px 16px 16px;
+    }
+
+    .nextButton {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    .markQuestionBtn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-height: 680px) {
+    .questionContent {
+        margin: 10px 0;
+        max-height: 60vh;
+    }
+
+    .questionSidebar,
+    .mainQuestionArea {
+        min-height: 60vh;
+        padding: 8px;
+    }
+
+    .examHeader {
+        padding: 6px 12px;
+    }
+
+    .examTitle {
+        font-size: 12px;
+    }
+
+    .timerText {
+        font-size: 14px;
+    }
+
+    .contextTitle,
+    .contextDescription,
+    .questionText,
+    .optionText {
+        font-size: 12px;
+    }
+
+    .optionsContainer {
+        gap: 4px;
+    }
+
+    .optionRow {
+        padding: 3px;
+    }
+
+    .examActions {
+        padding: 6px 12px 12px;
+    }
+
+    .nextButton {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .markQuestionBtn {
+        padding: 6px 10px;
+        font-size: 11px;
     }
 }

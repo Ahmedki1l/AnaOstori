@@ -169,10 +169,12 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                         {/* — Question‐level image, if any — */}
                         {currentQuestion.questionImages && (
                             currentQuestion.questionImages.map((image, index) => (
-                                <ImageLightbox
-                                    src={image}
-                                    alt={`Question ${index + 1}`}
-                                />
+                                <div className={styles.imageContainer}>
+                                    <ImageLightbox
+                                        src={image}
+                                        alt={`Question ${index + 1}`}
+                                    />
+                                </div>
                             ))
                         )}
 
