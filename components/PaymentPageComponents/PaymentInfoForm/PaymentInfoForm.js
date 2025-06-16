@@ -19,6 +19,7 @@ import * as PaymentConst from '../../../constants/PaymentConst'
 import TabbyPomoForm from './TabbyPromo'
 import TabbyCheckoutForm from './TabbyCheckout'
 import { toast } from 'react-toastify';
+import PaymentConfirmButton from './FreePaymentDetailForm'
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -35,6 +36,7 @@ export default function PaymentInfoForm(props) {
 	const [couponAppliedData, setCouponAppliedData] = useState();
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId);
 	const [tabbyUrl, setTabbyUrl] = useState(null);
+	const [freePayment, setFreePayment] = useState(true);
 	const [tabbyStatus, setTabbyStatus] = useState('');
 	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
 	const [paymentType, setPaymentType] = useState('');
@@ -101,6 +103,26 @@ export default function PaymentInfoForm(props) {
 		}
 	};
 
+	const handleFreePayment = async () => {
+		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Free Payment' })
+
+		let data = {
+			orderId: createdOrder.id,
+			withcoupon: couponAppliedData ? true : false,
+			couponId: couponAppliedData ? couponAppliedData.id : null,
+		}
+
+		try {
+			const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/confirmFreePayment`, data);
+			if (res.status === 200) {
+				setFreePayment(true);
+
+			}
+		} catch (error) {
+			console.error("Error confirming free payment:", error);
+			toast.error("حدث خطأ أثناء تأكيد الدفع. يرجى المحاولة مرة أخرى.");
+		}
+	}
 	// useEffect(() => {
 	// 	if (tabbyRejectionReason) {
 	// 		if (tabbyRejectionReason === "not_available") {
@@ -169,6 +191,8 @@ export default function PaymentInfoForm(props) {
 			setIsCanMakePayments(false)
 		}
 	}, [setIsCanMakePayments])
+
+	const zeroCostFlag = true //((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)) === 0;
 
 	return (
 		<div className='maxWidthDefault'>
@@ -262,6 +286,21 @@ export default function PaymentInfoForm(props) {
 								}
 							</div>
 						</label>
+						{zeroCostFlag && <>
+							<input type="radio" id="freePayment" name="paymentDetails" className="hidden peer" onClick={() => {}} />
+							<label htmlFor="freePayment" className='relative'>
+								<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
+									<div className='flex items-center'>
+										<div className={styles.circle}><div></div></div>
+										<p className={`fontMedium ${styles.labelText}`}>دفع مجاني بدون بطاقة</p>
+									</div>
+									{/* <Logo height={27} width={120} logoName={'creditCardPaymentLogo'} alt={'Payment Methode Logo'} /> */}
+								</div>
+								<div className={styles.creditCardWrapper}>
+									{freePayment && <PaymentConfirmButton />}
+								</div>
+							</label>
+						</>}
 						<input type="radio" id="bankDetails" name="paymentDetails" className="hidden peer" />
 						<label htmlFor="bankDetails">
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox3}`}>
