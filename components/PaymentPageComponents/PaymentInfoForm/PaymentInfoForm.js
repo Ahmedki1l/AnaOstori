@@ -36,7 +36,7 @@ export default function PaymentInfoForm(props) {
 	const [couponAppliedData, setCouponAppliedData] = useState();
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId);
 	const [tabbyUrl, setTabbyUrl] = useState(null);
-	const [freePayment, setFreePayment] = useState(true);
+	const [freePayment, setFreePayment] = useState(false);
 	const [tabbyStatus, setTabbyStatus] = useState('');
 	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
 	const [paymentType, setPaymentType] = useState('');
@@ -192,7 +192,7 @@ export default function PaymentInfoForm(props) {
 		}
 	}, [setIsCanMakePayments])
 
-	const zeroCostFlag = true //((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)) === 0;
+	const zeroCostFlag = ((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)) === 0;
 
 	return (
 		<div className='maxWidthDefault'>
@@ -287,11 +287,11 @@ export default function PaymentInfoForm(props) {
 							</div>
 						</label>
 						{zeroCostFlag && <>
-							<input type="radio" id="freePayment" name="paymentDetails" className="hidden peer" onClick={() => {}} />
+							<input type="radio" id="freePayment" name="paymentDetails" className="hidden peer" onClick={() => handleFreePayment()} />
 							<label htmlFor="freePayment" className='relative'>
 								<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
 									<div className='flex items-center'> 
-										
+
 										<div className={styles.circle}><div></div></div>
 										<p className={`fontMedium ${styles.labelText}`}>دفع مجاني بدون بطاقة</p>
 									</div>

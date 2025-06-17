@@ -40,6 +40,7 @@ export const uploadProfileImage = (data) => { return instance2.post('/userprofil
 export const uploadFileAPI = (data) => { return instance2.post('/file/upload', data) }
 
 export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyPayment`, data) }
+export const getFreePaymentInfoAPI = (data) => { return instance.post(`/orders/verifyFreePayment`, data) }
 export const getTabbyPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyTabbyPayment`, data) }
 
 export const postRouteAPI = (data) => { return instance.post(`/route`, data) }

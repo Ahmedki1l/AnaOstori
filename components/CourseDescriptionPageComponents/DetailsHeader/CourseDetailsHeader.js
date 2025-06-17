@@ -281,7 +281,7 @@ export default function CourseDetailsHeader(props) {
 							</div>
 						} */}
 						<div className={`${styles.analyticsBarWrapper2}`}>
-							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+							{courseDetail.reviewRate !== "-" && <div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 								<div className='m-1'>
 									<AllIconsComponenet height={isMediumScreen ? 18 : 24} width={isMediumScreen ? 20 : 24} iconName={'starDoubleColoredIcon'} color={'#FFCD3C'} />
 								</div>
@@ -289,8 +289,8 @@ export default function CourseDetailsHeader(props) {
 									<p> {lang == 'en' ? `Course Review` : 'تقييم الدورة'} </p>
 									<p className='fontBold'>{courseDetail.reviewRate}</p>
 								</div>
-							</div>
-							<div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
+							</div>}
+							{courseDetail.numberOfGrarduates !== "-" && <div className={`${styles.analyticsCard} pt-8 ${lang == 'en' ? 'pr-8' : "pl-8"}`}>
 								<div className='m-1'>
 									<AllIconsComponenet height={isMediumScreen ? 18 : 22} width={isMediumScreen ? 20 : 22} iconName={'personDoubleColoredIcon'} color={'#FFFFFF'} />
 								</div>
@@ -302,7 +302,7 @@ export default function CourseDetailsHeader(props) {
 									}
 									<p className='fontBold'>{courseDetail.numberOfGrarduates}</p>
 								</div>
-							</div>
+							</div>}
 						</div>
 					</div>
 					{(screenWidth > 767 && (offset < (screenWidth > 1280 ? 357 : screenWidth < 1024 ? 313 : 336))) &&

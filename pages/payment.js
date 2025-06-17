@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI } from '../services/apisService';
+import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI, getFreePaymentInfoAPI } from '../services/apisService';
 import { dateWithDay, timeDuration2 } from '../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
@@ -34,6 +34,7 @@ export default function Payment(props) {
     const { orderId, id, type, payment_id, res } = router.query;
 
     const orderID = orderId || orderId || router.query.orderId || null;
+    const isFreePayment = router.query.freePayment || false;
     const transactionID = id || router.query.id || null;
     const extractedType = type || null;
     const extractedPaymentID = payment_id || null;
@@ -62,6 +63,10 @@ export default function Payment(props) {
     }, [isLoading]);
 
     useEffect(() => {
+        if (isFreePayment && orderID) {
+            getFreePaymentData();
+            return;
+        }
         if ((!extractedType && (router.query.orderId && router.query.id)) || (extractedType && orderID && extractedPaymentID)) {
             getPaymentData();
         }
@@ -119,10 +124,10 @@ export default function Payment(props) {
                 console.log("response.data[0]: ", response.data[0]);
                 paymentData = response.data[0];
                 const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
-                
+
                 setIsPaymentSuccess(flag);
-                if(tabbyResultedResponse !== "success"){
-                    if(tabbyResultedResponse === "cancel") {
+                if (tabbyResultedResponse !== "success") {
+                    if (tabbyResultedResponse === "cancel") {
                         setPaymentMessage(tabbyResponseMessages.cancel.ar);
                     } else {
                         setPaymentMessage(tabbyResponseMessages.failure.ar);
@@ -148,6 +153,40 @@ export default function Payment(props) {
                 setLoading(false);
             })
         }
+    }
+
+    const getFreePaymentData = async () => {
+        let data = {
+            orderId: router.query.orderId,
+            transactionId: router.query.id,
+        }
+
+        let paymentData;
+
+        await getFreePaymentInfoAPI(data).then(async (response) => {
+            ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
+            setTransactionDetails(response.data)
+            console.log(response.data[0])
+            paymentData = response.data[0];
+            const flag = response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false;
+            setIsPaymentSuccess(flag);
+            setLoading(false)
+            setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
+            const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
+            const [myCourseData] = await Promise.all([getMyCourseReq])
+            dispatch({
+                type: 'SET_ALL_MYCOURSE',
+                myCourses: myCourseData?.data,
+            });
+
+            // If payment is successful, send WhatsApp message
+            if (flag) {
+                await sendWhatsAppMessage(paymentData);
+            }
+
+        }).catch(async (error) => {
+            setLoading(false)
+        });
     }
 
     const sendWhatsAppMessage = async (orderDetail) => {

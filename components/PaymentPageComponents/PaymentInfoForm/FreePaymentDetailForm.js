@@ -3,25 +3,6 @@ import { useRouter } from 'next/router'
 // Component for a simple payment confirmation button
 const PaymentConfirmButton = () => {
     const router = useRouter();
-    
-    const buttonStyles = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%'
-    };
-
-    const buttonElementStyles = {
-        padding: '12px 24px',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        backgroundColor: '#00a862',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer'
-    };
 
     const handleConfirmPayment = () => {
         router.push({
@@ -34,12 +15,21 @@ const PaymentConfirmButton = () => {
     };
 
     return (
-        <div style={buttonStyles}>
+        <div className="mt-4 text-left">
             <button
-                style={buttonElementStyles}
                 onClick={handleConfirmPayment}
+                className="
+            bg-blue-600 
+            hover:bg-blue-700 
+            text-white 
+            px-6 
+            py-2 
+            rounded-md 
+            text-base 
+            cursor-pointer 
+          "
             >
-                تأكيد الدفع
+                إتمام العملية
             </button>
         </div>
     );
