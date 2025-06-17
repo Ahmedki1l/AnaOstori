@@ -118,7 +118,7 @@ export default function CourseDetailsHeader(props) {
 									{courseDetail.type === "physical" ? (
 										<div className={`flex flex-wrap ${(screenWidth > 767) ? "items-center" : "flex-col"}`}>
 											{/* First group of locations */}
-											{locationNames.includes('الرياض') && <>
+											{(locationNames.includes('الرياض') || locationNames.includes('RIYADH')) && <>
 												<div className={`flex flex-wrap ${(screenWidth > 767) ? "items-center" : `flex-col`}`}>
 													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
 														{lang === 'en' ? "Riyadh:" : "الرياض:"}
@@ -181,8 +181,8 @@ export default function CourseDetailsHeader(props) {
 											</>
 											}
 
-											{locationNames.includes('الدمام') && <>
-												{(screenWidth > 767) && locationNames.includes('الرياض') && <span className="mx-2 text-gray-400">-</span>}
+											{(locationNames.includes('الدمام') || locationNames.includes('DAMMAM')) && <>
+												{(screenWidth > 767) && (locationNames.includes('الرياض') || locationNames.includes('RIYADH')) && <span className="mx-2 text-gray-400">-</span>}
 												<div className={`flex flex-wrap ${(screenWidth > 767) ? "items-center" : `flex-col`}`}>
 													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
 														{lang === 'en' ? "Dammam:" : "الدمام:"}
@@ -207,8 +207,8 @@ export default function CourseDetailsHeader(props) {
 											</>
 											}
 
-											{locationNames.includes('جدة') && <>
-												{(screenWidth > 767) && locationNames.includes('الدمام') && <span className="mx-2 text-gray-400">-</span>}
+											{(locationNames.includes('جدة') || locationNames.includes('JEDDAH')) && <>
+												{(screenWidth > 767) && (locationNames.includes('الدمام') || locationNames.includes('DAMMAM')) && <span className="mx-2 text-gray-400">-</span>}
 												<div className={`flex flex-wrap ${(screenWidth > 767) ? "items-center" : `flex-col`}`}>
 													<p className={lang === 'en' ? "ml-2" : "mr-2"}>
 														{lang === 'en' ? "Jeddah:" : "جدة:"}
