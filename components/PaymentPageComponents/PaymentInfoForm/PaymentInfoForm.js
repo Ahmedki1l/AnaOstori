@@ -290,7 +290,8 @@ export default function PaymentInfoForm(props) {
 							<input type="radio" id="freePayment" name="paymentDetails" className="hidden peer" onClick={() => {}} />
 							<label htmlFor="freePayment" className='relative'>
 								<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
-									<div className='flex items-center'>
+									<div className='flex items-center'> 
+										
 										<div className={styles.circle}><div></div></div>
 										<p className={`fontMedium ${styles.labelText}`}>دفع مجاني بدون بطاقة</p>
 									</div>
