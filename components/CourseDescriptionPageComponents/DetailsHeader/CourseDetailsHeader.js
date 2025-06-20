@@ -136,7 +136,7 @@ export default function CourseDetailsHeader(props) {
 																<GoogleMapsIcon />
 															</a>
 															<p className={lang === 'en' ? "ml-2" : "mr-2"}>
-																{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي الياسمين"}
+																{lang === 'en' ? "Al-Yasmeen District" : "حي الياسمين"}
 															</p>
 														</div>
 

@@ -578,34 +578,28 @@ export default function Index(props) {
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
 							{(screenWidth <= 767) ?
-								<ul className={`flex justify-center border-b border-inherit bg-white z-10 list-none`}>
-									{/* <li onClick={() => handleSlectedItem(0, `header`)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 0 ? styles.activeItemMobile : ''}`}>{lang == 'en' ? 'Course features' : `مميزات الدورة`}</li>
-									<li onClick={() => handleSlectedItem(4, 'dates')} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}>{lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li> */}
-									{courseDetail?.courseMetaData?.map((metaData, index) => {
-										return (
-											<div key={`datatitle${index}`}>
-												<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`, 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == (index + 1) ? styles.activeItemMobile : ''}`}>{metaData.title}</li>
-											</div>
-										)
-									})}
-									{
-										sortedReviewsByCategory[currentCategory] &&
-										<li onClick={() => handleSlectedItem(5, 'userFeedback', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 5 ? styles.activeItemMobile : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
-									}
-									{hasDates &&
-										<li onClick={() => handleSlectedItem(4, 'dates', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
-									}
-									<div>
-										{/* {courseDetail?.type == 'on-demand' ?
-												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
-												:
-												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
-											} */}
-										{courseDetail?.type == 'on-demand' &&
-											<li onClick={() => handleSlectedItem(4, 'dates', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
-										}
-									</div>
-								</ul>
+								// <ul className={`flex justify-center border-b border-inherit bg-white z-10 list-none`}>
+								// 	{courseDetail?.courseMetaData?.map((metaData, index) => {
+								// 		return (
+								// 			<div key={`datatitle${index}`}>
+								// 				<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`, 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == (index + 1) ? styles.activeItemMobile : ''}`}>{metaData.title}</li>
+								// 			</div>
+								// 		)
+								// 	})}
+								// 	{
+								// 		sortedReviewsByCategory[currentCategory] &&
+								// 		<li onClick={() => handleSlectedItem(5, 'userFeedback', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 5 ? styles.activeItemMobile : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير:`}</li>
+								// 	}
+								// 	{hasDates &&
+								// 		<li onClick={() => handleSlectedItem(4, 'dates', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+								// 	}
+								// 	<div>
+								// 		{courseDetail?.type == 'on-demand' &&
+								// 			<li onClick={() => handleSlectedItem(4, 'dates', 7)} className={`mx-auto pt-3 pb-2 px-4 fontMedium ${styles.mobileTabBarFont} ${selectedNavItem == 4 ? styles.activeItemMobile : ''}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
+								// 		}
+								// 	</div>
+								// </ul>
+								<></>
 								:
 								<ul className={`${styles.courseDetailsNavbar} ${offset > 313 ? `${styles.courseDetailsNavbarFixed}` : ''}`}>
 									<ScrollContainer className={`flex ${styles.courseDetailsSubNavbar} `}>
@@ -779,10 +773,10 @@ export default function Index(props) {
 											<>
 												{/* Location Selection */}
 												<div className="mb-6">
-													<h2 className="text-right mb-2 text-gray-600">
+													<h2 className={`${lang === "en" ? "text-left" : "text-right"} mb-2 text-gray-600`}>
 														{lang === 'en' ? "Branch" : "الفرع"}
 													</h2>
-													<p className="text-right text-sm mb-2">
+													<p className={`${lang === "en" ? "text-left" : "text-right"} text-sm mb-2`}>
 														{lang === 'en'
 															? "Accordingly, we will show you the available dates"
 															: "بناءً عليه يوريك المواعيد المتوفرة"}
@@ -809,7 +803,7 @@ export default function Index(props) {
 													{/* District Selection */}
 													{districts && districts.length > 0 && (
 														<div className="mt-4">
-															<h2 className="text-right mb-4 text-gray-600">
+															<h2 className={`${lang === "en" ? "text-left" : "text-right"} mb-2 text-gray-600`}>
 																{lang === 'en' ? "District" : "الحي"}
 															</h2>
 															<div className="flex justify-start gap-2">
@@ -836,7 +830,7 @@ export default function Index(props) {
 												{(filteredMaleDates?.length > 0 || filteredFemaleDates?.length > 0) &&
 													<div className="mb-6">
 														<h2 className={`${lang == 'en' ? 'text-left' : 'text-right'}  mb-2`}>{lang == 'en' ? "Choose the date that suits you" : "اختر الموعد المناسب لك"}</h2>
-														<div className={`flex ${lang == 'en' ? 'justify-end' : 'justify-start'}  gap-2`}>
+														<div className={`flex ${lang == 'en' ? 'justify-start' : 'justify-start'}  gap-2`}>
 															{
 																filteredMaleDates?.length > 0 && (
 																	<button
