@@ -34,13 +34,15 @@ export async function getServerSideProps({ req, res, resolvedUrl }) {
 		const requests = [];
 		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
 		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
-		requests.push(maleDatesReq, femaleDatesReq);
-		const [maleDates, femaleDates] = await Promise.all(requests);
+		const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`);
+		requests.push(maleDatesReq, femaleDatesReq, mixDatesReq);
+		const [maleDates, femaleDates, mixDates] = await Promise.all(requests);
 		return {
 			props: {
 				courseDetails: courseDetails || null,
 				maleDates: maleDates?.data || [],
 				femaleDates: femaleDates?.data || [],
+				mixDates: mixDates?.data || [],
 			}
 		}
 	} else if (courseDetails.type === 'online') {
@@ -86,7 +88,7 @@ export default function Index(props) {
 	const currentType = courseDetails?.type;
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
-	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+	const mixDates = (props?.courseDetails?.type == 'online' || props?.courseDetails?.type == 'physical') ? props?.mixDates?.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const [loading, setLoading] = useState(false)
 
 	const [changePage, setChangePage] = useState(false)

@@ -15,10 +15,10 @@ import * as PaymentConst from '../../../constants/PaymentConst';
 import TabbyPomoForm from '../PaymentInfoForm/TabbyPromo';
 
 export default function UserInfoForm(props) {
+	console.log("🚀 ~ UserInfoForm ~ props:", props);
 	const studentsDataLength = props.studentsData?.length
 	const noOfUsersTag = PaymentConst.noOfUsersTag
 	const courseDetail = props.courseDetails
-	const genders = PaymentConst.genders
 
 	const router = useRouter();
 	const [selectedGender, setSelectedGender] = useState(router.query.gender ? (router.query.gender == 'mix' ? 'male' : router.query.gender) : 'male')
@@ -26,7 +26,9 @@ export default function UserInfoForm(props) {
 	const [selectedRegionId, setSelectedRegionId] = useState(router.query.region ? router.query.region : "");
 
 	const initialMaleDate = props.maleDates.length > 0 && props.maleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.maleDates;
+	console.log("🚀 ~ UserInfoForm ~ initialMaleDate:", initialMaleDate)
 	const initialFemaleDate = props.femaleDates.length > 0 && props.femaleDates.every(obj => obj.numberOfSeats === 0) ? [] : props.femaleDates;
+	console.log("🚀 ~ UserInfoForm ~ initialFemaleDate:", initialFemaleDate)
 
 	let choosenQueryMaleDates = [];
 	let choosenQueryFemaleDates = [];
@@ -39,7 +41,16 @@ export default function UserInfoForm(props) {
 	const [maleDates, setMaleDates] = useState([...choosenQueryMaleDates]);
 	const [femaleDates, setFemaleDates] = useState([...choosenQueryFemaleDates]);
 
+
+
 	const mixDates = props.mixDates.length > 0 && props.mixDates.every(obj => obj.numberOfSeats === 0) ? [] : props.mixDates;
+	console.log("🚀 ~ UserInfoForm ~ mixDates:", mixDates)
+
+	// Filter genders based on available dates
+	const genders = PaymentConst.genders;
+
+
+
 	const storeData = useSelector((state) => state?.globalStore);
 	const userPredefineEmail = storeData?.viewProfileData?.email
 	const userPredefinePhone = storeData?.viewProfileData?.phone?.replace("966", "0")
@@ -49,7 +60,10 @@ export default function UserInfoForm(props) {
 	const [regionDataList, setRegionDataList] = useState()
 	const groupDiscountEligible = courseDetail.groupDiscountEligible
 	const smallScreen = useWindowSize().smallScreen
-	const [disabledGender, setDisabledGender] = useState(courseDetail.type == 'physical' ? (initialMaleDate.length == 0 ? "male" : initialFemaleDate.length == 0 ? "female" : null) : null)
+
+	const [disabledGender, setDisabledGender] = useState(null)
+
+
 	// const [disabledRegion, setDisabledRegion] = useState()
 	const [disabledRegions, setDisabledRegions] = useState([]);
 	const userTemplet = {
@@ -220,40 +234,61 @@ export default function UserInfoForm(props) {
 
 			setSelectedRegionId(currentRegion);
 
-			if (maleDates.length > 0 || femaleDates.length > 0) {
+			if (initialMaleDate.length > 0 || initialFemaleDate.length > 0 || mixDates.length > 0) {
 				let data = [...studentsData]
-				data[0]['region'] = selectedRegionId;
+				data[0]['region'] = currentRegion;
 				setStudentsData(data);
-				const regionDateListMale = initialMaleDate.filter((date) => date.regionId == selectedRegionId);
-				const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == selectedRegionId);
-				if (regionDateListMale.length > 0) {
-					setDisabledGender(null)
-					setMaleDates(regionDateListMale)
-				} else if (regionDateListMale.length == 0) {
-					setSelectedGender('female')
-					data[0]['gender'] = 'female'
-					setDisabledGender('male')
-				}
-				if (regionDateListFemale.length > 0) {
-					setDisabledGender(null)
-					setFemaleDates(regionDateListFemale)
-				} else if (regionDateListFemale.length == 0) {
-					setSelectedGender('male')
-					data[0]['gender'] = 'male'
-					setDisabledGender('female')
-				}
-				if (regionDateListMale.length == 0) {
-					setMaleDates([])
-				} else {
-					setMaleDates(regionDateListMale)
-				}
-				if (regionDateListFemale.length == 0) {
-					setFemaleDates([])
-				} else {
-					setFemaleDates(regionDateListFemale)
-				}
-			}
+				const regionDateListMale = initialMaleDate.filter((date) => date.regionId == currentRegion);
+				const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == currentRegion);
+				const regionDateListMix = mixDates.filter((date) => date.regionId == currentRegion);
 
+				let disabledGenders = [];
+
+				if (regionDateListMale.length === 0) {
+					disabledGenders.push('male');
+				}
+				if (regionDateListFemale.length === 0) {
+					disabledGenders.push('female');
+				}
+				if (regionDateListMix.length === 0) {
+					disabledGenders.push('mix');
+				}
+
+				if (disabledGenders.length === 0) {
+					setDisabledGender(null);
+				} else {
+					setDisabledGender(disabledGenders);
+					// Set default gender to first available option
+					const availableGenders = ['male', 'female', 'mix'].filter(g => !disabledGenders.includes(g));
+					if (availableGenders.length > 0) {
+						setSelectedGender(availableGenders[0]);
+						data[0]['gender'] = availableGenders[0];
+					}
+				}
+
+				setMaleDates(regionDateListMale.length === 0 ? [] : regionDateListMale);
+				setFemaleDates(regionDateListFemale.length === 0 ? [] : regionDateListFemale);
+			} else {
+				let data = [...studentsData]
+				data[0]['region'] = currentRegion;
+				setStudentsData(data);
+				const regionDateListMale = initialMaleDate.filter((date) => date.regionId == currentRegion);
+				const regionDateListFemale = initialFemaleDate.filter((date) => date.regionId == currentRegion);
+				const regionDateListMix = mixDates.filter((date) => date.regionId == currentRegion);
+
+				let disabledGenders = [];
+				if (regionDateListMale.length === 0) {
+					disabledGenders.push('male');
+				}
+				if (regionDateListFemale.length === 0) {
+					disabledGenders.push('female');
+				}
+				if (regionDateListMix.length === 0) {
+					disabledGenders.push('mix');
+				}
+
+				setDisabledGender(disabledGenders);
+			}
 			console.log("getRegionAndBranchList Region ID: ", currentRegion);
 
 			const availableRegionSet = new Set(initialMaleDate.concat(initialFemaleDate).map((dates) => {
@@ -309,6 +344,7 @@ export default function UserInfoForm(props) {
 	// States for filtered dates (by city & district)
 	const [filteredMaleDates, setFilteredMaleDates] = useState([]);
 	const [filteredFemaleDates, setFilteredFemaleDates] = useState([]);
+	const [filteredMixDates, setFilteredMixDates] = useState([]);
 
 	// STATES for city and district selection
 	const [cities, setCities] = useState([]);
@@ -413,7 +449,37 @@ export default function UserInfoForm(props) {
 		);
 		setFilteredFemaleDates(newFemaleDates);
 
-		// (Optional: Adjust selected gender if no dates are available)
+		const newMixDates = mixDates.filter(date =>
+			date.locationName.includes(city) && date.locationName.includes(district)
+		);
+		setFilteredMixDates(newMixDates);
+		// Check for disabled genders based on filtered dates
+		let disabledGenders = [];
+
+		if (newMaleDates.length === 0) {
+			disabledGenders.push('male');
+		}
+		if (newFemaleDates.length === 0) {
+			disabledGenders.push('female');
+		}
+		if (newMixDates.length === 0) {
+			disabledGenders.push('mix');
+		}
+
+		// Update disabled gender state
+		if (disabledGenders.length === 0) {
+			setDisabledGender(null);
+		} else {
+			setDisabledGender(disabledGenders);
+			// Set default gender to first available option if current is disabled
+			const availableGenders = ['male', 'female', 'mix'].filter(g => !disabledGenders.includes(g));
+			if (availableGenders.length > 0 && disabledGenders.includes(selectedGender)) {
+				setSelectedGender(availableGenders[0]);
+				let data = [...studentsData];
+				data[0]['gender'] = availableGenders[0];
+				setStudentsData(data);
+			}
+		}
 	};
 
 
@@ -574,12 +640,12 @@ export default function UserInfoForm(props) {
 										return (
 											<div className={styles.radioBtnBox} key={`gender${j}`}>
 												<input id={`gender${i}`} type="radio" name={`gender${i}`} value={gender.value} title="gender"
-													className={`${styles.radioBtn} ${disabledGender == gender.value ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+													className={`${styles.radioBtn} ${disabledGender?.includes(gender.value) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 													checked={(selectedGender && i == 0 ? selectedGender == gender.value : student.gender == gender.value)}
 													onChange={event => handleFormChange(event, i, null)}
-													disabled={disabledGender == gender.value}
+													disabled={disabledGender?.includes(gender.value)}
 												/>
-												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender == gender.value ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
+												<label htmlFor='dateForAll' className={` ${styles.lableName1} ${disabledGender?.includes(gender.value) ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer'}`}>{gender.label}</label>
 											</div>
 										)
 									})}
@@ -594,12 +660,12 @@ export default function UserInfoForm(props) {
 									<ScrollContainer className='flex'>
 										<div className={styles.datesMainArea}>
 											{((courseDetail.type === 'physical' && studentsData[i].gender !== null)
-												? (studentsData[i].gender === 'female' ? filteredFemaleDates : filteredMaleDates)
+												? (studentsData[i].gender === 'female' ? filteredFemaleDates : studentsData[i].gender === 'mix' ? filteredMixDates : filteredMaleDates)
 												: mixDates
 											).length > 0 ? (
 												<>
 													{((courseDetail.type === 'physical' && studentsData[i].gender !== null)
-														? (studentsData[i].gender === 'female' ? filteredFemaleDates : filteredMaleDates)
+														? (studentsData[i].gender === 'female' ? filteredFemaleDates : studentsData[i].gender === 'mix' ? filteredMixDates : filteredMaleDates)
 														: mixDates
 													).map((date, k) => (
 														<div key={`datecard${k}`}>
@@ -659,7 +725,7 @@ export default function UserInfoForm(props) {
 											<label htmlFor='enrollForMe' className={`fontMedium ${styles.checkboxText}`}>بسجل لنفسي</label>
 										</div>
 									*/}
-									{(totalStudent > 1 && i == 0 && (courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : maleDates) : mixDates).length > 0) &&
+									{(totalStudent > 1 && i == 0 && (courseDetail.type == 'physical' ? ((studentsData[i].gender || selectedGender) == 'female' ? femaleDates : (studentsData[i].gender || selectedGender) == 'mix' ? mixDates : maleDates) : mixDates).length > 0) &&
 										<div className='checkBoxDiv pb-4'>
 											<input id='dateForAll' type='checkbox' name='agree' onChange={(event) => handleDateForAll(event)} />
 											<label htmlFor='dateForAll' className={`fontMedium ${styles.checkboxText}`}>اختيار نفس الموعد لجميع الأشخاص</label>
