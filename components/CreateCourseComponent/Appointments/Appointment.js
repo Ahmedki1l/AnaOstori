@@ -100,12 +100,14 @@ const Appointments = ({
       (newMaxSeats - editAvailability.maxNumberOfSeats)
     );
   };
+  
   const availabilitySuccessRes = (msg) => {
     toast.success(msg, { rtl: true });
     setIsModalOpen(false);
     setShowBtnLoader(false);
     getAllAvailability();
   };
+
   const onFinish = async (values) => {
     setShowBtnLoader(true);
     values.dateFrom = dayjs(values?.dateFrom?.$d)
