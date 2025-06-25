@@ -51,13 +51,15 @@ export async function getServerSideProps(ctx) {
 		const requests = [];
 		const maleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=male`);
 		const femaleDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=female`);
-		requests.push(maleDatesReq, femaleDatesReq);
-		const [maleDates, femaleDates] = await Promise.all(requests);
+		const mixDatesReq = axios.get(`${process.env.API_BASE_URL}/route/fetch?routeName=AvailabilityByCourseIdNoAuth&courseId=${courseDetails?.id}&gender=mix`);
+		requests.push(maleDatesReq, femaleDatesReq, mixDatesReq);
+		const [maleDates, femaleDates, mixDates] = await Promise.all(requests);
 		return {
 			props: {
 				courseDetails: courseDetails || null,
 				maleDates: maleDates?.data || [],
 				femaleDates: femaleDates?.data || [],
+				mixDates: mixDates?.data || [],
 				homeReviews: homeReviewsReq.data
 			}
 		}
@@ -103,7 +105,7 @@ export default function Index(props) {
 	const currentCourseName = courseDetail?.name;
 	const maleDates = props?.courseDetails?.type == 'physical' ? props?.maleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 	const femaleDates = props?.courseDetails?.type == 'physical' ? props?.femaleDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
-	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
+	const mixDates = props?.courseDetails?.type == 'online' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : props?.courseDetails?.type == 'physical' ? props?.mixDates.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)) : [];
 
 	const hasDates = maleDates.length > 0 || femaleDates.length > 0 || mixDates.length > 0;
 
@@ -213,6 +215,7 @@ export default function Index(props) {
 			...(femaleDates || []),
 			...(mixDates || [])
 		];
+		console.log("🚀 ~ getUniqueDistrictsWithCity ~ allDates:", allDates)
 
 		const uniqueSet = new Set();
 		const uniqueLocations = [];
@@ -280,7 +283,6 @@ export default function Index(props) {
 
 	// Usage:
 	const districtsMapping = getDistrictsByCity();
-	console.log("🚀 ~ districtsMapping:", districtsMapping);
 
 	// Extract cities from the mapping keys
 	const initialCities = Object.keys(districtsMapping);
@@ -295,11 +297,6 @@ export default function Index(props) {
 
 	// Also store cities in state if needed elsewhere
 	const [cities, setCities] = useState(initialCities);
-
-	console.log("🚀 ~ districtsMapping:", districtsMapping);
-	console.log("🚀 ~ cities:", cities);
-	console.log("🚀 ~ selectedCity:", selectedCity);
-	console.log("🚀 ~ districts:", districts);
 
 	// Optional: update districts and selected district when selectedCity changes
 	useEffect(() => {
@@ -356,7 +353,7 @@ export default function Index(props) {
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 	// const isUserLogin = storeData?.accessToken ? true : false;
 	const lang = courseDetail.language
-	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
+	const isDateAvailable = (courseDetail.type == "physical" && maleDates.length == 0 && femaleDates.length == 0 && mixDates.length === 0) ? false : ((courseDetail.type == "online" && mixDates.length == 0) ? false : true)
 	const isSeatFullForMale = maleDates.length > 0 ? maleDates.every(obj => obj.numberOfSeats === 0) : false;
 	const isSeatFullForFemale = femaleDates.length > 0 ? femaleDates.every(obj => obj.numberOfSeats === 0) : false;
 	const isSeatFullForMix = mixDates.length > 0 ? mixDates.every(obj => obj.numberOfSeats === 0) : false;
@@ -534,34 +531,32 @@ export default function Index(props) {
 
 	const [filteredMaleDates, setFilteredMaleDates] = useState([]);
 	const [filteredFemaleDates, setFilteredFemaleDates] = useState([]);
+	const [filteredMixDates, setFilteredMixDates] = useState([]);
 
 	useEffect(() => {
-		console.log("🚀 ~ handleUserLogin ~ selectedCity:", selectedCity);
-		console.log("🚀 ~ handleUserLogin ~ selectedDistrict:", selectedDistrict);
 		filterDates(selectedCity, selectedDistrict);
 	}, [selectedCity, selectedDistrict, window.location.href]);
 
 	const filterDates = (city, district) => {
-		// If district is null, use an empty string instead.
-		const cleanedDistrict = district ? district.replace(/^حي\s*/, '') : '';
-	  
-		const newMaleDates = maleDates?.filter(date =>
-		  date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
-		);
+		// Use both city and district to filter the locationName.
+		const newMaleDates = maleDates.filter(date =>{
+			let refinedDistrict = district.replace("حي", "").trim();
+			(date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
+		});
 		setFilteredMaleDates(newMaleDates);
-	  
-		const newFemaleDates = femaleDates?.filter(date =>
-		  date.locationName.includes(city) && date.locationName.includes(cleanedDistrict)
-		);
+
+		const newFemaleDates = femaleDates.filter(date =>{
+			let refinedDistrict = district.replace("حي", "").trim();
+			return (date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
+		});
 		setFilteredFemaleDates(newFemaleDates);
-	  
-		if (selectedGender === "male" && newMaleDates.length <= 0) {
-		  setSelectedGender("female");
-		}
-		if (selectedGender === "female" && newFemaleDates.length <= 0) {
-		  setSelectedGender("male");
-		}
-	  };
+
+		const newMixDates = mixDates.filter(date => {
+			let refinedDistrict = district.replace("حي", "").trim();
+			return (date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
+		});
+		setFilteredMixDates(newMixDates);
+	};
 
 	return (
 		<>
@@ -827,7 +822,7 @@ export default function Index(props) {
 												</div>
 
 												{/* Gender Selection */}
-												{(filteredMaleDates?.length > 0 || filteredFemaleDates?.length > 0) &&
+												{(filteredMaleDates?.length > 0 || filteredFemaleDates?.length > 0 || filteredMixDates.length > 0) &&
 													<div className="mb-6">
 														<h2 className={`${lang == 'en' ? 'text-left' : 'text-right'}  mb-2`}>{lang == 'en' ? "Choose the date that suits you" : "اختر الموعد المناسب لك"}</h2>
 														<div className={`flex ${lang == 'en' ? 'justify-start' : 'justify-start'}  gap-2`}>
@@ -858,6 +853,20 @@ export default function Index(props) {
 																	</button>
 																)
 															}
+
+															{
+																filteredMixDates?.length > 0 && (
+																	<button
+																		className={`px-4 py-2 border border-black ${selectedGender === 'mix'
+																			? 'bg-[#F26722] text-white'
+																			: 'bg-white text-black'
+																			} rounded-lg hover:opacity-90 transition-opacity shadow-md`}
+																		onClick={() => setSelectedGender('mix')}
+																	>
+																		{lang == "en" ? "mix dates" : "مواعيد الجنسين"}
+																	</button>
+																)
+															}
 														</div>
 													</div>
 												}
@@ -873,16 +882,26 @@ export default function Index(props) {
 																/>
 															</Fragment>
 														))
-														:
-														filteredFemaleDates.map((date, index) => (
-															<Fragment key={`femaleDate${index}`}>
-																<CourseDates
-																	date={date}
-																	handleBookSit={handleBookSit}
-																	lang={lang}
-																/>
-															</Fragment>
-														))
+														: selectedGender === 'female' ?
+															filteredFemaleDates.map((date, index) => (
+																<Fragment key={`femaleDate${index}`}>
+																	<CourseDates
+																		date={date}
+																		handleBookSit={handleBookSit}
+																		lang={lang}
+																	/>
+																</Fragment>
+															))
+															:
+															filteredMixDates.map((date, index) => (
+																<Fragment key={`mixDate${index}`}>
+																	<CourseDates
+																		date={date}
+																		handleBookSit={handleBookSit}
+																		lang={lang}
+																	/>
+																</Fragment>
+															))
 													}
 												</ScrollContainer>
 											</>
