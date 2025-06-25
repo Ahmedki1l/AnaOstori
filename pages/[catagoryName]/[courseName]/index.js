@@ -538,23 +538,31 @@ export default function Index(props) {
 	}, [selectedCity, selectedDistrict, window.location.href]);
 
 	const filterDates = (city, district) => {
+		console.log("🚀 ~ filterDates ~ city:", city)
+		console.log("🚀 ~ filterDates ~ district:", district)
 		// Use both city and district to filter the locationName.
 		const newMaleDates = maleDates.filter(date =>{
 			let refinedDistrict = district.replace("حي", "").trim();
-			(date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
+			return (date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
 		});
+		console.log("🚀 ~ filterDates ~ maleDates:", maleDates)
+		console.log("🚀 ~ filterDates ~ newMaleDates:", newMaleDates)
 		setFilteredMaleDates(newMaleDates);
 
 		const newFemaleDates = femaleDates.filter(date =>{
 			let refinedDistrict = district.replace("حي", "").trim();
 			return (date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
 		});
+		console.log("🚀 ~ filterDates ~ femaleDates:", femaleDates)
+		console.log("🚀 ~ filterDates ~ newFemaleDates:", newFemaleDates)
 		setFilteredFemaleDates(newFemaleDates);
 
 		const newMixDates = mixDates.filter(date => {
 			let refinedDistrict = district.replace("حي", "").trim();
 			return (date.locationName.includes(city) || city.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict.includes(date.locationName))
 		});
+		console.log("🚀 ~ filterDates ~ mixDates:", mixDates)
+		console.log("🚀 ~ filterDates ~ newMixDates:", newMixDates)
 		setFilteredMixDates(newMixDates);
 	};
 
