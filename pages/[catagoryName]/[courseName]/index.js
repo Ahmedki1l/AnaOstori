@@ -19,7 +19,7 @@ import WhatsAppLinkComponent from '../../../components/CommonComponents/WhatsApp
 import { mediaUrl, secondsToMinutes } from '../../../constants/DataManupulation'
 import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/ModalForVideo'
 import ReviewComponent from '../../../components/CommonComponents/ReviewsComponent/ReviewComponent';
-
+import { ContentRenderer } from '../../../components/Markdown/ContentRenderer';
 
 
 
@@ -541,7 +541,7 @@ export default function Index(props) {
 		console.log("🚀 ~ filterDates ~ city:", city)
 		console.log("🚀 ~ filterDates ~ district:", district)
 		// Use both city and district to filter the locationName.
-		const newMaleDates = maleDates.filter(date =>{
+		const newMaleDates = maleDates.filter(date => {
 			let refinedDistrict = district?.replace("حي", "").trim();
 			return (date.locationName.includes(city) || city?.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict?.includes(date.locationName))
 		});
@@ -549,7 +549,7 @@ export default function Index(props) {
 		console.log("🚀 ~ filterDates ~ newMaleDates:", newMaleDates)
 		setFilteredMaleDates(newMaleDates);
 
-		const newFemaleDates = femaleDates.filter(date =>{
+		const newFemaleDates = femaleDates.filter(date => {
 			let refinedDistrict = district?.replace("حي", "").trim();
 			return (date.locationName.includes(city) || city?.includes(date.locationName)) && (date.locationName.includes(refinedDistrict) || refinedDistrict?.includes(date.locationName))
 		});
@@ -565,6 +565,27 @@ export default function Index(props) {
 		console.log("🚀 ~ filterDates ~ newMixDates:", newMixDates)
 		setFilteredMixDates(newMixDates);
 	};
+
+	function normalize(raw) {
+		return raw
+			// —— bullets ——  
+			// first bullet: inject blank line before the very first “- ”
+			.replace(/(\S)\s-\s/, '$1\n\n- ')
+			// split every other “ - ” into its own line
+			.replace(/ - /g, '\n- ')
+
+			// —— numbered ——  
+			// 1) inject a blank line before the first digit-dot-space  
+			.replace(
+				/(\S)\s([0-9\u0660-\u0669\u06F0-\u06F9]+)\.\s/u,
+				'$1\n\n$2. '
+			)
+			// 2) split every “ n. ” into its own line
+			.replace(
+				/ ([0-9\u0660-\u0669\u06F0-\u06F9]+)\.\s/gu,
+				'\n$1. '
+			)
+	}
 
 	return (
 		<>
@@ -686,30 +707,70 @@ export default function Index(props) {
 					<div className={styles.courseExtraDetailsWrapper}>
 						<div className={`maxWidthDefault `}>
 							{courseDetail?.courseMetaData?.map((metaData, i) => {
+								const isActive = selectedNavItem === `${i + 1}`
+
 								return (
-									<div key={`courseData${i}`} id={`title${i + 1}`} style={{ paddingTop: selectedNavItem == `${i + 1}` ? `${paddingTop}rem` : '2rem' }}>
-										<h1 className='head2'>{metaData.title}</h1>
-										{!metaData.content.includes("<list>") ?
-											<div className='flex pt-4'>
-												{metaData.link ?
-													<Link href={metaData.link} className={`${styles.discriptionText} link`} target={'_blank'}>{metaData.content}</Link>
-													:
-													<p className={styles.discriptionText}>{metaData.content}&nbsp;
-														{(metaData?.tailLink != null || metaData?.tailLink?.length === 0) &&
-															<Link href={metaData.tailLink ?? ""} className='link mx-1' target={'_blank'}>{metaData.tailLinkName}</Link>
-														}
-													</p>
-												}
-											</div>
-											:
-											<ul className='list-disc pr-5 pt-4'>
-												{metaData.content.split("<list>").map((list, j) => {
-													return (
-														<li key={`courseListDescrilition${j}`} className={styles.discriptionText}>{list}</li>
-													)
-												})}
-											</ul>
-										}
+									<div
+										key={`courseData${i}`}
+										id={`title${i + 1}`}
+										style={{ paddingTop: isActive ? `${paddingTop}rem` : '2rem' }}
+									>
+										<h1 className="head2">{metaData.title}</h1>
+
+										{/* —— keep your wrapper layout for old cases —— */}
+										<div className="pt-4 flex flex-col">
+											{/*
+												1) If they provided metaData.link,
+												wrap the *entire* content in a <Link> (old behavior)
+											*/}
+											{metaData.link ? (
+												<Link
+													href={metaData.link}
+													target="_blank"
+													className={`${styles.discriptionText} link`}
+												>
+													{metaData.content}
+												</Link>
+
+												/* 
+													2) Else if it’s one of those old-<list>-items
+												*/
+											) : metaData.content.includes('<list>') ? (
+												<ul className="list-disc pr-5 pt-4">
+													{metaData.content
+														.split('<list>')
+														.filter(Boolean)
+														.map((item, j) => (
+															<li
+																key={`courseListDescrilition${j}`}
+																className={styles.discriptionText}
+															>
+																{item}
+															</li>
+														))}
+												</ul>
+
+												/*
+												3) Otherwise—*new!*—render it as Markdown
+												(you get lists, **bold**, *italic*, [links](…), etc.)
+												*/
+											) : (
+												<>
+													<ContentRenderer content={normalize(metaData.content)} />
+
+													{/* still append a tailLink if they set one */}
+													{metaData.tailLink && metaData.tailLinkName && (
+														<Link
+															href={metaData.tailLink}
+															target="_blank"
+															className="link mx-1"
+														>
+															{metaData.tailLinkName}
+														</Link>
+													)}
+												</>
+											)}
+										</div>
 									</div>
 								)
 							})}
