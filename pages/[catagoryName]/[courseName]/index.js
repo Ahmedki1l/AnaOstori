@@ -585,7 +585,8 @@ export default function Index(props) {
 				/ ([0-9\u0660-\u0669\u06F0-\u06F9]+)\.\s/gu,
 				'\n$1. '
 			)
-	}
+			.replace(/_/g, '\n\n')	
+		}
 
 	return (
 		<>
