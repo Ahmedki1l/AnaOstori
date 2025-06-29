@@ -191,7 +191,8 @@ export default function Home(props) {
 								<Icon height={isSmallScreen ? 24 : 40} width={isSmallScreen ? 24 : 40} iconName={'checkYelloBadgeIcon'} alt={'Check Yello Badge Icon'} />
 								<div className='pr-2'>
 									<p className={`fontMedium ${styles.greySectionHeadText}`}>{HomeConst.p2Head2}</p>
-									<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p>
+									{/* <p className={styles.discriptionText}>{HomeConst.pDescriptionText2}<Link className={`link ${styles.discriptionLink}`} href={'https://drive.google.com/file/u/1/d/15RobQvOlz5-u5Bw5pOeaDLqjDtWqCyg8/view?usp=sharing'} target='_blank'>{HomeConst.pDescriptionText2LinkText1}</Link></p> */}
+									<p className={styles.discriptionText}>{HomeConst.pDescriptionText2}</p>
 								</div>
 							</div>
 						</div>

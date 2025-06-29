@@ -8,23 +8,25 @@ import styles from '../../styles/PhysicalCourse.module.scss'
 export function ContentRenderer({ content }) {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
+      // remarkPlugins={[remarkGfm]}
       components={{
+
         ol: ({ node, ...props }) => (
-          <ol className="list-decimal pl-5 pt-4" {...props} />
+          <ol className="list-decimal pl-5 pt-2 first:pt-0" {...props} />
         ),
         ul: ({ node, ...props }) => (
-          <ul className="list-disc pl-5 pt-4" {...props} />
+          <ul className="list-disc pl-5 pt-2 first:pt-0" {...props} />
         ),
+
         li: ({ node, ...props }) => (
-          <li className={styles.discriptionText} {...props} />
+          <li className={`${styles.discriptionText} pt-2 first:pt-0`} {...props} />
         ),
         strong: ({ node, ...props }) => (
           <strong className="font-bold" {...props} />
         ),
         em: ({ node, ...props }) => <em className="italic" {...props} />,
         p: ({ node, ...props }) => (
-          <p className={styles.discriptionText} {...props} />
+          <p className={`${styles.discriptionText} pt-2 first:pt-0`} {...props} />
         ),
         a: ({ href, children, ...props }) => {
           if (!href) return <>{children}</>

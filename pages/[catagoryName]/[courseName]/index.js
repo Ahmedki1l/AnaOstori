@@ -585,8 +585,8 @@ export default function Index(props) {
 				/ ([0-9\u0660-\u0669\u06F0-\u06F9]+)\.\s/gu,
 				'\n$1. '
 			)
-			.replace(/_/g, '\n\n')	
-		}
+			.replace(/_/g, '\n\n')
+	}
 
 	return (
 		<>
@@ -719,7 +719,7 @@ export default function Index(props) {
 										<h1 className="head2">{metaData.title}</h1>
 
 										{/* —— keep your wrapper layout for old cases —— */}
-										<div className="pt-4 flex flex-col">
+										<div className="pt-2 flex flex-col">
 											{/*
 												1) If they provided metaData.link,
 												wrap the *entire* content in a <Link> (old behavior)
@@ -737,7 +737,7 @@ export default function Index(props) {
 													2) Else if it’s one of those old-<list>-items
 												*/
 											) : metaData.content.includes('<list>') ? (
-												<ul className="list-disc pr-5 pt-4">
+												<ul className="list-disc pr-5">
 													{metaData.content
 														.split('<list>')
 														.filter(Boolean)

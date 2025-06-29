@@ -378,8 +378,8 @@ const Index = () => {
                     <Drawer
                         title={
                             <>
-                                <DrawerTiitle className="fontBold">{managePurchaseOrderConst.purchaseOrderDrawerTitle}</DrawerTiitle>
-                                <DrawerTiitle className="fontBold">#{selectedOrder.id}</DrawerTiitle>
+                                <DrawerTiitle className="fontBold">{managePurchaseOrderConst?.purchaseOrderDrawerTitle}</DrawerTiitle>
+                                <DrawerTiitle className="fontBold">#{selectedOrder?.id}</DrawerTiitle>
                             </>
                         }
                         closable={false}
@@ -388,7 +388,7 @@ const Index = () => {
                         onClose={onDrawerClose}
                         width={480}
                         extra={
-                            <Tag style={{ fontSize: 16, padding: 10 }} bordered={false} color={selectedOrderStatusLable.color}>{selectedOrderStatusLable?.label}</Tag>
+                            <Tag style={{ fontSize: 16, padding: 10 }} bordered={false} color={selectedOrderStatusLable?.color}>{selectedOrderStatusLable?.label}</Tag>
                         }
                     >
                         <PurchaseOrderDrawer selectedOrder={selectedOrder} onClose={onDrawerClose} />
