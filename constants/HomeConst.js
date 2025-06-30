@@ -19,7 +19,7 @@ export const HomeConst = {
     pDescriptionText2LinkText1: 'سياسة الضمان',
     p3Head2TypeOfCourseHeader: 'نقدم دوراتنا بـ 3 طرق',
     refCourseSecHead1: 'تصفّح دوراتنا',
-    studentSectionHead1: 'درجات طلابنا',
+    studentSectionHead1: '🔥 درجات طلابنا تحكي عنّا:',
     studentSectionLink: 'تصفح باقي الدرجات',
     studentSectionParaLine1: 'نفتخر إننا ساعدنا نحقق أهداف أكثر من 30 ألف',
     studentSectionParaLine21: 'طالب وطالبة،',

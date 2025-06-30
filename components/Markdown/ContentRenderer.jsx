@@ -12,10 +12,10 @@ export function ContentRenderer({ content }) {
       components={{
 
         ol: ({ node, ...props }) => (
-          <ol className="list-decimal pl-5 pt-2 first:pt-0" {...props} />
+          <ol className="list-decimal pl-5 pr-5 pt-2 first:pt-0" {...props} />
         ),
         ul: ({ node, ...props }) => (
-          <ul className="list-disc pl-5 pt-2 first:pt-0" {...props} />
+          <ul className="list-disc pl-5 pr-5 pt-2 first:pt-0" {...props} />
         ),
 
         li: ({ node, ...props }) => (
