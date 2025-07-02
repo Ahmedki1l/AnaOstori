@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
-// import { getAuthRouteAPI } from '../../../services/apisService';
-// import { getNewToken } from '../../../services/fireBaseAuthService';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 import styles from '../../../styles/ExamPage.module.scss';
 import ExamIntroduction from '../../../components/ExamComponents/ExamIntroduction';
 import ExamSections from '../../../components/ExamComponents/ExamSections';
@@ -15,9 +14,139 @@ import ExamResults from '../../../components/ExamComponents/ExamResults';
 import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsReview';
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
 import { toast } from 'react-toastify';
+import CheatWarning from '../../../components/CommonComponents/CheatWarning';
+
+/**
+ * Enhanced Distraction Detection System
+ * 
+ * This exam page implements a sophisticated distraction detection system with:
+ * 
+ * 1. 3-Strike Rule:
+ *    - Each distraction event starts a 3-second timer
+ *    - If the distraction continues for 3 seconds, it counts as 1 strike
+ *    - After 3 strikes, the exam is immediately terminated
+ * 
+ * 2. 30-Second Continuous Distraction Detection:
+ *    - If distraction continues for 30 seconds without interruption
+ *    - The exam is terminated immediately regardless of strike count
+ * 
+ * 3. Distraction Detection Methods:
+ *    - Page visibility changes (tab switching)
+ *    - Window blur/focus events
+ *    - Route changes within the app
+ * 
+ * 4. Visual Indicators:
+ *    - Fixed warning banner showing current strikes
+ *    - Timer indicator showing distraction status
+ *    - Color-coded warnings (orange → red)
+ * 
+ * 5. Automatic Cleanup:
+ *    - Timers are cleared when user returns to exam
+ *    - All timers are cleaned up on component unmount
+ */
+
+function useCheatDetection(onCheat, onContinuousCheat) {
+    const router = useRouter();
+    const isCheatingRef = useRef(false);
+    const cheatStartTimeRef = useRef(null);
+
+    useEffect(() => {
+        // 1) Page Visibility API
+        const handleVisibility = () => {
+            if (document.visibilityState === 'hidden') {
+                handleCheatEvent('tab_hidden');
+            } else {
+                // When tab becomes visible again, reset continuous cheating timer
+                if (isCheatingRef.current) {
+                    isCheatingRef.current = false;
+                    if (cheatStartTimeRef.current) {
+                        cheatStartTimeRef.current = null;
+                    }
+                    // Notify that cheating has stopped
+                    onContinuousCheat(false);
+                }
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
+
+        // 2) Window blur (fallback for very old browsers)
+        const handleBlur = () => handleCheatEvent('window_blur');
+        window.addEventListener('blur', handleBlur);
+
+        // 3) Window focus - reset cheating state when user returns
+        const handleFocus = () => {
+            if (isCheatingRef.current) {
+                isCheatingRef.current = false;
+                if (cheatStartTimeRef.current) {
+                    cheatStartTimeRef.current = null;
+                }
+                // Notify that cheating has stopped
+                onContinuousCheat(false);
+            }
+        };
+        window.addEventListener('focus', handleFocus);
+
+        // 4) Next.js route change (in-app navigation)
+        const handleRoute = (url) => {
+            // if they try to navigate inside your app
+            handleCheatEvent('route_change', { to: url });
+        };
+        router.events.on('routeChangeStart', handleRoute);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibility);
+            window.removeEventListener('blur', handleBlur);
+            window.removeEventListener('focus', handleFocus);
+            router.events.off('routeChangeStart', handleRoute);
+        };
+    }, [router.events, onCheat, onContinuousCheat]);
+
+    const handleCheatEvent = (type, data = {}) => {
+        console.warn('Cheat detected:', type, data);
+        
+        // If this is the first cheat event, start the continuous cheating timer
+        if (!isCheatingRef.current) {
+            isCheatingRef.current = true;
+            cheatStartTimeRef.current = Date.now();
+            
+            // Notify that continuous cheating has started
+            onContinuousCheat(true);
+        }
+
+        // Call the original onCheat callback
+        onCheat(type, data);
+    };
+}
+
 
 const ExamPage = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
+    const storeData = useSelector((state) => state?.globalStore);
+    const accessToken = storeData?.accessToken;
+    // Enhanced authentication logic
+    useEffect(() => {
+        async function checkAuth() {
+            if (!accessToken) {
+                try {
+                    const newToken = await getNewToken();
+                    if (newToken) {
+                        dispatch({ type: 'ADD_AUTH_TOKEN', accessToken: newToken });
+                        return;
+                    }
+                } catch (err) {
+                    // Token refresh failed, proceed to login
+                }
+                // Save returnUrl and redirect to login
+                dispatch({ type: 'SET_RETURN_URL', returnUrl: router.asPath });
+                router.replace('/login');
+            }
+        }
+        checkAuth();
+    }, [accessToken, router, dispatch]);
+    if (!accessToken) {
+        return <Spinner />;
+    }
     const { examId } = router.query;
     const isFirstRun = useRef(true);
     const isAbleToAddTime = useRef(false);
@@ -40,6 +169,105 @@ const ExamPage = () => {
     const [markedQuestions, setMarkedQuestions] = useState([]);
 
     const [selectedSectionidForReview, setSelectedSectionidForReview] = useState([]);
+
+    // Distraction detection
+    const [distractionEvents, setDistractionEvents] = useState([]);
+    const [distractionStrikes, setDistractionStrikes] = useState(0);
+    const [isDistracted, setIsDistracted] = useState(false);
+    const [distractionStartTime, setDistractionStartTime] = useState(null);
+    const distractionStrikeTimerRef = useRef(null);
+    const continuousDistractionTimerRef = useRef(null);
+
+    // callback whenever a "distraction" happens
+    const reportDistraction = (type, data = {}) => {
+        console.warn('Distraction detected:', type, data);
+        const currentTime = Date.now();
+        
+        setDistractionEvents(evts => [...evts, { type, time: currentTime, ...data }]);
+        
+        // If this is the first distraction event, start the 3-second timer
+        if (!isDistracted) {
+            setIsDistracted(true);
+            setDistractionStartTime(currentTime);
+            
+            // Set 3-second timer for this distraction event
+            distractionStrikeTimerRef.current = setTimeout(() => {
+                // After 3 seconds, count this as a strike
+                setDistractionStrikes(prev => {
+                    const newStrikes = prev + 1;
+                    console.warn(`Distraction strike ${newStrikes}/3 recorded`);
+                    
+                    if (newStrikes >= 3) {
+                        console.warn('3 strikes reached - terminating exam');
+                        handleExamTermination('three_strikes');
+                    }
+                    
+                    return newStrikes;
+                });
+                
+                setIsDistracted(false);
+                setDistractionStartTime(null);
+            }, 3000); // 3 seconds
+        }
+        
+        // you could also POST this to your backend:
+        // postAuthRouteAPI({ routeName:'logDistraction', examId, type, timestamp: currentTime })
+    };
+
+    // Handle continuous distraction detection
+    const handleContinuousDistraction = (isContinuous) => {
+        if (isContinuous) {
+            // Start 30-second timer for continuous distraction
+            continuousDistractionTimerRef.current = setTimeout(() => {
+                console.warn('Continuous distraction detected for 30 seconds - terminating exam');
+                handleExamTermination('continuous_distraction_30_seconds');
+            }, 30000); // 30 seconds
+        } else {
+            // Clear the continuous distraction timer when user returns
+            if (continuousDistractionTimerRef.current) {
+                clearTimeout(continuousDistractionTimerRef.current);
+                continuousDistractionTimerRef.current = null;
+            }
+        }
+    };
+
+    // Handle exam termination
+    const handleExamTermination = (reason) => {
+        console.warn('Exam terminated due to:', reason);
+        
+        // Clear all timers
+        if (distractionStrikeTimerRef.current) {
+            clearTimeout(distractionStrikeTimerRef.current);
+        }
+        if (continuousDistractionTimerRef.current) {
+            clearTimeout(continuousDistractionTimerRef.current);
+        }
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+        
+        // Log the termination to backend
+        const terminationData = {
+            routeName: 'logExamTermination',
+            examId,
+            reason,
+            distractionEvents,
+            distractionStrikes,
+            timestamp: Date.now()
+        };
+        
+        // You can uncomment this when you have the backend endpoint
+        // postAuthRouteAPI(terminationData).catch(console.error);
+        
+        // Show termination message to user
+        toast.error('تم إنهاء الاختبار بسبب التشتيت المتكرر');
+        
+        // Force exam to results stage
+        setExamStage('results');
+    };
+
+    // enable the hook
+    useCheatDetection(reportDistraction, handleContinuousDistraction);
 
     // near the top of your component
     // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
@@ -266,13 +494,58 @@ const ExamPage = () => {
             }, 1000);
         }
 
-        return () => clearInterval(timerRef.current);
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+        };
     }, [examStage]);
+
+    // Cleanup distraction detection timers when exam stage changes or component unmounts
+    useEffect(() => {
+        return () => {
+            if (distractionStrikeTimerRef.current) {
+                clearTimeout(distractionStrikeTimerRef.current);
+            }
+            if (continuousDistractionTimerRef.current) {
+                clearTimeout(continuousDistractionTimerRef.current);
+            }
+        };
+    }, [examStage]);
+
+    // Cleanup timers when component unmounts
+    useEffect(() => {
+        return () => {
+            if (distractionStrikeTimerRef.current) {
+                clearTimeout(distractionStrikeTimerRef.current);
+            }
+            if (continuousDistractionTimerRef.current) {
+                clearTimeout(continuousDistractionTimerRef.current);
+            }
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         console.log("🚀 ~ ExamPage ~ allElapsedFormatted:", allElapsedFormatted);
         console.log("🚀 ~ ExamPage ~ timeLeft:", timeLeft);
     }, [timeLeft, allElapsedFormatted])
+
+    // Log distraction strikes for debugging
+    useEffect(() => {
+        if (distractionStrikes > 0) {
+            console.log(`🚨 Distraction strikes: ${distractionStrikes}/3`);
+        }
+    }, [distractionStrikes]);
+
+    // Log distraction state for debugging
+    useEffect(() => {
+        if (isDistracted) {
+            console.log('🚨 Distraction detected - 3 second timer started');
+        }
+    }, [isDistracted]);
 
 
     useEffect(() => {
@@ -548,6 +821,12 @@ const ExamPage = () => {
 
     return (
         <div className={styles.examPageContainer}>
+            {/* Distraction Warning Component */}
+            <CheatWarning 
+                cheatStrikes={distractionStrikes} 
+                isCheating={isDistracted} 
+            />
+            
             {examStage === 'introduction' && (
                 <ExamIntroduction
                     examData={displayExamData}
@@ -573,6 +852,8 @@ const ExamPage = () => {
                     reviewQuestions={reviewQuestions}
                     setReviewQuestions={setReviewQuestions}
                     section={selectedExam.sections[selectedSectionId]}
+                    cheatStrikes={distractionStrikes}
+                    isCheating={isDistracted}
                 />
             )}
 
@@ -615,6 +896,8 @@ const ExamPage = () => {
                     showReviewSection={() => { setExamStage('review'); }}
                     finishReview={handleFinishReview}
                     section={selectedExam.sections[selectedSectionId]}
+                    cheatStrikes={distractionStrikes}
+                    isCheating={isDistracted}
                 />
             )}
 

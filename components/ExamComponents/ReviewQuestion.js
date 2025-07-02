@@ -15,7 +15,9 @@ const ReviewQuestion = ({
     showReviewSection,
     finishReview,
     formatTime,
-    section
+    section,
+    cheatStrikes,
+    isCheating
 }) => {
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [currentReviewQuestionIndex, setCurrentReviewQuestionIndex] = useState(currentQuestionIndex);
@@ -121,6 +123,15 @@ const ReviewQuestion = ({
                         </svg>
                     </div>
                     <span className={styles.timerText}>{formatTime(timeLeft)}</span>
+                    
+                    {/* Distraction Warning Indicator */}
+                    {(cheatStrikes > 0 || isCheating) && (
+                        <div className={styles.distractionIndicator}>
+                            <span className={styles.distractionIndicatorText}>
+                                {isCheating ? '⚠️' : `⚠️ ${cheatStrikes}/3`}
+                            </span>
+                        </div>
+                    )}
                 </div>
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button

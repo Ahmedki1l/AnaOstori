@@ -3,7 +3,7 @@ import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import ImageLightbox from './ImageLightbox';
 
-const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions, formatTime, section }) => {
+const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, currentTime, reviewQuestions, setReviewQuestions, formatTime, section, cheatStrikes, isCheating }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState({});
 
@@ -128,6 +128,15 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                         </svg>
                     </div>
                     <span className={styles.timerText}>{formatTime(timeLeft)}</span>
+                    
+                    {/* Distraction Warning Indicator */}
+                    {(cheatStrikes > 0 || isCheating) && (
+                        <div className={styles.distractionIndicator}>
+                            <span className={styles.distractionIndicatorText}>
+                                {isCheating ? '⚠️' : `⚠️ ${cheatStrikes}/3`}
+                            </span>
+                        </div>
+                    )}
                 </div>
                 <h1 className={styles.examTitle}>{CurrentExam?.title}</h1>
                 <button

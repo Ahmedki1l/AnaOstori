@@ -41,6 +41,22 @@
     font-size: 20px;
 }
 
+.distractionIndicator {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 107, 53, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+.distractionIndicatorText {
+    color: #FF6B35;
+    font-weight: 600;
+    font-size: 14px;
+}
+
 .examTitle {
     font-size: 18px;
     font-weight: 700;
@@ -1437,4 +1453,134 @@
         padding: 6px 10px;
         font-size: 11px;
     }
+}
+
+/* Distraction Warning Styles */
+.distractionWarning {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease-out;
+    direction: rtl;
+}
+
+.distractionWarningContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.distractionWarningIcon {
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.distractionWarningText {
+    flex: 1;
+}
+
+.distractionWarningTitle {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #FFFFFF;
+}
+
+.distractionWarningMessage {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #FFFFFF;
+}
+
+/* Warning levels */
+.distractionWarningActive {
+    background: linear-gradient(135deg, #FF6B35, #F7931E);
+    border-left: 4px solid #FF4500;
+}
+
+.distractionWarningLevel1 {
+    background: linear-gradient(135deg, #FFA726, #FF9800);
+    border-left: 4px solid #FF8F00;
+}
+
+.distractionWarningLevel2 {
+    background: linear-gradient(135deg, #FF7043, #FF5722);
+    border-left: 4px solid #E64A19;
+}
+
+.distractionWarningLevel3 {
+    background: linear-gradient(135deg, #F44336, #D32F2F);
+    border-left: 4px solid #C62828;
+    animation: pulse 1s infinite;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Mobile responsive for distraction warning */
+@media (max-width: 768px) {
+    .distractionWarning {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        padding: 12px;
+    }
+
+    .distractionWarningTitle {
+        font-size: 14px;
+    }
+
+    .distractionWarningMessage {
+        font-size: 12px;
+    }
+
+    .distractionWarningIcon {
+        font-size: 20px;
+    }
+}
+
+.cheatWarning {
+  background: #ffa726;
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 10px;
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.hide {
+  opacity: 0;
+  transform: translateY(-30px);
 }
