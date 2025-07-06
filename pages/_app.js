@@ -53,13 +53,17 @@ function MyApp({ Component, pageProps }) {
 	const isUserInstructor = storeData?.isUserInstructor
 	useEffect(() => {
 		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
-			router.replace('/');
+			if (router.asPath !== '/') {
+				router.replace('/');
+			}
 		}
 	}, [router, isUserInstructor]);
 
 	useEffect(() => {
 		if (!isUserLogin && protectedRoutes.includes(router.pathname)) {
-			router.replace('/login');
+			if (router.asPath !== '/login') {
+				router.replace('/login');
+			}
 		}
 	}, [router, router.pathname, isUserLogin, protectedRoutes]);
 

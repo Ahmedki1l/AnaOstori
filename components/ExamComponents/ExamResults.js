@@ -30,6 +30,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             }
         });
 
+        if (totalQuestions === 0) return 0;
         return Math.round((correctAnswers / totalQuestions) * 100);
     };
 
@@ -104,7 +105,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 const section = sectionMap.get(sectionTitle);
                 section.questions.push({
                     question,
-                    selectedAnswer: allReviews[index].selectedAnswer,
+                    selectedAnswer: allReviews?.[index]?.selectedAnswer ?? null,
                     skill: skill.text
                 });
 
@@ -114,7 +115,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 }
                 section.skills.get(skill.text).push({
                     question,
-                    selectedAnswer: allReviews[index].selectedAnswer
+                    selectedAnswer: allReviews?.[index]?.selectedAnswer ?? null
                 });
             });
         });
@@ -227,10 +228,10 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     const ProgressCircle = ({ score, totalQuestions, size = 100, displayText = true }) => {
         const radius = 45;
         const circumference = 2 * Math.PI * radius;
-        const strokeDashoffset = circumference - (score / totalQuestions) * circumference;
-
-        const percentage = Math.round((score / totalQuestions) * 100);
-
+        const safeTotal = totalQuestions === 0 ? 1 : totalQuestions;
+        const safeScore = score || 0;
+        const strokeDashoffset = circumference - (safeScore / safeTotal) * circumference;
+        const percentage = totalQuestions === 0 ? 0 : Math.round((safeScore / safeTotal) * 100);
         return (
             <div className={styles.progressCircleContainer}>
                 <svg width={size} height={size} viewBox="0 0 100 100">
@@ -262,7 +263,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                     </text>
                     {displayText &&
                         <text x="50" y="65" textAnchor="middle" fontSize="12">
-                            {score}/{totalQuestions}
+                            {safeScore}/{totalQuestions}
                         </text>
                     }
                 </svg>

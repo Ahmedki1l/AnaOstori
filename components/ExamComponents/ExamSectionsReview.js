@@ -62,7 +62,7 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
     console.log("🚀 ~ ExamSectionsReview ~ sectionsData:", sectionsData)
 
     /**
-     * Format each section’s questions into {id, status, isMarked} objects.
+     * Format each section's questions into {id, status, isMarked} objects.
      *
      * @param {Array<Array<Object>>} examData         — [[q,q],[q,q],…]
      * @param {Array<Array<Object>>} reviewQuestions  — [[r,r],[r,r],…]
@@ -99,10 +99,10 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
 
     const sections = examSections.map((section, i) => ({
         title: section.title,
-        time: elapsedTime[i],
-        score: sectionsData[i].score,
-        percentage: sectionsData[i].percentage,
-        questions: sectionsFormatted[i]
+        time: elapsedTime?.[i] ?? '',
+        score: sectionsData?.[i]?.score ?? 0,
+        percentage: sectionsData?.[i]?.percentage ?? 0,
+        questions: sectionsFormatted?.[i] ?? []
     }))
 
     console.log("🚀 ~ ExamSectionsReview ~ sections:", sections);

@@ -177,10 +177,10 @@ const UpdateProfile = () => {
             return
         }
         if (JSON.stringify(initialState) === JSON.stringify({ fullName, phoneNumber, gender, parentPhoneNo, selectedCity, selectedEducationLevel })) {
-            if(JSON.parse(localStorage.getItem('isBackToUserForm'))){
+            if (router.asPath !== storeData?.returnUrl) {
                 router.push(storeData?.returnUrl);
             }
-            else{
+            else {
                 router.push('/myProfile')
             }
         } else {
@@ -210,10 +210,10 @@ const UpdateProfile = () => {
                     type: 'SET_PROFILE_DATA',
                     viewProfileData: res?.data,
                 });
-                if(JSON.parse(localStorage.getItem('isBackToUserForm'))){
+                if (router.asPath !== storeData?.returnUrl) {
                     router.push(storeData?.returnUrl);
                 }
-                else{
+                else {
                     router.push('/myProfile')
                 }
             }).catch(async (error) => {
@@ -226,10 +226,10 @@ const UpdateProfile = () => {
                                 type: 'SET_PROFILE_DATA',
                                 viewProfileData: res?.data,
                             });
-                            if(JSON.parse(localStorage.getItem('isBackToUserForm'))){
+                            if (router.asPath !== storeData?.returnUrl) {
                                 router.push(storeData?.returnUrl);
                             }
-                            else{
+                            else {
                                 router.push('/myProfile')
                             }
                         })

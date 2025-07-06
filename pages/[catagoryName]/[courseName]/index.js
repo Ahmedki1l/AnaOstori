@@ -602,7 +602,7 @@ export default function Index(props) {
 					/>
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
-							{(screenWidth <= 767) ?
+							{/* {(screenWidth <= 767) ?
 								// <ul className={`flex justify-center border-b border-inherit bg-white z-10 list-none`}>
 								// 	{courseDetail?.courseMetaData?.map((metaData, index) => {
 								// 		return (
@@ -647,18 +647,18 @@ export default function Index(props) {
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Course Content` : ` محتوى الدورة`}</li>
 												:
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Upcoming appointments` : `المواعيد القادمة`}</li>
-											} */}
+											} 
 
 											{courseDetail?.type == 'on-demand' &&
 												<li onClick={() => handleSlectedItem(4, 'dates')} className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}> {lang == 'en' ? `Dates` : `مواعيد الدورة:`}</li>
 											}
 										</div>
-										{/* <div>
+										<div>
 											<li onClick={() => handleSlectedItem(5, 'userFeedback')} className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`} </li>
-										</div> */}
+										</div>
 									</ScrollContainer>
 								</ul>
-							}
+							} */}
 							{((offset > (screenWidth > 1280 ? 353 : (screenWidth < 1024 ? 313 : 336))) && !(screenWidth < 768)) &&
 								<div className={styles.bookSitBtnBox}>
 									<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleBookSitButtonClick()}>{bookSeatButtonText}</button>

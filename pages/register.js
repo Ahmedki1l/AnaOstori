@@ -126,7 +126,9 @@ export default function Register() {
 							if(JSON.parse(localStorage.getItem('isFromUserForm'))){
 								localStorage.setItem('isBackToUserForm', true);
 							}
-							router.push(storeData?.returnUrl);
+							if (router.asPath !== storeData?.returnUrl) {
+								router.push(storeData?.returnUrl);
+							}
 						}
 					}
 				}

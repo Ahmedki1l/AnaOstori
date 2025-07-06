@@ -53,8 +53,9 @@ export default function Login() {
 
 	const handleStoreUpdate = async (isUserNew) => {
 		if (isUserNew) {
-			// router.push('/registerSocialMediaUser')
-			router.push('/updateProfile')
+			if (router.asPath !== '/updateProfile') {
+				router.push('/updateProfile')
+			}
 			toast.success(toastSuccessMessage.successRegisterMsg, { rtl: true, })
 		} else {
 			try {
@@ -76,9 +77,13 @@ export default function Login() {
 					isUserInstructor: viewProfileData?.data?.role === 'instructor' ? true : false,
 				});
 				if (viewProfileData?.data.gender == null) {
-					router.push('/registerSocialMediaUser')
+					if (router.asPath !== '/registerSocialMediaUser') {
+						router.push('/registerSocialMediaUser')
+					}
 					if (viewProfileData?.data.gender == null || viewProfileData?.data.gender == '') {
-						router.push('/updateProfile')
+						if (router.asPath !== '/updateProfile') {
+							router.push('/updateProfile')
+						}
 					}
 				} else {
 					const createdAt = new Date(viewProfileData?.data?.createdAt);
@@ -91,24 +96,15 @@ export default function Login() {
 						setUpdateProfileModalOpen(true);
 					} else {
 						if (!storeData?.returnUrl) {
-							router.push('/')
-							// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
+							if (router.asPath !== '/') {
+								router.push('/')
+							}
 						} else {
-							router.push(storeData?.returnUrl)
+							if (router.asPath !== storeData?.returnUrl) {
+								router.push(storeData?.returnUrl)
+							}
 						}
 					}
-					// if (!storeData?.returnUrl) {
-					// 	if (viewProfileData?.data?.reminderPopUpAttempt === null || viewProfileData?.data?.reminderPopUpAttempt < 3) {
-					// 		setUpdateProfileModalOpen(true)
-					// 	}
-					// 	else {
-					// 		router.push('/')
-					// 		toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
-					// 	}
-					// }
-					// else {
-					// 	router.push(storeData?.returnUrl)
-					// }
 				}
 			} catch (error) {
 				console.log(error);
@@ -124,7 +120,6 @@ export default function Login() {
 			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
 			localStorage.setItem("accessToken", user?.accessToken);
-			// toast.success(toastSuccessMessage.successLoginMsg, { rtl: true, })
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
 				accessToken: user?.accessToken,
@@ -161,7 +156,6 @@ export default function Login() {
 					loginWithoutPassword: false,
 				});
 				handleStoreUpdate(false)
-				// router.push('/')
 			}).catch((error) => {
 				setLoading(false)
 				console.log(error);
@@ -236,7 +230,6 @@ export default function Login() {
 							</div>
 						</div>
 						{passwordError && <p className={styles.errorText}>{passwordError}</p>}
-						{/* {passwordError ? <p className={styles.errorText}>كلمة السر لاهنت</p> : isPasswordError && <p className={styles.errorText}>كلمة السر غير صحيحة</p>} */}
 						<Link href={'/forgot-password'} className={`link ${styles.forgotPassText}`}>نسيت كلمة السر؟</Link>
 						<div className={styles.loginBtnBox}>
 							<button className='primarySolidBtn' type='submit' onClick={handleSignIn}>تسجيل الدخول</button>

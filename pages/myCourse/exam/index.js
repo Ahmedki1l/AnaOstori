@@ -139,7 +139,9 @@ const ExamPage = () => {
                 }
                 // Save returnUrl and redirect to login
                 dispatch({ type: 'SET_RETURN_URL', returnUrl: router.asPath });
-                router.replace('/login');
+                if (router.asPath !== '/login') {
+                    router.replace('/login');
+                }
             }
         }
         checkAuth();
@@ -263,11 +265,34 @@ const ExamPage = () => {
         toast.error('تم إنهاء الاختبار بسبب التشتيت المتكرر');
         
         // Force exam to results stage
-        setExamStage('results');
+        if (examStage !== 'results') {
+            setExamStage('results');
+        }
+
+        // Align allReviewQuestions to match examData
+        if (selectedExam && allReviewQuestions) {
+            setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
+        }
     };
 
     // enable the hook
-    useCheatDetection(reportDistraction, handleContinuousDistraction);
+    const cheatDetectionCleanup = useRef(null);
+    useEffect(() => {
+        if (["questions", "review", "reviewQuestion"].includes(examStage)) {
+            cheatDetectionCleanup.current = useCheatDetection(reportDistraction, handleContinuousDistraction);
+        } else {
+            if (cheatDetectionCleanup.current) {
+                cheatDetectionCleanup.current();
+                cheatDetectionCleanup.current = null;
+            }
+        }
+        return () => {
+            if (cheatDetectionCleanup.current) {
+                cheatDetectionCleanup.current();
+                cheatDetectionCleanup.current = null;
+            }
+        };
+    }, [examStage]);
 
     // near the top of your component
     // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
@@ -781,8 +806,8 @@ const ExamPage = () => {
     const handleMarkQuestion = () => {
         const updatedQuestions = [...reviewQuestions];
         if (updatedQuestions[currentQuestionIndex]) {
-            updatedQuestions[currentQuestionIndex].isMarked = !updatedQuestions[currentQuestionIndex].isMarked;
-            console.log('Marking question', currentQuestionIndex);
+            updatedQuestions[currentIndex].isMarked = !updatedQuestions[currentIndex].isMarked;
+            console.log('Marking question', currentIndex);
 
             setReviewQuestions(updatedQuestions);
         }
@@ -810,6 +835,26 @@ const ExamPage = () => {
     useEffect(() => {
         console.log("🚀 ~ ExamPage ~ selectedSectionidForReview:", selectedSectionidForReview);
     }, [selectedSectionidForReview])
+
+    // Utility to pad or initialize allReviewQuestions to match examData
+    function alignAllReviewQuestions(examData, allReviewQuestions) {
+        if (!examData) return [];
+        return examData.map((section, i) => {
+            const sectionReviews = allReviewQuestions?.[i] || [];
+            return section.questions.map((q, j) => sectionReviews[j] || {
+                id: q._id,
+                selectedAnswer: null,
+                isMarked: false
+            });
+        });
+    }
+
+    // Before using allReviewQuestions for results/review, always align:
+    useEffect(() => {
+        if (selectedExam && allReviewQuestions) {
+            setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
+        }
+    }, [selectedExam, examStage]);
 
     if (loading) {
         return (
