@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Form, Select, Input, Upload, Button, message, Table } from 'antd'
+import { Modal, Form, Select, Input, Button, message, Table } from 'antd'
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons'
 import { postAuthRouteAPI } from '../../services/apisService'
 import { getNewToken } from '../../services/fireBaseAuthService'
@@ -30,16 +30,7 @@ const ModelForUploadExamResults = ({
         form.setFieldsValue({ examId })
     }
 
-    const handleFileUpload = (info) => {
-        const { fileList } = info
-        const results = fileList.map(file => ({
-            uid: file.uid,
-            name: file.name,
-            status: file.status,
-            file: file.originFileObj
-        }))
-        setUploadedResults(results)
-    }
+
 
     const handleManualEntry = () => {
         const newResult = {
@@ -238,15 +229,28 @@ const ModelForUploadExamResults = ({
 
                 <div className={styles.uploadSection}>
                     <h3>رفع ملف النتائج</h3>
-                    <Upload
+                    <input
+                        type="file"
                         multiple
-                        fileList={uploadedResults.filter(r => r.file)}
-                        onChange={handleFileUpload}
-                        beforeUpload={() => false}
                         accept=".xlsx,.xls,.csv"
-                    >
-                        <Button icon={<UploadOutlined />}>اختر ملف النتائج</Button>
-                    </Upload>
+                        onChange={(e) => {
+                            const files = Array.from(e.target.files)
+                            const results = files.map(file => ({
+                                uid: file.uid || Date.now() + Math.random(),
+                                name: file.name,
+                                status: 'done',
+                                file: file
+                            }))
+                            setUploadedResults([...uploadedResults, ...results])
+                        }}
+                        style={{ display: 'none' }}
+                        id="file-upload"
+                    />
+                    <label htmlFor="file-upload">
+                        <Button icon={<UploadOutlined />} as="span">
+                            اختر ملف النتائج
+                        </Button>
+                    </label>
                     <p className={styles.uploadHint}>
                         يدعم الملفات: Excel (.xlsx, .xls) أو CSV
                     </p>

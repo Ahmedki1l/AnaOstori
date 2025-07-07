@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { Table, Select, Input, Button, Upload, message, Tabs, Tag, Tooltip } from 'antd'
+import { Table, Select, Input, Button, message, Tabs, Tag, Tooltip } from 'antd'
 import { UploadOutlined, DownloadOutlined, EyeOutlined, WarningOutlined, ClockCircleOutlined } from '@ant-design/icons'
 import Empty from '../../../components/CommonComponents/Empty'
 import { postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
