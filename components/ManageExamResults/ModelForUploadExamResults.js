@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Form, Select, Input, Upload, Button, message, Table } from 'antd'
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons'
 import { postAuthRouteAPI } from '../../services/apisService'
-import { getNewToken } from '../../../services/fireBaseAuthService'
+import { getNewToken } from '../../services/fireBaseAuthService'
 import styles from './ModelForUploadExamResults.module.scss'
 
 const { TextArea } = Input

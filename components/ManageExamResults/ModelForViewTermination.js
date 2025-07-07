@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Descriptions, Tag, Divider, Timeline, Card } from 'antd'
 import { WarningOutlined, ClockCircleOutlined, EyeOutlined } from '@ant-design/icons'
-import { fullDate } from '../../../constants/DateConverter'
+import { fullDate } from '../../constants/DateConverter'
 import styles from './ModelForViewTermination.module.scss'
 
 const ModelForViewTermination = ({
