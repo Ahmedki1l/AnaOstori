@@ -51,13 +51,13 @@ function MyApp({ Component, pageProps }) {
 	], []);
 
 	const isUserInstructor = storeData?.isUserInstructor
-	useEffect(() => {
-		if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
-			if (router.asPath !== '/') {
-				router.replace('/');
-			}
-		}
-	}, [router, isUserInstructor]);
+	// useEffect(() => {
+	// 	if (!isUserInstructor && router.pathname.includes('/instructorPanel')) {
+	// 		if (router.asPath !== '/') {
+	// 			router.replace('/');
+	// 		}
+	// 	}
+	// }, [router, isUserInstructor]);
 
 	useEffect(() => {
 		if (!isUserLogin && protectedRoutes.includes(router.pathname)) {

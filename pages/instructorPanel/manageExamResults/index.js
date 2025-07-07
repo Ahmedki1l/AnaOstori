@@ -7,9 +7,9 @@ import React, { useEffect, useState } from 'react'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
 import { Table, Select, Input, Button, message, Tabs, Tag, Tooltip } from 'antd'
-import { UploadOutlined, DownloadOutlined, EyeOutlined, WarningOutlined, ClockCircleOutlined } from '@ant-design/icons'
+import { UploadOutlined, DownloadOutlined, EyeOutlined, WarningOutlined, ClockCircleOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import Empty from '../../../components/CommonComponents/Empty'
-import { postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
+import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
@@ -17,9 +17,10 @@ import { fullDate } from '../../../constants/DateConverter'
 import ModelForUploadExamResults from '../../../components/ManageExamResults/ModelForUploadExamResults'
 import ModelForViewExamResults from '../../../components/ManageExamResults/ModelForViewExamResults'
 import ModelForViewTermination from '../../../components/ManageExamResults/ModelForViewTermination'
+import Spinner from '../../../components/CommonComponents/spinner'
 
 // TEMPORARY: Disable authentication for testing
-const TESTING_MODE = false
+const TESTING_MODE = true
 
 // Mock data for testing
 const generateMockData = () => {
@@ -33,7 +34,6 @@ const generateMockData = () => {
         {
             id: '1',
             studentName: 'أحمد محمد',
-            studentAvatar: '/images/default-avatar.png',
             examName: 'اختبار الرياضيات',
             score: 85,
             status: 'pass',
@@ -44,7 +44,6 @@ const generateMockData = () => {
         {
             id: '2',
             studentName: 'فاطمة علي',
-            studentAvatar: '/images/default-avatar.png',
             examName: 'اختبار العلوم',
             score: 45,
             status: 'fail',
@@ -59,7 +58,6 @@ const generateMockData = () => {
         {
             id: '1',
             studentName: 'فاطمة علي',
-            studentAvatar: '/images/default-avatar.png',
             examName: 'اختبار العلوم',
             reason: 'تم إنهاء الاختبار بسبب التشتيت',
             distractionStrikes: 3,
@@ -75,6 +73,8 @@ const generateMockData = () => {
 
 const { Search } = Input
 
+const BRAND_ORANGE = '#F26722';
+
 const Index = () => {
     const [examResultsList, setExamResultsList] = useState([])
     const [examTerminationsList, setExamTerminationsList] = useState([])
@@ -83,8 +83,12 @@ const Index = () => {
     const [isModelForViewTermination, setIsModelForViewTermination] = useState(false)
     const [selectedExamResult, setSelectedExamResult] = useState(null)
     const [isModelForDeleteItems, setIsModelForDeleteItems] = useState(false)
+    const [folderList, setFolderList] = useState([])
     const [examList, setExamList] = useState([])
+    const [selectedFolder, setSelectedFolder] = useState(null)
     const [selectedExam, setSelectedExam] = useState(null)
+    const [loadingFolders, setLoadingFolders] = useState(false)
+    const [loadingExams, setLoadingExams] = useState(false)
     const [loading, setLoading] = useState(false)
     const [terminationsLoading, setTerminationsLoading] = useState(false)
     const [searchText, setSearchText] = useState('')
@@ -98,7 +102,7 @@ const Index = () => {
             key: 'studentName',
             render: (text, record) => (
                 <div className={styles.studentInfo}>
-                    <div className={styles.studentAvatar}>
+                    {/* <div className={styles.studentAvatar}>
                         <img 
                             src={record.studentAvatar || '/images/default-avatar.png'} 
                             alt="Student Avatar"
@@ -106,7 +110,7 @@ const Index = () => {
                                 e.target.src = '/images/default-avatar.png'
                             }}
                         />
-                    </div>
+                    </div> */}
                     <span>{text}</span>
                 </div>
             )
@@ -191,7 +195,7 @@ const Index = () => {
             key: 'studentName',
             render: (text, record) => (
                 <div className={styles.studentInfo}>
-                    <div className={styles.studentAvatar}>
+                    {/* <div className={styles.studentAvatar}>
                         <img 
                             src={record.studentAvatar || '/images/default-avatar.png'} 
                             alt="Student Avatar"
@@ -199,7 +203,7 @@ const Index = () => {
                                 e.target.src = '/images/default-avatar.png'
                             }}
                         />
-                    </div>
+                    </div> */}
                     <span>{text}</span>
                 </div>
             )
@@ -299,47 +303,100 @@ const Index = () => {
     ]
 
     useEffect(() => {
-        getExamList()
-        if (activeTab === 'results') {
-            getExamResultsList()
-        } else if (activeTab === 'terminations') {
-            getExamTerminationsList()
+        if (!selectedFolder && !selectedExam) {
+            fetchSimulationExamFolders(1);
         }
-    }, [activeTab])
+    }, [selectedFolder, selectedExam]);
 
-    const getExamList = async () => {
+    useEffect(() => {
+        if (selectedFolder && !selectedExam) {
+            fetchExamsInFolder(selectedFolder._id, 1);
+        }
+    }, [selectedFolder, selectedExam]);
+
+    useEffect(() => {
+        if (selectedExam) {
+            getExamResultsList(selectedExam);
+            getExamTerminationsList(selectedExam);
+        }
+    }, [selectedExam]);
+
+    const fetchSimulationExamFolders = async (pageNumber = 1) => {
+        setLoadingFolders(true)
+        setSelectedFolder(null)
+        setSelectedExam(null)
+        setExamList([])
         try {
-            const body = {
-                routeName: 'getItemByCourseId',
-                type: 'quiz'
+            const data = {
+                routeName: 'getFolderByType',
+                type: 'simulationExam',
+                page: pageNumber,
+                limit: 10
             }
-            const response = await getRouteAPI(body)
-            const exams = response.data?.map(exam => ({
-                key: exam.id,
-                label: exam.name,
-                value: exam.id,
-            }))
-            setExamList(exams)
+            const res = await getAuthRouteAPI(data)
+            setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
         } catch (error) {
-            console.error('Error fetching exam list:', error)
             if (TESTING_MODE) {
-                // Use mock data in testing mode
-                const { mockExams } = generateMockData()
-                setExamList(mockExams)
-                console.log('Using mock exam data for testing')
-            } else if (error?.response?.status === 401) {
-                await getNewToken()
-                getExamList()
+                setFolderList([{ _id: 'f1', name: 'مجلد اختبارات 1', createdAt: '2024-01-01', updatedAt: '2024-01-02' }])
             }
+        } finally {
+            setLoadingFolders(false)
         }
     }
 
-    const getExamResultsList = async () => {
+    const fetchExamsInFolder = async (folderId, pageNumber = 1) => {
+        setLoadingExams(true)
+        setSelectedExam(null)
+        try {
+            const body = {
+                routeName: 'getItem',
+                folderId: folderId,
+                type: 'simulationExam',
+                page: pageNumber,
+                limit: 10
+            }
+            const res = await getRouteAPI(body)
+            setExamList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+        } catch (error) {
+            if (TESTING_MODE) {
+                setExamList([{ _id: 'e1', title: 'اختبار محاكي 1', createdAt: '2024-01-03', updatedAt: '2024-01-04' }])
+            }
+        } finally {
+            setLoadingExams(false)
+        }
+    }
+
+    const handleFolderClick = (folder) => {
+        setSelectedFolder(folder);
+        setExamList([]);
+        setSelectedExam(null);
+        setExamResultsList([]);
+        setExamTerminationsList([]);
+    };
+    const handleExamClick = (exam) => {
+        setSelectedExam(exam._id);
+        setExamResultsList([]);
+        setExamTerminationsList([]);
+    };
+    const handleBackToFolders = () => {
+        setSelectedFolder(null);
+        setExamList([]);
+        setSelectedExam(null);
+        setExamResultsList([]);
+        setExamTerminationsList([]);
+    };
+    const handleBackToExams = () => {
+        setSelectedExam(null);
+        setExamResultsList([]);
+        setExamTerminationsList([]);
+    };
+
+    const getExamResultsList = async (examId) => {
         setLoading(true)
         try {
             const body = {
                 routeName: 'getExamResults',
-                examId: selectedExam
+                examId: examId
             }
             const response = await postRouteAPI(body)
             
@@ -406,12 +463,12 @@ const Index = () => {
         }
     }
 
-    const getExamTerminationsList = async () => {
+    const getExamTerminationsList = async (examId) => {
         setTerminationsLoading(true)
         try {
             const body = {
                 routeName: 'getExamTerminations',
-                examId: selectedExam,
+                examId: examId,
                 page: 1,
                 limit: 100
             }
@@ -464,20 +521,6 @@ const Index = () => {
             }
         } finally {
             setTerminationsLoading(false)
-        }
-    }
-
-    const handleExamChange = (examId) => {
-        setSelectedExam(examId)
-        if (examId) {
-            if (activeTab === 'results') {
-                getExamResultsList()
-            } else if (activeTab === 'terminations') {
-                getExamTerminationsList()
-            }
-        } else {
-            setExamResultsList([])
-            setExamTerminationsList([])
         }
     }
 
@@ -612,9 +655,9 @@ const Index = () => {
     )
 
     return (
-        <div className='maxWidthDefault px-4'>
+        <div className='maxWidthDefault px-4' dir="rtl">
             {/* TEMPORARY: Testing Mode Banner */}
-            {TESTING_MODE && (
+            {/* {TESTING_MODE && (
                 <div style={{
                     background: 'linear-gradient(45deg, #ff6b6b, #ff8e53)',
                     color: 'white',
@@ -627,9 +670,8 @@ const Index = () => {
                 }}>
                     🧪 وضع الاختبار - تم تعطيل المصادقة مؤقتاً للاختبار
                 </div>
-            )}
-            
-            <div style={{ height: 30 }}>
+            )} */}
+            <div className={styles.borderBottomNavbar}>
                 <BackToPath
                     backpathForPage={true}
                     backPathArray={[
@@ -638,123 +680,240 @@ const Index = () => {
                     ]}
                 />
             </div>
-
-            <div className={styles.examResultsHeadArea}>
-                <h1 className={`head2`}>إدارة نتائج الاختبارات</h1>
-                <div className={styles.createExamResultsBtnBox}>
-                    <button className='primarySolidBtn' onClick={handleUploadExamResults}>
-                        رفع نتائج اختبار
-                    </button>
-                </div>
+            <div className={styles.headerWrapper} style={{marginBottom: 0}}>
+                <h1 className={`head2 py-8`}>إدارة نتائج الاختبارات</h1>
             </div>
-
-            <div className={styles.filtersArea}>
-                <div className={styles.filterGroup}>
-                    <label>اختر الاختبار:</label>
-                    <Select
-                        placeholder="اختر الاختبار"
-                        style={{ width: 200 }}
-                        onChange={handleExamChange}
-                        allowClear
-                    >
-                        {examList.map(exam => (
-                            <Select.Option key={exam.key} value={exam.value}>
-                                {exam.label}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </div>
+            <div className={styles.bodysubWrapper}>
+                {/* Stage 1: Only Folders */}
+                {!selectedFolder && !selectedExam && (
+                    <div style={{ width: '100%' }}>
+                        <h3 className='mb-4' style={{fontWeight:700, fontSize:20}}>مجلدات الاختبارات المحاكية</h3>
+                        {loadingFolders ? (
+                            <Spinner />
+                        ) : folderList.length === 0 ? (
+                            <Empty emptyText={'لا توجد مجلدات اختبارات محاكية'} containerhight={200} />
+                        ) : (
+                            <table className={styles.tableArea} style={{ width: '100%' }}>
+                                <thead className={styles.tableHeaderArea}>
+                                    <tr>
+                                        <th>اسم المجلد</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>تاريخ آخر تعديل</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {folderList.map(folder => (
+                                        <tr key={folder._id} className={styles.tableRow}>
+                                            <td>
+                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleFolderClick(folder)}>
+                                                    <AllIconsComponenet iconName={'newFolderIcon'} height={24} width={24} color={BRAND_ORANGE} />
+                                                    <span style={{ marginRight: 8 }}>{folder.name}</span>
+                                                </div>
+                                            </td>
+                                            <td>{fullDate(folder.createdAt)}</td>
+                                            <td>{fullDate(folder.updatedAt)}</td>
+                                            <td></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                )}
+                {/* Stage 2: Only Exams in Folder */}
+                {selectedFolder && !selectedExam && (
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: 12 }}>
+                            <button
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: BRAND_ORANGE,
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    fontSize: 16
+                                }}
+                                onClick={handleBackToFolders}
+                            >
+                                <ArrowRightOutlined style={{ marginLeft: 4, color: BRAND_ORANGE }} />
+                                العودة إلى المجلدات
+                            </button>
+                        </div>
+                        <h3 className='mb-4' style={{fontWeight:700, fontSize:20}}>اختبارات مجلد: <span style={{ color: BRAND_ORANGE }}>{selectedFolder.name}</span></h3>
+                        {loadingExams ? (
+                            <Spinner />
+                        ) : examList.length === 0 ? (
+                            <Empty emptyText={'لا توجد اختبارات في هذا المجلد'} containerhight={200} />
+                        ) : (
+                            <table className={styles.tableArea} style={{ width: '100%' }}>
+                                <thead className={styles.tableHeaderArea}>
+                                    <tr>
+                                        <th>اسم الاختبار</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>تاريخ آخر تعديل</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {examList.map(exam => (
+                                        <tr key={exam._id} className={styles.tableRow}>
+                                            <td>
+                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleExamClick(exam)}>
+                                                    <AllIconsComponenet iconName={'quiz'} height={24} width={24} color={BRAND_ORANGE} />
+                                                    <span style={{ marginRight: 8 }}>{exam.title || exam.name}</span>
+                                                </div>
+                                            </td>
+                                            <td>{fullDate(exam.createdAt)}</td>
+                                            <td>{fullDate(exam.updatedAt)}</td>
+                                            <td></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                )}
+                {/* Stage 3: Only Results for Exam */}
+                {selectedExam && (
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: 12 }}>
+                            <button
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: BRAND_ORANGE,
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    fontSize: 16
+                                }}
+                                onClick={handleBackToExams}
+                            >
+                                <ArrowRightOutlined style={{ marginLeft: 4, color: BRAND_ORANGE }} />
+                                العودة إلى الاختبارات
+                            </button>
+                        </div>
+                        <Tabs
+                            className={styles.tabContainer}
+                            activeKey={activeTab}
+                            onChange={setActiveTab}
+                            tabBarGutter={32}
+                            tabBarStyle={{
+                                direction: 'rtl',
+                                borderBottom: `2px solid ${BRAND_ORANGE}`,
+                                marginBottom: 50,
+                            }}
+                            moreIcon={null}
+                            items={[
+                                {
+                                    key: 'results',
+                                    label: (
+                                        <span
+                                            style={{
+                                                color: activeTab === 'results' ? BRAND_ORANGE : undefined,
+                                                borderBottom: activeTab === 'results' ? `3px solid ${BRAND_ORANGE}` : 'none',
+                                                padding: '0 8px',
+                                                fontWeight: activeTab === 'results' ? 700 : 500,
+                                                background: 'none',
+                                                marginLeft: 16,
+                                                marginRight: 16,
+                                            }}
+                                        >
+                                            نتائج الاختبارات 
+                                            {examResultsList.length > 0 && (
+                                                <span className={styles.customTabBadge}>
+                                                    {examResultsList.length}
+                                                </span>
+                                            )}
+                                        </span>
+                                    ),
+                                    children: (
+                                        <div>
+                                            <div className={styles.filtersArea}>
+                                                <div className={styles.filterGroup}>
+                                                    <label>بحث:</label>
+                                                    <Search
+                                                        placeholder="ابحث باسم الطالب أو الاختبار"
+                                                        style={{ width: 300, direction: 'rtl', textAlign: 'right' }}
+                                                        onChange={(e) => handleSearch(e.target.value)}
+                                                        allowClear
+                                                    />
+                                                </div>
+                                            </div>
+                                            <Table
+                                                columns={tableColumns}
+                                                dataSource={filteredResults}
+                                                loading={loading}
+                                                locale={{ emptyText: customEmptyComponent }}
+                                                pagination={{
+                                                    pageSize: 10,
+                                                    showSizeChanger: true,
+                                                    showQuickJumper: true,
+                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة`
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                },
+                                {
+                                    key: 'terminations',
+                                    label: (
+                                        <span
+                                            style={{
+                                                color: activeTab === 'terminations' ? BRAND_ORANGE : undefined,
+                                                borderBottom: activeTab === 'terminations' ? `3px solid ${BRAND_ORANGE}` : 'none',
+                                                padding: '0 8px',
+                                                fontWeight: activeTab === 'terminations' ? 700 : 500,
+                                                background: 'none',
+                                                marginLeft: 16,
+                                                marginRight: 16,
+                                            }}
+                                        >
+                                            سجلات انتهاء الاختبارات
+                                            {examTerminationsList.length > 0 && (
+                                                <span className={styles.customTabBadge}>
+                                                    {examTerminationsList.length}
+                                                </span>
+                                            )}
+                                        </span>
+                                    ),
+                                    children: (
+                                        <div>
+                                            <div className={styles.filtersArea}>
+                                                <div className={styles.filterGroup}>
+                                                    <label>بحث:</label>
+                                                    <Search
+                                                        placeholder="ابحث باسم الطالب أو الاختبار أو سبب الانتهاء"
+                                                        style={{ width: 300, direction: 'rtl', textAlign: 'right' }}
+                                                        onChange={(e) => handleTerminationsSearch(e.target.value)}
+                                                        allowClear
+                                                    />
+                                                </div>
+                                            </div>
+                                            <Table
+                                                columns={terminationsTableColumns}
+                                                dataSource={filteredTerminations}
+                                                loading={terminationsLoading}
+                                                locale={{ emptyText: customEmptyTerminationsComponent }}
+                                                pagination={{
+                                                    pageSize: 10,
+                                                    showSizeChanger: true,
+                                                    showQuickJumper: true,
+                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} سجل انتهاء`
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                }
+                            ]}
+                        />
+                    </div>
+                )}
             </div>
-
-            <Tabs
-                className={styles.tabContainer}
-                activeKey={activeTab}
-                onChange={setActiveTab}
-                items={[
-                    {
-                        key: 'results',
-                        label: (
-                            <span>
-                                <span>نتائج الاختبارات</span>
-                                {examResultsList.length > 0 && (
-                                    <Tag color="blue" style={{ marginLeft: 8 }}>
-                                        {examResultsList.length}
-                                    </Tag>
-                                )}
-                            </span>
-                        ),
-                        children: (
-                            <div>
-                                <div className={styles.filtersArea}>
-                                    <div className={styles.filterGroup}>
-                                        <label>بحث:</label>
-                                        <Search
-                                            placeholder="ابحث باسم الطالب أو الاختبار"
-                                            style={{ width: 300 }}
-                                            onChange={(e) => handleSearch(e.target.value)}
-                                            allowClear
-                                        />
-                                    </div>
-                                </div>
-
-                                <Table
-                                    columns={tableColumns}
-                                    dataSource={filteredResults}
-                                    loading={loading}
-                                    locale={{ emptyText: customEmptyComponent }}
-                                    pagination={{
-                                        pageSize: 10,
-                                        showSizeChanger: true,
-                                        showQuickJumper: true,
-                                        showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة`
-                                    }}
-                                />
-                            </div>
-                        )
-                    },
-                    {
-                        key: 'terminations',
-                        label: (
-                            <span>
-                                <span>سجلات انتهاء الاختبارات</span>
-                                {examTerminationsList.length > 0 && (
-                                    <Tag color="red" style={{ marginLeft: 8 }}>
-                                        {examTerminationsList.length}
-                                    </Tag>
-                                )}
-                            </span>
-                        ),
-                        children: (
-                            <div>
-                                <div className={styles.filtersArea}>
-                                    <div className={styles.filterGroup}>
-                                        <label>بحث:</label>
-                                        <Search
-                                            placeholder="ابحث باسم الطالب أو الاختبار أو سبب الانتهاء"
-                                            style={{ width: 300 }}
-                                            onChange={(e) => handleTerminationsSearch(e.target.value)}
-                                            allowClear
-                                        />
-                                    </div>
-                                </div>
-
-                                <Table
-                                    columns={terminationsTableColumns}
-                                    dataSource={filteredTerminations}
-                                    loading={terminationsLoading}
-                                    locale={{ emptyText: customEmptyTerminationsComponent }}
-                                    pagination={{
-                                        pageSize: 10,
-                                        showSizeChanger: true,
-                                        showQuickJumper: true,
-                                        showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} سجل انتهاء`
-                                    }}
-                                />
-                            </div>
-                        )
-                    }
-                ]}
-            />
 
             {isModelForUploadExamResults && (
                 <ModelForUploadExamResults

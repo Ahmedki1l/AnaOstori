@@ -2,37 +2,70 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
+    padding: 0 0 0 0;
 }
 
 .createExamResultsBtnBox {
-    width: 150px;
+    width: 107px;
     height: 36px;
-
+    margin-left: auto;
     button {
         padding: 9px 10px !important;
         font-size: 16px;
     }
 }
 
+.borderBottomNavbar {
+    margin-bottom: 24px;
+}
+
 .filtersArea {
+    font-size: 18px;
     display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0px;
+    margin-bottom: 0px;
+    align-items: stretch;
+    background: #fff;
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
 
-    .filterGroup {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+.tableArea {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
 
-        label {
-            font-weight: 500;
-            font-size: 14px;
-            color: #333;
-        }
+.tableHeaderArea th {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    background: #f7f7f7;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    text-align: right;
+}
+
+.tableRow {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+    &:hover {
+        background: #fafafa;
     }
+}
+
+.tableRow td {
+    font-size: 15px;
+    padding: 12px 16px;
+    color: #222;
+    vertical-align: middle;
 }
 
 .studentInfo {
@@ -169,12 +202,42 @@
 
 // Tab styles
 .tabContainer {
+    :global(.ant-tabs-nav) {
+        margin-bottom: 0 !important;
+    }
     :global(.ant-tabs-tab) {
         font-weight: 500;
+        font-size: 18px;
+        padding: 0 24px !important;
+        color: #222;
+        background: none;
+        border: none;
+        margin: 0 0 0 24px;
     }
-
     :global(.ant-tabs-tab-active) {
-        font-weight: 600;
+        font-weight: 700;
+        color: #F26722 !important;
+        background: none;
+    }
+    :global(.ant-tabs-ink-bar) {
+        background: #F26722 !important;
+        height: 3px !important;
+        border-radius: 2px 2px 0 0;
+    }
+    :global(.customTabBadge) {
+        display: inline-block;
+        min-width: 24px;
+        padding: 0 8px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        background: #F26722;
+        border-radius: 12px;
+        margin: 0 8px;
+        text-align: center;
+        vertical-align: middle;
     }
 }
 
