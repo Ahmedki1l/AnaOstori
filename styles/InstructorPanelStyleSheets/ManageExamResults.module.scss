@@ -1,0 +1,205 @@
+.examResultsHeadArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.createExamResultsBtnBox {
+    width: 150px;
+    height: 36px;
+
+    button {
+        padding: 9px 10px !important;
+        font-size: 16px;
+    }
+}
+
+.filtersArea {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .filterGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+    }
+}
+
+.studentInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .studentAvatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    span {
+        font-weight: 500;
+    }
+}
+
+.score {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 4px 8px;
+    border-radius: 4px;
+
+    &.pass {
+        color: #52c41a;
+        background-color: #f6ffed;
+        border: 1px solid #b7eb8f;
+    }
+
+    &.fail {
+        color: #f5222d;
+        background-color: #fff2f0;
+        border: 1px solid #ffccc7;
+    }
+}
+
+.statusContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 12px;
+
+    &.passStatus {
+        color: #52c41a;
+        background-color: #f6ffed;
+        border: 1px solid #b7eb8f;
+    }
+
+    &.failStatus {
+        color: #f5222d;
+        background-color: #fff2f0;
+        border: 1px solid #ffccc7;
+    }
+}
+
+.terminatedBadge {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 10px;
+    color: #d4380d;
+    background-color: #fff2e8;
+    border: 1px solid #ffbb96;
+    cursor: help;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+
+    .ant-btn {
+        padding: 4px 8px;
+        height: auto;
+        min-width: 32px;
+    }
+}
+
+// Termination-specific styles
+.strikesCount {
+    font-weight: bold;
+    color: #d4380d;
+    background-color: #fff2e8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #ffbb96;
+}
+
+.eventsCount {
+    font-weight: bold;
+    color: #722ed1;
+    background-color: #f9f0ff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #d3adf7;
+}
+
+.distractionTypes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 200px;
+}
+
+.noTypes {
+    color: #999;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.terminationTime {
+    color: #1890ff;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+// Tab styles
+:global(.ant-tabs-tab) {
+    font-weight: 500;
+}
+
+:global(.ant-tabs-tab-active) {
+    font-weight: 600;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .examResultsHeadArea {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .filtersArea {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+
+        .filterGroup {
+            width: 100%;
+        }
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .distractionTypes {
+        max-width: 150px;
+    }
+} 

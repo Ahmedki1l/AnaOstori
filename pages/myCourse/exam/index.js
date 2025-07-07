@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Spinner from '../../../components/CommonComponents/spinner';
 import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
 import { getNewToken } from '../../../services/fireBaseAuthService';
+import { examResultService } from '../../../services/examResultService';
 import styles from '../../../styles/ExamPage.module.scss';
 import ExamIntroduction from '../../../components/ExamComponents/ExamIntroduction';
 import ExamSections from '../../../components/ExamComponents/ExamSections';
@@ -180,6 +181,10 @@ const ExamPage = () => {
     const distractionStrikeTimerRef = useRef(null);
     const continuousDistractionTimerRef = useRef(null);
 
+    // Exam result submission
+    const [examResultsSubmitted, setExamResultsSubmitted] = useState(false);
+    const [submittingResults, setSubmittingResults] = useState(false);
+
     // callback whenever a "distraction" happens
     const reportDistraction = (type, data = {}) => {
         console.warn('Distraction detected:', type, data);
@@ -234,7 +239,7 @@ const ExamPage = () => {
     };
 
     // Handle exam termination
-    const handleExamTermination = (reason) => {
+    const handleExamTermination = async (reason) => {
         console.warn('Exam terminated due to:', reason);
         
         // Clear all timers
@@ -248,6 +253,15 @@ const ExamPage = () => {
             clearInterval(timerRef.current);
         }
         
+        // Submit exam results even if terminated (with termination reason)
+        if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
+            try {
+                await submitExamResultsWithTermination(reason);
+            } catch (error) {
+                console.error('Error submitting terminated exam results:', error);
+            }
+        }
+        
         // Log the termination to backend
         const terminationData = {
             routeName: 'logExamTermination',
@@ -258,8 +272,8 @@ const ExamPage = () => {
             timestamp: Date.now()
         };
         
-        // You can uncomment this when you have the backend endpoint
-        // postAuthRouteAPI(terminationData).catch(console.error);
+        // Log the termination to backend
+        postAuthRouteAPI(terminationData).catch(console.error);
         
         // Show termination message to user
         toast.error('تم إنهاء الاختبار بسبب التشتيت المتكرر');
@@ -272,6 +286,64 @@ const ExamPage = () => {
         // Align allReviewQuestions to match examData
         if (selectedExam && allReviewQuestions) {
             setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
+        }
+    };
+
+    // Function to submit exam results with termination reason
+    const submitExamResultsWithTermination = async (terminationReason) => {
+        if (submittingResults || examResultsSubmitted) return;
+        
+        try {
+            setSubmittingResults(true);
+            
+            // Get student ID from store
+            const studentId = storeData?.viewProfileData?.id;
+            const courseId = router.query.courseId || selectedExam?.courseId;
+            
+            if (!studentId || !courseId || !examId) {
+                console.error('Missing required data for exam submission:', { studentId, courseId, examId });
+                return;
+            }
+
+            // Check if student has already taken this exam
+            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
+            if (hasTaken) {
+                console.log('Student has already taken this exam');
+                setExamResultsSubmitted(true);
+                return;
+            }
+
+            // Prepare exam results data with termination info
+            const results = examResultService.prepareExamResults(
+                selectedExam,
+                allReviewQuestions,
+                allExamQuestions,
+                allElapsedFormatted,
+                distractionEvents,
+                distractionStrikes
+            );
+
+            // Submit exam results with termination info
+            await examResultService.submitExamResults(
+                selectedExam,
+                results,
+                examId,
+                courseId,
+                studentId,
+                {
+                    isTerminated: true,
+                    terminationReason: terminationReason
+                }
+            );
+
+            setExamResultsSubmitted(true);
+            console.log('Terminated exam results submitted successfully');
+            
+        } catch (error) {
+            console.error('Error submitting terminated exam results:', error);
+            throw error;
+        } finally {
+            setSubmittingResults(false);
         }
     };
 
@@ -775,7 +847,7 @@ const ExamPage = () => {
         }
     };
 
-    const handleFinishReview = () => {
+    const handleFinishReview = async () => {
         isAbleToAddTime.current = true;
         if (selectedSectionId < selectedExam.sections.length - 1 && !sectionsFinished.includes(selectedSectionId)) {
             setSectionsFinished(prev => [...prev, selectedSectionId]);
@@ -792,7 +864,72 @@ const ExamPage = () => {
                 });
                 isFirstRun.current = false;
             }
+            
+            // Automatically submit exam results when exam is completed
+            if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
+                await submitExamResults();
+            }
+            
             setExamStage('results');
+        }
+    };
+
+    // Function to submit exam results automatically
+    const submitExamResults = async () => {
+        if (submittingResults || examResultsSubmitted) return;
+        
+        try {
+            setSubmittingResults(true);
+            
+            // Get student ID from store
+            const studentId = storeData?.viewProfileData?.id;
+            const courseId = router.query.courseId || selectedExam?.courseId;
+            
+            if (!studentId || !courseId || !examId) {
+                console.error('Missing required data for exam submission:', { studentId, courseId, examId });
+                return;
+            }
+
+            // Check if student has already taken this exam
+            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
+            if (hasTaken) {
+                console.log('Student has already taken this exam');
+                setExamResultsSubmitted(true);
+                return;
+            }
+
+            // Prepare exam results data
+            const results = examResultService.prepareExamResults(
+                selectedExam,
+                allReviewQuestions,
+                allExamQuestions,
+                allElapsedFormatted,
+                distractionEvents,
+                distractionStrikes
+            );
+
+            // Submit exam results
+            await examResultService.submitExamResults(
+                selectedExam,
+                results,
+                examId,
+                courseId,
+                studentId,
+                {
+                    isTerminated: false,
+                    terminationReason: null
+                }
+            );
+
+            setExamResultsSubmitted(true);
+            toast.success('تم حفظ نتائج الاختبار بنجاح');
+            console.log('Exam results submitted successfully');
+            
+        } catch (error) {
+            console.error('Error submitting exam results:', error);
+            toast.error('حدث خطأ في حفظ نتائج الاختبار');
+        } finally {
+            setSubmittingResults(false);
         }
     };
 
