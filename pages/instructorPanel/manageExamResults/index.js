@@ -20,7 +20,7 @@ import ModelForViewTermination from '../../../components/ManageExamResults/Model
 import Spinner from '../../../components/CommonComponents/spinner'
 
 // TEMPORARY: Disable authentication for testing
-const TESTING_MODE = true
+const TESTING_MODE = false
 
 // Mock data for testing
 const generateMockData = () => {
