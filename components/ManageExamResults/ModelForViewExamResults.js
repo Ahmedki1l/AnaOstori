@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Descriptions, Progress, Tag, Divider } from 'antd'
-import { fullDate } from '../../../constants/DateConverter'
+import { fullDate } from '../../constants/DateConverter'
 import styles from './ModelForViewExamResults.module.scss'
 
 const ModelForViewExamResults = ({
