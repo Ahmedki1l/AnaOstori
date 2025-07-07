@@ -559,6 +559,7 @@ const Index = () => {
             </div>
 
             <Tabs
+                className={styles.tabContainer}
                 activeKey={activeTab}
                 onChange={setActiveTab}
                 items={[

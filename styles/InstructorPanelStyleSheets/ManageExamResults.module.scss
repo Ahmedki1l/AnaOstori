@@ -168,12 +168,14 @@
 }
 
 // Tab styles
-:global(.ant-tabs-tab) {
-    font-weight: 500;
-}
+.tabContainer {
+    :global(.ant-tabs-tab) {
+        font-weight: 500;
+    }
 
-:global(.ant-tabs-tab-active) {
-    font-weight: 600;
+    :global(.ant-tabs-tab-active) {
+        font-weight: 600;
+    }
 }
 
 // Responsive design
