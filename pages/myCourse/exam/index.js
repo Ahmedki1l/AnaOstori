@@ -104,12 +104,12 @@ function useCheatDetection(onCheat, onContinuousCheat) {
 
     const handleCheatEvent = (type, data = {}) => {
         console.warn('Cheat detected:', type, data);
-        
+
         // If this is the first cheat event, start the continuous cheating timer
         if (!isCheatingRef.current) {
             isCheatingRef.current = true;
             cheatStartTimeRef.current = Date.now();
-            
+
             // Notify that continuous cheating has started
             onContinuousCheat(true);
         }
@@ -189,34 +189,34 @@ const ExamPage = () => {
     const reportDistraction = (type, data = {}) => {
         console.warn('Distraction detected:', type, data);
         const currentTime = Date.now();
-        
+
         setDistractionEvents(evts => [...evts, { type, time: currentTime, ...data }]);
-        
+
         // If this is the first distraction event, start the 3-second timer
         if (!isDistracted) {
             setIsDistracted(true);
             setDistractionStartTime(currentTime);
-            
+
             // Set 3-second timer for this distraction event
             distractionStrikeTimerRef.current = setTimeout(() => {
                 // After 3 seconds, count this as a strike
                 setDistractionStrikes(prev => {
                     const newStrikes = prev + 1;
                     console.warn(`Distraction strike ${newStrikes}/3 recorded`);
-                    
+
                     if (newStrikes >= 3) {
                         console.warn('3 strikes reached - terminating exam');
                         handleExamTermination('three_strikes');
                     }
-                    
+
                     return newStrikes;
                 });
-                
+
                 setIsDistracted(false);
                 setDistractionStartTime(null);
             }, 3000); // 3 seconds
         }
-        
+
         // you could also POST this to your backend:
         // postAuthRouteAPI({ routeName:'logDistraction', examId, type, timestamp: currentTime })
     };
@@ -241,7 +241,7 @@ const ExamPage = () => {
     // Handle exam termination
     const handleExamTermination = async (reason) => {
         console.warn('Exam terminated due to:', reason);
-        
+
         // Clear all timers
         if (distractionStrikeTimerRef.current) {
             clearTimeout(distractionStrikeTimerRef.current);
@@ -252,7 +252,7 @@ const ExamPage = () => {
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
-        
+
         // Submit exam results even if terminated (with termination reason)
         if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
             try {
@@ -261,7 +261,7 @@ const ExamPage = () => {
                 console.error('Error submitting terminated exam results:', error);
             }
         }
-        
+
         // Log the termination to backend
         const terminationData = {
             routeName: 'logExamTermination',
@@ -271,13 +271,13 @@ const ExamPage = () => {
             distractionStrikes,
             timestamp: Date.now()
         };
-        
+
         // Log the termination to backend
         postAuthRouteAPI(terminationData).catch(console.error);
-        
+
         // Show termination message to user
         toast.error('تم إنهاء الاختبار بسبب التشتيت المتكرر');
-        
+
         // Force exam to results stage
         if (examStage !== 'results') {
             setExamStage('results');
@@ -292,14 +292,14 @@ const ExamPage = () => {
     // Function to submit exam results with termination reason
     const submitExamResultsWithTermination = async (terminationReason) => {
         if (submittingResults || examResultsSubmitted) return;
-        
+
         try {
             setSubmittingResults(true);
-            
+
             // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
             const courseId = router.query.courseId || selectedExam?.courseId;
-            
+
             if (!studentId || !courseId || !examId) {
                 console.error('Missing required data for exam submission:', { studentId, courseId, examId });
                 return;
@@ -338,7 +338,7 @@ const ExamPage = () => {
 
             setExamResultsSubmitted(true);
             console.log('Terminated exam results submitted successfully');
-            
+
         } catch (error) {
             console.error('Error submitting terminated exam results:', error);
             throw error;
@@ -347,24 +347,30 @@ const ExamPage = () => {
         }
     };
 
-    // enable the hook
-    const cheatDetectionCleanup = useRef(null);
-    useEffect(() => {
-        if (["questions", "review", "reviewQuestion"].includes(examStage)) {
-            cheatDetectionCleanup.current = useCheatDetection(reportDistraction, handleContinuousDistraction);
-        } else {
-            if (cheatDetectionCleanup.current) {
-                cheatDetectionCleanup.current();
-                cheatDetectionCleanup.current = null;
-            }
-        }
-        return () => {
-            if (cheatDetectionCleanup.current) {
-                cheatDetectionCleanup.current();
-                cheatDetectionCleanup.current = null;
-            }
-        };
-    }, [examStage]);
+    const shouldEnableCheatDetection = ["questions", "review", "reviewQuestion"].includes(examStage);
+    useCheatDetection(
+        shouldEnableCheatDetection ? reportDistraction : () => { },
+        shouldEnableCheatDetection ? handleContinuousDistraction : () => { }
+    );
+
+    // // enable the hook
+    // const cheatDetectionCleanup = useRef(null);
+    // useEffect(() => {
+    //     if (["questions", "review", "reviewQuestion"].includes(examStage)) {
+    //         cheatDetectionCleanup.current = useCheatDetection(reportDistraction, handleContinuousDistraction);
+    //     } else {
+    //         if (cheatDetectionCleanup.current) {
+    //             cheatDetectionCleanup.current();
+    //             cheatDetectionCleanup.current = null;
+    //         }
+    //     }
+    //     return () => {
+    //         if (cheatDetectionCleanup.current) {
+    //             cheatDetectionCleanup.current();
+    //             cheatDetectionCleanup.current = null;
+    //         }
+    //     };
+    // }, [examStage]);
 
     // near the top of your component
     // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
@@ -864,12 +870,12 @@ const ExamPage = () => {
                 });
                 isFirstRun.current = false;
             }
-            
+
             // Automatically submit exam results when exam is completed
             if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
                 await submitExamResults();
             }
-            
+
             setExamStage('results');
         }
     };
@@ -877,14 +883,14 @@ const ExamPage = () => {
     // Function to submit exam results automatically
     const submitExamResults = async () => {
         if (submittingResults || examResultsSubmitted) return;
-        
+
         try {
             setSubmittingResults(true);
-            
+
             // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
             const courseId = router.query.courseId || selectedExam?.courseId;
-            
+
             if (!studentId || !courseId || !examId) {
                 console.error('Missing required data for exam submission:', { studentId, courseId, examId });
                 return;
@@ -924,7 +930,7 @@ const ExamPage = () => {
             setExamResultsSubmitted(true);
             toast.success('تم حفظ نتائج الاختبار بنجاح');
             console.log('Exam results submitted successfully');
-            
+
         } catch (error) {
             console.error('Error submitting exam results:', error);
             toast.error('حدث خطأ في حفظ نتائج الاختبار');
@@ -1004,11 +1010,11 @@ const ExamPage = () => {
     return (
         <div className={styles.examPageContainer}>
             {/* Distraction Warning Component */}
-            <CheatWarning 
-                cheatStrikes={distractionStrikes} 
-                isCheating={isDistracted} 
+            <CheatWarning
+                cheatStrikes={distractionStrikes}
+                isCheating={isDistracted}
             />
-            
+
             {examStage === 'introduction' && (
                 <ExamIntroduction
                     examData={displayExamData}
