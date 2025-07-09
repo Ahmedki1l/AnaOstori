@@ -5,19 +5,19 @@ import styles from './ImageLightbox.module.scss';
 
 export default function ImageLightbox({ src, alt }) {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [overlayLoading, setOverlayLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [overlayLoading, setOverlayLoading] = useState(false);
 
-  // Preload image for overlay
-  React.useEffect(() => {
-    if (open) {
-      setOverlayLoading(true);
-      const img = new window.Image();
-      img.src = src;
-      img.onload = () => setOverlayLoading(false);
-      img.onerror = () => setOverlayLoading(false);
-    }
-  }, [open, src]);
+  // // Preload image for overlay
+  // React.useEffect(() => {
+  //   if (open) {
+  //     setOverlayLoading(true);
+  //     const img = new window.Image();
+  //     img.src = src;
+  //     img.onload = () => setOverlayLoading(false);
+  //     img.onerror = () => setOverlayLoading(false);
+  //   }
+  // }, [open, src]);
 
   return (
     <>
@@ -38,7 +38,8 @@ export default function ImageLightbox({ src, alt }) {
             layout="responsive"
             width={400}
             height={250}
-            onLoadingComplete={() => setLoading(false)}
+            onLoadingComplete={() => { setLoading(false); console.log('Thumbnail image loaded:', src); }}
+            onError={(e) => { setLoading(false); console.log('Thumbnail image failed to load:', src, e); }}
             style={{ display: loading ? 'none' : 'block', cursor: 'pointer' }}
             unoptimized={false}
             priority={false}
@@ -63,7 +64,8 @@ export default function ImageLightbox({ src, alt }) {
               alt={alt}
               className={styles.lightboxImage}
               fill
-              onLoadingComplete={() => setOverlayLoading(false)}
+              onLoadingComplete={() => { setOverlayLoading(false); console.log('Overlay image loaded:', src); }}
+              onError={(e) => { setOverlayLoading(false); console.log('Overlay image failed to load:', src, e); }}
               style={{ display: overlayLoading ? 'none' : 'block', borderRadius: 4, boxShadow: '0 0 16px rgba(0,0,0,0.5)' }}
               unoptimized={false}
               priority={true}
