@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
+import Spinner from '../CommonComponents/spinner';
 import styles from './ImageLightbox.module.scss';
 
 export default function ImageLightbox({ src, alt }) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [overlayLoading, setOverlayLoading] = useState(true);
+
+  // Preload image for overlay
+  React.useEffect(() => {
+    if (open) {
+      setOverlayLoading(true);
+      const img = new window.Image();
+      img.src = src;
+      img.onload = () => setOverlayLoading(false);
+      img.onerror = () => setOverlayLoading(false);
+    }
+  }, [open, src]);
 
   return (
     <>
@@ -12,7 +27,22 @@ export default function ImageLightbox({ src, alt }) {
           className={styles.imageContainer}
           onClick={() => setOpen(true)}
         >
-          <img src={src} alt={alt} />
+          {loading && (
+            <div style={{ minHeight: 120, minWidth: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Spinner width={"2"} height={"2"} />
+            </div>
+          )}
+          <Image
+            src={src}
+            alt={alt}
+            layout="responsive"
+            width={400}
+            height={250}
+            onLoadingComplete={() => setLoading(false)}
+            style={{ display: loading ? 'none' : 'block', cursor: 'pointer' }}
+            unoptimized={false}
+            priority={false}
+          />
         </div>
       </div>
 
@@ -22,19 +52,30 @@ export default function ImageLightbox({ src, alt }) {
           className={styles.lightboxOverlay}
           onClick={() => setOpen(false)}
         >
-          <img
-            src={src}
-            alt={alt}
-            className={styles.lightboxImage}
-            // prevent click-through
-            onClick={e => e.stopPropagation()}
-          />
-          <button
-            className={styles.lightboxClose}
-            onClick={() => setOpen(false)}
-          >
-            &times;
-          </button>
+          <div style={{ position: 'relative', minHeight: 200, minWidth: 200 }}>
+            {overlayLoading && (
+              <div style={{ minHeight: 200, minWidth: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Spinner width={"3"} height={"3"} />
+              </div>
+            )}
+            <Image
+              src={src}
+              alt={alt}
+              className={styles.lightboxImage}
+              fill
+              onLoadingComplete={() => setOverlayLoading(false)}
+              style={{ display: overlayLoading ? 'none' : 'block', borderRadius: 4, boxShadow: '0 0 16px rgba(0,0,0,0.5)' }}
+              unoptimized={false}
+              priority={true}
+            />
+            <button
+              className={styles.lightboxClose}
+              onClick={() => setOpen(false)}
+              style={{ position: 'absolute', top: 16, right: 16 }}
+            >
+              &times;
+            </button>
+          </div>
         </div>
       )}
     </>

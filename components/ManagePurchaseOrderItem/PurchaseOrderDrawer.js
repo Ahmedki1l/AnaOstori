@@ -18,7 +18,7 @@ import * as PaymentConst from '../../constants/PaymentConst'
 const PurchaseOrderDrawer = (props) => {
     const selectedOrder = props.selectedOrder
     const [orderForm] = Form.useForm()
-    const { paymentStatusBank, paymentStatusOther } = PaymentConst
+    const { paymentStatusBank, paymentStatusOther, genders } = PaymentConst
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [paymentStatus, setPaymentStatus] = useState(selectedOrder.status)
 
@@ -212,7 +212,15 @@ const PurchaseOrderDrawer = (props) => {
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerGenderTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{selectedOrder.userProfile.gender ? selectedOrder.userProfile.gender == "male" ? "شاب" : "بنت" : '---'}</p>
+                <p>
+                    {selectedOrder.userProfile.gender
+                        ? selectedOrder.userProfile.gender == "male"
+                            ? genders.find(gender => gender.value === "male")?.label
+                            : selectedOrder.userProfile.gender == "female"
+                                ? genders.find(gender => gender.value === "female")?.label
+                                : genders.find(gender => gender.value === "mix")?.label
+                        : '---'}
+                </p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.buyerPhoneTitle}</p>
             <div className={styles.purchaseOrderBox}>

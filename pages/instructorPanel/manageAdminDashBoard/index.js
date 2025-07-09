@@ -193,13 +193,15 @@ const Index = () => {
                 accumulator[0] += current.count;
             } else if (current.gender === "female") {
                 accumulator[1] += current.count;
+            } else if (current.gender === "mix") {
+                accumulator[2] += current.count;
             }
             return accumulator;
-        }, [0, 0]);
+        }, [0, 0, 0]);
         const pieChartForGenders = {
             chartId: 'genderPieChart',
             context: '2d',
-            labels: ['شباب', 'بنات'],
+            labels: ['شباب', 'بنات', 'للجنسين'],
             datasets: {
                 label: 'My First Dataset',
                 data: result,

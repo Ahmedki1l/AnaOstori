@@ -191,6 +191,11 @@ const ManegeUserListDrawer = ({
                         <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "female" ? '#F06A25' : '#808080'} />
                         <span>أنثى</span>
                     </button>
+                    <button className={`${styles.mixBtn} ${gender == 'mix' ? `${styles.genderActiveBtn}` : ''}`} onClick={() => setGender('mix')} disabled>
+                        <AllIconsComponenet height={26} width={15} iconName={'male'} color={gender == "mix" ? '#F06A25' : '#808080'} />
+                        <AllIconsComponenet height={26} width={15} iconName={'female'} color={gender == "mix" ? '#F06A25' : '#808080'} />
+                        <span>للجنسين</span>
+                    </button>
                 </div>
 
                 <p className='fontBold py-2' style={{ fontSize: '18px' }}>{manageUserListConst.emailHeading}</p>

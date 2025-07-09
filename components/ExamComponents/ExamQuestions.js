@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import ImageLightbox from './ImageLightbox';
@@ -30,6 +30,33 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
     const currentQuestion = questions[currentQuestionIndex] || {};
     console.log("🚀 ~ ExamQuestions ~ currentQuestion:", currentQuestion);
     const totalQuestions = questions.length;
+
+    // Preload images for the next question
+    useEffect(() => {
+        const preloadImages = (images) => {
+            images.forEach((src) => {
+                if (src) {
+                    const img = new window.Image();
+                    img.src = src;
+                }
+            });
+        };
+        const nextQuestion = questions[currentQuestionIndex + 1];
+        if (nextQuestion) {
+            // Preload question-level images
+            if (Array.isArray(nextQuestion.questionImages)) {
+                preloadImages(nextQuestion.questionImages);
+            }
+            // Preload option-level images
+            if (Array.isArray(nextQuestion.options)) {
+                nextQuestion.options.forEach(option => {
+                    if (Array.isArray(option.images)) {
+                        preloadImages(option.images);
+                    }
+                });
+            }
+        }
+    }, [currentQuestionIndex, questions]);
 
     const handleSelectAnswer = (questionId, optionId) => {
         setReviewQuestions((prev) => {

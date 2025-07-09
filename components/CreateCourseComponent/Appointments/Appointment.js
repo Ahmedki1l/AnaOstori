@@ -100,7 +100,7 @@ const Appointments = ({
       (newMaxSeats - editAvailability.maxNumberOfSeats)
     );
   };
-  
+
   const availabilitySuccessRes = (msg) => {
     toast.success(msg, { rtl: true });
     setIsModalOpen(false);
@@ -421,7 +421,7 @@ const Appointments = ({
                         <p className={`head2`}>
                           {dateRange(appointment.dateFrom, appointment.dateTo)}
                         </p>
-                        {appointment.gender !== "mix" && (
+                        {(
                           <>
                             <div className={styles.genderDetails}>
                               {appointment.gender == "male" && (
@@ -440,11 +440,18 @@ const Appointments = ({
                                   color={"#E10768"}
                                 />
                               )}
-                              {/* {appointment.gender == "mix" && <><AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} /><AllIconsComponenet iconName={'female'} height={17} width={10} color={'#E10768'} /></>} */}
+                              {appointment.gender == "mix" && (
+                                <>
+                                  <AllIconsComponenet iconName={'male'} height={17} width={17} color={'#0C5D96'} />
+                                  <AllIconsComponenet iconName={'female'} height={17} width={17} color={'#E10768'} />
+                                </>
+                              )}
                               <span className="pr-1">
                                 {appointment.gender == "male"
-                                  ? genders[0].label
-                                  : genders[1].label}
+                                  ? genders.find(gender => gender.value === "male")?.label
+                                  : appointment.gender == "female"
+                                    ? genders.find(gender => gender.value === "female")?.label
+                                    : genders.find(gender => gender.value === "mix")?.label}
                               </span>
                             </div>
                             <br />
