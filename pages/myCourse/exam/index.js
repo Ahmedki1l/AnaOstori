@@ -271,6 +271,7 @@ const ExamPage = () => {
             distractionStrikes,
             timestamp: Date.now()
         };
+        console.log("🚀 ~ handleExamTermination ~ terminationData:", terminationData);
 
         // Log the termination to backend
         postAuthRouteAPI(terminationData).catch(console.error);
@@ -298,10 +299,9 @@ const ExamPage = () => {
 
             // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
-            const courseId = router.query.courseId || selectedExam?.courseId;
 
-            if (!studentId || !courseId || !examId) {
-                console.error('Missing required data for exam submission:', { studentId, courseId, examId });
+            if (!studentId || !examId) {
+                console.error('Missing required data for exam submission:', { studentId, examId });
                 return;
             }
 
@@ -328,7 +328,6 @@ const ExamPage = () => {
                 selectedExam,
                 results,
                 examId,
-                courseId,
                 studentId,
                 {
                     isTerminated: true,
@@ -889,10 +888,9 @@ const ExamPage = () => {
 
             // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
-            const courseId = router.query.courseId || selectedExam?.courseId;
 
-            if (!studentId || !courseId || !examId) {
-                console.error('Missing required data for exam submission:', { studentId, courseId, examId });
+            if (!studentId|| !examId) {
+                console.error('Missing required data for exam submission:', { studentId, examId });
                 return;
             }
 
@@ -919,7 +917,6 @@ const ExamPage = () => {
                 selectedExam,
                 results,
                 examId,
-                courseId,
                 studentId,
                 {
                     isTerminated: false,
@@ -998,6 +995,25 @@ const ExamPage = () => {
             setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
         }
     }, [selectedExam, examStage]);
+
+    useEffect(() => {
+      console.log('Exam Results Submission Check:', {
+        examStage,
+        examResultsSubmitted,
+        selectedExam,
+        allReviewQuestions,
+        allExamQuestions
+      });
+      if (examStage === 'results' && !examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
+        if (distractionStrikes >= 3 || examStage === 'results' && isDistracted) {
+          // If terminated, submit with termination reason
+          submitExamResultsWithTermination('terminated_or_cheating');
+        } else {
+          // Normal completion
+          submitExamResults();
+        }
+      }
+    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions]);
 
     if (loading) {
         return (

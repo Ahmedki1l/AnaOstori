@@ -25,7 +25,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         let correctAnswers = 0;
 
         allReviews.forEach((question, i) => {
-            if (question.selectedAnswer === examData[i].correctAnswer) {
+            if (question.selectedAnswer === examData[i]?.correctAnswer) {
                 correctAnswers++;
             }
         });
@@ -42,7 +42,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         let correctAnswers = 0;
 
         allReviews.forEach((question, i) => {
-            if (question.selectedAnswer === examData[i].correctAnswer) {
+            if (question.selectedAnswer === examData[i]?.correctAnswer) {
                 correctAnswers++;
             }
         });
@@ -188,8 +188,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             // Calculate score for section
             let correctAnswers = 0;
             sectionQuestions.forEach((question, i) => {
-                const questionIndex = examData[index].findIndex(q => q._id === question.id);
-                if (questionIndex >= 0 && question.selectedAnswer === examData[index][questionIndex].correctAnswer) {
+                const questionIndex = examData[index]?.findIndex(q => q._id === question.id);
+                if (questionIndex >= 0 && question.selectedAnswer === examData[index][questionIndex]?.correctAnswer) {
                     correctAnswers++;
                 }
             });
