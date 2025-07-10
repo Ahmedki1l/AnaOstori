@@ -91,8 +91,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         const sectionMap = new Map();
 
         examData.forEach((question, index) => {
-            question.skills.forEach(skill => {
-                const sectionTitle = question.section + " - " + question.lesson;
+            question?.skills?.forEach(skill => {
+                const sectionTitle = question?.section + " - " + question?.lesson;
 
                 if (!sectionMap.has(sectionTitle)) {
                     sectionMap.set(sectionTitle, {
@@ -189,7 +189,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             let correctAnswers = 0;
             sectionQuestions.forEach((question, i) => {
                 const questionIndex = examData[index]?.findIndex(q => q._id === question.id);
-                if (questionIndex >= 0 && question.selectedAnswer === examData[index][questionIndex]?.correctAnswer) {
+                if (questionIndex >= 0 && question?.selectedAnswer === examData[index][questionIndex]?.correctAnswer) {
                     correctAnswers++;
                 }
             });
@@ -197,11 +197,11 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             const sectionScore = Math.round((correctAnswers / sectionQuestions.length) * 100);
 
             return {
-                title: CurrentExam.sections[index].title,
-                score: sectionScore,
-                correctAnswers: correctAnswers,
-                numberOfQuestions: sectionQuestions.length,
-                time: elapsedTime[index]
+                title: CurrentExam?.sections[index]?.title,
+                score: sectionScore || 0,
+                correctAnswers: correctAnswers || 0,
+                numberOfQuestions: sectionQuestions?.length || 0,
+                time: elapsedTime[index] || 0
             };
         });
     };
