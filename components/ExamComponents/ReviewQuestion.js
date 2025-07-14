@@ -104,7 +104,7 @@ const ReviewQuestion = ({
     const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
 
     return (
-        <div className={styles.examContainer}>
+        <div className={styles.mainContainer}>
             <div className={styles.examHeader}>
                 <div className={styles.timerContainer}>
                     <div style={{ width: '28px', height: '28px' }} >
@@ -147,7 +147,7 @@ const ReviewQuestion = ({
                 </button>
             </div>
 
-            <div className={styles.questionContent}>
+            <div className={styles.centerContainer}>
                 <div className={styles.questionSidebar}>
                     {currentQuestion.type === "contextual" && (
                         <div className={styles.questionContext}>
@@ -218,7 +218,7 @@ const ReviewQuestion = ({
                 </div>
             </div>
             <div
-                className={styles.buttonsContainer}
+                className={styles.bottomContainer}
             >
                 <div className={styles.examActions}>
                     {currentReviewQuestionIndex !== 0 &&

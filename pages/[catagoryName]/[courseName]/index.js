@@ -777,7 +777,7 @@ export default function Index(props) {
 							})}
 
 							{sortedReviewsByCategory[currentCategory] && (<div id={'userFeedback'} style={{ paddingTop: selectedNavItem == 5 ? `${paddingTop}rem` : '2rem' }}>
-								<h1 className='head2 pb-4'>{lang == 'en' ? `Ostori’s feedback` : `تجارب الأساطير`}</h1>
+								<h1 className='head2 pb-4'>{lang == 'en' ? `Our students' scores speak for us` : `🔥 درجات طلابنا تحكي عنّا`}</h1>
 								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
 							</div>)}
 

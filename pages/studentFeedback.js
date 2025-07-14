@@ -65,7 +65,7 @@ export default function StudentFeedback(props) {
 		<div>
 			<div className={styles.headevDiv}>
 				<div className={styles.transparentDiv}>
-					<h1 className='head2 text-white z-10'>تجارب الأساطير</h1>
+					<h1 className='head2 text-white z-10'>🔥 درجات طلابنا تحكي عنّا</h1>
 					<p className='text-white z-10'>نفتخر بكل أسطوري يؤمن انه مافي شيء مستحيل!</p>
 				</div>
 			</div>

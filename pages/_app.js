@@ -100,7 +100,7 @@ function MyApp({ Component, pageProps }) {
 				setPageTitle('استعلام الحجوزات')
 				break;
 			case "/studentFeedback":
-				setPageTitle('تجارب الأساطير')
+				setPageTitle('🔥 درجات طلابنا تحكي عنّا')
 				break;
 			case "/receiveRequest":
 				setPageTitle('استلام الطلب')

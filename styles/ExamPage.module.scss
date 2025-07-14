@@ -155,10 +155,14 @@
 /* Question Page Styles - Exact Match */
 .questionContent {
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
     direction: ltr;
     margin: 40px 0;
     max-height: 75vh;
+    overflow-y: auto;
+    direction: ltr;
+    padding: 0 8px;
+    // Remove margin and max-height
 }
 
 .questionSidebar {
@@ -223,6 +227,7 @@
     line-height: 1.6;
     display: flex;
     direction: rtl;
+    font-weight: 600;
 }
 
 .optionsContainer {
@@ -308,11 +313,11 @@
 }
 
 .examActions {
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 16px 24px 24px;
+    padding: 16px 24px 10px;
     display: flex;
     justify-content: flex-end;
     direction: rtl;
@@ -320,13 +325,14 @@
 }
 
 .examActions2 {
-    padding: 16px 24px 24px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 24px 10px;
     display: flex;
     justify-content: flex-end;
     direction: rtl;
-    position: fixed;
-    bottom: 0;
-    right: 0;
     z-index: 1000;
 }
 
@@ -1338,7 +1344,6 @@
 
     .questionContent {
         margin: 20px 0;
-        max-height: 65vh;
     }
 
     .questionSidebar,
@@ -1404,7 +1409,6 @@
 @media (max-height: 680px) {
     .questionContent {
         margin: 10px 0;
-        max-height: 60vh;
     }
 
     .questionSidebar,
@@ -1584,3 +1588,196 @@
   opacity: 0;
   transform: translateY(-30px);
 }
+
+@media (max-width: 768px) {
+  .buttonsContainer {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    padding-bottom: 8px;
+  }
+  .questionContent {
+    padding: 0 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttonsContainer {
+    gap: 4px;
+    margin-top: 4px;
+    padding-bottom: 4px;
+  }
+  .questionContent {
+    padding: 0 1px;
+  }
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  height: 93.95vh;
+  min-height: 0;
+  width: 100%;
+  background: #fff;
+}
+
+.topContainer {
+  flex: 0 0 auto;
+  max-height: 56px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+  z-index: 1;
+}
+
+.centerContainer {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  background: #fff;
+}
+
+.bottomContainer {
+  flex: 0 0 auto;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+@media (max-width: 600px) {
+  .topContainer {
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 6px;
+  }
+  .centerContainer {
+    padding: 0 2px;
+  }
+  .bottomContainer {
+    padding: 8px 2px;
+    flex-direction: column;
+    justify-content: none;
+    gap: 8px;
+  }
+}
+
+@media (max-height: 995px) {
+    .topContainer {
+      min-height: 44px;
+      max-height: 44px;
+      padding: 0 8px;
+    }
+    .centerContainer {
+      padding: 0 4px;
+      max-height: 55vh;
+    }
+    .bottomContainer {
+      padding: 10px 4px;
+      gap: 8px;
+    }
+  }
+
+  @media (max-height: 895px) {
+    .topContainer {
+      min-height: 44px;
+      max-height: 44px;
+      padding: 0 8px;
+    }
+    .centerContainer {
+      padding: 0 4px;
+      max-height: 50vh;
+    }
+    .bottomContainer {
+      padding: 10px 4px;
+      gap: 8px;
+    }
+  }
+
+  @media (max-height: 800px) {
+    .topContainer {
+      min-height: 44px;
+      max-height: 44px;
+      padding: 0 8px;
+    }
+    .centerContainer {
+      padding: 0 4px;
+      max-height: 45vh;
+    }
+    .bottomContainer {
+      padding: 10px 4px;
+      gap: 8px;
+    }
+  }
+
+@media (max-height: 730px) {
+  .topContainer {
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 8px;
+  }
+  .centerContainer {
+    padding: 0 4px;
+    max-height: 40vh;
+  }
+  .bottomContainer {
+    padding: 10px 4px;
+    gap: 8px;
+  }
+}
+
+@media (max-height: 600px) {
+  .topContainer {
+    min-height: 36px;
+    max-height: 36px;
+    padding: 0 4px;
+  }
+  .centerContainer {
+    padding: 0 2px;
+  }
+  .bottomContainer {
+    padding: 6px 2px;
+    gap: 6px;
+  }
+}
+
+@media (max-height: 500px) {
+  .topContainer {
+    min-height: 28px;
+    max-height: 28px;
+    padding: 0 2px;
+  }
+  .centerContainer {
+    padding: 0 1px;
+  }
+  .bottomContainer {
+    padding: 4px 1px;
+    gap: 4px;
+  }
+}
+
+@media (max-height: 400px) {
+  .topContainer {
+    min-height: 20px;
+    max-height: 20px;
+    padding: 0 1px;
+  }
+  .centerContainer {
+    padding: 0 0;
+  }
+  .bottomContainer {
+    padding: 2px 0;
+    gap: 2px;
+  }
+}
+

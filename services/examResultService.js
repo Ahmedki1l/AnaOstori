@@ -10,17 +10,15 @@ export const examResultService = {
      * @param {Object} examData - Complete exam data
      * @param {Object} results - Exam results data
      * @param {string} examId - Exam ID
-     * @param {string} courseId - Course ID
      * @param {string} studentId - Student ID
      * @param {Object} options - Additional options (termination info, etc.)
      * @returns {Promise<Object>} - API response
      */
-    async submitExamResults(examData, results, examId, courseId, studentId, options = {}) {
+    async submitExamResults(examData, results, examId, studentId, options = {}) {
         try {
             const examResultData = {
                 routeName: 'submitExamResult',
                 examId: examId,
-                courseId: courseId,
                 studentId: studentId,
                 examData: {
                     examName: examData.name,
@@ -57,7 +55,7 @@ export const examResultService = {
             if (error?.response?.status === 401) {
                 try {
                     await getNewToken()
-                    return await this.submitExamResults(examData, results, examId, courseId, studentId, options)
+                    return await this.submitExamResults(examData, results, examId, studentId, options)
                 } catch (refreshError) {
                     console.error('Token refresh failed:', refreshError)
                     throw refreshError
