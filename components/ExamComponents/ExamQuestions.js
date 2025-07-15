@@ -136,7 +136,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
 
 
     return (
-        <div className={styles.examContainer}>
+        <div className={styles.mainContainer}>
             <div className={styles.examHeader}>
                 <div className={styles.timerContainer}>
                     <div style={{ width: '28px', height: '28px' }} >
@@ -155,7 +155,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                         </svg>
                     </div>
                     <span className={styles.timerText}>{formatTime(timeLeft)}</span>
-                    
+
                     {/* Distraction Warning Indicator */}
                     {(cheatStrikes > 0 || isCheating) && (
                         <div className={styles.distractionIndicator}>
@@ -179,7 +179,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                 </button>
             </div>
 
-            <div className={styles.questionContent}>
+            <div className={styles.centerContainer}>
                 <div className={styles.questionSidebar}>
                     {currentQuestion.type === "contextual" && (
                         <div className={styles.questionContext}>
@@ -249,26 +249,27 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                     </div>
                 </div>
             </div>
+            
+            <div className={styles.bottomContainer}>
+                <div className={styles.examActions}>
+                    {currentQuestionIndex !== 0 &&
+                        <button
+                            className={styles.nextButton}
+                            onClick={handlePreviousQuestion}
+                        >
+                            <AllIconsComponenet iconName="arrowRight" height={16} width={16} color="#FFFFFF" />
+                            <span>السابق</span>
+                        </button>
+                    }
 
-            <div className={styles.examActions}>
-                {currentQuestionIndex !== 0 &&
                     <button
                         className={styles.nextButton}
-                        onClick={handlePreviousQuestion}
+                        onClick={handleNextQuestion}
                     >
-                        <AllIconsComponenet iconName="arrowRight" height={16} width={16} color="#FFFFFF" />
-                        <span>السابق</span>
+                        <span>{(currentQuestionIndex + 1 < totalQuestions) ? "التالي" : "شاشة المراجعة"}</span>
+                        <AllIconsComponenet iconName="arrowLeft" height={16} width={16} color="#FFFFFF" />
                     </button>
-                }
-
-                <button
-                    className={styles.nextButton}
-                    onClick={handleNextQuestion}
-                >
-                    <span>{(currentQuestionIndex + 1 < totalQuestions) ? "التالي" : "شاشة المراجعة"}</span>
-                    <AllIconsComponenet iconName="arrowLeft" height={16} width={16} color="#FFFFFF" />
-                </button>
-
+                </div>
             </div>
         </div>
     );
