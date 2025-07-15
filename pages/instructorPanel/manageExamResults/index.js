@@ -407,7 +407,7 @@ const Index = () => {
             const response = await getRouteAPI(body)
             
             // Handle the new backend response structure
-            const responseData = response.data || response.body ? JSON.parse(response.body || response.data) : response
+            const responseData = response.data.data || JSON.parse(response.data.data)
             
             if (!responseData.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam results')
@@ -483,7 +483,7 @@ const Index = () => {
             const response = await getRouteAPI(body)
             
             // Handle the new backend response structure
-            const responseData = response.data || response.body ? JSON.parse(response.body || response.data) : response
+            const responseData = response.data.data || JSON.parse(response.data.data)
             
             if (!responseData.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam terminations')
@@ -558,7 +558,7 @@ const Index = () => {
             const response = await getRouteAPI(body)
             
             // Handle the new backend response structure
-            const responseData = response.data || response.body ? JSON.parse(response.body || response.data) : response
+            const responseData = response.data.data || JSON.parse(response.data.data)
             
             if (!responseData.success) {
                 throw new Error(responseData.message || 'Failed to download exam result')
