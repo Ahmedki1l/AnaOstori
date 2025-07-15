@@ -420,6 +420,7 @@ const Index = () => {
                 studentName: result.student?.fullName || result.student?.firstName || 'الاسم غير موجود',
                 studentAvatar: result.student?.avatar,
                 studentId: result.student?.id,
+                studentPhone: result.student?.phone,
                 examName: result.examName,
                 examId: result.examId,
                 score: result.score,

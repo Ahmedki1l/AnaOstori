@@ -31,11 +31,6 @@ const ModelForViewExamResults = ({
             title="تفاصيل نتيجة الاختبار"
             open={isModelForViewExamResults}
             onCancel={handleCancel}
-            footer={[
-                <button key="close" className="secondaryBtn" onClick={handleCancel}>
-                    إغلاق
-                </button>
-            ]}
             width={700}
             className={styles.viewModal}
         >
@@ -45,17 +40,16 @@ const ModelForViewExamResults = ({
                     <h3>معلومات الطالب</h3>
                     <div className={styles.studentInfo}>
                         <div className={styles.studentAvatar}>
-                            <img 
-                                src={examResult.studentAvatar || '/images/default-avatar.png'} 
-                                alt="Student Avatar"
-                                onError={(e) => {
-                                    e.target.src = '/images/default-avatar.png'
-                                }}
-                            />
+                            {examResult.studentAvatar &&
+                                <img
+                                    src={examResult.studentAvatar}
+                                    alt="Student Avatar"
+                                />
+                            }
                         </div>
                         <div className={styles.studentDetails}>
                             <h4>{examResult.studentName}</h4>
-                            <p>رقم الطالب: {examResult.studentId || 'غير محدد'}</p>
+                            <p>رقم الهاتف: {examResult.studentPhone || 'لا يوجد'}</p>
                         </div>
                     </div>
                 </div>
