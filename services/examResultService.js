@@ -137,38 +137,48 @@ export const examResultService = {
      * @returns {Object} - Formatted results data
      */
     prepareExamResults(examData, allReviewQuestions, allExamQuestions, elapsedTime, distractionEvents = [], distractionStrikes = 0) {
-        const flatReviewQuestions = allReviewQuestions.flat()
-        const flatExamQuestions = allExamQuestions.flat()
+        const flatReviewQuestions = allReviewQuestions.flat();
+        const flatExamQuestions = allExamQuestions.flat();
 
-        const totalQuestions = flatReviewQuestions.length
-        const correctAnswers = flatReviewQuestions.filter((question, index) => 
-            question.selectedAnswer === flatExamQuestions[index]?.correctAnswer
-        ).length
+        const totalQuestions = flatReviewQuestions.length;
+        let correctAnswers = 0;
 
-        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0
+        // Map reviewQuestions to required schema and count correct answers
+        const reviewQuestions = flatReviewQuestions.map((q, index) => {
+            const examQ = flatExamQuestions[index] || {};
+            const isCorrect = q.selectedAnswer === examQ.correctAnswer;
+            if (isCorrect) correctAnswers++;
+
+            return {
+                questionId: typeof q.id === 'string' ? q.id : (q.id ? String(q.id) : ''),
+                selectedAnswer: typeof q.selectedAnswer === 'string' ? q.selectedAnswer : (q.selectedAnswer ? String(q.selectedAnswer) : ''),
+                isCorrect,
+                isMarked: !!q.isMarked,
+                answered: !!q.answered,
+                timeSpent: q.timeSpent ? String(q.timeSpent) : undefined
+            };
+        });
+
+        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
 
         const results = {
             totalQuestions,
             score,
             correctQuestions: correctAnswers,
             wrongQuestions: totalQuestions - correctAnswers,
-            unansweredQuestions: flatReviewQuestions.filter(q => !q.answered).length,
-            markedQuestions: flatReviewQuestions.filter(q => q.isMarked).length,
+            unansweredQuestions: reviewQuestions.filter(q => !q.answered).length,
+            markedQuestions: reviewQuestions.filter(q => q.isMarked).length,
             timeSpent: this.calculateTotalTime(elapsedTime),
             totalTime: examData.duration + ":00",
             sections: this.prepareSectionsData(examData, allReviewQuestions, allExamQuestions),
             sectionDetails: this.prepareSectionDetails(examData, allReviewQuestions, allExamQuestions, elapsedTime),
-            reviewQuestions: flatReviewQuestions.map(q => ({
-                ...q,
-                questionId: q.id,
-                id: undefined
-            })),
+            reviewQuestions,
             distractionEvents,
             distractionStrikes,
             examDate: new Date().toISOString()
-        }
+        };
 
-        return results
+        return results;
     },
 
     /**
