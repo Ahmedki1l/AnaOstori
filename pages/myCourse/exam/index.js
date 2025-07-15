@@ -284,10 +284,10 @@ const ExamPage = () => {
             setExamStage('results');
         }
 
-        // Align allReviewQuestions to match examData
-        if (selectedExam && allReviewQuestions) {
-            setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
-        }
+        // // Align allReviewQuestions to match examData
+        // if (selectedExam && allReviewQuestions) {
+        //     setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
+        // }
     };
 
     // Function to submit exam results with termination reason
@@ -989,12 +989,12 @@ const ExamPage = () => {
         });
     }
 
-    // Before using allReviewQuestions for results/review, always align:
-    useEffect(() => {
-        if (selectedExam && allReviewQuestions) {
-            setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
-        }
-    }, [selectedExam, examStage]);
+    // // Before using allReviewQuestions for results/review, always align:
+    // useEffect(() => {
+    //     if (selectedExam && allReviewQuestions) {
+    //         setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
+    //     }
+    // }, [selectedExam, examStage]);
 
     useEffect(() => {
       console.log('Exam Results Submission Check:', {
