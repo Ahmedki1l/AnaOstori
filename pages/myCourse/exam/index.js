@@ -870,10 +870,10 @@ const ExamPage = () => {
                 isFirstRun.current = false;
             }
 
-            // Automatically submit exam results when exam is completed
-            if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
-                await submitExamResults();
-            }
+            // // Automatically submit exam results when exam is completed
+            // if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
+            //     await submitExamResults();
+            // }
 
             setExamStage('results');
         }
