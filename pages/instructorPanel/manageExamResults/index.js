@@ -404,7 +404,7 @@ const Index = () => {
                 page,
                 limit
             }
-            const response = await postRouteAPI(body)
+            const response = await getRouteAPI(body)
             
             // Handle the new backend response structure
             const responseData = response.data || response.body ? JSON.parse(response.body || response.data) : response
@@ -480,7 +480,7 @@ const Index = () => {
                 page: 1,
                 limit: 100
             }
-            const response = await postRouteAPI(body)
+            const response = await getRouteAPI(body)
             
             // Handle the new backend response structure
             const responseData = response.data || response.body ? JSON.parse(response.body || response.data) : response
@@ -555,7 +555,7 @@ const Index = () => {
                 routeName: 'downloadExamResult',
                 resultId: record._id || record.id // Use MongoDB ObjectId
             }
-            const response = await postRouteAPI(body)
+            const response = await getRouteAPI(body)
             
             // Handle the new backend response structure
             const responseData = response.data || response.body ? JSON.parse(response.body || response.data) : response
