@@ -1,4 +1,4 @@
-import { postAuthRouteAPI } from './apisService'
+import { getRouteAPI, postAuthRouteAPI } from './apisService'
 import { getNewToken } from './fireBaseAuthService'
 
 /**
@@ -80,7 +80,7 @@ export const examResultService = {
                 studentId: studentId
             }
 
-            const response = await postAuthRouteAPI(requestData)
+            const response = await getRouteAPI(requestData)
             return response
         } catch (error) {
             console.error('Error fetching student exam result:', error)

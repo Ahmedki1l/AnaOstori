@@ -1004,8 +1004,8 @@ const ExamPage = () => {
         allReviewQuestions,
         allExamQuestions
       });
-      if (examStage === 'results' && !examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
-        if (distractionStrikes >= 3 || examStage === 'results' && isDistracted) {
+      if (examStage === 'results' && selectedExam && allReviewQuestions && allExamQuestions) {
+        if (distractionStrikes >= 3) {
           // If terminated, submit with termination reason
           submitExamResultsWithTermination('terminated_or_cheating');
         } else {

@@ -94,6 +94,9 @@ const Index = () => {
     const [searchText, setSearchText] = useState('')
     const [terminationsSearchText, setTerminationsSearchText] = useState('')
     const [activeTab, setActiveTab] = useState('results')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
+    const [totalResults, setTotalResults] = useState(0)
 
     const tableColumns = [
         {
@@ -316,10 +319,11 @@ const Index = () => {
 
     useEffect(() => {
         if (selectedExam) {
-            getExamResultsList(selectedExam);
-            getExamTerminationsList(selectedExam);
+            getExamResultsList(selectedExam, currentPage, pageSize)
+            getExamTerminationsList(selectedExam)
         }
-    }, [selectedExam]);
+        // eslint-disable-next-line
+    }, [selectedExam, currentPage, pageSize])
 
     const fetchSimulationExamFolders = async (pageNumber = 1) => {
         setLoadingFolders(true)
@@ -391,12 +395,14 @@ const Index = () => {
         setExamTerminationsList([]);
     };
 
-    const getExamResultsList = async (examId) => {
+    const getExamResultsList = async (examId, page = currentPage, limit = pageSize) => {
         setLoading(true)
         try {
             const body = {
                 routeName: 'getExamResults',
-                examId: examId
+                examId: examId,
+                page,
+                limit
             }
             const response = await postRouteAPI(body)
             
@@ -435,6 +441,7 @@ const Index = () => {
                 distractionStrikes: result.distractionStrikes || 0
             }))
             setExamResultsList(results || [])
+            setTotalResults(responseData.total || responseData.totalCount || 0)
         } catch (error) {
             console.error('Error fetching exam results:', error)
             if (TESTING_MODE) {
@@ -451,10 +458,11 @@ const Index = () => {
                     submissionType: result.isTerminated ? 'terminated' : 'completed'
                 }))
                 setExamResultsList(results)
+                setTotalResults(results.length)
                 console.log('Using mock exam results for testing')
             } else if (error?.response?.status === 401) {
                 await getNewToken()
-                getExamResultsList()
+                getExamResultsList(examId, page, limit)
             } else {
                 message.error('فشل في جلب نتائج الاختبارات')
             }
@@ -850,10 +858,16 @@ const Index = () => {
                                                 loading={loading}
                                                 locale={{ emptyText: customEmptyComponent }}
                                                 pagination={{
-                                                    pageSize: 10,
+                                                    current: currentPage,
+                                                    pageSize: pageSize,
+                                                    total: totalResults,
                                                     showSizeChanger: true,
                                                     showQuickJumper: true,
-                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة`
+                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة`,
+                                                    onChange: (page, pageSize) => {
+                                                        setCurrentPage(page)
+                                                        setPageSize(pageSize)
+                                                    }
                                                 }}
                                             />
                                         </div>
