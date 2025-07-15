@@ -158,7 +158,11 @@ export const examResultService = {
             totalTime: examData.duration + ":00",
             sections: this.prepareSectionsData(examData, allReviewQuestions, allExamQuestions),
             sectionDetails: this.prepareSectionDetails(examData, allReviewQuestions, allExamQuestions, elapsedTime),
-            reviewQuestions: flatReviewQuestions,
+            reviewQuestions: flatReviewQuestions.map(q => ({
+                ...q,
+                questionId: q.id,
+                id: undefined
+            })),
             distractionEvents,
             distractionStrikes,
             examDate: new Date().toISOString()
