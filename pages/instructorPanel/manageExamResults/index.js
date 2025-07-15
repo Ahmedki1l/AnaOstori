@@ -409,7 +409,7 @@ const Index = () => {
             // Handle the new backend response structure
             const responseData = response.data.data || JSON.parse(response.data.data)
             
-            if (!responseData.success) {
+            if (!response.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam results')
             }
             
@@ -485,7 +485,7 @@ const Index = () => {
             // Handle the new backend response structure
             const responseData = response.data.data || JSON.parse(response.data.data)
             
-            if (!responseData.success) {
+            if (!response.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam terminations')
             }
             
@@ -560,7 +560,7 @@ const Index = () => {
             // Handle the new backend response structure
             const responseData = response.data.data || JSON.parse(response.data.data)
             
-            if (!responseData.success) {
+            if (!response.success) {
                 throw new Error(responseData.message || 'Failed to download exam result')
             }
             
