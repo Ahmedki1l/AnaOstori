@@ -415,30 +415,34 @@ const Index = () => {
             
             const results = responseData.data?.map(result => ({
                 ...result,
-                key: result._id || result.id, // MongoDB uses _id, but we need id for table
-                id: result._id || result.id, // Ensure we have both _id and id
-                studentName: result.student?.fullName || result.student?.firstName || 'Unknown Student',
+                key: result._id,
+                id: result._id,
+                studentName: result.student?.fullName || result.student?.firstName || 'الاسم غير موجود',
                 studentAvatar: result.student?.avatar,
-                studentId: result.student?.id || result.studentId,
-                examName: result.exam?.name || result.examData?.examName || 'Unknown Exam',
-                examId: result.exam?.id || result.examId,
-                score: result.score || result.examData?.score || 0,
-                status: (result.score || result.examData?.score || 0) >= 60 ? 'pass' : 'fail',
-                examDate: result.examDate || result.examData?.examDate,
-                uploadDate: result.createdAt || result.uploadDate,
-                isTerminated: result.isTerminated || false,
-                terminationReason: result.terminationReason || null,
-                submissionType: result.submissionType || (result.isTerminated ? 'terminated' : 'completed'),
-                // Additional fields from the new structure
-                totalQuestions: result.totalQuestions || result.examData?.totalQuestions,
-                correctAnswers: result.correctAnswers || result.examData?.correctAnswers,
-                wrongAnswers: result.wrongAnswers || result.examData?.wrongAnswers,
-                timeSpent: result.timeSpent || result.examData?.timeSpent,
-                totalTime: result.totalTime || result.examData?.totalTime,
-                sections: result.sections || [],
-                sectionDetails: result.sectionDetails || [],
-                distractionEvents: result.distractionEvents || [],
-                distractionStrikes: result.distractionStrikes || 0
+                studentId: result.student?.id,
+                examName: result.examName,
+                examId: result.examId,
+                score: result.score,
+                status: result.status, // use backend status directly
+                examDate: result.examDate,
+                uploadDate: result.createdAt,
+                isTerminated: result.isTerminated,
+                terminationReason: result.terminationReason,
+                submissionType: result.submissionType,
+                totalQuestions: result.totalQuestions,
+                correctAnswers: result.correctAnswers,
+                wrongAnswers: result.wrongAnswers,
+                timeSpent: result.timeSpent,
+                totalTime: result.totalTime,
+                sections: result.sections,
+                sectionDetails: result.sectionDetails,
+                distractionEvents: result.distractionEvents,
+                distractionStrikes: result.distractionStrikes,
+                markedQuestions: result.markedQuestions,
+                unansweredQuestions: result.unansweredQuestions,
+                isCompleted: result.isCompleted,
+                examDuration: result.examDuration,
+                reviewQuestions: result.reviewQuestions
             }))
             setExamResultsList(results || [])
             setTotalResults(responseData.total || responseData.totalCount || 0)
