@@ -137,35 +137,15 @@ export const examResultService = {
      * @returns {Object} - Formatted results data
      */
     prepareExamResults(examData, allReviewQuestions, allExamQuestions, elapsedTime, distractionEvents = [], distractionStrikes = 0) {
-        const flatReviewQuestions = allReviewQuestions.flat();
-        const flatExamQuestions = allExamQuestions.flat();
+        const flatReviewQuestions = allReviewQuestions.flat()
+        const flatExamQuestions = allExamQuestions.flat()
 
-        const totalQuestions = flatReviewQuestions.length;
-        const correctAnswers = flatReviewQuestions.filter((question, index) =>
+        const totalQuestions = flatReviewQuestions.length
+        const correctAnswers = flatReviewQuestions.filter((question, index) => 
             question.selectedAnswer === flatExamQuestions[index]?.correctAnswer
-        ).length;
+        ).length
 
-        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-
-        // Map reviewQuestions to match backend schema
-        const mappedReviewQuestions = flatReviewQuestions.map((question, index) => {
-            const correctAnswer = flatExamQuestions[index]?.correctAnswer;
-            return {
-                questionId: question.id || question._id || question.questionId || '',
-                selectedAnswer: typeof question.selectedAnswer === 'string' ? question.selectedAnswer : (question.selectedAnswer ? String(question.selectedAnswer) : ''),
-                isCorrect: question.selectedAnswer === correctAnswer,
-                isMarked: !!question.isMarked,
-                answered: !!question.answered,
-                timeSpent: question.timeSpent ? String(question.timeSpent) : undefined
-            };
-        });
-
-        // Map distractionEvents to match backend schema
-        const mappedDistractionEvents = (distractionEvents || []).map(evt => ({
-            timestamp: evt.time ? new Date(evt.time).toISOString() : (evt.timestamp ? evt.timestamp : new Date().toISOString()),
-            eventType: evt.type || evt.eventType || '',
-            description: evt.description || undefined
-        }));
+        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0
 
         const results = {
             totalQuestions,
@@ -178,13 +158,13 @@ export const examResultService = {
             totalTime: examData.duration + ":00",
             sections: this.prepareSectionsData(examData, allReviewQuestions, allExamQuestions),
             sectionDetails: this.prepareSectionDetails(examData, allReviewQuestions, allExamQuestions, elapsedTime),
-            reviewQuestions: mappedReviewQuestions,
-            distractionEvents: mappedDistractionEvents,
+            reviewQuestions: flatReviewQuestions,
+            distractionEvents,
             distractionStrikes,
             examDate: new Date().toISOString()
-        };
+        }
 
-        return results;
+        return results
     },
 
     /**
