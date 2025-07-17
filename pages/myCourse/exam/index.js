@@ -126,30 +126,30 @@ const ExamPage = () => {
     const storeData = useSelector((state) => state?.globalStore);
     const accessToken = storeData?.accessToken;
     // Enhanced authentication logic
-    // useEffect(() => {
-    //     async function checkAuth() {
-    //         if (!accessToken) {
-    //             try {
-    //                 const newToken = await getNewToken();
-    //                 if (newToken) {
-    //                     dispatch({ type: 'ADD_AUTH_TOKEN', accessToken: newToken });
-    //                     return;
-    //                 }
-    //             } catch (err) {
-    //                 // Token refresh failed, proceed to login
-    //             }
-    //             // Save returnUrl and redirect to login
-    //             dispatch({ type: 'SET_RETURN_URL', returnUrl: router.asPath });
-    //             if (router.asPath !== '/login') {
-    //                 router.replace('/login');
-    //             }
-    //         }
-    //     }
-    //     checkAuth();
-    // }, [accessToken, router, dispatch]);
-    // if (!accessToken) {
-    //     return <Spinner />;
-    // }
+    useEffect(() => {
+        async function checkAuth() {
+            if (!accessToken) {
+                try {
+                    const newToken = await getNewToken();
+                    if (newToken) {
+                        dispatch({ type: 'ADD_AUTH_TOKEN', accessToken: newToken });
+                        return;
+                    }
+                } catch (err) {
+                    // Token refresh failed, proceed to login
+                }
+                // Save returnUrl and redirect to login
+                dispatch({ type: 'SET_RETURN_URL', returnUrl: router.asPath });
+                if (router.asPath !== '/login') {
+                    router.replace('/login');
+                }
+            }
+        }
+        checkAuth();
+    }, [accessToken, router, dispatch]);
+    if (!accessToken) {
+        return <Spinner />;
+    }
     const { examId } = router.query;
     const isFirstRun = useRef(true);
     const isAbleToAddTime = useRef(false);
