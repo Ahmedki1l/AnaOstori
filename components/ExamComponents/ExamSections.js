@@ -83,7 +83,7 @@ const ExamSections = ({ examData, onStartExam }) => {
                 </div>
             ))}
 
-            <div className={styles.examActions}>
+            <div className={styles.examActionsAbsolute}>
                 <button className={styles.nextButton} onClick={onStartExam}>
                     <span>التالي</span>
                     <AllIconsComponenet iconName="arrowLeftIcon" height={16} width={16} color="#FFFFFF" />

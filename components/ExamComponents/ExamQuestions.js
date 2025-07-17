@@ -179,7 +179,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                 </button>
             </div>
 
-            <div className={styles.centerContainer}>
+            <div className={styles.centerContainer2}>
                 <div className={styles.questionSidebar}>
                     {currentQuestion.type === "contextual" && (
                         <div className={styles.questionContext}>
