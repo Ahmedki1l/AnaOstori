@@ -26,7 +26,6 @@ export default function ImageLightbox({ src, alt }) {
         <div
           className={styles.imageContainer}
           onClick={() => setOpen(true)}
-          style={{ position: 'relative', width: '100%', aspectRatio: '16/10', minHeight: 120 }}
         >
           {loading && (
             <div style={{ minHeight: 120, minWidth: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -52,7 +51,7 @@ export default function ImageLightbox({ src, alt }) {
           className={styles.lightboxOverlay}
           onClick={() => setOpen(false)}
         >
-          <div style={{ position: 'relative', width: '90vw', maxWidth: '90vw', aspectRatio: '16/10', margin: '0 auto' }}>
+          <div className={styles.lightboxImageContainer}>
             {overlayLoading && (
               <div style={{ minHeight: 200, minWidth: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Spinner width={"3"} height={"3"} />
@@ -65,7 +64,6 @@ export default function ImageLightbox({ src, alt }) {
               fill
               onLoadingComplete={() => { setOverlayLoading(false); console.log('Overlay image loaded:', src); }}
               onError={(e) => { setOverlayLoading(false); console.log('Overlay image failed to load:', src, e); }}
-              style={{ objectFit: 'contain', display: overlayLoading ? 'none' : 'block', borderRadius: 4, boxShadow: '0 0 16px rgba(0,0,0,0.5)' }}
               unoptimized={false}
               priority={true}
             />

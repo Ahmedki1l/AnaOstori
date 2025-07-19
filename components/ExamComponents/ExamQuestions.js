@@ -198,9 +198,9 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                     </div>
 
                     <div className={styles.questionBody}>
-                        <p className={styles.questionText}>
+                        {currentQuestion?.text && <p className={styles.questionText}>
                             {renderQuestionText()}
-                        </p>
+                        </p>}
 
                         {/* — Question‐level image, if any — */}
                         {currentQuestion.questionImages && (
