@@ -127,7 +127,7 @@ const ReviewSection = ({
                                         <div className={styles.textGroup}>
                                             <div className={styles.text}>{questionLabel} {index + 1}</div>
                                             {question.isMarked ?
-                                                <div style={{ width: '24px', height: '24px' }} >
+                                                <div className={styles.svgIcon} >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                         <g clip-path="url(#clip0_194_8160)">
                                                             <path d="M12.36 6H7V12H14.24L14.64 14H18V8H12.76L12.36 6Z" fill="#F26722" />
@@ -141,7 +141,7 @@ const ReviewSection = ({
                                                     </svg>
                                                 </div>
                                                 :
-                                                <div style={{ width: '24px', height: '24px' }} >
+                                                <div className={styles.svgIcon} >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                         <g clip-path="url(#clip0_194_8168)">
                                                             <path d="M14.4 6L14 4H5V21H7V14H12.6L13 16H20V6H14.4ZM18 14H14.64L14.24 12H7V6H12.36L12.76 8H18V14Z" fill="black" />

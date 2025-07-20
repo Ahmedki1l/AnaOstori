@@ -133,7 +133,9 @@ const ReviewAnswers = ({
                             <path d="M9.4 2.5L9 0.5H0V17.5H2V10.5H7.6L8 12.5H15V2.5H9.4ZM13 10.5H9.64L9.24 8.5H2V2.5H7.36L7.76 4.5H13V10.5Z" fill={isCurrentQuestionMarked ? "white" : "#F26722"} />
                         </svg>
                     </div>
-                    <span>{isCurrentQuestionMarked ? "تم التمييز" : "تمييز السؤال"}</span>
+                    {typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches ? null : (
+                        <span>{isCurrentQuestionMarked ? "تم التمييز" : "تمييز السؤال"}</span>
+                    )}
                 </button>
             </div>
 
