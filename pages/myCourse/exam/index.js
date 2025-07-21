@@ -788,9 +788,28 @@ const ExamPage = () => {
     };
 
 
-    const handleIntroductionBtn = () => {
-        setDisplayExamData(mockExamData1);
-        setExamStage('sections');
+    const handleIntroductionBtn = async () => {
+        setLoading(true);
+        try {
+            const studentId = storeData?.viewProfileData?.id;
+            if (!studentId || !examId) {
+                toast.error('حدث خطأ في بيانات المستخدم أو الامتحان');
+                setLoading(false);
+                return;
+            }
+            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
+            if (hasTaken) {
+                toast.error('لقد قمت بأداء هذا الاختبار من قبل ولا يمكنك إعادة الدخول.');
+                setLoading(false);
+                return;
+            }
+            setDisplayExamData(mockExamData1);
+            setExamStage('sections');
+        } catch (err) {
+            toast.error('حدث خطأ أثناء التحقق من حالة الاختبار.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSectionsBtn = () => {
