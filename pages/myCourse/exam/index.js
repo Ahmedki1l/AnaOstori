@@ -178,6 +178,7 @@ const ExamPage = () => {
     const [distractionStrikes, setDistractionStrikes] = useState(0);
     const [isDistracted, setIsDistracted] = useState(false);
     const [distractionStartTime, setDistractionStartTime] = useState(null);
+    const [terminationReason, setTerminationReason] = useState(null);
     const distractionStrikeTimerRef = useRef(null);
     const continuousDistractionTimerRef = useRef(null);
 
@@ -206,7 +207,8 @@ const ExamPage = () => {
 
                     if (newStrikes >= 3) {
                         console.warn('3 strikes reached - terminating exam');
-                        handleExamTermination('three_strikes');
+                        setTerminationReason('three_strikes');
+                        // handleExamTermination('three_strikes');
                     }
 
                     return newStrikes;
@@ -221,13 +223,27 @@ const ExamPage = () => {
         // postAuthRouteAPI({ routeName:'logDistraction', examId, type, timestamp: currentTime })
     };
 
+    useEffect(() => {
+        if (distractionStrikes >= 3) {
+            // Force exam to results stage
+            if (examStage !== 'results') {
+                setExamStage('results');
+            }
+        }
+    }, [distractionStrikes]);
+
     // Handle continuous distraction detection
     const handleContinuousDistraction = (isContinuous) => {
         if (isContinuous) {
             // Start 30-second timer for continuous distraction
             continuousDistractionTimerRef.current = setTimeout(() => {
                 console.warn('Continuous distraction detected for 30 seconds - terminating exam');
-                handleExamTermination('continuous_distraction_30_seconds');
+                setTerminationReason('continuous_distraction_30_seconds');
+                // handleExamTermination('continuous_distraction_30_seconds');
+                // Force exam to results stage
+                if (examStage !== 'results') {
+                    setExamStage('results');
+                }
             }, 30000); // 30 seconds
         } else {
             // Clear the continuous distraction timer when user returns
@@ -239,8 +255,8 @@ const ExamPage = () => {
     };
 
     // Handle exam termination
-    const handleExamTermination = async (reason) => {
-        console.warn('Exam terminated due to:', reason);
+    const handleExamTermination = async () => {
+        console.warn('Exam terminated due to:', terminationReason);
 
         // Clear all timers
         if (distractionStrikeTimerRef.current) {
@@ -256,7 +272,7 @@ const ExamPage = () => {
         // Submit exam results even if terminated (with termination reason)
         if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
             try {
-                await submitExamResultsWithTermination(reason);
+                await submitExamResultsWithTermination();
             } catch (error) {
                 console.error('Error submitting terminated exam results:', error);
             }
@@ -266,7 +282,7 @@ const ExamPage = () => {
         const terminationData = {
             routeName: 'logExamTermination',
             examId,
-            reason,
+            reason: terminationReason,
             distractionEvents,
             distractionStrikes,
             timestamp: Date.now()
@@ -291,7 +307,7 @@ const ExamPage = () => {
     };
 
     // Function to submit exam results with termination reason
-    const submitExamResultsWithTermination = async (terminationReason) => {
+    const submitExamResultsWithTermination = async () => {
         if (submittingResults || examResultsSubmitted) return;
 
         try {
@@ -756,8 +772,7 @@ const ExamPage = () => {
                 "قم بمراجعة كل اسئلتك وإجاباتك.",
                 "قم بمراجعة الأسئلة غير المكتملة.",
                 "قم بمراجعة الأسئلة المميزة بعلامة للمراجعة. (انقر فوق الرمز \"تمييز\" لتغيير العلامة الخاصة بحالة المراجعة.)"
-            ],
-            conclusion: "يمكنك أيضًا النقر فوق رقم سؤال لربطه مباشرة بموقعه في الاختبار."
+            ]
         },
         sectionTitle: "الباب الأول",
         buttonLabels: {
@@ -889,7 +904,7 @@ const ExamPage = () => {
             // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
 
-            if (!studentId|| !examId) {
+            if (!studentId || !examId) {
                 console.error('Missing required data for exam submission:', { studentId, examId });
                 return;
             }
@@ -997,22 +1012,22 @@ const ExamPage = () => {
     // }, [selectedExam, examStage]);
 
     useEffect(() => {
-      console.log('Exam Results Submission Check:', {
-        examStage,
-        examResultsSubmitted,
-        selectedExam,
-        allReviewQuestions,
-        allExamQuestions
-      });
-      if (examStage === 'results' && selectedExam && allReviewQuestions && allExamQuestions) {
-        if (distractionStrikes >= 3) {
-          // If terminated, submit with termination reason
-          submitExamResultsWithTermination('terminated_or_cheating');
-        } else {
-          // Normal completion
-          submitExamResults();
+        console.log('Exam Results Submission Check:', {
+            examStage,
+            examResultsSubmitted,
+            selectedExam,
+            allReviewQuestions,
+            allExamQuestions
+        });
+        if (examStage === 'results' && selectedExam && allReviewQuestions && allExamQuestions) {
+            if (distractionStrikes >= 3) {
+                // If terminated, submit with termination reason
+                submitExamResultsWithTermination('terminated_or_cheating');
+            } else {
+                // Normal completion
+                submitExamResults();
+            }
         }
-      }
     }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions]);
 
     if (loading) {

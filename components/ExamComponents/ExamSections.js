@@ -41,11 +41,11 @@ const ExamSections = ({ examData, onStartExam }) => {
                 {examData?.details && examData.details.map((detail, index) => (
                     <div key={index} className={styles.detailItem}>
                         <div className={styles.detailIcon}>
-                            <AllIconsComponenet iconName={detail.iconName} height={20} width={20} color="#00A3FF" />
+                            <AllIconsComponenet iconName={detail?.iconName} height={20} width={20} color="#00A3FF" />
                         </div>
                         <div className={styles.detailText}>
-                            <p className={styles.detailTitle}>{detail.title}</p>
-                            <p className={styles.detailDescription}>{detail.description}</p>
+                            <p className={styles.detailTitle}>{detail?.title}</p>
+                            <p className={styles.detailDescription}>{detail?.description}</p>
                         </div>
                     </div>
                 ))}
@@ -63,17 +63,17 @@ const ExamSections = ({ examData, onStartExam }) => {
                             <div key={dIdx} className={styles.detailItem}>
                                 <div className={styles.detailIcon}>
                                     <AllIconsComponenet
-                                        iconName={detail.iconName}
+                                        iconName={detail?.iconName}
                                         height={20}
                                         width={20}
                                         color="#00A3FF"
                                     />
                                 </div>
                                 <div className={styles.detailText}>
-                                    <p className={styles.detailTitle}>{detail.title}</p>
-                                    {detail.description && (
+                                    <p className={styles.detailTitle}>{detail?.title}</p>
+                                    {detail?.description && (
                                         <p className={styles.detailDescription}>
-                                            {detail.description}
+                                            {detail?.description}
                                         </p>
                                     )}
                                 </div>

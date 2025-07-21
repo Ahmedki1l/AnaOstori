@@ -145,6 +145,7 @@
     font-weight: 600;
     color: #000000;
     margin-bottom: 4px;
+    text-align: right;
 }
 
 .detailDescription {
@@ -642,7 +643,8 @@
 .sectionTitle {
     font-size: 16px;
     font-weight: 700;
-    text-align: center;
+    text-align: right;
+    margin-bottom: 10px;
     color: #000000;
 }
 
@@ -1355,10 +1357,6 @@
     }
 
     .contextDescription {
-        font-size: 14px;
-    }
-
-    .sectionTitle {
         font-size: 14px;
     }
 

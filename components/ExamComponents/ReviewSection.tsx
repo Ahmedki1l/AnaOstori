@@ -60,6 +60,7 @@ const ReviewSection = ({
     timeLeft,
     CurrentExam
 }) => {
+    const [showConfirm, setShowConfirm] = React.useState(false);
     return (
         <div className={styles.div}>
             <div className={styles.frameParent3}>
@@ -98,18 +99,18 @@ const ReviewSection = ({
                             <div className={styles.text}>{instructionsTitle}</div>
                         </div>
                         <div className={styles.div1}>
-                            {instructions.intro.map((paragraph, idx) => (
+                            {instructions?.intro.map((paragraph, idx) => (
                                 <p key={`intro-${idx}`} className={styles.p}>{paragraph}</p>
                             ))}
                         </div>
                         <div className={styles.div2}>
                             <ol className={styles.ol}>
-                                {instructions.list.map((item, idx) => (
-                                    <li key={`list-${idx}`} className={idx < instructions.list.length - 1 ? styles.li : ''}>{item}</li>
+                                {instructions?.list.map((item, idx) => (
+                                    <li key={`list-${idx}`} className={idx < instructions?.list.length - 1 ? styles.li : ''}>{item}</li>
                                 ))}
                             </ol>
                         </div>
-                        <div className={styles.div1}>{instructions.conclusion}</div>
+                        <div className={styles.div1}>{instructions?.conclusion}</div>
                         <div className={styles.textContainer}>
                             <div className={styles.text}>{sectionTitle}</div>
                         </div>
@@ -163,6 +164,23 @@ const ReviewSection = ({
                 </div>
             </div>
             <div className={styles.frameParent1}>
+                <div className={styles.frameWrapper}>
+                    <div className={styles.textParent8} onClick={() => setShowConfirm(true)}>
+                        <div className={styles.text}>{buttonLabels.finishReview}</div>
+                        <div style={{ width: '24px', height: '24px' }} >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <g clip-path="url(#clip0_194_8196)">
+                                    <path d="M5 5H12V3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H12V19H5V5ZM21 12L17 8V11H9V13H17V16L21 12Z" fill="white" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_194_8196">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
                 <div className={styles.frameParent2}>
                     <div className={styles.textParent8} onClick={onReviewMarked}>
                         <div className={styles.text}>{buttonLabels.reviewMarked}</div>
@@ -193,24 +211,22 @@ const ReviewSection = ({
                         <div className={styles.text}>{buttonLabels.reviewAll}</div>
                     </div>
                 </div>
-                <div className={styles.frameWrapper}>
-                    <div className={styles.textParent8} onClick={onFinishReview}>
-                        <div className={styles.text}>{buttonLabels.finishReview}</div>
-                        <div style={{ width: '24px', height: '24px' }} >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <g clip-path="url(#clip0_194_8196)">
-                                    <path d="M5 5H12V3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H12V19H5V5ZM21 12L17 8V11H9V13H17V16L21 12Z" fill="white" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_194_8196">
-                                        <rect width="24" height="24" fill="white" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
+            </div>
+            {showConfirm && (
+                <div className={styles.confirmOverlay}>
+                    <div className={styles.confirmBox}>
+                        <div className={styles.confirmText}>هل أنت متأكد أنك تريد إنهاء المراجعة؟</div>
+                        <div className={styles.confirmActions}>
+                            <button className={styles.confirmButton} onClick={() => { setShowConfirm(false); onFinishReview(); }}>
+                                تأكيد
+                            </button>
+                            <button className={styles.cancelButton} onClick={() => setShowConfirm(false)}>
+                                إلغاء
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
