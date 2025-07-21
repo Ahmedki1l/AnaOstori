@@ -110,12 +110,18 @@ export const examResultService = {
             const result = await this.getStudentExamResult(examId, studentId)
             
             // Handle the new backend response structure
-            const responseData = result.data || result.body ? JSON.parse(result.body || result.data) : result
-            
+            let responseData;
+            if (result.body || result.data) {
+                const raw = result.body || result.data;
+                responseData = typeof raw === 'string' ? JSON.parse(raw) : raw;
+            } else {
+                responseData = result;
+            }
+
             if (!responseData.success) {
                 return false
             }
-            
+
             return responseData.data && responseData.data.length > 0
         } catch (error) {
             // If no result found, student hasn't taken the exam
