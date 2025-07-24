@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
 import * as PaymentConst from '../../../constants/PaymentConst';
-import TabbyPomoForm from '../PaymentInfoForm/TabbyPromo';
+// import TabbyPomoForm from '../PaymentInfoForm/TabbyPromo';
 
 export default function UserInfoForm(props) {
 	console.log("🚀 ~ UserInfoForm ~ props:", props);
@@ -516,9 +516,9 @@ export default function UserInfoForm(props) {
 												</div>
 											</label>
 											{/* The promo widget is rendered below the radio content without affecting the parent's width */}
-											<div style={{ position: 'absolute', width: '100%', top: '100%' }}>
+											{/* <div style={{ position: 'absolute', width: '100%', top: '100%' }}>
 												<TabbyPomoForm amount={parseFloat(data.label2)} />
-											</div>
+											</div> */}
 										</div>
 									)
 								})}

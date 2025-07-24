@@ -6,7 +6,7 @@ import BankDetailsCard from '../../components/CommonComponents/BankDetailCard/Ba
 import CreditCardDetailForm from '../../components/PaymentPageComponents/PaymentInfoForm/CreditCardDetailForm';
 import MadaCardDetailForm from '../../components/PaymentPageComponents/PaymentInfoForm/MadaCardDetailForm';
 import ApplePayForm from '../../components/PaymentPageComponents/PaymentInfoForm/ApplePayForm';
-import TabbyCheckoutForm from '../../components/PaymentPageComponents/PaymentInfoForm/TabbyCheckout';
+// import TabbyCheckoutForm from '../../components/PaymentPageComponents/PaymentInfoForm/TabbyCheckout';
 import Logo from '../../components/CommonComponents/Logo';
 import * as fbq from '../../lib/fpixel'
 import * as PaymentConst from '../../constants/PaymentConst';
@@ -51,8 +51,8 @@ const CustomeCourses = () => {
     const [paymentType, setPaymentType] = useState("");
     const [checkoutID, setCheckoutId] = useState(null);
     const [isCanMakeApplePay, setIsCanMakeApplePay] = useState(false);
-    const [tabbyUrl, setTabbyUrl] = useState(null);
-    const [tabbyStatus, setTabbyStatus] = useState("");
+    // const [tabbyUrl, setTabbyUrl] = useState(null);
+    // const [tabbyStatus, setTabbyStatus] = useState("");
     const [hyperPayIntegrity, setHyperPayIntegrity] = useState(null);
 
     // User details + page-specific request

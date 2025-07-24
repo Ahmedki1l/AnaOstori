@@ -82,9 +82,9 @@ export default function BuyCourseComponent(props) {
 						)
 					})}
 				</ul>
-				<TabbyPomoForm
+				{/* <TabbyPomoForm
 					amount={courseDetail.discount}
-				/>
+				/> */}
 			</div>
 			{/* <Link href={coursePlanUrl ?? ""} target='_blank' className={`flex items-center justify-center normalLinkText ${styles.downloadPlanBox}`} >
 				<SaveAltIcon className={`text-blue-500`} />

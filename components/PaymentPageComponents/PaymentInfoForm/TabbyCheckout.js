@@ -1,3 +1,4 @@
+// Entire TabbyCheckoutForm component is commented out to disable Tabby payment method.
 import React, { useState } from 'react'
 import Script from 'next/script'
 
@@ -23,7 +24,7 @@ export default function TabbyCheckoutForm({
       {/* Container for Tabby card, full width */}
       <div id="tabbyCard" className="w-full" />
 
-      <Script
+      {/* <Script
         src="https://checkout.tabby.ai/tabby-card.js"
         strategy="afterInteractive"
         onReady={() => {
@@ -47,7 +48,7 @@ export default function TabbyCheckoutForm({
         onError={(e) => {
           console.error('Failed to load tabby-card.js', e);
         }}
-      />
+      /> */}
 
       {/* Show the button ONLY after Tabby is initialized */}
       {isTabbyReady && (

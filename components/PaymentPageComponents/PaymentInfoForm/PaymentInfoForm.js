@@ -16,8 +16,8 @@ import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import { getRouteAPI } from '../../../services/apisService'
 import * as PaymentConst from '../../../constants/PaymentConst'
-import TabbyPomoForm from './TabbyPromo'
-import TabbyCheckoutForm from './TabbyCheckout'
+// import TabbyPomoForm from './TabbyPromo'
+// import TabbyCheckoutForm from './TabbyCheckout'
 import { toast } from 'react-toastify';
 import PaymentConfirmButton from './FreePaymentDetailForm'
 
@@ -245,9 +245,9 @@ export default function PaymentInfoForm(props) {
 							</div>
 						</label>
 						{/* Tabby Payment Option */}
-						<input type="radio" id="tabbyPay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('tabby')}
-						/>
-						<label htmlFor="tabbyPay" className='relative'>
+						{/* <input type="radio" id="tabbyPay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('tabby')}
+						/> */}
+						{/* <label htmlFor="tabbyPay" className='relative'>
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
 								<div className='flex items-center'>
 									<div className={styles.circle}><div></div></div>
@@ -258,7 +258,7 @@ export default function PaymentInfoForm(props) {
 								{/* <TabbyPomoForm
 									amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
 								/> */}
-							</div>
+							{/* </div>
 							<div className={styles.creditCardWrapper}>
 								{(checkoutID && tabbyUrl && paymentType === 'tabby') && (
 									<TabbyCheckoutForm
@@ -270,7 +270,7 @@ export default function PaymentInfoForm(props) {
 									/>
 								)}
 							</div>
-						</label>
+						</label> */}
 						<input type="radio" id="creditCardDetails" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('credit')} />
 						<label htmlFor="creditCardDetails" className='relative'>
 							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
