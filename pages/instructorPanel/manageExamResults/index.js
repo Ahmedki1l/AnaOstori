@@ -16,10 +16,10 @@ import { fullDate } from '../../../constants/DateConverter'
 import Spinner from '../../../components/CommonComponents/spinner'
 import dynamic from 'next/dynamic'
 
-const ModelForDeleteItems = dynamic(() => import('../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'), { ssr: false });
-const ModelForUploadExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForUploadExamResults'), { ssr: false });
-const ModelForViewExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForViewExamResults'), { ssr: false });
-const ModelForViewTermination = dynamic(() => import('../../../components/ManageExamResults/ModelForViewTermination'), { ssr: false });
+import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems';
+import ModelForUploadExamResults from '../../../components/ManageExamResults/ModelForUploadExamResults';
+import ModelForViewExamResults from '../../../components/ManageExamResults/ModelForViewExamResults';
+import ModelForViewTermination from '../../../components/ManageExamResults/ModelForViewTermination';
 import { Tabs } from 'antd';
 
 // TEMPORARY: Disable authentication for testing
