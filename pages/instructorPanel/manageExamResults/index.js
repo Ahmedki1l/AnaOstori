@@ -314,18 +314,6 @@ const Index = () => {
         }
     }, [selectedFolder, selectedExam]);
 
-    useEffect(() => {
-        if (selectedExam && activeTab === 'results') {
-            getExamResultsList(selectedExam, currentPage, pageSize)
-        }
-    }, [selectedExam, currentPage, pageSize, activeTab, getExamResultsList])
-
-    useEffect(() => {
-        if (selectedExam && activeTab === 'terminations') {
-            getExamTerminationsList(selectedExam)
-        }
-    }, [selectedExam, activeTab, getExamTerminationsList])
-
     const fetchSimulationExamFolders = async (pageNumber = 1) => {
         setLoadingFolders(true)
         setSelectedFolder(null)
@@ -693,6 +681,18 @@ const Index = () => {
         termination.examName?.toLowerCase().includes(terminationsSearchText.toLowerCase()) ||
         termination.reason?.toLowerCase().includes(terminationsSearchText.toLowerCase())
     )
+
+    useEffect(() => {
+        if (selectedExam && activeTab === 'results') {
+            getExamResultsList(selectedExam, currentPage, pageSize)
+        }
+    }, [selectedExam, currentPage, pageSize, activeTab, getExamResultsList])
+
+    useEffect(() => {
+        if (selectedExam && activeTab === 'terminations') {
+            getExamTerminationsList(selectedExam)
+        }
+    }, [selectedExam, activeTab, getExamTerminationsList])
 
     const customEmptyComponent = (
         <Empty
