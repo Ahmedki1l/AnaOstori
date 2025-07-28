@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 
 /**
  * ⚠️ IMPORTANT: Before pushing to production, set TESTING_MODE = false
@@ -314,6 +314,20 @@ const Index = () => {
         }
     }, [selectedFolder, selectedExam]);
 
+    useEffect(() => {
+        if (selectedFolder && !selectedExam) {
+            fetchExamsInFolder(selectedFolder._id, 1);
+        }
+    }, [selectedFolder, selectedExam, pageSize, activeTab]);
+
+    useEffect(() => {
+        if (selectedExam) {
+            getExamResultsList(selectedExam, currentPage, pageSize)
+            getExamTerminationsList(selectedExam)
+        }
+        // eslint-disable-next-line
+    }, [selectedExam, currentPage, pageSize, activeTab])
+
     const fetchSimulationExamFolders = async (pageNumber = 1) => {
         setLoadingFolders(true)
         setSelectedFolder(null)
@@ -409,7 +423,7 @@ const Index = () => {
         setExamTerminationsList([]);
     };
 
-    const getExamResultsList = useCallback(async (examId, page = currentPage, limit = pageSize) => {
+    const getExamResultsList = async (examId, page = currentPage, limit = pageSize) => {
         setLoading(true)
         try {
             const body = {
@@ -492,9 +506,9 @@ const Index = () => {
         } finally {
             setLoading(false)
         }
-    }, [currentPage, pageSize])
+    }
 
-    const getExamTerminationsList = useCallback(async (examId) => {
+    const getExamTerminationsList = async (examId) => {
         setTerminationsLoading(true)
         try {
             const body = {
@@ -557,7 +571,7 @@ const Index = () => {
         } finally {
             setTerminationsLoading(false)
         }
-    }, [])
+    }
 
     const handleSearch = (value) => {
         setSearchText(value)
@@ -681,18 +695,6 @@ const Index = () => {
         termination.examName?.toLowerCase().includes(terminationsSearchText.toLowerCase()) ||
         termination.reason?.toLowerCase().includes(terminationsSearchText.toLowerCase())
     )
-
-    useEffect(() => {
-        if (selectedExam && activeTab === 'results') {
-            getExamResultsList(selectedExam, currentPage, pageSize)
-        }
-    }, [selectedExam, currentPage, pageSize, activeTab, getExamResultsList])
-
-    useEffect(() => {
-        if (selectedExam && activeTab === 'terminations') {
-            getExamTerminationsList(selectedExam)
-        }
-    }, [selectedExam, activeTab, getExamTerminationsList])
 
     const customEmptyComponent = (
         <Empty
