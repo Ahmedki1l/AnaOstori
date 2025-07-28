@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
  */
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { Table, Select, Input, Button, Tag, Tooltip } from 'antd'
+import { Table, Select, Input, Button, Tabs, Tag, Tooltip } from 'antd'
 import { UploadOutlined, DownloadOutlined, EyeOutlined, WarningOutlined, ClockCircleOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import Empty from '../../../components/CommonComponents/Empty'
 import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
@@ -20,7 +20,6 @@ const ModelForDeleteItems = dynamic(() => import('../../../components/ManageLibr
 const ModelForUploadExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForUploadExamResults'), { ssr: false });
 const ModelForViewExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForViewExamResults'), { ssr: false });
 const ModelForViewTermination = dynamic(() => import('../../../components/ManageExamResults/ModelForViewTermination'), { ssr: false });
-const Tabs = dynamic(() => import('antd').then((mod) => mod.Tabs), { ssr: false });
 
 // TEMPORARY: Disable authentication for testing
 const TESTING_MODE = false
