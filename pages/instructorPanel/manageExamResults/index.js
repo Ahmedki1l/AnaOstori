@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
  */
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { Table, Select, Input, Button, message, Tabs, Tag, Tooltip } from 'antd'
+import { Table, Select, Input, Button, Tabs, Tag, Tooltip } from 'antd'
 import { UploadOutlined, DownloadOutlined, EyeOutlined, WarningOutlined, ClockCircleOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import Empty from '../../../components/CommonComponents/Empty'
 import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
@@ -499,6 +499,7 @@ const Index = () => {
                     console.error("Error:", error);
                 });
             } else {
+                const { message } = await import('antd');
                 message.error('فشل في جلب نتائج الاختبارات')
             }
         } finally {
@@ -563,6 +564,7 @@ const Index = () => {
                     console.error("Error:", error);
                 });
             } else {
+                const { message } = await import('antd');
                 message.error('فشل في جلب سجلات انتهاء الاختبارات')
             }
         } finally {
@@ -611,6 +613,7 @@ const Index = () => {
             link.click()
             window.URL.revokeObjectURL(url)
         } catch (error) {
+            const { message } = await import('antd');
             message.error('فشل في تحميل النتيجة')
             console.error('Error downloading result:', error)
         }
@@ -628,10 +631,12 @@ const Index = () => {
                 resultId: selectedExamResult._id || selectedExamResult.id // Use MongoDB ObjectId
             }
             await postAuthRouteAPI(body)
+            const { message } = await import('antd');
             message.success('تم حذف النتيجة بنجاح')
             getExamResultsList()
             setIsModelForDeleteItems(false)
         } catch (error) {
+            const { message } = await import('antd');
             message.error('فشل في حذف النتيجة')
             console.error('Error deleting result:', error)
             if (!TESTING_MODE && error?.response?.status === 401) {
@@ -661,10 +666,12 @@ const Index = () => {
                 terminationId: selectedExamResult._id || selectedExamResult.id
             }
             await postAuthRouteAPI(body)
+            const { message } = await import('antd');
             message.success('تم حذف سجل الانتهاء بنجاح')
             getExamTerminationsList()
             setIsModelForDeleteItems(false)
         } catch (error) {
+            const { message } = await import('antd');
             message.error('فشل في حذف سجل الانتهاء')
             console.error('Error deleting termination:', error)
             if (!TESTING_MODE && error?.response?.status === 401) {
