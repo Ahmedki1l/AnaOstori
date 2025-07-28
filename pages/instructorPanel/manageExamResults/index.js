@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
 /**
  * ⚠️ IMPORTANT: Before pushing to production, set TESTING_MODE = false
@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
  */
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 import BackToPath from '../../../components/CommonComponents/BackToPath'
-import { Table, Select, Input, Button, Tabs, Tag, Tooltip } from 'antd'
+import { Table, Select, Input, Button, Tag, Tooltip } from 'antd'
 import { UploadOutlined, DownloadOutlined, EyeOutlined, WarningOutlined, ClockCircleOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import Empty from '../../../components/CommonComponents/Empty'
 import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
@@ -20,6 +20,7 @@ const ModelForDeleteItems = dynamic(() => import('../../../components/ManageLibr
 const ModelForUploadExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForUploadExamResults'), { ssr: false });
 const ModelForViewExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForViewExamResults'), { ssr: false });
 const ModelForViewTermination = dynamic(() => import('../../../components/ManageExamResults/ModelForViewTermination'), { ssr: false });
+const Tabs = dynamic(() => import('antd').then((mod) => mod.Tabs), { ssr: false });
 
 // TEMPORARY: Disable authentication for testing
 const TESTING_MODE = false
@@ -314,18 +315,16 @@ const Index = () => {
     }, [selectedFolder, selectedExam]);
 
     useEffect(() => {
-        if (selectedFolder && !selectedExam) {
-            fetchExamsInFolder(selectedFolder._id, 1);
+        if (selectedExam && activeTab === 'results') {
+            getExamResultsList(selectedExam, currentPage, pageSize)
         }
-    }, [selectedFolder, selectedExam]);
+    }, [selectedExam, currentPage, pageSize, activeTab, getExamResultsList])
 
     useEffect(() => {
-        if (selectedExam) {
-            getExamResultsList(selectedExam, currentPage, pageSize)
+        if (selectedExam && activeTab === 'terminations') {
             getExamTerminationsList(selectedExam)
         }
-        // eslint-disable-next-line
-    }, [selectedExam, currentPage, pageSize])
+    }, [selectedExam, activeTab, getExamTerminationsList])
 
     const fetchSimulationExamFolders = async (pageNumber = 1) => {
         setLoadingFolders(true)
@@ -422,7 +421,7 @@ const Index = () => {
         setExamTerminationsList([]);
     };
 
-    const getExamResultsList = async (examId, page = currentPage, limit = pageSize) => {
+    const getExamResultsList = useCallback(async (examId, page = currentPage, limit = pageSize) => {
         setLoading(true)
         try {
             const body = {
@@ -505,9 +504,9 @@ const Index = () => {
         } finally {
             setLoading(false)
         }
-    }
+    }, [currentPage, pageSize])
 
-    const getExamTerminationsList = async (examId) => {
+    const getExamTerminationsList = useCallback(async (examId) => {
         setTerminationsLoading(true)
         try {
             const body = {
@@ -570,7 +569,7 @@ const Index = () => {
         } finally {
             setTerminationsLoading(false)
         }
-    }
+    }, [])
 
     const handleSearch = (value) => {
         setSearchText(value)
