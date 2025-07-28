@@ -20,7 +20,7 @@ const ModelForDeleteItems = dynamic(() => import('../../../components/ManageLibr
 const ModelForUploadExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForUploadExamResults'), { ssr: false });
 const ModelForViewExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForViewExamResults'), { ssr: false });
 const ModelForViewTermination = dynamic(() => import('../../../components/ManageExamResults/ModelForViewTermination'), { ssr: false });
-const Tabs = dynamic(() => import('antd').then((mod) => mod.Tabs), { ssr: false });
+import { Tabs } from 'antd';
 
 // TEMPORARY: Disable authentication for testing
 const TESTING_MODE = false
