@@ -12,12 +12,14 @@ import Empty from '../../../components/CommonComponents/Empty'
 import { getAuthRouteAPI, postAuthRouteAPI, postRouteAPI, getRouteAPI } from '../../../services/apisService'
 import { getNewToken } from '../../../services/fireBaseAuthService'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
-import ModelForDeleteItems from '../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'
 import { fullDate } from '../../../constants/DateConverter'
-import ModelForUploadExamResults from '../../../components/ManageExamResults/ModelForUploadExamResults'
-import ModelForViewExamResults from '../../../components/ManageExamResults/ModelForViewExamResults'
-import ModelForViewTermination from '../../../components/ManageExamResults/ModelForViewTermination'
 import Spinner from '../../../components/CommonComponents/spinner'
+import dynamic from 'next/dynamic'
+
+const ModelForDeleteItems = dynamic(() => import('../../../components/ManageLibraryComponent/ModelForDeleteItems/ModelForDeleteItems'), { ssr: false });
+const ModelForUploadExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForUploadExamResults'), { ssr: false });
+const ModelForViewExamResults = dynamic(() => import('../../../components/ManageExamResults/ModelForViewExamResults'), { ssr: false });
+const ModelForViewTermination = dynamic(() => import('../../../components/ManageExamResults/ModelForViewTermination'), { ssr: false });
 
 // TEMPORARY: Disable authentication for testing
 const TESTING_MODE = false
@@ -340,9 +342,21 @@ const Index = () => {
             const res = await getAuthRouteAPI(data)
             setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
         } catch (error) {
-            if (TESTING_MODE) {
-                setFolderList([{ _id: 'f1', name: 'مجلد اختبارات 1', createdAt: '2024-01-01', updatedAt: '2024-01-02' }])
-            }
+            await getNewToken().then(async () => {
+                const data = {
+                    routeName: 'getFolderByType',
+                    type: 'simulationExam',
+                    page: pageNumber,
+                    limit: 10
+                }
+                const res = await getAuthRouteAPI(data)
+                setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+            // if (TESTING_MODE) {
+            //     setFolderList([{ _id: 'f1', name: 'مجلد اختبارات 1', createdAt: '2024-01-01', updatedAt: '2024-01-02' }])
+            // }
         } finally {
             setLoadingFolders(false)
         }
@@ -362,9 +376,22 @@ const Index = () => {
             const res = await getRouteAPI(body)
             setExamList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
         } catch (error) {
-            if (TESTING_MODE) {
-                setExamList([{ _id: 'e1', title: 'اختبار محاكي 1', createdAt: '2024-01-03', updatedAt: '2024-01-04' }])
-            }
+            await getNewToken().then(async () => {
+                const body = {
+                    routeName: 'getItem',
+                    folderId: folderId,
+                    type: 'simulationExam',
+                    page: pageNumber,
+                    limit: 10
+                }
+                const res = await getRouteAPI(body)
+                setExamList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+            // if (TESTING_MODE) {
+            //     setExamList([{ _id: 'e1', title: 'اختبار محاكي 1', createdAt: '2024-01-03', updatedAt: '2024-01-04' }])
+            // }
         } finally {
             setLoadingExams(false)
         }
@@ -405,14 +432,14 @@ const Index = () => {
                 limit
             }
             const response = await getRouteAPI(body)
-            
+
             // Handle the new backend response structure
             const responseData = response.data || JSON.parse(response.data)
-            
+
             if (!responseData.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam results')
             }
-            
+
             const results = responseData.data?.map(result => ({
                 ...result,
                 key: result._id,
@@ -466,8 +493,11 @@ const Index = () => {
                 setTotalResults(results.length)
                 console.log('Using mock exam results for testing')
             } else if (error?.response?.status === 401) {
-                await getNewToken()
-                getExamResultsList(examId, page, limit)
+                await getNewToken().then(async () => {
+                    getExamResultsList(examId, page, limit)
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
             } else {
                 message.error('فشل في جلب نتائج الاختبارات')
             }
@@ -486,14 +516,14 @@ const Index = () => {
                 limit: 100
             }
             const response = await getRouteAPI(body)
-            
+
             // Handle the new backend response structure
             const responseData = response.data || JSON.parse(response.data)
-            
+
             if (!response.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam terminations')
             }
-            
+
             const terminations = responseData.data?.map(termination => ({
                 ...termination,
                 key: termination._id || termination.id,
@@ -527,8 +557,11 @@ const Index = () => {
                 setExamTerminationsList(terminations)
                 console.log('Using mock terminations data for testing')
             } else if (error?.response?.status === 401) {
-                await getNewToken()
-                getExamTerminationsList()
+                await getNewToken().then(async () => {
+                    getExamTerminationsList()
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
             } else {
                 message.error('فشل في جلب سجلات انتهاء الاختبارات')
             }
@@ -561,14 +594,14 @@ const Index = () => {
                 resultId: record._id || record.id // Use MongoDB ObjectId
             }
             const response = await getRouteAPI(body)
-            
+
             // Handle the new backend response structure
             const responseData = response.data || JSON.parse(response.data)
-            
+
             if (!response.success) {
                 throw new Error(responseData.message || 'Failed to download exam result')
             }
-            
+
             // Handle file download
             const blob = new Blob([responseData.data || responseData], { type: 'application/pdf' })
             const url = window.URL.createObjectURL(blob)
@@ -602,8 +635,11 @@ const Index = () => {
             message.error('فشل في حذف النتيجة')
             console.error('Error deleting result:', error)
             if (!TESTING_MODE && error?.response?.status === 401) {
-                await getNewToken()
-                handleDeleteConfirm()
+                await getNewToken().then(async () => {
+                    handleDeleteConfirm()
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
             }
         }
     }
@@ -632,8 +668,11 @@ const Index = () => {
             message.error('فشل في حذف سجل الانتهاء')
             console.error('Error deleting termination:', error)
             if (!TESTING_MODE && error?.response?.status === 401) {
-                await getNewToken()
-                handleDeleteTerminationConfirm()
+                await getNewToken().then(async () => {
+                    handleDeleteTerminationConfirm()
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
             }
         }
     }
@@ -650,20 +689,20 @@ const Index = () => {
     )
 
     const customEmptyComponent = (
-        <Empty 
-            emptyText={'لا توجد نتائج اختبارات'} 
-            containerhight={400} 
-            buttonText={'رفع نتائج اختبار'} 
-            onClick={handleUploadExamResults} 
+        <Empty
+            emptyText={'لا توجد نتائج اختبارات'}
+            containerhight={400}
+            buttonText={'رفع نتائج اختبار'}
+            onClick={handleUploadExamResults}
         />
     )
 
     const customEmptyTerminationsComponent = (
-        <Empty 
-            emptyText={'لا توجد سجلات انتهاء اختبارات'} 
-            containerhight={400} 
-            buttonText={null} 
-            onClick={null} 
+        <Empty
+            emptyText={'لا توجد سجلات انتهاء اختبارات'}
+            containerhight={400}
+            buttonText={null}
+            onClick={null}
         />
     )
 
@@ -693,14 +732,14 @@ const Index = () => {
                     ]}
                 />
             </div>
-            <div className={styles.headerWrapper} style={{marginBottom: 0}}>
+            <div className={styles.headerWrapper} style={{ marginBottom: 0 }}>
                 <h1 className={`head2 py-8`}>إدارة نتائج الاختبارات</h1>
             </div>
             <div className={styles.bodysubWrapper}>
                 {/* Stage 1: Only Folders */}
                 {!selectedFolder && !selectedExam && (
                     <div style={{ width: '100%' }}>
-                        <h3 className='mb-4' style={{fontWeight:700, fontSize:20}}>مجلدات الاختبارات المحاكية</h3>
+                        <h3 className='mb-4' style={{ fontWeight: 700, fontSize: 20 }}>مجلدات الاختبارات المحاكية</h3>
                         {loadingFolders ? (
                             <Spinner />
                         ) : folderList.length === 0 ? (
@@ -755,7 +794,7 @@ const Index = () => {
                                 العودة إلى المجلدات
                             </button>
                         </div>
-                        <h3 className='mb-4' style={{fontWeight:700, fontSize:20}}>اختبارات مجلد: <span style={{ color: BRAND_ORANGE }}>{selectedFolder.name}</span></h3>
+                        <h3 className='mb-4' style={{ fontWeight: 700, fontSize: 20 }}>اختبارات مجلد: <span style={{ color: BRAND_ORANGE }}>{selectedFolder.name}</span></h3>
                         {loadingExams ? (
                             <Spinner />
                         ) : examList.length === 0 ? (
@@ -836,7 +875,7 @@ const Index = () => {
                                                 marginRight: 16,
                                             }}
                                         >
-                                            نتائج الاختبارات 
+                                            نتائج الاختبارات
                                             {examResultsList.length > 0 && (
                                                 <span className={styles.customTabBadge}>
                                                     {examResultsList.length}

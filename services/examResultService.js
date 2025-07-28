@@ -148,12 +148,16 @@ export const examResultService = {
 
         const totalQuestions = flatReviewQuestions.length;
         let correctAnswers = 0;
+        let unAnswered = 0;
+        let marked = 0;
 
         // Map reviewQuestions to required schema and count correct answers
         const reviewQuestions = flatReviewQuestions.map((q, index) => {
             const examQ = flatExamQuestions[index] || {};
             const isCorrect = q.selectedAnswer === examQ.correctAnswer;
             if (isCorrect) correctAnswers++;
+            if (!q.answered) unAnswered++;
+            if (q.isMarked) marked++;
 
             return {
                 questionId: typeof q.id === 'string' ? q.id : (q.id ? String(q.id) : ''),
@@ -172,8 +176,8 @@ export const examResultService = {
             score,
             correctQuestions: correctAnswers,
             wrongQuestions: totalQuestions - correctAnswers,
-            unansweredQuestions: reviewQuestions.filter(q => !q.answered).length,
-            markedQuestions: reviewQuestions.filter(q => q.isMarked).length,
+            unansweredQuestions: unAnswered,
+            markedQuestions: marked,
             timeSpent: this.calculateTotalTime(elapsedTime),
             totalTime: examData.duration + ":00",
             sections: this.prepareSectionsData(examData, allReviewQuestions, allExamQuestions),
@@ -204,9 +208,9 @@ export const examResultService = {
             totalSeconds += seconds
         })
 
-        while (totalSeconds > 59) {
-            totalMinutes++
-            totalSeconds -= 60
+        if (totalSeconds > 59) {
+            totalMinutes += Math.floor(totalSeconds / 60);
+            totalSeconds = totalSeconds % 60;
         }
 
         return `${totalMinutes.toString().padStart(2, '0')}:${totalSeconds.toString().padStart(2, '0')}`
@@ -220,23 +224,69 @@ export const examResultService = {
      * @returns {Array} - Sections data
      */
     prepareSectionsData(examData, allReviewQuestions, allExamQuestions) {
-        if (!examData?.sections) return []
-
-        return examData.sections.map((section, sectionIndex) => {
-            const sectionQuestions = allReviewQuestions[sectionIndex] || []
-            const sectionExamQuestions = allExamQuestions[sectionIndex] || []
-
-            const correctInSection = sectionQuestions.filter((question, index) => 
-                question.selectedAnswer === sectionExamQuestions[index]?.correctAnswer
-            ).length
-
+        const flatExamQuestions = allExamQuestions.flat();
+        const flatReviewQuestions = allReviewQuestions.flat();
+    
+        if (!flatExamQuestions || !flatReviewQuestions || flatReviewQuestions.length === 0) {
+            return [];
+        }
+    
+        const sectionMap = new Map();
+    
+        flatExamQuestions.forEach((question, index) => {
+            question?.skills?.forEach(skill => {
+                const sectionTitle = question?.section + " - " + question?.lesson;
+    
+                if (!sectionMap.has(sectionTitle)) {
+                    sectionMap.set(sectionTitle, {
+                        title: sectionTitle,
+                        questions: [],
+                        skills: new Map()
+                    });
+                }
+    
+                const section = sectionMap.get(sectionTitle);
+                section.questions.push({
+                    question,
+                    selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null,
+                    skill: skill.text
+                });
+    
+                if (!section.skills.has(skill.text)) {
+                    section.skills.set(skill.text, []);
+                }
+                section.skills.get(skill.text).push({
+                    question,
+                    selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null
+                });
+            });
+        });
+    
+        return Array.from(sectionMap.values()).map(section => {
+            const correctInSection = section.questions.filter(q =>
+                q.selectedAnswer === q.question.correctAnswer
+            ).length;
+    
+            const skills = Array.from(section.skills.entries()).map(([skillTitle, questions]) => {
+                const correctInSkill = questions.filter(q =>
+                    q.selectedAnswer === q.question.correctAnswer
+                ).length;
+    
+                return {
+                    title: skillTitle,
+                    correctAnswers: correctInSkill,
+                    numberOfQuestions: questions.length,
+                    score: Math.round((correctInSkill / questions.length) * 100)
+                };
+            });
+    
             return {
                 title: section.title,
                 score: correctInSection,
-                totalQuestions: sectionQuestions.length,
-                skills: this.prepareSkillsData(section, sectionQuestions, sectionExamQuestions)
-            }
-        })
+                totalQuestions: section.questions.length,
+                skills: skills
+            };
+        });
     },
 
     /**
@@ -254,9 +304,10 @@ export const examResultService = {
                 sectionExamQuestions[index]?.skills?.some(s => s.text === skill.text)
             )
 
-            const correctInSkill = skillQuestions.filter((question, index) => 
-                question.selectedAnswer === sectionExamQuestions[index]?.correctAnswer
-            ).length
+            const correctInSkill = skillQuestions.filter((question, index) => {
+                const examQuestion = sectionExamQuestions.find(eq => eq._id === question.id);
+                return examQuestion && question.selectedAnswer === examQuestion.correctAnswer;
+            }).length
 
             return {
                 title: skill.text,
@@ -276,26 +327,27 @@ export const examResultService = {
      * @returns {Array} - Section details
      */
     prepareSectionDetails(examData, allReviewQuestions, allExamQuestions, elapsedTime) {
-        if (!examData?.sections) return []
+        if (!examData?.sections || !allReviewQuestions || allReviewQuestions.length === 0) return []
 
-        return examData.sections.map((section, sectionIndex) => {
-            const sectionQuestions = allReviewQuestions[sectionIndex] || []
-            const sectionExamQuestions = allExamQuestions[sectionIndex] || []
+        return allReviewQuestions.map((sectionQuestions, index) => {
+            let correctAnswers = 0;
+            sectionQuestions.forEach((question, i) => {
+                const questionIndex = allExamQuestions[index]?.findIndex(q => q._id === question.id);
+                if (questionIndex >= 0 && question?.selectedAnswer === allExamQuestions[index][questionIndex]?.correctAnswer) {
+                    correctAnswers++;
+                }
+            });
 
-            const correctAnswers = sectionQuestions.filter((question, index) => 
-                question.selectedAnswer === sectionExamQuestions[index]?.correctAnswer
-            ).length
-
-            const sectionScore = sectionQuestions.length > 0 ? Math.round((correctAnswers / sectionQuestions.length) * 100) : 0
+            const sectionScore = Math.round((correctAnswers / sectionQuestions.length) * 100);
 
             return {
-                title: section.title,
-                score: sectionScore,
-                correctAnswers,
-                numberOfQuestions: sectionQuestions.length,
-                time: elapsedTime[sectionIndex] || "00:00"
-            }
-        })
+                title: examData?.sections[index]?.title,
+                score: sectionScore || 0,
+                correctAnswers: correctAnswers || 0,
+                numberOfQuestions: sectionQuestions?.length || 0,
+                time: elapsedTime[index] || "00:00"
+            };
+        });
     },
 
     /**

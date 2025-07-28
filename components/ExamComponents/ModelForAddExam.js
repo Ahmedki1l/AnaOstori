@@ -272,7 +272,8 @@ const ModelForAddExam = ({
         setLoading(true);
         let data = {
             routeName: 'getFolderByType',
-            type: "questions"
+            type: "questions",
+            limit: 9999,
         };
 
         await getAuthRouteAPI(data).then((res) => {
