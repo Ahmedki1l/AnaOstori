@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 
 /**
  * ⚠️ IMPORTANT: Before pushing to production, set TESTING_MODE = false
@@ -315,14 +315,14 @@ const Index = () => {
     }, [selectedFolder, selectedExam]);
 
     useEffect(() => {
-        if (selectedExam && activeTab === 'results') {
-            getExamResultsList(selectedExam, currentPage, pageSize)
+        if (selectedFolder && !selectedExam) {
+            fetchExamsInFolder(selectedFolder._id, 1);
         }
-        // eslint-disable-next-line
-    }, [selectedExam, currentPage, pageSize, activeTab])
+    }, [selectedFolder, selectedExam, pageSize, activeTab]);
 
     useEffect(() => {
-        if (selectedExam && activeTab === 'terminations') {
+        if (selectedExam) {
+            getExamResultsList(selectedExam, currentPage, pageSize)
             getExamTerminationsList(selectedExam)
         }
         // eslint-disable-next-line
@@ -423,7 +423,7 @@ const Index = () => {
         setExamTerminationsList([]);
     };
 
-    const getExamResultsList = useCallback(async (examId, page = currentPage, limit = pageSize) => {
+    const getExamResultsList = async (examId, page = currentPage, limit = pageSize) => {
         setLoading(true)
         try {
             const body = {
@@ -506,9 +506,9 @@ const Index = () => {
         } finally {
             setLoading(false)
         }
-    }, [currentPage, pageSize])
+    }
 
-    const getExamTerminationsList = useCallback(async (examId) => {
+    const getExamTerminationsList = async (examId) => {
         setTerminationsLoading(true)
         try {
             const body = {
@@ -571,7 +571,7 @@ const Index = () => {
         } finally {
             setTerminationsLoading(false)
         }
-    }, [])
+    }
 
     const handleSearch = (value) => {
         setSearchText(value)
