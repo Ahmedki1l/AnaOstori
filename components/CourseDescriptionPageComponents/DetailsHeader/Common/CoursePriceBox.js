@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styles from './CoursePriceBox.module.scss'
 import AllIconsComponenet from '../../../../Icons/AllIconsComponenet';
+import TamaraPromo from '../../../../components/CommonComponents/TamaraPromo/TamaraPromo';
 
 
 export default function CoursePriceBox(props) {
@@ -116,9 +117,12 @@ export default function CoursePriceBox(props) {
 					</div>
 				</>}
 			</>}
+			
 			<div className={styles.btnBox}>
 				<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => props.handleBookSitButtonClick()}>{props.bookSeatButtonText}</button>
 			</div>
+			{/* Tamara Promo */}
+			<TamaraPromo amount={courseDetail.discount || courseDetail.price} />
 		</div>
 	)
 }

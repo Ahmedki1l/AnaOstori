@@ -20,6 +20,7 @@ import * as PaymentConst from '../../../constants/PaymentConst'
 // import TabbyCheckoutForm from './TabbyCheckout'
 import { toast } from 'react-toastify';
 import PaymentConfirmButton from './FreePaymentDetailForm'
+import TamaraCheckoutForm from './TamaraCheckout'
 
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
@@ -36,6 +37,7 @@ export default function PaymentInfoForm(props) {
 	const [couponAppliedData, setCouponAppliedData] = useState();
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId);
 	const [tabbyUrl, setTabbyUrl] = useState(null);
+	const [tamaraUrl, setTamaraUrl] = useState(null);
 	const [freePayment, setFreePayment] = useState(false);
 	const [tabbyStatus, setTabbyStatus] = useState('');
 	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
@@ -92,6 +94,14 @@ export default function PaymentInfoForm(props) {
 						} else {
 							toast.error(`حاول مرة أخرى`);
 						}
+					}
+				} else if (type === "tamara") {
+					if (res.data[0]?.url !== "") {
+						// For Tamara, we'll handle the redirect in the TamaraCheckoutForm component
+						console.log('Tamara checkout URL:', res.data[0]?.url);
+						setTamaraUrl(res.data[0]?.url);
+					} else {
+						toast.error('فشل في إنشاء جلسة الدفع مع تمارا. يرجى المحاولة مرة أخرى.');
 					}
 				} else {
 					setHyperPayIntegrity(res.data[2]);
@@ -284,6 +294,34 @@ export default function PaymentInfoForm(props) {
 								{(checkoutID && paymentType == 'credit' && hyperPayIntegrity) &&
 									<CreditCardDetailForm checkoutID={checkoutID} orderID={createdOrder.id} integrity={hyperPayIntegrity} />
 								}
+							</div>
+						</label>
+						
+						{/* Tamara Payment Option */}
+						<input type="radio" id="tamaraPay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('tamara')} />
+						<label htmlFor="tamaraPay" className='relative'>
+							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
+								<div className='flex items-center'>
+									<div className={styles.circle}><div></div></div>
+									<p className={`fontMedium ${styles.labelText}`}>ادفع لاحقاً مع تمارا</p>
+								</div>
+								<div style={{ width: '70px', height: '40px', backgroundColor: '#6366F1', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>
+									TAMARA
+								</div>
+							</div>
+							<div className={styles.creditCardWrapper}>
+								{(checkoutID && paymentType === 'tamara') && (
+									<TamaraCheckoutForm
+										orderId={createdOrder.id}
+										amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
+										couponAppliedData={couponAppliedData}
+										tamaraUrl={tamaraUrl}
+										onError={(error) => {
+											console.error('Tamara payment error:', error);
+											toast.error('حدث خطأ أثناء إنشاء جلسة الدفع مع تمارا. يرجى المحاولة مرة أخرى.');
+										}}
+									/>
+								)}
 							</div>
 						</label>
 						{zeroCostFlag && <>

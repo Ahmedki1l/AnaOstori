@@ -1,0 +1,54 @@
+.tamaraPromo {
+  margin: 1rem 0;
+  border: 1px solid #e0e7ff;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
+
+  .promoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .promoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    .promoText {
+      font-weight: 600;
+      color: #6366f1;
+      font-size: 0.875rem;
+    }
+
+    .amountText {
+      font-weight: 700;
+      color: #1f2937;
+      font-size: 0.875rem;
+    }
+  }
+
+  .widgetContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .tamaraPromo {
+    padding: 0.75rem;
+
+    .promoHeader {
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+    }
+
+    .paymentDetails {
+      font-size: 0.7rem;
+    }
+  }
+} 

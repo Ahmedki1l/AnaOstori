@@ -281,6 +281,15 @@ const paymentMode = [
         ],
     },
     {
+        label: 'Buy Now Pay Later',
+        options: [
+            {
+                label: 'تمارا',
+                value: 'tamara',
+            },
+        ],
+    },
+    {
         label: 'Bank Transfer',
         options: [
             {

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import useWindowSize from '../../hooks/useWindoSize';
 import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 import { mediaUrl } from '../../constants/DataManupulation';
+import TamaraPromo from '../CommonComponents/TamaraPromo/TamaraPromo';
 
 
 export default function PhysicalCourseCard(props) {
@@ -122,6 +123,7 @@ export default function PhysicalCourseCard(props) {
 								</>
 							}
 						</>}
+						
 						<div className={styles.btnBox}>
 							<button className='primaryStrockedBtn' onClick={() => handleNavigation(catagoryName, courseDetail)}>{lang == 'en' ? 'View course details' : 'قراءة تفاصيل الدورة'}</button>
 						</div>

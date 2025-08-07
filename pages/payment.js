@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI, getFreePaymentInfoAPI } from '../services/apisService';
+import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI, getTamaraPaymentInfoAPI, getFreePaymentInfoAPI } from '../services/apisService';
 import { dateWithDay, timeDuration2 } from '../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
@@ -28,6 +28,17 @@ export default function Payment(props) {
         failure: {
             en: "Sorry, Tabby is unable to approve this purchase. Please use an alternative payment method for your order.",
             ar: "نأسف، تابي غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى."
+        }
+    });
+
+    const [tamaraResponseMessages, setTamaraResponseMessages] = useState({
+        cancel: {
+            en: "You aborted the payment. Please retry or choose another payment method.",
+            ar: "لقد ألغيت الدفعة. فضلاً حاول مجددًا أو اختر طريقة دفع أخرى."
+        },
+        failure: {
+            en: "Sorry, Tamara is unable to approve this purchase. Please use an alternative payment method for your order.",
+            ar: "نأسف، تمارا غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى."
         }
     });
 
@@ -104,6 +115,53 @@ export default function Payment(props) {
 
             }).catch(async (error) => {
                 setLoading(false)
+            })
+        } else if (extractedType === "tamara") {
+            if (!extractedPaymentID) {
+                console.log("payment_id not found");
+                return;
+            }
+
+            let data = {
+                orderId: orderId,
+                paymentId: extractedPaymentID,
+            }
+            console.log(data);
+
+            let paymentData;
+            await getTamaraPaymentInfoAPI(data).then(async (response) => {
+                setTransactionDetails(response.data);
+                console.log("full response: ", response);
+                console.log("response.data[0]: ", response.data[0]);
+                paymentData = response.data[0];
+                const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED" || response.data[0].status === "CAPTURED");
+
+                setIsPaymentSuccess(flag);
+                if (tabbyResultedResponse !== "success") {
+                    if (tabbyResultedResponse === "cancel") {
+                        setPaymentMessage(tamaraResponseMessages.cancel.ar);
+                    } else {
+                        setPaymentMessage(tamaraResponseMessages.failure.ar);
+                    }
+                } else {
+                    setPaymentMessage(paymentData.messageAR);
+                }
+                setLoading(false);
+                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
+                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
+                const [myCourseData] = await Promise.all([getMyCourseReq]);
+                dispatch({
+                    type: 'SET_ALL_MYCOURSE',
+                    myCourses: myCourseData?.data,
+                });
+
+                // If payment is successful, send WhatsApp message
+                if (flag) {
+                    await sendWhatsAppMessage(paymentData);
+                }
+
+            }).catch(async (error) => {
+                setLoading(false);
             })
         } else {
             if (!extractedPaymentID) {

@@ -6,7 +6,8 @@ import BankDetailsCard from '../../components/CommonComponents/BankDetailCard/Ba
 import CreditCardDetailForm from '../../components/PaymentPageComponents/PaymentInfoForm/CreditCardDetailForm';
 import MadaCardDetailForm from '../../components/PaymentPageComponents/PaymentInfoForm/MadaCardDetailForm';
 import ApplePayForm from '../../components/PaymentPageComponents/PaymentInfoForm/ApplePayForm';
-// import TabbyCheckoutForm from '../../components/PaymentPageComponents/PaymentInfoForm/TabbyCheckout';
+// import TabbyCheckoutForm from '../../components/PaymentPageComponents/PaymentInfoForm/TabbyCheckout'
+import TamaraCheckoutForm from '../../components/PaymentPageComponents/PaymentInfoForm/TamaraCheckout';
 import Logo from '../../components/CommonComponents/Logo';
 import * as fbq from '../../lib/fpixel'
 import * as PaymentConst from '../../constants/PaymentConst';
@@ -192,6 +193,13 @@ const CustomeCourses = () => {
                             toast.error(`حاول مرة أخرى`);
                         }
                     }
+                } else if (type === "tamara") {
+                    if (res.data[0]?.url !== "") {
+                        // For Tamara, we'll handle the redirect in the TamaraCheckoutForm component
+                        console.log('Tamara checkout URL:', res.data[0]?.url);
+                    } else {
+                        toast.error('فشل في إنشاء جلسة الدفع مع تمارا. يرجى المحاولة مرة أخرى.');
+                    }
                 } else {
                     setHyperPayIntegrity(res.data[2]);
                 }
@@ -352,6 +360,36 @@ const CustomeCourses = () => {
                         />
                     )}
                 </label> */}
+
+                {/* Tamara Payment Option */}
+                <input
+                    type="radio"
+                    id="tamaraPay"
+                    name="paymentDetails"
+                    className="hidden peer"
+                    onClick={() => generateCheckoutId('tamara')}
+                />
+                <label htmlFor="tamaraPay" className="relative">
+                    <div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
+                        <div className="flex items-center">
+                            <div className={styles.circle}><div /></div>
+                            <p className={`fontMedium ${styles.labelText}`}>ادفع لاحقاً مع تمارا</p>
+                        </div>
+                        <div style={{ width: '70px', height: '40px', backgroundColor: '#6366F1', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>
+                            TAMARA
+                        </div>
+                    </div>
+                    {checkoutID && paymentType === 'tamara' && (
+                        <TamaraCheckoutForm
+                            orderId={createdOrder.orderId}
+                            amount={calculateTotal()}
+                            onError={(error) => {
+                                console.error('Tamara payment error:', error);
+                                toast.error('حدث خطأ أثناء إنشاء جلسة الدفع مع تمارا. يرجى المحاولة مرة أخرى.');
+                            }}
+                        />
+                    )}
+                </label>
 
                 <input
                     type="radio"
