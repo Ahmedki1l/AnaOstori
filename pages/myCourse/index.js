@@ -271,6 +271,18 @@ const Index = () => {
                                     )
                                 })}
                             </div>}
+                            {smallScreen && selectedTab == 2 && <>
+                                <div className="p-4">
+                                    <h3 className="text-lg font-semibold mb-4 text-right">نتائج الاختبارات</h3>
+                                    <p className="text-right text-gray-600 mb-4">عرض نتائج الاختبارات الخاصة بهذه الدورة</p>
+                                    <button 
+                                        onClick={() => router.push('/myCourse/exam-results')}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                                    >
+                                        عرض جميع النتائج
+                                    </button>
+                                </div>
+                            </>}
                             {smallScreen && selectedTab == 3 && <>
                                 {filesInCourse?.map((fileItem, index) => {
                                     return (
@@ -284,6 +296,7 @@ const Index = () => {
                             {smallScreen &&
                                 <div className={styles.navItemsWrapper}>
                                     <p className={`fontMedium ${styles.navItemText} ${selectedTab == '1' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(1)}>المحتوى</p>
+                                    <p className={`fontMedium ${styles.navItemText} ${selectedTab == '2' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(2)}>نتائج الاختبارات</p>
                                     <p className={`fontMedium ${styles.navItemText} ${selectedTab == '3' ? `${styles.selectedTab}` : ``}`} onClick={() => setSelectedTab(3)}>نظرة عامة</p>
                                 </div>
                             }

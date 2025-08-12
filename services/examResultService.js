@@ -100,6 +100,35 @@ export const examResultService = {
     },
 
     /**
+     * Get all exam results for the current student
+     * @returns {Promise<Object>} - API response
+     */
+    async getAllStudentExamResults() {
+        try {
+            const requestData = {
+                routeName: 'getStudentAllExamResults'
+            }
+
+            const response = await getAuthRouteAPI(requestData)
+            return response
+        } catch (error) {
+            console.error('Error fetching all student exam results:', error)
+            
+            if (error?.response?.status === 401) {
+                try {
+                    await getNewToken()
+                    return await this.getAllStudentExamResults()
+                } catch (refreshError) {
+                    console.error('Token refresh failed:', refreshError)
+                    throw refreshError
+                }
+            }
+            
+            throw error
+        }
+    },
+
+    /**
      * Check if student has already taken this exam
      * @param {string} examId - Exam ID
      * @param {string} studentId - Student ID

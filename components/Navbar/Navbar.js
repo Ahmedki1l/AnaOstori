@@ -272,6 +272,15 @@ export default function Navbar() {
 			key: '1',
 		},
 		{
+			label: (
+				<Link href={'/myCourse/exam-results'} className={`normalLinkText ${styles.profileMenuItemsWrapper}`}>
+					<p className={styles.profileMenuItemsText}>نتائج الاختبارات</p>
+					<AllIconsComponenet height={24} width={24} iconName={'examIcon'} color={'#808080'} />
+				</Link>
+			),
+			key: '2',
+		},
+		{
 			type: 'divider',
 		},
 		{
