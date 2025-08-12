@@ -1,4 +1,4 @@
-import { getRouteAPI, postAuthRouteAPI } from './apisService'
+import { getRouteAPI, postAuthRouteAPI, getAuthRouteAPI } from './apisService'
 import { getNewToken } from './fireBaseAuthService'
 
 /**
