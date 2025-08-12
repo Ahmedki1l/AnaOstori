@@ -1,26 +1,18 @@
 import React from 'react'
-import { NextSeo } from 'next-seo'
+import Head from 'next/head'
 import StudentExamResults from '../../components/CommonComponents/StudentExamResults/StudentExamResults'
 import BackToPath from '../../components/CommonComponents/BackToPath'
 
 const ExamResultsPage = () => {
   return (
     <>
-      <NextSeo
-        title="نتائج الاختبارات | أنا أستوري"
-        description="عرض نتائج الاختبارات الخاصة بك"
-        canonical="https://anaostori.com/myCourse/exam-results"
-      />
+      <Head>
+        <title>نتائج الاختبارات - أنا أوستوري</title>
+        <meta name="description" content="عرض نتائج الاختبارات الخاصة بك" />
+      </Head>
       
-      <div className="maxWidthDefault">
-        <BackToPath 
-          paths={[
-            { name: 'الرئيسية', href: '/' },
-            { name: 'دوراتي', href: '/myCourse' },
-            { name: 'نتائج الاختبارات', href: '/myCourse/exam-results' }
-          ]}
-        />
-        
+      <div style={{ padding: '1rem' }}>
+        <BackToPath />
         <StudentExamResults />
       </div>
     </>
