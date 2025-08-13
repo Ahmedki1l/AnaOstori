@@ -103,7 +103,7 @@ export const examResultService = {
      * Get all exam results for the current student
      * @returns {Promise<Object>} - API response
      */
-    async getAllStudentExamResults() {
+    async getAllStudentExamResults(retryCount = 0) {
         try {
             const requestData = {
                 routeName: 'getStudentAllExamResults'
@@ -114,16 +114,20 @@ export const examResultService = {
         } catch (error) {
             console.error('Error fetching all student exam results:', error)
             
-            if (error?.response?.status === 401) {
+            // Only retry once on authentication error
+            if (error?.response?.status === 401 && retryCount === 0) {
                 try {
+                    console.log('Token expired, attempting to refresh...')
                     await getNewToken()
-                    return await this.getAllStudentExamResults()
+                    // Retry once with incremented retry count
+                    return await this.getAllStudentExamResults(retryCount + 1)
                 } catch (refreshError) {
                     console.error('Token refresh failed:', refreshError)
                     throw refreshError
                 }
             }
             
+            // For all other errors or if already retried, throw the error
             throw error
         }
     },
