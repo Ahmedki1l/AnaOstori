@@ -21,14 +21,23 @@ const StudentExamResults = () => {
   const fetchFolders = async () => {
     try {
       setLoading(true)
+      setError(null)
       const response = await examResultService.getAllStudentExamResults()
       
-      if (response?.data) {
+      console.log('API Response:', response) // Debug log
+      
+      if (response?.data && Array.isArray(response.data)) {
+        console.log('Setting folders:', response.data) // Debug log
         setFolders(response.data)
+      } else {
+        console.warn('Invalid data structure received:', response)
+        setFolders([])
+        setError('بيانات غير صحيحة من الخادم')
       }
     } catch (error) {
       console.error('Error fetching exam results:', error)
       setError('فشل في جلب نتائج الاختبارات')
+      setFolders([])
     } finally {
       setLoading(false)
     }
@@ -96,6 +105,17 @@ const StudentExamResults = () => {
     return `${score}%`
   }
 
+  // Safety check - ensure we have valid data structure
+  if (!loading && !error && (!Array.isArray(folders) || folders.length === 0)) {
+    return (
+      <div className={styles.emptyContainer}>
+        <AllIconsComponenet iconName="examIcon" height={64} width={64} color="#d9d9d9" />
+        <h3>لا توجد نتائج اختبارات</h3>
+        <p>لم تقم بأداء أي اختبارات بعد</p>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -120,6 +140,20 @@ const StudentExamResults = () => {
 
   // Folders View
   if (currentView === 'folders') {
+    // Safety check to ensure folders is an array
+    if (!Array.isArray(folders)) {
+      return (
+        <div className={styles.errorContainer}>
+          <AllIconsComponenet iconName="warningIcon" height={48} width={48} color="#ff4d4f" />
+          <h3>خطأ في البيانات</h3>
+          <p>بيانات غير صحيحة، يرجى إعادة المحاولة</p>
+          <button onClick={fetchFolders} className={styles.retryButton}>
+            إعادة المحاولة
+          </button>
+        </div>
+      )
+    }
+
     if (folders.length === 0) {
       return (
         <div className={styles.emptyContainer}>
@@ -164,6 +198,20 @@ const StudentExamResults = () => {
 
   // Exams View
   if (currentView === 'exams') {
+    // Safety check to ensure selectedFolder and exams exist
+    if (!selectedFolder || !Array.isArray(selectedFolder.exams)) {
+      return (
+        <div className={styles.errorContainer}>
+          <AllIconsComponenet iconName="warningIcon" height={48} width={48} color="#ff4d4f" />
+          <h3>خطأ في البيانات</h3>
+          <p>بيانات الاختبارات غير متوفرة، يرجى العودة للمجلدات</p>
+          <button onClick={goBackToFolders} className={styles.retryButton}>
+            العودة للمجلدات
+          </button>
+        </div>
+      )
+    }
+
     return (
       <div className={styles.container}>
         <div className={styles.navigationHeader}>
@@ -201,6 +249,20 @@ const StudentExamResults = () => {
 
   // Results View
   if (currentView === 'results') {
+    // Safety check to ensure selectedExam and results exist
+    if (!selectedExam || !Array.isArray(selectedExam.results)) {
+      return (
+        <div className={styles.errorContainer}>
+          <AllIconsComponenet iconName="warningIcon" height={48} width={48} color="#ff4d4f" />
+          <h3>خطأ في البيانات</h3>
+          <p>بيانات النتائج غير متوفرة، يرجى العودة للاختبارات</p>
+          <button onClick={goBackToExams} className={styles.retryButton}>
+            العودة للاختبارات
+          </button>
+        </div>
+      )
+    }
+
     return (
       <div className={styles.container}>
         <div className={styles.navigationHeader}>
@@ -254,7 +316,7 @@ const StudentExamResults = () => {
                 </div>
               </div>
 
-              {result.sections && result.sections.length > 0 && (
+              {result.sections && Array.isArray(result.sections) && result.sections.length > 0 && (
                 <div className={styles.sectionsContainer}>
                   <h4>تفاصيل الأقسام</h4>
                   <div className={styles.sectionsList}>
@@ -266,7 +328,7 @@ const StudentExamResults = () => {
                             {section.score}/{section.totalQuestions}
                           </span>
                         </div>
-                        {section.skills && section.skills.length > 0 && (
+                        {section.skills && Array.isArray(section.skills) && section.skills.length > 0 && (
                           <div className={styles.skillsList}>
                             {section.skills.map((skill, skillIndex) => (
                               <div key={skillIndex} className={styles.skillItem}>

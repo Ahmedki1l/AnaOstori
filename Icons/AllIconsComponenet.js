@@ -101,6 +101,8 @@ import NewLiveTVIcon from './customeIcons/newLiveTVIcon'
 import NewFolderIcon from './customeIcons/newFolderIcon'
 import NewVisibleIcon from './customeIcons/newVisibleIcon'
 import NewVideoIcon from './customeIcons/newVideoIcon'
+import ExamIcon from './customeIcons/examIcon'
+import WarningIcon from './customeIcons/warningIcon'
 
 import CurriculumNewVideoIcon from './customeIcons/curriculumNewVideoIcon'
 import CurriculumNewFileIcon from './customeIcons/curriculumNewFileIcon'
@@ -214,6 +216,8 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 			{iconName == 'excused' && <ExcusedIcon height={height} width={width} color={color} />}
 			{iconName == 'fullSeatsIcon' && <FullSeatsIcon height={height} width={width} color={color} />}
 			{iconName == 'folderIcon' && <FolderIcon height={height} width={width} color={color} />}
+			{iconName == 'examIcon' && <ExamIcon height={height} width={width} color={color} />}
+			{iconName == 'warningIcon' && <WarningIcon height={height} width={width} color={color} />}
 			{iconName == 'visibilityIcon' && <VisibilityIcon height={height} width={width} color={color} />}
 			{iconName == 'visibilityOffIcon' && <VisibilityOffIcon height={height} width={width} color={color} />}
 			{iconName == 'keyBoardDownIcon' && <KeyBoardDownIcon height={height} width={width} color={color} />}
