@@ -26,9 +26,10 @@ const StudentExamResults = () => {
       
       console.log('API Response:', response) // Debug log
       
-      if (response?.data && Array.isArray(response.data)) {
-        console.log('Setting folders:', response.data) // Debug log
-        setFolders(response.data)
+      // The API returns data in response.data.data structure
+      if (response?.data?.data && Array.isArray(response.data.data)) {
+        console.log('Setting folders:', response.data.data) // Debug log
+        setFolders(response.data.data)
       } else {
         console.warn('Invalid data structure received:', response)
         setFolders([])
