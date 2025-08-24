@@ -59,7 +59,7 @@ export default function Login() {
 			toast.success(toastSuccessMessage.successRegisterMsg, { rtl: true, })
 		} else {
 			try {
-				const viewProfileReq = getAuthRouteAPI({ routeName: "viewProfile" })
+				const viewProfileReq = getAuthRouteAPI({ routeName: 'viewProfile' })
 				const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
 				const [viewProfileData, myCourseData] = await Promise.all([
 					viewProfileReq, getMyCourseReq
@@ -95,6 +95,40 @@ export default function Login() {
 					if (((dayDifference >= 7) && (reminderPopUpCount === null || reminderPopUpCount < 3))) {
 						setUpdateProfileModalOpen(true);
 					} else {
+						// Check if user was redirected from course registration
+						const isFromCourseRegistration = localStorage.getItem('isFromCourseRegistration')
+						const savedFormData = localStorage.getItem('courseRegistrationFormData')
+						
+						// Check if user was redirected from course booking
+						const isFromCourseBooking = localStorage.getItem('isFromCourseBooking')
+						const savedBookingData = localStorage.getItem('courseBookingFormData')
+						
+						if (isFromCourseRegistration === 'true' && savedFormData) {
+							try {
+								const formData = JSON.parse(savedFormData)
+								// Redirect back to course registration page
+								router.push(`/${formData.courseName?.toLowerCase().replace(/\s+/g, '-')}/bookSit`)
+								return
+							} catch (error) {
+								console.error('Error parsing saved form data:', error)
+								localStorage.removeItem('courseRegistrationFormData')
+								localStorage.removeItem('isFromCourseRegistration')
+							}
+						}
+						
+						if (isFromCourseBooking === 'true' && savedBookingData) {
+							try {
+								const bookingData = JSON.parse(savedBookingData)
+								// Redirect back to course booking page
+								router.push(`/${bookingData.courseName?.toLowerCase().replace(/\s+/g, '-')}/bookSit`)
+								return
+							} catch (error) {
+								console.error('Error parsing saved booking data:', error)
+								localStorage.removeItem('courseBookingFormData')
+								localStorage.removeItem('isFromCourseBooking')
+							}
+						}
+						
 						if (!storeData?.returnUrl) {
 							if (router.asPath !== '/') {
 								router.push('/')
@@ -111,7 +145,6 @@ export default function Login() {
 				setLoading(false)
 			}
 		}
-
 	}
 
 	const hendelGoogleLogin = async () => {

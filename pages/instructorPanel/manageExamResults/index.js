@@ -20,6 +20,10 @@ import ModelForDeleteItems from '../../../components/ManageLibraryComponent/Mode
 import ModelForUploadExamResults from '../../../components/ManageExamResults/ModelForUploadExamResults';
 import ModelForViewExamResults from '../../../components/ManageExamResults/ModelForViewExamResults';
 import ModelForViewTermination from '../../../components/ManageExamResults/ModelForViewTermination';
+import ModelForCopyExam from '../../../components/ManageExamResults/ModelForCopyExam';
+import ModelForMoveExam from '../../../components/ManageExamResults/ModelForMoveExam';
+import ModelForEditFolder from '../../../components/ManageExamResults/ModelForEditFolder';
+import ModelForDeleteFolder from '../../../components/ManageExamResults/ModelForDeleteFolder';
 import { Tabs } from 'antd';
 
 // TEMPORARY: Disable authentication for testing
@@ -86,6 +90,10 @@ const Index = () => {
     const [isModelForViewTermination, setIsModelForViewTermination] = useState(false)
     const [selectedExamResult, setSelectedExamResult] = useState(null)
     const [isModelForDeleteItems, setIsModelForDeleteItems] = useState(false)
+    const [isCopyExamModal, setIsCopyExamModal] = useState(false)
+    const [isMoveExamModal, setIsMoveExamModal] = useState(false)
+    const [selectedExamForAction, setSelectedExamForAction] = useState(null)
+    const [actionType, setActionType] = useState(null) // 'copy' or 'move'
     const [folderList, setFolderList] = useState([])
     const [examList, setExamList] = useState([])
     const [selectedFolder, setSelectedFolder] = useState(null)
@@ -100,6 +108,17 @@ const Index = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [totalResults, setTotalResults] = useState(0)
+    
+    // Folder Management States
+    const [isEditFolderModal, setIsEditFolderModal] = useState(false)
+    const [isDeleteFolderModal, setIsDeleteFolderModal] = useState(false)
+    const [selectedFolderForAction, setSelectedFolderForAction] = useState(null)
+    const [folderFormData, setFolderFormData] = useState({
+        name: '',
+        description: '',
+        isActive: true
+    })
+    const [folderActionLoading, setFolderActionLoading] = useState(false)
 
     const tableColumns = [
         {
@@ -685,6 +704,361 @@ const Index = () => {
         }
     }
 
+    const handleCopyExam = (exam) => {
+        setSelectedExamForAction(exam)
+        setActionType('copy')
+        setIsCopyExamModal(true)
+    }
+
+    const handleMoveExam = (exam) => {
+        setSelectedExamForAction(exam)
+        setActionType('move')
+        setIsMoveExamModal(true)
+    }
+
+    const handleCopyConfirm = async (destinationFolderId, options, retryCount = 0) => {
+        try {
+            const queryParams = new URLSearchParams({
+                routeName: 'copyExam',
+                examId: selectedExamForAction._id,
+                sourceFolderId: selectedFolder._id,
+                destinationFolderId: destinationFolderId,
+                keepOriginal: options.keepOriginal.toString(),
+                copyResults: options.copyResults.toString()
+            })
+            
+            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            
+            // Handle HTTP status codes
+            if (response.status === 401 && retryCount === 0) {
+                // Try to refresh token and retry once
+                try {
+                    await getNewToken()
+                    return handleCopyConfirm(destinationFolderId, options, retryCount + 1)
+                } catch (tokenError) {
+                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
+                }
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+            }
+            
+            const result = await response.json()
+            
+            if (result.success) {
+                const { message } = await import('antd');
+                message.success('تم نسخ الاختبار بنجاح')
+                setIsCopyExamModal(false)
+                setSelectedExamForAction(null)
+                setActionType(null)
+                
+                // Refresh the current folder to show updated exam count
+                fetchExamsInFolder(selectedFolder._id)
+            } else {
+                // Handle specific error codes
+                let errorMessage = 'فشل في نسخ الاختبار'
+                
+                switch (result.errorCode) {
+                    case 'VALIDATION_ERROR':
+                        errorMessage = result.message || 'خطأ في التحقق من البيانات'
+                        break
+                    case 'PERMISSION_DENIED':
+                        errorMessage = result.message || 'غير مصرح: لا تملك الصلاحيات المطلوبة'
+                        break
+                    case 'NOT_FOUND':
+                        errorMessage = result.message || 'الاختبار أو المجلد غير موجود'
+                        break
+                    case 'BUSINESS_LOGIC_ERROR':
+                        errorMessage = result.message || 'لا يمكن نسخ الاختبار إلى نفس المجلد'
+                        break
+                    default:
+                        errorMessage = result.message || errorMessage
+                }
+                
+                throw new Error(errorMessage)
+            }
+        } catch (error) {
+            const { message } = await import('antd');
+            
+            // Check if it's a network error and suggest retry
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            } else {
+                message.error(error.message || 'فشل في نسخ الاختبار')
+            }
+            
+            console.error('Error copying exam:', error)
+        }
+    }
+
+    const handleMoveConfirm = async (destinationFolderId, retryCount = 0) => {
+        try {
+            const queryParams = new URLSearchParams({
+                routeName: 'moveExam',
+                examId: selectedExamForAction._id,
+                sourceFolderId: selectedFolder._id,
+                destinationFolderId: destinationFolderId
+            })
+            
+            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            
+            // Handle HTTP status codes
+            if (response.status === 401 && retryCount === 0) {
+                // Try to refresh token and retry once
+                try {
+                    await getNewToken()
+                    return handleMoveConfirm(destinationFolderId, retryCount + 1)
+                } catch (tokenError) {
+                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
+                }
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+            }
+            
+            const result = await response.json()
+            
+            if (result.success) {
+                const { message } = await import('antd');
+                message.success('تم نقل الاختبار بنجاح')
+                setIsMoveExamModal(false)
+                setSelectedExamForAction(null)
+                setActionType(null)
+                
+                // Refresh both folders to show updated exam counts
+                fetchExamsInFolder(selectedFolder._id)
+                fetchSimulationExamFolders()
+            } else {
+                // Handle specific error codes
+                let errorMessage = 'فشل في نقل الاختبار'
+                
+                switch (result.errorCode) {
+                    case 'VALIDATION_ERROR':
+                        errorMessage = result.message || 'خطأ في التحقق من البيانات'
+                        break
+                    case 'PERMISSION_DENIED':
+                        errorMessage = result.message || 'غير مصرح: لا تملك الصلاحيات المطلوبة'
+                        break
+                    case 'NOT_FOUND':
+                        errorMessage = result.message || 'الاختبار أو المجلد غير موجود'
+                        break
+                    case 'BUSINESS_LOGIC_ERROR':
+                        errorMessage = result.message || 'لا يمكن نقل الاختبار إلى نفس المجلد'
+                        break
+                    default:
+                        errorMessage = result.message || errorMessage
+                }
+                
+                throw new Error(errorMessage)
+            }
+        } catch (error) {
+            const { message } = await import('antd');
+            
+            // Check if it's a network error and suggest retry
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            } else {
+                message.error(error.message || 'فشل في نقل الاختبار')
+            }
+            
+            console.error('Error moving exam:', error)
+        }
+    }
+
+    // Folder Management Functions
+    const handleEditFolder = (folder) => {
+        setSelectedFolderForAction(folder)
+        setFolderFormData({
+            name: folder.name || '',
+            description: folder.description || '',
+            isActive: folder.isActive !== false
+        })
+        setIsEditFolderModal(true)
+    }
+
+    const handleDeleteFolder = (folder) => {
+        setSelectedFolderForAction(folder)
+        setIsDeleteFolderModal(true)
+    }
+
+    const handleUpdateFolder = async (retryCount = 0) => {
+        if (!folderFormData.name.trim()) {
+            const { message } = await import('antd');
+            message.error('يرجى إدخال اسم المجلد')
+            return
+        }
+
+        setFolderActionLoading(true)
+        try {
+            const queryParams = new URLSearchParams({
+                routeName: 'updateMongoDBFolder',
+                folderId: selectedFolderForAction._id,
+                name: folderFormData.name,
+                ...(folderFormData.description && { description: folderFormData.description }),
+                isActive: folderFormData.isActive.toString()
+            })
+            
+            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            
+            // Handle HTTP status codes
+            if (response.status === 401 && retryCount === 0) {
+                try {
+                    await getNewToken()
+                    return handleUpdateFolder(retryCount + 1)
+                } catch (tokenError) {
+                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
+                }
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+            }
+            
+            const result = await response.json()
+            
+            if (result.success) {
+                const { message } = await import('antd');
+                message.success('تم تحديث المجلد بنجاح')
+                setIsEditFolderModal(false)
+                setSelectedFolderForAction(null)
+                setFolderFormData({ name: '', description: '', isActive: true })
+                
+                // Refresh folders list
+                fetchSimulationExamFolders()
+            } else {
+                let errorMessage = 'فشل في تحديث المجلد'
+                
+                switch (result.errorCode) {
+                    case 'VALIDATION_ERROR':
+                        errorMessage = result.message || 'خطأ في التحقق من البيانات'
+                        break
+                    case 'PERMISSION_DENIED':
+                        errorMessage = result.message || 'غير مصرح: لا تملك المجلد'
+                        break
+                    case 'NOT_FOUND':
+                        errorMessage = result.message || 'المجلد غير موجود'
+                        break
+                    default:
+                        errorMessage = result.message || errorMessage
+                }
+                
+                throw new Error(errorMessage)
+            }
+        } catch (error) {
+            const { message } = await import('antd');
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            } else {
+                message.error(error.message || 'فشل في تحديث المجلد')
+            }
+            
+            console.error('Error updating folder:', error)
+        } finally {
+            setFolderActionLoading(false)
+        }
+    }
+
+    const handleDeleteFolderConfirm = async (forceDelete = false, retryCount = 0) => {
+        setFolderActionLoading(true)
+        try {
+            const queryParams = new URLSearchParams({
+                routeName: 'deleteMongoDBFolder',
+                folderId: selectedFolderForAction._id,
+                forceDelete: forceDelete.toString()
+            })
+            
+            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            
+            // Handle HTTP status codes
+            if (response.status === 401 && retryCount === 0) {
+                try {
+                    await getNewToken()
+                    return handleDeleteFolderConfirm(forceDelete, retryCount + 1)
+                } catch (tokenError) {
+                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
+                }
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+            }
+            
+            const result = await response.json()
+            
+            if (result.success) {
+                const { message } = await import('antd');
+                message.success('تم حذف المجلد بنجاح')
+                setIsDeleteFolderModal(false)
+                setSelectedFolderForAction(null)
+                
+                // Refresh folders list
+                fetchSimulationExamFolders()
+                
+                // If we were viewing this folder, go back to folders list
+                if (selectedFolder && selectedFolder._id === selectedFolderForAction._id) {
+                    handleBackToFolders()
+                }
+            } else {
+                let errorMessage = 'فشل في حذف المجلد'
+                
+                switch (result.errorCode) {
+                    case 'VALIDATION_ERROR':
+                        errorMessage = result.message || 'خطأ في التحقق من البيانات'
+                        break
+                    case 'PERMISSION_DENIED':
+                        errorMessage = result.message || 'غير مصرح: لا تملك المجلد'
+                        break
+                    case 'NOT_FOUND':
+                        errorMessage = result.message || 'المجلد غير موجود'
+                        break
+                    default:
+                        errorMessage = result.message || errorMessage
+                }
+                
+                throw new Error(errorMessage)
+            }
+        } catch (error) {
+            const { message } = await import('antd');
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            } else {
+                message.error(error.message || 'فشل في حذف المجلد')
+            }
+            
+            console.error('Error deleting folder:', error)
+        } finally {
+            setFolderActionLoading(false)
+        }
+    }
+
     const filteredResults = examResultsList.filter(result =>
         result.studentName?.toLowerCase().includes(searchText.toLowerCase()) ||
         result.examName?.toLowerCase().includes(searchText.toLowerCase())
@@ -773,7 +1147,30 @@ const Index = () => {
                                             </td>
                                             <td>{fullDate(folder.createdAt)}</td>
                                             <td>{fullDate(folder.updatedAt)}</td>
-                                            <td></td>
+                                            <td>
+                                                <div className={styles.folderActions}>
+                                                    <Button
+                                                        type="text"
+                                                        icon={<AllIconsComponenet iconName={'editIcon'} height={16} width={16} color={'#3b82f6'} />}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleEditFolder(folder)
+                                                        }}
+                                                        title="تعديل المجلد"
+                                                        className={styles.actionButton}
+                                                    />
+                                                    <Button
+                                                        type="text"
+                                                        icon={<AllIconsComponenet iconName={'deleteIcon'} height={16} width={16} color={'#ff4d4f'} />}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleDeleteFolder(folder)
+                                                        }}
+                                                        title="حذف المجلد"
+                                                        className={styles.actionButton}
+                                                    />
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -828,7 +1225,30 @@ const Index = () => {
                                             </td>
                                             <td>{fullDate(exam.createdAt)}</td>
                                             <td>{fullDate(exam.updatedAt)}</td>
-                                            <td></td>
+                                            <td>
+                                                <div className={styles.examActions}>
+                                                    <Button
+                                                        type="text"
+                                                        icon={<AllIconsComponenet iconName={'copyIcon'} height={16} width={16} color={'#3b82f6'} />}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleCopyExam(exam)
+                                                        }}
+                                                        title="نسخ الاختبار"
+                                                        className={styles.actionButton}
+                                                    />
+                                                    <Button
+                                                        type="text"
+                                                        icon={<AllIconsComponenet iconName={'moveIcon'} height={16} width={16} color={'#8b5cf6'} />}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleMoveExam(exam)
+                                                        }}
+                                                        title="نقل الاختبار"
+                                                        className={styles.actionButton}
+                                                    />
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -1012,6 +1432,46 @@ const Index = () => {
                     onCloseModal={() => setIsModelForDeleteItems(false)}
                     deleteItemType={activeTab === 'results' ? 'examResult' : 'examTermination'}
                     onDelete={activeTab === 'results' ? handleDeleteConfirm : handleDeleteTerminationConfirm}
+                />
+            )}
+
+            {isCopyExamModal && (
+                <ModelForCopyExam
+                    isModelForCopyExam={isCopyExamModal}
+                    setIsModelForCopyExam={setIsCopyExamModal}
+                    selectedExamForAction={selectedExamForAction}
+                    folderList={folderList}
+                    onCopyConfirm={handleCopyConfirm}
+                />
+            )}
+
+            {isMoveExamModal && (
+                <ModelForMoveExam
+                    isModelForMoveExam={isMoveExamModal}
+                    setIsModelForMoveExam={setIsMoveExamModal}
+                    selectedExamForAction={selectedExamForAction}
+                    folderList={folderList}
+                    onMoveConfirm={handleMoveConfirm}
+                />
+            )}
+
+            {isEditFolderModal && (
+                <ModelForEditFolder
+                    isModelForEditFolder={isEditFolderModal}
+                    setIsModelForEditFolder={setIsEditFolderModal}
+                    selectedFolderForAction={selectedFolderForAction}
+                    onUpdateConfirm={handleUpdateFolder}
+                    loading={folderActionLoading}
+                />
+            )}
+
+            {isDeleteFolderModal && (
+                <ModelForDeleteFolder
+                    isModelForDeleteFolder={isDeleteFolderModal}
+                    setIsModelForDeleteFolder={setIsDeleteFolderModal}
+                    selectedFolderForAction={selectedFolderForAction}
+                    onDeleteConfirm={handleDeleteFolderConfirm}
+                    loading={folderActionLoading}
                 />
             )}
         </div>

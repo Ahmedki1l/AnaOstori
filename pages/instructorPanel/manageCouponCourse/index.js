@@ -32,9 +32,23 @@ const Index = () => {
             isDeleted: true,
         }
         await postRouteAPI(data).then((res) => {
+            toast.success('تم حذف الكوبون بنجاح');
             getCouponList()
         }).catch((err) => {
             console.log(err);
+            
+            // Handle specific error cases
+            if (err?.response?.status === 400) {
+                const errorMessage = err?.response?.data?.message || 'بيانات غير صحيحة';
+                toast.error(errorMessage);
+            } else if (err?.response?.status === 404) {
+                toast.error('الكوبون غير موجود');
+            } else if (err?.response?.status === 422) {
+                const errorMessage = err?.response?.data?.message || 'لا يمكن حذف الكوبون';
+                toast.error(errorMessage);
+            } else {
+                toast.error('حدث خطأ أثناء حذف الكوبون');
+            }
         })
     }
     const tableColumns = [
@@ -49,6 +63,23 @@ const Index = () => {
         {
             title: 'نسبة الخصم',
             dataIndex: 'percentage',
+            render: (text, record) => {
+                if (record.discountMode === 'fixedAmount' || record.fixedAmount) {
+                    return (
+                        <div>
+                            <p className="fontBold" style={{ color: '#F26722' }}>{record.fixedAmount} ر.س</p>
+                            <p className="text-xs text-gray-500">قيمة ثابتة</p>
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div>
+                            <p className="fontBold" style={{ color: '#F26722' }}>{text}%</p>
+                            <p className="text-xs text-gray-500">نسبة مئوية</p>
+                        </div>
+                    );
+                }
+            }
         },
         {
             title: 'نوع الخصم',
@@ -60,6 +91,17 @@ const Index = () => {
                 return (
                     <p>{couponType?.label}</p>
                 )
+            }
+        },
+        {
+            title: 'طريقة الخصم',
+            dataIndex: 'discountMode',
+            render: (text, record) => {
+                if (record.discountMode === 'fixedAmount' || record.fixedAmount) {
+                    return <span style={{ color: '#F26722' }}>قيمة ثابتة</span>;
+                } else {
+                    return <span style={{ color: '#00bd5d' }}>نسبة مئوية</span>;
+                }
             }
         },
         {
@@ -165,11 +207,24 @@ const Index = () => {
             if (error?.response?.status == 401) {
                 await getNewToken().then(async (token) => {
                     await postRouteAPI(body).then((res) => {
-                        setListOfCoupon(res.data);
-                    })
-                }).catch(error => {
-                    console.error("Error:", error);
+                        const newList = res.data.map((item) => {
+                            return {
+                                ...item,
+                                key: item.id
+                            }
+                        })
+                        setListOfCoupon(newList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+                    }).catch(retryError => {
+                        console.error("Error after token refresh:", retryError);
+                        toast.error('فشل في تحميل قائمة الكوبونات');
+                    });
+                }).catch(tokenError => {
+                    console.error("Token refresh error:", tokenError);
+                    toast.error('فشل في تحديث الجلسة');
                 });
+            } else {
+                console.error("Error loading coupons:", error);
+                toast.error('فشل في تحميل قائمة الكوبونات');
             }
         })
     }

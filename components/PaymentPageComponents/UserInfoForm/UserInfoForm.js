@@ -13,6 +13,7 @@ import { dateWithDay } from '../../../constants/DateConverter';
 import { getRouteAPI } from '../../../services/apisService';
 import * as PaymentConst from '../../../constants/PaymentConst';
 // import TabbyPomoForm from '../PaymentInfoForm/TabbyPromo';
+import { toast } from 'react-toastify';
 
 export default function UserInfoForm(props) {
 	console.log("🚀 ~ UserInfoForm ~ props:", props);
@@ -94,6 +95,10 @@ export default function UserInfoForm(props) {
 	const [totalStudent, setTotalStudent] = useState((studentsDataLength) ? (((studentsDataLength > 2) ? 3 : studentsDataLength)) : 1)
 	const [userAgree, setUserAgree] = useState(false)
 	const [enrollForMe, setEnrollForMe] = useState(false)
+	
+	// Enhanced form data persistence
+	const [formDataSaved, setFormDataSaved] = useState(false)
+	
 	const [studentsData, setStudentsData] = useState(
 		(courseDetail.type == 'on-demand') ? [preselectedUserTempletFOrOnDemand]
 			: studentsDataLength ? (props.studentsData)
@@ -105,6 +110,97 @@ export default function UserInfoForm(props) {
 		getRegionAndBranchList();
 	}, []);
 
+	// Enhanced form data persistence functions
+	const saveFormDataToStorage = () => {
+		const formData = {
+			studentsData: studentsData,
+			totalStudent: totalStudent,
+			userAgree: userAgree,
+			enrollForMe: enrollForMe,
+			selectedGender: selectedGender,
+			selectedDate: selectedDate,
+			selectedRegionId: selectedRegionId,
+			courseId: courseDetail.id,
+			courseName: courseDetail.name,
+			courseType: courseDetail.type,
+			timestamp: Date.now()
+		}
+		
+		localStorage.setItem('courseRegistrationFormData', JSON.stringify(formData))
+		localStorage.setItem('isFromCourseRegistration', 'true')
+		setFormDataSaved(true)
+	}
+
+	const restoreFormDataFromStorage = () => {
+		const savedFormData = localStorage.getItem('courseRegistrationFormData')
+		if (savedFormData) {
+			try {
+				const parsedData = JSON.parse(savedFormData)
+				const currentTime = Date.now()
+				const timeDiff = currentTime - parsedData.timestamp
+				const hoursDiff = timeDiff / (1000 * 60 * 60)
+				
+				// Only restore data if it's less than 24 hours old
+				if (hoursDiff < 24 && parsedData.courseId === courseDetail.id) {
+					setStudentsData(parsedData.studentsData || studentsData)
+					setTotalStudent(parsedData.totalStudent || totalStudent)
+					setUserAgree(parsedData.userAgree || false)
+					setEnrollForMe(parsedData.enrollForMe || false)
+					setSelectedGender(parsedData.selectedGender || selectedGender)
+					setSelectedDate(parsedData.selectedDate || selectedDate)
+					setSelectedRegionId(parsedData.selectedRegionId || selectedRegionId)
+					
+					
+					// Show success message
+					toast.success('تم استعادة بيانات التسجيل المحفوظة', { rtl: true })
+					return true
+				} else {
+					// Clear expired data
+					localStorage.removeItem('courseRegistrationFormData')
+					localStorage.removeItem('isFromCourseRegistration')
+				}
+			} catch (error) {
+				console.error('Error restoring form data:', error)
+				localStorage.removeItem('courseRegistrationFormData')
+				localStorage.removeItem('isFromCourseRegistration')
+			}
+		}
+		return false
+	}
+
+	const clearSavedFormData = () => {
+		localStorage.removeItem('courseRegistrationFormData')
+		localStorage.removeItem('isFromCourseRegistration')
+		setFormDataSaved(false)
+	}
+
+	// Check for saved form data on component mount
+	useEffect(() => {
+		const isFromRegistration = localStorage.getItem('isFromCourseRegistration')
+		if (isFromRegistration === 'true') {
+			restoreFormDataFromStorage()
+		}
+	}, [])
+
+	// Add visual indicator for saved form data
+	const renderFormDataIndicator = () => {
+		if (formDataSaved) {
+			return (
+				<div className={styles.formDataIndicator}>
+					<AllIconsComponenet iconName={'saveIcon'} height={16} width={16} color={'#10b981'} />
+					<span>تم حفظ بيانات التسجيل</span>
+					<button 
+						onClick={clearSavedFormData}
+						className={styles.clearDataBtn}
+						title="مسح البيانات المحفوظة"
+					>
+						<AllIconsComponenet iconName={'deleteIcon'} height={14} width={14} color={'#6b7280'} />
+					</button>
+				</div>
+			)
+		}
+		return null
+	}
 
 	const handleTotalStudent = (value) => {
 		const newTotalStudent = value
@@ -122,6 +218,9 @@ export default function UserInfoForm(props) {
 			data.splice(1, students)
 			setStudentsData(data)
 		}
+		
+		// Auto-save form data when total student changes
+		setTimeout(() => saveFormDataToStorage(), 100)
 	}
 
 	const handleAddForm = (isDateForAllSelected) => {
@@ -304,6 +403,54 @@ export default function UserInfoForm(props) {
 		})
 	}
 
+	const handleStudentDataChange = (index, field, value) => {
+		const updatedStudentsData = [...studentsData]
+		updatedStudentsData[index][field] = value
+		setStudentsData(updatedStudentsData)
+		
+		// Auto-save form data when student data changes
+		setTimeout(() => saveFormDataToStorage(), 100)
+	}
+
+	const handleStudentInputChange = (index, field, value) => {
+		const updatedStudentsData = [...studentsData]
+		updatedStudentsData[index][field] = value
+		setStudentsData(updatedStudentsData)
+		
+		// Auto-save form data when student input changes
+		setTimeout(() => saveFormDataToStorage(), 100)
+	}
+
+	const handleStudentGenderChange = (index, value) => {
+		const updatedStudentsData = [...studentsData]
+		updatedStudentsData[index].gender = value
+		setStudentsData(updatedStudentsData)
+		
+		// Auto-save form data when student gender changes
+		setTimeout(() => saveFormDataToStorage(), 100)
+	}
+
+	const handleStudentDateChange = (index, value) => {
+		const updatedStudentsData = [...studentsData]
+		updatedStudentsData[index].availabilityId = value
+		setStudentsData(updatedStudentsData)
+		
+		// Auto-save form data when student date changes
+		setTimeout(() => saveFormDataToStorage(), 100)
+	}
+
+	const handleGenderChange = (value) => {
+		setSelectedGender(value)
+		// Auto-save form data when gender changes
+		setTimeout(() => saveFormDataToStorage(), 100)
+	}
+
+	const handleDateChange = (value) => {
+		setSelectedDate(value)
+		// Auto-save form data when date changes
+		setTimeout(() => saveFormDataToStorage(), 100)
+	}
+
 	const handleRegionChange = (event, index) => {
 		const selectedRegionId = event.target.value
 		console.log("selected region: ", selectedRegionId);
@@ -339,6 +486,9 @@ export default function UserInfoForm(props) {
 		} else {
 			setFemaleDates(regionDateListFemale)
 		}
+		
+		// Auto-save form data when region changes
+		setTimeout(() => saveFormDataToStorage(), 100)
 	}
 
 	// States for filtered dates (by city & district)
@@ -484,7 +634,10 @@ export default function UserInfoForm(props) {
 
 
 	return (
-		<>
+		<div className={styles.userInfoFormWrapper}>
+			{/* Form Data Persistence Indicator */}
+			{renderFormDataIndicator()}
+			
 			<FirstPaymentPageInfo />
 			<div className='pb-4'>
 				{groupDiscountEligible && courseDetail.type != 'on-demand' &&
@@ -787,6 +940,6 @@ export default function UserInfoForm(props) {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	)
 }

@@ -3,6 +3,11 @@ export const couponTypes = [
     { value: 'notLimited', label: ' لا محدود ' }
 ]
 
+export const discountModes = [
+    { label: 'نسبة مئوية', value: 'percentage' },
+    { label: 'قيمة ثابتة', value: 'fixedAmount' },
+]
+
 export const manageCouponConst = {
     createCouponHead: 'إضافة كوبون',
     updateCouponHead: 'تعديل الكوبون',

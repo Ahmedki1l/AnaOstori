@@ -1,6 +1,6 @@
 import React from 'react'
 
-const EditIcon = ({ height, width, color, className }) => {
+const MoveIcon = ({ height, width, color, className }) => {
     return (
         <svg
             width={width}
@@ -11,14 +11,21 @@ const EditIcon = ({ height, width, color, className }) => {
             className={className}
         >
             <path
-                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
+                d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"
                 stroke={color}
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
             <path
-                d="M18.5 2.50023C18.8978 2.1025 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1025 21.5 2.50023C21.8978 2.89795 22.1214 3.43757 22.1214 4.00023C22.1214 4.56288 21.8978 5.1025 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z"
+                d="M19 15L19.5 17.5L22 18L19.5 18.5L19 21L18.5 18.5L16 18L18.5 17.5L19 15Z"
+                stroke={color}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M5 15L5.5 17.5L8 18L5.5 18.5L5 21L4.5 18.5L2 18L4.5 17.5L5 15Z"
                 stroke={color}
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -28,4 +35,4 @@ const EditIcon = ({ height, width, color, className }) => {
     )
 }
 
-export default EditIcon
+export default MoveIcon

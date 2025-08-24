@@ -363,17 +363,18 @@ export default function Index(props) {
 				people: createOrderData
 			}
 
-			// const params = {
-			// 	orderData,
-			// }
-
 			// Save data to localStorage before making the API call
 			localStorage.setItem('studentsData', JSON.stringify(studentsData));
 			localStorage.setItem('courseType', JSON.stringify(courseType));
 			localStorage.setItem('userAgree', JSON.stringify(userAgree));
 
-			await postAuthRouteAPI(orderData).then(res => {
+			await postAuthRouteAPI(orderData).then(async (res) => {
+				// Clear saved form data after successful order creation
+				localStorage.removeItem('courseBookingFormData')
+				localStorage.removeItem('isFromCourseBooking')
+				
 				let registeredDate;
+
 				if (studentsData[0].gender === "male") {
 					if (maleDates.length) {
 						registeredDate = maleDates.find((date) => date.id === studentsData[0].availabilityId);
@@ -413,8 +414,24 @@ export default function Index(props) {
 						returnUrl: window.location.pathname,
 					});
 					localStorage.setItem('isFromUserForm', true);
+					// Enhanced form data persistence - save comprehensive form data
+					const formData = {
+						studentsData: studentsData,
+						courseType: courseType,
+						userAgree: userAgree,
+						courseId: courseDetails.id,
+						courseName: courseDetails.name,
+						timestamp: Date.now()
+					}
+					localStorage.setItem('courseBookingFormData', JSON.stringify(formData))
+					localStorage.setItem('isFromCourseBooking', 'true')
+					
 					await getNewToken().then(async (token) => {
 						await postAuthRouteAPI(orderData).then(res => {
+							// Clear saved form data after successful order creation
+							localStorage.removeItem('courseBookingFormData')
+							localStorage.removeItem('isFromCourseBooking')
+							
 							let registeredDate;
 
 							if (studentsData[0].gender === "male") {

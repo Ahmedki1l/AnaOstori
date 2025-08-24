@@ -3,18 +3,12 @@ import { Form, FormItem } from '../antDesignCompo/FormItem';
 import Select from '../antDesignCompo/Select';
 import Input from '../../components/antDesignCompo/Input'
 import CustomButton from '../CommonComponents/CustomButton';
-import { couponTypes, manageCouponConst } from '../../constants/adminPanelConst/couponConst/couponConst';
+import { couponTypes, discountModes, manageCouponConst } from '../../constants/adminPanelConst/couponConst/couponConst';
 import { postRouteAPI } from '../../services/apisService';
 import DatePicker from '../antDesignCompo/Datepicker';
 import dayjs from 'dayjs';
 import styles from '../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
 import { toast } from 'react-toastify';
-
-// New constant for discount modes
-const discountModes = [
-    { label: 'نسبة', value: 'نسبة' },
-    { label: 'قيمة', value: 'قيمة' },
-];
 
 const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, setDrawerForCouponCourse }) => {
 
@@ -22,8 +16,8 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
     const [showBtnLoader, setShowBtnLoader] = useState(false)
     const [selectedCouponType, setSelectedCouponType] = useState()
     const [selectedCourse, setSelectedCourse] = useState()
-    const [selectedDiscountMode, setSelectedDiscountMode] = useState('نسبة');
-    // ^ tracks whether we are using "percentage" or "amount"
+    const [selectedDiscountMode, setSelectedDiscountMode] = useState('percentage');
+    // ^ tracks whether we are using "percentage" or "fixedAmount"
 
     /**
      * Build an array of { value: courseId, label: courseName, price: coursePrice }
@@ -39,24 +33,57 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
     );
 
     useEffect(() => {
+        // Determine discount mode from existing coupon data
+        let discountMode = 'percentage';
+        if (selectedCoupon?.discountMode) {
+            discountMode = selectedCoupon.discountMode;
+        } else if (selectedCoupon?.fixedAmount) {
+            discountMode = 'fixedAmount';
+        }
+        
+        const courseIds = selectedCoupon?.couponCourses.map((item) => {
+            return item.course.id
+        }) || [];
+        
         couponCourseForm.setFieldsValue({
             expires: selectedCoupon?.expires ? dayjs(selectedCoupon?.expires, 'YYYY-MM-DD') : undefined,
             name: selectedCoupon?.name,
             couponCode: selectedCoupon?.couponCode,
             percentage: selectedCoupon?.percentage,
+            fixedAmount: selectedCoupon?.fixedAmount,
             type: selectedCoupon?.type,
             limit: selectedCoupon?.limit,
-            discountMode: 'نسبة',
-            courseIds: selectedCoupon?.couponCourses.map((item) => { return item.course.id }),
+            discountMode: discountMode,
+            courseIds: courseIds,
         })
-        setSelectedCourse(selectedCoupon?.couponCourses.map((item) => {
-            return item.course.id
-        }))
+        
+        setSelectedCourse(courseIds);
+        
+        // Ensure fixed amount coupons only have one course
+        if (discountMode === 'fixedAmount' && courseIds.length > 1) {
+            const singleCourse = [courseIds[0]];
+            setSelectedCourse(singleCourse);
+            couponCourseForm.setFieldsValue({ courseIds: singleCourse });
+        }
         setSelectedCouponType(selectedCoupon?.type)
+        setSelectedDiscountMode(discountMode)
     }, [selectedCoupon, couponCourseForm])
 
     const handleSelectDiscountModeChange = (value) => {
         setSelectedDiscountMode(value);
+        // Clear the other field when switching modes
+        if (value === 'percentage') {
+            couponCourseForm.setFieldsValue({ fixedAmount: null });
+        } else {
+            couponCourseForm.setFieldsValue({ percentage: null });
+            // If switching to fixed amount and multiple courses are selected, keep only one
+            if (selectedCourse && selectedCourse.length > 1) {
+                const singleCourse = [selectedCourse[0]];
+                setSelectedCourse(singleCourse);
+                couponCourseForm.setFieldsValue({ courseIds: singleCourse });
+                toast.info("تم الاحتفاظ بالدورة الأولى فقط للكوبونات بقيمة ثابتة");
+            }
+        }
     };
 
     const handleSaveCouponDetails = async (values) => {
@@ -65,50 +92,35 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         values.global = true
         values.id = selectedCoupon?.id
 
-        // If user selected 'amount', convert the entered "percentage" field 
-        // to an actual fixed amount (or vice versa, whichever you prefer).
-        // In the snippet below, let's say we repurpose "percentage" field in the Form 
-        // to store the numeric discount. We'll rename it to avoid confusion:
-        let discountValue = values.percentage; // rename this in your form to "discountValue" for clarity
-
-        if (values.discountMode === 'قيمة') {
-            // If you only allow 1 course for "amount"
+        // Handle different discount modes properly
+        if (values.discountMode === 'fixedAmount') {
+            // For fixed amount, validate single course selection
+            if (!selectedCourse || selectedCourse.length === 0) {
+                setShowBtnLoader(false);
+                toast.error("يجب اختيار دورة واحدة على الأقل للكوبونات بقيمة ثابتة");
+                return;
+            }
             if (selectedCourse.length > 1) {
                 setShowBtnLoader(false);
-                toast.error("Cannot use 'Amount' discount for multiple courses. Select only 1 course.");
+                toast.error("لا يمكن استخدام خصم بقيمة ثابتة لدورات متعددة. اختر دورة واحدة فقط.");
                 return;
             }
-            // Find the selected course and its price
-            const selectedCourseObj = courseOptions.find(
-                (course) => course.value === selectedCourse[0]
-            );
-            if (!selectedCourseObj || !selectedCourseObj.price) {
-                setShowBtnLoader(false);
-                toast.error("Selected course does not have a valid price!");
-                return;
-            }
-
-            // Convert "discountValue" to percentage
-            // (Example formula: discountValue / coursePrice * 100)
-            const { price } = selectedCourseObj;
-            let convertedPercentage = (discountValue / price) * 100;
-
-            // If your schema strictly wants a number 0-100 in "percentage"
-            values.percentage = +convertedPercentage.toFixed(2);
-
-            // Optionally clamp the discount if > 100%
-            if (values.percentage > 100) {
-                values.percentage = 100;
-            }
+            
+            // For fixed amount, percentage field is not used, fixedAmount field is already set
+            // Clear percentage field for fixed amount coupons
+            values.percentage = null;
+        } else {
+            // For percentage, clear fixed amount field
+            values.fixedAmount = null;
         }
 
-        // Remove discountMode from the values object
-        delete values.discountMode;
+        // Keep the discount mode for backend processing
+        // Don't delete values.discountMode;
 
-        // else if 'percentage', we keep it as is
         let data = {
             routeName: selectedCoupon?.id ? "updateCoupon" : "createCoupon",
-            ...values
+            ...values,
+            courseIds: selectedCourse // Use selectedCourse instead of values.courseIds
         }
         await postRouteAPI(data).then((res) => {
             setShowBtnLoader(false)
@@ -119,6 +131,19 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         }).catch((err) => {
             console.log(err);
             setShowBtnLoader(false)
+            
+            // Handle specific error cases
+            if (err?.response?.status === 400) {
+                const errorMessage = err?.response?.data?.message || 'بيانات غير صحيحة';
+                toast.error(errorMessage);
+            } else if (err?.response?.status === 409) {
+                toast.error('كود الكوبون مستخدم بالفعل');
+            } else if (err?.response?.status === 422) {
+                const errorMessage = err?.response?.data?.message || 'بيانات غير صحيحة';
+                toast.error(errorMessage);
+            } else {
+                toast.error('حدث خطأ أثناء حفظ الكوبون');
+            }
         })
     }
     const handleSelectCouponChange = (value) => {
@@ -131,6 +156,15 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
     });
     const handleSelectCourse = (value) => {
         setSelectedCourse(value);
+        
+        // Validate fixed amount coupons can only have one course
+        if (selectedDiscountMode === 'fixedAmount' && value.length > 1) {
+            toast.warning("الكوبونات بقيمة ثابتة تعمل مع دورة واحدة فقط. سيتم إلغاء تحديد الدورات الإضافية.");
+            // Keep only the first selected course
+            const singleCourse = [value[0]];
+            setSelectedCourse(singleCourse);
+            couponCourseForm.setFieldsValue({ courseIds: singleCourse });
+        }
     }
 
 
@@ -167,7 +201,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                 </p>
                 <FormItem
                     name="discountMode"
-                    initialValue="نسبة"
+                    initialValue="percentage"
                     rules={[{ required: true, message: 'إختر نوع الخصم' }]}
                 >
                     <Select
@@ -192,7 +226,10 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                                 {
                                     validator: (_, val) => {
                                         if (val && val > 100) {
-                                            return Promise.reject('Percentage cannot exceed 100');
+                                            return Promise.reject('النسبة لا يمكن أن تتجاوز 100%');
+                                        }
+                                        if (val && val < 0) {
+                                            return Promise.reject('النسبة لا يمكن أن تكون سالبة');
                                         }
                                         return Promise.resolve();
                                     },
@@ -215,14 +252,13 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                             {manageCouponConst.couponAmountHead}
                         </p>
                         <FormItem
-                            name="percentage"
-                            // rename to "discountValue" in your form if you prefer
+                            name="fixedAmount"
                             rules={[
                                 { required: true, message: manageCouponConst.couponAmountError },
                                 {
                                     validator: (_, val) => {
                                         if (val && val < 0) {
-                                            return Promise.reject('Amount cannot be negative');
+                                            return Promise.reject('القيمة لا يمكن أن تكون سالبة');
                                         }
                                         return Promise.resolve();
                                     },
@@ -235,6 +271,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                                 fontSize={16}
                                 placeholder={manageCouponConst.couponAmountPlaceHolder}
                                 type="number"
+                                min={0}
                             />
                         </FormItem>
                     </>

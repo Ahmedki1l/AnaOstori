@@ -849,3 +849,43 @@
 		font-size: 26px;
 	}
 }
+
+// Form Data Persistence Indicator
+.formDataIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #166534;
+  font-weight: 500;
+  
+  span {
+    flex: 1;
+  }
+}
+
+.clearDataBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(107, 114, 128, 0.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}

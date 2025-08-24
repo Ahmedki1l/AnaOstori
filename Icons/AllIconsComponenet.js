@@ -103,6 +103,9 @@ import NewVisibleIcon from './customeIcons/newVisibleIcon'
 import NewVideoIcon from './customeIcons/newVideoIcon'
 import ExamIcon from './customeIcons/examIcon'
 import WarningIcon from './customeIcons/warningIcon'
+import CopyIcon from './customeIcons/copyIcon'
+import MoveIcon from './customeIcons/moveIcon'
+import SaveIcon from './customeIcons/saveIcon'
 
 import CurriculumNewVideoIcon from './customeIcons/curriculumNewVideoIcon'
 import CurriculumNewFileIcon from './customeIcons/curriculumNewFileIcon'
@@ -313,6 +316,12 @@ const AllIconsComponenet = ({ iconName, height, width, color = {}, strockColor =
 
 			{iconName == 'passwordAlertIcon' && <PasswordAlert height={height} width={width} color={color} />}
 			{iconName == 'whatsApp_whiteBorder' && <WhatsApp_whiteBorder height={height} width={width} color={color} />}
+
+			{iconName == 'copyIcon' && <CopyIcon height={height} width={width} color={color} />}
+			{iconName == 'moveIcon' && <MoveIcon height={height} width={width} color={color} />}
+			{iconName == 'saveIcon' && <SaveIcon height={height} width={width} color={color} />}
+			{iconName == 'editIcon' && <EditIcon height={height} width={width} color={color} />}
+			{iconName == 'deleteIcon' && <DeleteIcon height={height} width={width} color={color} />}
 
 		</>
 	)

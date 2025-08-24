@@ -175,7 +175,21 @@ export default function PaymentInfoForm(props) {
 		try {
 			const res = await getRouteAPI(data);
 			if (res.status === 200) {
-				setCouponAppliedData(res.data);
+				// Expected API response structure:
+				// For percentage: { percentage: 20, discountMode: 'percentage' }
+				// For fixed amount: { fixedAmount: 50, discountMode: 'fixedAmount' }
+				// Legacy support: { percentage: 20 } (assumed percentage)
+				
+				const couponData = res.data;
+				
+				// Ensure we have valid discount data
+				if (!couponData.percentage && !couponData.fixedAmount) {
+					console.error('Invalid coupon data: missing discount information');
+					setCouponError(true);
+					return;
+				}
+				
+				setCouponAppliedData(couponData);
 				setCouponError(false);
 
 				// Regenerate the checkout ID if a payment type is already selected
@@ -191,6 +205,19 @@ export default function PaymentInfoForm(props) {
 			console.error("Error checking coupon validity:", error);
 			setCouponAppliedData(null);
 			setCouponError(true);
+			
+			// Handle specific error cases
+			if (error?.response?.status === 400) {
+				const errorMessage = error?.response?.data?.message || 'كود الكوبون غير صحيح';
+				toast.error(errorMessage);
+			} else if (error?.response?.status === 404) {
+				toast.error('كود الكوبون غير موجود');
+			} else if (error?.response?.status === 422) {
+				const errorMessage = error?.response?.data?.message || 'كود الكوبون غير صالح';
+				toast.error(errorMessage);
+			} else {
+				toast.error('حدث خطأ أثناء التحقق من الكوبون');
+			}
 		}
 	};
 
@@ -202,7 +229,31 @@ export default function PaymentInfoForm(props) {
 		}
 	}, [setIsCanMakePayments])
 
-	const zeroCostFlag = ((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)) === 0;
+	// Helper function to calculate coupon discount amount
+	const calculateCouponDiscount = (couponData, totalAmount) => {
+		if (!couponData) return 0;
+		
+		let discountAmount = 0;
+		
+		if (couponData.discountMode === 'fixedAmount' || couponData.fixedAmount) {
+			// Fixed amount discount
+			discountAmount = Number(couponData.fixedAmount || 0);
+			console.log('Fixed amount discount:', discountAmount, 'ر.س');
+		} else {
+			// Percentage discount
+			discountAmount = (Number(couponData.percentage || 0) * totalAmount) / 100;
+			console.log('Percentage discount:', couponData.percentage, '% =', discountAmount.toFixed(2), 'ر.س');
+		}
+		
+		console.log('Total amount:', totalAmount, 'ر.س, Discount:', discountAmount.toFixed(2), 'ر.س');
+		return discountAmount;
+	};
+
+	const zeroCostFlag = (() => {
+		const totalAmount = Number(createdOrder.totalPrice) + Number(createdOrder.totalVat);
+		const discountAmount = calculateCouponDiscount(couponAppliedData, totalAmount);
+		return (totalAmount - discountAmount) === 0;
+	})();
 
 	return (
 		<div className='maxWidthDefault'>
@@ -424,15 +475,25 @@ export default function PaymentInfoForm(props) {
 							<p className='fontBold'>المبلغ الإجمالي</p>
 							<p className='fontBold pb-2'>{(Number(Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)).toFixed(2))} ر.س</p>
 						</div>
-						{(couponAppliedData?.percentage) &&
+						{(couponAppliedData?.percentage || couponAppliedData?.fixedAmount) &&
 							<>
 								<div className='flex justify-between'>
-									<p style={{ color: '#00bd5d' }} className='fontBold  pb-2'>خصم كود ({couponAppliedData?.percentage} %) </p>
-									<p style={{ color: '#00bd5d' }}> {(couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)}- ر.س</p>
+									<p style={{ color: '#00bd5d' }} className='fontBold  pb-2'>
+										خصم كود 
+										{couponAppliedData.discountMode === 'fixedAmount' || couponAppliedData.fixedAmount ? 
+											`(${couponAppliedData.fixedAmount} ر.س)` : 
+											`(${couponAppliedData.percentage} %)`
+										}
+									</p>
+									<p style={{ color: '#00bd5d' }}> 
+										{calculateCouponDiscount(couponAppliedData, Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)).toFixed(2)}- ر.س
+									</p>
 								</div>
 								<div className='flex justify-between '>
-									<p style={{ color: '#F26722' }} className='fontBold'>المبلغ المطلوب</p>
-									<p className='fontBold pb-2'>{((((Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)) - (couponAppliedData ? ((Number(couponAppliedData?.percentage) * (Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))) / 100) : 0)).toFixed(2)))} ر.س</p>
+									<p className='fontBold' style={{ color: '#F26722' }}>المبلغ المطلوب</p>
+									<p className='fontBold pb-2' style={{ color: '#F26722' }}>
+										{(Number(createdOrder.totalPrice) + Number(createdOrder.totalVat) - calculateCouponDiscount(couponAppliedData, Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))).toFixed(2)} ر.س
+									</p>
 								</div>
 							</>
 						}
