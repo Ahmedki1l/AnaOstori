@@ -106,6 +106,7 @@ import WarningIcon from './customeIcons/warningIcon'
 import CopyIcon from './customeIcons/copyIcon'
 import MoveIcon from './customeIcons/moveIcon'
 import SaveIcon from './customeIcons/saveIcon'
+import DeleteIcon from './customeIcons/deleteIcon'
 
 import CurriculumNewVideoIcon from './customeIcons/curriculumNewVideoIcon'
 import CurriculumNewFileIcon from './customeIcons/curriculumNewFileIcon'

@@ -23,8 +23,9 @@
 .noOfUserWrapper,
 .genderWrapper {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	width: 77rem;
+	gap: 1rem;
 }
 
 .userPriceWrapper {
@@ -682,10 +683,12 @@
 	.noOfUserWrapper {
 		width: 100%;
 		flex-direction: column;
+		justify-content: center;	
+		gap: 0;
 	}
 
 	.userPriceWrapper {
-		margin-bottom: 7rem;
+		margin-bottom: 1rem;
 	}
 
 	.usersRadioWrapper {
