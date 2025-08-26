@@ -108,10 +108,10 @@ export default function Payment(props) {
                     myCourses: myCourseData?.data,
                 });
 
-                // If payment is successful, send WhatsApp message
-                if (flag) {
-                    await sendWhatsAppMessage(paymentData);
-                }
+                // // If payment is successful, send WhatsApp message
+                // if (flag) {
+                //     await sendWhatsAppMessage(paymentData);
+                // }
 
             }).catch(async (error) => {
                 setLoading(false)
@@ -156,9 +156,9 @@ export default function Payment(props) {
                 });
 
                 // If payment is successful, send WhatsApp message
-                if (flag) {
-                    await sendWhatsAppMessage(paymentData);
-                }
+                // if (flag) {
+                //     await sendWhatsAppMessage(paymentData);
+                // }
 
             }).catch(async (error) => {
                 setLoading(false);
@@ -202,10 +202,10 @@ export default function Payment(props) {
                     myCourses: myCourseData?.data,
                 });
 
-                // If payment is successful, send WhatsApp message
-                if (flag) {
-                    await sendWhatsAppMessage(paymentData);
-                }
+                // // If payment is successful, send WhatsApp message
+                // if (flag) {
+                //     await sendWhatsAppMessage(paymentData);
+                // }
 
             }).catch(async (error) => {
                 setLoading(false);
@@ -237,10 +237,10 @@ export default function Payment(props) {
                 myCourses: myCourseData?.data,
             });
 
-            // If payment is successful, send WhatsApp message
-            if (flag) {
-                await sendWhatsAppMessage(paymentData);
-            }
+            // // If payment is successful, send WhatsApp message
+            // if (flag) {
+            //     await sendWhatsAppMessage(paymentData);
+            // }
 
         }).catch(async (error) => {
             setLoading(false)
