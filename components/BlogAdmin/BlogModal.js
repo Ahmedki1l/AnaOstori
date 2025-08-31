@@ -23,6 +23,7 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
     const [addingHeroImage, setAddingHeroImage] = useState(false)
     const [sections, setSections] = useState(initialSections)
     const [addingImageFor, setAddingImageFor] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     // add blank section
     const addSection = () => {
@@ -65,7 +66,6 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
         setAddingHeroImage(false);
     }
 
-
     // submit to your backend
     const handleSave = async () => {
         const sectionsWithoutId = sections.map(({ id, ...rest }) => rest);
@@ -73,14 +73,15 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
 
         // 1) validation (required fields…)
         if (!title.trim()) {
-            toast.warn("العنوان مطلوب");
+            toast.warn("العنوان مطلوب", { rtl: true });
             return;
         }
         if (!categoryId) {
-            toast.warn("اختر تصنيفًا");
+            toast.warn("اختر تصنيفًا", { rtl: true });
             return;
         }
 
+        setLoading(true);
         try {
             // 2) HERO IMAGE
             let finalHeroUrl = '';
@@ -94,7 +95,9 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                         console.log("🚀 ~ imageFiles.map ~ s3Url:", finalHeroUrl);
                     } catch (error) {
                         console.error("Error uploading new question image during update:", error);
-                        toast.error("فشل تحميل صورة المدونة الجديدة");
+                        toast.error("فشل تحميل صورة المدونة الجديدة", { rtl: true });
+                        setLoading(false);
+                        return;
                     }
                 }
             }
@@ -111,7 +114,9 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                                 imgUrl = await uploadFileSevices(sec.imageFile, () => { }, null, "blog");
                             } catch (error) {
                                 console.error("Error uploading new question image during update:", error);
-                                toast.error("فشل تحميل صورة القسم الجديدة");
+                                toast.error("فشل تحميل صورة القسم الجديدة", { rtl: true });
+                                setLoading(false);
+                                return;
                             }
                         }
                     }
@@ -133,26 +138,48 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
             };
 
             // 5) call your API
+            let response;
             if (blog?._id) {
                 // update
-                await axios.put(
+                response = await axios.put(
                     `${process.env.NEXT_PUBLIC_API_BASE_URL}/update-blog`,
                     { blogId: blog._id, ...payload }
                 );
-                toast.success("تم تحديث المقال بنجاح");
+                toast.success("تم تحديث المقال بنجاح", { rtl: true });
             } else {
                 // create
-                await axios.post(
+                response = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_BASE_URL}/create-blog`,
                     payload
                 );
-                toast.success("تم إضافة المقال بنجاح");
+                toast.success("تم إضافة المقال بنجاح", { rtl: true });
             }
 
+            onSave(response.data);
             onClose();
-        } catch (err) {
-            console.error("Blog upload error:", err);
-            toast.error("فشل حفظ المقال، حاول مرة أخرى");
+        } catch (error) {
+            console.error("Blog upload error:", error);
+            
+            // Handle different error status codes
+            if (error.response?.status === 400) {
+                if (error.response.data?.message?.includes('duplicate')) {
+                    toast.error('عنوان المقال موجود بالفعل', { rtl: true });
+                } else {
+                    toast.error('بيانات غير صحيحة، يرجى التحقق من المدخلات', { rtl: true });
+                }
+            } else if (error.response?.status === 404) {
+                toast.error('المقال أو التصنيف غير موجود', { rtl: true });
+            } else if (error.response?.status === 500) {
+                toast.error('حدث خطأ في الخادم، يرجى المحاولة مرة أخرى', { rtl: true });
+            } else if (error.response?.status === 405) {
+                toast.error('طريقة الطلب غير مسموحة', { rtl: true });
+            } else if (!error.response) {
+                toast.error('خطأ في الاتصال بالشبكة، يرجى التحقق من اتصال الإنترنت', { rtl: true });
+            } else {
+                toast.error("فشل حفظ المقال، حاول مرة أخرى", { rtl: true });
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -164,12 +191,22 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
 
                 <div className={styles.formGroup}>
                     <label>العنوان:</label>
-                    <input value={title} onChange={e => setTitle(e.target.value)} />
+                    <input 
+                        value={title} 
+                        onChange={e => setTitle(e.target.value)}
+                        disabled={loading}
+                        placeholder="أدخل عنوان المقال"
+                    />
                 </div>
 
                 <div className={styles.formGroup}>
                     <label>الوصف:</label>
-                    <textarea value={description} onChange={e => setDescription(e.target.value)} />
+                    <textarea 
+                        value={description} 
+                        onChange={e => setDescription(e.target.value)}
+                        disabled={loading}
+                        placeholder="أدخل وصف المقال"
+                    />
                 </div>
 
                 {/* — Hero Image — */}
@@ -182,6 +219,7 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                                 type="button"
                                 className={styles.removeImageBtn}
                                 onClick={() => setHeroImagePreview('')}
+                                disabled={loading}
                             >
                                 X
                             </button>
@@ -193,11 +231,13 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                                 accept="image/*"
                                 onChange={handleLocalHeroImage}
                                 className={styles.imageFileInput}
+                                disabled={loading}
                             />
                             <button
                                 type="button"
                                 className={styles.cancelImageBtn}
                                 onClick={() => setAddingHeroImage(false)}
+                                disabled={loading}
                             >
                                 إلغاء
                             </button>
@@ -207,6 +247,7 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                             type="button"
                             className={styles.addImageBtn}
                             onClick={() => setAddingHeroImage(true)}
+                            disabled={loading}
                         >
                             + إضافة صورة رئيسية
                         </button>
@@ -215,7 +256,11 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
 
                 <div className={styles.formGroup}>
                     <label>التصنيف:</label>
-                    <select value={categoryId} onChange={e => setCategoryId(e.target.value)}>
+                    <select 
+                        value={categoryId} 
+                        onChange={e => setCategoryId(e.target.value)}
+                        disabled={loading}
+                    >
                         <option value=''>— اختر تصنيف —</option>
                         {categories.map(c => (
                             <option key={c._id} value={c._id}>{c.title}</option>
@@ -230,6 +275,7 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                             <button
                                 className={styles.removeSectionBtn}
                                 onClick={() => removeSection(idx)}
+                                disabled={loading}
                             >
                                 X
                             </button>
@@ -239,6 +285,8 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                             <input
                                 value={sec.head}
                                 onChange={e => updateSection(idx, 'head', e.target.value)}
+                                disabled={loading}
+                                placeholder="أدخل العنوان الفرعي"
                             />
                         </div>
                         <div className={styles.formGroup}>
@@ -246,43 +294,49 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                             <textarea
                                 value={sec.content}
                                 onChange={e => updateSection(idx, 'content', e.target.value)}
+                                disabled={loading}
+                                placeholder="أدخل محتوى الفقرة"
                             />
                         </div>
 
                         {/* section image */}
                         {sec.imagePreview ? (
                             <div className={styles.imagePreviewContainer}>
-                                <label>صورة المقال الرئيسية:</label>
+                                <label>صورة القسم:</label>
                                 <img src={sec.imagePreview} alt="صورة القسم" className={styles.imagePreview} />
                                 <button
                                     className={styles.removeImageBtn}
                                     onClick={() => updateSection(idx, 'imagePreview', '')}
+                                    disabled={loading}
                                 >
                                     X
                                 </button>
                             </div>
                         ) : addingImageFor === idx ? (
                             <div className={styles.imageInputGroup}>
-                                <label>صورة المقال الرئيسية:</label>
+                                <label>صورة القسم:</label>
                                 <input
                                     type="file"
                                     accept="image/*"
                                     onChange={e => handleLocalImage(e, idx)}
                                     className={styles.imageFileInput}
+                                    disabled={loading}
                                 />
                                 <button
                                     className={styles.cancelImageBtn}
                                     onClick={() => setAddingImageFor(null)}
+                                    disabled={loading}
                                 >
                                     إلغاء
                                 </button>
                             </div>
                         ) : (
                             <>
-                                <label>صورة المقال الرئيسية:</label>
+                                <label>صورة القسم:</label>
                                 <button
                                     className={styles.addImageBtn}
                                     onClick={() => setAddingImageFor(idx)}
+                                    disabled={loading}
                                 >
                                     + إضافة صورة
                                 </button>
@@ -291,13 +345,29 @@ export default function BlogModal({ blog, categories, onSave, onClose }) {
                     </div>
                 ))}
 
-                <button className={styles.addSectionBtn} onClick={addSection}>
+                <button 
+                    className={styles.addSectionBtn} 
+                    onClick={addSection}
+                    disabled={loading}
+                >
                     + إضافة قسم جديد
                 </button>
 
                 <div className={styles.actions}>
-                    <button className={styles.cancelBtn} onClick={onClose}>إلغاء</button>
-                    <button className={styles.saveBtn} onClick={handleSave}>حفظ</button>
+                    <button 
+                        className={styles.cancelBtn} 
+                        onClick={onClose}
+                        disabled={loading}
+                    >
+                        إلغاء
+                    </button>
+                    <button 
+                        className={styles.saveBtn} 
+                        onClick={handleSave}
+                        disabled={loading || !title.trim() || !categoryId}
+                    >
+                        {loading ? 'جاري الحفظ...' : 'حفظ'}
+                    </button>
                 </div>
             </div>
         </div>

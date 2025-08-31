@@ -4,11 +4,13 @@ import BlogModal from './BlogModal'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import styles from './BlogList.module.scss';
 import { formatFullDate } from '../../constants/DateConverter';
+import { toast } from 'react-toastify';
 
 export default function BlogList({ blogs, setBlogs, categories, refresh }) {
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [creating, setCreating] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   const handleCreate = async data => {
     refresh();
@@ -19,12 +21,44 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
   }
 
   const handleDelete = async id => {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/delete-blog`,
-      { blogId: id }
-    );
-    setBlogs(bs => bs.filter(b => b._id !== id))
-    refresh();
+    setDeleteLoading(true);
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/delete-blog`,
+        {
+          data: { 
+            blogId: id 
+          }
+        }
+      );
+      
+      if (response.status === 200) {
+        // Update local state
+        setBlogs(bs => bs.filter(b => b._id !== id));
+        toast.success('تم حذف المقال بنجاح', { rtl: true });
+        refresh();
+      }
+    } catch (error) {
+      console.error('Delete blog failed:', error);
+      
+      // Handle different error status codes
+      if (error.response?.status === 404) {
+        toast.error('المقال غير موجود', { rtl: true });
+      } else if (error.response?.status === 400) {
+        toast.error('معرف المقال غير صحيح', { rtl: true });
+      } else if (error.response?.status === 500) {
+        toast.error('حدث خطأ في الخادم، يرجى المحاولة مرة أخرى', { rtl: true });
+      } else if (error.response?.status === 405) {
+        toast.error('طريقة الطلب غير مسموحة', { rtl: true });
+      } else if (!error.response) {
+        toast.error('خطأ في الاتصال بالشبكة، يرجى التحقق من اتصال الإنترنت', { rtl: true });
+      } else {
+        toast.error('فشل في حذف المقال، يرجى المحاولة مرة أخرى', { rtl: true });
+      }
+    } finally {
+      setDeleteLoading(false);
+      setDeleting(null);
+    }
   }
 
   return (
@@ -65,8 +99,9 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
                   <button
                     className={styles.deleteBtn}
                     onClick={() => setDeleting(b)}
+                    disabled={deleteLoading}
                   >
-                    حذف
+                    {deleteLoading ? 'جاري الحذف...' : 'حذف'}
                   </button>
                 </div>
               </td>
@@ -93,8 +128,9 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
       {deleting && (
         <ConfirmDeleteModal
           title={`حذف المقال "${deleting.title}"؟`}
-          onConfirm={() => { handleDelete(deleting._id); setDeleting(null) }}
-          onClose={() => {setDeleting(null); handleUpdate()}}
+          onConfirm={() => handleDelete(deleting._id)}
+          onClose={() => setDeleting(null)}
+          isLoading={deleteLoading}
         />
       )}
     </div>
