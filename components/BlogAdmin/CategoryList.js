@@ -12,10 +12,18 @@ export default function CategoryList({ categories, setCategories, refresh }) {
     const [deleteLoading, setDeleteLoading] = useState(false)
 
     const handleCreate = async data => {
+        // Update local state immediately
+        setCategories(prev => [data, ...prev]);
+        // Then refresh from server to ensure consistency
         refresh();
     }
     
     const handleUpdate = async (id, data) => {
+        // Update local state immediately
+        setCategories(prev => prev.map(category => 
+            category._id === id ? { ...category, ...data } : category
+        ));
+        // Then refresh from server to ensure consistency
         refresh();
     }
     
@@ -33,7 +41,7 @@ export default function CategoryList({ categories, setCategories, refresh }) {
                 // Update local state
                 setCategories(cs => cs.filter(c => c._id !== id));
                 toast.success('تم حذف التصنيف بنجاح', { rtl: true });
-                refresh();
+                // No need to call refresh() here since we already updated local state
             }
         } catch (error) {
             console.error('Delete category failed:', error);

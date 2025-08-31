@@ -13,10 +13,18 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
   const [deleteLoading, setDeleteLoading] = useState(false)
 
   const handleCreate = async data => {
+    // Update local state immediately
+    setBlogs(prev => [data, ...prev]);
+    // Then refresh from server to ensure consistency
     refresh();
   }
 
   const handleUpdate = async (id, data) => {
+    // Update local state immediately
+    setBlogs(prev => prev.map(blog => 
+      blog._id === id ? { ...blog, ...data } : blog
+    ));
+    // Then refresh from server to ensure consistency
     refresh();
   }
 
@@ -36,7 +44,7 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
         // Update local state
         setBlogs(bs => bs.filter(b => b._id !== id));
         toast.success('تم حذف المقال بنجاح', { rtl: true });
-        refresh();
+        // No need to call refresh() here since we already updated local state
       }
     } catch (error) {
       console.error('Delete blog failed:', error);
@@ -114,7 +122,7 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
         <BlogModal
           categories={categories}
           onSave={data => { handleCreate(data); setCreating(false) }}
-          onClose={() => {setCreating(false); handleUpdate()}}
+          onClose={() => setCreating(false)}
         />
       )}
       {editing && (
@@ -122,7 +130,7 @@ export default function BlogList({ blogs, setBlogs, categories, refresh }) {
           blog={editing}
           categories={categories}
           onSave={data => { handleUpdate(editing._id, data); setEditing(null) }}
-          onClose={() => {setEditing(null); handleUpdate()}}
+          onClose={() => setEditing(null)}
         />
       )}
       {deleting && (
