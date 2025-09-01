@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, Button, Alert, Divider, Checkbox, Typography } from 'antd'
 import { DeleteOutlined, ExclamationCircleOutlined, WarningOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
+import styles from '../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 
 const { Text } = Typography
 

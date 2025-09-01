@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Input, Checkbox, Button, Alert, Divider, Form } from 'antd'
 import { EditOutlined, FolderOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
+import styles from '../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 
 const { TextArea } = Input
 

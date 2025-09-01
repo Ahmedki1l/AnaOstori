@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Select, Button, Alert, Divider, Typography } from 'antd'
 import { SwapOutlined, FolderOutlined, ExclamationCircleOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
+import styles from '../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 
 const { Option } = Select
 const { Text } = Typography
