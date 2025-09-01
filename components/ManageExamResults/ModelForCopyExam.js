@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Select, Checkbox, Button, Alert, Spin, Divider } from 'antd'
 import { CopyOutlined, FolderOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import styles from '../../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
+import styles from '../../styles/InstructorPanelStyleSheets/ManageExamResults.module.scss'
 
 const { Option } = Select
 
