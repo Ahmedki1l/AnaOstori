@@ -82,23 +82,23 @@
     border: 1px solid #e2e8f0;
 
     .backButton {
-      display: flex;
-      align-items: center;
-      gap: 0.875rem;
-      background: linear-gradient(135deg, #F26722 0%, #e55a1a 100%);
-      border: none;
-      border-radius: 16px;
-      padding: 1.125rem 2rem;
-      color: white;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 6px 20px rgba(242, 103, 34, 0.3), 0 2px 8px rgba(242, 103, 34, 0.2);
-      position: relative;
-      overflow: hidden;
-      text-transform: none;
-      letter-spacing: 0.025em;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.875rem !important;
+      background: linear-gradient(135deg, #F26722 0%, #e55a1a 100%) !important;
+      border: none !important;
+      border-radius: 16px !important;
+      padding: 1.125rem 2rem !important;
+      color: white !important;
+      font-size: 0.95rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 6px 20px rgba(242, 103, 34, 0.3), 0 2px 8px rgba(242, 103, 34, 0.2) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      text-transform: none !important;
+      letter-spacing: 0.025em !important;
 
       &::before {
         content: '';
@@ -124,9 +124,9 @@
       }
 
       &:hover {
-        background: linear-gradient(135deg, #e55a1a 0%, #d14e0f 100%);
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 12px 35px rgba(242, 103, 34, 0.4), 0 6px 15px rgba(242, 103, 34, 0.3);
+        background: linear-gradient(135deg, #e55a1a 0%, #d14e0f 100%) !important;
+        transform: translateY(-3px) scale(1.02) !important;
+        box-shadow: 0 12px 35px rgba(242, 103, 34, 0.4), 0 6px 15px rgba(242, 103, 34, 0.3) !important;
 
         &::before {
           left: 100%;
@@ -138,13 +138,13 @@
       }
 
       &:active {
-        transform: translateY(-1px) scale(1.01);
-        box-shadow: 0 8px 25px rgba(242, 103, 34, 0.3), 0 4px 10px rgba(242, 103, 34, 0.2);
+        transform: translateY(-1px) scale(1.01) !important;
+        box-shadow: 0 8px 25px rgba(242, 103, 34, 0.3), 0 4px 10px rgba(242, 103, 34, 0.2) !important;
       }
 
       &:focus {
-        outline: none;
-        box-shadow: 0 0 0 4px rgba(242, 103, 34, 0.2), 0 6px 20px rgba(242, 103, 34, 0.3);
+        outline: none !important;
+        box-shadow: 0 0 0 4px rgba(242, 103, 34, 0.2), 0 6px 20px rgba(242, 103, 34, 0.3) !important;
       }
 
       // Icon styling

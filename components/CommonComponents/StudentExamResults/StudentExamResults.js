@@ -294,7 +294,7 @@ const StudentExamResults = () => {
         </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToFolders} className={styles.backButton}>
-            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
             العودة للمجلدات
           </button>
           <h2>{selectedFolder.name}</h2>
@@ -351,7 +351,7 @@ const StudentExamResults = () => {
         </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToExams} className={styles.backButton}>
-            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
             العودة للاختبارات
           </button>
           <h2>{selectedExam.name}</h2>
@@ -481,7 +481,7 @@ const StudentExamResults = () => {
         </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToResults} className={styles.backButton}>
-            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
             العودة للنتائج
           </button>
           <h2>تفاصيل النتيجة</h2>
@@ -520,7 +520,7 @@ const StudentExamResults = () => {
         </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
-            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
             العودة للتفاصيل
           </button>
           <h2>مراجعة الأقسام</h2>
@@ -617,7 +617,7 @@ const StudentExamResults = () => {
           </div> */}
           <div className={styles.navigationHeader}>
             <button onClick={goBackToDetails} className={styles.backButton}>
-              <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+              <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
               العودة للتفاصيل
             </button>
             <h2>مراجعة الأسئلة</h2>
@@ -640,7 +640,7 @@ const StudentExamResults = () => {
         </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
-            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
             العودة للتفاصيل
           </button>
           <h2>مراجعة الأسئلة</h2>
@@ -677,7 +677,7 @@ const StudentExamResults = () => {
         </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
-            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
             العودة للتفاصيل
           </button>
           <h2>مراجعة السؤال</h2>
