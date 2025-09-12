@@ -31,6 +31,16 @@ const StudentExamResults = () => {
     fetchFolders()
   }, [])
 
+  // Fetch questions when reviewAnswers view is active and questions are needed
+  useEffect(() => {
+    if (currentView === 'reviewAnswers' && selectedResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
+      const questionIds = selectedResult.reviewQuestions.map(q => q.questionId)
+      fetchQuestionsByIds(questionIds).then(questions => {
+        setFetchedQuestions(questions)
+      })
+    }
+  }, [currentView, selectedResult, fetchedQuestions.length])
+
   // Function to fetch questions by their IDs
   const fetchQuestionsByIds = async (questionIds) => {
     if (!questionIds || questionIds.length === 0) return []
@@ -503,16 +513,6 @@ const StudentExamResults = () => {
   // Review Answers View
   if (currentView === 'reviewAnswers' && selectedResult) {
     const reviewQuestions = selectedResult.reviewQuestions || []
-    
-    // Fetch questions if not already fetched
-    useEffect(() => {
-      if (reviewQuestions.length > 0 && fetchedQuestions.length === 0) {
-        const questionIds = reviewQuestions.map(q => q.questionId)
-        fetchQuestionsByIds(questionIds).then(questions => {
-          setFetchedQuestions(questions)
-        })
-      }
-    }, [reviewQuestions])
 
     // Create question structure with fetched data
     const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
