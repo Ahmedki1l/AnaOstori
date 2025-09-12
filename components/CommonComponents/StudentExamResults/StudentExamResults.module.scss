@@ -999,6 +999,8 @@
 
   // Override navigationHeader styles when inside resultsContainer
   .navigationHeader {
+    margin-bottom: 2rem; // Add space between header and main content
+    
     .backButton {
       display: flex !important;
       align-items: center !important;
