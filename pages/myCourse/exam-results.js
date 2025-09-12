@@ -11,7 +11,7 @@ const ExamResultsPage = () => {
       </Head>
       
       <div style={{ padding: '1rem' }}>
-        <div style={{ marginBottom: '1rem' }}>
+        {/* <div style={{ marginBottom: '1rem' }}>
           <a 
             href="/myCourse" 
             style={{ 
@@ -25,7 +25,7 @@ const ExamResultsPage = () => {
           >
             ← العودة لدوراتي
           </a>
-        </div>
+        </div> */}
         <StudentExamResults />
       </div>
     </>
