@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQuestions, onReviewAnswers, onRetakeExam }) => {
+const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQuestions, onReviewAnswers, onRetakeExam, hideRetakeButton = false }) => {
     console.log("🚀 ~ ExamResults ~ elapsedTime:", elapsedTime);
     const allReviews = reviewQuestions;
     const flatReviews = allReviews.flat();
@@ -490,9 +490,11 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
 
             {/* Action buttons */}
             <div className={styles.actionButtons}>
-                <button className={styles.retakeButton} onClick={onRetakeExam}>
-                    إعادة الاختبار
-                </button>
+                {!hideRetakeButton && (
+                    <button className={styles.retakeButton} onClick={onRetakeExam}>
+                        إعادة الاختبار
+                    </button>
+                )}
                 <button className={styles.reviewButton} onClick={onReviewAnswers}>
                     مراجعة الأسئلة والأجوبة الصحيحة
                 </button>

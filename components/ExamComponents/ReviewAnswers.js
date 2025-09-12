@@ -14,7 +14,9 @@ const ReviewAnswers = ({
     showReviewSection,
     finishReview,
     showResults,
-    section
+    section,
+    hideResultsButton = false,
+    hideRetakeButton = false
 }) => {
     console.log("🚀 ~ section:", section)
     console.log("🚀 ~ reviewQuestions:", reviewQuestions)
@@ -266,26 +268,28 @@ const ReviewAnswers = ({
                 </div>
 
                 <div className={styles.examActions2}>
-                    <button
-                        className={styles.nextButton}
-                        onClick={showResults}
-                    >
-                        <div style={{ width: '28px', height: '28px' }} >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <g clip-path="url(#clip0_205_4266)">
-                                    <path d="M8 9H4V20H8V9Z" fill="white" />
-                                    <path d="M20 13H16V20H20V13Z" fill="white" />
-                                    <path d="M14 4H10V20H14V4Z" fill="white" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_205_4266">
-                                        <rect width="24" height="24" fill="white" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                        </div>
-                        <span>ملخص النتائج</span>
-                    </button>
+                    {!hideResultsButton && (
+                        <button
+                            className={styles.nextButton}
+                            onClick={showResults}
+                        >
+                            <div style={{ width: '28px', height: '28px' }} >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <g clip-path="url(#clip0_205_4266)">
+                                        <path d="M8 9H4V20H8V9Z" fill="white" />
+                                        <path d="M20 13H16V20H20V13Z" fill="white" />
+                                        <path d="M14 4H10V20H14V4Z" fill="white" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_205_4266">
+                                            <rect width="24" height="24" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <span>ملخص النتائج</span>
+                        </button>
+                    )}
 
                     <button
                         className={styles.nextButton}
@@ -309,24 +313,26 @@ const ReviewAnswers = ({
                         <span>شاشة الأقسام</span>
                     </button>
 
-                    <button
-                        className={styles.nextButton}
-                        onClick={finishReview}
-                    >
-                        <div style={{ width: '28px', height: '28px' }} >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                                <g clip-path="url(#clip0_205_4261)">
-                                    <path d="M18.1498 6.35C16.6998 4.9 14.7098 4 12.4998 4C8.07977 4 4.50977 7.58 4.50977 12C4.50977 16.42 8.07977 20 12.4998 20C16.2298 20 19.3398 17.45 20.2298 14H18.1498C17.3298 16.33 15.1098 18 12.4998 18C9.18977 18 6.49977 15.31 6.49977 12C6.49977 8.69 9.18977 6 12.4998 6C14.1598 6 15.6398 6.69 16.7198 7.78L13.4998 11H20.4998V4L18.1498 6.35Z" fill="white" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_205_4261">
-                                        <rect width="24" height="24" fill="white" transform="translate(0.5)" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                        </div>
-                        <span>إعادة الاختبار</span>
-                    </button>
+                    {!hideRetakeButton && (
+                        <button
+                            className={styles.nextButton}
+                            onClick={finishReview}
+                        >
+                            <div style={{ width: '28px', height: '28px' }} >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                                    <g clip-path="url(#clip0_205_4261)">
+                                        <path d="M18.1498 6.35C16.6998 4.9 14.7098 4 12.4998 4C8.07977 4 4.50977 7.58 4.50977 12C4.50977 16.42 8.07977 20 12.4998 20C16.2298 20 19.3398 17.45 20.2298 14H18.1498C17.3298 16.33 15.1098 18 12.4998 18C9.18977 18 6.49977 15.31 6.49977 12C6.49977 8.69 9.18977 6 12.4998 6C14.1598 6 15.6398 6.69 16.7198 7.78L13.4998 11H20.4998V4L18.1498 6.35Z" fill="white" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_205_4261">
+                                            <rect width="24" height="24" fill="white" transform="translate(0.5)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <span>إعادة الاختبار</span>
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
