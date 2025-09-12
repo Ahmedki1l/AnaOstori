@@ -197,7 +197,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             const sectionScore = Math.round((correctAnswers / sectionQuestions.length) * 100);
 
             return {
-                title: CurrentExam?.sections[index]?.title,
+                title: CurrentExam?.sections?.[index]?.title || `القسم ${index + 1}`,
                 score: sectionScore || 0,
                 correctAnswers: correctAnswers || 0,
                 numberOfQuestions: sectionQuestions?.length || 0,

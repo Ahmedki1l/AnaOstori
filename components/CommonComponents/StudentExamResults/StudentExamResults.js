@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styles from './StudentExamResults.module.scss'
 import { examResultService } from '../../../services/examResultService'
+import { getRouteAPI } from '../../../services/apisService'
+import { getNewToken } from '../../../lib/metaData'
 import Spinner from '../spinner'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
@@ -22,10 +24,46 @@ const StudentExamResults = () => {
   const [examData, setExamData] = useState([])
   const [elapsedTime, setElapsedTime] = useState([])
   const [totalTime, setTotalTime] = useState(0)
+  const [fetchedQuestions, setFetchedQuestions] = useState([])
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false)
 
   useEffect(() => {
     fetchFolders()
   }, [])
+
+  // Function to fetch questions by their IDs
+  const fetchQuestionsByIds = async (questionIds) => {
+    if (!questionIds || questionIds.length === 0) return []
+    
+    setIsLoadingQuestions(true)
+    const payload = {
+      routeName: 'getItem',
+      type: 'questions',
+      page: 1,
+      limit: questionIds.length,
+      ids: questionIds
+    }
+    
+    try {
+      const response = await getRouteAPI(payload)
+      if (response?.data) {
+        return response.data.data
+      }
+    } catch (error) {
+      if (error?.response?.status === 401) {
+        await getNewToken()
+        const response = await getRouteAPI(payload)
+        if (response?.data) {
+          return response.data.data
+        }
+      } else {
+        console.error('Error fetching questions:', error)
+      }
+    } finally {
+      setIsLoadingQuestions(false)
+    }
+    return []
+  }
 
   const fetchFolders = async () => {
     try {
@@ -365,10 +403,17 @@ const StudentExamResults = () => {
   // Details View - Using ExamResults component
   if (currentView === 'details' && selectedResult) {
     // Prepare data for ExamResults component
+    // The backend data structure is different - we need to create the expected format
     const examData = selectedResult.reviewQuestions ? [selectedResult.reviewQuestions] : []
     const reviewQuestions = selectedResult.reviewQuestions ? [selectedResult.reviewQuestions] : []
     const elapsedTime = selectedResult.timeSpent ? [selectedResult.timeSpent] : []
     const totalTime = selectedResult.totalTime || 0
+
+    // Create a mock CurrentExam with sections data
+    const mockCurrentExam = {
+      ...selectedExam,
+      sections: selectedResult.sections || []
+    }
 
     return (
       <div className={styles.resultsContainer}>
@@ -384,7 +429,7 @@ const StudentExamResults = () => {
           elapsedTime={elapsedTime}
           totalTime={totalTime}
           examData={examData}
-          CurrentExam={selectedExam}
+          CurrentExam={mockCurrentExam}
           reviewQuestions={reviewQuestions}
           onReviewAnswers={handleShowReviewSection}
           onRetakeExam={handleRetakeExam}
@@ -457,9 +502,69 @@ const StudentExamResults = () => {
 
   // Review Answers View
   if (currentView === 'reviewAnswers' && selectedResult) {
-    const questions = selectedResult.reviewQuestions || []
-    const currentQuestion = questions[currentQuestionIndex] || {}
+    const reviewQuestions = selectedResult.reviewQuestions || []
+    
+    // Fetch questions if not already fetched
+    useEffect(() => {
+      if (reviewQuestions.length > 0 && fetchedQuestions.length === 0) {
+        const questionIds = reviewQuestions.map(q => q.questionId)
+        fetchQuestionsByIds(questionIds).then(questions => {
+          setFetchedQuestions(questions)
+        })
+      }
+    }, [reviewQuestions])
+
+    // Create question structure with fetched data
+    const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
+      const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
+      
+      if (fetchedQuestion) {
+        return {
+          ...fetchedQuestion,
+          selectedAnswer: reviewQuestion.selectedAnswer,
+          answered: reviewQuestion.answered,
+          isMarked: reviewQuestion.isMarked
+        }
+      }
+      
+      // Fallback if question not found
+      return {
+        _id: reviewQuestion.questionId,
+        id: reviewQuestion.questionId,
+        text: `السؤال ${index + 1} - جاري التحميل...`,
+        type: "multipleChoice",
+        options: [
+          { id: "أ", text: "الخيار أ" },
+          { id: "ب", text: "الخيار ب" },
+          { id: "ج", text: "الخيار ج" },
+          { id: "د", text: "الخيار د" }
+        ],
+        correctAnswer: "أ",
+        selectedAnswer: reviewQuestion.selectedAnswer,
+        answered: reviewQuestion.answered,
+        isMarked: reviewQuestion.isMarked
+      }
+    })
+
     const section = { title: selectedExam?.name || 'الاختبار' }
+
+    if (isLoadingQuestions) {
+      return (
+        <div className={styles.resultsContainer}>
+          <div className={styles.navigationHeader}>
+            <button onClick={goBackToDetails} className={styles.backButton}>
+              <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
+              العودة للتفاصيل
+            </button>
+            <h2>مراجعة الأسئلة</h2>
+          </div>
+          <div className={styles.loadingContainer}>
+            <Spinner />
+            <p>جاري تحميل الأسئلة...</p>
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div className={styles.resultsContainer}>
@@ -473,10 +578,10 @@ const StudentExamResults = () => {
 
         <ReviewAnswers
           CurrentExam={selectedExam}
-          examData={{ questions: questions }}
+          examData={{ questions: questionsWithData }}
           onCompleteExam={() => {}}
           currentTime="00:00"
-          reviewQuestions={questions}
+          reviewQuestions={reviewQuestions}
           setReviewQuestions={() => {}}
           currentQuestionIndex={currentQuestionIndex}
           showReviewSection={() => setCurrentView('reviewSection')}
