@@ -31,9 +31,9 @@ const StudentExamResults = () => {
     fetchFolders()
   }, [])
 
-  // Fetch questions when reviewAnswers view is active and questions are needed
+  // Fetch questions when details or reviewAnswers view is active and questions are needed
   useEffect(() => {
-    if (currentView === 'reviewAnswers' && selectedResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
+    if ((currentView === 'details' || currentView === 'reviewAnswers') && selectedResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
       const questionIds = selectedResult.reviewQuestions.map(q => q.questionId)
       fetchQuestionsByIds(questionIds).then(questions => {
         setFetchedQuestions(questions)
@@ -413,16 +413,48 @@ const StudentExamResults = () => {
   // Details View - Using ExamResults component
   if (currentView === 'details' && selectedResult) {
     // Prepare data for ExamResults component
-    // The backend data structure is different - we need to create the expected format
-    const examData = selectedResult.reviewQuestions ? [selectedResult.reviewQuestions] : []
-    const reviewQuestions = selectedResult.reviewQuestions ? [selectedResult.reviewQuestions] : []
+    const reviewQuestions = selectedResult.reviewQuestions || []
     const elapsedTime = selectedResult.timeSpent ? [selectedResult.timeSpent] : []
     const totalTime = selectedResult.totalTime || 0
 
-    // Create a mock CurrentExam with sections data
+    // Use fetched questions if available, otherwise create mock data
+    let examData = []
+    if (fetchedQuestions.length > 0) {
+      // Use real question data with skills and sections
+      examData = fetchedQuestions.map((question, index) => ({
+        ...question,
+        section: question.section || `القسم ${Math.floor(index / 10) + 1}`,
+        lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
+        skills: question.skills || [{ text: "مهارة أساسية" }]
+      }))
+    } else {
+      // Create mock data structure
+      examData = reviewQuestions.map((reviewQuestion, index) => ({
+        _id: reviewQuestion.questionId,
+        id: reviewQuestion.questionId,
+        text: `السؤال ${index + 1}`,
+        correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
+        section: `القسم ${Math.floor(index / 10) + 1}`,
+        lesson: `الدرس ${Math.floor(index / 5) + 1}`,
+        skills: [
+          { text: "مهارة أساسية" }
+        ]
+      }))
+    }
+
+    // Create CurrentExam with proper sections structure
     const mockCurrentExam = {
       ...selectedExam,
-      sections: selectedResult.sections || []
+      sections: selectedResult.sections?.map((section, index) => ({
+        title: section.title || `القسم ${index + 1}`,
+        questions: examData.slice(
+          index * Math.ceil(examData.length / selectedResult.sections.length),
+          (index + 1) * Math.ceil(examData.length / selectedResult.sections.length)
+        )
+      })) || [{
+        title: "القسم الأول",
+        questions: examData
+      }]
     }
 
     return (
@@ -438,9 +470,9 @@ const StudentExamResults = () => {
         <ExamResults
           elapsedTime={elapsedTime}
           totalTime={totalTime}
-          examData={examData}
+          examData={[examData]}
           CurrentExam={mockCurrentExam}
-          reviewQuestions={reviewQuestions}
+          reviewQuestions={[reviewQuestions]}
           onReviewAnswers={handleShowReviewSection}
           onRetakeExam={handleRetakeExam}
           hideRetakeButton={true}
