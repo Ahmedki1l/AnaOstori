@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import styles from './StudentExamResults.module.scss'
 import { examResultService } from '../../../services/examResultService'
 import { getRouteAPI } from '../../../services/apisService'
@@ -11,6 +12,7 @@ import ReviewAnswers from '../../ExamComponents/ReviewAnswers'
 import ReviewSection from '../../ExamComponents/ReviewSection'
 
 const StudentExamResults = () => {
+  const router = useRouter()
   const [folders, setFolders] = useState([])
   const [selectedFolder, setSelectedFolder] = useState(null)
   const [selectedExam, setSelectedExam] = useState(null)
@@ -284,6 +286,12 @@ const StudentExamResults = () => {
 
     return (
       <div className={styles.container}>
+        {/* <div className={styles.topNavigation}>
+          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+            العودة لدوراتي
+          </button>
+        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToFolders} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
@@ -335,6 +343,12 @@ const StudentExamResults = () => {
 
     return (
       <div className={styles.container}>
+        {/* <div className={styles.topNavigation}>
+          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+            العودة لدوراتي
+          </button>
+        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToExams} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
@@ -459,6 +473,12 @@ const StudentExamResults = () => {
 
     return (
       <div className={styles.resultsContainer}>
+        {/* <div className={styles.topNavigation}>
+          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+            العودة لدوراتي
+          </button>
+        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToResults} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
@@ -492,6 +512,12 @@ const StudentExamResults = () => {
 
     return (
       <div className={styles.resultsContainer}>
+        {/* <div className={styles.topNavigation}>
+          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+            العودة لدوراتي
+          </button>
+        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
@@ -583,6 +609,12 @@ const StudentExamResults = () => {
     if (isLoadingQuestions) {
       return (
         <div className={styles.resultsContainer}>
+          {/* <div className={styles.topNavigation}>
+            <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+              <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+              العودة لدوراتي
+            </button>
+          </div> */}
           <div className={styles.navigationHeader}>
             <button onClick={goBackToDetails} className={styles.backButton}>
               <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
@@ -600,6 +632,12 @@ const StudentExamResults = () => {
 
     return (
       <div className={styles.resultsContainer}>
+        {/* <div className={styles.topNavigation}>
+          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+            العودة لدوراتي
+          </button>
+        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
@@ -631,6 +669,12 @@ const StudentExamResults = () => {
   if (currentView === 'questionReview' && selectedQuestion) {
     return (
       <div className={styles.resultsContainer}>
+        {/* <div className={styles.topNavigation}>
+          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
+            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
+            العودة لدوراتي
+          </button>
+        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="#6b7280" />
