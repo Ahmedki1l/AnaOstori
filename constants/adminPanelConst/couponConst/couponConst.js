@@ -19,6 +19,11 @@ export const manageCouponConst = {
     couponCodeHead: 'الكود*',
     couponCodePlaceHolder: 'مثلا SND93',
     couponCodeError: 'اكتب الكود',
+    
+    // Auto-generate code
+    autoGenerateCodeBtn: 'إنشاء تلقائي',
+    codeLengthHead: 'عدد الأحرف',
+    codeLengthPlaceHolder: '8',
 
     couponPercantageHead: 'نسبة الخصم*',
     couponPercantagePlaceHolder: 'نسبة الخصم',
@@ -43,6 +48,11 @@ export const manageCouponConst = {
     couponLimitHead: 'اكتب العدد*',
     couponLimitPlaceHolder: 'محدد بعدد (من سبق لبق)',
     couponLimitError: 'حدد العدد',
+
+    // Coupon Conditions
+    couponConditionsHead: 'شروط الكوبون',
+    singlePersonBookingLabel: 'الحجز لشخص واحد فقط',
+    singlePersonBookingDescription: 'يمنع تطبيق الكوبون على الحجوزات لعدة أشخاص',
 
     couponCreateSuccessMsg: 'تم إضافة الكوبون بنجاح',
     couponUpdateSuccessMsg: 'تم تحديث الكوبون بنجاح',

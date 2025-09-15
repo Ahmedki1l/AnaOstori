@@ -68,6 +68,7 @@ export default function PaymentInfoForm(props) {
 			withcoupon: couponAppliedData ? true : false,
 			couponId: couponAppliedData ? couponAppliedData.id : null,
 			type: type,
+			peopleBody: createdOrder?.orderItems?.length,
 		};
 
 		let res;
@@ -120,6 +121,7 @@ export default function PaymentInfoForm(props) {
 			orderId: createdOrder.id,
 			withcoupon: couponAppliedData ? true : false,
 			couponId: couponAppliedData ? couponAppliedData.id : null,
+			peopleBody: createdOrder?.orderItems?.length,
 		}
 
 		try {
@@ -153,6 +155,7 @@ export default function PaymentInfoForm(props) {
 			orderId: createdOrder.id,
 			withcoupon: couponAppliedData ? true : false,
 			couponId: couponAppliedData ? couponAppliedData.id : null,
+			peopleBody: createdOrder?.orderItems?.length,
 		}
 		await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/choosePaymentMethod`, data).then(res => {
 			if (res.status != 200) { return }
@@ -170,6 +173,7 @@ export default function PaymentInfoForm(props) {
 			routeName: 'checkCouponValidity',
 			courseId: createdOrder.courseId,
 			coupon: couponCode,
+			peopleBody: createdOrder?.orderItems?.length,
 		};
 
 		try {
@@ -214,7 +218,12 @@ export default function PaymentInfoForm(props) {
 				toast.error('كود الكوبون غير موجود');
 			} else if (error?.response?.status === 422) {
 				const errorMessage = error?.response?.data?.message || 'كود الكوبون غير صالح';
-				toast.error(errorMessage);
+				// Check if this is a conditions-related error
+				if (errorMessage.includes('شخص واحد') || errorMessage.includes('single person')) {
+					toast.error('هذا الكوبون متاح للحجز لشخص واحد فقط');
+				} else {
+					toast.error(errorMessage);
+				}
 			} else {
 				toast.error('حدث خطأ أثناء التحقق من الكوبون');
 			}
@@ -460,7 +469,14 @@ export default function PaymentInfoForm(props) {
 						<p className={styles.errorText}>{inputErrorMessages.incorrectCodeErrorMsg}</p>
 					}
 					{couponAppliedData &&
-						<p className={styles.sucessText}>{inputSuccessMessages.discountAppliedMsg}</p>
+						<div>
+							<p className={styles.sucessText}>{inputSuccessMessages.discountAppliedMsg}</p>
+							{couponAppliedData.conditions && couponAppliedData.conditions.singlePersonBooking && (
+								<p className={styles.conditionText} style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+									✓ هذا الكوبون للحجز لشخص واحد فقط
+								</p>
+							)}
+						</div>
 					}
 					<div className={styles.priceDetailsBox}>
 						<div className='flex justify-between  py-2'>

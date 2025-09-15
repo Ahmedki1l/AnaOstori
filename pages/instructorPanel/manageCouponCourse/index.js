@@ -106,6 +106,32 @@ const Index = () => {
             }
         },
         {
+            title: 'الشروط',
+            dataIndex: 'conditions',
+            render: (conditions) => {
+                if (!conditions) {
+                    return <span style={{ color: '#999' }}>بدون شروط</span>;
+                }
+                
+                const conditionsList = [];
+                if (conditions.singlePersonBooking) {
+                    conditionsList.push('شخص واحد فقط');
+                }
+                
+                return conditionsList.length > 0 ? (
+                    <div>
+                        {conditionsList.map((condition, index) => (
+                            <Tag key={index} color="blue" style={{ fontFamily: 'Tajawal-Regular', marginBottom: '2px' }}>
+                                {condition}
+                            </Tag>
+                        ))}
+                    </div>
+                ) : (
+                    <span style={{ color: '#999' }}>بدون شروط</span>
+                );
+            }
+        },
+        {
             title: 'تاريخ الانتهاء',
             dataIndex: 'expires',
             sorter: (a, b) => a.expires.localeCompare(b.expires),

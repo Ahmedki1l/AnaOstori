@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, FormItem } from '../antDesignCompo/FormItem';
 import Select from '../antDesignCompo/Select';
 import Input from '../../components/antDesignCompo/Input'
+import CheckBox from '../antDesignCompo/CheckBox';
 import CustomButton from '../CommonComponents/CustomButton';
 import { couponTypes, discountModes, manageCouponConst } from '../../constants/adminPanelConst/couponConst/couponConst';
 import { postRouteAPI } from '../../services/apisService';
@@ -9,6 +10,7 @@ import DatePicker from '../antDesignCompo/Datepicker';
 import dayjs from 'dayjs';
 import styles from '../../styles/InstructorPanelStyleSheets/ManageCouponCourse.module.scss'
 import { toast } from 'react-toastify';
+import AllIconsComponenet from '../../Icons/AllIconsComponenet';
 
 const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, setDrawerForCouponCourse }) => {
 
@@ -18,6 +20,8 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
     const [selectedCourse, setSelectedCourse] = useState()
     const [selectedDiscountMode, setSelectedDiscountMode] = useState('percentage');
     // ^ tracks whether we are using "percentage" or "fixedAmount"
+    const [singlePersonBooking, setSinglePersonBooking] = useState(false);
+    const [codeLength, setCodeLength] = useState(8);
 
     /**
      * Build an array of { value: courseId, label: courseName, price: coursePrice }
@@ -56,6 +60,14 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             discountMode: discountMode,
             courseIds: courseIds,
         })
+        
+        // Handle existing conditions
+        const existingConditions = selectedCoupon?.conditions;
+        if (existingConditions) {
+            setSinglePersonBooking(existingConditions.singlePersonBooking || false);
+        } else {
+            setSinglePersonBooking(false);
+        }
         
         setSelectedCourse(courseIds);
         
@@ -117,10 +129,17 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         // Keep the discount mode for backend processing
         // Don't delete values.discountMode;
 
+        // Build conditions object
+        const conditions = {};
+        if (singlePersonBooking) {
+            conditions.singlePersonBooking = true;
+        }
+
         let data = {
             routeName: selectedCoupon?.id ? "updateCoupon" : "createCoupon",
             ...values,
-            courseIds: selectedCourse // Use selectedCourse instead of values.courseIds
+            courseIds: selectedCourse, // Use selectedCourse instead of values.courseIds
+            conditions: Object.keys(conditions).length > 0 ? conditions : null
         }
         await postRouteAPI(data).then((res) => {
             setShowBtnLoader(false)
@@ -167,6 +186,23 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
         }
     }
 
+    // Auto-generate coupon code function
+    const generateCouponCode = (length = 8) => {
+        // Exclude similar-looking characters: 0, O, 1, I, L for better readability
+        const characters = 'ABCDEFGHIJKMNPQRSTUVWXYZ23456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    };
+
+    const handleGenerateCouponCode = () => {
+        const newCode = generateCouponCode(codeLength);
+        couponCourseForm.setFieldsValue({ couponCode: newCode });
+        toast.success(`تم إنشاء كود الكوبون: ${newCode}`);
+    };
+
 
     return (
         <div >
@@ -184,17 +220,67 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                     />
                 </FormItem>
                 <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponCodeHead}</p>
-                <FormItem
-                    name={'couponCode'}
-                    rules={[{ required: true, message: manageCouponConst.couponCodeError }]}
-                >
-                    <Input
-                        width={425}
-                        height={47}
-                        fontSize={16}
-                        placeholder={manageCouponConst.couponCodePlaceHolder}
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+                    <FormItem
+                        name={'couponCode'}
+                        rules={[{ required: true, message: manageCouponConst.couponCodeError }]}
+                        style={{ flex: 1 }}
+                    >
+                        <Input
+                            width={280}
+                            height={47}
+                            fontSize={16}
+                            placeholder={manageCouponConst.couponCodePlaceHolder}
+                        />
+                    </FormItem>
+                    <button
+                        type="button"
+                        onClick={handleGenerateCouponCode}
+                        style={{
+                            height: '47px',
+                            padding: '0 15px',
+                            backgroundColor: '#F26722',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontFamily: 'Tajawal-Medium',
+                            transition: 'background-color 0.3s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#d55a1e'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#F26722'}
+                    >
+                        <AllIconsComponenet height={16} width={16} iconName={'arrowRight'} color={'white'} />
+                        {manageCouponConst.autoGenerateCodeBtn}
+                    </button>
+                </div>
+                
+                {/* Code Length Setting */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                    <p className='fontMedium' style={{ fontSize: '14px', margin: 0 }}>{manageCouponConst.codeLengthHead}:</p>
+                    <input
+                        type="number"
+                        min="4"
+                        max="20"
+                        value={codeLength}
+                        onChange={(e) => setCodeLength(Math.max(4, Math.min(20, parseInt(e.target.value) || 8)))}
+                        style={{
+                            width: '60px',
+                            height: '30px',
+                            padding: '5px',
+                            border: '1px solid #d9d9d9',
+                            borderRadius: '4px',
+                            textAlign: 'center',
+                            fontSize: '14px'
+                        }}
+                        placeholder={manageCouponConst.codeLengthPlaceHolder}
                     />
-                </FormItem>
+                    <span style={{ fontSize: '12px', color: '#666' }}>أحرف (4-20)</span>
+                </div>
                 {/* Choose Discount Mode (Percentage or Amount) */}
                 <p className="fontMedium py-2" style={{ fontSize: '18px' }}>
                     اختر طريقة الخصم
@@ -323,6 +409,31 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                         />
                     </>
                 </FormItem>
+                {/* Coupon Conditions Section */}
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponConditionsHead}</p>
+                <div style={{ 
+                    backgroundColor: '#f9f9f9', 
+                    padding: '15px', 
+                    borderRadius: '8px', 
+                    marginBottom: '20px',
+                    border: '1px solid #e0e0e0'
+                }}>
+                    <CheckBox
+                        label={manageCouponConst.singlePersonBookingLabel}
+                        checked={singlePersonBooking}
+                        onChange={(e) => setSinglePersonBooking(e.target.checked)}
+                    />
+                    <p style={{ 
+                        fontSize: '14px', 
+                        color: '#666', 
+                        marginTop: '5px', 
+                        marginRight: '32px',
+                        fontFamily: 'Tajawal-Regular'
+                    }}>
+                        {manageCouponConst.singlePersonBookingDescription}
+                    </p>
+                </div>
+
                 <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponAppliedCourseHead}</p>
                 <FormItem
                     name={'courseIds'}
