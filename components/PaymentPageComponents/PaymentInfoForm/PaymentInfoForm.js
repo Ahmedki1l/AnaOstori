@@ -169,22 +169,41 @@ export default function PaymentInfoForm(props) {
 	}
 
 	const handleCheckCouponIsValid = async () => {
+		// Build peopleBody array from studentsData or createdOrder
+		const peopleBodyArray = studentsData && studentsData.length > 0 
+			? studentsData.map(student => ({
+				name: student.fullName || 'مستخدم',
+				email: student.email || 'user@example.com',
+				// Add any other relevant user data
+			}))
+			: Array.from({ length: createdOrder?.orderItems?.length || 1 }, (_, index) => ({
+				name: `مستخدم ${index + 1}`,
+				email: `user${index + 1}@example.com`,
+			}));
+
 		let data = {
-			routeName: 'checkCouponValidity',
-			courseId: createdOrder.courseId,
-			coupon: couponCode,
-			peopleBody: createdOrder?.orderItems?.length,
+			couponCode: couponCode,
+			peopleBody: peopleBodyArray,
 		};
 
+		let res;
 		try {
-			const res = await getRouteAPI(data);
+			res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/check-coupon-by-code`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data)
+			});
+			
+			const responseData = await res.json();
 			if (res.status === 200) {
 				// Expected API response structure:
 				// For percentage: { percentage: 20, discountMode: 'percentage' }
 				// For fixed amount: { fixedAmount: 50, discountMode: 'fixedAmount' }
 				// Legacy support: { percentage: 20 } (assumed percentage)
 				
-				const couponData = res.data;
+				const couponData = responseData;
 				
 				// Ensure we have valid discount data
 				if (!couponData.percentage && !couponData.fixedAmount) {
@@ -210,19 +229,29 @@ export default function PaymentInfoForm(props) {
 			setCouponAppliedData(null);
 			setCouponError(true);
 			
-			// Handle specific error cases
-			if (error?.response?.status === 400) {
-				const errorMessage = error?.response?.data?.message || 'كود الكوبون غير صحيح';
-				toast.error(errorMessage);
-			} else if (error?.response?.status === 404) {
-				toast.error('كود الكوبون غير موجود');
-			} else if (error?.response?.status === 422) {
-				const errorMessage = error?.response?.data?.message || 'كود الكوبون غير صالح';
-				// Check if this is a conditions-related error
-				if (errorMessage.includes('شخص واحد') || errorMessage.includes('single person')) {
-					toast.error('هذا الكوبون متاح للحجز لشخص واحد فقط');
-				} else {
-					toast.error(errorMessage);
+			// Handle network errors
+			if (!res || !res.ok) {
+				try {
+					const errorData = await res.json();
+					const errorMessage = errorData?.message || 'كود الكوبون غير صالح';
+					
+					// Handle specific error cases based on status
+					if (res.status === 400) {
+						toast.error(errorMessage);
+					} else if (res.status === 404) {
+						toast.error('كود الكوبون غير موجود');
+					} else if (res.status === 422) {
+						// Check if this is a conditions-related error
+						if (errorMessage.includes('شخص واحد') || errorMessage.includes('single person')) {
+							toast.error('هذا الكوبون متاح للحجز لشخص واحد فقط');
+						} else {
+							toast.error(errorMessage);
+						}
+					} else {
+						toast.error('حدث خطأ أثناء التحقق من الكوبون');
+					}
+				} catch (parseError) {
+					toast.error('حدث خطأ أثناء التحقق من الكوبون');
 				}
 			} else {
 				toast.error('حدث خطأ أثناء التحقق من الكوبون');
