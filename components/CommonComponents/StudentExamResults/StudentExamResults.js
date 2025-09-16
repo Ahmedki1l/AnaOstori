@@ -43,6 +43,11 @@ const StudentExamResults = () => {
     }
   }, [currentView, selectedResult, fetchedQuestions.length])
 
+  // Reset fetched questions when changing results
+  useEffect(() => {
+    setFetchedQuestions([])
+  }, [selectedResult])
+
   // Function to fetch questions by their IDs
   const fetchQuestionsByIds = async (questionIds) => {
     if (!questionIds || questionIds.length === 0) return []
@@ -434,40 +439,64 @@ const StudentExamResults = () => {
     // Use fetched questions if available, otherwise create mock data
     let examData = []
     if (fetchedQuestions.length > 0) {
-      // Use real question data with skills and sections
-      examData = fetchedQuestions.map((question, index) => ({
-        ...question,
-        section: question.section || `القسم ${Math.floor(index / 10) + 1}`,
-        lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
-        skills: question.skills || [{ text: "مهارة أساسية" }]
-      }))
+      // Use real question data with skills from the questions themselves
+      examData = fetchedQuestions.map((question, index) => {
+        // Determine which section this question belongs to based on its position
+        const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sections?.length || 1)))
+        const section = selectedResult.sections?.[sectionIndex]
+        
+        return {
+          ...question,
+          section: section?.title || `القسم ${sectionIndex + 1}`,
+          lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
+          // Use skills from the question itself, not from section
+          skills: question.skills || [{ text: "مهارة أساسية" }]
+        }
+      })
     } else {
-      // Create mock data structure
-      examData = reviewQuestions.map((reviewQuestion, index) => ({
-        _id: reviewQuestion.questionId,
-        id: reviewQuestion.questionId,
-        text: `السؤال ${index + 1}`,
-        correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
-        section: `القسم ${Math.floor(index / 10) + 1}`,
-        lesson: `الدرس ${Math.floor(index / 5) + 1}`,
-        skills: [
-          { text: "مهارة أساسية" }
-        ]
-      }))
+      // Create mock data structure with proper section assignment
+      examData = reviewQuestions.map((reviewQuestion, index) => {
+        // Determine which section this question belongs to based on its position
+        const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sections?.length || 1)))
+        const section = selectedResult.sections?.[sectionIndex]
+        
+        return {
+          _id: reviewQuestion.questionId,
+          id: reviewQuestion.questionId,
+          text: `السؤال ${index + 1}`,
+          correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
+          section: section?.title || `القسم ${sectionIndex + 1}`,
+          lesson: `الدرس ${Math.floor(index / 5) + 1}`,
+          skills: [{ text: "مهارة أساسية" }] // Default skill until questions are fetched
+        }
+      })
     }
 
-    // Create CurrentExam with proper sections structure
+    // Create CurrentExam with proper sections structure based on actual API data
     const mockCurrentExam = {
       ...selectedExam,
-      sections: selectedResult.sections?.map((section, index) => ({
-        title: section.title || `القسم ${index + 1}`,
-        questions: examData.slice(
-          index * Math.ceil(examData.length / selectedResult.sections.length),
-          (index + 1) * Math.ceil(examData.length / selectedResult.sections.length)
-        )
-      })) || [{
+      sections: selectedResult.sections?.map((section, index) => {
+        // Find questions that belong to this section based on their position in the reviewQuestions array
+        const questionsPerSection = Math.ceil(reviewQuestions.length / selectedResult.sections.length)
+        const startIndex = index * questionsPerSection
+        const endIndex = Math.min((index + 1) * questionsPerSection, reviewQuestions.length)
+        
+        // Get the questions for this section
+        const sectionQuestions = examData.slice(startIndex, endIndex)
+        
+        return {
+          title: section.title || `القسم ${index + 1}`,
+          questions: sectionQuestions,
+          score: section.score || 0,
+          totalQuestions: section.totalQuestions || sectionQuestions.length
+          // Skills are handled at the question level, not section level
+        }
+      }) || [{
         title: "القسم الأول",
-        questions: examData
+        questions: examData,
+        score: 0,
+        totalQuestions: examData.length
+        // Skills are handled at the question level, not section level
       }]
     }
 
@@ -490,9 +519,9 @@ const StudentExamResults = () => {
         <ExamResults
           elapsedTime={elapsedTime}
           totalTime={totalTime}
-          examData={[examData]}
+          examData={examData}
           CurrentExam={mockCurrentExam}
-          reviewQuestions={[reviewQuestions]}
+          reviewQuestions={reviewQuestions}
           onReviewAnswers={handleShowReviewSection}
           onRetakeExam={handleRetakeExam}
           hideRetakeButton={true}
@@ -572,16 +601,23 @@ const StudentExamResults = () => {
   if (currentView === 'reviewAnswers' && selectedResult) {
     const reviewQuestions = selectedResult.reviewQuestions || []
 
-    // Create question structure with fetched data
+    // Create question structure with fetched data and proper section assignment
     const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
       const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
+      
+      // Determine which section this question belongs to
+      const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sections?.length || 1)))
+      const section = selectedResult.sections?.[sectionIndex]
       
       if (fetchedQuestion) {
         return {
           ...fetchedQuestion,
           selectedAnswer: reviewQuestion.selectedAnswer,
           answered: reviewQuestion.answered,
-          isMarked: reviewQuestion.isMarked
+          isMarked: reviewQuestion.isMarked,
+          section: section?.title || `القسم ${sectionIndex + 1}`,
+          // Use skills from the fetched question itself
+          skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
         }
       }
       
@@ -600,7 +636,9 @@ const StudentExamResults = () => {
         correctAnswer: "أ",
         selectedAnswer: reviewQuestion.selectedAnswer,
         answered: reviewQuestion.answered,
-        isMarked: reviewQuestion.isMarked
+        isMarked: reviewQuestion.isMarked,
+        section: section?.title || `القسم ${sectionIndex + 1}`,
+        skills: [{ text: "مهارة أساسية" }] // Default skill until question is fetched
       }
     })
 
