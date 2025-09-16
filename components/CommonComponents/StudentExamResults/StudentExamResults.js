@@ -548,7 +548,6 @@ const StudentExamResults = () => {
   // Review Section View
   if (currentView === 'reviewSection' && selectedResult) {
     const questions = selectedResult.reviewQuestions || []
-    let fetchedQuestions = selectedResult.fetchedQuestions || []
     
     // If fetchedQuestions is empty, try to fetch them
     if (fetchedQuestions.length === 0 && questions.length > 0) {
