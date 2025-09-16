@@ -493,6 +493,7 @@ export default function Index(props) {
 							createdOrder={createdOrder}
 							studentsData={studentsData}
 							checkoutId={checkoutId}
+							courseId={courseDetails.id}
 						/>
 					) : (
 						<UserInfoForm

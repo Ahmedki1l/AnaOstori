@@ -25,6 +25,7 @@ import TamaraCheckoutForm from './TamaraCheckout'
 export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
 	const studentsData = props.studentsData
+	const courseId = props.courseId
 	const bankDetails = PaymentConst.bankDetails
 	const noOfUser = PaymentConst.noOfUsersTag2
 	const numberOfUser = PaymentConst.noOfUsersTag3
@@ -184,6 +185,7 @@ export default function PaymentInfoForm(props) {
 		let data = {
 			couponCode: couponCode,
 			peopleBody: peopleBodyArray,
+			courseId: courseId,
 		};
 
 		let res;
