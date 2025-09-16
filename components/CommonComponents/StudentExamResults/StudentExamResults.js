@@ -604,7 +604,7 @@ const StudentExamResults = () => {
       
       return sectionQuestions.map((question, questionIndex) => ({
         id: question.questionId || `q_${startIndex + questionIndex}`,
-        selectedAnswer: question.selectedAnswer,
+        selectedAnswer: question.selectedAnswer || null,
         isMarked: question.isMarked || false,
         answered: question.answered || false,
         isCorrect: question.isCorrect || false

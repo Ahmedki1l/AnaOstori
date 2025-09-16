@@ -78,7 +78,7 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
                 let status;
                 if (rev.selectedAnswer === q.correctAnswer) {
                     status = 'correct';
-                } else if (rev.selectedAnswer == null) {
+                } else if (rev.selectedAnswer === "" || rev.selectedAnswer === null) {
                     status = 'incomplete';
                 } else {
                     status = 'wrong';
