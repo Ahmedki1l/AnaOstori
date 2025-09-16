@@ -33,12 +33,12 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
             console.log("🚀 ~ returnsections.map ~ questionList:", questionList)
             const reviews = allReviewQuestions[idx] || [];
             console.log("🚀 ~ returnsections.map ~ reviews:", reviews)
-            const total = reviews.length;
+            const total = questionList.length; // Use questionList length instead of reviews length
 
             // count how many selectedAnswer === correctAnswer
-            const correctCount = reviews.reduce((sum, rev) => {
-                const orig = questionList.find(q => q._id === rev.id);
-                return sum + (orig && rev.selectedAnswer === orig.correctAnswer ? 1 : 0);
+            const correctCount = questionList.reduce((sum, q) => {
+                const rev = reviews.find(r => r.id === q._id);
+                return sum + (rev && rev.selectedAnswer === q.correctAnswer ? 1 : 0);
             }, 0);
             console.log("🚀 ~ correctCount ~ correctCount:", correctCount)
 
@@ -72,13 +72,14 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
         return examData.map((sectionQs, secIdx) => {
             // Map each question in the section
             return sectionQs.map((q, qIdx) => {
-                const rev = (reviewQuestions[secIdx] || [])[qIdx] || {};
+                // Find the review question by matching IDs
+                const rev = (reviewQuestions[secIdx] || []).find(r => r.id === q._id) || {};
 
                 // Determine status
                 let status;
                 if (rev.selectedAnswer === q.correctAnswer) {
                     status = 'correct';
-                } else if (rev.selectedAnswer == null) {
+                } else if (rev.selectedAnswer == null || rev.selectedAnswer === undefined) {
                     status = 'incomplete';
                 } else {
                     status = 'wrong';

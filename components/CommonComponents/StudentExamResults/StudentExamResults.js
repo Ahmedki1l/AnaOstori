@@ -548,6 +548,18 @@ const StudentExamResults = () => {
   // Review Section View
   if (currentView === 'reviewSection' && selectedResult) {
     const questions = selectedResult.reviewQuestions || []
+    let fetchedQuestions = selectedResult.fetchedQuestions || []
+    
+    // If fetchedQuestions is empty, try to fetch them
+    if (fetchedQuestions.length === 0 && questions.length > 0) {
+      console.log("🚀 ~ No fetchedQuestions found, attempting to fetch...")
+      // Try to get questions from the global fetchedQuestions state
+      fetchedQuestions = fetchedQuestions || []
+    }
+    
+    console.log("🚀 ~ Review Section ~ questions:", questions)
+    console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
+    console.log("🚀 ~ Review Section ~ selectedResult.sections:", selectedResult.sections)
     
     // Create examData structure for ExamSectionsReview
     const examData = selectedResult.sections?.map((section, index) => {
@@ -558,15 +570,39 @@ const StudentExamResults = () => {
       // Get the questions for this section
       const sectionQuestions = questions.slice(startIndex, endIndex)
       
-      return sectionQuestions.map((question, questionIndex) => ({
-        _id: question.questionId || `q_${startIndex + questionIndex}`,
-        correctAnswer: question.correctAnswer || 'A',
-        // Add other question properties as needed
-      }))
-    }) || [questions.map((question, index) => ({
-      _id: question.questionId || `q_${index}`,
-      correctAnswer: question.correctAnswer || 'A',
-    }))]
+      return sectionQuestions.map((question, questionIndex) => {
+        // Find the corresponding fetched question
+        const fetchedQuestion = fetchedQuestions.find(fq => 
+          fq._id === question.questionId || fq.id === question.questionId
+        )
+        
+        console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question:`, question)
+        console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question keys:`, Object.keys(question))
+        console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ fetchedQuestion:`, fetchedQuestion)
+        console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from fetched:`, fetchedQuestion?.correctAnswer)
+        console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from question:`, question.correctAnswer)
+        console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
+        
+        return {
+          _id: question.questionId || `q_${startIndex + questionIndex}`,
+          correctAnswer: fetchedQuestion?.correctAnswer || question.correctAnswer || question.answer || 'A',
+          // Add other question properties as needed
+        }
+      })
+    }) || [questions.map((question, index) => {
+      const fetchedQuestion = fetchedQuestions.find(fq => 
+        fq._id === question.questionId || fq.id === question.questionId
+      )
+      
+      console.log(`🚀 ~ Fallback Question ${index} ~ question:`, question)
+      console.log(`🚀 ~ Fallback Question ${index} ~ fetchedQuestion:`, fetchedQuestion)
+      console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
+      
+      return {
+        _id: question.questionId || `q_${index}`,
+        correctAnswer: fetchedQuestion?.correctAnswer || question.correctAnswer || question.answer || 'A',
+      }
+    })]
 
     // Create reviewQuestions structure for ExamSectionsReview
     const reviewQuestions = selectedResult.sections?.map((section, index) => {
@@ -580,12 +616,16 @@ const StudentExamResults = () => {
       return sectionQuestions.map((question, questionIndex) => ({
         id: question.questionId || `q_${startIndex + questionIndex}`,
         selectedAnswer: question.selectedAnswer,
-        isMarked: question.isMarked || false
+        isMarked: question.isMarked || false,
+        answered: question.answered || false,
+        isCorrect: question.isCorrect || false
       }))
     }) || [questions.map((question, index) => ({
       id: question.questionId || `q_${index}`,
       selectedAnswer: question.selectedAnswer,
-      isMarked: question.isMarked || false
+      isMarked: question.isMarked || false,
+      answered: question.answered || false,
+      isCorrect: question.isCorrect || false
     }))]
 
     // Create examSections structure
@@ -601,6 +641,9 @@ const StudentExamResults = () => {
       // Calculate time per section or use default
       return "00:05" // Default time, you can calculate this based on your data
     }) || ["00:05"]
+
+    console.log("🚀 ~ Review Section ~ examData:", examData)
+    console.log("🚀 ~ Review Section ~ reviewQuestions:", reviewQuestions)
 
     const handleQuestionClick = (sectionIndex, questionIndex) => {
       // Calculate global question index
