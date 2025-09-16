@@ -549,13 +549,6 @@ const StudentExamResults = () => {
   if (currentView === 'reviewSection' && selectedResult) {
     const questions = selectedResult.reviewQuestions || []
     
-    // If fetchedQuestions is empty, try to fetch them
-    if (fetchedQuestions.length === 0 && questions.length > 0) {
-      console.log("🚀 ~ No fetchedQuestions found, attempting to fetch...")
-      // Try to get questions from the global fetchedQuestions state
-      fetchedQuestions = fetchedQuestions || []
-    }
-    
     console.log("🚀 ~ Review Section ~ questions:", questions)
     console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
     console.log("🚀 ~ Review Section ~ selectedResult.sections:", selectedResult.sections)
