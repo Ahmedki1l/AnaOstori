@@ -205,12 +205,9 @@ export default function PaymentInfoForm(props) {
 			const responseData = await res.json();
 			
 			if (res.status === 200) {
-				// Expected API response structure:
-				// For percentage: { percentage: 20, discountMode: 'percentage' }
-				// For fixed amount: { fixedAmount: 50, discountMode: 'fixedAmount' }
-				// Legacy support: { percentage: 20 } (assumed percentage)
-				
-				const couponData = responseData;
+				// Handle the actual API response structure
+				// Response has: { valid: true, coupon: { ... } }
+				const couponData = responseData.coupon || responseData;
 				
 				// Ensure we have valid discount data
 				if (!couponData.percentage && !couponData.fixedAmount) {
@@ -222,6 +219,9 @@ export default function PaymentInfoForm(props) {
 				
 				setCouponAppliedData(couponData);
 				setCouponError(false);
+				
+				// Debug logging
+				console.log('Coupon applied successfully:', couponData);
 
 				// Regenerate the checkout ID if a payment type is already selected
 				if (paymentType) {
@@ -467,7 +467,7 @@ export default function PaymentInfoForm(props) {
 					</div>
 					{(!isSmallScreen && createdOrder.course.type != "on-demand") &&
 						<div className={styles.backBtnBox}>
-							<button className='fontBold primaryStrockedBtn'>
+							<button className='fontBold primaryStrockedBtn' onClick={() => props.backToUserForm(studentsData, false)}>
 								<div className={styles.arrowIcon}>
 									<AllIconsComponenet height={20} width={20} iconName={'rightArrowIcon'} color={'#F26722'} />
 								</div>
