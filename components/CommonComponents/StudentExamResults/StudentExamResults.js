@@ -521,7 +521,7 @@ const StudentExamResults = () => {
         <ExamResults
           elapsedTime={elapsedTime}
           totalTime={totalTime}
-          examData={[examData]}
+          examData={mockCurrentExam.sections.map(section => section.questions)}
           CurrentExam={mockCurrentExam}
           reviewQuestions={[reviewQuestions]}
           onReviewAnswers={handleShowReviewSection}
