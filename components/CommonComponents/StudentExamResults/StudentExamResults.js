@@ -547,20 +547,33 @@ const StudentExamResults = () => {
   // Review Section View
   if (currentView === 'reviewSection' && selectedResult) {
     const questions = selectedResult.reviewQuestions || []
-    const questionItems = questions.map((question, index) => ({
-      id: index,
-      answered: question.answered || false,
-      isMarked: question.isMarked || false
-    }))
+    
+    // Group questions by sections
+    const questionsPerSection = Math.ceil(questions.length / (selectedResult.sections?.length || 1))
+    const sectionedQuestions = selectedResult.sections?.map((section, sectionIndex) => {
+      const startIndex = sectionIndex * questionsPerSection
+      const endIndex = Math.min((sectionIndex + 1) * questionsPerSection, questions.length)
+      const sectionQuestions = questions.slice(startIndex, endIndex)
+      
+      return {
+        section: section,
+        questions: sectionQuestions.map((question, index) => ({
+          id: startIndex + index,
+          answered: question.answered || false,
+          isMarked: question.isMarked || false
+        }))
+      }
+    }) || [{
+      section: { title: "القسم الأول" },
+      questions: questions.map((question, index) => ({
+        id: index,
+        answered: question.answered || false,
+        isMarked: question.isMarked || false
+      }))
+    }]
 
     return (
       <div className={styles.resultsContainer}>
-        {/* <div className={styles.topNavigation}>
-          <button onClick={() => router.push('/myCourse')} className={styles.homeButton}>
-            <AllIconsComponenet iconName="homeIcon" height={20} width={20} color="#F26722" />
-            العودة لدوراتي
-          </button>
-        </div> */}
         <div className={styles.navigationHeader}>
           <button onClick={goBackToDetails} className={styles.backButton}>
             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
@@ -569,44 +582,55 @@ const StudentExamResults = () => {
           <h2>مراجعة الأقسام</h2>
         </div>
 
-        <ReviewSection
-          title="مراجعة الأسئلة"
-          examTitle={selectedExam?.name || 'الاختبار'}
-          currentTime="00:00"
-          instructionsTitle="تعليمات المراجعة"
-          instructions={{
-            intro: ['يمكنك مراجعة جميع الأسئلة أو الأسئلة المميزة أو غير المكتملة'],
-            list: [
-              'انقر على أي سؤال للانتقال إليه مباشرة',
-              'استخدم الأزرار أدناه لتصفية الأسئلة',
-              'يمكنك العودة للنتائج في أي وقت'
-            ],
-            conclusion: 'تأكد من مراجعة جميع الأسئلة قبل إنهاء المراجعة'
-          }}
-          sectionTitle="أسئلة الاختبار"
-          questions={questionItems}
-          buttonLabels={{
-            reviewMarked: 'مراجعة المميزة',
-            reviewIncomplete: 'مراجعة غير المكتملة',
-            reviewAll: 'مراجعة الكل',
-            finishReview: 'إنهاء المراجعة',
-            markQuestion: 'تمييز السؤال'
-          }}
-          questionLabel="سؤال"
-          incompleteLabel="غير مكتمل"
-          completeLabel="مكتمل"
-          onReviewAll={() => setCurrentView('reviewAnswers')}
-          onReviewIncomplete={() => setCurrentView('reviewAnswers')}
-          onReviewMarked={() => setCurrentView('reviewAnswers')}
-          onFinishReview={handleFinishReview}
-          onQuestionClick={handleQuestionClick}
-          onMarkQuestion={() => {}}
-          formatTime={(time) => time}
-          timeLeft={0}
-          CurrentExam={selectedExam}
-          hideMarkedButton={true}
-          hideIncompleteButton={true}
-        />
+        <div className={styles.sectionsReviewContainer}>
+          {sectionedQuestions.map((sectionData, sectionIndex) => (
+            <div key={sectionIndex} className={styles.sectionReviewWrapper}>
+              <h3 className={styles.sectionTitle}>{sectionData.section.title}</h3>
+              <ReviewSection
+                title={`مراجعة ${sectionData.section.title}`}
+                examTitle={selectedExam?.name || 'الاختبار'}
+                currentTime="00:00"
+                instructionsTitle="تعليمات المراجعة"
+                instructions={{
+                  intro: ['يمكنك مراجعة جميع الأسئلة أو الأسئلة المميزة أو غير المكتملة'],
+                  list: [
+                    'انقر على أي سؤال للانتقال إليه مباشرة',
+                    'استخدم الأزرار أدناه لتصفية الأسئلة',
+                    'يمكنك العودة للنتائج في أي وقت'
+                  ],
+                  conclusion: 'تأكد من مراجعة جميع الأسئلة قبل إنهاء المراجعة'
+                }}
+                sectionTitle={`أسئلة ${sectionData.section.title}`}
+                questions={sectionData.questions}
+                buttonLabels={{
+                  reviewMarked: 'مراجعة المميزة',
+                  reviewIncomplete: 'مراجعة غير المكتملة',
+                  reviewAll: 'مراجعة الكل',
+                  finishReview: 'إنهاء المراجعة',
+                  markQuestion: 'تمييز السؤال'
+                }}
+                questionLabel="سؤال"
+                incompleteLabel="غير مكتمل"
+                completeLabel="مكتمل"
+                onReviewAll={() => setCurrentView('reviewAnswers')}
+                onReviewIncomplete={() => setCurrentView('reviewAnswers')}
+                onReviewMarked={() => setCurrentView('reviewAnswers')}
+                onFinishReview={handleFinishReview}
+                onQuestionClick={(questionIndex) => {
+                  // Adjust question index to global index
+                  const globalIndex = sectionData.questions[questionIndex].id
+                  handleQuestionClick(globalIndex)
+                }}
+                onMarkQuestion={() => {}}
+                formatTime={(time) => time}
+                timeLeft={0}
+                CurrentExam={selectedExam}
+                hideMarkedButton={true}
+                hideIncompleteButton={true}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     )
   }

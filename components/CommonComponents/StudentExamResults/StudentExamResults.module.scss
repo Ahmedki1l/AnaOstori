@@ -1336,6 +1336,32 @@
   color: #6b7280;
 }
 
+// Sections Review Container
+.sectionsReviewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.sectionReviewWrapper {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f26722;
+  text-align: center;
+}
+
 // Question Review Container
 .questionReviewContainer {
   background: #fff;
