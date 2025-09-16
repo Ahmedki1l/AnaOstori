@@ -584,7 +584,7 @@ const StudentExamResults = () => {
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
         
         return {
-          ...question,
+          ...fetchedQuestion,
         }
       })
     }) || [questions.map((question, index) => {
@@ -597,7 +597,7 @@ const StudentExamResults = () => {
       console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
       
       return {
-          ...question,
+          ...fetchedQuestion,
       }
     })]
 
