@@ -445,12 +445,17 @@ const StudentExamResults = () => {
         const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sections?.length || 1)))
         const section = selectedResult.sections?.[sectionIndex]
         
+        // Filter skills to only include كمي and لفظي skills
+        const filteredSkills = (question.skills || []).filter(skill => 
+          skill.text && (skill.text.includes('كمي') || skill.text.includes('لفظي'))
+        )
+        
         return {
           ...question,
           section: section?.title || `القسم ${sectionIndex + 1}`,
           lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
-          // Use skills from the question itself, not from section
-          skills: question.skills || [{ text: "مهارة أساسية" }]
+          // Use filtered skills from the question itself
+          skills: filteredSkills.length > 0 ? filteredSkills : [{ text: "مهارة أساسية" }]
         }
       })
     } else {
@@ -484,19 +489,45 @@ const StudentExamResults = () => {
         // Get the questions for this section
         const sectionQuestions = examData.slice(startIndex, endIndex)
         
+        // Calculate skills for this section from the questions
+        const sectionSkills = new Map()
+        sectionQuestions.forEach(question => {
+          question.skills?.forEach(skill => {
+            if (!sectionSkills.has(skill.text)) {
+              sectionSkills.set(skill.text, [])
+            }
+            sectionSkills.get(skill.text).push(question)
+          })
+        })
+        
+        // Convert skills map to array with scores
+        const skillsArray = Array.from(sectionSkills.entries()).map(([skillTitle, questions]) => {
+          const correctAnswers = questions.filter(q => {
+            const reviewQuestion = reviewQuestions.find(rq => rq.questionId === q._id || rq.questionId === q.id)
+            return reviewQuestion && reviewQuestion.selectedAnswer === q.correctAnswer
+          }).length
+          
+          return {
+            title: skillTitle,
+            correctAnswers: correctAnswers,
+            numberOfQuestions: questions.length,
+            score: questions.length > 0 ? Math.round((correctAnswers / questions.length) * 100) : 0
+          }
+        })
+        
         return {
           title: section.title || `القسم ${index + 1}`,
           questions: sectionQuestions,
           score: section.score || 0,
-          totalQuestions: section.totalQuestions || sectionQuestions.length
-          // Skills are handled at the question level, not section level
+          totalQuestions: section.totalQuestions || sectionQuestions.length,
+          skills: skillsArray
         }
       }) || [{
         title: "القسم الأول",
         questions: examData,
         score: 0,
-        totalQuestions: examData.length
-        // Skills are handled at the question level, not section level
+        totalQuestions: examData.length,
+        skills: []
       }]
     }
 
@@ -610,14 +641,19 @@ const StudentExamResults = () => {
       const section = selectedResult.sections?.[sectionIndex]
       
       if (fetchedQuestion) {
+        // Filter skills to only include كمي and لفظي skills
+        const filteredSkills = (fetchedQuestion.skills || []).filter(skill => 
+          skill.text && (skill.text.includes('كمي') || skill.text.includes('لفظي'))
+        )
+        
         return {
           ...fetchedQuestion,
           selectedAnswer: reviewQuestion.selectedAnswer,
           answered: reviewQuestion.answered,
           isMarked: reviewQuestion.isMarked,
           section: section?.title || `القسم ${sectionIndex + 1}`,
-          // Use skills from the fetched question itself
-          skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
+          // Use filtered skills from the fetched question itself
+          skills: filteredSkills.length > 0 ? filteredSkills : [{ text: "مهارة أساسية" }]
         }
       }
       
