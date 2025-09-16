@@ -584,9 +584,7 @@ const StudentExamResults = () => {
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
         
         return {
-          _id: question.questionId || `q_${startIndex + questionIndex}`,
-          correctAnswer: question.selectedAnswer, // Use selectedAnswer as the "correct" answer for display purposes
-          // Add other question properties as needed
+          ...question,
         }
       })
     }) || [questions.map((question, index) => {
@@ -599,8 +597,7 @@ const StudentExamResults = () => {
       console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
       
       return {
-        _id: question.questionId || `q_${index}`,
-        correctAnswer: question.selectedAnswer, // Use selectedAnswer as the "correct" answer for display purposes
+          ...question,
       }
     })]
 
