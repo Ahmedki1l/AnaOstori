@@ -512,7 +512,7 @@ export default function PaymentInfoForm(props) {
 					}
 					<div className={styles.priceDetailsBox}>
 						<div className='flex justify-between  py-2'>
-							<p>{numberOfUser[createdOrder.orderItems.length - 1]}سعر الدورة</p>
+							<p>{numberOfUser[createdOrder.orderItems.length - 1]} سعر الدورة</p>
 							<p>{Number(createdOrder.totalPrice || 0).toFixed(2)} ر.س</p>
 						</div>
 						<div className='flex justify-between  py-2'>
