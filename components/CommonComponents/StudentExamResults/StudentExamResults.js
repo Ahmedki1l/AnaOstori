@@ -640,6 +640,7 @@ const StudentExamResults = () => {
       const globalIndex = sectionIndex * questionsPerSection + questionIndex
       setCurrentView('reviewAnswers')
       setSelectedQuestion(globalIndex)
+      setCurrentQuestionIndex(globalIndex) // Update the current question index for ReviewAnswers
     }
 
     const handleRetakeExam = () => {
