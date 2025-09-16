@@ -451,7 +451,7 @@ const StudentExamResults = () => {
           ...question,
           section: section?.title || `القسم ${sectionIndex + 1}`,
           lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
-          // Use skills from the question itself, not from section
+          // Use skills from the question itself - let ExamResults component handle the processing
           skills: question.skills || [{ text: "مهارة أساسية" }]
         }
       })
@@ -521,21 +521,9 @@ const StudentExamResults = () => {
         <ExamResults
           elapsedTime={elapsedTime}
           totalTime={totalTime}
-          examData={mockCurrentExam.sections.map(section => section.questions)}
+          examData={[examData]}
           CurrentExam={mockCurrentExam}
-          reviewQuestions={mockCurrentExam.sections.map(section => 
-            section.questions.map(question => {
-              const reviewQuestion = reviewQuestions.find(rq => 
-                rq.questionId === question._id || rq.questionId === question.id
-              )
-              return reviewQuestion || {
-                questionId: question._id || question.id,
-                selectedAnswer: null,
-                answered: false,
-                isMarked: false
-              }
-            })
-          )}
+          reviewQuestions={[reviewQuestions]}
           onReviewAnswers={handleShowReviewSection}
           onRetakeExam={handleRetakeExam}
           hideRetakeButton={true}
