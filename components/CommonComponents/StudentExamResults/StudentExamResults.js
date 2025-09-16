@@ -690,9 +690,9 @@ const StudentExamResults = () => {
       if (fetchedQuestion) {
         return {
           ...fetchedQuestion,
-          selectedAnswer: reviewQuestion.selectedAnswer,
-          answered: reviewQuestion.answered,
-          isMarked: reviewQuestion.isMarked,
+          // Ensure we have the correct structure for ReviewAnswers component
+          _id: fetchedQuestion._id,
+          id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
           section: section?.title || `القسم ${sectionIndex + 1}`,
           // Use skills from the fetched question itself
           skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
@@ -712,13 +712,18 @@ const StudentExamResults = () => {
           { id: "د", text: "الخيار د" }
         ],
         correctAnswer: "أ",
-        selectedAnswer: reviewQuestion.selectedAnswer,
-        answered: reviewQuestion.answered,
-        isMarked: reviewQuestion.isMarked,
         section: section?.title || `القسم ${sectionIndex + 1}`,
         skills: [{ text: "مهارة أساسية" }] // Default skill until question is fetched
       }
     })
+
+    // Create separate reviewQuestions array for ReviewAnswers component
+    const reviewQuestionsForComponent = reviewQuestions.map((reviewQuestion, index) => ({
+      id: reviewQuestion.questionId,
+      selectedAnswer: reviewQuestion.selectedAnswer,
+      answered: reviewQuestion.answered,
+      isMarked: reviewQuestion.isMarked
+    }))
 
     const section = { title: selectedExam?.name || 'الاختبار' }
 
@@ -767,7 +772,7 @@ const StudentExamResults = () => {
           examData={{ questions: questionsWithData }}
           onCompleteExam={() => {}}
           currentTime="00:00"
-          reviewQuestions={questionsWithData}
+          reviewQuestions={reviewQuestionsForComponent}
           setReviewQuestions={() => {}}
           currentQuestionIndex={currentQuestionIndex}
           showReviewSection={() => setCurrentView('reviewSection')}
