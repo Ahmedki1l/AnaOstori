@@ -519,9 +519,9 @@ const StudentExamResults = () => {
         <ExamResults
           elapsedTime={elapsedTime}
           totalTime={totalTime}
-          examData={examData}
+          examData={[examData]}
           CurrentExam={mockCurrentExam}
-          reviewQuestions={reviewQuestions}
+          reviewQuestions={[reviewQuestions]}
           onReviewAnswers={handleShowReviewSection}
           onRetakeExam={handleRetakeExam}
           hideRetakeButton={true}
@@ -689,7 +689,7 @@ const StudentExamResults = () => {
           examData={{ questions: questionsWithData }}
           onCompleteExam={() => {}}
           currentTime="00:00"
-          reviewQuestions={reviewQuestions}
+          reviewQuestions={questionsWithData}
           setReviewQuestions={() => {}}
           currentQuestionIndex={currentQuestionIndex}
           showReviewSection={() => setCurrentView('reviewSection')}
