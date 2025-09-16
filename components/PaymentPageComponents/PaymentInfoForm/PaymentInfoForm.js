@@ -188,9 +188,8 @@ export default function PaymentInfoForm(props) {
 			courseId: courseId,
 		};
 
-		let res;
 		try {
-			res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/check-coupon-by-code`, {
+			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/check-coupon-by-code`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -199,6 +198,7 @@ export default function PaymentInfoForm(props) {
 			});
 			
 			const responseData = await res.json();
+			
 			if (res.status === 200) {
 				// Expected API response structure:
 				// For percentage: { percentage: 20, discountMode: 'percentage' }
@@ -211,6 +211,7 @@ export default function PaymentInfoForm(props) {
 				if (!couponData.percentage && !couponData.fixedAmount) {
 					console.error('Invalid coupon data: missing discount information');
 					setCouponError(true);
+					toast.error('كود الكوبون غير صالح');
 					return;
 				}
 				
@@ -225,39 +226,34 @@ export default function PaymentInfoForm(props) {
 						radio.checked = false;
 					}
 				}
+			} else {
+				// Handle API error responses
+				setCouponAppliedData(null);
+				setCouponError(true);
+				
+				const errorMessage = responseData?.message || 'كود الكوبون غير صالح';
+				
+				// Handle specific error cases based on status
+				if (res.status === 400) {
+					toast.error(errorMessage);
+				} else if (res.status === 404) {
+					toast.error('كود الكوبون غير موجود');
+				} else if (res.status === 422) {
+					// Check if this is a conditions-related error
+					if (errorMessage.includes('شخص واحد') || errorMessage.includes('single person')) {
+						toast.error('هذا الكوبون متاح للحجز لشخص واحد فقط');
+					} else {
+						toast.error(errorMessage);
+					}
+				} else {
+					toast.error(errorMessage);
+				}
 			}
 		} catch (error) {
 			console.error("Error checking coupon validity:", error);
 			setCouponAppliedData(null);
 			setCouponError(true);
-			
-			// Handle network errors
-			if (!res || !res.ok) {
-				try {
-					const errorData = await res.json();
-					const errorMessage = errorData?.message || 'كود الكوبون غير صالح';
-					
-					// Handle specific error cases based on status
-					if (res.status === 400) {
-						toast.error(errorMessage);
-					} else if (res.status === 404) {
-						toast.error('كود الكوبون غير موجود');
-					} else if (res.status === 422) {
-						// Check if this is a conditions-related error
-						if (errorMessage.includes('شخص واحد') || errorMessage.includes('single person')) {
-							toast.error('هذا الكوبون متاح للحجز لشخص واحد فقط');
-						} else {
-							toast.error(errorMessage);
-						}
-					} else {
-						toast.error('حدث خطأ أثناء التحقق من الكوبون');
-					}
-				} catch (parseError) {
-					toast.error('حدث خطأ أثناء التحقق من الكوبون');
-				}
-			} else {
-				toast.error('حدث خطأ أثناء التحقق من الكوبون');
-			}
+			toast.error('حدث خطأ أثناء التحقق من الكوبون');
 		}
 	};
 
