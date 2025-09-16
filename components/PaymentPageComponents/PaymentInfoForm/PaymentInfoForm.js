@@ -26,6 +26,11 @@ export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
 	const studentsData = props.studentsData
 	const courseId = props.courseId
+	
+	// Debug logging to check createdOrder data
+	console.log('PaymentInfoForm - createdOrder:', createdOrder);
+	console.log('PaymentInfoForm - totalPrice:', createdOrder?.totalPrice);
+	console.log('PaymentInfoForm - totalVat:', createdOrder?.totalVat);
 	const bankDetails = PaymentConst.bankDetails
 	const noOfUser = PaymentConst.noOfUsersTag2
 	const numberOfUser = PaymentConst.noOfUsersTag3
@@ -286,7 +291,7 @@ export default function PaymentInfoForm(props) {
 	};
 
 	const zeroCostFlag = (() => {
-		const totalAmount = Number(createdOrder.totalPrice) + Number(createdOrder.totalVat);
+		const totalAmount = Number(createdOrder.totalPrice || 0) + Number(createdOrder.totalVat || 0);
 		const discountAmount = calculateCouponDiscount(couponAppliedData, totalAmount);
 		return (totalAmount - discountAmount) === 0;
 	})();
@@ -508,15 +513,15 @@ export default function PaymentInfoForm(props) {
 					<div className={styles.priceDetailsBox}>
 						<div className='flex justify-between  py-2'>
 							<p>{numberOfUser[createdOrder.orderItems.length - 1]}سعر الدورة</p>
-							<p>{Number(createdOrder.totalPrice).toFixed(2)} ر.س</p>
+							<p>{Number(createdOrder.totalPrice || 0).toFixed(2)} ر.س</p>
 						</div>
 						<div className='flex justify-between  py-2'>
 							<p>ضريبة القيمة المضافة</p>
-							<p>{Number(createdOrder.totalVat).toFixed(2)} ر.س</p>
+							<p>{Number(createdOrder.totalVat || 0).toFixed(2)} ر.س</p>
 						</div>
 						<div className='flex justify-between py-2 '>
 							<p className='fontBold'>المبلغ الإجمالي</p>
-							<p className='fontBold pb-2'>{(Number(Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)).toFixed(2))} ر.س</p>
+							<p className='fontBold pb-2'>{(Number(createdOrder.totalPrice || 0) + Number(createdOrder.totalVat || 0)).toFixed(2)} ر.س</p>
 						</div>
 						{(couponAppliedData?.percentage || couponAppliedData?.fixedAmount) &&
 							<>
@@ -529,13 +534,13 @@ export default function PaymentInfoForm(props) {
 										}
 									</p>
 									<p style={{ color: '#00bd5d' }}> 
-										{calculateCouponDiscount(couponAppliedData, Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)).toFixed(2)}- ر.س
+										{calculateCouponDiscount(couponAppliedData, Number(createdOrder.totalPrice || 0) + Number(createdOrder.totalVat || 0)).toFixed(2)}- ر.س
 									</p>
 								</div>
 								<div className='flex justify-between '>
 									<p className='fontBold' style={{ color: '#F26722' }}>المبلغ المطلوب</p>
 									<p className='fontBold pb-2' style={{ color: '#F26722' }}>
-										{(Number(createdOrder.totalPrice) + Number(createdOrder.totalVat) - calculateCouponDiscount(couponAppliedData, Number(createdOrder.totalPrice) + Number(createdOrder.totalVat))).toFixed(2)} ر.س
+										{(Number(createdOrder.totalPrice || 0) + Number(createdOrder.totalVat || 0) - calculateCouponDiscount(couponAppliedData, Number(createdOrder.totalPrice || 0) + Number(createdOrder.totalVat || 0))).toFixed(2)} ر.س
 									</p>
 								</div>
 							</>
