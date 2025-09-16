@@ -586,7 +586,6 @@ const StudentExamResults = () => {
         return {
           _id: question.questionId || `q_${startIndex + questionIndex}`,
           correctAnswer: question.selectedAnswer, // Use selectedAnswer as the "correct" answer for display purposes
-          isCorrect: question.isCorrect, // Include the isCorrect flag
           // Add other question properties as needed
         }
       })
@@ -602,7 +601,6 @@ const StudentExamResults = () => {
       return {
         _id: question.questionId || `q_${index}`,
         correctAnswer: question.selectedAnswer, // Use selectedAnswer as the "correct" answer for display purposes
-        isCorrect: question.isCorrect, // Include the isCorrect flag
       }
     })]
 
