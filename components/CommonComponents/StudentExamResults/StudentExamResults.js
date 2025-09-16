@@ -10,6 +10,7 @@ import { fullDate } from '../../../constants/DateConverter'
 import ExamResults from '../../ExamComponents/ExamResults'
 import ReviewAnswers from '../../ExamComponents/ReviewAnswers'
 import ReviewSection from '../../ExamComponents/ReviewSection'
+import ExamSectionsReview from '../../ExamComponents/ExamSectionsReview'
 
 const StudentExamResults = () => {
   const router = useRouter()
@@ -548,29 +549,76 @@ const StudentExamResults = () => {
   if (currentView === 'reviewSection' && selectedResult) {
     const questions = selectedResult.reviewQuestions || []
     
-    // Group questions by sections
-    const questionsPerSection = Math.ceil(questions.length / (selectedResult.sections?.length || 1))
-    const sectionedQuestions = selectedResult.sections?.map((section, sectionIndex) => {
-      const startIndex = sectionIndex * questionsPerSection
-      const endIndex = Math.min((sectionIndex + 1) * questionsPerSection, questions.length)
+    // Create examData structure for ExamSectionsReview
+    const examData = selectedResult.sections?.map((section, index) => {
+      const questionsPerSection = Math.ceil(questions.length / selectedResult.sections.length)
+      const startIndex = index * questionsPerSection
+      const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
+      
+      // Get the questions for this section
       const sectionQuestions = questions.slice(startIndex, endIndex)
       
-      return {
-        section: section,
-        questions: sectionQuestions.map((question, index) => ({
-          id: startIndex + index,
-          answered: question.answered || false,
-          isMarked: question.isMarked || false
-        }))
-      }
-    }) || [{
-      section: { title: "القسم الأول" },
-      questions: questions.map((question, index) => ({
-        id: index,
-        answered: question.answered || false,
+      return sectionQuestions.map((question, questionIndex) => ({
+        _id: question.questionId || `q_${startIndex + questionIndex}`,
+        correctAnswer: question.correctAnswer || 'A',
+        // Add other question properties as needed
+      }))
+    }) || [questions.map((question, index) => ({
+      _id: question.questionId || `q_${index}`,
+      correctAnswer: question.correctAnswer || 'A',
+    }))]
+
+    // Create reviewQuestions structure for ExamSectionsReview
+    const reviewQuestions = selectedResult.sections?.map((section, index) => {
+      const questionsPerSection = Math.ceil(questions.length / selectedResult.sections.length)
+      const startIndex = index * questionsPerSection
+      const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
+      
+      // Get the questions for this section
+      const sectionQuestions = questions.slice(startIndex, endIndex)
+      
+      return sectionQuestions.map((question, questionIndex) => ({
+        id: question.questionId || `q_${startIndex + questionIndex}`,
+        selectedAnswer: question.selectedAnswer,
         isMarked: question.isMarked || false
       }))
+    }) || [questions.map((question, index) => ({
+      id: question.questionId || `q_${index}`,
+      selectedAnswer: question.selectedAnswer,
+      isMarked: question.isMarked || false
+    }))]
+
+    // Create examSections structure
+    const examSections = selectedResult.sections?.map((section, index) => ({
+      title: section.title || `القسم ${index + 1}`,
+      // Add other section properties as needed
+    })) || [{
+      title: "القسم الأول"
     }]
+
+    // Create elapsedTime array
+    const elapsedTime = selectedResult.sections?.map((section, index) => {
+      // Calculate time per section or use default
+      return "00:05" // Default time, you can calculate this based on your data
+    }) || ["00:05"]
+
+    const handleQuestionClick = (sectionIndex, questionIndex) => {
+      // Calculate global question index
+      const questionsPerSection = Math.ceil(questions.length / (selectedResult.sections?.length || 1))
+      const globalIndex = sectionIndex * questionsPerSection + questionIndex
+      setCurrentView('reviewAnswers')
+      setSelectedQuestion(globalIndex)
+    }
+
+    const handleRetakeExam = () => {
+      // Handle retake exam logic
+      console.log('Retake exam clicked')
+    }
+
+    const handleViewResults = () => {
+      // Handle view results logic
+      setCurrentView('details')
+    }
 
     return (
       <div className={styles.resultsContainer}>
@@ -582,55 +630,15 @@ const StudentExamResults = () => {
           <h2>مراجعة الأقسام</h2>
         </div>
 
-        <div className={styles.sectionsReviewContainer}>
-          {sectionedQuestions.map((sectionData, sectionIndex) => (
-            <div key={sectionIndex} className={styles.sectionReviewWrapper}>
-              <h3 className={styles.sectionTitle}>{sectionData.section.title}</h3>
-              <ReviewSection
-                title={`مراجعة ${sectionData.section.title}`}
-                examTitle={selectedExam?.name || 'الاختبار'}
-                currentTime="00:00"
-                instructionsTitle="تعليمات المراجعة"
-                instructions={{
-                  intro: ['يمكنك مراجعة جميع الأسئلة أو الأسئلة المميزة أو غير المكتملة'],
-                  list: [
-                    'انقر على أي سؤال للانتقال إليه مباشرة',
-                    'استخدم الأزرار أدناه لتصفية الأسئلة',
-                    'يمكنك العودة للنتائج في أي وقت'
-                  ],
-                  conclusion: 'تأكد من مراجعة جميع الأسئلة قبل إنهاء المراجعة'
-                }}
-                sectionTitle={`أسئلة ${sectionData.section.title}`}
-                questions={sectionData.questions}
-                buttonLabels={{
-                  reviewMarked: 'مراجعة المميزة',
-                  reviewIncomplete: 'مراجعة غير المكتملة',
-                  reviewAll: 'مراجعة الكل',
-                  finishReview: 'إنهاء المراجعة',
-                  markQuestion: 'تمييز السؤال'
-                }}
-                questionLabel="سؤال"
-                incompleteLabel="غير مكتمل"
-                completeLabel="مكتمل"
-                onReviewAll={() => setCurrentView('reviewAnswers')}
-                onReviewIncomplete={() => setCurrentView('reviewAnswers')}
-                onReviewMarked={() => setCurrentView('reviewAnswers')}
-                onFinishReview={handleFinishReview}
-                onQuestionClick={(questionIndex) => {
-                  // Adjust question index to global index
-                  const globalIndex = sectionData.questions[questionIndex].id
-                  handleQuestionClick(globalIndex)
-                }}
-                onMarkQuestion={() => {}}
-                formatTime={(time) => time}
-                timeLeft={0}
-                CurrentExam={selectedExam}
-                hideMarkedButton={true}
-                hideIncompleteButton={true}
-              />
-            </div>
-          ))}
-        </div>
+        <ExamSectionsReview
+          examData={examData}
+          elapsedTime={elapsedTime}
+          reviewQuestions={reviewQuestions}
+          examSections={examSections}
+          onRetakeExam={handleRetakeExam}
+          onViewResults={handleViewResults}
+          handleQuestionClick={handleQuestionClick}
+        />
       </div>
     )
   }
