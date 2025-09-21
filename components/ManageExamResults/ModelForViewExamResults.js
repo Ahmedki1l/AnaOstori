@@ -143,12 +143,17 @@ const ModelForViewExamResults = ({
                 // Get the corresponding section from the sections array to access skills
                 const sectionWithSkills = examResult.sections?.[sectionIndex]
                 
+                // Find the corresponding review question to get the correct answer
+                const reviewQuestion = reviewQuestions.find(rq => rq.questionId === question._id || rq.questionId === question.id)
+                
                 return {
                     ...question,
                     _id: question._id || question.id,
                     id: question._id || question.id,
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     lesson: question.lesson || sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
+                    // Ensure we have the correct answer - use from fetched question or determine from review
+                    correctAnswer: question.correctAnswer || question.answer || (reviewQuestion?.isCorrect ? reviewQuestion.selectedAnswer : "أ"),
                     // Use skills from the sections array, fallback to question skills, then default
                     skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
                            question.skills || 
@@ -193,6 +198,7 @@ const ModelForViewExamResults = ({
 
         console.log("🚀 ~ Details View ~ examData:", examData)
         console.log("🚀 ~ Details View ~ examResult.sections:", examResult.sections)
+        console.log("🚀 ~ Details View ~ reviewQuestions:", reviewQuestions)
 
         // Show loading state if questions are being fetched
         if (isLoadingQuestions) {
@@ -253,6 +259,25 @@ const ModelForViewExamResults = ({
             }]
         }
         console.log("🚀 ~ Details View ~ mockCurrentExam:", mockCurrentExam)
+        
+        // Create the final data structures for ExamResults
+        const examDataForResults = mockCurrentExam.sections.map(section => section.questions)
+        const reviewQuestionsForResults = mockCurrentExam.sections.map(section => 
+            section.questions.map(question => {
+                const reviewQuestion = reviewQuestions.find(rq => 
+                    rq.questionId === question._id || rq.questionId === question.id
+                )
+                return reviewQuestion || {
+                    questionId: question._id || question.id,
+                    selectedAnswer: null,
+                    answered: false,
+                    isMarked: false
+                }
+            })
+        )
+        
+        console.log("🚀 ~ Details View ~ examDataForResults:", examDataForResults)
+        console.log("🚀 ~ Details View ~ reviewQuestionsForResults:", reviewQuestionsForResults)
 
         return (
             <Modal
@@ -275,21 +300,9 @@ const ModelForViewExamResults = ({
                     <ExamResults
                         elapsedTime={elapsedTime}
                         totalTime={totalTime}
-                        examData={mockCurrentExam.sections.map(section => section.questions)}
+                        examData={examDataForResults}
                         CurrentExam={mockCurrentExam}
-                        reviewQuestions={mockCurrentExam.sections.map(section => 
-                            section.questions.map(question => {
-                                const reviewQuestion = reviewQuestions.find(rq => 
-                                    rq.questionId === question._id || rq.questionId === question.id
-                                )
-                                return reviewQuestion || {
-                                    questionId: question._id || question.id,
-                                    selectedAnswer: null,
-                                    answered: false,
-                                    isMarked: false
-                                }
-                            })
-                        )}
+                        reviewQuestions={reviewQuestionsForResults}
                         onReviewAnswers={handleShowReviewSection}
                         onRetakeExam={handleRetakeExam}
                         hideRetakeButton={true}
