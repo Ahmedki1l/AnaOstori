@@ -114,49 +114,72 @@ const ModelForViewExamResults = ({
         const reviewQuestions = examResult.reviewQuestions || []
         const totalTime = examResult.totalTime || 0
         
-        // Create elapsedTime array for each section based on sectionDetails
-        const elapsedTime = examResult.sectionDetails?.map(section => section.time) || 
-                           examResult.sections?.map(() => "00:00") || []
+        // Create elapsedTime array for each section
+        const elapsedTime = examResult.sections?.map(() => examResult.timeSpent || "00:00") || []
 
-        // Create flattened examData array - ExamResults component handles section grouping internally
-        const examData = reviewQuestions.map((reviewQuestion, index) => {
-            const fetchedQuestion = fetchedQuestions.find(fq => 
-                fq._id === reviewQuestion.questionId || fq.id === reviewQuestion.questionId
-            )
-            
-            if (fetchedQuestion) {
+        // Use fetched questions if available, otherwise create mock data
+        let examData = []
+        if (fetchedQuestions.length > 0) {
+            // Use real question data with skills from the questions themselves
+            examData = fetchedQuestions.map((question, index) => {
+                // Determine which section this question belongs to based on its position
+                const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (examResult.sections?.length || 1)))
+                const section = examResult.sections?.[sectionIndex]
+                
                 return {
-                    ...fetchedQuestion,
-                    section: fetchedQuestion.section || examResult.sections?.[0]?.title || "القسم الأول",
-                    lesson: fetchedQuestion.lesson || examResult.sections?.[0]?.title || "الدرس الأول",
-                    skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
+                    ...question,
+                    section: section?.title || `القسم ${sectionIndex + 1}`,
+                    lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
+                    // Use skills from the question itself, not from section
+                    skills: question.skills || [{ text: "مهارة أساسية" }]
                 }
-            } else {
+            })
+        } else {
+            // Create mock data structure with proper section assignment
+            examData = reviewQuestions.map((reviewQuestion, index) => {
+                // Determine which section this question belongs to based on its position
+                const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (examResult.sections?.length || 1)))
+                const section = examResult.sections?.[sectionIndex]
+                
                 return {
                     _id: reviewQuestion.questionId,
                     id: reviewQuestion.questionId,
                     text: `السؤال ${index + 1}`,
                     correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
-                    section: examResult.sections?.[0]?.title || "القسم الأول",
-                    lesson: examResult.sections?.[0]?.title || "الدرس الأول",
-                    skills: [{ text: "مهارة أساسية" }]
+                    section: section?.title || `القسم ${sectionIndex + 1}`,
+                    lesson: `الدرس ${Math.floor(index / 5) + 1}`,
+                    skills: [{ text: "مهارة أساسية" }] // Default skill until questions are fetched
                 }
-            }
-        })
-
-        // Create CurrentExam with basic structure - ExamResults will handle the rest
-        const mockCurrentExam = {
-            ...examResult,
-            sections: examResult.sections || [{ title: "القسم الأول" }]
+            })
         }
 
-        // Create flattened reviewQuestions array
-        const reviewQuestionsFlat = reviewQuestions.map(reviewQuestion => ({
-            questionId: reviewQuestion.questionId,
-            selectedAnswer: reviewQuestion.selectedAnswer,
-            answered: reviewQuestion.answered,
-            isMarked: reviewQuestion.isMarked
-        }))
+        // Create CurrentExam with proper sections structure based on actual API data
+        const mockCurrentExam = {
+            ...examResult,
+            sections: examResult.sections?.map((section, index) => {
+                // Find questions that belong to this section based on their position in the reviewQuestions array
+                const questionsPerSection = Math.ceil(reviewQuestions.length / examResult.sections.length)
+                const startIndex = index * questionsPerSection
+                const endIndex = Math.min((index + 1) * questionsPerSection, reviewQuestions.length)
+                
+                // Get the questions for this section
+                const sectionQuestions = examData.slice(startIndex, endIndex)
+                
+                return {
+                    title: section.title || `القسم ${index + 1}`,
+                    questions: sectionQuestions,
+                    score: section.score || 0,
+                    totalQuestions: section.totalQuestions || sectionQuestions.length
+                    // Skills are handled at the question level, not section level
+                }
+            }) || [{
+                title: "القسم الأول",
+                questions: examData,
+                score: 0,
+                totalQuestions: examData.length
+                // Skills are handled at the question level, not section level
+            }]
+        }
 
         return (
             <Modal
@@ -179,9 +202,21 @@ const ModelForViewExamResults = ({
                     <ExamResults
                         elapsedTime={elapsedTime}
                         totalTime={totalTime}
-                        examData={[examData]}
+                        examData={mockCurrentExam.sections.map(section => section.questions)}
                         CurrentExam={mockCurrentExam}
-                        reviewQuestions={[reviewQuestionsFlat]}
+                        reviewQuestions={mockCurrentExam.sections.map(section => 
+                            section.questions.map(question => {
+                                const reviewQuestion = reviewQuestions.find(rq => 
+                                    rq.questionId === question._id || rq.questionId === question.id
+                                )
+                                return reviewQuestion || {
+                                    questionId: question._id || question.id,
+                                    selectedAnswer: null,
+                                    answered: false,
+                                    isMarked: false
+                                }
+                            })
+                        )}
                         onReviewAnswers={handleShowReviewSection}
                         onRetakeExam={handleRetakeExam}
                         hideRetakeButton={true}
@@ -195,45 +230,90 @@ const ModelForViewExamResults = ({
     if (currentView === 'reviewSection' && examResult) {
         const questions = examResult.reviewQuestions || []
         
-        // Create flattened examData array - ExamSectionsReview component handles section grouping
-        const examData = questions.map((reviewQuestion, index) => {
-            const fetchedQuestion = fetchedQuestions.find(fq => 
-                fq._id === reviewQuestion.questionId || fq.id === reviewQuestion.questionId
-            )
+        console.log("🚀 ~ Review Section ~ questions:", questions)
+        console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
+        console.log("🚀 ~ Review Section ~ examResult.sections:", examResult.sections)
+        
+        // Create examData structure for ExamSectionsReview
+        const examData = examResult.sections?.map((section, index) => {
+            const questionsPerSection = Math.ceil(questions.length / examResult.sections.length)
+            const startIndex = index * questionsPerSection
+            const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
             
-            if (fetchedQuestion) {
+            // Get the questions for this section
+            const sectionQuestions = questions.slice(startIndex, endIndex)
+            
+            return sectionQuestions.map((question, questionIndex) => {
+                // Find the corresponding fetched question
+                const fetchedQuestion = fetchedQuestions.find(fq => 
+                    fq._id === question.questionId || fq.id === question.questionId
+                )
+                
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question:`, question)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question keys:`, Object.keys(question))
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ fetchedQuestion:`, fetchedQuestion)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from fetched:`, fetchedQuestion?.correctAnswer)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from question:`, question.correctAnswer)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
+                
                 return {
                     ...fetchedQuestion,
-                    _id: fetchedQuestion._id,
-                    id: fetchedQuestion._id
                 }
-            } else {
-                return {
-                    _id: reviewQuestion.questionId,
-                    id: reviewQuestion.questionId,
-                    text: `السؤال ${index + 1}`,
-                    correctAnswer: "أ"
-                }
+            })
+        }) || [questions.map((question, index) => {
+            const fetchedQuestion = fetchedQuestions.find(fq => 
+                fq._id === question.questionId || fq.id === question.questionId
+            )
+            
+            console.log(`🚀 ~ Fallback Question ${index} ~ question:`, question)
+            console.log(`🚀 ~ Fallback Question ${index} ~ fetchedQuestion:`, fetchedQuestion)
+            console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
+            
+            return {
+                ...fetchedQuestion,
             }
-        })
+        })]
 
-        // Create flattened reviewQuestions array
-        const reviewQuestionsFlat = questions.map(reviewQuestion => ({
-            id: reviewQuestion.questionId,
-            selectedAnswer: reviewQuestion.selectedAnswer,
-            isMarked: reviewQuestion.isMarked || false,
-            answered: reviewQuestion.answered || false,
-            isCorrect: reviewQuestion.isCorrect || false
-        }))
+        // Create reviewQuestions structure for ExamSectionsReview
+        const reviewQuestions = examResult.sections?.map((section, index) => {
+            const questionsPerSection = Math.ceil(questions.length / examResult.sections.length)
+            const startIndex = index * questionsPerSection
+            const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
+            
+            // Get the questions for this section
+            const sectionQuestions = questions.slice(startIndex, endIndex)
+            
+            return sectionQuestions.map((question, questionIndex) => ({
+                id: question.questionId || `q_${startIndex + questionIndex}`,
+                selectedAnswer: question.selectedAnswer,
+                isMarked: question.isMarked || false,
+                answered: question.answered || false,
+                isCorrect: question.isCorrect || false
+            }))
+        }) || [questions.map((question, index) => ({
+            id: question.questionId || `q_${index}`,
+            selectedAnswer: question.selectedAnswer,
+            isMarked: question.isMarked || false,
+            answered: question.answered || false,
+            isCorrect: question.isCorrect || false
+        }))]
 
         // Create examSections structure
         const examSections = examResult.sections?.map((section, index) => ({
-            title: section.title || `القسم ${index + 1}`
-        })) || [{ title: "القسم الأول" }]
+            title: section.title || `القسم ${index + 1}`,
+            // Add other section properties as needed
+        })) || [{
+            title: "القسم الأول"
+        }]
 
-        // Create elapsedTime array based on sectionDetails
-        const elapsedTime = examResult.sectionDetails?.map(section => section.time) || 
-                           examResult.sections?.map(() => "00:05") || ["00:05"]
+        // Create elapsedTime array
+        const elapsedTime = examResult.sections?.map((section, index) => {
+            // Calculate time per section or use default
+            return "00:05" // Default time, you can calculate this based on your data
+        }) || ["00:05"]
+
+        console.log("🚀 ~ Review Section ~ examData:", examData)
+        console.log("🚀 ~ Review Section ~ reviewQuestions:", reviewQuestions)
 
         const handleQuestionClick = (sectionIndex, questionIndex) => {
             // Calculate global question index
@@ -272,9 +352,9 @@ const ModelForViewExamResults = ({
                         <h2>مراجعة الأقسام</h2>
                     </div>
                     <ExamSectionsReview
-                        examData={[examData]}
+                        examData={examData}
                         elapsedTime={elapsedTime}
-                        reviewQuestions={[reviewQuestionsFlat]}
+                        reviewQuestions={reviewQuestions}
                         examSections={examSections}
                         onRetakeExam={handleRetakeExam}
                         onViewResults={handleViewResults}
@@ -289,17 +369,22 @@ const ModelForViewExamResults = ({
     if (currentView === 'reviewAnswers' && examResult) {
         const reviewQuestions = examResult.reviewQuestions || []
 
-        // Create question structure with fetched data - ReviewAnswers component handles the rest
+        // Create question structure with fetched data and proper section assignment
         const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
             const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
+            
+            // Determine which section this question belongs to
+            const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (examResult.sections?.length || 1)))
+            const section = examResult.sections?.[sectionIndex]
             
             if (fetchedQuestion) {
                 return {
                     ...fetchedQuestion,
+                    // Ensure we have the correct structure for ReviewAnswers component
                     _id: fetchedQuestion._id,
-                    id: fetchedQuestion._id,
-                    section: fetchedQuestion.section || examResult.sections?.[0]?.title || "القسم الأول",
-                    lesson: fetchedQuestion.lesson || examResult.sections?.[0]?.title || "الدرس الأول",
+                    id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
+                    section: section?.title || `القسم ${sectionIndex + 1}`,
+                    // Use skills from the fetched question itself
                     skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
                 }
             }
@@ -317,9 +402,8 @@ const ModelForViewExamResults = ({
                     { id: "د", text: "الخيار د" }
                 ],
                 correctAnswer: "أ",
-                section: examResult.sections?.[0]?.title || "القسم الأول",
-                lesson: examResult.sections?.[0]?.title || "الدرس الأول",
-                skills: [{ text: "مهارة أساسية" }]
+                section: section?.title || `القسم ${sectionIndex + 1}`,
+                skills: [{ text: "مهارة أساسية" }] // Default skill until question is fetched
             }
         })
 
