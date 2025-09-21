@@ -26,15 +26,15 @@ const ModelForViewExamResults = ({
         setFetchedQuestions([])
     };
 
-    // Fetch questions when reviewAnswers or reviewSection view is active and questions are needed
+    // Fetch questions when modal opens and we have examResult data
     useEffect(() => {
-        if ((currentView === 'reviewAnswers' || currentView === 'reviewSection') && examResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
+        if (isModelForViewExamResults && examResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
             const questionIds = examResult.reviewQuestions.map(q => q.questionId)
             fetchQuestionsByIds(questionIds).then(questions => {
                 setFetchedQuestions(questions)
             })
         }
-    }, [currentView, examResult, fetchedQuestions.length])
+    }, [isModelForViewExamResults, examResult, fetchedQuestions.length])
 
     // Reset fetched questions when modal opens/closes
     useEffect(() => {
@@ -122,6 +122,7 @@ const ModelForViewExamResults = ({
         let examData = []
         if (fetchedQuestions.length > 0) {
             console.log("🚀 ~ Details View ~ fetchedQuestions:", fetchedQuestions)
+            console.log("🚀 ~ Details View ~ fetchedQuestions[0]:", fetchedQuestions[0])
             // Use real question data with proper section assignment based on sectionDetails
             examData = fetchedQuestions.map((question, index) => {
                 // Find which section this question belongs to based on sectionDetails
@@ -139,13 +140,19 @@ const ModelForViewExamResults = ({
                 }
                 
                 const sectionDetail = examResult.sectionDetails?.[sectionIndex]
+                // Get the corresponding section from the sections array to access skills
+                const sectionWithSkills = examResult.sections?.[sectionIndex]
                 
                 return {
                     ...question,
+                    _id: question._id || question.id,
+                    id: question._id || question.id,
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     lesson: question.lesson || sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
-                    // Use skills from the question itself, not from section
-                    skills: question.skills || [{ text: "مهارة أساسية" }]
+                    // Use skills from the sections array, fallback to question skills, then default
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                           question.skills || 
+                           [{ text: "مهارة أساسية" }]
                 }
             })
         } else {
@@ -167,6 +174,8 @@ const ModelForViewExamResults = ({
                 }
                 
                 const sectionDetail = examResult.sectionDetails?.[sectionIndex]
+                // Get the corresponding section from the sections array to access skills
+                const sectionWithSkills = examResult.sections?.[sectionIndex]
                 
                 return {
                     _id: reviewQuestion.questionId,
@@ -175,12 +184,44 @@ const ModelForViewExamResults = ({
                     correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     lesson: sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
-                    skills: [{ text: "مهارة أساسية" }] // Default skill until questions are fetched
+                    // Use skills from the sections array
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                           [{ text: "مهارة أساسية" }]
                 }
             })
         }
 
         console.log("🚀 ~ Details View ~ examData:", examData)
+        console.log("🚀 ~ Details View ~ examResult.sections:", examResult.sections)
+
+        // Show loading state if questions are being fetched
+        if (isLoadingQuestions) {
+            return (
+                <Modal
+                    title={`تفاصيل نتيجة الاختبار - ${examResult.studentName}`}
+                    open={isModelForViewExamResults}
+                    onCancel={handleCancel}
+                    width="95vw"
+                    footer={null}
+                    style={{ top: 10 }}
+                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                >
+                    <div className={styles.resultsContainer}>
+                        <div className={styles.navigationHeader}>
+                            <button onClick={handleCancel} className={styles.backButton}>
+                                <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                                العودة للنتائج
+                            </button>
+                            <h2>تفاصيل النتيجة</h2>
+                        </div>
+                        <div className={styles.loadingContainer}>
+                            <Spinner />
+                            <p>جاري تحميل الأسئلة...</p>
+                        </div>
+                    </div>
+                </Modal>
+            )
+        }
 
         // Create CurrentExam with proper sections structure based on sectionDetails
         const mockCurrentExam = {
@@ -352,6 +393,35 @@ const ModelForViewExamResults = ({
         console.log("🚀 ~ Review Section ~ examData:", examData)
         console.log("🚀 ~ Review Section ~ reviewQuestions:", reviewQuestions)
 
+        // Show loading state if questions are being fetched
+        if (isLoadingQuestions) {
+            return (
+                <Modal
+                    title={`مراجعة الأقسام - ${examResult.studentName}`}
+                    open={isModelForViewExamResults}
+                    onCancel={handleCancel}
+                    width="95vw"
+                    footer={null}
+                    style={{ top: 10 }}
+                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                >
+                    <div className={styles.resultsContainer}>
+                        <div className={styles.navigationHeader}>
+                            <button onClick={handleCancel} className={styles.backButton}>
+                                <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                                العودة للنتائج
+                            </button>
+                            <h2>مراجعة الأقسام</h2>
+                        </div>
+                        <div className={styles.loadingContainer}>
+                            <Spinner />
+                            <p>جاري تحميل الأسئلة...</p>
+                        </div>
+                    </div>
+                </Modal>
+            )
+        }
+
         const handleQuestionClick = (sectionIndex, questionIndex) => {
             // Calculate global question index based on sectionDetails
             let globalIndex = 0
@@ -429,6 +499,9 @@ const ModelForViewExamResults = ({
             
             const sectionDetail = examResult.sectionDetails?.[sectionIndex]
             
+            // Get the corresponding section from the sections array to access skills
+            const sectionWithSkills = examResult.sections?.[sectionIndex]
+            
             if (fetchedQuestion) {
                 return {
                     ...fetchedQuestion,
@@ -436,8 +509,10 @@ const ModelForViewExamResults = ({
                     _id: fetchedQuestion._id,
                     id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
-                    // Use skills from the fetched question itself
-                    skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
+                    // Use skills from the sections array, fallback to question skills, then default
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                           fetchedQuestion.skills || 
+                           [{ text: "مهارة أساسية" }]
                 }
             }
             
@@ -455,7 +530,9 @@ const ModelForViewExamResults = ({
                 ],
                 correctAnswer: "أ",
                 section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
-                skills: [{ text: "مهارة أساسية" }] // Default skill until question is fetched
+                // Use skills from the sections array
+                skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                       [{ text: "مهارة أساسية" }]
             }
         })
 
