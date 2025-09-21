@@ -149,7 +149,7 @@ const ModelForViewExamResults = ({
                 return {
                     ...question,
                     _id: question._id || question.id,
-                    id: question._id || question.id,
+                    id: question._id || question.id, // Ensure both _id and id are set
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     lesson: question.lesson || sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
                     // Ensure we have the correct answer - use from fetched question or determine from review
@@ -267,17 +267,20 @@ const ModelForViewExamResults = ({
                 const reviewQuestion = reviewQuestions.find(rq => 
                     rq.questionId === question._id || rq.questionId === question.id
                 )
-                return reviewQuestion || {
+                return {
+                    id: question._id || question.id, // ExamResults expects 'id' field
                     questionId: question._id || question.id,
-                    selectedAnswer: null,
-                    answered: false,
-                    isMarked: false
+                    selectedAnswer: reviewQuestion?.selectedAnswer || null,
+                    answered: reviewQuestion?.answered || false,
+                    isMarked: reviewQuestion?.isMarked || false
                 }
             })
         )
         
         console.log("🚀 ~ Details View ~ examDataForResults:", examDataForResults)
         console.log("🚀 ~ Details View ~ reviewQuestionsForResults:", reviewQuestionsForResults)
+        console.log("🚀 ~ Details View ~ examDataForResults[0]:", examDataForResults[0])
+        console.log("🚀 ~ Details View ~ reviewQuestionsForResults[0]:", reviewQuestionsForResults[0])
 
         return (
             <Modal
