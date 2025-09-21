@@ -470,17 +470,17 @@ const ModelForViewExamResults = ({
             setCurrentView('details')
         }
 
-        return (
-                <Modal
+    return (
+        <Modal
                     title={`مراجعة الأقسام - ${examResult.studentName}`}
-                    open={isModelForViewExamResults}
-                    onCancel={handleCancel}
+            open={isModelForViewExamResults}
+            onCancel={handleCancel}
                     width="60vw"
                     footer={null}
                     style={{ top: 10 }}
                     bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
                     className={styles.modalOverrides}
-                >
+        >
             <div className={styles.resultsContainer}>
                     <div className={styles.navigationHeader}>
                         <button onClick={handleBackToDetails} className={styles.backButton}>
@@ -624,7 +624,7 @@ const ModelForViewExamResults = ({
                             العودة للأقسام
                         </button>
                         <h2>مراجعة الأسئلة</h2>
-                    </div>
+                            </div>
                     <div style={{ flex: 1, height: '100%', overflow: 'auto' }}>
                         <ReviewAnswers
                             CurrentExam={examResult}
@@ -640,6 +640,7 @@ const ModelForViewExamResults = ({
                             section={section}
                             hideResultsButton={true}
                             hideRetakeButton={true}
+                            className={styles.reviewAnswersContainer}
                         />
                     </div>
                 </div>

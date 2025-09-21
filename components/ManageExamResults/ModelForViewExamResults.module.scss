@@ -145,6 +145,53 @@
   }
 }
 
+// Override ReviewAnswers component height when used in modal context
+.reviewAnswersContainer {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  
+  // Target the internal components using global selectors
+  :global(.centerContainer) {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  :global(.mainQuestionArea) {
+    height: 100% !important;
+    min-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  :global(.questionBody) {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
+  :global(.optionsContainer) {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 1rem !important;
+  }
+
+  // Ensure proper spacing and layout
+  :global(.questionHeader) {
+    flex-shrink: 0 !important;
+  }
+
+  :global(.bottomContainer) {
+    flex-shrink: 0 !important;
+    margin-top: auto !important;
+  }
+}
+
 // Responsive Design
 @media (max-width: 768px) {
   .resultsContainer {
@@ -171,6 +218,30 @@
       max-width: calc(100vw - 20px) !important;
     }
   }
+
+  .reviewAnswersContainer {
+    :global(.mainContainer) {
+      height: 100% !important;
+      min-height: 100% !important;
+    }
+
+    :global(.centerContainer) {
+      flex-direction: column !important;
+      padding: 8px !important;
+    }
+
+    :global(.questionSidebar) {
+      width: 100% !important;
+      min-height: auto !important;
+      padding: 8px !important;
+    }
+
+    :global(.mainQuestionArea) {
+      width: 100% !important;
+      min-height: 70vh !important;
+      padding: 12px !important;
+    }
+  }
 }
 
 @media (max-width: 480px) {
@@ -190,6 +261,30 @@
       h2 {
         font-size: 1.25rem;
       }
+    }
+  }
+
+  .reviewAnswersContainer {
+    :global(.mainContainer) {
+      height: 100% !important;
+      min-height: 100% !important;
+    }
+
+    :global(.centerContainer) {
+      padding: 4px !important;
+    }
+
+    :global(.questionSidebar) {
+      padding: 4px !important;
+    }
+
+    :global(.mainQuestionArea) {
+      min-height: 65vh !important;
+      padding: 8px !important;
+    }
+
+    :global(.optionsContainer) {
+      gap: 0.75rem !important;
     }
   }
 }

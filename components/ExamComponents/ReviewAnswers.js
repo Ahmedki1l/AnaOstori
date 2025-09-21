@@ -16,7 +16,8 @@ const ReviewAnswers = ({
     showResults,
     section,
     hideResultsButton = false,
-    hideRetakeButton = false
+    hideRetakeButton = false,
+    className = ''
 }) => {
     console.log("🚀 ~ section:", section)
     console.log("🚀 ~ reviewQuestions:", reviewQuestions)
@@ -105,7 +106,7 @@ const ReviewAnswers = ({
     const isCurrentQuestionMarked = reviewQuestions.find(q => q.id === currentQuestion._id)?.isMarked || false;
 
     return (
-        <div className={styles.mainContainer}>
+        <div className={`${styles.mainContainer} ${className}`}>
             <div className={styles.topContainer}>
                 <div className={styles.timerContainer}>
                     {/* <div style={{ width: '28px', height: '28px' }} >
@@ -168,6 +169,7 @@ const ReviewAnswers = ({
                         {currentQuestion.questionImages && (
                             currentQuestion.questionImages.map((image, index) => (
                                 <ImageLightbox
+                                    key={`question-image-${index}`}
                                     src={image}
                                     alt={`Question ${index + 1}`}
                                 />
@@ -199,6 +201,7 @@ const ReviewAnswers = ({
                                     {option.images && (
                                         option.images.map((image, index) => (
                                             <ImageLightbox
+                                                key={`option-image-${option.id}-${index}`}
                                                 src={image}
                                                 alt={`Option ${option.id}`}
                                             />
