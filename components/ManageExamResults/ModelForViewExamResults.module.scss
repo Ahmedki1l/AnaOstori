@@ -116,30 +116,32 @@
 }
 
 // Modal specific overrides
-:global(.ant-modal-content) {
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-:global(.ant-modal-header) {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-bottom: 1px solid #e2e8f0;
-  padding: 1.5rem 2rem;
-
-  .ant-modal-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1e293b;
+.modalOverrides {
+  :global(.ant-modal-content) {
+    border-radius: 16px;
+    overflow: hidden;
   }
-}
 
-:global(.ant-modal-close) {
-  top: 1.5rem;
-  right: 2rem;
-  color: #64748b;
-  
-  &:hover {
-    color: #F26722;
+  :global(.ant-modal-header) {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.5rem 2rem;
+
+    :global(.ant-modal-title) {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+  }
+
+  :global(.ant-modal-close) {
+    top: 1.5rem;
+    right: 2rem;
+    color: #64748b;
+    
+    &:hover {
+      color: #F26722;
+    }
   }
 }
 
@@ -163,9 +165,11 @@
     }
   }
 
-  :global(.ant-modal) {
-    margin: 10px !important;
-    max-width: calc(100vw - 20px) !important;
+  .modalOverrides {
+    :global(.ant-modal) {
+      margin: 10px !important;
+      max-width: calc(100vw - 20px) !important;
+    }
   }
 }
 

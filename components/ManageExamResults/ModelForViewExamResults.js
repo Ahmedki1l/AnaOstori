@@ -220,6 +220,7 @@ const ModelForViewExamResults = ({
                     footer={null}
                     style={{ top: 10 }}
                     bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                    className={styles.modalOverrides}
                 >
                     <div className={styles.resultsContainer}>
                         <div className={styles.navigationHeader}>
@@ -300,6 +301,7 @@ const ModelForViewExamResults = ({
                 footer={null}
                 style={{ top: 10 }}
                 bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                className={styles.modalOverrides}
             >
                 <div className={styles.resultsContainer}>
                     <div className={styles.navigationHeader}>
@@ -469,15 +471,16 @@ const ModelForViewExamResults = ({
         }
 
         return (
-            <Modal
-                title={`مراجعة الأقسام - ${examResult.studentName}`}
-                open={isModelForViewExamResults}
-                onCancel={handleCancel}
-                width="60vw"
-                footer={null}
-                style={{ top: 10 }}
-                bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
-            >
+                <Modal
+                    title={`مراجعة الأقسام - ${examResult.studentName}`}
+                    open={isModelForViewExamResults}
+                    onCancel={handleCancel}
+                    width="60vw"
+                    footer={null}
+                    style={{ top: 10 }}
+                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                    className={styles.modalOverrides}
+                >
             <div className={styles.resultsContainer}>
                     <div className={styles.navigationHeader}>
                         <button onClick={handleBackToDetails} className={styles.backButton}>
@@ -582,6 +585,7 @@ const ModelForViewExamResults = ({
                     footer={null}
                     style={{ top: 5 }}
                     bodyStyle={{ height: 'calc(100vh - 80px)', overflowY: 'auto', padding: '20px' }}
+                    className={styles.modalOverrides}
                 >
                     <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <div className={styles.navigationHeader}>
@@ -611,6 +615,7 @@ const ModelForViewExamResults = ({
                 footer={null}
                 style={{ top: 5 }}
                 bodyStyle={{ height: 'calc(100vh - 80px)', overflowY: 'auto', padding: '20px' }}
+                className={styles.modalOverrides}
             >
                 <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <div className={styles.navigationHeader}>
