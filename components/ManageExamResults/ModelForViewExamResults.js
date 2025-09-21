@@ -7,6 +7,7 @@ import ExamResults from '../ExamComponents/ExamResults'
 import ReviewAnswers from '../ExamComponents/ReviewAnswers'
 import ExamSectionsReview from '../ExamComponents/ExamSectionsReview'
 import Spinner from '../CommonComponents/spinner'
+import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 
 const ModelForViewExamResults = ({
     isModelForViewExamResults,
@@ -25,9 +26,9 @@ const ModelForViewExamResults = ({
         setFetchedQuestions([])
     };
 
-    // Fetch questions when reviewAnswers view is active and questions are needed
+    // Fetch questions when reviewAnswers or reviewSection view is active and questions are needed
     useEffect(() => {
-        if (currentView === 'reviewAnswers' && examResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
+        if ((currentView === 'reviewAnswers' || currentView === 'reviewSection') && examResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
             const questionIds = examResult.reviewQuestions.map(q => q.questionId)
             fetchQuestionsByIds(questionIds).then(questions => {
                 setFetchedQuestions(questions)
@@ -113,72 +114,49 @@ const ModelForViewExamResults = ({
         const reviewQuestions = examResult.reviewQuestions || []
         const totalTime = examResult.totalTime || 0
         
-        // Create elapsedTime array for each section
-        const elapsedTime = examResult.sections?.map(() => examResult.timeSpent || "00:00") || []
+        // Create elapsedTime array for each section based on sectionDetails
+        const elapsedTime = examResult.sectionDetails?.map(section => section.time) || 
+                           examResult.sections?.map(() => "00:00") || []
 
-        // Use fetched questions if available, otherwise create mock data
-        let examData = []
-        if (fetchedQuestions.length > 0) {
-            // Use real question data with skills from the questions themselves
-            examData = fetchedQuestions.map((question, index) => {
-                // Determine which section this question belongs to based on its position
-                const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (examResult.sections?.length || 1)))
-                const section = examResult.sections?.[sectionIndex]
-                
+        // Create flattened examData array - ExamResults component handles section grouping internally
+        const examData = reviewQuestions.map((reviewQuestion, index) => {
+            const fetchedQuestion = fetchedQuestions.find(fq => 
+                fq._id === reviewQuestion.questionId || fq.id === reviewQuestion.questionId
+            )
+            
+            if (fetchedQuestion) {
                 return {
-                    ...question,
-                    section: section?.title || `القسم ${sectionIndex + 1}`,
-                    lesson: question.lesson || `الدرس ${Math.floor(index / 5) + 1}`,
-                    // Use skills from the question itself, not from section
-                    skills: question.skills || [{ text: "مهارة أساسية" }]
+                    ...fetchedQuestion,
+                    section: fetchedQuestion.section || examResult.sections?.[0]?.title || "القسم الأول",
+                    lesson: fetchedQuestion.lesson || examResult.sections?.[0]?.title || "الدرس الأول",
+                    skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
                 }
-            })
-        } else {
-            // Create mock data structure with proper section assignment
-            examData = reviewQuestions.map((reviewQuestion, index) => {
-                // Determine which section this question belongs to based on its position
-                const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (examResult.sections?.length || 1)))
-                const section = examResult.sections?.[sectionIndex]
-                
+            } else {
                 return {
                     _id: reviewQuestion.questionId,
                     id: reviewQuestion.questionId,
                     text: `السؤال ${index + 1}`,
                     correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
-                    section: section?.title || `القسم ${sectionIndex + 1}`,
-                    lesson: `الدرس ${Math.floor(index / 5) + 1}`,
-                    skills: [{ text: "مهارة أساسية" }] // Default skill until questions are fetched
+                    section: examResult.sections?.[0]?.title || "القسم الأول",
+                    lesson: examResult.sections?.[0]?.title || "الدرس الأول",
+                    skills: [{ text: "مهارة أساسية" }]
                 }
-            })
-        }
+            }
+        })
 
-        // Create CurrentExam with proper sections structure based on actual API data
+        // Create CurrentExam with basic structure - ExamResults will handle the rest
         const mockCurrentExam = {
             ...examResult,
-            sections: examResult.sections?.map((section, index) => {
-                // Find questions that belong to this section based on their position in the reviewQuestions array
-                const questionsPerSection = Math.ceil(reviewQuestions.length / examResult.sections.length)
-                const startIndex = index * questionsPerSection
-                const endIndex = Math.min((index + 1) * questionsPerSection, reviewQuestions.length)
-                
-                // Get the questions for this section
-                const sectionQuestions = examData.slice(startIndex, endIndex)
-                
-                return {
-                    title: section.title || `القسم ${index + 1}`,
-                    questions: sectionQuestions,
-                    score: section.score || 0,
-                    totalQuestions: section.totalQuestions || sectionQuestions.length
-                    // Skills are handled at the question level, not section level
-                }
-            }) || [{
-                title: "القسم الأول",
-                questions: examData,
-                score: 0,
-                totalQuestions: examData.length
-                // Skills are handled at the question level, not section level
-            }]
+            sections: examResult.sections || [{ title: "القسم الأول" }]
         }
+
+        // Create flattened reviewQuestions array
+        const reviewQuestionsFlat = reviewQuestions.map(reviewQuestion => ({
+            questionId: reviewQuestion.questionId,
+            selectedAnswer: reviewQuestion.selectedAnswer,
+            answered: reviewQuestion.answered,
+            isMarked: reviewQuestion.isMarked
+        }))
 
         return (
             <Modal
@@ -191,29 +169,24 @@ const ModelForViewExamResults = ({
                 bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
             >
                 <div className={styles.resultsContainer}>
+                    <div className={styles.navigationHeader}>
+                        <button onClick={handleCancel} className={styles.backButton}>
+                            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                            العودة للنتائج
+                        </button>
+                        <h2>تفاصيل النتيجة</h2>
+                    </div>
                     <ExamResults
                         elapsedTime={elapsedTime}
                         totalTime={totalTime}
-                        examData={mockCurrentExam.sections.map(section => section.questions)}
+                        examData={[examData]}
                         CurrentExam={mockCurrentExam}
-                        reviewQuestions={mockCurrentExam.sections.map(section => 
-                            section.questions.map(question => {
-                                const reviewQuestion = reviewQuestions.find(rq => 
-                                    rq.questionId === question._id || rq.questionId === question.id
-                                )
-                                return reviewQuestion || {
-                                    questionId: question._id || question.id,
-                                    selectedAnswer: null,
-                                    answered: false,
-                                    isMarked: false
-                                }
-                            })
-                        )}
+                        reviewQuestions={[reviewQuestionsFlat]}
                         onReviewAnswers={handleShowReviewSection}
                         onRetakeExam={handleRetakeExam}
                         hideRetakeButton={true}
                     />
-                </div>
+            </div>
             </Modal>
         )
     }
@@ -222,72 +195,45 @@ const ModelForViewExamResults = ({
     if (currentView === 'reviewSection' && examResult) {
         const questions = examResult.reviewQuestions || []
         
-        // Create examData structure for ExamSectionsReview
-        const examData = examResult.sections?.map((section, index) => {
-            const questionsPerSection = Math.ceil(questions.length / examResult.sections.length)
-            const startIndex = index * questionsPerSection
-            const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
-            
-            // Get the questions for this section
-            const sectionQuestions = questions.slice(startIndex, endIndex)
-            
-            return sectionQuestions.map((question, questionIndex) => {
-                // Find the corresponding fetched question
-                const fetchedQuestion = fetchedQuestions.find(fq => 
-                    fq._id === question.questionId || fq.id === question.questionId
-                )
-                
-                return {
-                    ...fetchedQuestion,
-                }
-            })
-        }) || [questions.map((question, index) => {
+        // Create flattened examData array - ExamSectionsReview component handles section grouping
+        const examData = questions.map((reviewQuestion, index) => {
             const fetchedQuestion = fetchedQuestions.find(fq => 
-                fq._id === question.questionId || fq.id === question.questionId
+                fq._id === reviewQuestion.questionId || fq.id === reviewQuestion.questionId
             )
             
-            return {
-                ...fetchedQuestion,
+            if (fetchedQuestion) {
+                return {
+                    ...fetchedQuestion,
+                    _id: fetchedQuestion._id,
+                    id: fetchedQuestion._id
+                }
+            } else {
+                return {
+                    _id: reviewQuestion.questionId,
+                    id: reviewQuestion.questionId,
+                    text: `السؤال ${index + 1}`,
+                    correctAnswer: "أ"
+                }
             }
-        })]
+        })
 
-        // Create reviewQuestions structure for ExamSectionsReview
-        const reviewQuestions = examResult.sections?.map((section, index) => {
-            const questionsPerSection = Math.ceil(questions.length / examResult.sections.length)
-            const startIndex = index * questionsPerSection
-            const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
-            
-            // Get the questions for this section
-            const sectionQuestions = questions.slice(startIndex, endIndex)
-            
-            return sectionQuestions.map((question, questionIndex) => ({
-                id: question.questionId || `q_${startIndex + questionIndex}`,
-                selectedAnswer: question.selectedAnswer,
-                isMarked: question.isMarked || false,
-                answered: question.answered || false,
-                isCorrect: question.isCorrect || false
-            }))
-        }) || [questions.map((question, index) => ({
-            id: question.questionId || `q_${index}`,
-            selectedAnswer: question.selectedAnswer,
-            isMarked: question.isMarked || false,
-            answered: question.answered || false,
-            isCorrect: question.isCorrect || false
-        }))]
+        // Create flattened reviewQuestions array
+        const reviewQuestionsFlat = questions.map(reviewQuestion => ({
+            id: reviewQuestion.questionId,
+            selectedAnswer: reviewQuestion.selectedAnswer,
+            isMarked: reviewQuestion.isMarked || false,
+            answered: reviewQuestion.answered || false,
+            isCorrect: reviewQuestion.isCorrect || false
+        }))
 
         // Create examSections structure
         const examSections = examResult.sections?.map((section, index) => ({
-            title: section.title || `القسم ${index + 1}`,
-            // Add other section properties as needed
-        })) || [{
-            title: "القسم الأول"
-        }]
+            title: section.title || `القسم ${index + 1}`
+        })) || [{ title: "القسم الأول" }]
 
-        // Create elapsedTime array
-        const elapsedTime = examResult.sections?.map((section, index) => {
-            // Calculate time per section or use default
-            return "00:05" // Default time, you can calculate this based on your data
-        }) || ["00:05"]
+        // Create elapsedTime array based on sectionDetails
+        const elapsedTime = examResult.sectionDetails?.map(section => section.time) || 
+                           examResult.sections?.map(() => "00:05") || ["00:05"]
 
         const handleQuestionClick = (sectionIndex, questionIndex) => {
             // Calculate global question index
@@ -307,21 +253,28 @@ const ModelForViewExamResults = ({
             setCurrentView('details')
         }
 
-        return (
-            <Modal
+    return (
+        <Modal
                 title={`مراجعة الأقسام - ${examResult.studentName}`}
-                open={isModelForViewExamResults}
-                onCancel={handleCancel}
+            open={isModelForViewExamResults}
+            onCancel={handleCancel}
                 width="95vw"
                 footer={null}
                 style={{ top: 10 }}
                 bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
-            >
-                <div className={styles.resultsContainer}>
+        >
+            <div className={styles.resultsContainer}>
+                    <div className={styles.navigationHeader}>
+                        <button onClick={handleCancel} className={styles.backButton}>
+                            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                            العودة للنتائج
+                        </button>
+                        <h2>مراجعة الأقسام</h2>
+                    </div>
                     <ExamSectionsReview
-                        examData={examData}
+                        examData={[examData]}
                         elapsedTime={elapsedTime}
-                        reviewQuestions={reviewQuestions}
+                        reviewQuestions={[reviewQuestionsFlat]}
                         examSections={examSections}
                         onRetakeExam={handleRetakeExam}
                         onViewResults={handleViewResults}
@@ -336,22 +289,17 @@ const ModelForViewExamResults = ({
     if (currentView === 'reviewAnswers' && examResult) {
         const reviewQuestions = examResult.reviewQuestions || []
 
-        // Create question structure with fetched data and proper section assignment
+        // Create question structure with fetched data - ReviewAnswers component handles the rest
         const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
             const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
-            
-            // Determine which section this question belongs to
-            const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (examResult.sections?.length || 1)))
-            const section = examResult.sections?.[sectionIndex]
             
             if (fetchedQuestion) {
                 return {
                     ...fetchedQuestion,
-                    // Ensure we have the correct structure for ReviewAnswers component
                     _id: fetchedQuestion._id,
-                    id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
-                    section: section?.title || `القسم ${sectionIndex + 1}`,
-                    // Use skills from the fetched question itself
+                    id: fetchedQuestion._id,
+                    section: fetchedQuestion.section || examResult.sections?.[0]?.title || "القسم الأول",
+                    lesson: fetchedQuestion.lesson || examResult.sections?.[0]?.title || "الدرس الأول",
                     skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
                 }
             }
@@ -369,8 +317,9 @@ const ModelForViewExamResults = ({
                     { id: "د", text: "الخيار د" }
                 ],
                 correctAnswer: "أ",
-                section: section?.title || `القسم ${sectionIndex + 1}`,
-                skills: [{ text: "مهارة أساسية" }] // Default skill until question is fetched
+                section: examResult.sections?.[0]?.title || "القسم الأول",
+                lesson: examResult.sections?.[0]?.title || "الدرس الأول",
+                skills: [{ text: "مهارة أساسية" }]
             }
         })
 
@@ -396,6 +345,13 @@ const ModelForViewExamResults = ({
                     bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
                 >
                     <div className={styles.resultsContainer}>
+                        <div className={styles.navigationHeader}>
+                            <button onClick={handleCancel} className={styles.backButton}>
+                                <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                                العودة للنتائج
+                            </button>
+                            <h2>مراجعة الأسئلة</h2>
+                        </div>
                         <div className={styles.loadingContainer}>
                             <Spinner />
                             <p>جاري تحميل الأسئلة...</p>
@@ -416,6 +372,13 @@ const ModelForViewExamResults = ({
                 bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
             >
                 <div className={styles.resultsContainer}>
+                    <div className={styles.navigationHeader}>
+                        <button onClick={handleCancel} className={styles.backButton}>
+                            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                            العودة للنتائج
+                        </button>
+                        <h2>مراجعة الأسئلة</h2>
+                            </div>
                     <ReviewAnswers
                         CurrentExam={examResult}
                         examData={{ questions: questionsWithData }}
@@ -439,4 +402,4 @@ const ModelForViewExamResults = ({
     return null
 };
 
-export default ModelForViewExamResults;
+export default ModelForViewExamResults; 
