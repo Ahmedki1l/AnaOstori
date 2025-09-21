@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd';
-import styles from '../../styles/ExamPage.module.scss'; // Using styles from ExamResults
+import styles from './ModelForViewExamResults.module.scss';
 import { getRouteAPI } from '../../services/apisService'
 import { getNewToken } from '../../services/fireBaseAuthService'
 import ExamResults from '../ExamComponents/ExamResults'
@@ -106,6 +106,15 @@ const ModelForViewExamResults = ({
     const handleQuestionClick = (index) => {
         setCurrentQuestionIndex(index)
         setCurrentView('reviewAnswers')
+    }
+
+    // Back button handlers for each view
+    const handleBackToDetails = () => {
+        setCurrentView('details')
+    }
+
+    const handleBackToReviewSection = () => {
+        setCurrentView('reviewSection')
     }
 
     // Details View - Using ExamResults component
@@ -471,7 +480,7 @@ const ModelForViewExamResults = ({
             >
             <div className={styles.resultsContainer}>
                     <div className={styles.navigationHeader}>
-                        <button onClick={handleCancel} className={styles.backButton}>
+                        <button onClick={handleBackToDetails} className={styles.backButton}>
                             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
                             العودة للنتائج
                         </button>
@@ -576,9 +585,9 @@ const ModelForViewExamResults = ({
                 >
                     <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <div className={styles.navigationHeader}>
-                            <button onClick={handleCancel} className={styles.backButton}>
+                            <button onClick={handleBackToReviewSection} className={styles.backButton}>
                                 <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
-                                العودة للنتائج
+                                العودة للأقسام
                             </button>
                             <h2>مراجعة الأسئلة</h2>
                         </div>
@@ -605,9 +614,9 @@ const ModelForViewExamResults = ({
             >
                 <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <div className={styles.navigationHeader}>
-                        <button onClick={handleCancel} className={styles.backButton}>
+                        <button onClick={handleBackToReviewSection} className={styles.backButton}>
                             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
-                            العودة للنتائج
+                            العودة للأقسام
                         </button>
                         <h2>مراجعة الأسئلة</h2>
                     </div>
