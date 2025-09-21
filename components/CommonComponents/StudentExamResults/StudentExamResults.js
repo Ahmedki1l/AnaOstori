@@ -670,6 +670,7 @@ const StudentExamResults = () => {
           onRetakeExam={handleRetakeExam}
           onViewResults={handleViewResults}
           handleQuestionClick={handleQuestionClick}
+          canRetakeExam={false}
         />
       </div>
     )

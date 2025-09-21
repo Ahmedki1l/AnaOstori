@@ -207,7 +207,7 @@ const ModelForViewExamResults = ({
                     title={`تفاصيل نتيجة الاختبار - ${examResult.studentName}`}
                     open={isModelForViewExamResults}
                     onCancel={handleCancel}
-                    width="95vw"
+                    width="85vw"
                     footer={null}
                     style={{ top: 10 }}
                     bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
@@ -287,7 +287,7 @@ const ModelForViewExamResults = ({
                 title={`تفاصيل نتيجة الاختبار - ${examResult.studentName}`}
                 open={isModelForViewExamResults}
                 onCancel={handleCancel}
-                width="95vw"
+                width="85vw"
                 footer={null}
                 style={{ top: 10 }}
                 bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
@@ -416,7 +416,7 @@ const ModelForViewExamResults = ({
                     title={`مراجعة الأقسام - ${examResult.studentName}`}
                     open={isModelForViewExamResults}
                     onCancel={handleCancel}
-                    width="95vw"
+                    width="85vw"
                     footer={null}
                     style={{ top: 10 }}
                     bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
@@ -459,16 +459,16 @@ const ModelForViewExamResults = ({
             setCurrentView('details')
         }
 
-    return (
-        <Modal
+        return (
+            <Modal
                 title={`مراجعة الأقسام - ${examResult.studentName}`}
-            open={isModelForViewExamResults}
-            onCancel={handleCancel}
-                width="95vw"
+                open={isModelForViewExamResults}
+                onCancel={handleCancel}
+                width="85vw"
                 footer={null}
                 style={{ top: 10 }}
                 bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
-        >
+            >
             <div className={styles.resultsContainer}>
                     <div className={styles.navigationHeader}>
                         <button onClick={handleCancel} className={styles.backButton}>
@@ -485,6 +485,7 @@ const ModelForViewExamResults = ({
                         onRetakeExam={handleRetakeExam}
                         onViewResults={handleViewResults}
                         handleQuestionClick={handleQuestionClick}
+                        canRetakeExam={false}
                     />
                 </div>
             </Modal>
@@ -568,12 +569,12 @@ const ModelForViewExamResults = ({
                     title={`مراجعة الأسئلة - ${examResult.studentName}`}
                     open={isModelForViewExamResults}
                     onCancel={handleCancel}
-                    width="95vw"
+                    width="90vw"
                     footer={null}
-                    style={{ top: 10 }}
-                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                    style={{ top: 5 }}
+                    bodyStyle={{ height: 'calc(100vh - 80px)', overflowY: 'auto', padding: '20px' }}
                 >
-                    <div className={styles.resultsContainer}>
+                    <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <div className={styles.navigationHeader}>
                             <button onClick={handleCancel} className={styles.backButton}>
                                 <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
@@ -581,9 +582,11 @@ const ModelForViewExamResults = ({
                             </button>
                             <h2>مراجعة الأسئلة</h2>
                         </div>
-                        <div className={styles.loadingContainer}>
-                            <Spinner />
-                            <p>جاري تحميل الأسئلة...</p>
+                        <div className={styles.loadingContainer} style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div>
+                                <Spinner />
+                                <p>جاري تحميل الأسئلة...</p>
+                            </div>
                         </div>
                     </div>
                 </Modal>
@@ -595,34 +598,36 @@ const ModelForViewExamResults = ({
                 title={`مراجعة الأسئلة - ${examResult.studentName}`}
                 open={isModelForViewExamResults}
                 onCancel={handleCancel}
-                width="95vw"
+                width="90vw"
                 footer={null}
-                style={{ top: 10 }}
-                bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                style={{ top: 5 }}
+                bodyStyle={{ height: 'calc(100vh - 80px)', overflowY: 'auto', padding: '20px' }}
             >
-                <div className={styles.resultsContainer}>
+                <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <div className={styles.navigationHeader}>
                         <button onClick={handleCancel} className={styles.backButton}>
                             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
                             العودة للنتائج
                         </button>
                         <h2>مراجعة الأسئلة</h2>
-                            </div>
-                    <ReviewAnswers
-                        CurrentExam={examResult}
-                        examData={{ questions: questionsWithData }}
-                        onCompleteExam={() => {}}
-                        currentTime="00:00"
-                        reviewQuestions={reviewQuestionsForComponent}
-                        setReviewQuestions={() => {}}
-                        currentQuestionIndex={currentQuestionIndex}
-                        showReviewSection={() => setCurrentView('reviewSection')}
-                        finishReview={handleFinishReview}
-                        showResults={handleShowResults}
-                        section={section}
-                        hideResultsButton={true}
-                        hideRetakeButton={true}
-                    />
+                    </div>
+                    <div style={{ flex: 1, height: '100%', overflow: 'auto' }}>
+                        <ReviewAnswers
+                            CurrentExam={examResult}
+                            examData={{ questions: questionsWithData }}
+                            onCompleteExam={() => {}}
+                            currentTime="00:00"
+                            reviewQuestions={reviewQuestionsForComponent}
+                            setReviewQuestions={() => {}}
+                            currentQuestionIndex={currentQuestionIndex}
+                            showReviewSection={() => setCurrentView('reviewSection')}
+                            finishReview={handleFinishReview}
+                            showResults={handleShowResults}
+                            section={section}
+                            hideResultsButton={true}
+                            hideRetakeButton={true}
+                        />
+                    </div>
                 </div>
             </Modal>
         )
