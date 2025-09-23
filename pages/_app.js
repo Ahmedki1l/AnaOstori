@@ -183,11 +183,17 @@ function MyApp({ Component, pageProps }) {
 
 	useEffect(() => {
 		fbq.pageview()
-		tiktok.pageview()
+		// Delay TikTok pixel call to ensure it's loaded
+		setTimeout(() => {
+			tiktok.pageview()
+		}, 100)
 
 		const handleRouteChange = () => {
 			fbq.pageview()
-			tiktok.pageview()
+			// Delay TikTok pixel call to ensure it's loaded
+			setTimeout(() => {
+				tiktok.pageview()
+			}, 100)
 		}
 
 		router.events.on('routeChangeComplete', handleRouteChange)
