@@ -435,7 +435,9 @@ const StudentExamResults = () => {
     const totalTime = selectedResult.totalTime.toString() || "0"
     
     // Create elapsedTime array for each section
-    const elapsedTime = selectedResult.timeSpent.toString() || "0";
+    const elapsedTime = selectedResult.sectionDetails
+      ? selectedResult.sectionDetails.map(section => section.time?.toString() || "0")
+      : ["0"];
 
     // Use fetched questions if available, otherwise create mock data
     let examData = []
@@ -638,7 +640,7 @@ const StudentExamResults = () => {
     // Create elapsedTime array
     const elapsedTime = selectedResult.sectionDetails?.map((section, index) => {
       // Calculate time per section or use default
-      return section.time.toString() || "00:05" // Default time, you can calculate this based on your data
+      return section.time?.toString() || "00:05" // Default time, you can calculate this based on your data
     }) || ["00:05"]
 
     console.log("🚀 ~ Review Section ~ examData:", examData)
