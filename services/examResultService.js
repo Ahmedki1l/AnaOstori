@@ -208,7 +208,7 @@ export const examResultService = {
             totalQuestions,
             score,
             correctQuestions: correctAnswers,
-            wrongQuestions: totalQuestions - correctAnswers,
+            wrongQuestions: totalQuestions - correctAnswers - unAnswered,
             unansweredQuestions: unAnswered,
             markedQuestions: marked,
             timeSpent: this.calculateTotalTime(elapsedTime),
