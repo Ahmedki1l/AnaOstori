@@ -436,7 +436,7 @@ const StudentExamResults = () => {
     const totalTime = selectedResult.totalTime || 0
     
     // Create elapsedTime array for each section
-    const elapsedTime = selectedResult.sections?.map(() => selectedResult.timeSpent || "00:00") || []
+    const elapsedTime = selectedResult.timeSpent || 0;
 
     // Use fetched questions if available, otherwise create mock data
     let examData = []
@@ -444,8 +444,8 @@ const StudentExamResults = () => {
       // Use real question data with skills from the questions themselves
       examData = fetchedQuestions.map((question, index) => {
         // Determine which section this question belongs to based on its position
-        const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sections?.length || 1)))
-        const section = selectedResult.sections?.[sectionIndex]
+        const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sectionDetails?.length || 1)))
+        const section = selectedResult.sectionDetails?.[sectionIndex]
         
         return {
           ...question,
@@ -459,8 +459,8 @@ const StudentExamResults = () => {
       // Create mock data structure with proper section assignment
       examData = reviewQuestions.map((reviewQuestion, index) => {
         // Determine which section this question belongs to based on its position
-        const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sections?.length || 1)))
-        const section = selectedResult.sections?.[sectionIndex]
+        const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sectionDetails?.length || 1)))
+        const section = selectedResult.sectionDetails?.[sectionIndex]
         
         return {
           _id: reviewQuestion.questionId,
@@ -475,32 +475,40 @@ const StudentExamResults = () => {
     }
 
     // Create CurrentExam with proper sections structure based on actual API data
+    let questionsCounter = 0;
+    
     const mockCurrentExam = {
       ...selectedExam,
-      sections: selectedResult.sections?.map((section, index) => {
+      sections: selectedResult.sectionDetails?.map((section, index) => {
         // Find questions that belong to this section based on their position in the reviewQuestions array
-        const questionsPerSection = Math.ceil(reviewQuestions.length / selectedResult.sections.length)
-        const startIndex = index * questionsPerSection
-        const endIndex = Math.min((index + 1) * questionsPerSection, reviewQuestions.length)
-        
-        // Get the questions for this section
+        const questionsPerSection = Math.ceil(reviewQuestions.length / selectedResult.sectionDetails.length)
+        const totalSectionQuestions = section.numberOfQuestions;
+        const startIndex = index + questionsCounter;
+        // The endIndex is NOT included in the subarray returned by slice (slice is exclusive of endIndex)
+        const endIndex = startIndex + totalSectionQuestions;
+        questionsCounter += totalSectionQuestions;
+        // Get the questions for this section (endIndex is exclusive)
         const sectionQuestions = examData.slice(startIndex, endIndex)
         
         return {
           title: section.title || `القسم ${index + 1}`,
           questions: sectionQuestions,
           score: section.score || 0,
-          totalQuestions: section.totalQuestions || sectionQuestions.length
+          totalQuestions: section.numberOfQuestions || sectionQuestions.length,
+          time: section.time || "00:00"
           // Skills are handled at the question level, not section level
         }
       }) || [{
         title: "القسم الأول",
         questions: examData,
         score: 0,
-        totalQuestions: examData.length
+        totalQuestions: examData.length,
+        time: "00:00"
         // Skills are handled at the question level, not section level
       }]
     }
+
+    console.log("🚀 ~ Details View ~ mockCurrentExam:", mockCurrentExam)
 
     return (
       <div className={styles.resultsContainer}>
@@ -547,18 +555,20 @@ const StudentExamResults = () => {
   // Review Section View
   if (currentView === 'reviewSection' && selectedResult) {
     const questions = selectedResult.reviewQuestions || []
-    
+    let questionsCounter = 0;
     console.log("🚀 ~ Review Section ~ questions:", questions)
     console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
-    console.log("🚀 ~ Review Section ~ selectedResult.sections:", selectedResult.sections)
+    console.log("🚀 ~ Review Section ~ selectedResult.sectionDetails:", selectedResult.sectionDetails)
     
+
     // Create examData structure for ExamSectionsReview
-    const examData = selectedResult.sections?.map((section, index) => {
-      const questionsPerSection = Math.ceil(questions.length / selectedResult.sections.length)
-      const startIndex = index * questionsPerSection
-      const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
+    const examData = selectedResult.sectionDetails?.map((section, index) => {
+      const totalSectionQuestions = section.numberOfQuestions;
+      const startIndex = index + questionsCounter;
+      const endIndex = startIndex + totalSectionQuestions;
       
-      // Get the questions for this section
+      // Get the questions for this section (endIndex is exclusive)
+      questionsCounter += totalSectionQuestions;
       const sectionQuestions = questions.slice(startIndex, endIndex)
       
       return sectionQuestions.map((question, questionIndex) => {
@@ -592,14 +602,16 @@ const StudentExamResults = () => {
       }
     })]
 
+    questionsCounter = 0;
     // Create reviewQuestions structure for ExamSectionsReview
-    const reviewQuestions = selectedResult.sections?.map((section, index) => {
-      const questionsPerSection = Math.ceil(questions.length / selectedResult.sections.length)
-      const startIndex = index * questionsPerSection
-      const endIndex = Math.min((index + 1) * questionsPerSection, questions.length)
+    const reviewQuestions = selectedResult.sectionDetails?.map((section, index) => {
+      const totalSectionQuestions = section.numberOfQuestions;
+      const startIndex = index + questionsCounter;
+      const endIndex = startIndex + totalSectionQuestions;
       
-      // Get the questions for this section
+      // Get the questions for this section (endIndex is exclusive)
       const sectionQuestions = questions.slice(startIndex, endIndex)
+      questionsCounter += totalSectionQuestions;
       
       return sectionQuestions.map((question, questionIndex) => ({
         id: question.questionId || `q_${startIndex + questionIndex}`,
@@ -617,7 +629,7 @@ const StudentExamResults = () => {
     }))]
 
     // Create examSections structure
-    const examSections = selectedResult.sections?.map((section, index) => ({
+    const examSections = selectedResult.sectionDetails?.map((section, index) => ({
       title: section.title || `القسم ${index + 1}`,
       // Add other section properties as needed
     })) || [{
@@ -625,7 +637,7 @@ const StudentExamResults = () => {
     }]
 
     // Create elapsedTime array
-    const elapsedTime = selectedResult.sections?.map((section, index) => {
+    const elapsedTime = selectedResult.sectionDetails?.map((section, index) => {
       // Calculate time per section or use default
       return "00:05" // Default time, you can calculate this based on your data
     }) || ["00:05"]
@@ -635,7 +647,7 @@ const StudentExamResults = () => {
 
     const handleQuestionClick = (sectionIndex, questionIndex) => {
       // Calculate global question index
-      const questionsPerSection = Math.ceil(questions.length / (selectedResult.sections?.length || 1))
+      const questionsPerSection = Math.ceil(questions.length / (selectedResult.sectionDetails?.length || 1))
       const globalIndex = sectionIndex * questionsPerSection + questionIndex
       setCurrentView('reviewAnswers')
       setSelectedQuestion(globalIndex)
@@ -685,8 +697,8 @@ const StudentExamResults = () => {
       const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
       
       // Determine which section this question belongs to
-      const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sections?.length || 1)))
-      const section = selectedResult.sections?.[sectionIndex]
+      const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sectionDetails?.length || 1)))
+      const section = selectedResult.sectionDetails?.[sectionIndex]
       
       if (fetchedQuestion) {
         return {
