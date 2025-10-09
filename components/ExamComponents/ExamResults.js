@@ -188,7 +188,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             // Calculate score for section
             let correctAnswers = 0;
             sectionQuestions.forEach((question, i) => {
-                const questionIndex = examData[index]?.findIndex(q => q._id === question.id);
+                const questionIndex = examData[index]?.findIndex(q => q._id === question.questionId);
                 if (questionIndex >= 0 && question?.selectedAnswer === examData[index][questionIndex]?.correctAnswer) {
                     correctAnswers++;
                 }
