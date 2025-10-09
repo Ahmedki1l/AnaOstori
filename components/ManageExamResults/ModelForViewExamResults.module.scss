@@ -1,227 +1,290 @@
-.viewModal {
-    .ant-modal-body {
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-}
+// ModelForViewExamResults Styles
+.resultsContainer {
+  padding: 2rem;
+  background: #fff;
+  min-height: 100vh;
+  direction: rtl;
 
-.examResultDetails {
-    h3 {
-        margin-bottom: 16px;
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-        border-bottom: 2px solid #f0f0f0;
-        padding-bottom: 8px;
-    }
+  // Navigation Header
+  .navigationHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
 
-    h4 {
-        margin: 0 0 8px 0;
-        font-size: 16px;
-        font-weight: 600;
-        color: #333;
-    }
-}
+    .backButton {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.875rem !important;
+      background: linear-gradient(135deg, #F26722 0%, #e55a1a 100%) !important;
+      border: none !important;
+      border-radius: 16px !important;
+      padding: 1.125rem 2rem !important;
+      color: white !important;
+      font-size: 0.95rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 6px 20px rgba(242, 103, 34, 0.3), 0 2px 8px rgba(242, 103, 34, 0.2) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      text-transform: none !important;
+      letter-spacing: 0.025em !important;
 
-.studentSection {
-    .studentInfo {
-        display: flex;
-        align-items: center;
-        gap: 16px;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s;
+      }
 
-        .studentAvatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 3px solid #f0f0f0;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
 
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+      &:hover {
+        background: linear-gradient(135deg, #e55a1a 0%, #d14e0f 100%) !important;
+        transform: translateY(-3px) scale(1.02) !important;
+        box-shadow: 0 12px 35px rgba(242, 103, 34, 0.4), 0 6px 15px rgba(242, 103, 34, 0.3) !important;
+
+        &::before {
+          left: 100%;
         }
 
-        .studentDetails {
-            p {
-                margin: 4px 0 0 0;
-                color: #666;
-                font-size: 14px;
-            }
+        &::after {
+          opacity: 1;
         }
+      }
+
+      &:active {
+        transform: translateY(-1px) scale(1.01) !important;
+        box-shadow: 0 8px 25px rgba(242, 103, 34, 0.35), 0 4px 12px rgba(242, 103, 34, 0.25) !important;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 6px 20px rgba(242, 103, 34, 0.3), 0 2px 8px rgba(242, 103, 34, 0.2), 0 0 0 3px rgba(242, 103, 34, 0.1) !important;
+      }
     }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  // Loading Container
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 1.5rem;
+
+    p {
+      font-size: 1.125rem;
+      color: #64748b;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
 }
 
-.examSection {
-    .ant-descriptions-item-label {
-        font-weight: 600;
-        color: #333;
-    }
+// Modal specific overrides
+.modalOverrides {
+  :global(.ant-modal-content) {
+    border-radius: 16px;
+    overflow: hidden;
+  }
 
-    .ant-descriptions-item-content {
-        color: #666;
+  :global(.ant-modal-header) {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.5rem 2rem;
+
+    :global(.ant-modal-title) {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
     }
+  }
+
+  :global(.ant-modal-close) {
+    top: 1.5rem;
+    right: 2rem;
+    color: #64748b;
+    
+    &:hover {
+      color: #F26722;
+    }
+  }
 }
 
-.scoreSection {
-    .scoreDisplay {
-        display: flex;
-        align-items: center;
-        gap: 24px;
+// Override ReviewAnswers component height when used in modal context
+.reviewAnswersContainer {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  
+  // Target the internal components using global selectors
+  :global(.centerContainer) {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    flex: 1 1 auto !important;
+  }
 
-        .scoreCircle {
-            flex-shrink: 0;
-        }
+  :global(.mainQuestionArea) {
+    height: 100% !important;
+    min-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
 
-        .scoreInfo {
-            flex: 1;
+  :global(.questionBody) {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
 
-            .scoreItem {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 12px;
-                padding: 8px 12px;
-                background-color: #f9f9f9;
-                border-radius: 6px;
+  :global(.optionsContainer) {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 1rem !important;
+  }
 
-                &:last-child {
-                    margin-bottom: 0;
-                }
+  // Ensure proper spacing and layout
+  :global(.questionHeader) {
+    flex-shrink: 0 !important;
+  }
 
-                .scoreLabel {
-                    font-weight: 500;
-                    color: #333;
-                }
-
-                .scoreValue {
-                    font-weight: 600;
-                    font-size: 16px;
-
-                    &.positive {
-                        color: #52c41a;
-                    }
-
-                    &.negative {
-                        color: #f5222d;
-                    }
-                }
-            }
-        }
-    }
+  :global(.bottomContainer) {
+    flex-shrink: 0 !important;
+    margin-top: auto !important;
+  }
 }
 
-.additionalSection,
-.notesSection,
-.sectionsSection,
-.timeSection {
-    .ant-descriptions-item-label {
-        font-weight: 600;
-        color: #333;
-    }
-
-    .ant-descriptions-item-content {
-        color: #666;
-    }
-}
-
-.notesSection {
-    .notesContent {
-        padding: 12px;
-        background-color: #f9f9f9;
-        border-radius: 6px;
-        border-left: 4px solid #1890ff;
-        font-size: 14px;
-        line-height: 1.6;
-        color: #333;
-    }
-}
-
-.sectionsSection {
-    .sectionsList {
-        .sectionItem {
-            margin-bottom: 16px;
-            padding: 12px;
-            border: 1px solid #e8e8e8;
-            border-radius: 6px;
-            background-color: #fafafa;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-
-            .sectionHeader {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 8px;
-
-                .sectionTitle {
-                    font-weight: 600;
-                    color: #333;
-                    font-size: 14px;
-                }
-
-                .sectionScore {
-                    font-weight: 600;
-                    color: #1890ff;
-                    font-size: 14px;
-                }
-            }
-
-            .ant-progress {
-                margin: 0;
-            }
-        }
-    }
-}
-
-// Responsive design
+// Responsive Design
 @media (max-width: 768px) {
-    .viewModal {
-        .ant-modal {
-            width: 95% !important;
-            margin: 10px;
-        }
+  .resultsContainer {
+    padding: 1rem;
+
+    .navigationHeader {
+      padding: 1rem;
+      gap: 1rem;
+
+      .backButton {
+        padding: 0.875rem 1.5rem !important;
+        font-size: 0.875rem !important;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .modalOverrides {
+    :global(.ant-modal) {
+      margin: 10px !important;
+      max-width: calc(100vw - 20px) !important;
+    }
+  }
+
+  .reviewAnswersContainer {
+    :global(.mainContainer) {
+      height: 100% !important;
+      min-height: 100% !important;
     }
 
-    .scoreSection {
-        .scoreDisplay {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-
-            .scoreInfo {
-                width: 100%;
-
-                .scoreItem {
-                    flex-direction: column;
-                    gap: 4px;
-                    text-align: center;
-                }
-            }
-        }
+    :global(.centerContainer) {
+      flex-direction: column !important;
+      padding: 8px !important;
     }
 
-    .studentSection {
-        .studentInfo {
-            flex-direction: column;
-            text-align: center;
-            gap: 12px;
-        }
+    :global(.questionSidebar) {
+      width: 100% !important;
+      min-height: auto !important;
+      padding: 8px !important;
     }
 
-    .sectionsSection {
-        .sectionsList {
-            .sectionItem {
-                .sectionHeader {
-                    flex-direction: column;
-                    gap: 4px;
-                    text-align: center;
-                }
-            }
-        }
+    :global(.mainQuestionArea) {
+      width: 100% !important;
+      min-height: 70vh !important;
+      padding: 12px !important;
     }
-} 
+  }
+}
+
+@media (max-width: 480px) {
+  .resultsContainer {
+    padding: 0.75rem;
+
+    .navigationHeader {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.75rem;
+
+      .backButton {
+        width: 100%;
+        justify-content: center;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .reviewAnswersContainer {
+    :global(.mainContainer) {
+      height: 100% !important;
+      min-height: 100% !important;
+    }
+
+    :global(.centerContainer) {
+      padding: 4px !important;
+    }
+
+    :global(.questionSidebar) {
+      padding: 4px !important;
+    }
+
+    :global(.mainQuestionArea) {
+      min-height: 65vh !important;
+      padding: 8px !important;
+    }
+
+    :global(.optionsContainer) {
+      gap: 0.75rem !important;
+    }
+  }
+}

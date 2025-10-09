@@ -9,7 +9,6 @@ import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'
 import ExamResults from '../../ExamComponents/ExamResults'
 import ReviewAnswers from '../../ExamComponents/ReviewAnswers'
-import ReviewSection from '../../ExamComponents/ReviewSection'
 import ExamSectionsReview from '../../ExamComponents/ExamSectionsReview'
 
 const StudentExamResults = () => {
@@ -21,7 +20,7 @@ const StudentExamResults = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [currentView, setCurrentView] = useState('folders') // 'folders', 'exams', 'results', 'details', 'questionReview', 'reviewSection', 'reviewAnswers'
+  const [currentView, setCurrentView] = useState('folders') // 'folders', 'exams', 'results', 'details', 'reviewSection', 'reviewAnswers'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [reviewQuestions, setReviewQuestions] = useState([])
   const [examData, setExamData] = useState([])
@@ -671,6 +670,7 @@ const StudentExamResults = () => {
           onRetakeExam={handleRetakeExam}
           onViewResults={handleViewResults}
           handleQuestionClick={handleQuestionClick}
+          canRetakeExam={false}
         />
       </div>
     )

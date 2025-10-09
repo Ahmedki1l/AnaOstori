@@ -1,299 +1,654 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd';
-import styles from '../../styles/ExamPage.module.scss'; // Using styles from ExamResults
+import styles from './ModelForViewExamResults.module.scss';
+import { getRouteAPI } from '../../services/apisService'
+import { getNewToken } from '../../services/fireBaseAuthService'
+import ExamResults from '../ExamComponents/ExamResults'
+import ReviewAnswers from '../ExamComponents/ReviewAnswers'
+import ExamSectionsReview from '../ExamComponents/ExamSectionsReview'
+import Spinner from '../CommonComponents/spinner'
+import AllIconsComponenet from '../../Icons/AllIconsComponenet'
 
 const ModelForViewExamResults = ({
     isModelForViewExamResults,
     setIsModelForViewExamResults,
     examResult
 }) => {
+    const [currentView, setCurrentView] = useState('details') // 'details', 'reviewSection', 'reviewAnswers'
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [fetchedQuestions, setFetchedQuestions] = useState([])
+    const [isLoadingQuestions, setIsLoadingQuestions] = useState(false)
+
     const handleCancel = () => {
         setIsModelForViewExamResults(false);
+        setCurrentView('details')
+        setCurrentQuestionIndex(0)
+        setFetchedQuestions([])
     };
+
+    // Fetch questions when modal opens and we have examResult data
+    useEffect(() => {
+        if (isModelForViewExamResults && examResult?.reviewQuestions?.length > 0 && fetchedQuestions.length === 0) {
+            const questionIds = examResult.reviewQuestions.map(q => q.questionId)
+            fetchQuestionsByIds(questionIds).then(questions => {
+                setFetchedQuestions(questions)
+            })
+        }
+    }, [isModelForViewExamResults, examResult, fetchedQuestions.length])
+
+    // Reset fetched questions when modal opens/closes
+    useEffect(() => {
+        if (isModelForViewExamResults) {
+            setFetchedQuestions([])
+        }
+    }, [isModelForViewExamResults])
+
+    // Function to fetch questions by their IDs
+    const fetchQuestionsByIds = async (questionIds) => {
+        if (!questionIds || questionIds.length === 0) return []
+        
+        setIsLoadingQuestions(true)
+        const payload = {
+            routeName: 'getItem',
+            type: 'questions',
+            page: 1,
+            limit: questionIds.length,
+            ids: questionIds
+        }
+        
+        try {
+            const response = await getRouteAPI(payload)
+            if (response?.data) {
+                return response.data.data
+            }
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                await getNewToken()
+                const response = await getRouteAPI(payload)
+                if (response?.data) {
+                    return response.data.data
+                }
+            } else {
+                console.error('Error fetching questions:', error)
+            }
+        } finally {
+            setIsLoadingQuestions(false)
+        }
+        return []
+    }
 
     if (!examResult) {
         return null;
     }
 
-    // Directly use the processed data from examResult prop
-    const results = {
-        score: examResult.score || 0,
-        totalQuestions: examResult.totalQuestions || 0,
-        totalTime: examResult.totalTime || examResult.examDuration || 0,
-        timeSpent: examResult.timeSpent || 'N/A',
-        correctQuestions: examResult.correctAnswers || 0,
-        wrongQuestions: examResult.wrongAnswers || 0,
-        unansweredQuestions: examResult.unansweredQuestions || 0,
-        markedQuestions: examResult.markedQuestions || 0,
-        sections: examResult.sections || [],
-        sectionDetails: examResult.sectionDetails || []
-    };
+    // Navigation handlers for exam components
+    const handleShowReviewSection = () => {
+        setCurrentView('reviewSection')
+    }
 
-    // Render progress circle with percentage
-    const ProgressCircle = ({ score, totalQuestions, size = 100, displayText = true }) => {
-        const radius = 45;
-        const circumference = 2 * Math.PI * radius;
-        const safeTotal = totalQuestions === 0 ? 1 : totalQuestions;
-        const safeScore = score || 0;
-        const strokeDashoffset = circumference - (safeScore / safeTotal) * circumference;
-        const percentage = totalQuestions === 0 ? 0 : Math.round((safeScore / safeTotal) * 100);
+    const handleShowReviewAnswers = () => {
+        setCurrentView('reviewAnswers')
+    }
+
+    const handleShowResults = () => {
+        setCurrentView('details')
+    }
+
+    const handleRetakeExam = () => {
+        // Not applicable for instructor view
+        console.log('Retake exam not applicable for instructor view')
+    }
+
+    const handleFinishReview = () => {
+        setCurrentView('details')
+    }
+
+    const handleQuestionClick = (index) => {
+        setCurrentQuestionIndex(index)
+        setCurrentView('reviewAnswers')
+    }
+
+    // Back button handlers for each view
+    const handleBackToDetails = () => {
+        setCurrentView('details')
+    }
+
+    const handleBackToReviewSection = () => {
+        setCurrentView('reviewSection')
+    }
+
+    // Details View - Using ExamResults component
+    if (currentView === 'details' && examResult) {
+        // Prepare data for ExamResults component
+        const reviewQuestions = examResult.reviewQuestions || []
+        const totalTime = examResult.totalTime || 0
+        
+        // Create elapsedTime array for each section based on sectionDetails
+        const elapsedTime = examResult.sectionDetails?.map(sectionDetail => sectionDetail.time) || 
+                           examResult.sections?.map(() => examResult.timeSpent || "00:00") || []
+
+        // Use fetched questions if available, otherwise create mock data
+        let examData = []
+        if (fetchedQuestions.length > 0) {
+            console.log("🚀 ~ Details View ~ fetchedQuestions:", fetchedQuestions)
+            console.log("🚀 ~ Details View ~ fetchedQuestions[0]:", fetchedQuestions[0])
+            // Use real question data with proper section assignment based on sectionDetails
+            examData = fetchedQuestions.map((question, index) => {
+                // Find which section this question belongs to based on sectionDetails
+                let sectionIndex = 0
+                let questionCount = 0
+                
+                // Determine section based on cumulative question count from sectionDetails
+                for (let i = 0; i < examResult.sectionDetails?.length; i++) {
+                    const sectionDetail = examResult.sectionDetails[i]
+                    if (index < questionCount + sectionDetail.numberOfQuestions) {
+                        sectionIndex = i
+                        break
+                    }
+                    questionCount += sectionDetail.numberOfQuestions
+                }
+                
+                const sectionDetail = examResult.sectionDetails?.[sectionIndex]
+                // Get the corresponding section from the sections array to access skills
+                const sectionWithSkills = examResult.sections?.[sectionIndex]
+                
+                // Find the corresponding review question to get the correct answer
+                const reviewQuestion = reviewQuestions.find(rq => rq.questionId === question._id || rq.questionId === question.id)
+                
+                return {
+                    ...question,
+                    _id: question._id || question.id,
+                    id: question._id || question.id, // Ensure both _id and id are set
+                    section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
+                    lesson: question.lesson || sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
+                    // Ensure we have the correct answer - use from fetched question or determine from review
+                    correctAnswer: question.correctAnswer || question.answer || (reviewQuestion?.isCorrect ? reviewQuestion.selectedAnswer : "أ"),
+                    // Use skills from the sections array, fallback to question skills, then default
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                           question.skills || 
+                           [{ text: "مهارة أساسية" }]
+                }
+            })
+        } else {
+            console.log("🚀 ~ Details View ~ reviewQuestions:", reviewQuestions)
+            // Create mock data structure with proper section assignment based on sectionDetails
+            examData = reviewQuestions.map((reviewQuestion, index) => {
+                // Find which section this question belongs to based on sectionDetails
+                let sectionIndex = 0
+                let questionCount = 0
+                
+                // Determine section based on cumulative question count from sectionDetails
+                for (let i = 0; i < examResult.sectionDetails?.length; i++) {
+                    const sectionDetail = examResult.sectionDetails[i]
+                    if (index < questionCount + sectionDetail.numberOfQuestions) {
+                        sectionIndex = i
+                        break
+                    }
+                    questionCount += sectionDetail.numberOfQuestions
+                }
+                
+                const sectionDetail = examResult.sectionDetails?.[sectionIndex]
+                // Get the corresponding section from the sections array to access skills
+                const sectionWithSkills = examResult.sections?.[sectionIndex]
+                
+                return {
+                    _id: reviewQuestion.questionId,
+                    id: reviewQuestion.questionId,
+                    text: `السؤال ${index + 1}`,
+                    correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
+                    section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
+                    lesson: sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
+                    // Use skills from the sections array
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                           [{ text: "مهارة أساسية" }]
+                }
+            })
+        }
+
+        console.log("🚀 ~ Details View ~ examData:", examData)
+        console.log("🚀 ~ Details View ~ examResult.sections:", examResult.sections)
+        console.log("🚀 ~ Details View ~ reviewQuestions:", reviewQuestions)
+
+        // Show loading state if questions are being fetched
+        if (isLoadingQuestions) {
+            return (
+                <Modal
+                    title={`تفاصيل نتيجة الاختبار - ${examResult.studentName}`}
+                    open={isModelForViewExamResults}
+                    onCancel={handleCancel}
+                    width="60vw"
+                    footer={null}
+                    style={{ top: 10 }}
+                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                    className={styles.modalOverrides}
+                >
+                    <div className={styles.resultsContainer}>
+                        <div className={styles.navigationHeader}>
+                            <button onClick={handleCancel} className={styles.backButton}>
+                                <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                                العودة للنتائج
+                            </button>
+                            <h2>تفاصيل النتيجة</h2>
+                        </div>
+                        <div className={styles.loadingContainer}>
+                            <Spinner />
+                            <p>جاري تحميل الأسئلة...</p>
+                        </div>
+                    </div>
+                </Modal>
+            )
+        }
+
+        // Create CurrentExam with proper sections structure based on sectionDetails
+        const mockCurrentExam = {
+            ...examResult,
+            sections: examResult.sectionDetails?.map((sectionDetail, index) => {
+                // Find questions that belong to this section based on sectionDetails
+                let startIndex = 0
+                for (let i = 0; i < index; i++) {
+                    startIndex += examResult.sectionDetails[i].numberOfQuestions
+                }
+                const endIndex = startIndex + sectionDetail.numberOfQuestions
+                
+                // Get the questions for this section
+                const sectionQuestions = examData.slice(startIndex, endIndex)
+                
+                return {
+                    title: sectionDetail.title || `القسم ${index + 1}`,
+                    questions: sectionQuestions,
+                    score: sectionDetail.score || 0,
+                    totalQuestions: sectionDetail.numberOfQuestions || sectionQuestions.length
+                    // Skills are handled at the question level, not section level
+                }
+            }) || [{
+                title: "القسم الأول",
+                questions: examData,
+                score: 0,
+                totalQuestions: examData.length
+                // Skills are handled at the question level, not section level
+            }]
+        }
+        console.log("🚀 ~ Details View ~ mockCurrentExam:", mockCurrentExam)
+        
+        // Create the final data structures for ExamResults
+        const examDataForResults = mockCurrentExam.sections.map(section => section.questions)
+        const reviewQuestionsForResults = mockCurrentExam.sections.map(section => 
+            section.questions.map(question => {
+                const reviewQuestion = reviewQuestions.find(rq => 
+                    rq.questionId === question._id || rq.questionId === question.id
+                )
+                return {
+                    id: question._id || question.id, // ExamResults expects 'id' field
+                    questionId: question._id || question.id,
+                    selectedAnswer: reviewQuestion?.selectedAnswer || null,
+                    answered: reviewQuestion?.answered || false,
+                    isMarked: reviewQuestion?.isMarked || false
+                }
+            })
+        )
+        
+        console.log("🚀 ~ Details View ~ examDataForResults:", examDataForResults)
+        console.log("🚀 ~ Details View ~ reviewQuestionsForResults:", reviewQuestionsForResults)
+        console.log("🚀 ~ Details View ~ examDataForResults[0]:", examDataForResults[0])
+        console.log("🚀 ~ Details View ~ reviewQuestionsForResults[0]:", reviewQuestionsForResults[0])
 
         return (
-            <div className={styles.progressCircleContainer}>
-                <svg width={size} height={size} viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r={radius} fill="transparent" stroke="#e6e6e6" strokeWidth="8" />
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r={radius}
-                        fill="transparent"
-                        stroke="#19A337"
-                        strokeWidth="8"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset}
-                        strokeLinecap="round"
-                        transform="rotate(-90 50 50)"
+            <Modal
+                title={`تفاصيل نتيجة الاختبار - ${examResult.studentName}`}
+                open={isModelForViewExamResults}
+                onCancel={handleCancel}
+                width="60vw"
+                footer={null}
+                style={{ top: 10 }}
+                bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                className={styles.modalOverrides}
+            >
+                <div className={styles.resultsContainer}>
+                    <div className={styles.navigationHeader}>
+                        <button onClick={handleCancel} className={styles.backButton}>
+                            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                            العودة للنتائج
+                        </button>
+                        <h2>تفاصيل النتيجة</h2>
+                    </div>
+                    <ExamResults
+                        elapsedTime={elapsedTime}
+                        totalTime={totalTime}
+                        examData={examDataForResults}
+                        CurrentExam={mockCurrentExam}
+                        reviewQuestions={reviewQuestionsForResults}
+                        onReviewAnswers={handleShowReviewSection}
+                        onRetakeExam={handleRetakeExam}
+                        hideRetakeButton={true}
                     />
-                    <text x="50" y={displayText ? "45" : "55"} textAnchor="middle" fontSize={displayText ? "16" : "26"} fontWeight="bold">
-                        {percentage}%
-                    </text>
-                    {displayText && (
-                        <text x="50" y="65" textAnchor="middle" fontSize="12">
-                            {safeScore}/{totalQuestions}
-                        </text>
-                    )}
-                </svg>
             </div>
-        );
-    };
+            </Modal>
+        )
+    }
+
+    // Review Section View
+    if (currentView === 'reviewSection' && examResult) {
+        const questions = examResult.reviewQuestions || []
+        
+        console.log("🚀 ~ Review Section ~ questions:", questions)
+        console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
+        console.log("🚀 ~ Review Section ~ examResult.sections:", examResult.sections)
+        
+        // Create examData structure for ExamSectionsReview based on sectionDetails
+        const examData = examResult.sectionDetails?.map((sectionDetail, index) => {
+            // Find questions that belong to this section based on sectionDetails
+            let startIndex = 0
+            for (let i = 0; i < index; i++) {
+                startIndex += examResult.sectionDetails[i].numberOfQuestions
+            }
+            const endIndex = startIndex + sectionDetail.numberOfQuestions
+            
+            // Get the questions for this section
+            const sectionQuestions = questions.slice(startIndex, endIndex)
+            
+            return sectionQuestions.map((question, questionIndex) => {
+                // Find the corresponding fetched question
+                const fetchedQuestion = fetchedQuestions.find(fq => 
+                    fq._id === question.questionId || fq.id === question.questionId
+                )
+                
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question:`, question)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question keys:`, Object.keys(question))
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ fetchedQuestion:`, fetchedQuestion)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from fetched:`, fetchedQuestion?.correctAnswer)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from question:`, question.correctAnswer)
+                console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
+                
+                return {
+                    ...fetchedQuestion,
+                }
+            })
+        }) || [questions.map((question, index) => {
+            const fetchedQuestion = fetchedQuestions.find(fq => 
+                fq._id === question.questionId || fq.id === question.questionId
+            )
+            
+            console.log(`🚀 ~ Fallback Question ${index} ~ question:`, question)
+            console.log(`🚀 ~ Fallback Question ${index} ~ fetchedQuestion:`, fetchedQuestion)
+            console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
+            
+            return {
+                ...fetchedQuestion,
+            }
+        })]
+
+        // Create reviewQuestions structure for ExamSectionsReview based on sectionDetails
+        const reviewQuestions = examResult.sectionDetails?.map((sectionDetail, index) => {
+            // Find questions that belong to this section based on sectionDetails
+            let startIndex = 0
+            for (let i = 0; i < index; i++) {
+                startIndex += examResult.sectionDetails[i].numberOfQuestions
+            }
+            const endIndex = startIndex + sectionDetail.numberOfQuestions
+            
+            // Get the questions for this section
+            const sectionQuestions = questions.slice(startIndex, endIndex)
+            
+            return sectionQuestions.map((question, questionIndex) => ({
+                id: question.questionId || `q_${startIndex + questionIndex}`,
+                selectedAnswer: question.selectedAnswer,
+                isMarked: question.isMarked || false,
+                answered: question.answered || false,
+                isCorrect: question.isCorrect || false
+            }))
+        }) || [questions.map((question, index) => ({
+            id: question.questionId || `q_${index}`,
+            selectedAnswer: question.selectedAnswer,
+            isMarked: question.isMarked || false,
+            answered: question.answered || false,
+            isCorrect: question.isCorrect || false
+        }))]
+
+        // Create examSections structure based on sectionDetails
+        const examSections = examResult.sectionDetails?.map((sectionDetail, index) => ({
+            title: sectionDetail.title || `القسم ${index + 1}`,
+            // Add other section properties as needed
+        })) || [{
+            title: "القسم الأول"
+        }]
+
+        // Create elapsedTime array based on sectionDetails
+        const elapsedTime = examResult.sectionDetails?.map((sectionDetail, index) => {
+            return sectionDetail.time || "00:05" // Use actual time from sectionDetails
+        }) || ["00:05"]
+
+        console.log("🚀 ~ Review Section ~ examData:", examData)
+        console.log("🚀 ~ Review Section ~ reviewQuestions:", reviewQuestions)
+
+        // Show loading state if questions are being fetched
+        if (isLoadingQuestions) {
+            return (
+                <Modal
+                    title={`مراجعة الأقسام - ${examResult.studentName}`}
+                    open={isModelForViewExamResults}
+                    onCancel={handleCancel}
+                    width="85vw"
+                    footer={null}
+                    style={{ top: 10 }}
+                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                >
+                    <div className={styles.resultsContainer}>
+                        <div className={styles.navigationHeader}>
+                            <button onClick={handleCancel} className={styles.backButton}>
+                                <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                                العودة للنتائج
+                            </button>
+                            <h2>مراجعة الأقسام</h2>
+                        </div>
+                        <div className={styles.loadingContainer}>
+                            <Spinner />
+                            <p>جاري تحميل الأسئلة...</p>
+                        </div>
+                    </div>
+                </Modal>
+            )
+        }
+
+        const handleQuestionClick = (sectionIndex, questionIndex) => {
+            // Calculate global question index based on sectionDetails
+            let globalIndex = 0
+            for (let i = 0; i < sectionIndex; i++) {
+                globalIndex += examResult.sectionDetails?.[i]?.numberOfQuestions || 0
+            }
+            globalIndex += questionIndex
+            setCurrentView('reviewAnswers')
+            setCurrentQuestionIndex(globalIndex)
+        }
+
+        const handleRetakeExam = () => {
+            // Not applicable for instructor view
+            console.log('Retake exam not applicable for instructor view')
+        }
+
+        const handleViewResults = () => {
+            // Handle view results logic
+            setCurrentView('details')
+        }
 
     return (
         <Modal
-            title="تفاصيل نتيجة الاختبار"
+                    title={`مراجعة الأقسام - ${examResult.studentName}`}
             open={isModelForViewExamResults}
             onCancel={handleCancel}
-            width="90vw"
-            footer={null} // Hiding default footer
-            style={{ top: 20 }}
-            bodyStyle={{ height: 'calc(100vh - 120px)', overflowY: 'auto' }}
+                    width="60vw"
+                    footer={null}
+                    style={{ top: 10 }}
+                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                    className={styles.modalOverrides}
         >
             <div className={styles.resultsContainer}>
-                <div className={styles.resultsHeader}>
-                    <h1>نتائج واحصائيات الاختبار للطالب: {examResult.studentName}</h1>
+                    <div className={styles.navigationHeader}>
+                        <button onClick={handleBackToDetails} className={styles.backButton}>
+                            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                            العودة للنتائج
+                        </button>
+                        <h2>مراجعة الأقسام</h2>
+                    </div>
+                    <ExamSectionsReview
+                        examData={examData}
+                        elapsedTime={elapsedTime}
+                        reviewQuestions={reviewQuestions}
+                        examSections={examSections}
+                        onRetakeExam={handleRetakeExam}
+                        onViewResults={handleViewResults}
+                        handleQuestionClick={handleQuestionClick}
+                        canRetakeExam={false}
+                    />
                 </div>
+            </Modal>
+        )
+    }
 
-                {/* Main score */}
-                <div className={styles.mainScoreContainer}>
-                    <ProgressCircle score={results.correctQuestions} totalQuestions={results.totalQuestions} size={120} />
-                    <div className={styles.scoreLabel}>درجة الاختبار</div>
-                </div>
+    // Review Answers View
+    if (currentView === 'reviewAnswers' && examResult) {
+        const reviewQuestions = examResult.reviewQuestions || []
 
-                {/* Stats summary */}
-                <div className={styles.statsContainer}>
-                    {/* First row - Question stats */}
-                    <div className={styles.statsSummary}>
-                        {/* Incomplete question */}
-                        <div className={styles.statsItem}>
-                            <div className={styles.statsTopRow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 32 32" fill="none">
-                                    <g clipPath="url(#clip0_198_6381)">
-                                        <path opacity="0.3" d="M15.9999 5.33398C10.1199 5.33398 5.33328 10.1207 5.33328 16.0007C5.33328 21.8807 10.1199 26.6673 15.9999 26.6673C21.8799 26.6673 26.6666 21.8807 26.6666 16.0007C26.6666 10.1207 21.8799 5.33398 15.9999 5.33398ZM17.3333 22.6673H14.6666V14.6673H17.3333V22.6673ZM17.3333 12.0007H14.6666V9.33398H17.3333V12.0007Z" fill="#FFBF00" />
-                                        <path d="M14.6666 9.33268H17.3333V11.9993H14.6666V9.33268ZM14.6666 14.666H17.3333V22.666H14.6666V14.666ZM15.9999 2.66602C8.63993 2.66602 2.6666 8.63935 2.6666 15.9993C2.6666 23.3593 8.63993 29.3327 15.9999 29.3327C23.3599 29.3327 29.3333 23.3593 29.3333 15.9993C29.3333 8.63935 23.3599 2.66602 15.9999 2.66602ZM15.9999 26.666C10.1199 26.666 5.33326 21.8793 5.33326 15.9993C5.33326 10.1193 10.1199 5.33268 15.9999 5.33268C21.8799 5.33268 26.6666 10.1193 26.6666 15.9993C26.6666 21.8793 21.8799 26.666 15.9999 26.666Z" fill="#FFBF00" />
-                                        <path d="M14.6666 9.33268H17.3333V11.9993H14.6666V9.33268ZM14.6666 14.666H17.3333V22.666H14.6666V14.666ZM15.9999 2.66602C8.63993 2.66602 2.6666 8.63935 2.6666 15.9993C2.6666 23.3593 8.63993 29.3327 15.9999 29.3327C23.3599 29.3327 29.3333 23.3593 29.3333 15.9993C29.3333 8.63935 23.3599 2.66602 15.9999 2.66602ZM15.9999 26.666C10.1199 26.666 5.33326 21.8793 5.33326 15.9993C5.33326 10.1193 10.1199 5.33268 15.9999 5.33268C21.8799 5.33268 26.6666 10.1193 26.6666 15.9993C26.6666 21.8793 21.8799 26.666 15.9999 26.666Z" fill="black" fill-opacity="0.2" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_198_6381">
-                                            <rect width="32" height="32" fill="white" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </div>
-                            <div className={styles.statsTextItem}>
-                                <div className={styles.statsCount}>{results.unansweredQuestions}</div>
-                                <div className={styles.statsText}>سؤال غير مكتمل</div>
-                            </div>
+        // Create question structure with fetched data and proper section assignment based on sectionDetails
+        const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
+            const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
+            
+            // Find which section this question belongs to based on sectionDetails
+            let sectionIndex = 0
+            let questionCount = 0
+            
+            // Determine section based on cumulative question count from sectionDetails
+            for (let i = 0; i < examResult.sectionDetails?.length; i++) {
+                const sectionDetail = examResult.sectionDetails[i]
+                if (index < questionCount + sectionDetail.numberOfQuestions) {
+                    sectionIndex = i
+                    break
+                }
+                questionCount += sectionDetail.numberOfQuestions
+            }
+            
+            const sectionDetail = examResult.sectionDetails?.[sectionIndex]
+            
+            // Get the corresponding section from the sections array to access skills
+            const sectionWithSkills = examResult.sections?.[sectionIndex]
+            
+            if (fetchedQuestion) {
+                return {
+                    ...fetchedQuestion,
+                    // Ensure we have the correct structure for ReviewAnswers component
+                    _id: fetchedQuestion._id,
+                    id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
+                    section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
+                    // Use skills from the sections array, fallback to question skills, then default
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                           fetchedQuestion.skills || 
+                           [{ text: "مهارة أساسية" }]
+                }
+            }
+            
+            // Fallback if question not found
+            return {
+                _id: reviewQuestion.questionId,
+                id: reviewQuestion.questionId,
+                text: `السؤال ${index + 1} - جاري التحميل...`,
+                type: "multipleChoice",
+                options: [
+                    { id: "أ", text: "الخيار أ" },
+                    { id: "ب", text: "الخيار ب" },
+                    { id: "ج", text: "الخيار ج" },
+                    { id: "د", text: "الخيار د" }
+                ],
+                correctAnswer: "أ",
+                section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
+                // Use skills from the sections array
+                skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
+                       [{ text: "مهارة أساسية" }]
+            }
+        })
+
+        // Create separate reviewQuestions array for ReviewAnswers component
+        const reviewQuestionsForComponent = reviewQuestions.map((reviewQuestion, index) => ({
+            id: reviewQuestion.questionId,
+            selectedAnswer: reviewQuestion.selectedAnswer,
+            answered: reviewQuestion.answered,
+            isMarked: reviewQuestion.isMarked
+        }))
+
+        const section = { title: examResult.examName || 'الاختبار' }
+
+        if (isLoadingQuestions) {
+            return (
+                <Modal
+                    title={`مراجعة الأسئلة - ${examResult.studentName}`}
+                    open={isModelForViewExamResults}
+                    onCancel={handleCancel}
+                    width="90vw"
+                    footer={null}
+                    style={{ top: 5 }}
+                    bodyStyle={{ height: 'calc(100vh - 80px)', overflowY: 'auto', padding: '20px' }}
+                    className={styles.modalOverrides}
+                >
+                    <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <div className={styles.navigationHeader}>
+                            <button onClick={handleBackToReviewSection} className={styles.backButton}>
+                                <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                                العودة للأقسام
+                            </button>
+                            <h2>مراجعة الأسئلة</h2>
                         </div>
-
-                        {/* Correct question */}
-                        <div className={styles.statsItem}>
-                            <div className={styles.statsTopRow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 33 32" fill="none">
-                                    <g clip-path="url(#clip0_198_6145)">
-                                        <path opacity="0.3" d="M16.6667 5.33398C10.7867 5.33398 6 10.1207 6 16.0007C6 21.8807 10.7867 26.6673 16.6667 26.6673C22.5467 26.6673 27.3333 21.8807 27.3333 16.0007C27.3333 10.1207 22.5467 5.33398 16.6667 5.33398ZM14 22.6673L8.66667 17.334L10.5467 15.454L14 18.894L22.7867 10.1073L24.6667 12.0007L14 22.6673Z" fill="#008000" />
-                                        <path d="M16.6667 2.66602C9.30671 2.66602 3.33337 8.63935 3.33337 15.9993C3.33337 23.3593 9.30671 29.3327 16.6667 29.3327C24.0267 29.3327 30 23.3593 30 15.9993C30 8.63935 24.0267 2.66602 16.6667 2.66602ZM16.6667 26.666C10.7867 26.666 6.00004 21.8793 6.00004 15.9993C6.00004 10.1193 10.7867 5.33268 16.6667 5.33268C22.5467 5.33268 27.3334 10.1193 27.3334 15.9993C27.3334 21.8793 22.5467 26.666 16.6667 26.666ZM22.7867 10.106L14 18.8927L10.5467 15.4527L8.66671 17.3327L14 22.666L24.6667 11.9993L22.7867 10.106Z" fill="#008000" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_198_6145">
-                                            <rect width="32" height="32" fill="white" transform="translate(0.666687)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </div>
-                            <div className={styles.statsTextItem}>
-                                <div className={styles.statsCount}>{results.correctQuestions}</div>
-                                <div className={styles.statsText}>سؤال صحيح</div>
-                            </div>
-                        </div>
-
-                        {/* Wrong question */}
-                        <div className={styles.statsItem}>
-                            <div className={styles.statsTopRow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 33 32" fill="none">
-                                    <g clip-path="url(#clip0_198_6137)">
-                                        <path opacity="0.3" d="M16.3334 5.33398C10.4534 5.33398 5.66675 10.1207 5.66675 16.0007C5.66675 21.8807 10.4534 26.6673 16.3334 26.6673C22.2134 26.6673 27.0001 21.8807 27.0001 16.0007C27.0001 10.1207 22.2134 5.33398 16.3334 5.33398ZM21.6667 19.454L19.7867 21.334L16.3334 17.8807L12.8801 21.334L11.0001 19.454L14.4534 16.0007L11.0001 12.5473L12.8801 10.6673L16.3334 14.1207L19.7867 10.6673L21.6667 12.5473L18.2134 16.0007L21.6667 19.454Z" fill="#C80E08" />
-                                        <path d="M19.7867 10.666L16.3333 14.1193L12.88 10.666L11 12.546L14.4533 15.9993L11 19.4527L12.88 21.3327L16.3333 17.8793L19.7867 21.3327L21.6667 19.4527L18.2133 15.9993L21.6667 12.546L19.7867 10.666ZM16.3333 2.66602C8.96 2.66602 3 8.62602 3 15.9993C3 23.3727 8.96 29.3327 16.3333 29.3327C23.7067 29.3327 29.6667 23.3727 29.6667 15.9993C29.6667 8.62602 23.7067 2.66602 16.3333 2.66602ZM16.3333 26.666C10.4533 26.666 5.66667 21.8793 5.66667 15.9993C5.66667 10.1193 10.4533 5.33268 16.3333 5.33268C22.2133 5.33268 27 10.1193 27 15.9993C27 21.8793 22.2133 26.666 16.3333 26.666Z" fill="#C80E08" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_198_6137">
-                                            <rect width="32" height="32" fill="white" transform="translate(0.333374)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </div>
-                            <div className={styles.statsTextItem}>
-                                <div className={styles.statsCount}>{results.wrongQuestions}</div>
-                                <div className={styles.statsText}>سؤال خاطئ</div>
-                            </div>
-                        </div>
-                        {/* Marked question */}
-                        <div className={styles.statsItem}>
-                            <div className={styles.statsTopRow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <g clip-path="url(#clip0_198_6154)">
-                                        <path d="M12.36 6H7.00003V12H14.24L14.64 14H18V8H12.76L12.36 6Z" fill="#B4F3E9" />
-                                        <path d="M14.3999 6L13.9999 4H4.99991V21H6.99991V14H12.5999L12.9999 16H19.9999V6H14.3999ZM17.9999 14H14.6399L14.2399 12H6.99991V6H12.3599L12.7599 8H17.9999V14Z" fill="#03D4B4" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_198_6154">
-                                            <rect width="24" height="24" fill="white" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </div>
-                            <div className={styles.statsTextItem}>
-                                <div className={styles.statsCount}>{results.markedQuestions}</div>
-                                <div className={styles.statsText}>سؤال مميز بعلامة</div>
-                            </div>
-                        </div>
-
-                        {/* Exam duration */}
-                        <div className={styles.statsItem}>
-                            <div className={styles.statsTopRow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 33 32" fill="none">
-                                    <g clip-path="url(#clip0_198_6404)">
-                                        <path opacity="0.3" d="M16.6667 8C11.5067 8 7.33337 12.1733 7.33337 17.3333C7.33337 22.4933 11.5067 26.6667 16.6667 26.6667C21.8267 26.6667 26 22.4933 26 17.3333C26 12.1733 21.8267 8 16.6667 8ZM18 18.6667H15.3334V10.6667H18V18.6667Z" fill="black" />
-                                        <path d="M20.6667 1.33398H12.6667V4.00065H20.6667V1.33398Z" fill="black" />
-                                        <path d="M26.04 9.85398L27.9334 7.96065C27.36 7.28065 26.7334 6.64065 26.0534 6.08065L24.16 7.97398C22.0934 6.32065 19.4934 5.33398 16.6667 5.33398C10.04 5.33398 4.66669 10.7073 4.66669 17.334C4.66669 23.9607 10.0267 29.334 16.6667 29.334C23.3067 29.334 28.6667 23.9607 28.6667 17.334C28.6667 14.5073 27.68 11.9073 26.04 9.85398ZM16.6667 26.6673C11.5067 26.6673 7.33335 22.494 7.33335 17.334C7.33335 12.174 11.5067 8.00065 16.6667 8.00065C21.8267 8.00065 26 12.174 26 17.334C26 22.494 21.8267 26.6673 16.6667 26.6673Z" fill="black" />
-                                        <path d="M18 10.668H15.3334V18.668H18V10.668Z" fill="black" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_198_6404">
-                                            <rect width="32" height="32" fill="white" transform="translate(0.666687)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </div>
-                            <div className={styles.statsTextItem}>
-                                <div className={styles.statsCount}>{results.totalTime} دقيقة</div>
-                                <div className={styles.statsText}>مدة الاختبار</div>
-                            </div>
-                        </div>
-
-                        {/* Time spent */}
-                        <div className={styles.statsItem}>
-                            <div className={styles.statsTopRow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 33 32" fill="none">
-                                    <g clip-path="url(#clip0_198_6404)">
-                                        <path opacity="0.3" d="M16.6667 8C11.5067 8 7.33337 12.1733 7.33337 17.3333C7.33337 22.4933 11.5067 26.6667 16.6667 26.6667C21.8267 26.6667 26 22.4933 26 17.3333C26 12.1733 21.8267 8 16.6667 8ZM18 18.6667H15.3334V10.6667H18V18.6667Z" fill="black" />
-                                        <path d="M20.6667 1.33398H12.6667V4.00065H20.6667V1.33398Z" fill="black" />
-                                        <path d="M26.04 9.85398L27.9334 7.96065C27.36 7.28065 26.7334 6.64065 26.0534 6.08065L24.16 7.97398C22.0934 6.32065 19.4934 5.33398 16.6667 5.33398C10.04 5.33398 4.66669 10.7073 4.66669 17.334C4.66669 23.9607 10.0267 29.334 16.6667 29.334C23.3067 29.334 28.6667 23.9607 28.6667 17.334C28.6667 14.5073 27.68 11.9073 26.04 9.85398ZM16.6667 26.6673C11.5067 26.6673 7.33335 22.494 7.33335 17.334C7.33335 12.174 11.5067 8.00065 16.6667 8.00065C21.8267 8.00065 26 12.174 26 17.334C26 22.494 21.8267 26.6673 16.6667 26.6673Z" fill="black" />
-                                        <path d="M18 10.668H15.3334V18.668H18V10.668Z" fill="black" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_198_6404">
-                                            <rect width="32" height="32" fill="white" transform="translate(0.666687)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-
-                            </div>
-                            <div className={styles.statsTextItem}>
-                                <div className={styles.statsCount}>{results.timeSpent}</div>
-                                <div className={styles.statsText}>إجمالي الوقت المستغرق</div>
+                        <div className={styles.loadingContainer} style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div>
+                                <Spinner />
+                                <p>جاري تحميل الأسئلة...</p>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Modal>
+            )
+        }
 
-                {/* Section scores */}
-                <div className={styles.sectionsContainer}>
-                    {results.sections.map((section, index) => (
-                        <div key={index} className={styles.sectionBox}>
-                            <div className={styles.sectionHeader}>
-                                <ProgressCircle score={section.score} totalQuestions={section.totalQuestions} size={80} />
-                                <h3>{section.title}</h3>
+        return (
+            <Modal
+                title={`مراجعة الأسئلة - ${examResult.studentName}`}
+                open={isModelForViewExamResults}
+                onCancel={handleCancel}
+                width="60vw"
+                footer={null}
+                style={{ top: 5 }}
+                bodyStyle={{ height: 'calc(100vh - 80px)', overflowY: 'auto', padding: '20px' }}
+                className={styles.modalOverrides}
+            >
+                <div className={styles.resultsContainer} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <div className={styles.navigationHeader}>
+                        <button onClick={handleBackToReviewSection} className={styles.backButton}>
+                            <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
+                            العودة للأقسام
+                        </button>
+                        <h2>مراجعة الأسئلة</h2>
                             </div>
-                            <div className={styles.skillsList}>
-                                {section.skills.map((skill, skillIndex) => (
-                                    <div key={skillIndex} className={styles.skillItem}>
-                                        <div className={styles.skillTitle}>{skill.title}</div>
-                                        <div className={styles.scoreContainer}>
-                                            <div className={styles.skillScore}>{skill.correctAnswers} / {skill.numberOfQuestions}</div>
-                                            <div className={styles.skillScore}>
-                                                <ProgressCircle score={skill.correctAnswers} totalQuestions={skill.numberOfQuestions} size={35} displayText={false} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                    <div style={{ flex: 1, height: '100%', overflow: 'auto' }}>
+                        <ReviewAnswers
+                            CurrentExam={examResult}
+                            examData={{ questions: questionsWithData }}
+                            onCompleteExam={() => {}}
+                            currentTime="00:00"
+                            reviewQuestions={reviewQuestionsForComponent}
+                            setReviewQuestions={() => {}}
+                            currentQuestionIndex={currentQuestionIndex}
+                            showReviewSection={() => setCurrentView('reviewSection')}
+                            finishReview={handleFinishReview}
+                            showResults={handleShowResults}
+                            section={section}
+                            hideResultsButton={true}
+                            hideRetakeButton={true}
+                            className={styles.reviewAnswersContainer}
+                        />
+                    </div>
                 </div>
+            </Modal>
+        )
+    }
 
-                {/* Section details */}
-                <div className={styles.sectionDetailsContainer}>
-                    <table className={styles.detailsTable}>
-                        <thead >
-                            تفاصيل الأقسام
-                        </thead>
-                        <tbody>
-                            {results.sectionDetails.map((detail, index) => (
-                                <tr key={index} className={styles.tableRow}>
-                                    <td >{detail.title}</td>
-                                    <td >
-                                        <div className={styles.skillScore}>
-                                            <ProgressCircle score={detail.correctAnswers} totalQuestions={detail.numberOfQuestions} size={35} displayText={false} />
-                                        </div>
-                                    </td>
-                                    <td >
-                                        <span>{detail.correctAnswers} / {detail.numberOfQuestions}</span>
-                                    </td>
-                                    <td className={styles.timer}>
-                                        <div style={{ width: '28px', height: '28px' }} >
-                                            <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_207_14210)">
-                                                    <path opacity="0.3" d="M9.00117 4.5C6.09867 4.5 3.75117 6.8475 3.75117 9.75C3.75117 12.6525 6.09867 15 9.00117 15C11.9037 15 14.2512 12.6525 14.2512 9.75C14.2512 6.8475 11.9037 4.5 9.00117 4.5ZM9.75117 10.5H8.25117V6H9.75117V10.5Z" fill="black" />
-                                                    <path d="M11.25 0.75H6.75V2.25H11.25V0.75Z" fill="black" />
-                                                    <path d="M14.2725 5.5425L15.3375 4.4775C15.015 4.095 14.6625 3.735 14.28 3.42L13.215 4.485C12.0525 3.555 10.59 3 9 3C5.2725 3 2.25 6.0225 2.25 9.75C2.25 13.4775 5.265 16.5 9 16.5C12.735 16.5 15.75 13.4775 15.75 9.75C15.75 8.16 15.195 6.6975 14.2725 5.5425ZM9 15C6.0975 15 3.75 12.6525 3.75 9.75C3.75 6.8475 6.0975 4.5 9 4.5C11.9025 4.5 14.25 6.8475 14.25 9.75C14.25 12.6525 11.9025 15 9 15Z" fill="black" />
-                                                    <path d="M9.75117 6H8.25117V10.5H9.75117V6Z" fill="black" />
-                                                </g>
-                                                <defs>
-                                                    <clipPath id="clip0_207_14210">
-                                                        <rect width="18" height="18" fill="white" />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        </div>
-                                        {detail.time}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </Modal>
-    );
+    return null
 };
 
 export default ModelForViewExamResults; 

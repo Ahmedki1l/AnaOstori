@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSections, onRetakeExam, onViewResults, handleQuestionClick }) => {
+const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSections, onRetakeExam, onViewResults, handleQuestionClick, canRetakeExam = true }) => {
     const [expandedSections, setExpandedSections] = useState([0]); // First section expanded by default
 
     const toggleSection = (index) => {
@@ -332,7 +332,7 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
 
             {/* Footer buttons */}
             <div className={styles.figmaSectionsFooter}>
-                <button className={styles.figmaRetakeButton} onClick={onRetakeExam}>
+                {canRetakeExam && <button className={styles.figmaRetakeButton} onClick={onRetakeExam}>
                     <span>إعادة الاختبار</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <g clip-path="url(#clip0_205_5453)">
@@ -344,7 +344,7 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
                             </clipPath>
                         </defs>
                     </svg>
-                </button>
+                </button>}
 
                 <button className={styles.figmaResultsButton} onClick={onViewResults}>
                     <span>ملخص النتائج</span>
