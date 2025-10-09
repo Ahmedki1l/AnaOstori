@@ -537,7 +537,10 @@ const StudentExamResults = () => {
               const reviewQuestion = reviewQuestions.find(rq => 
                 rq.questionId === question._id || rq.questionId === question.id
               )
-              return reviewQuestion || {
+              return {
+                ...reviewQuestion,
+                id: reviewQuestion.questionId
+              } || {
                 questionId: question._id || question.id,
                 selectedAnswer: null,
                 answered: false,
