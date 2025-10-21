@@ -122,38 +122,16 @@ export default function CourseDetailsHeader(props) {
 
   const locations = [
     {
-      city: "الرياض",
-      cityEn: "RIYADH",
-      districts: [
-        {
-          name: lang === "en" ? "Al-Yasmeen District" : "حي الياسمين",
-          mapUrl: "https://goo.gl/maps/p9V4qb6csGQGXWxb6",
-        },
-        {
-          name: lang === "en" ? "Al-Yarmuk District" : "حي اليرموك",
-          mapUrl: "https://maps.app.goo.gl/PVgwAkyrFQ3HaWdj7",
-        },
-      ],
+      name: lang === "en" ? "Riyadh" : "الرياض، حي الياسمين",
+      mapUrl: "https://goo.gl/maps/p9V4qb6csGQGXWxb6",
     },
     {
-      city: "الدمام",
-      cityEn: "DAMMAM",
-      districts: [
-        {
-          name: lang === "en" ? "Al-Etisalat District" : "حي الإتصالات",
-          mapUrl: "https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7",
-        },
-      ],
+      name: lang === "en" ? "Dammam" : "الدمام، حي الإتصالات",
+      mapUrl: "https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7",
     },
     {
-      city: "جدة",
-      cityEn: "JEDDAH",
-      districts: [
-        {
-          name: lang === "en" ? "Al Nahda District" : "حي النهضة",
-          mapUrl: "https://maps.app.goo.gl/gQdzQCznSKqLak1v6",
-        },
-      ],
+      name: lang === "en" ? "Gadda" : "جدة، حي السلامة",
+      mapUrl: "https://maps.app.goo.gl/Zce5pJPo4AJTsg2Z6",
     },
   ];
 
@@ -249,64 +227,184 @@ export default function CourseDetailsHeader(props) {
                         screenWidth > 767 ? "items-center" : "flex-col"
                       }`}
                     >
-                      {locations
-                        .filter((location) =>
-                          locationNames.includes(location.city) ||
-                          locationNames.includes(location.cityEn)
-                        )
-                        .map((location, cityIndex) => (
-                          <div key={location.city}>
-                            {/* Add separator between cities on desktop */}
-                            {cityIndex > 0 && screenWidth > 767 && (
-                              <span className="mx-2 text-gray-400">-</span>
-                            )}
-                            
+                      {/* First group of locations */}
+                      {(locationNames.includes("الرياض") ||
+                        locationNames.includes("RIYADH")) && (
+                        <>
+                          <div
+                            className={`flex flex-wrap ${
+                              screenWidth > 767 ? "items-center" : `flex-col`
+                            }`}
+                          >
+                            <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                              {lang === "en" ? "Riyadh:" : "الرياض:"}
+                            </p>
                             <div
-                              className={`flex flex-wrap ${
-                                screenWidth > 767 ? "items-center" : "flex-col"
+                              className={`flex items-center ${
+                                screenWidth > 767 ? "" : `ml-4 mr-4 mt-2 mb-2`
                               }`}
                             >
-                              <p className={lang === "en" ? "ml-2" : "mr-2"}>
-                                {lang === "en" 
-                                  ? `${location.cityEn.charAt(0)}${location.cityEn.slice(1).toLowerCase()}:`
-                                  : `${location.city}:`
-                                }
-                              </p>
-                              
-                              <div
-                                className={`flex items-center ${
-                                  screenWidth > 767 
-                                    ? "ml-2 mr-2" 
-                                    : "ml-4 mr-4 mt-2 mb-2"
-                                }`}
-                              >
-                                {location.districts.map((district, districtIndex) => (
-                                  <div key={districtIndex}>
-                                    {/* Add separator between districts on desktop */}
-                                    {districtIndex > 0 && screenWidth > 767 && (
-                                      <span className="mx-2 text-gray-400">-</span>
-                                    )}
-                                    
-                                    <div className="flex items-center ml-2 mr-2">
-                                      <a
-                                        href={district.mapUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ color: "#fff" }}
-                                        className="flex items-center hover:opacity-75 transition-opacity"
-                                      >
-                                        <GoogleMapsIcon />
-                                      </a>
-                                      <p className={lang === "en" ? "ml-2" : "mr-2"}>
-                                        {district.name}
-                                      </p>
-                                    </div>
-                                  </div>
-                                ))}
+                              <div className="flex items-center ml-2 mr-2">
+                                <a
+                                  href="https://goo.gl/maps/p9V4qb6csGQGXWxb6"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: "#fff" }}
+                                  className="flex items-center hover:opacity-75 transition-opacity"
+                                >
+                                  <GoogleMapsIcon />
+                                </a>
+                                <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                                  {lang === "en"
+                                    ? "Al-Yasmeen District"
+                                    : "حي الياسمين"}
+                                </p>
                               </div>
+                              {screenWidth > 767 && (
+                                <span className="mx-2 text-gray-400">-</span>
+                              )}
+                              <div className="flex items-center ml-2 mr-2">
+                                <a
+                                  href="https://maps.app.goo.gl/PVgwAkyrFQ3HaWdj7"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: "#fff" }}
+                                  className="flex items-center hover:opacity-75 transition-opacity"
+                                >
+                                  <GoogleMapsIcon />
+                                </a>
+                                <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                                  {lang === "en"
+                                    ? "Al-Yarmuk District"
+                                    : "حي اليرموك"}
+                                </p>
+                              </div>
+
+                              {/* {(screenWidth > 767) && <span className="mx-2 text-gray-400">-</span>}
+
+													<div className="flex items-center ml-2 mr-2">
+														<a
+															href="https://maps.app.goo.gl/Un9XNuHwCREta9CV6"
+															target="_blank"
+															rel="noopener noreferrer"
+															style={{ color: '#fff' }}
+															className="flex items-center hover:opacity-75 transition-opacity"
+														>
+															<GoogleMapsIcon />
+														</a>
+														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}
+														</p>
+													</div>
+
+													{(screenWidth > 767) && <span className="mx-2 text-gray-400">-</span>}
+
+													<div className="flex items-center ml-2 mr-2">
+														<a
+															href="https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9"
+															target="_blank"
+															rel="noopener noreferrer"
+															style={{ color: '#fff' }}
+															className="flex items-center hover:opacity-75 transition-opacity"
+														>
+															<GoogleMapsIcon />
+														</a>
+														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
+															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}
+														</p>
+													</div> */}
+
+                              {/* {(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>} */}
                             </div>
                           </div>
-                        ))}
+                        </>
+                      )}
+
+                      {(locationNames.includes("الدمام") ||
+                        locationNames.includes("DAMMAM")) && (
+                        <>
+                          {screenWidth > 767 &&
+                            (locationNames.includes("الرياض") ||
+                              locationNames.includes("RIYADH")) && (
+                              <span className="mx-2 text-gray-400">-</span>
+                            )}
+                          <div
+                            className={`flex flex-wrap ${
+                              screenWidth > 767 ? "items-center" : `flex-col`
+                            }`}
+                          >
+                            <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                              {lang === "en" ? "Dammam:" : "الدمام:"}
+                            </p>
+                            {/* Second group */}
+                            <div
+                              className={`flex items-center ${
+                                screenWidth > 767
+                                  ? "ml-2 mr-2"
+                                  : `ml-6 mr-6 mt-2 mb-2`
+                              }`}
+                            >
+                              <a
+                                href="https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: "#fff" }}
+                                className="flex items-center hover:opacity-75 transition-opacity"
+                              >
+                                <GoogleMapsIcon />
+                              </a>
+                              <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                                {lang === "en"
+                                  ? "Al-Etisalat District"
+                                  : "حي الإتصالات"}
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {(locationNames.includes("جدة") ||
+                        locationNames.includes("JEDDAH")) && (
+                        <>
+                          {screenWidth > 767 &&
+                            (locationNames.includes("الدمام") ||
+                              locationNames.includes("DAMMAM")) && (
+                              <span className="mx-2 text-gray-400">-</span>
+                            )}
+                          <div
+                            className={`flex flex-wrap ${
+                              screenWidth > 767 ? "items-center" : `flex-col`
+                            }`}
+                          >
+                            <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                              {lang === "en" ? "Jeddah:" : "جدة:"}
+                            </p>
+                            {/* Third group */}
+                            <div
+                              className={`flex items-center ${
+                                screenWidth > 767
+                                  ? "ml-2 mr-2"
+                                  : `ml-6 mr-6 mt-2 mb-2`
+                              }`}
+                            >
+                              <a
+                                href="https://maps.app.goo.gl/gQdzQCznSKqLak1v6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: "#fff" }}
+                                className="flex items-center hover:opacity-75 transition-opacity"
+                              >
+                                <GoogleMapsIcon />
+                              </a>
+                              <p className={lang === "en" ? "ml-2" : "mr-2"}>
+                                {lang === "en"
+                                  ? "Al Nahda District"
+                                  : "حي النهضة"}
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ) : (
                     <p>{lang === "en" ? "Broadcast via" : "يتم بثها عبر "}</p>
