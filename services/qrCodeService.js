@@ -79,9 +79,24 @@ export const qrCodeService = {
             }
 
             const response = await getAuthRouteAPI(requestData)
-            const result = JSON.parse(response.body)
             
-            if (result.success) {
+            // Handle different response structures
+            let result;
+            if (response.data && response.data.body) {
+                // Wrapped response with body property
+                result = typeof response.data.body === 'string' ? JSON.parse(response.data.body) : response.data.body
+            } else if (response.data) {
+                // Direct response.data
+                result = response.data
+            } else if (response.body) {
+                // Response has body property (wrapped response)
+                result = typeof response.body === 'string' ? JSON.parse(response.body) : response.body
+            } else {
+                // Direct response
+                result = response
+            }
+            
+            if (result.success && result.data) {
                 return result.data
             } else {
                 throw new Error(result.message || 'Failed to fetch QR codes')
@@ -102,9 +117,20 @@ export const qrCodeService = {
                         search: search
                     }
                     const response = await getAuthRouteAPI(requestData)
-                    const result = JSON.parse(response.body)
                     
-                    if (result.success) {
+                    // Handle different response structures
+                    let result;
+                    if (response.data && response.data.body) {
+                        result = typeof response.data.body === 'string' ? JSON.parse(response.data.body) : response.data.body
+                    } else if (response.data) {
+                        result = response.data
+                    } else if (response.body) {
+                        result = typeof response.body === 'string' ? JSON.parse(response.body) : response.body
+                    } else {
+                        result = response
+                    }
+                    
+                    if (result.success && result.data) {
                         return result.data
                     } else {
                         throw new Error(result.message || 'Failed to fetch QR codes')
