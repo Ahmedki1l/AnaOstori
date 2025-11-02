@@ -10,6 +10,35 @@ export default function QRCodeCard({ qrCode, onDelete }) {
         onDelete(qrCode._id)
     }
 
+    const handleDownload = async (e) => {
+        e.preventDefault()
+        try {
+            // Fetch the image
+            const response = await fetch(qrCode.qrCodeCDNUrl)
+            const blob = await response.blob()
+            
+            // Create a temporary URL for the blob
+            const blobUrl = window.URL.createObjectURL(blob)
+            
+            // Create a temporary anchor element
+            const link = document.createElement('a')
+            link.href = blobUrl
+            link.download = `QRCode-${qrCode.bookName.replace(/ /g, '-')}.png`
+            
+            // Trigger the download
+            document.body.appendChild(link)
+            link.click()
+            
+            // Cleanup
+            document.body.removeChild(link)
+            window.URL.revokeObjectURL(blobUrl)
+        } catch (error) {
+            console.error('Error downloading QR code:', error)
+            // Fallback to direct link
+            window.open(qrCode.qrCodeCDNUrl, '_blank')
+        }
+    }
+
     const truncateUrl = (url, maxLength = 50) => {
         if (url.length <= maxLength) return url
         return url.substring(0, maxLength) + '...'
@@ -53,15 +82,14 @@ export default function QRCodeCard({ qrCode, onDelete }) {
             </div>
             
             <div className={styles.cardActions}>
-                <a 
-                    href={qrCode.qrCodeCDNUrl} 
-                    download
+                <button
+                    onClick={handleDownload}
                     className={styles.downloadBtn}
                     title="تحميل رمز QR"
                 >
                     <AllIconsComponenet width={20} height={20} iconName='downloadIcon' color={'#ffffff'} />
                     <span>تحميل</span>
-                </a>
+                </button>
                 <button 
                     className={styles.deleteBtn}
                     onClick={handleDelete}

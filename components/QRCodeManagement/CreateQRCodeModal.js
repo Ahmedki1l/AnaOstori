@@ -116,7 +116,7 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
             // Build URL from category and course name with proper encoding
             const courseUrlName = course.name.replace(/ /g, '-')
             const categoryUrlName = course.categoryName.replace(/ /g, '-')
-            finalUrl = `${window.location.origin}/${encodeURIComponent(categoryUrlName)}/${encodeURIComponent(courseUrlName)}`
+            finalUrl = `${window.location.origin}/${encodeURIComponent(courseUrlName)}/${encodeURIComponent(categoryUrlName)}`
             finalBookName = course.name
         }
 
@@ -227,7 +227,7 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
                                                     if (!course) return ''
                                                     const courseName = course.name.replace(/ /g, '-')
                                                     const categoryName = course.categoryName.replace(/ /g, '-')
-                                                    return `${window.location.origin}/${encodeURIComponent(categoryName)}/${encodeURIComponent(courseName)}`
+                                                    return `${window.location.origin}/${encodeURIComponent(courseName)}/${encodeURIComponent(categoryName)}`
                                                 })()}
                                             </p>
                                         </div>
