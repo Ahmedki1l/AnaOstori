@@ -1,0 +1,234 @@
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    direction: rtl;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 540px;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    direction: rtl;
+}
+
+.close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: #f0f0f0;
+        color: #333;
+    }
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #1e293b;
+    font-family: 'Tajawal-Bold';
+}
+
+.tabContainer {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    background: #f8fafc;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.tab {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease;
+    font-family: 'Tajawal-Medium';
+    
+    &:hover:not(:disabled) {
+        background: #e2e8f0;
+        color: #475569;
+    }
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.activeTab {
+    background: linear-gradient(135deg, #F26722 0%, #f97316 100%);
+    color: white;
+    
+    &:hover {
+        background: linear-gradient(135deg, #e55a1f 0%, #ea6a0a 100%);
+        color: white;
+    }
+}
+
+.formContainer {
+    min-height: 200px;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+    
+    label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-family: 'Tajawal-Medium';
+        font-size: 0.95rem;
+    }
+    
+    input,
+    select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        color: #1e293b;
+        font-family: 'Tajawal-Regular';
+        transition: all 0.2s ease;
+        
+        &:focus {
+            outline: none;
+            border-color: #F26722;
+            box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
+        }
+        
+        &:disabled {
+            background-color: #f8fafc;
+            cursor: not-allowed;
+        }
+        
+        &::placeholder {
+            color: #94a3b8;
+        }
+    }
+    
+    select {
+        cursor: pointer;
+    }
+}
+
+.loadingText {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+    font-family: 'Tajawal-Regular';
+}
+
+.error {
+    display: block;
+    color: #e53935;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    font-family: 'Tajawal-Regular';
+}
+
+.coursePreview {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    
+    .previewLabel {
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+        font-family: 'Tajawal-Medium';
+    }
+    
+    .previewUrl {
+        margin: 0;
+        color: #F26722;
+        font-size: 0.875rem;
+        word-break: break-all;
+        font-family: 'Tajawal-Regular';
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.cancelBtn,
+.saveBtn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Tajawal-Medium';
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.cancelBtn {
+    background: #e2e8f0;
+    color: #475569;
+    
+    &:hover:not(:disabled) {
+        background: #cbd5e1;
+    }
+}
+
+.saveBtn {
+    background: linear-gradient(135deg, #F26722 0%, #f97316 100%);
+    color: white;
+    
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #e55a1f 0%, #ea6a0a 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(242, 103, 34, 0.3);
+    }
+    
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+}
+

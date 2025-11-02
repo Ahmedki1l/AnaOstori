@@ -198,7 +198,7 @@ export const examResultService = {
                 isCorrect,
                 isMarked: !!q.isMarked,
                 answered: !!q.answered,
-                timeSpent: q.timeSpent ? String(q.timeSpent) : undefined
+                timeSpent: q.timeSpent ? String(q.timeSpent) : "00:00"
             };
         });
 
@@ -213,7 +213,7 @@ export const examResultService = {
             markedQuestions: marked,
             timeSpent: this.calculateTotalTime(elapsedTime),
             totalTime: examData.duration + ":00",
-            sections: this.prepareSectionsData(examData, allReviewQuestions, allExamQuestions),
+            sections: this.prepareSectionsDataWithQuestions(examData, allReviewQuestions, allExamQuestions, elapsedTime),
             sectionDetails: this.prepareSectionDetails(examData, allReviewQuestions, allExamQuestions, elapsedTime),
             reviewQuestions,
             distractionEvents,
@@ -250,7 +250,112 @@ export const examResultService = {
     },
 
     /**
-     * Prepare sections data for submission
+     * Prepare sections data with nested questions (NEW STRUCTURE)
+     * @param {Object} examData - Exam data
+     * @param {Array} allReviewQuestions - All review questions (by section)
+     * @param {Array} allExamQuestions - All exam questions (by section)
+     * @param {Array} elapsedTime - Elapsed time for each section
+     * @returns {Array} - Sections data with nested questions
+     */
+    prepareSectionsDataWithQuestions(examData, allReviewQuestions, allExamQuestions, elapsedTime) {
+        if (!examData?.sections || !allReviewQuestions || allReviewQuestions.length === 0) {
+            return [];
+        }
+
+        return allReviewQuestions.map((sectionReviewQuestions, sectionIndex) => {
+            const sectionExamQuestions = allExamQuestions[sectionIndex] || [];
+            const sectionData = examData.sections[sectionIndex] || {};
+            
+            // Calculate correct answers for this section
+            let correctAnswers = 0;
+            
+            // Prepare nested questions array with all required fields
+            const questions = sectionReviewQuestions.map((reviewQ, questionIndex) => {
+                const examQ = sectionExamQuestions[questionIndex] || {};
+                const isCorrect = reviewQ.selectedAnswer === examQ.correctAnswer;
+                
+                if (isCorrect) correctAnswers++;
+                
+                return {
+                    questionId: typeof reviewQ.id === 'string' ? reviewQ.id : (reviewQ.id ? String(reviewQ.id) : ''),
+                    correctAnswer: examQ.correctAnswer ? String(examQ.correctAnswer) : '',
+                    selectedAnswer: typeof reviewQ.selectedAnswer === 'string' ? reviewQ.selectedAnswer : (reviewQ.selectedAnswer ? String(reviewQ.selectedAnswer) : ''),
+                    isCorrect,
+                    isMarked: !!reviewQ.isMarked,
+                    answered: !!reviewQ.answered,
+                    timeSpent: reviewQ.timeSpent ? String(reviewQ.timeSpent) : "00:00"
+                };
+            });
+            
+            // Prepare skills data
+            const skills = this.prepareSectionSkills(sectionExamQuestions, sectionReviewQuestions);
+            
+            // Get time for this section - ensure last section has correct time
+            const sectionTime = elapsedTime && elapsedTime[sectionIndex] ? String(elapsedTime[sectionIndex]) : "00:00";
+            
+            return {
+                title: sectionData.title || `القسم ${sectionIndex + 1}`,
+                score: correctAnswers,
+                totalQuestions: sectionReviewQuestions.length,
+                correctAnswers: correctAnswers,
+                time: sectionTime,
+                skills: skills,
+                questions: questions
+            };
+        });
+    },
+
+    /**
+     * Prepare skills data for a section
+     * @param {Array} sectionExamQuestions - Exam questions for the section
+     * @param {Array} sectionReviewQuestions - Review questions for the section
+     * @returns {Array} - Skills data
+     */
+    prepareSectionSkills(sectionExamQuestions, sectionReviewQuestions) {
+        if (!sectionExamQuestions || sectionExamQuestions.length === 0) {
+            return [];
+        }
+
+        // Group questions by skill
+        const skillsMap = new Map();
+
+        sectionExamQuestions.forEach((examQ, index) => {
+            const reviewQ = sectionReviewQuestions[index];
+            if (!examQ?.skills) return;
+
+            examQ.skills.forEach(skill => {
+                const skillName = skill.text || skill;
+                if (!skillsMap.has(skillName)) {
+                    skillsMap.set(skillName, {
+                        title: skillName,
+                        questions: []
+                    });
+                }
+
+                skillsMap.get(skillName).questions.push({
+                    examQ,
+                    reviewQ,
+                    isCorrect: reviewQ?.selectedAnswer === examQ.correctAnswer
+                });
+            });
+        });
+
+        // Calculate scores for each skill
+        return Array.from(skillsMap.values()).map(skill => {
+            const correctAnswers = skill.questions.filter(q => q.isCorrect).length;
+            const totalQuestions = skill.questions.length;
+
+            return {
+                title: skill.title,
+                correctAnswers: correctAnswers,
+                numberOfQuestions: totalQuestions,
+                score: totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0
+            };
+        });
+    },
+
+    /**
+     * Prepare sections data for submission (OLD STRUCTURE - kept for reference)
      * @param {Object} examData - Exam data
      * @param {Array} allReviewQuestions - All review questions
      * @param {Array} allExamQuestions - All exam questions
@@ -322,34 +427,6 @@ export const examResultService = {
         });
     },
 
-    /**
-     * Prepare skills data for a section
-     * @param {Object} section - Section data
-     * @param {Array} sectionQuestions - Section questions
-     * @param {Array} sectionExamQuestions - Section exam questions
-     * @returns {Array} - Skills data
-     */
-    prepareSkillsData(section, sectionQuestions, sectionExamQuestions) {
-        if (!section.skills) return []
-
-        return section.skills.map(skill => {
-            const skillQuestions = sectionQuestions.filter((_, index) => 
-                sectionExamQuestions[index]?.skills?.some(s => s.text === skill.text)
-            )
-
-            const correctInSkill = skillQuestions.filter((question, index) => {
-                const examQuestion = sectionExamQuestions.find(eq => eq._id === question.id);
-                return examQuestion && question.selectedAnswer === examQuestion.correctAnswer;
-            }).length
-
-            return {
-                title: skill.text,
-                correctAnswers: correctInSkill,
-                numberOfQuestions: skillQuestions.length,
-                score: skillQuestions.length > 0 ? Math.round((correctInSkill / skillQuestions.length) * 100) : 0
-            }
-        })
-    },
 
     /**
      * Prepare section details for submission

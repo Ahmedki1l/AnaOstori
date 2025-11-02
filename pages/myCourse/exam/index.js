@@ -681,6 +681,25 @@ const ExamPage = () => {
         }
 
         if (examStage !== 'results') return;
+        
+        // FIX: Add the last section's time before stopping the timer
+        if (sectionIDRef.current >= 0 && sectionsCounterRef.current < examSections) {
+            const initial = (selectedExam?.sections[sectionIDRef.current].duration || 0) * 60;
+            const used = initial - timeLeft;
+            console.log("🚀 ~ Last Section Time ~ sectionID:", sectionIDRef.current);
+            console.log("🚀 ~ Last Section Time ~ initial:", initial);
+            console.log("🚀 ~ Last Section Time ~ timeLeft:", timeLeft);
+            console.log("🚀 ~ Last Section Time ~ used:", used);
+            setAllElapsedFormatted((prev) => {
+                // Only add if this section's time isn't already added
+                if (prev.length === sectionsCounterRef.current) {
+                    return [...prev, formatTime(used)];
+                }
+                return prev;
+            });
+            sectionsCounterRef.current += 1;
+        }
+        
         // kill interval if still running
         if (timerRef.current) {
             clearInterval(timerRef.current);

@@ -460,38 +460,54 @@ const Index = () => {
                 throw new Error(responseData.message || 'Failed to fetch exam results')
             }
 
-            const results = responseData.data?.map(result => ({
-                ...result,
-                key: result._id,
-                id: result._id,
-                studentName: result.student?.fullName || result.student?.firstName || 'الاسم غير موجود',
-                studentAvatar: result.student?.avatar,
-                studentId: result.student?.id,
-                studentPhone: result.student?.phone,
-                examName: result.examName,
-                examId: result.examId,
-                score: result.score,
-                status: result.status, // use backend status directly
-                examDate: result.examDate,
-                uploadDate: result.createdAt,
-                isTerminated: result.isTerminated,
-                terminationReason: result.terminationReason,
-                submissionType: result.submissionType,
-                totalQuestions: result.totalQuestions,
-                correctAnswers: result.correctAnswers,
-                wrongAnswers: result.wrongAnswers,
-                timeSpent: result.timeSpent,
-                totalTime: result.totalTime,
-                sections: result.sections,
-                sectionDetails: result.sectionDetails,
-                distractionEvents: result.distractionEvents,
-                distractionStrikes: result.distractionStrikes,
-                markedQuestions: result.markedQuestions,
-                unansweredQuestions: result.unansweredQuestions,
-                isCompleted: result.isCompleted,
-                examDuration: result.examDuration,
-                reviewQuestions: result.reviewQuestions
-            }))
+            const results = responseData.data?.map(result => {
+                // Check if we have new structure with nested questions
+                const hasNewStructure = result.sections && 
+                                       result.sections.length > 0 && 
+                                       result.sections[0].questions && 
+                                       result.sections[0].questions.length > 0;
+                
+                // Extract reviewQuestions if not available (for backward compatibility)
+                let reviewQuestions = result.reviewQuestions;
+                if (!reviewQuestions && hasNewStructure) {
+                    // Extract from nested structure
+                    reviewQuestions = result.sections.flatMap(section => section.questions);
+                }
+                
+                return {
+                    ...result,
+                    key: result._id,
+                    id: result._id,
+                    studentName: result.student?.fullName || result.student?.firstName || 'الاسم غير موجود',
+                    studentAvatar: result.student?.avatar,
+                    studentId: result.student?.id,
+                    studentPhone: result.student?.phone,
+                    examName: result.examName,
+                    examId: result.examId,
+                    score: result.score,
+                    status: result.status, // use backend status directly
+                    examDate: result.examDate,
+                    uploadDate: result.createdAt,
+                    isTerminated: result.isTerminated,
+                    terminationReason: result.terminationReason,
+                    submissionType: result.submissionType,
+                    totalQuestions: result.totalQuestions,
+                    correctAnswers: result.correctAnswers,
+                    wrongAnswers: result.wrongAnswers,
+                    timeSpent: result.timeSpent,
+                    totalTime: result.totalTime,
+                    sections: result.sections,
+                    sectionDetails: result.sectionDetails,
+                    distractionEvents: result.distractionEvents,
+                    distractionStrikes: result.distractionStrikes,
+                    markedQuestions: result.markedQuestions,
+                    unansweredQuestions: result.unansweredQuestions,
+                    isCompleted: result.isCompleted,
+                    examDuration: result.examDuration,
+                    reviewQuestions: reviewQuestions,
+                    hasNewStructure: hasNewStructure
+                }
+            })
             setExamResultsList(results || [])
             setTotalResults(responseData.total || responseData.totalCount || 0)
         } catch (error) {

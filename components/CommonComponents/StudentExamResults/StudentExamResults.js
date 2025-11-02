@@ -430,14 +430,44 @@ const StudentExamResults = () => {
 
   // Details View - Using ExamResults component
   if (currentView === 'details' && selectedResult) {
+    // Check if we have new structure (sections with nested questions) or old structure (flat reviewQuestions)
+    const hasNewStructure = selectedResult.sections && 
+                           selectedResult.sections.length > 0 && 
+                           selectedResult.sections[0].questions && 
+                           selectedResult.sections[0].questions.length > 0;
+    
     // Prepare data for ExamResults component
-    const reviewQuestions = selectedResult.reviewQuestions || []
-    const totalTime = selectedResult.totalTime.toString() || "0"
+    let reviewQuestions = [];
+    
+    if (hasNewStructure) {
+      // Extract reviewQuestions from nested structure
+      reviewQuestions = selectedResult.sections.flatMap(section => 
+        section.questions.map(q => ({
+          questionId: q.questionId,
+          selectedAnswer: q.selectedAnswer,
+          isCorrect: q.isCorrect,
+          isMarked: q.isMarked,
+          answered: q.answered,
+          timeSpent: q.timeSpent
+        }))
+      );
+    } else {
+      // Use flat reviewQuestions (old structure)
+      reviewQuestions = selectedResult.reviewQuestions || [];
+    }
+    
+    const totalTime = selectedResult.totalTime?.toString() || "0";
     
     // Create elapsedTime array for each section
-    const elapsedTime = selectedResult.sectionDetails
-      ? selectedResult.sectionDetails.map(section => section.time?.toString() || "0")
-      : ["0"];
+    // Try to get time from sections first (new structure), then fall back to sectionDetails
+    let elapsedTime = [];
+    if (hasNewStructure && selectedResult.sections) {
+      elapsedTime = selectedResult.sections.map(section => section.time?.toString() || "0");
+    } else if (selectedResult.sectionDetails) {
+      elapsedTime = selectedResult.sectionDetails.map(section => section.time?.toString() || "0");
+    } else {
+      elapsedTime = ["0"];
+    }
 
     // Use fetched questions if available, otherwise create mock data
     let examData = []
@@ -445,8 +475,8 @@ const StudentExamResults = () => {
       // Use real question data with skills from the questions themselves
       examData = fetchedQuestions.map((question, index) => {
         // Determine which section this question belongs to based on its position
-        const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sectionDetails?.length || 1)))
-        const section = selectedResult.sectionDetails?.[sectionIndex]
+        const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sectionDetails?.length || selectedResult.sections?.length || 1)))
+        const section = selectedResult.sectionDetails?.[sectionIndex] || selectedResult.sections?.[sectionIndex]
         
         return {
           ...question,
@@ -460,8 +490,8 @@ const StudentExamResults = () => {
       // Create mock data structure with proper section assignment
       examData = reviewQuestions.map((reviewQuestion, index) => {
         // Determine which section this question belongs to based on its position
-        const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sectionDetails?.length || 1)))
-        const section = selectedResult.sectionDetails?.[sectionIndex]
+        const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sectionDetails?.length || selectedResult.sections?.length || 1)))
+        const section = selectedResult.sectionDetails?.[sectionIndex] || selectedResult.sections?.[sectionIndex]
         
         return {
           _id: reviewQuestion.questionId,
@@ -558,16 +588,35 @@ const StudentExamResults = () => {
 
   // Review Section View
   if (currentView === 'reviewSection' && selectedResult) {
-    const questions = selectedResult.reviewQuestions || []
+    // Check if we have new structure with nested questions
+    const hasNewStructure = selectedResult.sections && 
+                           selectedResult.sections.length > 0 && 
+                           selectedResult.sections[0].questions && 
+                           selectedResult.sections[0].questions.length > 0;
+    
+    let questions = [];
+    
+    if (hasNewStructure) {
+      // Extract questions from nested structure
+      questions = selectedResult.sections.flatMap(section => section.questions);
+    } else {
+      // Use flat reviewQuestions (old structure)
+      questions = selectedResult.reviewQuestions || [];
+    }
+    
     let questionsCounter = 0;
     console.log("🚀 ~ Review Section ~ questions:", questions)
     console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
+    console.log("🚀 ~ Review Section ~ hasNewStructure:", hasNewStructure)
+    console.log("🚀 ~ Review Section ~ selectedResult.sections:", selectedResult.sections)
     console.log("🚀 ~ Review Section ~ selectedResult.sectionDetails:", selectedResult.sectionDetails)
     
+    // Use sections from new structure if available, otherwise use sectionDetails
+    const sectionsToUse = hasNewStructure ? selectedResult.sections : selectedResult.sectionDetails;
 
     // Create examData structure for ExamSectionsReview
-    const examData = selectedResult.sectionDetails?.map((section, index) => {
-      const totalSectionQuestions = section.numberOfQuestions;
+    const examData = sectionsToUse?.map((section, index) => {
+      const totalSectionQuestions = section.numberOfQuestions || section.questions?.length || 0;
       const startIndex = index + questionsCounter;
       const endIndex = startIndex + totalSectionQuestions;
       
@@ -608,8 +657,8 @@ const StudentExamResults = () => {
 
     questionsCounter = 0;
     // Create reviewQuestions structure for ExamSectionsReview
-    const reviewQuestions = selectedResult.sectionDetails?.map((section, index) => {
-      const totalSectionQuestions = section.numberOfQuestions;
+    const reviewQuestions = sectionsToUse?.map((section, index) => {
+      const totalSectionQuestions = section.numberOfQuestions || section.questions?.length || 0;
       const startIndex = index + questionsCounter;
       const endIndex = startIndex + totalSectionQuestions;
       
@@ -633,17 +682,17 @@ const StudentExamResults = () => {
     }))]
 
     // Create examSections structure
-    const examSections = selectedResult.sectionDetails?.map((section, index) => ({
+    const examSections = sectionsToUse?.map((section, index) => ({
       title: section.title || `القسم ${index + 1}`,
       // Add other section properties as needed
     })) || [{
       title: "القسم الأول"
     }]
 
-    // Create elapsedTime array
-    const elapsedTime = selectedResult.sectionDetails?.map((section, index) => {
-      // Calculate time per section or use default
-      return section.time?.toString() || "00:05" // Default time, you can calculate this based on your data
+    // Create elapsedTime array - use time from sections if available
+    const elapsedTime = sectionsToUse?.map((section, index) => {
+      // Use time from section, with fallback to default
+      return section.time?.toString() || "00:05"
     }) || ["00:05"]
 
     console.log("🚀 ~ Review Section ~ examData:", examData)
@@ -694,15 +743,32 @@ const StudentExamResults = () => {
 
   // Review Answers View
   if (currentView === 'reviewAnswers' && selectedResult) {
-    const reviewQuestions = selectedResult.reviewQuestions || []
+    // Check if we have new structure with nested questions
+    const hasNewStructure = selectedResult.sections && 
+                           selectedResult.sections.length > 0 && 
+                           selectedResult.sections[0].questions && 
+                           selectedResult.sections[0].questions.length > 0;
+    
+    let reviewQuestions = [];
+    
+    if (hasNewStructure) {
+      // Extract questions from nested structure
+      reviewQuestions = selectedResult.sections.flatMap(section => section.questions);
+    } else {
+      // Use flat reviewQuestions (old structure)
+      reviewQuestions = selectedResult.reviewQuestions || [];
+    }
+    
+    // Use sections from new structure if available, otherwise use sectionDetails
+    const sectionsToUse = hasNewStructure ? selectedResult.sections : selectedResult.sectionDetails;
 
     // Create question structure with fetched data and proper section assignment
     const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
       const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
       
       // Determine which section this question belongs to
-      const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sectionDetails?.length || 1)))
-      const section = selectedResult.sectionDetails?.[sectionIndex]
+      const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (sectionsToUse?.length || 1)))
+      const section = sectionsToUse?.[sectionIndex]
       
       if (fetchedQuestion) {
         return {
