@@ -22,7 +22,22 @@ export const qrCodeService = {
             }
 
             const response = await postAuthRouteAPI(requestData)
-            const result = JSON.parse(response.body)
+            
+            // Handle different response structures
+            let result;
+            if (response.data && response.data.body) {
+                // Wrapped response with body property
+                result = typeof response.data.body === 'string' ? JSON.parse(response.data.body) : response.data.body
+            } else if (response.data) {
+                // Direct response.data
+                result = response.data
+            } else if (response.body) {
+                // Response has body property
+                result = typeof response.body === 'string' ? JSON.parse(response.body) : response.body
+            } else {
+                // Direct response
+                result = response
+            }
             
             if (result.success) {
                 return result.data
@@ -45,7 +60,18 @@ export const qrCodeService = {
                         regenerate: regenerate
                     }
                     const response = await postAuthRouteAPI(requestData)
-                    const result = JSON.parse(response.body)
+                    
+                    // Handle different response structures
+                    let result;
+                    if (response.data && response.data.body) {
+                        result = typeof response.data.body === 'string' ? JSON.parse(response.data.body) : response.data.body
+                    } else if (response.data) {
+                        result = response.data
+                    } else if (response.body) {
+                        result = typeof response.body === 'string' ? JSON.parse(response.body) : response.body
+                    } else {
+                        result = response
+                    }
                     
                     if (result.success) {
                         return result.data
@@ -160,7 +186,18 @@ export const qrCodeService = {
             }
 
             const response = await postAuthRouteAPI(requestData)
-            const result = JSON.parse(response.body)
+            
+            // Handle different response structures
+            let result;
+            if (response.data && response.data.body) {
+                result = typeof response.data.body === 'string' ? JSON.parse(response.data.body) : response.data.body
+            } else if (response.data) {
+                result = response.data
+            } else if (response.body) {
+                result = typeof response.body === 'string' ? JSON.parse(response.body) : response.body
+            } else {
+                result = response
+            }
             
             if (result.success) {
                 return result
@@ -182,7 +219,18 @@ export const qrCodeService = {
                         deleteFromS3: deleteFromS3
                     }
                     const response = await postAuthRouteAPI(requestData)
-                    const result = JSON.parse(response.body)
+                    
+                    // Handle different response structures
+                    let result;
+                    if (response.data && response.data.body) {
+                        result = typeof response.data.body === 'string' ? JSON.parse(response.data.body) : response.data.body
+                    } else if (response.data) {
+                        result = response.data
+                    } else if (response.body) {
+                        result = typeof response.body === 'string' ? JSON.parse(response.body) : response.body
+                    } else {
+                        result = response
+                    }
                     
                     if (result.success) {
                         return result
