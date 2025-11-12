@@ -1,40 +1,90 @@
-import React from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
 export default function TamaraCheckoutForm({
-  orderId,
-  amount,
-  couponAppliedData,
-  tamaraUrl,
-  onError
+	orderId,
+	checkoutId,
+	tamaraLabel,
+	selectedLocale = 'ar',
+	onError,
 }) {
+	const formRef = useRef(null)
+	const locale = selectedLocale === 'ar' ? 'ar' : 'en'
 
-  const initiateTamaraPayment = () => {
-    if (tamaraUrl) {
-      // Redirect to Tamara checkout URL
-      window.location.href = tamaraUrl
-    } else {
-      if (onError) {
-        onError(new Error('No Tamara checkout URL available'))
-      }
-    }
-  }
+	const tamaraCopy = useMemo(() => {
+		if (!tamaraLabel) {
+			return null
+		}
 
-  return (
-    <div className="w-full p-4">
-      {/* Payment Button */}
-      <button
-        onClick={initiateTamaraPayment}
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
-      >
-        ادفع مع تمارا
-      </button>
-      
-      {/* Info Message */}
-      <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-xs text-blue-800 text-center">
-          سيتم توجيهك إلى صفحة الدفع الخاصة بتمارا لإتمام عملية الدفع
-        </p>
-      </div>
-    </div>
-  )
+		const localized = locale === 'ar' ? tamaraLabel.description_ar : tamaraLabel.description_en
+		const fallback = locale === 'ar' ? tamaraLabel.description_en : tamaraLabel.description_ar
+
+		return localized || fallback || null
+	}, [tamaraLabel, locale])
+
+	useEffect(() => {
+		if (!checkoutId) {
+			return
+		}
+
+		if (typeof window === 'undefined' || typeof document === 'undefined') {
+			return
+		}
+
+		const previousWpwlOptions = window.wpwlOptions
+		window.wpwlOptions = {
+			locale,
+			style: 'plain',
+			paymentTarget: '_top',
+		}
+
+		const handleScriptError = () => {
+			if (onError) {
+				onError(new Error('Failed to load Tamara payment widget'))
+			}
+		}
+
+		const script = document.createElement('script')
+		script.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutId}`
+		script.async = true
+		script.addEventListener('error', handleScriptError)
+		document.head.appendChild(script)
+
+		return () => {
+			if (previousWpwlOptions) {
+				window.wpwlOptions = previousWpwlOptions
+			} else {
+				delete window.wpwlOptions
+			}
+
+			script.removeEventListener('error', handleScriptError)
+			if (document.head.contains(script)) {
+				document.head.removeChild(script)
+			}
+
+			if (formRef.current) {
+				formRef.current.innerHTML = ''
+			}
+		}
+	}, [checkoutId, locale, onError])
+
+	return (
+		<div className="w-full p-4">
+			{tamaraCopy && (
+				<div className="mb-3 text-sm leading-6 text-gray-700 tamara-copy">
+					{tamaraCopy}
+				</div>
+			)}
+			<form
+				ref={formRef}
+				action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?type=tamara&orderId=${orderId}`}
+				className="paymentWidgets"
+				data-brands="TAMARA"
+			/>
+			<p className="mt-2 text-xs text-center text-gray-500">
+				{locale === 'ar'
+					? 'سيتم توجيهك إلى صفحة تمارا لإتمام عملية الدفع.'
+					: 'You will be redirected to Tamara to complete the payment.'}
+			</p>
+		</div>
+	)
 } 

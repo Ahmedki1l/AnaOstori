@@ -1,7 +1,7 @@
 import styles from '../styles/PaymentDone.module.scss'
 import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI, getTamaraPaymentInfoAPI, getFreePaymentInfoAPI } from '../services/apisService';
 import { dateWithDay, timeDuration2 } from '../constants/DateConverter';
@@ -19,6 +19,7 @@ export default function Payment(props) {
     const [transactionDetails, setTransactionDetails] = useState([])
     const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
     const router = useRouter()
+    const locale = router.locale || 'ar'
 
     const [tabbyResponseMessages, setTabbyResponseMessages] = useState({
         cancel: {
@@ -39,17 +40,50 @@ export default function Payment(props) {
         failure: {
             en: "Sorry, Tamara is unable to approve this purchase. Please use an alternative payment method for your order.",
             ar: "نأسف، تمارا غير قادرة على الموافقة على هذه العملية. الرجاء استخدام طريقة دفع أخرى."
+        },
+        success: {
+            en: "Payment completed successfully with Tamara.",
+            ar: "تمت عملية الدفع بنجاح عبر تمارا."
         }
     });
 
+    const getTamaraCheckoutContext = () => {
+        if (typeof window === 'undefined') {
+            return null;
+        }
+        try {
+            const raw = window.localStorage.getItem('tamaraCheckoutContext');
+            return raw ? JSON.parse(raw) : null;
+        } catch (error) {
+            console.error('Failed to parse Tamara checkout context:', error);
+            return null;
+        }
+    };
+
+    const clearTamaraCheckoutContext = () => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        window.localStorage.removeItem('tamaraCheckoutContext');
+    };
+
+    const resolveTamaraMessage = (key) => {
+        const messages = tamaraResponseMessages[key];
+        if (!messages) {
+            return null;
+        }
+        return locale === 'ar' ? messages.ar : messages.en;
+    };
+
     const { orderId, id, type, payment_id, res } = router.query;
 
-    const orderID = orderId || orderId || router.query.orderId || null;
+    const orderID = orderId || router.query.orderId || null;
     const isFreePayment = router.query.freePayment || false;
     const transactionID = id || router.query.id || null;
     const extractedType = type || null;
     const extractedPaymentID = payment_id || null;
-    const tabbyResultedResponse = res || null;
+    const redirectStatus = typeof res === 'string' ? res.toLowerCase() : null;
+    const tabbyResultedResponse = redirectStatus || null;
 
     const [loading, setLoading] = useState(true)
     const [invoiceUrl, setInvoiceUrl] = useState('')
@@ -57,6 +91,38 @@ export default function Payment(props) {
     const dispatch = useDispatch()
 
     const [isLoading, setIsLoading] = useState(true);
+    const [tamaraContext, setTamaraContext] = useState(null);
+    const tamaraVerificationStartedRef = useRef(false);
+    const tamaraPollingTimeoutRef = useRef(null);
+    const TAMARA_SUCCESS_STATUSES = ['AUTHORIZED', 'CLOSED', 'CAPTURED', 'ACCEPTED'];
+    const TAMARA_PENDING_STATUSES = ['PENDING', 'IN_PROGRESS', 'OPEN'];
+    const TAMARA_MAX_POLL_ATTEMPTS = 5;
+    const TAMARA_POLL_INTERVAL = 3000;
+
+    const tamaraContextOrderId = tamaraContext?.orderId || null;
+    const tamaraContextPaymentId = tamaraContext?.tamaraPaymentId || tamaraContext?.paymentId || null;
+    const resolvedTamaraOrderId = orderID || tamaraContextOrderId;
+    const resolvedTamaraPaymentId = extractedPaymentID || tamaraContextPaymentId || null;
+
+    useEffect(() => {
+        return () => {
+            if (tamaraPollingTimeoutRef.current) {
+                clearTimeout(tamaraPollingTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (extractedType === 'tamara') {
+            const context = getTamaraCheckoutContext();
+            if (context) {
+                setTamaraContext(context);
+            }
+        } else if (extractedType) {
+            setTamaraContext(null);
+            clearTamaraCheckoutContext();
+        }
+    }, [extractedType]);
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -78,140 +144,227 @@ export default function Payment(props) {
             getFreePaymentData();
             return;
         }
-        if ((!extractedType && (router.query.orderId && router.query.id)) || (extractedType && orderID && extractedPaymentID)) {
+
+        if (extractedType === 'tamara') {
+            if (redirectStatus === 'cancel' || redirectStatus === 'failure') {
+                const messageKey = redirectStatus === 'cancel' ? 'cancel' : 'failure';
+                const localizedMessage =
+                    resolveTamaraMessage(messageKey) ||
+                    (locale === 'ar'
+                        ? tamaraResponseMessages[messageKey]?.ar
+                        : tamaraResponseMessages[messageKey]?.en) ||
+                    'Payment could not be completed.';
+                setPaymentMessage(localizedMessage);
+                setIsPaymentSuccess(false);
+                setLoading(false);
+                if (tamaraPollingTimeoutRef.current) {
+                    clearTimeout(tamaraPollingTimeoutRef.current);
+                    tamaraPollingTimeoutRef.current = null;
+                }
+                clearTamaraCheckoutContext();
+                tamaraVerificationStartedRef.current = true;
+                return;
+            }
+
+            if ((redirectStatus === 'success' || !redirectStatus) && resolvedTamaraOrderId && resolvedTamaraPaymentId) {
+                if (!tamaraVerificationStartedRef.current) {
+                    tamaraVerificationStartedRef.current = true;
+                    setLoading(true);
+                    getPaymentData(resolvedTamaraOrderId, resolvedTamaraPaymentId, 0);
+                }
+            }
+            return;
+        }
+
+        if ((!extractedType && router.query.orderId && router.query.id) || (extractedType && orderID && extractedPaymentID)) {
             getPaymentData();
         }
-    }, [router.query.orderId, router.query.id])
+    }, [
+        extractedType,
+        redirectStatus,
+        resolvedTamaraOrderId,
+        resolvedTamaraPaymentId,
+        orderID,
+        extractedPaymentID,
+        isFreePayment,
+        router.query.orderId,
+        router.query.id,
+        locale,
+        tamaraResponseMessages,
+    ])
 
-    const getPaymentData = async () => {
+    const getPaymentData = async (overrideOrderId = null, overridePaymentId = null, tamaraAttempt = 0) => {
         if (!extractedType) {
-            let data = {
+            const data = {
                 orderId: router.query.orderId,
                 transactionId: router.query.id,
-            }
+            };
 
-            let paymentData;
-
-            await getPaymentInfoAPI(data).then(async (response) => {
-                ((response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110") ? (fbq.event('Purchase Successfull', { orderId: orderID })) : (fbq.event('Purchase Fail', { orderId: orderID })))
-                setTransactionDetails(response.data)
-                console.log(response.data[0])
-                paymentData = response.data[0];
-                const flag = response.data[0].result.code == "000.000.000" || response.data[0].result.code == "000.100.110" ? true : false;
-                setIsPaymentSuccess(flag);
-                setLoading(false)
-                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey))
-                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' })
-                const [myCourseData] = await Promise.all([getMyCourseReq])
-                dispatch({
-                    type: 'SET_ALL_MYCOURSE',
-                    myCourses: myCourseData?.data,
-                });
-
-                // // If payment is successful, send WhatsApp message
-                // if (flag) {
-                //     await sendWhatsAppMessage(paymentData);
-                // }
-
-            }).catch(async (error) => {
-                setLoading(false)
-            })
-        } else if (extractedType === "tamara") {
-            if (!extractedPaymentID) {
-                console.log("payment_id not found");
-                return;
-            }
-
-            let data = {
-                orderId: orderId,
-                paymentId: extractedPaymentID,
-            }
-            console.log(data);
-
-            let paymentData;
-            await getTamaraPaymentInfoAPI(data).then(async (response) => {
-                setTransactionDetails(response.data);
-                console.log("full response: ", response);
-                console.log("response.data[0]: ", response.data[0]);
-                paymentData = response.data[0];
-                const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED" || response.data[0].status === "CAPTURED");
-
-                setIsPaymentSuccess(flag);
-                if (tabbyResultedResponse !== "success") {
-                    if (tabbyResultedResponse === "cancel") {
-                        setPaymentMessage(tamaraResponseMessages.cancel.ar);
-                    } else {
-                        setPaymentMessage(tamaraResponseMessages.failure.ar);
-                    }
-                } else {
-                    setPaymentMessage(paymentData.messageAR);
-                }
+            try {
+                const response = await getPaymentInfoAPI(data);
+                const paymentData = response.data?.[0];
+                ((paymentData?.result?.code === '000.000.000' || paymentData?.result?.code === '000.100.110')
+                    ? fbq.event('Purchase Successfull', { orderId: orderID })
+                    : fbq.event('Purchase Fail', { orderId: orderID }));
+                setTransactionDetails(response.data || []);
+                const flag = paymentData?.result?.code === '000.000.000' || paymentData?.result?.code === '000.100.110';
+                setIsPaymentSuccess(Boolean(flag));
                 setLoading(false);
-                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
+                setInvoiceUrl(mediaUrl(paymentData?.orderDetails?.invoiceBucket, paymentData?.orderDetails?.invoiceKey));
                 const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
                 const [myCourseData] = await Promise.all([getMyCourseReq]);
                 dispatch({
                     type: 'SET_ALL_MYCOURSE',
                     myCourses: myCourseData?.data,
                 });
-
-                // If payment is successful, send WhatsApp message
-                // if (flag) {
-                //     await sendWhatsAppMessage(paymentData);
-                // }
-
-            }).catch(async (error) => {
+            } catch (error) {
                 setLoading(false);
-            })
-        } else {
-            if (!extractedPaymentID) {
-                console.log("payment_id not found");
-                return;
             }
-
-            let data = {
-                orderId: orderId,
-                paymentId: extractedPaymentID,
-            }
-            console.log(data);
-
-            let paymentData;
-            await getTabbyPaymentInfoAPI(data).then(async (response) => {
-                setTransactionDetails(response.data);
-                console.log("full response: ", response);
-                console.log("response.data[0]: ", response.data[0]);
-                paymentData = response.data[0];
-                const flag = (response.data[0].status === "AUTHORIZED" || response.data[0].status === "CLOSED");
-
-                setIsPaymentSuccess(flag);
-                if (tabbyResultedResponse !== "success") {
-                    if (tabbyResultedResponse === "cancel") {
-                        setPaymentMessage(tabbyResponseMessages.cancel.ar);
-                    } else {
-                        setPaymentMessage(tabbyResponseMessages.failure.ar);
-                    }
-                } else {
-                    setPaymentMessage(paymentData.messageAR);
-                }
-                setLoading(false);
-                setInvoiceUrl(mediaUrl(response.data[0]?.orderDetails?.invoiceBucket, response.data[0]?.orderDetails?.invoiceKey));
-                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
-                const [myCourseData] = await Promise.all([getMyCourseReq]);
-                dispatch({
-                    type: 'SET_ALL_MYCOURSE',
-                    myCourses: myCourseData?.data,
-                });
-
-                // // If payment is successful, send WhatsApp message
-                // if (flag) {
-                //     await sendWhatsAppMessage(paymentData);
-                // }
-
-            }).catch(async (error) => {
-                setLoading(false);
-            })
+            return;
         }
-    }
+
+        if (extractedType === 'tamara') {
+            const targetOrderId = overrideOrderId || orderId || resolvedTamaraOrderId;
+            const targetPaymentId = overridePaymentId || extractedPaymentID || resolvedTamaraPaymentId;
+
+            if (!targetOrderId || !targetPaymentId) {
+                setLoading(false);
+                setPaymentMessage(resolveTamaraMessage('failure') || 'Tamara payment could not be located.');
+                clearTamaraCheckoutContext();
+                setTamaraContext(null);
+                return;
+            }
+
+            const payload = {
+                orderId: targetOrderId,
+                paymentId: targetPaymentId,
+            };
+
+            try {
+                const response = await getTamaraPaymentInfoAPI(payload);
+                const paymentData = response.data?.[0] || null;
+                const status = paymentData?.status;
+                const isSuccessStatus = TAMARA_SUCCESS_STATUSES.includes(status);
+                const isPendingStatus = TAMARA_PENDING_STATUSES.includes(status);
+
+                setTransactionDetails(response.data || []);
+                setIsPaymentSuccess(isSuccessStatus);
+                if (isSuccessStatus) {
+                    fbq.event('Purchase Successfull', { orderId: targetOrderId });
+                } else if (!isPendingStatus && (redirectStatus === 'success' || !redirectStatus)) {
+                    fbq.event('Purchase Fail', { orderId: targetOrderId });
+                }
+
+                if (isPendingStatus && tamaraAttempt < TAMARA_MAX_POLL_ATTEMPTS && (redirectStatus === 'success' || !redirectStatus)) {
+                    if (tamaraPollingTimeoutRef.current) {
+                        clearTimeout(tamaraPollingTimeoutRef.current);
+                    }
+                    tamaraPollingTimeoutRef.current = setTimeout(() => {
+                        getPaymentData(targetOrderId, targetPaymentId, tamaraAttempt + 1);
+                    }, TAMARA_POLL_INTERVAL);
+                    return;
+                }
+
+                if (redirectStatus === 'cancel' || redirectStatus === 'failure') {
+                    const messageKey = redirectStatus === 'cancel' ? 'cancel' : 'failure';
+                    const localizedMessage =
+                        resolveTamaraMessage(messageKey) ||
+                        (locale === 'ar'
+                            ? tamaraResponseMessages[messageKey]?.ar
+                            : tamaraResponseMessages[messageKey]?.en);
+                    setPaymentMessage(localizedMessage || 'Payment could not be completed.');
+                } else if (isSuccessStatus) {
+                    const localizedMessage =
+                        locale === 'ar'
+                            ? paymentData?.messageAR
+                            : paymentData?.messageEn || paymentData?.messageEN || paymentData?.messageAr || paymentData?.messageAR;
+                    setPaymentMessage(localizedMessage || resolveTamaraMessage('success') || 'Payment completed successfully.');
+                } else if (isPendingStatus) {
+                    setPaymentMessage(resolveTamaraMessage('failure') || 'Payment confirmation timed out. Please contact support.');
+                } else {
+                    setPaymentMessage(resolveTamaraMessage('failure') || 'Payment could not be completed.');
+                }
+
+                setLoading(false);
+                setInvoiceUrl(mediaUrl(paymentData?.orderDetails?.invoiceBucket, paymentData?.orderDetails?.invoiceKey));
+                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
+                const [myCourseData] = await Promise.all([getMyCourseReq]);
+                dispatch({
+                    type: 'SET_ALL_MYCOURSE',
+                    myCourses: myCourseData?.data,
+                });
+
+                if (!isPendingStatus) {
+                    if (tamaraPollingTimeoutRef.current) {
+                        clearTimeout(tamaraPollingTimeoutRef.current);
+                        tamaraPollingTimeoutRef.current = null;
+                    }
+                    clearTamaraCheckoutContext();
+                    setTamaraContext(null);
+                }
+            } catch (error) {
+                if (tamaraAttempt < TAMARA_MAX_POLL_ATTEMPTS - 1 && (redirectStatus === 'success' || !redirectStatus)) {
+                    if (tamaraPollingTimeoutRef.current) {
+                        clearTimeout(tamaraPollingTimeoutRef.current);
+                    }
+                    tamaraPollingTimeoutRef.current = setTimeout(() => {
+                        getPaymentData(targetOrderId, targetPaymentId, tamaraAttempt + 1);
+                    }, TAMARA_POLL_INTERVAL);
+                    return;
+                }
+                const fallbackMessage =
+                    resolveTamaraMessage('failure') ||
+                    (locale === 'ar' ? tamaraResponseMessages.failure.ar : tamaraResponseMessages.failure.en) ||
+                    'Payment could not be completed.';
+                setPaymentMessage(fallbackMessage);
+                fbq.event('Purchase Fail', { orderId: targetOrderId });
+                setIsPaymentSuccess(false);
+                setLoading(false);
+                clearTamaraCheckoutContext();
+                setTamaraContext(null);
+            }
+            return;
+        }
+
+        if (!extractedPaymentID) {
+            setLoading(false);
+            setPaymentMessage(tabbyResponseMessages.failure.ar);
+            return;
+        }
+
+        const data = {
+            orderId: orderId,
+            paymentId: extractedPaymentID,
+        };
+
+        try {
+            const response = await getTabbyPaymentInfoAPI(data);
+            const paymentData = response.data?.[0];
+            const flag = paymentData?.status === 'AUTHORIZED' || paymentData?.status === 'CLOSED';
+
+            setTransactionDetails(response.data || []);
+            setIsPaymentSuccess(flag);
+            if (tabbyResultedResponse !== 'success') {
+                if (tabbyResultedResponse === 'cancel') {
+                    setPaymentMessage(tabbyResponseMessages.cancel.ar);
+                } else {
+                    setPaymentMessage(tabbyResponseMessages.failure.ar);
+                }
+            } else {
+                setPaymentMessage(paymentData?.messageAR);
+            }
+            setLoading(false);
+            setInvoiceUrl(mediaUrl(paymentData?.orderDetails?.invoiceBucket, paymentData?.orderDetails?.invoiceKey));
+            const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
+            const [myCourseData] = await Promise.all([getMyCourseReq]);
+            dispatch({
+                type: 'SET_ALL_MYCOURSE',
+                myCourses: myCourseData?.data,
+            });
+        } catch (error) {
+            setLoading(false);
+        }
+    };
 
     const getFreePaymentData = async () => {
         let data = {
@@ -363,7 +516,6 @@ export default function Payment(props) {
     };
 
     const courseType = transactionDetails[0]?.orderDetails?.courseType;
-    console.log(transactionDetails);
     const handleFillInformation = () => {
         router.push({
             pathname: (`/studentInformation`),

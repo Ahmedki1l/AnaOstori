@@ -45,6 +45,14 @@ export const getPaymentInfoAPI = (data) => { return instance.post(`/orders/verif
 export const getFreePaymentInfoAPI = (data) => { return instance.post(`/orders/verifyFreePayment`, data) }
 export const getTabbyPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyTabbyPayment`, data) }
 export const getTamaraPaymentInfoAPI = (data) => { return instance.post(`/orders/verifyTamaraPayment`, data) }
+export const createTamaraCheckoutAPI = (data = {}) => {
+	const payload = {
+		...data,
+		type: 'tamara',
+	};
+
+	return axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, payload);
+}
 
 export const postRouteAPI = (data) => { return instance.post(`/route`, data) }
 

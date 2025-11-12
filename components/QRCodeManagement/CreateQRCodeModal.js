@@ -12,8 +12,12 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
     
     // Course selection fields
     const [selectedCourse, setSelectedCourse] = useState('')
+    const [selectedCourseMeta, setSelectedCourseMeta] = useState(null)
     const [courses, setCourses] = useState([])
     const [loadingCourses, setLoadingCourses] = useState(false)
+    const [lessons, setLessons] = useState([])
+    const [selectedLesson, setSelectedLesson] = useState('')
+    const [loadingLessons, setLoadingLessons] = useState(false)
     
     // Loading state
     const [loading, setLoading] = useState(false)
@@ -36,7 +40,8 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
                 (category.courses || []).map(course => ({
                     id: course.id,
                     name: course.name,
-                    categoryName: category.name
+                    categoryName: category.name,
+                    type: course.type,
                 }))
             )
             
@@ -52,7 +57,8 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
                         (category.courses || []).map(course => ({
                             id: course.id,
                             name: course.name,
-                            categoryName: category.name
+                            categoryName: category.name,
+                            type: course.type,
                         }))
                     )
                     setCourses(allCourses)
@@ -65,6 +71,69 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
             }
         } finally {
             setLoadingCourses(false)
+        }
+    }
+
+    const resetLessonState = () => {
+        setLessons([])
+        setSelectedLesson('')
+    }
+
+    const fetchLessonsForCourse = async (course) => {
+        if (!course || course.type !== 'on-demand') {
+            resetLessonState()
+            return
+        }
+
+        setLoadingLessons(true)
+        setErrors(prev => ({ ...prev, lesson: undefined }))
+
+        const payload = {
+            routeName: 'getCourseCurriculum',
+            courseId: course.id,
+        }
+
+        const request = async () => {
+            const response = await getAuthRouteAPI(payload)
+            const curriculum = response?.data
+            const sectionItems = (curriculum?.sections || [])
+                .sort((a, b) => (a.order || 0) - (b.order || 0))
+                .flatMap((section) => {
+                    const items = (section.items || [])
+                        .sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0))
+                        .map((item) => ({
+                            id: item.id,
+                            name: item.name,
+                            sectionName: section.name,
+                        }))
+                    return items
+                })
+            setLessons(sectionItems)
+        }
+
+        try {
+            await request()
+        } catch (error) {
+            console.error('Error fetching lessons for course:', error)
+            if (error?.response?.status === 401) {
+                try {
+                    await getNewToken()
+                    await request()
+                } catch (refreshError) {
+                    console.error('Token refresh failed while fetching lessons:', refreshError)
+                    setErrors(prev => ({
+                        ...prev,
+                        lesson: 'فشل في تحميل الدروس. يرجى المحاولة مرة أخرى.',
+                    }))
+                }
+            } else {
+                setErrors(prev => ({
+                    ...prev,
+                    lesson: 'فشل في تحميل الدروس. يرجى المحاولة مرة أخرى.',
+                }))
+            }
+        } finally {
+            setLoadingLessons(false)
         }
     }
 
@@ -112,11 +181,22 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
                 setErrors({ course: 'الدورة غير موجودة' })
                 return
             }
+
+            if (course.type === 'on-demand') {
+                if (!selectedLesson) {
+                    setErrors({ lesson: 'اختر درساً من الدورة' })
+                    return
+                }
+            }
             
             // Build URL from category and course name with proper encoding
-            const courseUrlName = course.name.replace(/ /g, '-')
-            const categoryUrlName = course.categoryName.replace(/ /g, '-')
-            finalUrl = `${window.location.origin}/${encodeURIComponent(courseUrlName)}/${encodeURIComponent(categoryUrlName)}`
+            if (course.type === 'on-demand' && selectedLesson) {
+                finalUrl = `${window.location.origin}/myCourse?courseId=${encodeURIComponent(course.id)}&itemId=${encodeURIComponent(selectedLesson)}`
+            } else {
+                const courseUrlName = course.name.replace(/ /g, '-')
+                const categoryUrlName = course.categoryName.replace(/ /g, '-')
+                finalUrl = `${window.location.origin}/${encodeURIComponent(courseUrlName)}/${encodeURIComponent(categoryUrlName)}`
+            }
             finalBookName = course.name
         }
 
@@ -137,9 +217,26 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
         // Clear form fields when switching tabs
         if (tab === 'manual') {
             setSelectedCourse('')
+            setSelectedCourseMeta(null)
+            resetLessonState()
         } else {
             setBookName('')
             setUrl('')
+        }
+    }
+
+    const handleCourseChange = async (courseId) => {
+        setSelectedCourse(courseId)
+        setErrors(prev => ({ ...prev, course: undefined }))
+        setSelectedLesson('')
+
+        const course = courses.find(c => c.id === courseId) || null
+        setSelectedCourseMeta(course || null)
+
+        if (course?.type === 'on-demand') {
+            await fetchLessonsForCourse(course)
+        } else {
+            resetLessonState()
         }
     }
 
@@ -207,17 +304,42 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
                                 <>
                                     <select
                                         value={selectedCourse}
-                                        onChange={(e) => setSelectedCourse(e.target.value)}
+                                        onChange={(e) => handleCourseChange(e.target.value)}
                                         disabled={loading || loadingCourses}
                                     >
                                         <option value="">— اختر دورة —</option>
                                         {courses.map(course => (
                                             <option key={course.id} value={course.id}>
-                                                {course.name}
+                                                {course.name}{course.type === 'on-demand' ? ' (مسجلة)' : ''}
                                             </option>
                                         ))}
                                     </select>
                                     {errors.course && <span className={styles.error}>{errors.course}</span>}
+                                    {selectedCourseMeta?.type === 'on-demand' && (
+                                        <div className={styles.formGroup}>
+                                            <label>اختر درساً:</label>
+                                            {loadingLessons ? (
+                                                <div className={styles.loadingText}>جاري تحميل الدروس...</div>
+                                            ) : (
+                                                <select
+                                                    value={selectedLesson}
+                                                    onChange={(e) => setSelectedLesson(e.target.value)}
+                                                    disabled={loading || loadingLessons}
+                                                >
+                                                    <option value="">— اختر درساً —</option>
+                                                    {lessons.map((lesson) => (
+                                                        <option key={lesson.id} value={lesson.id}>
+                                                            {lesson.sectionName ? `${lesson.sectionName} - ${lesson.name}` : lesson.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            )}
+                                            {errors.lesson && <span className={styles.error}>{errors.lesson}</span>}
+                                            {!loadingLessons && selectedCourse && lessons.length === 0 && (
+                                                <p className={styles.helperText}>لم يتم العثور على دروس لهذه الدورة.</p>
+                                            )}
+                                        </div>
+                                    )}
                                     {selectedCourse && (
                                         <div className={styles.coursePreview}>
                                             <p className={styles.previewLabel}>الرابط المُنشأ:</p>
@@ -225,6 +347,9 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
                                                 {(() => {
                                                     const course = courses.find(c => c.id === selectedCourse)
                                                     if (!course) return ''
+                                                    if (course.type === 'on-demand' && selectedLesson) {
+                                                        return `${window.location.origin}/myCourse?courseId=${encodeURIComponent(course.id)}&itemId=${encodeURIComponent(selectedLesson)}`
+                                                    }
                                                     const courseName = course.name.replace(/ /g, '-')
                                                     const categoryName = course.categoryName.replace(/ /g, '-')
                                                     return `${window.location.origin}/${encodeURIComponent(courseName)}/${encodeURIComponent(categoryName)}`

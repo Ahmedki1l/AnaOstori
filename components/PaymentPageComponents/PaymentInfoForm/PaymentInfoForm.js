@@ -14,7 +14,7 @@ import * as fbq from '../../../lib/fpixel'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { inputErrorMessages, inputSuccessMessages } from '../../../constants/ar'
 import { mediaUrl } from '../../../constants/DataManupulation'
-import { getRouteAPI } from '../../../services/apisService'
+import { getRouteAPI, createTamaraCheckoutAPI } from '../../../services/apisService'
 import * as PaymentConst from '../../../constants/PaymentConst'
 // import TabbyPomoForm from './TabbyPromo'
 // import TabbyCheckoutForm from './TabbyCheckout'
@@ -26,15 +26,11 @@ export default function PaymentInfoForm(props) {
 	const createdOrder = props.createdOrder
 	const studentsData = props.studentsData
 	const courseId = props.courseId
-	
-	// Debug logging to check createdOrder data
-	console.log('PaymentInfoForm - createdOrder:', createdOrder);
-	console.log('PaymentInfoForm - totalPrice:', createdOrder?.totalPrice);
-	console.log('PaymentInfoForm - totalVat:', createdOrder?.totalVat);
 	const bankDetails = PaymentConst.bankDetails
 	const noOfUser = PaymentConst.noOfUsersTag2
 	const numberOfUser = PaymentConst.noOfUsersTag3
 	const router = useRouter()
+	const selectedLocale = router.locale || 'ar'
 	const screenWidth = useWindowSize().width
 	const isSmallScreen = useWindowSize().smallScreen
 
@@ -43,13 +39,23 @@ export default function PaymentInfoForm(props) {
 	const [couponAppliedData, setCouponAppliedData] = useState();
 	const [checkoutID, setCheckoutId] = useState(props.checkoutId);
 	const [tabbyUrl, setTabbyUrl] = useState(null);
-	const [tamaraUrl, setTamaraUrl] = useState(null);
 	const [freePayment, setFreePayment] = useState(false);
 	const [tabbyStatus, setTabbyStatus] = useState('');
 	const [tabbyRejectionReason, setTabbyRejectionReason] = useState('');
 	const [paymentType, setPaymentType] = useState('');
 	const [isCanMakePayments, setIsCanMakePayments] = useState(false);
 	const [hyperPayIntegrity, setHyperPayIntegrity] = useState(null);
+	const [tamaraLabel, setTamaraLabel] = useState(null);
+	const [tamaraAvailability, setTamaraAvailability] = useState({ status: 'unknown', message: '' });
+	const [tamaraCheckoutLoading, setTamaraCheckoutLoading] = useState(false);
+	const tamaraFallbackCopy = {
+		ar: 'تمارا غير متاحة لهذا المبلغ.',
+		en: 'Tamara is not available for this amount.',
+	};
+	const tamaraGenericErrorCopy = {
+		ar: 'حدث خطأ أثناء إنشاء جلسة تمارا. يرجى المحاولة مرة أخرى.',
+		en: 'Something went wrong while starting the Tamara checkout. Please try again.',
+	};
 
 	const [tabbyPreScoringMessages, setTabbyPreScoringMessages] = useState({
 		not_available: {
@@ -66,10 +72,20 @@ export default function PaymentInfoForm(props) {
 		}
 	})
 
+	const clearSelectedPaymentRadio = () => {
+		if (typeof document === 'undefined') {
+			return;
+		}
+		const selected = document.querySelector('input[type=radio][name=paymentDetails]:checked');
+		if (selected) {
+			selected.checked = false;
+		}
+	};
+
 	const generateCheckoutId = async (type) => {
 		fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
 
-		let data = {
+		const basePayload = {
 			orderId: createdOrder.id,
 			withcoupon: couponAppliedData ? true : false,
 			couponId: couponAppliedData ? couponAppliedData.id : null,
@@ -77,12 +93,71 @@ export default function PaymentInfoForm(props) {
 			peopleBody: createdOrder?.orderItems?.length,
 		};
 
+		if (type === 'tamara') {
+			setTamaraCheckoutLoading(true);
+			try {
+				const response = await createTamaraCheckoutAPI(basePayload);
+				const checkoutResult = response?.data?.[0];
+				const orderDetails = response?.data?.[1];
+				const availableLabels = checkoutResult?.tamaraOptions?.available_payment_labels || [];
+
+				if (!availableLabels.length) {
+					setTamaraAvailability({
+						status: 'unavailable',
+						message: selectedLocale === 'ar' ? tamaraFallbackCopy.ar : tamaraFallbackCopy.en,
+					});
+					setTamaraLabel(null);
+					setCheckoutId(null);
+					setPaymentType('');
+					clearSelectedPaymentRadio();
+					toast.info(selectedLocale === 'ar' ? tamaraFallbackCopy.ar : tamaraFallbackCopy.en);
+					window.localStorage.removeItem('tamaraCheckoutContext');
+					return;
+				}
+
+				setTamaraAvailability({ status: 'available', message: '' });
+				setPaymentType('tamara');
+				setCheckoutId(checkoutResult?.id || null);
+				setTamaraLabel(availableLabels[0]);
+				setHyperPayIntegrity(null);
+				setTabbyUrl(null);
+
+				const tamaraContext = {
+					orderId: orderDetails?.id || createdOrder.id,
+					checkoutId: checkoutResult?.id,
+					ndc: checkoutResult?.ndc,
+					timestamp: Date.now(),
+					availablePaymentLabels: availableLabels,
+					tamaraPaymentId: orderDetails?.tamaraPaymentId || orderDetails?.paymentId || null,
+				};
+
+				window.localStorage.setItem('tamaraCheckoutContext', JSON.stringify(tamaraContext));
+			} catch (error) {
+				console.error('Error generating Tamara checkout ID:', error);
+				setTamaraAvailability({
+					status: 'error',
+					message: selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en,
+				});
+				setTamaraLabel(null);
+				setCheckoutId(null);
+				setPaymentType('');
+				clearSelectedPaymentRadio();
+				toast.error(selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en);
+				window.localStorage.removeItem('tamaraCheckoutContext');
+			} finally {
+				setTamaraCheckoutLoading(false);
+			}
+			return;
+		}
+
 		let res;
 		try {
-			res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, data);
+			res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, basePayload);
 			if (res.status === 200) {
 				setPaymentType(type);
 				setCheckoutId(res.data[0]?.id);
+				setTamaraLabel(null);
+				setTamaraAvailability({ status: 'unknown', message: '' });
 				if (type === "tabby") {
 					if (res.data[0]?.url !== "") {
 						setTabbyUrl(res.data[0]?.url);
@@ -102,21 +177,12 @@ export default function PaymentInfoForm(props) {
 							toast.error(`حاول مرة أخرى`);
 						}
 					}
-				} else if (type === "tamara") {
-					if (res.data[0]?.url !== "") {
-						// For Tamara, we'll handle the redirect in the TamaraCheckoutForm component
-						console.log('Tamara checkout URL:', res.data[0]?.url);
-						setTamaraUrl(res.data[0]?.url);
-					} else {
-						toast.error('فشل في إنشاء جلسة الدفع مع تمارا. يرجى المحاولة مرة أخرى.');
-					}
 				} else {
 					setHyperPayIntegrity(res.data[2]);
 				}
 			}
 		} catch (error) {
-			console.log(res);
-			console.error("Error generating checkout ID:", error);
+			console.error(`Error generating checkout ID for ${type}:`, error);
 		}
 	};
 
@@ -390,32 +456,71 @@ export default function PaymentInfoForm(props) {
 						</label>
 						
 						{/* Tamara Payment Option */}
-						<input type="radio" id="tamaraPay" name="paymentDetails" className="hidden peer" onClick={() => generateCheckoutId('tamara')} />
-						<label htmlFor="tamaraPay" className='relative'>
-							<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2}`}>
-								<div className='flex items-center'>
-									<div className={styles.circle}><div></div></div>
-									<p className={`fontMedium ${styles.labelText}`}>ادفع لاحقاً مع تمارا</p>
-								</div>
-								<div style={{ width: '70px', height: '40px', backgroundColor: '#6366F1', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>
-									TAMARA
+						{tamaraAvailability.status !== 'unavailable' && (
+							<>
+								<input
+									type="radio"
+									id="tamaraPay"
+									name="paymentDetails"
+									className="hidden peer"
+									onClick={() => generateCheckoutId('tamara')}
+									disabled={tamaraCheckoutLoading}
+								/>
+								<label htmlFor="tamaraPay" className='relative'>
+									<div className={`${styles.radioBtnBox} ${styles.radioBtnBox2} ${tamaraCheckoutLoading ? styles.radioBtnDisabled : ''}`}>
+										<div className='flex items-center'>
+											<div className={styles.circle}><div></div></div>
+											<p className={`fontMedium ${styles.labelText}`}>ادفع لاحقاً مع تمارا</p>
+										</div>
+										<div style={{ width: '70px', height: '40px', backgroundColor: '#6366F1', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>
+											TAMARA
+										</div>
+									</div>
+									{tamaraLabel && paymentType === 'tamara' && !tamaraCheckoutLoading && (
+										<p className={styles.tamaraCopyPreview}>
+											{selectedLocale === 'ar'
+												? (tamaraLabel.description_ar || tamaraLabel.description_en)
+												: (tamaraLabel.description_en || tamaraLabel.description_ar)}
+										</p>
+									)}
+									<div className={styles.creditCardWrapper}>
+										{tamaraCheckoutLoading && (
+											<div className={styles.tamaraLoadingState}>
+												<span>{selectedLocale === 'ar' ? 'جارٍ تجهيز خيار تمارا...' : 'Preparing Tamara checkout…'}</span>
+											</div>
+										)}
+										{(checkoutID && paymentType === 'tamara') && (
+											<TamaraCheckoutForm
+												orderId={createdOrder.id}
+												checkoutId={checkoutID}
+												tamaraLabel={tamaraLabel}
+												selectedLocale={selectedLocale}
+												onError={(error) => {
+													console.error('Tamara payment error:', error);
+													toast.error(selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en);
+													setTamaraAvailability({
+														status: 'error',
+														message: selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en,
+													});
+												}}
+											/>
+										)}
+									</div>
+								</label>
+							</>
+						)}
+						{tamaraAvailability.status === 'unavailable' && (
+							<div className={styles.tamaraUnavailableBox}>
+								<div className={styles.tamaraUnavailableMessage}>
+									{tamaraAvailability.message}
 								</div>
 							</div>
-							<div className={styles.creditCardWrapper}>
-								{(checkoutID && paymentType === 'tamara') && (
-									<TamaraCheckoutForm
-										orderId={createdOrder.id}
-										amount={Number(createdOrder.totalPrice) + Number(createdOrder.totalVat)}
-										couponAppliedData={couponAppliedData}
-										tamaraUrl={tamaraUrl}
-										onError={(error) => {
-											console.error('Tamara payment error:', error);
-											toast.error('حدث خطأ أثناء إنشاء جلسة الدفع مع تمارا. يرجى المحاولة مرة أخرى.');
-										}}
-									/>
-								)}
-							</div>
-						</label>
+						)}
+						{tamaraAvailability.status === 'error' && tamaraAvailability.message && (
+							<p className={`${styles.tamaraMessage} ${styles.tamaraMessageError}`}>
+								{tamaraAvailability.message}
+							</p>
+						)}
 						{zeroCostFlag && <>
 							<input type="radio" id="freePayment" name="paymentDetails" className="hidden peer" onClick={() => handleFreePayment()} />
 							<label htmlFor="freePayment" className='relative'>
