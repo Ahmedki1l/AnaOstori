@@ -476,13 +476,6 @@ export default function PaymentInfoForm(props) {
 											TAMARA
 										</div>
 									</div>
-									{tamaraLabel && paymentType === 'tamara' && !tamaraCheckoutLoading && (
-										<p className={styles.tamaraCopyPreview}>
-											{selectedLocale === 'ar'
-												? (tamaraLabel.description_ar || tamaraLabel.description_en)
-												: (tamaraLabel.description_en || tamaraLabel.description_ar)}
-										</p>
-									)}
 									<div className={styles.creditCardWrapper}>
 										{tamaraCheckoutLoading && (
 											<div className={styles.tamaraLoadingState}>
