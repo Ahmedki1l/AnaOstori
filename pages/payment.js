@@ -3,7 +3,7 @@ import Link from 'next/link';
 import * as LinkConst from '../constants/LinkConst'
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI, getTamaraPaymentInfoAPI, getFreePaymentInfoAPI } from '../services/apisService';
+import { getAuthRouteAPI, getPaymentInfoAPI, getTabbyPaymentInfoAPI, getFreePaymentInfoAPI } from '../services/apisService';
 import { dateWithDay, timeDuration2 } from '../constants/DateConverter';
 import * as fbq from '../lib/fpixel'
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
@@ -90,27 +90,13 @@ export default function Payment(props) {
     const [paymentMessage, setPaymentMessage] = useState('Payment Fail');
     const dispatch = useDispatch()
 
-    const [isLoading, setIsLoading] = useState(true);
     const [tamaraContext, setTamaraContext] = useState(null);
     const tamaraVerificationStartedRef = useRef(false);
-    const tamaraPollingTimeoutRef = useRef(null);
-    const TAMARA_SUCCESS_STATUSES = ['AUTHORIZED', 'CLOSED', 'CAPTURED', 'ACCEPTED'];
-    const TAMARA_PENDING_STATUSES = ['PENDING', 'IN_PROGRESS', 'OPEN'];
-    const TAMARA_MAX_POLL_ATTEMPTS = 5;
-    const TAMARA_POLL_INTERVAL = 3000;
 
     const tamaraContextOrderId = tamaraContext?.orderId || null;
     const tamaraContextPaymentId = tamaraContext?.tamaraPaymentId || tamaraContext?.paymentId || null;
     const resolvedTamaraOrderId = orderID || tamaraContextOrderId;
     const resolvedTamaraPaymentId = extractedPaymentID || tamaraContextPaymentId || transactionID || null;
-
-    useEffect(() => {
-        return () => {
-            if (tamaraPollingTimeoutRef.current) {
-                clearTimeout(tamaraPollingTimeoutRef.current);
-            }
-        };
-    }, []);
 
     useEffect(() => {
         if (extractedType === 'tamara') {
@@ -126,7 +112,7 @@ export default function Payment(props) {
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
-            if (isLoading) {
+            if (loading) {
                 event.preventDefault();
                 alert('Please wait for the payment to complete');
                 event.returnValue = '';
@@ -137,7 +123,7 @@ export default function Payment(props) {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, [isLoading]);
+    }, [loading]);
 
     useEffect(() => {
         if (isFreePayment && orderID) {
@@ -157,20 +143,19 @@ export default function Payment(props) {
                 setPaymentMessage(localizedMessage);
                 setIsPaymentSuccess(false);
                 setLoading(false);
-                if (tamaraPollingTimeoutRef.current) {
-                    clearTimeout(tamaraPollingTimeoutRef.current);
-                    tamaraPollingTimeoutRef.current = null;
-                }
                 clearTamaraCheckoutContext();
                 tamaraVerificationStartedRef.current = true;
                 return;
             }
 
-            if ((redirectStatus === 'success' || !redirectStatus) && resolvedTamaraOrderId && resolvedTamaraPaymentId) {
+            const targetOrderId = resolvedTamaraOrderId;
+            const targetTransactionId = transactionID || resolvedTamaraPaymentId;
+
+            if ((redirectStatus === 'success' || !redirectStatus) && targetOrderId && targetTransactionId) {
                 if (!tamaraVerificationStartedRef.current) {
                     tamaraVerificationStartedRef.current = true;
                     setLoading(true);
-                    getPaymentData(resolvedTamaraOrderId, resolvedTamaraPaymentId, 0);
+                    getPaymentData(targetOrderId, targetTransactionId);
                 }
             }
             return;
@@ -193,19 +178,29 @@ export default function Payment(props) {
         tamaraResponseMessages,
     ])
 
-    const getPaymentData = async (overrideOrderId = null, overridePaymentId = null, tamaraAttempt = 0) => {
-        if (!extractedType) {
+    const getPaymentData = async (overrideOrderId = null, overridePaymentId = null) => {
+        const shouldUseHyperpayFlow = !extractedType || extractedType === 'tamara';
+
+        if (shouldUseHyperpayFlow) {
+            const targetOrderId = overrideOrderId || orderID || router.query.orderId || resolvedTamaraOrderId;
+            const targetTransactionId = overridePaymentId || transactionID || router.query.id || resolvedTamaraPaymentId;
+
+            if (!targetOrderId || !targetTransactionId) {
+                setLoading(false);
+                return;
+            }
+
             const data = {
-                orderId: router.query.orderId,
-                transactionId: router.query.id,
+                orderId: targetOrderId,
+                transactionId: targetTransactionId,
             };
 
             try {
                 const response = await getPaymentInfoAPI(data);
                 const paymentData = response.data?.[0];
                 ((paymentData?.result?.code === '000.000.000' || paymentData?.result?.code === '000.100.110')
-                    ? fbq.event('Purchase Successfull', { orderId: orderID })
-                    : fbq.event('Purchase Fail', { orderId: orderID }));
+                    ? fbq.event('Purchase Successfull', { orderId: targetOrderId })
+                    : fbq.event('Purchase Fail', { orderId: targetOrderId }));
                 setTransactionDetails(response.data || []);
                 const flag = paymentData?.result?.code === '000.000.000' || paymentData?.result?.code === '000.100.110';
                 setIsPaymentSuccess(Boolean(flag));
@@ -217,111 +212,16 @@ export default function Payment(props) {
                     type: 'SET_ALL_MYCOURSE',
                     myCourses: myCourseData?.data,
                 });
-            } catch (error) {
-                setLoading(false);
-            }
-            return;
-        }
-
-        if (extractedType === 'tamara') {
-            const targetOrderId = overrideOrderId || orderId || resolvedTamaraOrderId;
-            const targetPaymentId = overridePaymentId || extractedPaymentID || resolvedTamaraPaymentId;
-
-            if (!targetOrderId || !targetPaymentId) {
-                setLoading(false);
-                setPaymentMessage(resolveTamaraMessage('failure') || 'Tamara payment could not be located.');
-                clearTamaraCheckoutContext();
-                setTamaraContext(null);
-                return;
-            }
-
-            const payload = {
-                orderId: targetOrderId,
-                paymentId: targetPaymentId,
-            };
-
-            try {
-                const response = await getTamaraPaymentInfoAPI(payload);
-                const paymentData = response.data?.[0] || null;
-                const status = paymentData?.status;
-                const isSuccessStatus = TAMARA_SUCCESS_STATUSES.includes(status);
-                const isPendingStatus = TAMARA_PENDING_STATUSES.includes(status);
-
-                setTransactionDetails(response.data || []);
-                setIsPaymentSuccess(isSuccessStatus);
-                if (isSuccessStatus) {
-                    fbq.event('Purchase Successfull', { orderId: targetOrderId });
-                } else if (!isPendingStatus && (redirectStatus === 'success' || !redirectStatus)) {
-                    fbq.event('Purchase Fail', { orderId: targetOrderId });
-                }
-
-                if (isPendingStatus && tamaraAttempt < TAMARA_MAX_POLL_ATTEMPTS && (redirectStatus === 'success' || !redirectStatus)) {
-                    if (tamaraPollingTimeoutRef.current) {
-                        clearTimeout(tamaraPollingTimeoutRef.current);
-                    }
-                    tamaraPollingTimeoutRef.current = setTimeout(() => {
-                        getPaymentData(targetOrderId, targetPaymentId, tamaraAttempt + 1);
-                    }, TAMARA_POLL_INTERVAL);
-                    return;
-                }
-
-                if (redirectStatus === 'cancel' || redirectStatus === 'failure') {
-                    const messageKey = redirectStatus === 'cancel' ? 'cancel' : 'failure';
-                    const localizedMessage =
-                        resolveTamaraMessage(messageKey) ||
-                        (locale === 'ar'
-                            ? tamaraResponseMessages[messageKey]?.ar
-                            : tamaraResponseMessages[messageKey]?.en);
-                    setPaymentMessage(localizedMessage || 'Payment could not be completed.');
-                } else if (isSuccessStatus) {
-                    const localizedMessage =
-                        locale === 'ar'
-                            ? paymentData?.messageAR
-                            : paymentData?.messageEn || paymentData?.messageEN || paymentData?.messageAr || paymentData?.messageAR;
-                    setPaymentMessage(localizedMessage || resolveTamaraMessage('success') || 'Payment completed successfully.');
-                } else if (isPendingStatus) {
-                    setPaymentMessage(resolveTamaraMessage('failure') || 'Payment confirmation timed out. Please contact support.');
-                } else {
-                    setPaymentMessage(resolveTamaraMessage('failure') || 'Payment could not be completed.');
-                }
-
-                setLoading(false);
-                setInvoiceUrl(mediaUrl(paymentData?.orderDetails?.invoiceBucket, paymentData?.orderDetails?.invoiceKey));
-                const getMyCourseReq = getAuthRouteAPI({ routeName: 'myCourses' });
-                const [myCourseData] = await Promise.all([getMyCourseReq]);
-                dispatch({
-                    type: 'SET_ALL_MYCOURSE',
-                    myCourses: myCourseData?.data,
-                });
-
-                if (!isPendingStatus) {
-                    if (tamaraPollingTimeoutRef.current) {
-                        clearTimeout(tamaraPollingTimeoutRef.current);
-                        tamaraPollingTimeoutRef.current = null;
-                    }
+                if (extractedType === 'tamara') {
                     clearTamaraCheckoutContext();
                     setTamaraContext(null);
                 }
             } catch (error) {
-                if (tamaraAttempt < TAMARA_MAX_POLL_ATTEMPTS - 1 && (redirectStatus === 'success' || !redirectStatus)) {
-                    if (tamaraPollingTimeoutRef.current) {
-                        clearTimeout(tamaraPollingTimeoutRef.current);
-                    }
-                    tamaraPollingTimeoutRef.current = setTimeout(() => {
-                        getPaymentData(targetOrderId, targetPaymentId, tamaraAttempt + 1);
-                    }, TAMARA_POLL_INTERVAL);
-                    return;
-                }
-                const fallbackMessage =
-                    resolveTamaraMessage('failure') ||
-                    (locale === 'ar' ? tamaraResponseMessages.failure.ar : tamaraResponseMessages.failure.en) ||
-                    'Payment could not be completed.';
-                setPaymentMessage(fallbackMessage);
-                fbq.event('Purchase Fail', { orderId: targetOrderId });
-                setIsPaymentSuccess(false);
                 setLoading(false);
-                clearTamaraCheckoutContext();
-                setTamaraContext(null);
+                if (extractedType === 'tamara') {
+                    clearTamaraCheckoutContext();
+                    setTamaraContext(null);
+                }
             }
             return;
         }
