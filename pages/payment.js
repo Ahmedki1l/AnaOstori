@@ -102,7 +102,7 @@ export default function Payment(props) {
     const tamaraContextOrderId = tamaraContext?.orderId || null;
     const tamaraContextPaymentId = tamaraContext?.tamaraPaymentId || tamaraContext?.paymentId || null;
     const resolvedTamaraOrderId = orderID || tamaraContextOrderId;
-    const resolvedTamaraPaymentId = extractedPaymentID || tamaraContextPaymentId || null;
+    const resolvedTamaraPaymentId = extractedPaymentID || tamaraContextPaymentId || transactionID || null;
 
     useEffect(() => {
         return () => {
