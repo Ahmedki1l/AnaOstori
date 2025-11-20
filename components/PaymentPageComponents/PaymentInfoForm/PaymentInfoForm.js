@@ -6,6 +6,7 @@ import BankDetailsCard from '../../CommonComponents/BankDetailCard/BankDetailsCa
 import CoverImg from '../../CommonComponents/CoverImg'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import Image from 'next/legacy/image'
 import CreditCardDetailForm from './CreditCardDetailForm'
 import MadaCardDetailForm from './MadaCardDetailForm'
 import ApplePayForm from './ApplePayForm'
@@ -472,8 +473,8 @@ export default function PaymentInfoForm(props) {
 											<div className={styles.circle}><div></div></div>
 											<p className={`fontMedium ${styles.labelText}`}>ادفع لاحقاً مع تمارا</p>
 										</div>
-										<div style={{ width: '70px', height: '40px', backgroundColor: '#6366F1', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>
-											TAMARA
+										<div style={{ width: '70px', height: '40px', position: 'relative' }}>
+											<Image src="/logos/Tamara.png" alt="Tamara Payment Logo" layout="fill" objectFit="contain" />
 										</div>
 									</div>
 									<div className={styles.creditCardWrapper}>
