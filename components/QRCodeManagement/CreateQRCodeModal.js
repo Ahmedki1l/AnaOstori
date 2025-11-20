@@ -192,12 +192,21 @@ export default function CreateQRCodeModal({ onSave, onClose }) {
             // Build URL from category and course name with proper encoding
             if (course.type === 'on-demand' && selectedLesson) {
                 finalUrl = `${window.location.origin}/myCourse?courseId=${encodeURIComponent(course.id)}&itemId=${encodeURIComponent(selectedLesson)}`
+                
+                // الحصول على اسم الدرس المحدد
+                const selectedLessonData = lessons.find(l => l.id === selectedLesson)
+                if (selectedLessonData) {
+                    // عنوان الباركود: اسم الدرس - اسم الدورة
+                    finalBookName = `${selectedLessonData.name} - ${course.name}`
+                } else {
+                    finalBookName = course.name
+                }
             } else {
                 const courseUrlName = course.name.replace(/ /g, '-')
                 const categoryUrlName = course.categoryName.replace(/ /g, '-')
                 finalUrl = `${window.location.origin}/${encodeURIComponent(courseUrlName)}/${encodeURIComponent(categoryUrlName)}`
+                finalBookName = course.name
             }
-            finalBookName = course.name
         }
 
         setLoading(true)

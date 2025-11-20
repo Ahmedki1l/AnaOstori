@@ -49,6 +49,7 @@ function MyApp({ Component, pageProps }) {
 		'/payment',
 		'/receiveRequest',
 		'/instructorPanel',
+		'/myCourse',
 	], []);
 
 	const isUserInstructor = storeData?.isUserInstructor
@@ -61,7 +62,7 @@ function MyApp({ Component, pageProps }) {
 	}, [router, isUserInstructor]);
 
 	useEffect(() => {
-		if (!isUserLogin && protectedRoutes.includes(router.pathname)) {
+		if (!isUserLogin && (protectedRoutes.includes(router.pathname) || router.pathname === '/myCourse')) {
 			if (router.asPath !== '/login') {
 				router.replace('/login');
 			}

@@ -30,7 +30,13 @@ const Index = () => {
     const [ccSections, setCCSections] = useState()
     const [isAllItemsCompleted, setIsAllItemsCompleted] = useState(false)
     const [selectedTab, setSelectedTab] = useState(1)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null) // 'auth' | 'notEnrolled' | 'general' | null
     const smallScreen = useWindowSize().smallScreen
+    
+    // التحقق من تسجيل الدخول
+    const isUserLogin = typeof window !== 'undefined' && localStorage?.getItem('accessToken') ? true : false;
+    
     const enrollmentId = storeData?.myCourses?.find((course) => {
         return course.courseId = courseID
     })?.id
@@ -153,8 +159,16 @@ const Index = () => {
     }
 
     useEffect(() => {
+        // التحقق من تسجيل الدخول أولاً
+        if (!isUserLogin) {
+            router.replace('/login')
+            return
+        }
+
         if (courseID) {
             const getPageProps = async () => {
+                setLoading(true)
+                setError(null)
                 let couresCurriculumParams = {
                     routeName: 'getCourseCurriculum',
                     courseId: courseID,
@@ -180,28 +194,65 @@ const Index = () => {
                         courseProgressReq,
                         completedCourseItemReq
                     ])
+                    
+                    // التحقق من الاشتراك في الدورة
+                    if (!courseCurriculum.data?.enrollment) {
+                        setError('notEnrolled')
+                        setLoading(false)
+                        // إعادة التوجيه إلى الصفحة الرئيسية بعد 2 ثانية
+                        setTimeout(() => {
+                            router.replace('/')
+                        }, 2000)
+                        return
+                    }
+                    
                     setCourseCurriculum(courseCurriculum.data)
-                    if (courseCurriculum.data?.enrollment != null) { setIsUserEnrolled(true) }
+                    setIsUserEnrolled(true)
                     setCCSections(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
                     setCompletedCourseItem(completedCourseItem.data)
                     setFilesInCourse(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)?.flatMap((section) => section?.items?.filter((item) => item.type === 'file')))
                     markCourseCompleteHandler(completedCourseItem.data, courseCurriculum.data)
                     setNewSelectedCourseItem(courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order)[0]?.items?.sort((a, b) => a.sectionItem.order - b.sectionItem.order)[0])
                     getCurrentItemId(completedCourseItem.data, courseCurriculum?.data?.sections?.sort((a, b) => a.order - b.order))
+                    setLoading(false)
 
                 } catch (error) {
+                    console.error('Error loading course:', error)
+                    setLoading(false)
+                    
                     if (error?.response?.status == 401) {
-                        await getNewToken().then(async (token) => {
+                        // غير مسجل دخول - حاول تجديد التوكن
+                        try {
+                            await getNewToken()
+                            // إعادة المحاولة بعد تجديد التوكن
                             getPageProps()
-                        })
+                        } catch (refreshError) {
+                            console.error('Token refresh failed:', refreshError)
+                            setError('auth')
+                            // إعادة التوجيه إلى صفحة تسجيل الدخول
+                            setTimeout(() => {
+                                router.replace('/login')
+                            }, 1500)
+                        }
+                    } else if (error?.response?.status == 403 || error?.response?.status == 404) {
+                        // المستخدم غير مشترك في الدورة أو الدورة غير موجودة
+                        setError('notEnrolled')
+                        setTimeout(() => {
+                            router.replace('/')
+                        }, 2000)
+                    } else {
+                        // خطأ عام
+                        setError('general')
                     }
                 }
             }
             setExpandedSection(0)
             getPageProps()
 
+        } else {
+            setLoading(false)
         }
-    }, [courseID])
+    }, [courseID, isUserLogin])
 
     const getCurrentItemId = (watchedItems, ccSections) => {
         if (queryItemID) {
@@ -230,12 +281,48 @@ const Index = () => {
 
     return (
         <>
-            {!courseCurriculum ?
-                <div className='flex justify-center items-center'>
+            {loading ?
+                <div className='flex justify-center items-center min-h-screen'>
                     <Spinner />
                 </div>
-                :
-                isUserEnrolled ?
+                : error === 'auth' ?
+                    <div className='flex justify-center items-center min-h-screen'>
+                        <div className='text-center p-8'>
+                            <AllIconsComponenet iconName={'alertIcon'} height={56} width={56} color={'#E5342F'} />
+                            <h1 className='text-2xl font-bold mb-4 mt-4'>يرجى تسجيل الدخول</h1>
+                            <p className='mb-4'>يتم التوجيه إلى صفحة تسجيل الدخول...</p>
+                            <Spinner />
+                        </div>
+                    </div>
+                    : error === 'notEnrolled' ?
+                        <div className='flex justify-center items-center min-h-screen'>
+                            <div className='text-center p-8 max-w-md mx-auto'>
+                                <AllIconsComponenet iconName={'alertIcon'} height={56} width={56} color={'#E5342F'} />
+                                <h1 className='text-2xl font-bold mb-4 mt-4'>غير مشترك في الدورة</h1>
+                                <p className='mb-4'>أنت غير مشترك في هذه الدورة. سيتم توجيهك إلى الصفحة الرئيسية...</p>
+                                <Spinner />
+                            </div>
+                        </div>
+                        : error === 'general' ?
+                            <div className='flex justify-center items-center min-h-screen'>
+                                <div className='text-center p-8 max-w-md mx-auto'>
+                                    <AllIconsComponenet iconName={'alertIcon'} height={56} width={56} color={'#E5342F'} />
+                                    <h1 className='text-2xl font-bold mb-4 mt-4'>حدث خطأ</h1>
+                                    <p className='mb-4'>حدث خطأ أثناء تحميل الدورة. يرجى المحاولة مرة أخرى.</p>
+                                    <button 
+                                        onClick={() => router.push('/')}
+                                        className='bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 mt-4'
+                                    >
+                                        العودة إلى الرئيسية
+                                    </button>
+                                </div>
+                            </div>
+                            : !courseCurriculum ?
+                                <div className='flex justify-center items-center min-h-screen'>
+                                    <Spinner />
+                                </div>
+                                :
+                                isUserEnrolled ?
                     <>
                         <div className={styles.courseCurriculumMainArea}>
                             {selectedTab == 1 && <div className={styles.ccSectionsMainArea}>
@@ -334,24 +421,18 @@ const Index = () => {
                         }
                     </>
                     :
-                    <div
-                        style="
-                            position: fixed;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            padding: 1rem 2rem;
-                            background: #fff;
-                            border: 2px solid #060E15;
-                            border-radius: 8px;
-                            font-size: 1.5rem;
-                            font-weight: bold;
-                            color: #060E15;
-                            text-align: center;
-                            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                        "
-                    >
-                        نرجو منك التسجيل في الدورة
+                    <div className='flex justify-center items-center min-h-screen'>
+                        <div className='text-center p-8 max-w-md mx-auto'>
+                            <AllIconsComponenet iconName={'alertIcon'} height={56} width={56} color={'#E5342F'} />
+                            <h1 className='text-2xl font-bold mb-4 mt-4'>غير مشترك في الدورة</h1>
+                            <p className='mb-4'>نرجو منك التسجيل في الدورة أولاً</p>
+                            <button 
+                                onClick={() => router.push('/')}
+                                className='bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 mt-4'
+                            >
+                                العودة إلى الرئيسية
+                            </button>
+                        </div>
                     </div>
             }
         </>
