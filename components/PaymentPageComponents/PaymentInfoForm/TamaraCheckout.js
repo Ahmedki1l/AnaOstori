@@ -74,14 +74,12 @@ export default function TamaraCheckoutForm({
 					{tamaraCopy}
 				</div>
 			)}
-			<div className="min-h-[300px] pb-8 relative">
-				<form
-					ref={formRef}
-					action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?type=tamara&orderId=${orderId}`}
-					className="paymentWidgets"
-					data-brands="TAMARA"
-				/>
-			</div>
+			<form
+				ref={formRef}
+				action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?type=tamara&orderId=${orderId}`}
+				className="paymentWidgets"
+				data-brands="TAMARA"
+			/>
 			<p className="mt-2 text-xs text-center text-gray-500">
 				{locale === 'ar'
 					? 'سيتم توجيهك إلى صفحة تمارا لإتمام عملية الدفع.'
