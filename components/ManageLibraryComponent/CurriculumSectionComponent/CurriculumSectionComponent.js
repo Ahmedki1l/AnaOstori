@@ -5,7 +5,7 @@ import { useState } from 'react'
 import ModelForDeleteItems from '../ModelForDeleteItems/ModelForDeleteItems'
 import ModelForAddItemCurriculum from '../ModelForAddItemCurriculum/ModelForAddItemCurriculum'
 import ModelWithOneInput from '../../CommonComponents/ModelWithOneInput/ModelWithOneInput'
-import { postRouteAPI } from '../../../services/apisService'
+import { postRouteAPI, getRouteAPI } from '../../../services/apisService'
 import { useRouter } from 'next/router'
 import { toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
@@ -114,6 +114,58 @@ const CurriculumSectionComponent = ({ sectionList }) => {
         setEditSectionName(true)
     }
 
+    // دالة لجلب البيانات الكاملة للقسم
+    const refreshSectionData = async () => {
+        const curriculumId = router.query.coursePathId;
+        
+        if (!curriculumId) {
+            console.error('curriculumId not found in router');
+            return;
+        }
+        
+        try {
+            const res = await getRouteAPI({
+                routeName: 'getSection',
+                curriculumId: curriculumId,
+            });
+            
+            if (res?.data) {
+                // ترتيب الأقسام حسب order
+                const sortedSections = res.data.sort((a, b) => (a.order || 0) - (b.order || 0));
+                
+                // ترتيب العناصر داخل كل قسم حسب order
+                const sectionsWithSortedItems = sortedSections.map(section => ({
+                    ...section,
+                    items: (section.items || []).sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0))
+                }));
+                
+                setSectionDetails(sectionsWithSortedItems);
+            }
+        } catch (error) {
+            console.error('Error refreshing section data:', error);
+            if (error?.response?.status == 401) {
+                await getNewToken().then(async (token) => {
+                    try {
+                        const res = await getRouteAPI({
+                            routeName: 'getSection',
+                            curriculumId: curriculumId,
+                        });
+                        if (res?.data) {
+                            const sortedSections = res.data.sort((a, b) => (a.order || 0) - (b.order || 0));
+                            const sectionsWithSortedItems = sortedSections.map(section => ({
+                                ...section,
+                                items: (section.items || []).sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0))
+                            }));
+                            setSectionDetails(sectionsWithSortedItems);
+                        }
+                    } catch (err) {
+                        console.error('Error:', err);
+                    }
+                });
+            }
+        }
+    };
+
     const handleAddItemtoSection = async (itemList) => {
         // Calculate order for new items
         const currentSection = sectionDetails.find(s => s.id === selectedSection?.id);
@@ -138,22 +190,9 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             sectionId: selectedSection?.id,
             items: itemsWithOrder
         }
-        await postRouteAPI(body).then((res) => {
-            let newItems = res.data.items || []
-            // ترتيب العناصر حسب order
-            const sortedItems = newItems.sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
-            
-            // إنشاء object جديد بدلاً من تعديل الموجود
-            let newSectionDetails = sectionDetails.map((section) => {
-                if (section.id == selectedSection?.id) {
-                    return {
-                        ...section,
-                        items: sortedItems
-                    }
-                }
-                return section
-            })
-            setSectionDetails(newSectionDetails)
+        await postRouteAPI(body).then(async (res) => {
+            // جلب البيانات الكاملة للقسم بعد الإضافة
+            await refreshSectionData();
         }).catch((error) => {
             console.log(error);
             toast.error(toastErrorMessage.sameFileError, { rtl: true, });
@@ -168,49 +207,8 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             routeName: 'removeItemToSection'
         }
         await postRouteAPI(body).then(async (res) => {
-            let newItems = res.data.items || []
-            // ترتيب العناصر حسب order
-            const sortedItems = newItems.sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
-            
-            // إنشاء object جديد بدلاً من تعديل الموجود
-            let newSectionDetails = sectionDetails.map((section) => {
-                if (section.id == deleteItemSectionId) {
-                    return {
-                        ...section,
-                        items: sortedItems
-                    }
-                }
-                return section
-            })
-            setSectionDetails(newSectionDetails)
-            
-            // Reorder remaining items to ensure sequential order starting from 1
-            const remainingItems = sortedItems
-                .sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
-            
-            if (remainingItems.length > 0) {
-                const reorderData = remainingItems.map((item, index) => ({
-                    sectionId: deleteItemSectionId,
-                    itemId: item.id,
-                    order: index + 1
-                }));
-                
-                // Update order if needed
-                const needsReorder = remainingItems.some((item, index) => 
-                    (item.sectionItem?.order || 0) !== (index + 1)
-                );
-                
-                if (needsReorder) {
-                    try {
-                        await postRouteAPI({
-                            routeName: 'updateSectionItem',
-                            data: reorderData
-                        });
-                    } catch (reorderError) {
-                        console.error('Error reordering items after deletion:', reorderError);
-                    }
-                }
-            }
+            // جلب البيانات الكاملة للقسم بعد الحذف
+            await refreshSectionData();
         }).catch((error) => {
             console.log(error);
         })
