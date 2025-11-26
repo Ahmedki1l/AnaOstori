@@ -370,7 +370,9 @@ export default function Index(props) {
 	const noOfVideos = ccSections?.flatMap((section) => section?.items?.filter((item) => item.type === 'video'))?.length
 	const noOfQuizes = ccSections?.flatMap((section) => section?.items?.filter((item) => item.type === 'quiz'))?.length
 
-	const [selectedNavItem, setSelectedNavItem] = useState(1)
+	const [selectedNavItem, setSelectedNavItem] = useState(
+		courseDetail?.type == 'on-demand' && courseCurriculum ? 4 : 1
+	)
 	const [paddingTop, setPaddingTop] = useState(2)
 
 	const [isMaleSubscribed, setIsMaleSubscribed] = useState(false)
@@ -697,6 +699,32 @@ export default function Index(props) {
 									</ScrollContainer>
 								</ul>
 							} */}
+							{courseDetail?.type == 'on-demand' && courseCurriculum && (
+								<ul className={`${styles.courseDetailsNavbar} ${offset > 313 ? `${styles.courseDetailsNavbarFixed}` : ''}`}>
+									<ScrollContainer className={`flex ${styles.courseDetailsSubNavbar}`}>
+										{courseDetail?.courseMetaData?.map((metaData, index) => {
+											return (
+												<div key={`datatitle${index}`}>
+													<li onClick={() => handleSlectedItem((index + 1), `title${index + 1}`)} 
+														className={`${selectedNavItem == (index + 1) ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>
+														{metaData.title}
+													</li>
+												</div>
+											)
+										})}
+										{sortedReviewsByCategory[currentCategory] && (
+											<li onClick={() => handleSlectedItem(5, 'userFeedback')} 
+												className={`${selectedNavItem == 5 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>
+												{lang == 'en' ? `Ostori's feedback` : `تجارب الأساطير:`}
+											</li>
+										)}
+										<li onClick={() => handleSlectedItem(4, 'dates')} 
+											className={`${selectedNavItem == 4 ? styles.activeItem : ''} ${lang == 'en' ? styles.mr2 : styles.ml2}`}>
+											{lang == "en" ? "Course Content" : "محتوى الدورة"}
+										</li>
+									</ScrollContainer>
+								</ul>
+							)}
 							{((offset > (screenWidth > 1280 ? 353 : (screenWidth < 1024 ? 313 : 336))) && !(screenWidth < 768)) &&
 								<div className={styles.bookSitBtnBox}>
 									<button className={`primarySolidBtn ${styles.firstBtn}`} onClick={() => handleBookSitButtonClick()}>{bookSeatButtonText}</button>
@@ -819,7 +847,7 @@ export default function Index(props) {
 								<ReviewComponent homeReviews={sortedReviewsByCategory[currentCategory]} />
 							</div>)}
 
-							{(hasDates) &&
+							{((hasDates || (courseDetail?.type == 'on-demand' && courseCurriculum)) &&
 								(courseDetail?.type == 'on-demand' ?
 									<div id={'dates'} style={{ paddingTop: selectedNavItem == 4 ? `${paddingTop}rem` : '2rem' }} className={styles.courseCurriculumWrapper}>
 										<div className={`flex ${lang == "en" ? "justify-end" : "justify-start"} items-center`}>
