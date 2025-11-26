@@ -123,11 +123,15 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             : 0;
         
         // Add order to items if not already present
-        console.log("Adding items to section. itemList:", itemList);
-        const itemsWithOrder = itemList.map((item, index) => ({
-            ...item,
-            order: item.order || (maxOrder + index + 1)
-        }));
+        const itemsWithOrder = itemList.map((item, index) => {
+            // إذا كان item string، تحويله إلى object
+            const itemObj = typeof item === 'string' ? { id: item } : item;
+            
+            return {
+                ...itemObj,
+                order: itemObj.order || (maxOrder + index + 1)
+            };
+        });
         
         let body = {
             routeName: 'addItemToSection',
@@ -135,10 +139,17 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             items: itemsWithOrder
         }
         await postRouteAPI(body).then((res) => {
-            let newItems = res.data.items
+            let newItems = res.data.items || []
+            // ترتيب العناصر حسب order
+            const sortedItems = newItems.sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
+            
+            // إنشاء object جديد بدلاً من تعديل الموجود
             let newSectionDetails = sectionDetails.map((section) => {
                 if (section.id == selectedSection?.id) {
-                    section.items = newItems
+                    return {
+                        ...section,
+                        items: sortedItems
+                    }
                 }
                 return section
             })
@@ -157,18 +168,24 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             routeName: 'removeItemToSection'
         }
         await postRouteAPI(body).then(async (res) => {
-            let newItems = res.data.items
+            let newItems = res.data.items || []
+            // ترتيب العناصر حسب order
+            const sortedItems = newItems.sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
+            
+            // إنشاء object جديد بدلاً من تعديل الموجود
             let newSectionDetails = sectionDetails.map((section) => {
                 if (section.id == deleteItemSectionId) {
-                    section.items = newItems
+                    return {
+                        ...section,
+                        items: sortedItems
+                    }
                 }
                 return section
             })
             setSectionDetails(newSectionDetails)
             
             // Reorder remaining items to ensure sequential order starting from 1
-            const remainingItems = newItems
-                .filter(item => item.id !== deleteItemId)
+            const remainingItems = sortedItems
                 .sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
             
             if (remainingItems.length > 0) {
