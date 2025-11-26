@@ -22,6 +22,37 @@ const CoursePathLibrary = () => {
     const router = useRouter()
 
     useEffect(() => {
+        const fetchCurriculumList = async () => {
+            try {
+                const res = await getRouteAPI({ routeName: 'getAllCurriculum' });
+                dispatch({
+                    type: 'SET_CURRICULUMIDS',
+                    curriculumIds: res.data,
+                });
+                SetCurriculumList(res.data);
+            } catch (error) {
+                console.error("Error fetching curriculum list:", error);
+                if (error?.response?.status == 401) {
+                    await getNewToken().then(async (token) => {
+                        try {
+                            const res = await getRouteAPI({ routeName: 'getAllCurriculum' });
+                            dispatch({
+                                type: 'SET_CURRICULUMIDS',
+                                curriculumIds: res.data,
+                            });
+                            SetCurriculumList(res.data);
+                        } catch (err) {
+                            console.error("Error:", err);
+                        }
+                    });
+                }
+            }
+        };
+        
+        fetchCurriculumList();
+    }, []); // [] يعني مرة واحدة عند تحميل المكون
+
+    useEffect(() => {
         SetCurriculumList(storeData.curriculumIds)
     }, [storeData.curriculumIds])
 
