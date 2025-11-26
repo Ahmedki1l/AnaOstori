@@ -20,6 +20,7 @@ import { mediaUrl, secondsToMinutes } from '../../../constants/DataManupulation'
 import ModalForVideo from '../../../components/CommonComponents/ModalForVideo/ModalForVideo'
 import ReviewComponent from '../../../components/CommonComponents/ReviewsComponent/ReviewComponent';
 import { ContentRenderer } from '../../../components/Markdown/ContentRenderer';
+import { toast } from 'react-toastify';
 
 
 
@@ -464,7 +465,44 @@ export default function Index(props) {
 		setPaddingTop(2)
 	}
 
-	const handleCourseItemClick = (item) => {
+	const handleCourseItemClick = async (item) => {
+		const isUserLogin = localStorage.getItem('accessToken') ? true : false;
+		
+		// Check if item is free and user is not logged in
+		if (!isUserLogin && item?.sectionItem?.freeUsage !== true) {
+			// Redirect to login with course info
+			dispatch({
+				type: 'SET_RETURN_URL',
+				returnUrl: router.asPath,
+			});
+			router.push('/login');
+			return;
+		}
+		
+		// If user is logged in but not enrolled, check enrollment for non-free content
+		if (isUserLogin && item?.sectionItem?.freeUsage !== true) {
+			try {
+				const enrollmentCheck = await getAuthRouteAPI({
+					routeName: 'getCourseCurriculum',
+					courseId: courseDetail.id,
+				});
+				
+				if (!enrollmentCheck.data?.enrollment) {
+					// Not enrolled - show message
+					toast.error('يجب الاشتراك في الدورة لمشاهدة هذا المحتوى', { rtl: true });
+					return;
+				}
+			} catch (error) {
+				console.error('Error checking enrollment:', error);
+				// If error, still try to show content (might be free)
+				if (item?.sectionItem?.freeUsage !== true) {
+					toast.error('حدث خطأ في التحقق من الاشتراك', { rtl: true });
+					return;
+				}
+			}
+		}
+		
+		// Allow access to free content or enrolled users
 		if (item.type == 'video') {
 			setFileSrc(mediaUrl(item.linkBucket, item.linkKey))
 			setVideoModalOpen(true)
@@ -817,10 +855,23 @@ export default function Index(props) {
 																					</p>
 																				</div>
 																			</div>
-																			<div className={styles.lockItemWrapper}>
-																				{item?.sectionItem?.freeUsage != true && <AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />}
-																				{item?.sectionItem?.freeUsage == true && <p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>{lang == "en" ? "Watch for free" : "شاهد مجانًا"}</p>}
-																			</div>
+											<div className={styles.lockItemWrapper}>
+												{item?.sectionItem?.freeUsage == true ? (
+													<p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>
+														{lang == "en" ? "Watch for free" : "شاهد مجانًا"}
+													</p>
+												) : (
+													<>
+														{isUserLogin ? (
+															<AllIconsComponenet height={24} width={20} iconName={'lock2'} color={'#0000008a'} />
+														) : (
+															<p onClick={() => handleCourseItemClick(item)} className={styles.previewItemText}>
+																{lang == "en" ? "Login to watch" : "سجل دخول للمشاهدة"}
+															</p>
+														)}
+													</>
+												)}
+											</div>
 																		</div>
 																	)
 																})}

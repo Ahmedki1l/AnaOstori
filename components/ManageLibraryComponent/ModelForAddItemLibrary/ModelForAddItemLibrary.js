@@ -106,7 +106,8 @@ const ModelForAddItemLibrary = ({
     }
 
     const editFolderItems = async (e) => {
-        if (existingItemName.includes(e.name)) {
+        // Check if name changed, and if so, check for duplicates (excluding current item)
+        if (e.name !== selectedItem.name && existingItemName.includes(e.name)) {
             toast.error(commonLibraryConst.nameDuplicateErrorMsg, { rtl: true, })
             return
         }

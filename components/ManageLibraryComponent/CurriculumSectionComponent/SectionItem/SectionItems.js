@@ -35,16 +35,21 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
         if (!result.destination) {
             return;
         }
+        
+        // Save original order for rollback on error
+        const originalOrder = Array.from(sectionItemList);
+        
         const newSectionOrder = Array.from(sectionItemList);
         const [reorderedSection] = newSectionOrder.splice(result.source.index, 1);
         newSectionOrder.splice(result.destination.index, 0, reorderedSection);
         setSectionItemList(newSectionOrder)
 
+        // Update order starting from 1 (not 0)
         const data = newSectionOrder.map((e, index) => {
             return {
                 sectionId: sectionId,
                 itemId: e.id,
-                order: index + 1
+                order: index + 1  // Start from 1, not 0
             }
         })
         let body = {
@@ -52,8 +57,11 @@ const SectionItems = ({ itemList, handleDeleteSectionItem, setDeleteItemId, setD
             data: data
         }
         await postRouteAPI(body).then((res) => {
+            // Success - order updated
         }).catch((error) => {
             console.log(error);
+            // Revert to original order on error
+            setSectionItemList(originalOrder);
         })
     };
 

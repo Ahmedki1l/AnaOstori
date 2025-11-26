@@ -64,10 +64,16 @@ function MyApp({ Component, pageProps }) {
 	useEffect(() => {
 		if (!isUserLogin && (protectedRoutes.includes(router.pathname) || router.pathname === '/myCourse')) {
 			if (router.asPath !== '/login') {
+				// Save full URL including query params
+				const fullUrl = router.asPath
+				store.dispatch({
+					type: 'SET_RETURN_URL',
+					returnUrl: fullUrl,
+				});
 				router.replace('/login');
 			}
 		}
-	}, [router, router.pathname, isUserLogin, protectedRoutes]);
+	}, [router, router.pathname, router.asPath, isUserLogin, protectedRoutes]);
 
 
 	useEffect(() => {

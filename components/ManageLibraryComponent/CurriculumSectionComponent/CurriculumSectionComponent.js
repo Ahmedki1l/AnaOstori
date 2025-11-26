@@ -115,10 +115,23 @@ const CurriculumSectionComponent = ({ sectionList }) => {
     }
 
     const handleAddItemtoSection = async (itemList) => {
+        // Calculate order for new items
+        const currentSection = sectionDetails.find(s => s.id === selectedSection?.id);
+        const currentItems = currentSection?.items || [];
+        const maxOrder = currentItems.length > 0 
+            ? Math.max(...currentItems.map(item => item.sectionItem?.order || 0))
+            : 0;
+        
+        // Add order to items if not already present
+        const itemsWithOrder = itemList.map((item, index) => ({
+            ...item,
+            order: item.order || (maxOrder + index + 1)
+        }));
+        
         let body = {
             routeName: 'addItemToSection',
             sectionId: selectedSection?.id,
-            items: itemList
+            items: itemsWithOrder
         }
         await postRouteAPI(body).then((res) => {
             let newItems = res.data.items
@@ -142,7 +155,7 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             itemId: deleteItemId,
             routeName: 'removeItemToSection'
         }
-        await postRouteAPI(body).then((res) => {
+        await postRouteAPI(body).then(async (res) => {
             let newItems = res.data.items
             let newSectionDetails = sectionDetails.map((section) => {
                 if (section.id == deleteItemSectionId) {
@@ -151,6 +164,35 @@ const CurriculumSectionComponent = ({ sectionList }) => {
                 return section
             })
             setSectionDetails(newSectionDetails)
+            
+            // Reorder remaining items to ensure sequential order starting from 1
+            const remainingItems = newItems
+                .filter(item => item.id !== deleteItemId)
+                .sort((a, b) => (a.sectionItem?.order || 0) - (b.sectionItem?.order || 0));
+            
+            if (remainingItems.length > 0) {
+                const reorderData = remainingItems.map((item, index) => ({
+                    sectionId: deleteItemSectionId,
+                    itemId: item.id,
+                    order: index + 1
+                }));
+                
+                // Update order if needed
+                const needsReorder = remainingItems.some((item, index) => 
+                    (item.sectionItem?.order || 0) !== (index + 1)
+                );
+                
+                if (needsReorder) {
+                    try {
+                        await postRouteAPI({
+                            routeName: 'updateSectionItem',
+                            data: reorderData
+                        });
+                    } catch (reorderError) {
+                        console.error('Error reordering items after deletion:', reorderError);
+                    }
+                }
+            }
         }).catch((error) => {
             console.log(error);
         })

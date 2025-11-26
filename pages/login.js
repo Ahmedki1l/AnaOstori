@@ -129,6 +129,68 @@ export default function Login() {
 							}
 						}
 						
+						// Check if user was redirected from QR code scan
+						const isFromQRCode = localStorage.getItem('isFromQRCode')
+						const qrCodeData = localStorage.getItem('qrCodeData')
+						
+						if (isFromQRCode === 'true' && qrCodeData) {
+							try {
+								const qrData = JSON.parse(qrCodeData)
+								// Check if user is enrolled in the course
+								try {
+									const checkEnrollmentParams = {
+										routeName: 'getCourseCurriculum',
+										courseId: qrData.courseId,
+									}
+									const enrollmentCheck = await getAuthRouteAPI(checkEnrollmentParams)
+									
+									if (enrollmentCheck.data?.enrollment) {
+										// User is enrolled - redirect to course lesson
+										const redirectUrl = `/myCourse?courseId=${qrData.courseId}${qrData.itemId ? `&itemId=${qrData.itemId}` : ''}`
+										localStorage.removeItem('isFromQRCode')
+										localStorage.removeItem('qrCodeData')
+										router.push(redirectUrl)
+										return
+									} else {
+										// User is not enrolled - redirect to subscription page
+										const courseDetails = await getAuthRouteAPI({
+											routeName: 'courseById',
+											courseId: qrData.courseId
+										})
+										const courseUrl = courseDetails.data.name.toLowerCase().replace(/\s+/g, '-')
+										const categoryUrl = courseDetails.data.catagory.name.toLowerCase().replace(/\s+/g, '-')
+										localStorage.removeItem('isFromQRCode')
+										localStorage.removeItem('qrCodeData')
+										router.push(`/${courseUrl}/${categoryUrl}`)
+										return
+									}
+								} catch (enrollmentError) {
+									console.error('Error checking enrollment:', enrollmentError)
+									// If enrollment check fails, try to redirect to course page anyway
+									try {
+										const courseDetails = await getAuthRouteAPI({
+											routeName: 'courseById',
+											courseId: qrData.courseId
+										})
+										const courseUrl = courseDetails.data.name.toLowerCase().replace(/\s+/g, '-')
+										const categoryUrl = courseDetails.data.catagory.name.toLowerCase().replace(/\s+/g, '-')
+										localStorage.removeItem('isFromQRCode')
+										localStorage.removeItem('qrCodeData')
+										router.push(`/${courseUrl}/${categoryUrl}`)
+										return
+									} catch (courseError) {
+										console.error('Error getting course details:', courseError)
+										localStorage.removeItem('isFromQRCode')
+										localStorage.removeItem('qrCodeData')
+									}
+								}
+							} catch (error) {
+								console.error('Error parsing QR code data:', error)
+								localStorage.removeItem('isFromQRCode')
+								localStorage.removeItem('qrCodeData')
+							}
+						}
+						
 						if (!storeData?.returnUrl) {
 							if (router.asPath !== '/') {
 								router.push('/')

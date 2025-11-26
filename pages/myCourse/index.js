@@ -1,7 +1,7 @@
 
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Spinner from '../../components/CommonComponents/spinner'
 import { getAuthRouteAPI, postAuthRouteAPI } from '../../services/apisService'
 import styles from '../../styles/MyCourseWatch.module.scss'
@@ -16,6 +16,7 @@ import { getNewToken } from '../../services/fireBaseAuthService'
 
 const Index = () => {
     const router = useRouter()
+    const dispatch = useDispatch()
     const courseID = router?.query?.courseId;
     const queryEnrollmentID = router?.query?.enrollmentId;
     const queryItemID = router?.query?.itemId;
@@ -161,6 +162,20 @@ const Index = () => {
     useEffect(() => {
         // التحقق من تسجيل الدخول أولاً
         if (!isUserLogin) {
+            // Save QR code data if present (courseId and itemId from query)
+            if (courseID) {
+                localStorage.setItem('isFromQRCode', 'true')
+                localStorage.setItem('qrCodeData', JSON.stringify({
+                    courseId: courseID,
+                    itemId: queryItemID || null,
+                    timestamp: Date.now()
+                }))
+            }
+            
+            dispatch({
+                type: 'SET_RETURN_URL',
+                returnUrl: router.asPath,
+            });
             router.replace('/login')
             return
         }
