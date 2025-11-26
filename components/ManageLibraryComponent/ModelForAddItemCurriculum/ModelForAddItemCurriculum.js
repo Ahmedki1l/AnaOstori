@@ -229,7 +229,12 @@ const ModelForAddItemCurriculum = ({
     }
 
     const handleItemAddInToSection = async () => {
-        handleAddItemtoSection(selectedItems)
+        // تحويل selectedItems (array of IDs) إلى array of objects مع id
+        const itemsToAdd = selectedItems.map(itemId => ({
+            id: itemId
+        }));
+        
+        handleAddItemtoSection(itemsToAdd)
         setSelectedItems([])
         showFolderList()
     }
