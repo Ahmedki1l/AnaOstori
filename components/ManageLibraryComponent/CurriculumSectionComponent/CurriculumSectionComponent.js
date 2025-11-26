@@ -123,6 +123,7 @@ const CurriculumSectionComponent = ({ sectionList }) => {
             : 0;
         
         // Add order to items if not already present
+        console.log("Adding items to section. itemList:", itemList);
         const itemsWithOrder = itemList.map((item, index) => ({
             ...item,
             order: item.order || (maxOrder + index + 1)
