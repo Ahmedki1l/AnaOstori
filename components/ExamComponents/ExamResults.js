@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
 
-const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQuestions, onReviewAnswers, onRetakeExam, hideRetakeButton = false }) => {
+const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQuestions, onReviewAnswers, onRetakeExam, hideRetakeButton = false, savedSections, savedSectionDetails }) => {
     console.log("🚀 ~ ExamResults ~ elapsedTime:", elapsedTime);
     const allReviews = reviewQuestions;
     const flatReviews = allReviews.flat();
@@ -156,7 +156,11 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         totalSeconds = 0;
 
         elapsedTime.map((time) => {
-            const [minutes, seconds] = time.split(':').map(Number);
+            if (!time) return; // Guard against undefined/null times
+            const parts = time.toString().split(':'); // numeric time is converted to string
+            const minutes = parseInt(parts[0]) || 0;
+            const seconds = parseInt(parts[1]) || 0;
+            
             totalMinutes += minutes;
             totalSeconds += seconds;
         });
@@ -177,7 +181,9 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     const correctAnswers = getCorrectAnswers(flatQuestions, flatReviews);
     const unAnswered = getNotAnsweredQuestions();
     const marked = getMarkedQuestions();
-    const sections = getSections(flatQuestions, flatReviews);
+    
+    // Use saved sections if provided, otherwise calculate them
+    const sections = savedSections || getSections(flatQuestions, flatReviews);
 
     const getSectionDetails = (allReviews, examData) => {
         if (!allReviews || !examData || allReviews.length === 0) {
@@ -206,7 +212,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         });
     };
 
-    const sectionDetails = getSectionDetails(allReviews, examData)
+    // Use saved section details if provided, otherwise calculate them
+    const sectionDetails = savedSectionDetails || getSectionDetails(allReviews, examData)
 
     // Add to results object
     const results = {

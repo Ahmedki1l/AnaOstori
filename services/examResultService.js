@@ -50,7 +50,7 @@ export const examResultService = {
             return response
         } catch (error) {
             console.error('Error submitting exam results:', error)
-            
+
             // Handle token refresh
             if (error?.response?.status === 401) {
                 try {
@@ -61,7 +61,7 @@ export const examResultService = {
                     throw refreshError
                 }
             }
-            
+
             throw error
         }
     },
@@ -84,7 +84,7 @@ export const examResultService = {
             return response
         } catch (error) {
             console.error('Error fetching student exam result:', error)
-            
+
             if (error?.response?.status === 401) {
                 try {
                     await getNewToken()
@@ -94,7 +94,7 @@ export const examResultService = {
                     throw refreshError
                 }
             }
-            
+
             throw error
         }
     },
@@ -113,7 +113,7 @@ export const examResultService = {
             return response
         } catch (error) {
             console.error('Error fetching all student exam results:', error)
-            
+
             // Only retry once on authentication error
             if (error?.response?.status === 401 && retryCount === 0) {
                 try {
@@ -126,7 +126,7 @@ export const examResultService = {
                     throw refreshError
                 }
             }
-            
+
             // For all other errors or if already retried, throw the error
             throw error
         }
@@ -141,7 +141,7 @@ export const examResultService = {
     async hasStudentTakenExam(examId, studentId) {
         try {
             const result = await this.getStudentExamResult(examId, studentId)
-            
+
             // Handle the new backend response structure
             let responseData;
             if (result.body || result.data) {
@@ -265,17 +265,17 @@ export const examResultService = {
         return allReviewQuestions.map((sectionReviewQuestions, sectionIndex) => {
             const sectionExamQuestions = allExamQuestions[sectionIndex] || [];
             const sectionData = examData.sections[sectionIndex] || {};
-            
+
             // Calculate correct answers for this section
             let correctAnswers = 0;
-            
+
             // Prepare nested questions array with all required fields
             const questions = sectionReviewQuestions.map((reviewQ, questionIndex) => {
                 const examQ = sectionExamQuestions[questionIndex] || {};
                 const isCorrect = reviewQ.selectedAnswer === examQ.correctAnswer;
-                
+
                 if (isCorrect) correctAnswers++;
-                
+
                 return {
                     questionId: typeof reviewQ.id === 'string' ? reviewQ.id : (reviewQ.id ? String(reviewQ.id) : ''),
                     correctAnswer: examQ.correctAnswer ? String(examQ.correctAnswer) : '',
@@ -286,13 +286,13 @@ export const examResultService = {
                     timeSpent: reviewQ.timeSpent ? String(reviewQ.timeSpent) : "00:00"
                 };
             });
-            
+
             // Prepare skills data
             const skills = this.prepareSectionSkills(sectionExamQuestions, sectionReviewQuestions);
-            
+
             // Get time for this section - ensure last section has correct time
             const sectionTime = elapsedTime && elapsedTime[sectionIndex] ? String(elapsedTime[sectionIndex]) : "00:00";
-            
+
             return {
                 title: sectionData.title || `القسم ${sectionIndex + 1}`,
                 score: correctAnswers,
@@ -364,17 +364,17 @@ export const examResultService = {
     prepareSectionsData(examData, allReviewQuestions, allExamQuestions) {
         const flatExamQuestions = allExamQuestions.flat();
         const flatReviewQuestions = allReviewQuestions.flat();
-    
+
         if (!flatExamQuestions || !flatReviewQuestions || flatReviewQuestions.length === 0) {
             return [];
         }
-    
+
         const sectionMap = new Map();
-    
+
         flatExamQuestions.forEach((question, index) => {
             question?.skills?.forEach(skill => {
                 const sectionTitle = question?.section + " - " + question?.lesson;
-    
+
                 if (!sectionMap.has(sectionTitle)) {
                     sectionMap.set(sectionTitle, {
                         title: sectionTitle,
@@ -382,14 +382,14 @@ export const examResultService = {
                         skills: new Map()
                     });
                 }
-    
+
                 const section = sectionMap.get(sectionTitle);
                 section.questions.push({
                     question,
                     selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null,
                     skill: skill.text
                 });
-    
+
                 if (!section.skills.has(skill.text)) {
                     section.skills.set(skill.text, []);
                 }
@@ -399,17 +399,17 @@ export const examResultService = {
                 });
             });
         });
-    
+
         return Array.from(sectionMap.values()).map(section => {
             const correctInSection = section.questions.filter(q =>
                 q.selectedAnswer === q.question.correctAnswer
             ).length;
-    
+
             const skills = Array.from(section.skills.entries()).map(([skillTitle, questions]) => {
                 const correctInSkill = questions.filter(q =>
                     q.selectedAnswer === q.question.correctAnswer
                 ).length;
-    
+
                 return {
                     title: skillTitle,
                     correctAnswers: correctInSkill,
@@ -417,7 +417,7 @@ export const examResultService = {
                     score: Math.round((correctInSkill / questions.length) * 100)
                 };
             });
-    
+
             return {
                 title: section.title,
                 score: correctInSection,

@@ -50,7 +50,7 @@ const StudentExamResults = () => {
   // Function to fetch questions by their IDs
   const fetchQuestionsByIds = async (questionIds) => {
     if (!questionIds || questionIds.length === 0) return []
-    
+
     setIsLoadingQuestions(true)
     const payload = {
       routeName: 'getItem',
@@ -59,7 +59,7 @@ const StudentExamResults = () => {
       limit: questionIds.length,
       ids: questionIds
     }
-    
+
     try {
       const response = await getRouteAPI(payload)
       if (response?.data) {
@@ -86,9 +86,9 @@ const StudentExamResults = () => {
       setLoading(true)
       setError(null)
       const response = await examResultService.getAllStudentExamResults()
-      
+
       console.log('API Response:', response) // Debug log
-      
+
       // The API returns data in response.data.data structure
       if (response?.data?.data && Array.isArray(response.data.data)) {
         console.log('Setting folders:', response.data.data) // Debug log
@@ -249,8 +249,8 @@ const StudentExamResults = () => {
 
         <div className={styles.foldersGrid}>
           {folders.map((folder) => (
-            <div 
-              key={folder.id} 
+            <div
+              key={folder.id}
               className={styles.folderCard}
               onClick={() => handleFolderSelect(folder)}
             >
@@ -306,8 +306,8 @@ const StudentExamResults = () => {
 
         <div className={styles.examsGrid}>
           {selectedFolder.exams.map((exam) => (
-            <div 
-              key={exam.id} 
+            <div
+              key={exam.id}
               className={styles.examCard}
               onClick={() => handleExamSelect(exam)}
             >
@@ -405,13 +405,13 @@ const StudentExamResults = () => {
               </div>
 
               <div className={styles.resultActions}>
-                <button 
+                <button
                   className={styles.viewDetailsButton}
                   onClick={() => handleResultSelect(result)}
                 >
                   عرض التفاصيل الكاملة
                 </button>
-                <button 
+                <button
                   className={styles.reviewButton}
                   onClick={() => {
                     setSelectedResult(result)
@@ -431,17 +431,17 @@ const StudentExamResults = () => {
   // Details View - Using ExamResults component
   if (currentView === 'details' && selectedResult) {
     // Check if we have new structure (sections with nested questions) or old structure (flat reviewQuestions)
-    const hasNewStructure = selectedResult.sections && 
-                           selectedResult.sections.length > 0 && 
-                           selectedResult.sections[0].questions && 
-                           selectedResult.sections[0].questions.length > 0;
-    
+    const hasNewStructure = selectedResult.sections &&
+      selectedResult.sections.length > 0 &&
+      selectedResult.sections[0].questions &&
+      selectedResult.sections[0].questions.length > 0;
+
     // Prepare data for ExamResults component
     let reviewQuestions = [];
-    
+
     if (hasNewStructure) {
       // Extract reviewQuestions from nested structure
-      reviewQuestions = selectedResult.sections.flatMap(section => 
+      reviewQuestions = selectedResult.sections.flatMap(section =>
         section.questions.map(q => ({
           questionId: q.questionId,
           selectedAnswer: q.selectedAnswer,
@@ -455,9 +455,9 @@ const StudentExamResults = () => {
       // Use flat reviewQuestions (old structure)
       reviewQuestions = selectedResult.reviewQuestions || [];
     }
-    
+
     const totalTime = selectedResult.totalTime?.toString() || "0";
-    
+
     // Create elapsedTime array for each section
     // Try to get time from sections first (new structure), then fall back to sectionDetails
     let elapsedTime = [];
@@ -477,7 +477,7 @@ const StudentExamResults = () => {
         // Determine which section this question belongs to based on its position
         const sectionIndex = Math.floor(index / Math.ceil(fetchedQuestions.length / (selectedResult.sectionDetails?.length || selectedResult.sections?.length || 1)))
         const section = selectedResult.sectionDetails?.[sectionIndex] || selectedResult.sections?.[sectionIndex]
-        
+
         return {
           ...question,
           section: section?.title || `القسم ${sectionIndex + 1}`,
@@ -492,7 +492,7 @@ const StudentExamResults = () => {
         // Determine which section this question belongs to based on its position
         const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (selectedResult.sectionDetails?.length || selectedResult.sections?.length || 1)))
         const section = selectedResult.sectionDetails?.[sectionIndex] || selectedResult.sections?.[sectionIndex]
-        
+
         return {
           _id: reviewQuestion.questionId,
           id: reviewQuestion.questionId,
@@ -507,7 +507,7 @@ const StudentExamResults = () => {
 
     // Create CurrentExam with proper sections structure based on actual API data
     let questionsCounter = 0;
-    
+
     const mockCurrentExam = {
       ...selectedExam,
       sections: selectedResult.sectionDetails?.map((section, index) => {
@@ -520,7 +520,7 @@ const StudentExamResults = () => {
         questionsCounter += totalSectionQuestions;
         // Get the questions for this section (endIndex is exclusive)
         const sectionQuestions = examData.slice(startIndex, endIndex)
-        
+
         return {
           title: section.title || `القسم ${index + 1}`,
           questions: sectionQuestions,
@@ -562,9 +562,9 @@ const StudentExamResults = () => {
           totalTime={totalTime}
           examData={mockCurrentExam.sections.map(section => section.questions)}
           CurrentExam={mockCurrentExam}
-          reviewQuestions={mockCurrentExam.sections.map(section => 
+          reviewQuestions={mockCurrentExam.sections.map(section =>
             section.questions.map(question => {
-              const reviewQuestion = reviewQuestions.find(rq => 
+              const reviewQuestion = reviewQuestions.find(rq =>
                 rq.questionId === question._id || rq.questionId === question.id
               )
               return {
@@ -581,6 +581,8 @@ const StudentExamResults = () => {
           onReviewAnswers={handleShowReviewSection}
           onRetakeExam={handleRetakeExam}
           hideRetakeButton={true}
+          savedSections={selectedResult.sections}
+          savedSectionDetails={selectedResult.sectionDetails}
         />
       </div>
     )
@@ -589,13 +591,13 @@ const StudentExamResults = () => {
   // Review Section View
   if (currentView === 'reviewSection' && selectedResult) {
     // Check if we have new structure with nested questions
-    const hasNewStructure = selectedResult.sections && 
-                           selectedResult.sections.length > 0 && 
-                           selectedResult.sections[0].questions && 
-                           selectedResult.sections[0].questions.length > 0;
-    
+    const hasNewStructure = selectedResult.sections &&
+      selectedResult.sections.length > 0 &&
+      selectedResult.sections[0].questions &&
+      selectedResult.sections[0].questions.length > 0;
+
     let questions = [];
-    
+
     if (hasNewStructure) {
       // Extract questions from nested structure
       questions = selectedResult.sections.flatMap(section => section.questions);
@@ -603,14 +605,14 @@ const StudentExamResults = () => {
       // Use flat reviewQuestions (old structure)
       questions = selectedResult.reviewQuestions || [];
     }
-    
+
     let questionsCounter = 0;
     console.log("🚀 ~ Review Section ~ questions:", questions)
     console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
     console.log("🚀 ~ Review Section ~ hasNewStructure:", hasNewStructure)
     console.log("🚀 ~ Review Section ~ selectedResult.sections:", selectedResult.sections)
     console.log("🚀 ~ Review Section ~ selectedResult.sectionDetails:", selectedResult.sectionDetails)
-    
+
     // Use sections from new structure if available, otherwise use sectionDetails
     const sectionsToUse = hasNewStructure ? selectedResult.sections : selectedResult.sectionDetails;
 
@@ -619,39 +621,39 @@ const StudentExamResults = () => {
       const totalSectionQuestions = section.numberOfQuestions || section.questions?.length || 0;
       const startIndex = index + questionsCounter;
       const endIndex = startIndex + totalSectionQuestions;
-      
+
       // Get the questions for this section (endIndex is exclusive)
       questionsCounter += totalSectionQuestions;
       const sectionQuestions = questions.slice(startIndex, endIndex)
-      
+
       return sectionQuestions.map((question, questionIndex) => {
         // Find the corresponding fetched question
-        const fetchedQuestion = fetchedQuestions.find(fq => 
+        const fetchedQuestion = fetchedQuestions.find(fq =>
           fq._id === question.questionId || fq.id === question.questionId
         )
-        
+
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question:`, question)
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question keys:`, Object.keys(question))
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ fetchedQuestion:`, fetchedQuestion)
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from fetched:`, fetchedQuestion?.correctAnswer)
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from question:`, question.correctAnswer)
         console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
-        
+
         return {
           ...fetchedQuestion,
         }
       })
     }) || [questions.map((question, index) => {
-      const fetchedQuestion = fetchedQuestions.find(fq => 
+      const fetchedQuestion = fetchedQuestions.find(fq =>
         fq._id === question.questionId || fq.id === question.questionId
       )
-      
+
       console.log(`🚀 ~ Fallback Question ${index} ~ question:`, question)
       console.log(`🚀 ~ Fallback Question ${index} ~ fetchedQuestion:`, fetchedQuestion)
       console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
-      
+
       return {
-          ...fetchedQuestion,
+        ...fetchedQuestion,
       }
     })]
 
@@ -661,11 +663,11 @@ const StudentExamResults = () => {
       const totalSectionQuestions = section.numberOfQuestions || section.questions?.length || 0;
       const startIndex = index + questionsCounter;
       const endIndex = startIndex + totalSectionQuestions;
-      
+
       // Get the questions for this section (endIndex is exclusive)
       const sectionQuestions = questions.slice(startIndex, endIndex)
       questionsCounter += totalSectionQuestions;
-      
+
       return sectionQuestions.map((question, questionIndex) => ({
         id: question.questionId || `q_${startIndex + questionIndex}`,
         selectedAnswer: question.selectedAnswer,
@@ -744,13 +746,13 @@ const StudentExamResults = () => {
   // Review Answers View
   if (currentView === 'reviewAnswers' && selectedResult) {
     // Check if we have new structure with nested questions
-    const hasNewStructure = selectedResult.sections && 
-                           selectedResult.sections.length > 0 && 
-                           selectedResult.sections[0].questions && 
-                           selectedResult.sections[0].questions.length > 0;
-    
+    const hasNewStructure = selectedResult.sections &&
+      selectedResult.sections.length > 0 &&
+      selectedResult.sections[0].questions &&
+      selectedResult.sections[0].questions.length > 0;
+
     let reviewQuestions = [];
-    
+
     if (hasNewStructure) {
       // Extract questions from nested structure
       reviewQuestions = selectedResult.sections.flatMap(section => section.questions);
@@ -758,18 +760,18 @@ const StudentExamResults = () => {
       // Use flat reviewQuestions (old structure)
       reviewQuestions = selectedResult.reviewQuestions || [];
     }
-    
+
     // Use sections from new structure if available, otherwise use sectionDetails
     const sectionsToUse = hasNewStructure ? selectedResult.sections : selectedResult.sectionDetails;
 
     // Create question structure with fetched data and proper section assignment
     const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
       const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
-      
+
       // Determine which section this question belongs to
       const sectionIndex = Math.floor(index / Math.ceil(reviewQuestions.length / (sectionsToUse?.length || 1)))
       const section = sectionsToUse?.[sectionIndex]
-      
+
       if (fetchedQuestion) {
         return {
           ...fetchedQuestion,
@@ -781,7 +783,7 @@ const StudentExamResults = () => {
           skills: fetchedQuestion.skills || [{ text: "مهارة أساسية" }]
         }
       }
-      
+
       // Fallback if question not found
       return {
         _id: reviewQuestion.questionId,
@@ -853,10 +855,10 @@ const StudentExamResults = () => {
         <ReviewAnswers
           CurrentExam={selectedExam}
           examData={{ questions: questionsWithData }}
-          onCompleteExam={() => {}}
+          onCompleteExam={() => { }}
           currentTime="00:00"
           reviewQuestions={reviewQuestionsForComponent}
-          setReviewQuestions={() => {}}
+          setReviewQuestions={() => { }}
           currentQuestionIndex={currentQuestionIndex}
           showReviewSection={() => setCurrentView('reviewSection')}
           finishReview={handleFinishReview}
@@ -901,7 +903,7 @@ const StudentExamResults = () => {
             <div className={styles.questionText}>
               {selectedQuestion.questionText || 'نص السؤال غير متوفر'}
             </div>
-            
+
             {selectedQuestion.questionImage && (
               <div className={styles.questionImage}>
                 <img src={selectedQuestion.questionImage} alt="صورة السؤال" />
@@ -913,13 +915,12 @@ const StudentExamResults = () => {
             <h3>الخيارات:</h3>
             <div className={styles.answersList}>
               {selectedQuestion.options && selectedQuestion.options.map((option, optionIndex) => (
-                <div 
-                  key={optionIndex} 
-                  className={`${styles.answerOption} ${
-                    option.isCorrect ? styles.correctAnswer : 
-                    option.id === selectedQuestion.selectedAnswer ? styles.selectedAnswer : 
-                    styles.otherAnswer
-                  }`}
+                <div
+                  key={optionIndex}
+                  className={`${styles.answerOption} ${option.isCorrect ? styles.correctAnswer :
+                      option.id === selectedQuestion.selectedAnswer ? styles.selectedAnswer :
+                        styles.otherAnswer
+                    }`}
                 >
                   <div className={styles.answerContent}>
                     <span className={styles.optionLabel}>

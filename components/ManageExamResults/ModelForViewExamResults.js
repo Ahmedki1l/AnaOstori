@@ -46,7 +46,7 @@ const ModelForViewExamResults = ({
     // Function to fetch questions by their IDs
     const fetchQuestionsByIds = async (questionIds) => {
         if (!questionIds || questionIds.length === 0) return []
-        
+
         setIsLoadingQuestions(true)
         const payload = {
             routeName: 'getItem',
@@ -55,7 +55,7 @@ const ModelForViewExamResults = ({
             limit: questionIds.length,
             ids: questionIds
         }
-        
+
         try {
             const response = await getRouteAPI(payload)
             if (response?.data) {
@@ -122,10 +122,10 @@ const ModelForViewExamResults = ({
         // Prepare data for ExamResults component
         const reviewQuestions = examResult.reviewQuestions || []
         const totalTime = examResult.totalTime || 0
-        
+
         // Create elapsedTime array for each section based on sectionDetails
-        const elapsedTime = examResult.sectionDetails?.map(sectionDetail => sectionDetail.time) || 
-                           examResult.sections?.map(() => examResult.timeSpent || "00:00") || []
+        const elapsedTime = examResult.sectionDetails?.map(sectionDetail => sectionDetail.time) ||
+            examResult.sections?.map(() => examResult.timeSpent || "00:00") || []
 
         // Use fetched questions if available, otherwise create mock data
         let examData = []
@@ -137,7 +137,7 @@ const ModelForViewExamResults = ({
                 // Find which section this question belongs to based on sectionDetails
                 let sectionIndex = 0
                 let questionCount = 0
-                
+
                 // Determine section based on cumulative question count from sectionDetails
                 for (let i = 0; i < examResult.sectionDetails?.length; i++) {
                     const sectionDetail = examResult.sectionDetails[i]
@@ -147,14 +147,14 @@ const ModelForViewExamResults = ({
                     }
                     questionCount += sectionDetail.numberOfQuestions
                 }
-                
+
                 const sectionDetail = examResult.sectionDetails?.[sectionIndex]
                 // Get the corresponding section from the sections array to access skills
                 const sectionWithSkills = examResult.sections?.[sectionIndex]
-                
+
                 // Find the corresponding review question to get the correct answer
                 const reviewQuestion = reviewQuestions.find(rq => rq.questionId === question._id || rq.questionId === question.id)
-                
+
                 return {
                     ...question,
                     _id: question._id || question.id,
@@ -164,9 +164,9 @@ const ModelForViewExamResults = ({
                     // Ensure we have the correct answer - use from fetched question or determine from review
                     correctAnswer: question.correctAnswer || question.answer || (reviewQuestion?.isCorrect ? reviewQuestion.selectedAnswer : "أ"),
                     // Use skills from the sections array, fallback to question skills, then default
-                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
-                           question.skills || 
-                           [{ text: "مهارة أساسية" }]
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
+                        question.skills ||
+                        [{ text: "مهارة أساسية" }]
                 }
             })
         } else {
@@ -176,7 +176,7 @@ const ModelForViewExamResults = ({
                 // Find which section this question belongs to based on sectionDetails
                 let sectionIndex = 0
                 let questionCount = 0
-                
+
                 // Determine section based on cumulative question count from sectionDetails
                 for (let i = 0; i < examResult.sectionDetails?.length; i++) {
                     const sectionDetail = examResult.sectionDetails[i]
@@ -186,11 +186,11 @@ const ModelForViewExamResults = ({
                     }
                     questionCount += sectionDetail.numberOfQuestions
                 }
-                
+
                 const sectionDetail = examResult.sectionDetails?.[sectionIndex]
                 // Get the corresponding section from the sections array to access skills
                 const sectionWithSkills = examResult.sections?.[sectionIndex]
-                
+
                 return {
                     _id: reviewQuestion.questionId,
                     id: reviewQuestion.questionId,
@@ -199,8 +199,8 @@ const ModelForViewExamResults = ({
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     lesson: sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
                     // Use skills from the sections array
-                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
-                           [{ text: "مهارة أساسية" }]
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
+                        [{ text: "مهارة أساسية" }]
                 }
             })
         }
@@ -249,10 +249,10 @@ const ModelForViewExamResults = ({
                     startIndex += examResult.sectionDetails[i].numberOfQuestions
                 }
                 const endIndex = startIndex + sectionDetail.numberOfQuestions
-                
+
                 // Get the questions for this section
                 const sectionQuestions = examData.slice(startIndex, endIndex)
-                
+
                 return {
                     title: sectionDetail.title || `القسم ${index + 1}`,
                     questions: sectionQuestions,
@@ -269,12 +269,12 @@ const ModelForViewExamResults = ({
             }]
         }
         console.log("🚀 ~ Details View ~ mockCurrentExam:", mockCurrentExam)
-        
+
         // Create the final data structures for ExamResults
         const examDataForResults = mockCurrentExam.sections.map(section => section.questions)
-        const reviewQuestionsForResults = mockCurrentExam.sections.map(section => 
+        const reviewQuestionsForResults = mockCurrentExam.sections.map(section =>
             section.questions.map(question => {
-                const reviewQuestion = reviewQuestions.find(rq => 
+                const reviewQuestion = reviewQuestions.find(rq =>
                     rq.questionId === question._id || rq.questionId === question.id
                 )
                 return {
@@ -286,7 +286,7 @@ const ModelForViewExamResults = ({
                 }
             })
         )
-        
+
         console.log("🚀 ~ Details View ~ examDataForResults:", examDataForResults)
         console.log("🚀 ~ Details View ~ reviewQuestionsForResults:", reviewQuestionsForResults)
         console.log("🚀 ~ Details View ~ examDataForResults[0]:", examDataForResults[0])
@@ -320,8 +320,10 @@ const ModelForViewExamResults = ({
                         onReviewAnswers={handleShowReviewSection}
                         onRetakeExam={handleRetakeExam}
                         hideRetakeButton={true}
+                        savedSections={examResult.sections}
+                        savedSectionDetails={examResult.sectionDetails}
                     />
-            </div>
+                </div>
             </Modal>
         )
     }
@@ -329,11 +331,11 @@ const ModelForViewExamResults = ({
     // Review Section View
     if (currentView === 'reviewSection' && examResult) {
         const questions = examResult.reviewQuestions || []
-        
+
         console.log("🚀 ~ Review Section ~ questions:", questions)
         console.log("🚀 ~ Review Section ~ fetchedQuestions:", fetchedQuestions)
         console.log("🚀 ~ Review Section ~ examResult.sections:", examResult.sections)
-        
+
         // Create examData structure for ExamSectionsReview based on sectionDetails
         const examData = examResult.sectionDetails?.map((sectionDetail, index) => {
             // Find questions that belong to this section based on sectionDetails
@@ -342,36 +344,36 @@ const ModelForViewExamResults = ({
                 startIndex += examResult.sectionDetails[i].numberOfQuestions
             }
             const endIndex = startIndex + sectionDetail.numberOfQuestions
-            
+
             // Get the questions for this section
             const sectionQuestions = questions.slice(startIndex, endIndex)
-            
+
             return sectionQuestions.map((question, questionIndex) => {
                 // Find the corresponding fetched question
-                const fetchedQuestion = fetchedQuestions.find(fq => 
+                const fetchedQuestion = fetchedQuestions.find(fq =>
                     fq._id === question.questionId || fq.id === question.questionId
                 )
-                
+
                 console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question:`, question)
                 console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ question keys:`, Object.keys(question))
                 console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ fetchedQuestion:`, fetchedQuestion)
                 console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from fetched:`, fetchedQuestion?.correctAnswer)
                 console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ correctAnswer from question:`, question.correctAnswer)
                 console.log(`🚀 ~ Section ${index} Question ${questionIndex} ~ answer from question:`, question.answer)
-                
+
                 return {
                     ...fetchedQuestion,
                 }
             })
         }) || [questions.map((question, index) => {
-            const fetchedQuestion = fetchedQuestions.find(fq => 
+            const fetchedQuestion = fetchedQuestions.find(fq =>
                 fq._id === question.questionId || fq.id === question.questionId
             )
-            
+
             console.log(`🚀 ~ Fallback Question ${index} ~ question:`, question)
             console.log(`🚀 ~ Fallback Question ${index} ~ fetchedQuestion:`, fetchedQuestion)
             console.log(`🚀 ~ Fallback Question ${index} ~ correctAnswer:`, fetchedQuestion?.correctAnswer)
-            
+
             return {
                 ...fetchedQuestion,
             }
@@ -385,10 +387,10 @@ const ModelForViewExamResults = ({
                 startIndex += examResult.sectionDetails[i].numberOfQuestions
             }
             const endIndex = startIndex + sectionDetail.numberOfQuestions
-            
+
             // Get the questions for this section
             const sectionQuestions = questions.slice(startIndex, endIndex)
-            
+
             return sectionQuestions.map((question, questionIndex) => ({
                 id: question.questionId || `q_${startIndex + questionIndex}`,
                 selectedAnswer: question.selectedAnswer,
@@ -470,18 +472,18 @@ const ModelForViewExamResults = ({
             setCurrentView('details')
         }
 
-    return (
-        <Modal
-                    title={`مراجعة الأقسام - ${examResult.studentName}`}
-            open={isModelForViewExamResults}
-            onCancel={handleCancel}
-                    width="60vw"
-                    footer={null}
-                    style={{ top: 10 }}
-                    bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
-                    className={styles.modalOverrides}
-        >
-            <div className={styles.resultsContainer}>
+        return (
+            <Modal
+                title={`مراجعة الأقسام - ${examResult.studentName}`}
+                open={isModelForViewExamResults}
+                onCancel={handleCancel}
+                width="60vw"
+                footer={null}
+                style={{ top: 10 }}
+                bodyStyle={{ height: 'calc(100vh - 100px)', overflowY: 'auto' }}
+                className={styles.modalOverrides}
+            >
+                <div className={styles.resultsContainer}>
                     <div className={styles.navigationHeader}>
                         <button onClick={handleBackToDetails} className={styles.backButton}>
                             <AllIconsComponenet iconName="arrowRightIcon" height={16} width={16} color="white" />
@@ -511,11 +513,11 @@ const ModelForViewExamResults = ({
         // Create question structure with fetched data and proper section assignment based on sectionDetails
         const questionsWithData = reviewQuestions.map((reviewQuestion, index) => {
             const fetchedQuestion = fetchedQuestions.find(q => q._id === reviewQuestion.questionId)
-            
+
             // Find which section this question belongs to based on sectionDetails
             let sectionIndex = 0
             let questionCount = 0
-            
+
             // Determine section based on cumulative question count from sectionDetails
             for (let i = 0; i < examResult.sectionDetails?.length; i++) {
                 const sectionDetail = examResult.sectionDetails[i]
@@ -525,12 +527,12 @@ const ModelForViewExamResults = ({
                 }
                 questionCount += sectionDetail.numberOfQuestions
             }
-            
+
             const sectionDetail = examResult.sectionDetails?.[sectionIndex]
-            
+
             // Get the corresponding section from the sections array to access skills
             const sectionWithSkills = examResult.sections?.[sectionIndex]
-            
+
             if (fetchedQuestion) {
                 return {
                     ...fetchedQuestion,
@@ -539,12 +541,12 @@ const ModelForViewExamResults = ({
                     id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     // Use skills from the sections array, fallback to question skills, then default
-                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
-                           fetchedQuestion.skills || 
-                           [{ text: "مهارة أساسية" }]
+                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
+                        fetchedQuestion.skills ||
+                        [{ text: "مهارة أساسية" }]
                 }
             }
-            
+
             // Fallback if question not found
             return {
                 _id: reviewQuestion.questionId,
@@ -560,8 +562,8 @@ const ModelForViewExamResults = ({
                 correctAnswer: "أ",
                 section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                 // Use skills from the sections array
-                skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) || 
-                       [{ text: "مهارة أساسية" }]
+                skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
+                    [{ text: "مهارة أساسية" }]
             }
         })
 
@@ -624,15 +626,15 @@ const ModelForViewExamResults = ({
                             العودة للأقسام
                         </button>
                         <h2>مراجعة الأسئلة</h2>
-                            </div>
+                    </div>
                     <div style={{ flex: 1, height: '100%', overflow: 'auto' }}>
                         <ReviewAnswers
                             CurrentExam={examResult}
                             examData={{ questions: questionsWithData }}
-                            onCompleteExam={() => {}}
+                            onCompleteExam={() => { }}
                             currentTime="00:00"
                             reviewQuestions={reviewQuestionsForComponent}
-                            setReviewQuestions={() => {}}
+                            setReviewQuestions={() => { }}
                             currentQuestionIndex={currentQuestionIndex}
                             showReviewSection={() => setCurrentView('reviewSection')}
                             finishReview={handleFinishReview}
