@@ -683,20 +683,29 @@ const ExamPage = () => {
         if (examStage !== 'results') return;
 
         // FIX: Add the last section's time before stopping the timer
-        if (sectionIDRef.current >= 0 && sectionsCounterRef.current < examSections) {
-            const initial = (selectedExam?.sections[sectionIDRef.current].duration || 0) * 60;
-            const used = initial - timeLeft;
-            console.log("🚀 ~ Last Section Time ~ sectionID:", sectionIDRef.current);
+        // We check if we have not yet recorded time for the current section
+        if (sectionIDRef.current >= 0 && allElapsedFormatted.length < examSections) {
+            const currentSectionIndex = sectionIDRef.current;
+            // Use the stored section duration or default 25
+            const initial = (selectedExam?.sections[currentSectionIndex]?.duration || 0) * 60;
+
+            // If timeLeft is weirdly larger than initial (shouldn't happen), clamp it
+            const validTimeLeft = timeLeft > initial ? initial : timeLeft;
+            const used = initial - validTimeLeft;
+
+            console.log("🚀 ~ Last Section Time ~ sectionID:", currentSectionIndex);
             console.log("🚀 ~ Last Section Time ~ initial:", initial);
             console.log("🚀 ~ Last Section Time ~ timeLeft:", timeLeft);
             console.log("🚀 ~ Last Section Time ~ used:", used);
+
             setAllElapsedFormatted((prev) => {
-                // Only add if this section's time isn't already added
-                if (prev.length === sectionsCounterRef.current) {
+                // Double check inside state setter to prevent race conditions
+                if (prev.length < examSections) {
                     return [...prev, formatTime(used)];
                 }
                 return prev;
             });
+            // Update the counter to reflect we're done with this section
             sectionsCounterRef.current += 1;
         }
 
