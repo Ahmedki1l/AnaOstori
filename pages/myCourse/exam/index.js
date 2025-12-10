@@ -1064,8 +1064,19 @@ const ExamPage = () => {
             examResultsSubmitted,
             selectedExam,
             allReviewQuestions,
-            allExamQuestions
+            allExamQuestions,
+            formattedTimesLength: allElapsedFormatted.length,
+            totalSections: examSections
         });
+
+        // WAIT: If we are in 'results' stage, ensure we have tallied time for ALL sections before submitting.
+        // The time calculation happens in another useEffect that also triggers on 'results'.
+        // We must wait for that state update to propagate.
+        if (examStage === 'results' && examSections > 0 && allElapsedFormatted.length < examSections) {
+            console.log("⏳ Waiting for final section time calculation before submitting...");
+            return;
+        }
+
         if (examStage === 'results' && selectedExam && allReviewQuestions && allExamQuestions) {
             if (distractionStrikes >= 3) {
                 // If terminated, submit with termination reason
@@ -1075,7 +1086,7 @@ const ExamPage = () => {
                 submitExamResults();
             }
         }
-    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions]);
+    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, allElapsedFormatted, examSections]);
 
     if (loading) {
         return (
