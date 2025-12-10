@@ -191,7 +191,7 @@ const ExamPage = () => {
         console.warn('Distraction detected:', type, data);
         const currentTime = Date.now();
 
-        setDistractionEvents(evts => [...evts, { type, time: currentTime, ...data }]);
+        setDistractionEvents(evts => [...evts, { type, timestamp: currentTime, ...data }]);
 
         // If this is the first distraction event, start the 3-second timer
         if (!isDistracted) {
@@ -681,7 +681,7 @@ const ExamPage = () => {
         }
 
         if (examStage !== 'results') return;
-        
+
         // FIX: Add the last section's time before stopping the timer
         if (sectionIDRef.current >= 0 && sectionsCounterRef.current < examSections) {
             const initial = (selectedExam?.sections[sectionIDRef.current].duration || 0) * 60;
@@ -699,7 +699,7 @@ const ExamPage = () => {
             });
             sectionsCounterRef.current += 1;
         }
-        
+
         // kill interval if still running
         if (timerRef.current) {
             clearInterval(timerRef.current);

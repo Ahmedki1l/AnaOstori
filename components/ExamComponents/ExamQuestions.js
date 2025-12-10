@@ -209,7 +209,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                         {/* — Question‐level image, if any — */}
                         {currentQuestion.questionImages && (
                             currentQuestion.questionImages.map((image, index) => (
-                                <div className={styles.imageContainer}>
+                                <div className={styles.imageContainer} key={index}>
                                     <ImageLightbox
                                         src={image}
                                         alt={`Question ${index + 1}`}
@@ -242,6 +242,7 @@ const ExamQuestions = ({ timeLeft, CurrentExam, examData, onCompleteExam, curren
                                     {option.images && (
                                         option.images.map((image, index) => (
                                             <ImageLightbox
+                                                key={index}
                                                 src={image}
                                                 alt={`Option ${option.id}`}
                                             />

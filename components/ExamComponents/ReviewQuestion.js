@@ -123,7 +123,7 @@ const ReviewQuestion = ({
                         </svg>
                     </div>
                     <span className={styles.timerText}>{formatTime(timeLeft)}</span>
-                    
+
                     {/* Distraction Warning Indicator */}
                     {(cheatStrikes > 0 || isCheating) && (
                         <div className={styles.distractionIndicator}>
@@ -176,10 +176,11 @@ const ReviewQuestion = ({
                         {currentQuestion.questionImages && (
                             currentQuestion.questionImages.map((image, index) => (
                                 <ImageLightbox
+                                    key={`question-img-${index}`}
                                     src={image}
                                     alt={`Question ${index + 1}`}
                                 />
-                                
+
                             ))
                         )}
 
@@ -207,10 +208,11 @@ const ReviewQuestion = ({
                                     {option.images && (
                                         option.images.map((image, index) => (
                                             <ImageLightbox
+                                                key={`option-img-${option.id}-${index}`}
                                                 src={image}
                                                 alt={`Option ${option.id}`}
                                             />
-                                            
+
                                         ))
                                     )}
                                 </div>

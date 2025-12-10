@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Spinner from '../CommonComponents/spinner';
 import styles from './ImageLightbox.module.scss';
 
 export default function ImageLightbox({ src, alt }) {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [overlayLoading, setOverlayLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [overlayLoading, setOverlayLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    setOverlayLoading(true);
+  }, [src]);
 
   // // Preload image for overlay
   // React.useEffect(() => {
