@@ -87,48 +87,40 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             return [];
         }
 
-        // Group questions by section (text before "-")
-        const sectionMap = new Map();
+        return examData.map((sectionQuestions, sectionIndex) => {
+            const sectionReviewQuestions = allReviews[sectionIndex] || [];
 
-        examData.forEach((question, index) => {
-            question?.skills?.forEach(skill => {
-                const sectionTitle = question?.section + " - " + question?.lesson;
+            // Calculate correct answers for this section
+            let correctInSection = 0;
+            sectionReviewQuestions.forEach((q, qIndex) => {
+                if (q.selectedAnswer === sectionQuestions[qIndex]?.correctAnswer) {
+                    correctInSection++;
+                }
+            });
 
-                if (!sectionMap.has(sectionTitle)) {
-                    sectionMap.set(sectionTitle, {
-                        title: sectionTitle,
-                        questions: [],
-                        skills: new Map()
+            const sectionScore = sectionQuestions.length > 0
+                ? Math.round((correctInSection / sectionQuestions.length) * 100)
+                : 0;
+
+            // Group questions by skill within this section
+            const skillsMap = new Map();
+            sectionQuestions.forEach((question, qIndex) => {
+                question?.skills?.forEach(skill => {
+                    const skillName = skill.text || skill;
+
+                    if (!skillsMap.has(skillName)) {
+                        skillsMap.set(skillName, []);
+                    }
+
+                    skillsMap.get(skillName).push({
+                        question,
+                        selectedAnswer: sectionReviewQuestions?.[qIndex]?.selectedAnswer ?? null
                     });
-                }
-
-                const section = sectionMap.get(sectionTitle);
-                section.questions.push({
-                    question,
-                    selectedAnswer: allReviews?.[index]?.selectedAnswer ?? null,
-                    skill: skill.text
-                });
-
-                // Group by skill within section
-                if (!section.skills.has(skill.text)) {
-                    section.skills.set(skill.text, []);
-                }
-                section.skills.get(skill.text).push({
-                    question,
-                    selectedAnswer: allReviews?.[index]?.selectedAnswer ?? null
                 });
             });
-        });
 
-        // Calculate scores for sections and skills
-        return Array.from(sectionMap.values()).map(section => {
-            const correctInSection = section.questions.filter(q =>
-                q.selectedAnswer === q.question.correctAnswer
-            ).length;
-
-            const sectionScore = Math.round((correctInSection / section.questions.length) * 100);
-
-            const skills = Array.from(section.skills.entries()).map(([skillTitle, questions]) => {
+            // Calculate skill scores
+            const skills = Array.from(skillsMap.entries()).map(([skillTitle, questions]) => {
                 const correctInSkill = questions.filter(q =>
                     q.selectedAnswer === q.question.correctAnswer
                 ).length;
@@ -142,9 +134,9 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             });
 
             return {
-                title: section.title,
+                title: CurrentExam?.sections?.[sectionIndex]?.title || `القسم ${sectionIndex + 1}`,
                 score: correctInSection,
-                totalQuestions: section.questions.length,
+                totalQuestions: sectionQuestions.length,
                 skills: skills
             };
         });
@@ -160,7 +152,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             const parts = time.toString().split(':'); // numeric time is converted to string
             const minutes = parseInt(parts[0]) || 0;
             const seconds = parseInt(parts[1]) || 0;
-            
+
             totalMinutes += minutes;
             totalSeconds += seconds;
         });
@@ -181,9 +173,9 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     const correctAnswers = getCorrectAnswers(flatQuestions, flatReviews);
     const unAnswered = getNotAnsweredQuestions();
     const marked = getMarkedQuestions();
-    
+
     // Use saved sections if provided, otherwise calculate them
-    const sections = savedSections || getSections(flatQuestions, flatReviews);
+    const sections = savedSections || getSections(examData, reviewQuestions);
 
     const getSectionDetails = (allReviews, examData) => {
         if (!allReviews || !examData || allReviews.length === 0) {
