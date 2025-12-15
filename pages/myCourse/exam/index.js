@@ -191,7 +191,7 @@ const ExamPage = () => {
         console.warn('Distraction detected:', type, data);
         const currentTime = Date.now();
 
-        setDistractionEvents(evts => [...evts, { type, timestamp: new Date(currentTime).toISOString(), ...data }]);
+        setDistractionEvents(evts => [...evts, { eventType: type, timestamp: new Date(currentTime).toISOString(), ...data }]);
 
         // If this is the first distraction event, start the 3-second timer
         if (!isDistracted) {
