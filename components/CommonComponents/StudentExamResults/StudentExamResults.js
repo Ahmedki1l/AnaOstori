@@ -514,7 +514,7 @@ const StudentExamResults = () => {
         // Find questions that belong to this section based on their position in the reviewQuestions array
         const questionsPerSection = Math.ceil(reviewQuestions.length / selectedResult.sectionDetails.length)
         const totalSectionQuestions = section.numberOfQuestions;
-        const startIndex = index + questionsCounter;
+        const startIndex = questionsCounter;
         // The endIndex is NOT included in the subarray returned by slice (slice is exclusive of endIndex)
         const endIndex = startIndex + totalSectionQuestions;
         questionsCounter += totalSectionQuestions;
@@ -619,7 +619,7 @@ const StudentExamResults = () => {
     // Create examData structure for ExamSectionsReview
     const examData = sectionsToUse?.map((section, index) => {
       const totalSectionQuestions = section.numberOfQuestions || section.questions?.length || 0;
-      const startIndex = index + questionsCounter;
+      const startIndex = questionsCounter;
       const endIndex = startIndex + totalSectionQuestions;
 
       // Get the questions for this section (endIndex is exclusive)
@@ -661,7 +661,7 @@ const StudentExamResults = () => {
     // Create reviewQuestions structure for ExamSectionsReview
     const reviewQuestions = sectionsToUse?.map((section, index) => {
       const totalSectionQuestions = section.numberOfQuestions || section.questions?.length || 0;
-      const startIndex = index + questionsCounter;
+      const startIndex = questionsCounter;
       const endIndex = startIndex + totalSectionQuestions;
 
       // Get the questions for this section (endIndex is exclusive)
@@ -701,9 +701,13 @@ const StudentExamResults = () => {
     console.log("🚀 ~ Review Section ~ reviewQuestions:", reviewQuestions)
 
     const handleQuestionClick = (sectionIndex, questionIndex) => {
-      // Calculate global question index
-      const questionsPerSection = Math.ceil(questions.length / (selectedResult.sectionDetails?.length || 1))
-      const globalIndex = sectionIndex * questionsPerSection + questionIndex
+      // Calculate global question index by summing questions in previous sections
+      let globalIndex = questionIndex;
+      for (let i = 0; i < sectionIndex; i++) {
+        const sectionQuestions = selectedResult.sectionDetails?.[i]?.numberOfQuestions ||
+          selectedResult.sections?.[i]?.questions?.length || 0;
+        globalIndex += sectionQuestions;
+      }
       setCurrentView('reviewAnswers')
       setSelectedQuestion(globalIndex)
       setCurrentQuestionIndex(globalIndex) // Update the current question index for ReviewAnswers
@@ -918,8 +922,8 @@ const StudentExamResults = () => {
                 <div
                   key={optionIndex}
                   className={`${styles.answerOption} ${option.isCorrect ? styles.correctAnswer :
-                      option.id === selectedQuestion.selectedAnswer ? styles.selectedAnswer :
-                        styles.otherAnswer
+                    option.id === selectedQuestion.selectedAnswer ? styles.selectedAnswer :
+                      styles.otherAnswer
                     }`}
                 >
                   <div className={styles.answerContent}>

@@ -45,7 +45,7 @@ export default function ImageLightbox({ src, alt }) {
             onError={(e) => { setLoading(false); console.log('Thumbnail image failed to load:', src, e); }}
             style={{ objectFit: 'contain', display: loading ? 'none' : 'block', cursor: 'pointer' }}
             unoptimized={false}
-            priority={false}
+            priority={true}
           />
         </div>
       </div>

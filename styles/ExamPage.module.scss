@@ -1942,3 +1942,184 @@
         gap: 2px;
     }
 }
+
+/* Small mobile screens (480px and below) */
+@media (max-width: 480px) {
+    .examHeader {
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .examTitle {
+        font-size: 12px;
+        order: 1;
+        width: 100%;
+        text-align: center;
+    }
+
+    .timerContainer {
+        order: 2;
+    }
+
+    .timerText {
+        font-size: 14px;
+    }
+
+    .questionNumber {
+        font-size: 12px;
+        margin: 0 5px;
+    }
+
+    .questionContent {
+        margin: 10px 0;
+        padding: 0 4px;
+    }
+
+    .mainQuestionArea {
+        padding: 12px 8px;
+    }
+
+    .questionText {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    .optionsContainer {
+        gap: 6px;
+    }
+
+    .optionRow {
+        padding: 6px 8px;
+    }
+
+    .optionText {
+        font-size: 13px;
+        padding-right: 6px;
+    }
+
+    .optionLabel {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+
+    .nextButton {
+        padding: 10px 14px;
+        font-size: 14px;
+        margin: 0 4px;
+    }
+
+    .wrapper {
+        padding: 6px 8px;
+    }
+
+    .markQuestionBtn {
+        padding: 6px 10px;
+        font-size: 11px;
+        margin: 0 4px;
+    }
+
+    .buttonsContainer {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .examActions,
+    .examActionsAbsolute,
+    .examActions2 {
+        padding: 10px 8px;
+    }
+
+    /* Section review mobile fixes */
+    .figmaSectionsContent {
+        padding: 12px 8px;
+        gap: 12px;
+    }
+
+    .figmaSectionHeader {
+        padding: 12px;
+        flex-wrap: wrap;
+    }
+
+    .figmaSectionTitle {
+        font-size: 16px;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .figmaSectionInfo {
+        width: 100%;
+        gap: 8px;
+        justify-content: space-between;
+    }
+
+    .figmaSectionScore,
+    .figmaTimeText {
+        font-size: 14px;
+    }
+
+    .figmaQuestionItem {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 12px;
+    }
+
+    .figmaQuestionText {
+        font-size: 14px;
+    }
+
+    .figmaSectionsFooter {
+        padding: 12px 8px;
+        gap: 8px;
+    }
+
+    .figmaRetakeButton,
+    .figmaResultsButton {
+        height: 48px;
+        font-size: 16px;
+    }
+
+    /* Results container mobile */
+    .resultsContainer {
+        padding: 12px 8px;
+    }
+
+    .statsSummary {
+        gap: 10px;
+    }
+
+    .statsSummary > * {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .statsItem {
+        width: 100%;
+    }
+
+    .statsCount {
+        font-size: 16px;
+    }
+
+    .statsText {
+        font-size: 14px;
+    }
+
+    .sectionBox {
+        min-width: 100%;
+        height: auto;
+        min-height: 350px;
+    }
+
+    .actionButtons {
+        gap: 8px;
+    }
+
+    .retakeButton,
+    .reviewButton {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+}

@@ -142,6 +142,84 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         });
     };
 
+    // Aggregate scores by category (كمي/لفظي) across all sections
+    const getAggregatedCategories = (examData, allReviews) => {
+        if (!examData || !allReviews || allReviews.length === 0) {
+            return [];
+        }
+
+        // Category aggregation maps
+        const categoriesMap = new Map();
+
+        examData.forEach((sectionQuestions, sectionIndex) => {
+            const sectionReviewQuestions = allReviews[sectionIndex] || [];
+            const sectionTitle = CurrentExam?.sections?.[sectionIndex]?.title || `القسم ${sectionIndex + 1}`;
+
+            // Determine which category this section belongs to
+            let category = 'أخرى'; // Default category
+            if (sectionTitle.includes('كمي')) {
+                category = 'كمي';
+            } else if (sectionTitle.includes('لفظي')) {
+                category = 'لفظي';
+            }
+
+            // Initialize category if not exists
+            if (!categoriesMap.has(category)) {
+                categoriesMap.set(category, {
+                    title: category,
+                    score: 0,
+                    totalQuestions: 0,
+                    skillsMap: new Map()
+                });
+            }
+
+            const categoryData = categoriesMap.get(category);
+
+            // Calculate correct answers for this section and add to category
+            sectionQuestions.forEach((question, qIndex) => {
+                const reviewQuestion = sectionReviewQuestions[qIndex];
+                const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
+
+                categoryData.totalQuestions++;
+                if (isCorrect) {
+                    categoryData.score++;
+                }
+
+                // Group by skills within category
+                question?.skills?.forEach(skill => {
+                    const skillName = skill.text || skill;
+
+                    if (!categoryData.skillsMap.has(skillName)) {
+                        categoryData.skillsMap.set(skillName, {
+                            title: skillName,
+                            correctAnswers: 0,
+                            numberOfQuestions: 0
+                        });
+                    }
+
+                    const skillData = categoryData.skillsMap.get(skillName);
+                    skillData.numberOfQuestions++;
+                    if (isCorrect) {
+                        skillData.correctAnswers++;
+                    }
+                });
+            });
+        });
+
+        // Convert maps to arrays and calculate percentages
+        return Array.from(categoriesMap.values()).map(category => ({
+            title: category.title,
+            score: category.score,
+            totalQuestions: category.totalQuestions,
+            skills: Array.from(category.skillsMap.values()).map(skill => ({
+                ...skill,
+                score: skill.numberOfQuestions > 0
+                    ? Math.round((skill.correctAnswers / skill.numberOfQuestions) * 100)
+                    : 0
+            }))
+        }));
+    };
+
     const calculateTime = () => {
         let totalMinutes, totalSeconds;
         totalMinutes = 0;
@@ -207,6 +285,9 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     // Use saved section details if provided, otherwise calculate them
     const sectionDetails = savedSectionDetails || getSectionDetails(allReviews, examData)
 
+    // Get aggregated categories (كمي/لفظي totals)
+    const aggregatedCategories = getAggregatedCategories(examData, reviewQuestions);
+
     // Add to results object
     const results = {
         score: score,
@@ -218,7 +299,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         unansweredQuestions: unAnswered,
         markedQuestions: marked,
         sections: sections,
-        sectionDetails: sectionDetails
+        sectionDetails: sectionDetails,
+        aggregatedCategories: aggregatedCategories
     };
 
     console.log("🚀 ~ ExamResults ~ results:", results)
@@ -419,16 +501,16 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 </div>
             </div>
 
-            {/* Section scores */}
+            {/* Category totals (كمي/لفظي) */}
             <div className={styles.sectionsContainer}>
-                {results.sections.map((section, index) => (
+                {results.aggregatedCategories.map((category, index) => (
                     <div key={index} className={styles.sectionBox}>
                         <div className={styles.sectionHeader}>
-                            <ProgressCircle score={section.score} totalQuestions={section.totalQuestions} size={80} />
-                            <h3>{section.title}</h3>
+                            <ProgressCircle score={category.score} totalQuestions={category.totalQuestions} size={80} />
+                            <h3>إجمالي {category.title}</h3>
                         </div>
                         <div className={styles.skillsList}>
-                            {section.skills.map((skill, skillIndex) => (
+                            {category.skills.map((skill, skillIndex) => (
                                 <div key={skillIndex} className={styles.skillItem}>
                                     <div className={styles.skillTitle}>{skill.title}</div>
                                     <div className={styles.scoreContainer}>
@@ -440,7 +522,6 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                                 </div>
                             ))}
                         </div>
-                        {/* <button className={styles.showMoreBtn}>عرض باقي المهارات</button> */}
                     </div>
                 ))}
             </div>
