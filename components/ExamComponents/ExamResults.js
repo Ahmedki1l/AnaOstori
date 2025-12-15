@@ -507,7 +507,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                     <div key={index} className={styles.sectionBox}>
                         <div className={styles.sectionHeader}>
                             <ProgressCircle score={category.score} totalQuestions={category.totalQuestions} size={80} />
-                            <h3>إجمالي {category.title}</h3>
+                            <h3>{category.title}</h3>
                         </div>
                         <div className={styles.skillsList}>
                             {category.skills.map((skill, skillIndex) => (

@@ -1624,7 +1624,7 @@
         font-size: 20px;
     }
 
-    .nextButton{
+    .nextButton {
         font-size: 16px;
     }
 }
@@ -2087,12 +2087,14 @@
     }
 
     .statsSummary {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 
-    .statsSummary > * {
-        flex: 0 0 100%;
-        max-width: 100%;
+    .statsSummary>* {
+        flex: unset;
+        max-width: unset;
     }
 
     .statsItem {
