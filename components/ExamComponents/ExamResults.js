@@ -142,7 +142,253 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         });
     };
 
-    // Aggregate scores by category (كمي/لفظي) across all sections
+    // Skill to Category Mapping
+    const SKILL_CATEGORIES = {
+        // ========================================
+        // قدرات (Arabic GAT) - كمي / لفظي
+        // ========================================
+
+        // لفظي (Verbal) Skills
+        'إكمال الجمل': 'لفظي',
+        'الخطأ السياقي': 'لفظي',
+        'التناظر اللفظي': 'لفظي',
+        'الارتباط والاختلاف': 'لفظي',
+        'استيعاب المقروء': 'لفظي',
+        'المفردة الشاذة': 'لفظي',
+
+        // كمي (Quantitative) Skills
+        'العمليات الأساسية': 'كمي',
+        'الكسور الاعتيادية': 'كمي',
+        'الكسور العشرية': 'كمي',
+        'أفكار خاصة بالقدرات': 'كمي',
+        'النسب والتناسب': 'كمي',
+        'الأسس والمتطابقات': 'كمي',
+        'الجذور': 'كمي',
+        'المعادلات والمتباينات': 'كمي',
+        'الزوايا والمضلعات': 'كمي',
+        'المثلث': 'كمي',
+        'المضلعات الرباعية': 'كمي',
+        'الدائرة': 'كمي',
+        'أفكار خاصة بالهندسة': 'كمي',
+        'الإحصاء': 'كمي',
+
+        // ========================================
+        // GAT English - Quantitative / Verbal
+        // ========================================
+
+        // Quantitative Skills (GAT English)
+        'Algebra': 'Quantitative',
+        'Geometry': 'Quantitative',
+        'Arithmetic': 'Quantitative',
+        'Statistics': 'Quantitative',
+        'Comparison': 'Quantitative',
+
+        // Verbal Skills (GAT English)
+        'Analogy': 'Verbal',
+        'Sentence Completion': 'Verbal',
+        'Contextual Error': 'Verbal',
+        'Atypical word': 'Verbal',
+        'Atypical Word': 'Verbal',
+        'Reading comprehension': 'Verbal',
+        'Reading Comprehension': 'Verbal',
+
+        // ========================================
+        // تحصيلي (Arabic SAAT) - رياضيات / فيزياء / كيمياء / أحياء
+        // ========================================
+
+        // رياضيات (Math) Skills
+        'التبرير والبرهان والمنطق الرياضي': 'رياضيات',
+        'هندسة المثلثات': 'رياضيات',
+        'الاشكال الرباعية والتحويلات الهندسية': 'رياضيات',
+        'تحليل الدوال': 'رياضيات',
+        'ضرب العبارات النسبية وقسمتها': 'رياضيات',
+        'المصفوفات والمحددات': 'رياضيات',
+        'كثيرات الحدود': 'رياضيات',
+        'الأسس والجذور واللوغاريتمات': 'رياضيات',
+        'المتتابعات والمتسلسلات': 'رياضيات',
+        'الإحصاء والاحتمال': 'رياضيات',
+        'حساب المثلثات': 'رياضيات',
+        'النهايات والدوال المتصلة': 'رياضيات',
+        'التفاضل والتكامل': 'رياضيات',
+        'القطوع المخروطية': 'رياضيات',
+        'المتجهات والإحداثيات القطبية': 'رياضيات',
+
+        // فيزياء (Physics) Skills
+        'علم الفيزياء': 'فيزياء',
+        'الحركة والسرعة': 'فيزياء',
+        'التسارع': 'فيزياء',
+        'القوة': 'فيزياء',
+        'قوانين كبلر والجاذبية': 'فيزياء',
+        'العزم': 'فيزياء',
+        'الدفع والزخم': 'فيزياء',
+        'الشغل والطاقة': 'فيزياء',
+        'الطاقة الحرارية': 'فيزياء',
+        'الموائع': 'فيزياء',
+        'الموجات': 'فيزياء',
+        'الصوت': 'فيزياء',
+        'الضوء': 'فيزياء',
+        'الانعكاس في الضوء والمرايا': 'فيزياء',
+        'الانكسار في الضوء والعدسات': 'فيزياء',
+        'الكهرباء الساكنة والمجال الكهربي': 'فيزياء',
+        'التيار الكهربي': 'فيزياء',
+        'القوى والمجالات المغناطيسية': 'فيزياء',
+        'الفيزياء الحديثة': 'فيزياء',
+        'إلكترونيات الحالة الصلبة': 'فيزياء',
+        'الفيزياء النووية': 'فيزياء',
+
+        // كيمياء (Chemistry) Skills
+        'تركيب الذرة والنشاط الإشعاعي': 'كيمياء',
+        'نظرية الكم والتوزيع الإلكتروني': 'كيمياء',
+        'الجدول الدوري وتدرج الخواص': 'كيمياء',
+        'الروابط الكيميائية والفيزيائية': 'كيمياء',
+        'التفاعلات والحسابات الكيميائية': 'كيمياء',
+        'المحاليل الكيميائية': 'كيمياء',
+        'الغازات': 'كيمياء',
+        'الكيمياء الحرارية': 'كيمياء',
+        'الاتزان الكيميائي': 'كيمياء',
+        'الأحماض والقواعد': 'كيمياء',
+        'الأكسدة والاختزال': 'كيمياء',
+        'الكيمياء الكهربائية': 'كيمياء',
+        'الهيدروكربونات': 'كيمياء',
+        'مشتقات الهيدروكربونات': 'كيمياء',
+        'الكيمياء الحيوية': 'كيمياء',
+        'العلماء في الكيمياء': 'كيمياء',
+
+        // أحياء (Biology) Skills
+        'دراسة الحياة': 'أحياء',
+        'تنظيم تنوع الحياة': 'أحياء',
+        'البكتيريا والفيروسات': 'أحياء',
+        'الطلائعيات': 'أحياء',
+        'الفطريات': 'أحياء',
+        'مدخل إلى الحيوانات': 'أحياء',
+        'الديدان والرخويات': 'أحياء',
+        'المفصليات': 'أحياء',
+        'شوكيات الجلد واللافقاريات الحبلية': 'أحياء',
+        'الأسماك والبرمائيات': 'أحياء',
+        'الزواحف والطيور': 'أحياء',
+        'الثدييات': 'أحياء',
+        'مقدمة في النبات': 'أحياء',
+        'تركيب النبات ووظائف أجزائه': 'أحياء',
+        'التكاثر في النباتات الزهرية': 'أحياء',
+        'الجهازان الهيكلي والعضلي': 'أحياء',
+        'الجهاز العصبي': 'أحياء',
+        'أجهزة الدوران والتنفس والإخراج': 'أحياء',
+        'جهاز الهضم والغدد الصم': 'أحياء',
+        'التكاثر والنمو في الإنسان': 'أحياء',
+        'جهاز المناعة': 'أحياء',
+        'أجهزة جسم الإنسان': 'أحياء',
+        'تركيب الخلية ووظائفها': 'أحياء',
+        'الطاقة الخلوية': 'أحياء',
+        'التكاثر الخلوي': 'أحياء',
+        'التكاثر الجنسي والوراثة': 'أحياء',
+        'الوراثة المعقدة والوراثة البشرية': 'أحياء',
+        'مبادئ علم البيئة': 'أحياء',
+        'المجتمعات والمناطق الحيوية والأنظمة البيئية': 'أحياء',
+        'علم بيئة الجماعات الحيوية': 'أحياء',
+        'التنوع الحيوي والمحافظة عليه': 'أحياء',
+        'سلوك الحيوان': 'أحياء',
+
+        // ========================================
+        // SAAT English - Mathematics / Physics / Chemistry / Biology
+        // ========================================
+
+        // Mathematics Skills (SAAT English)
+        'Mathematical Reasoning': 'Mathematics',
+        'Triangle Geometry': 'Mathematics',
+        'Quadrilaterals and Geometric Transformations': 'Mathematics',
+        'Function Analysis': 'Mathematics',
+        'Rational Expressions': 'Mathematics',
+        'Matrices and Determinants': 'Mathematics',
+        'Polynomials': 'Mathematics',
+        'Exponents and Logarithms': 'Mathematics',
+        'Sequences and Series': 'Mathematics',
+        'Statistics and Probability': 'Mathematics',
+        'Trigonometry': 'Mathematics',
+        'Limits and Continuous Functions': 'Mathematics',
+        'Calculus': 'Mathematics',
+        'Conic Sections': 'Mathematics',
+        'Vectors and Polar Coordinates': 'Mathematics',
+
+        // Physics Skills (SAAT English)
+        'Physics Science': 'Physics',
+        'Motion and Speed': 'Physics',
+        'Acceleration': 'Physics',
+        'Force': 'Physics',
+        'Kepler Laws and Gravity': 'Physics',
+        'Torque': 'Physics',
+        'Impulse and Momentum': 'Physics',
+        'Work and Energy': 'Physics',
+        'Thermal Energy': 'Physics',
+        'Fluids': 'Physics',
+        'Waves': 'Physics',
+        'Sound': 'Physics',
+        'Light': 'Physics',
+        'Reflection and Mirrors': 'Physics',
+        'Refraction and Lenses': 'Physics',
+        'Electrostatics': 'Physics',
+        'Electric Current': 'Physics',
+        'Magnetic Forces and Fields': 'Physics',
+        'Modern Physics': 'Physics',
+        'Solid State Electronics': 'Physics',
+        'Nuclear Physics': 'Physics',
+
+        // Chemistry Skills (SAAT English)
+        'Atomic Structure and Radioactivity': 'Chemistry',
+        'Quantum Theory and Electron Configuration': 'Chemistry',
+        'Periodic Table and Properties': 'Chemistry',
+        'Chemical and Physical Bonds': 'Chemistry',
+        'Chemical Reactions and Calculations': 'Chemistry',
+        'Chemical Solutions': 'Chemistry',
+        'Gases': 'Chemistry',
+        'Thermochemistry': 'Chemistry',
+        'Chemical Equilibrium': 'Chemistry',
+        'Acids and Bases': 'Chemistry',
+        'Oxidation and Reduction': 'Chemistry',
+        'Electrochemistry': 'Chemistry',
+        'Hydrocarbons': 'Chemistry',
+        'Hydrocarbon Derivatives': 'Chemistry',
+        'Biochemistry': 'Chemistry',
+
+        // Biology Skills (SAAT English)
+        'Study of Life': 'Biology',
+        'Diversity of Life': 'Biology',
+        'Bacteria and Viruses': 'Biology',
+        'Protists': 'Biology',
+        'Fungi': 'Biology',
+        'Introduction to Animals': 'Biology',
+        'Worms and Mollusks': 'Biology',
+        'Arthropods': 'Biology',
+        'Echinoderms and Invertebrate Chordates': 'Biology',
+        'Fish and Amphibians': 'Biology',
+        'Reptiles and Birds': 'Biology',
+        'Mammals': 'Biology',
+        'Introduction to Plants': 'Biology',
+        'Plant Structure and Function': 'Biology',
+        'Plant Reproduction': 'Biology',
+        'Skeletal and Muscular Systems': 'Biology',
+        'Nervous System': 'Biology',
+        'Circulatory Respiratory and Excretory Systems': 'Biology',
+        'Digestive and Endocrine Systems': 'Biology',
+        'Human Reproduction and Development': 'Biology',
+        'Immune System': 'Biology',
+        'Cell Structure and Function': 'Biology',
+        'Cellular Energy': 'Biology',
+        'Cell Reproduction': 'Biology',
+        'Sexual Reproduction and Genetics': 'Biology',
+        'Complex Inheritance and Human Genetics': 'Biology',
+        'Principles of Ecology': 'Biology',
+        'Communities and Biomes': 'Biology',
+        'Population Ecology': 'Biology',
+        'Biodiversity and Conservation': 'Biology',
+        'Animal Behavior': 'Biology'
+    };
+
+    // Function to get category from skill name
+    const getCategoryFromSkill = (skillName) => {
+        return SKILL_CATEGORIES[skillName] || 'أخرى';
+    };
+
+    // Aggregate scores by category based on skills across all sections
     const getAggregatedCategories = (examData, allReviews) => {
         if (!examData || !allReviews || allReviews.length === 0) {
             return [];
@@ -153,42 +399,33 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
 
         examData.forEach((sectionQuestions, sectionIndex) => {
             const sectionReviewQuestions = allReviews[sectionIndex] || [];
-            const sectionTitle = CurrentExam?.sections?.[sectionIndex]?.title || `القسم ${sectionIndex + 1}`;
 
-            // Determine which category this section belongs to
-            let category = 'أخرى'; // Default category
-            if (sectionTitle.includes('كمي')) {
-                category = 'كمي';
-            } else if (sectionTitle.includes('لفظي')) {
-                category = 'لفظي';
-            }
-
-            // Initialize category if not exists
-            if (!categoriesMap.has(category)) {
-                categoriesMap.set(category, {
-                    title: category,
-                    score: 0,
-                    totalQuestions: 0,
-                    skillsMap: new Map()
-                });
-            }
-
-            const categoryData = categoriesMap.get(category);
-
-            // Calculate correct answers for this section and add to category
             sectionQuestions.forEach((question, qIndex) => {
                 const reviewQuestion = sectionReviewQuestions[qIndex];
                 const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
 
-                categoryData.totalQuestions++;
-                if (isCorrect) {
-                    categoryData.score++;
-                }
-
-                // Group by skills within category
+                // Get category from the question's skills
                 question?.skills?.forEach(skill => {
                     const skillName = skill.text || skill;
+                    const category = getCategoryFromSkill(skillName);
 
+                    // Initialize category if not exists
+                    if (!categoriesMap.has(category)) {
+                        categoriesMap.set(category, {
+                            title: category,
+                            score: 0,
+                            totalQuestions: 0,
+                            skillsMap: new Map()
+                        });
+                    }
+
+                    const categoryData = categoriesMap.get(category);
+                    categoryData.totalQuestions++;
+                    if (isCorrect) {
+                        categoryData.score++;
+                    }
+
+                    // Group by skills within category
                     if (!categoryData.skillsMap.has(skillName)) {
                         categoryData.skillsMap.set(skillName, {
                             title: skillName,
