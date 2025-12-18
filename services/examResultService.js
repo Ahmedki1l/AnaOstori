@@ -11,15 +11,18 @@ export const examResultService = {
      * @param {Object} results - Exam results data
      * @param {string} examId - Exam ID
      * @param {string} studentId - Student ID
-     * @param {Object} options - Additional options (termination info, etc.)
+     * @param {Object} options - Additional options (termination info, courseId, etc.)
      * @returns {Promise<Object>} - API response
      */
-    async submitExamResults(examData, results, examId, studentId, options = {}) {
+    async submitExamResults(examData, results, examId, studentId, options = {}, retryCount = 0) {
+        const MAX_RETRIES = 3;
+
         try {
             const examResultData = {
                 routeName: 'submitExamResult',
                 examId: examId,
                 studentId: studentId,
+                courseId: options.courseId || examData.courseId || null, // Include courseId if available
                 examData: {
                     examName: examData.title,
                     examDuration: examData.duration,
@@ -49,17 +52,26 @@ export const examResultService = {
             console.log('Exam results submitted successfully:', response)
             return response
         } catch (error) {
-            console.error('Error submitting exam results:', error)
+            console.error(`Error submitting exam results (attempt ${retryCount + 1}/${MAX_RETRIES}):`, error)
 
             // Handle token refresh
             if (error?.response?.status === 401) {
                 try {
                     await getNewToken()
-                    return await this.submitExamResults(examData, results, examId, studentId, options)
+                    return await this.submitExamResults(examData, results, examId, studentId, options, retryCount)
                 } catch (refreshError) {
                     console.error('Token refresh failed:', refreshError)
                     throw refreshError
                 }
+            }
+
+            // Retry with exponential backoff for network errors (not 4xx client errors)
+            const isNetworkError = !error?.response?.status || error?.response?.status >= 500
+            if (isNetworkError && retryCount < MAX_RETRIES) {
+                const delay = 1000 * Math.pow(2, retryCount) // 1s, 2s, 4s
+                console.log(`Retrying submission in ${delay}ms...`)
+                await new Promise(resolve => setTimeout(resolve, delay))
+                return await this.submitExamResults(examData, results, examId, studentId, options, retryCount + 1)
             }
 
             throw error

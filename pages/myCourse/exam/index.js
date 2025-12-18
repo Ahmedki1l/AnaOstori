@@ -185,6 +185,7 @@ const ExamPage = () => {
     // Exam result submission
     const [examResultsSubmitted, setExamResultsSubmitted] = useState(false);
     const [submittingResults, setSubmittingResults] = useState(false);
+    const [submissionFailed, setSubmissionFailed] = useState(false);
 
     // callback whenever a "distraction" happens
     const reportDistraction = (type, data = {}) => {
@@ -992,10 +993,18 @@ const ExamPage = () => {
 
         } catch (error) {
             console.error('Error submitting exam results:', error);
-            toast.error('حدث خطأ في حفظ نتائج الاختبار');
+            toast.error('حدث خطأ في حفظ نتائج الاختبار. يمكنك المحاولة مرة أخرى.');
+            setSubmissionFailed(true);
         } finally {
             setSubmittingResults(false);
         }
+    };
+
+    // Manual retry function for failed submissions
+    const retrySubmission = () => {
+        setSubmissionFailed(false);
+        setExamResultsSubmitted(false);
+        submitExamResults();
     };
 
     const handleQuestionClick = (index) => {
@@ -1069,22 +1078,39 @@ const ExamPage = () => {
             totalSections: examSections
         });
 
+        // Early exit if not in results stage or already submitted
+        if (examStage !== 'results' || examResultsSubmitted) return;
+        if (!selectedExam || !allReviewQuestions || !allExamQuestions) return;
+
         // WAIT: If we are in 'results' stage, ensure we have tallied time for ALL sections before submitting.
-        // The time calculation happens in another useEffect that also triggers on 'results'.
-        // We must wait for that state update to propagate.
-        if (examStage === 'results' && examSections > 0 && allElapsedFormatted.length < examSections) {
+        // But add a fallback timeout to prevent results from being lost if timing fails
+        if (examSections > 0 && allElapsedFormatted.length < examSections) {
             console.log("⏳ Waiting for final section time calculation before submitting...");
-            return;
+
+            // Fallback: If section times don't arrive in 3 seconds, submit anyway
+            const fallbackTimeout = setTimeout(() => {
+                console.warn("⚠️ Fallback: Section time calculation timed out. Submitting with available data...");
+                // Fill missing times with "00:00" to prevent data loss
+                const missingCount = examSections - allElapsedFormatted.length;
+                if (missingCount > 0) {
+                    const filledTimes = [...allElapsedFormatted];
+                    for (let i = 0; i < missingCount; i++) {
+                        filledTimes.push("00:00");
+                    }
+                    setAllElapsedFormatted(filledTimes);
+                }
+            }, 3000);
+
+            return () => clearTimeout(fallbackTimeout);
         }
 
-        if (examStage === 'results' && selectedExam && allReviewQuestions && allExamQuestions) {
-            if (distractionStrikes >= 3) {
-                // If terminated, submit with termination reason
-                submitExamResultsWithTermination('terminated_or_cheating');
-            } else {
-                // Normal completion
-                submitExamResults();
-            }
+        // Ready to submit - proceed with submission
+        if (distractionStrikes >= 3) {
+            // If terminated, submit with termination reason
+            submitExamResultsWithTermination('terminated_or_cheating');
+        } else {
+            // Normal completion
+            submitExamResults();
         }
     }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, allElapsedFormatted, examSections]);
 
@@ -1179,15 +1205,68 @@ const ExamPage = () => {
             )}
 
             {examStage === 'results' && (
-                <ExamResults
-                    elapsedTime={allElapsedFormatted}
-                    totalTime={selectedExam.duration + ":00" || "25:00"}
-                    examData={allExamQuestions}
-                    CurrentExam={selectedExam}
-                    reviewQuestions={allReviewQuestions}
-                    onReviewAnswers={() => setExamStage('sectionsReview')}
-                    onRetakeExam={() => handleRetakeExam()}
-                />
+                <>
+                    {/* Submission status feedback */}
+                    {submittingResults && (
+                        <div style={{
+                            padding: '1rem',
+                            backgroundColor: '#fff3cd',
+                            borderRadius: '8px',
+                            marginBottom: '1rem',
+                            textAlign: 'center',
+                            direction: 'rtl'
+                        }}>
+                            <span>⏳ جاري حفظ نتائج الاختبار...</span>
+                        </div>
+                    )}
+                    {submissionFailed && !submittingResults && (
+                        <div style={{
+                            padding: '1rem',
+                            backgroundColor: '#f8d7da',
+                            borderRadius: '8px',
+                            marginBottom: '1rem',
+                            textAlign: 'center',
+                            direction: 'rtl'
+                        }}>
+                            <span>❌ فشل في حفظ النتائج. </span>
+                            <button
+                                onClick={retrySubmission}
+                                style={{
+                                    backgroundColor: '#F26722',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    marginRight: '0.5rem'
+                                }}
+                            >
+                                إعادة المحاولة
+                            </button>
+                        </div>
+                    )}
+                    {examResultsSubmitted && !submissionFailed && (
+                        <div style={{
+                            padding: '1rem',
+                            backgroundColor: '#d4edda',
+                            borderRadius: '8px',
+                            marginBottom: '1rem',
+                            textAlign: 'center',
+                            direction: 'rtl'
+                        }}>
+                            <span>✅ تم حفظ نتائج الاختبار بنجاح</span>
+                        </div>
+                    )}
+                    <ExamResults
+                        elapsedTime={allElapsedFormatted}
+                        totalTime={selectedExam.duration + ":00" || "25:00"}
+                        examData={allExamQuestions}
+                        CurrentExam={selectedExam}
+                        reviewQuestions={allReviewQuestions}
+                        onReviewAnswers={() => setExamStage('sectionsReview')}
+                        onRetakeExam={() => handleRetakeExam()}
+                    />
+                </>
             )}
 
             {examStage === 'sectionsReview' && (

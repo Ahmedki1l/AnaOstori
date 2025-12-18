@@ -108,7 +108,6 @@ const Index = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [totalResults, setTotalResults] = useState(0)
-    
     // Folder Management States
     const [isEditFolderModal, setIsEditFolderModal] = useState(false)
     const [isDeleteFolderModal, setIsDeleteFolderModal] = useState(false)
@@ -329,15 +328,15 @@ const Index = () => {
 
     useEffect(() => {
         if (!selectedFolder && !selectedExam) {
-            fetchSimulationExamFolders(1);
+            fetchSimulationExamFolders();
         }
     }, [selectedFolder, selectedExam]);
 
     useEffect(() => {
         if (selectedFolder && !selectedExam) {
-            fetchExamsInFolder(selectedFolder._id, 1);
+            fetchExamsInFolder(selectedFolder._id);
         }
-    }, [selectedFolder, selectedExam, pageSize, activeTab]);
+    }, [selectedFolder, selectedExam]);
 
     useEffect(() => {
         if (selectedExam) {
@@ -347,7 +346,7 @@ const Index = () => {
         // eslint-disable-next-line
     }, [selectedExam, currentPage, pageSize, activeTab])
 
-    const fetchSimulationExamFolders = async (pageNumber = 1) => {
+    const fetchSimulationExamFolders = async () => {
         setLoadingFolders(true)
         setSelectedFolder(null)
         setSelectedExam(null)
@@ -356,8 +355,8 @@ const Index = () => {
             const data = {
                 routeName: 'getFolderByType',
                 type: 'simulationExam',
-                page: pageNumber,
-                limit: 10
+                page: 1,
+                limit: 1000 // Fetch all folders
             }
             const res = await getAuthRouteAPI(data)
             setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
@@ -366,23 +365,20 @@ const Index = () => {
                 const data = {
                     routeName: 'getFolderByType',
                     type: 'simulationExam',
-                    page: pageNumber,
-                    limit: 10
+                    page: 1,
+                    limit: 1000 // Fetch all folders
                 }
                 const res = await getAuthRouteAPI(data)
                 setFolderList(res.data.data.sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             }).catch(error => {
                 console.error("Error:", error);
             });
-            // if (TESTING_MODE) {
-            //     setFolderList([{ _id: 'f1', name: 'مجلد اختبارات 1', createdAt: '2024-01-01', updatedAt: '2024-01-02' }])
-            // }
         } finally {
             setLoadingFolders(false)
         }
     }
 
-    const fetchExamsInFolder = async (folderId, pageNumber = 1) => {
+    const fetchExamsInFolder = async (folderId) => {
         setLoadingExams(true)
         setSelectedExam(null)
         try {
@@ -390,8 +386,8 @@ const Index = () => {
                 routeName: 'getItem',
                 folderId: folderId,
                 type: 'simulationExam',
-                page: pageNumber,
-                limit: 10
+                page: 1,
+                limit: 1000 // Fetch all exams
             }
             const res = await getRouteAPI(body)
             setExamList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
@@ -401,17 +397,14 @@ const Index = () => {
                     routeName: 'getItem',
                     folderId: folderId,
                     type: 'simulationExam',
-                    page: pageNumber,
-                    limit: 10
+                    page: 1,
+                    limit: 1000 // Fetch all exams
                 }
                 const res = await getRouteAPI(body)
                 setExamList(res.data.data.filter(item => item !== null).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
             }).catch(error => {
                 console.error("Error:", error);
             });
-            // if (TESTING_MODE) {
-            //     setExamList([{ _id: 'e1', title: 'اختبار محاكي 1', createdAt: '2024-01-03', updatedAt: '2024-01-04' }])
-            // }
         } finally {
             setLoadingExams(false)
         }
@@ -462,18 +455,18 @@ const Index = () => {
 
             const results = responseData.data?.map(result => {
                 // Check if we have new structure with nested questions
-                const hasNewStructure = result.sections && 
-                                       result.sections.length > 0 && 
-                                       result.sections[0].questions && 
-                                       result.sections[0].questions.length > 0;
-                
+                const hasNewStructure = result.sections &&
+                    result.sections.length > 0 &&
+                    result.sections[0].questions &&
+                    result.sections[0].questions.length > 0;
+
                 // Extract reviewQuestions if not available (for backward compatibility)
                 let reviewQuestions = result.reviewQuestions;
                 if (!reviewQuestions && hasNewStructure) {
                     // Extract from nested structure
                     reviewQuestions = result.sections.flatMap(section => section.questions);
                 }
-                
+
                 return {
                     ...result,
                     key: result._id,
@@ -742,7 +735,7 @@ const Index = () => {
                 keepOriginal: options.keepOriginal.toString(),
                 copyResults: options.copyResults.toString()
             })
-            
+
             const response = await fetch(`/auth/route/fetch?${queryParams}`, {
                 method: 'GET',
                 headers: {
@@ -750,7 +743,7 @@ const Index = () => {
                     'Content-Type': 'application/json'
                 }
             })
-            
+
             // Handle HTTP status codes
             if (response.status === 401 && retryCount === 0) {
                 // Try to refresh token and retry once
@@ -761,26 +754,26 @@ const Index = () => {
                     throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
                 }
             }
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`)
             }
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 const { message } = await import('antd');
                 message.success('تم نسخ الاختبار بنجاح')
                 setIsCopyExamModal(false)
                 setSelectedExamForAction(null)
                 setActionType(null)
-                
+
                 // Refresh the current folder to show updated exam count
                 fetchExamsInFolder(selectedFolder._id)
             } else {
                 // Handle specific error codes
                 let errorMessage = 'فشل في نسخ الاختبار'
-                
+
                 switch (result.errorCode) {
                     case 'VALIDATION_ERROR':
                         errorMessage = result.message || 'خطأ في التحقق من البيانات'
@@ -797,19 +790,19 @@ const Index = () => {
                     default:
                         errorMessage = result.message || errorMessage
                 }
-                
+
                 throw new Error(errorMessage)
             }
         } catch (error) {
             const { message } = await import('antd');
-            
+
             // Check if it's a network error and suggest retry
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             } else {
                 message.error(error.message || 'فشل في نسخ الاختبار')
             }
-            
+
             console.error('Error copying exam:', error)
         }
     }
@@ -822,7 +815,7 @@ const Index = () => {
                 sourceFolderId: selectedFolder._id,
                 destinationFolderId: destinationFolderId
             })
-            
+
             const response = await fetch(`/auth/route/fetch?${queryParams}`, {
                 method: 'GET',
                 headers: {
@@ -830,7 +823,7 @@ const Index = () => {
                     'Content-Type': 'application/json'
                 }
             })
-            
+
             // Handle HTTP status codes
             if (response.status === 401 && retryCount === 0) {
                 // Try to refresh token and retry once
@@ -841,27 +834,27 @@ const Index = () => {
                     throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
                 }
             }
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`)
             }
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 const { message } = await import('antd');
                 message.success('تم نقل الاختبار بنجاح')
                 setIsMoveExamModal(false)
                 setSelectedExamForAction(null)
                 setActionType(null)
-                
+
                 // Refresh both folders to show updated exam counts
                 fetchExamsInFolder(selectedFolder._id)
                 fetchSimulationExamFolders()
             } else {
                 // Handle specific error codes
                 let errorMessage = 'فشل في نقل الاختبار'
-                
+
                 switch (result.errorCode) {
                     case 'VALIDATION_ERROR':
                         errorMessage = result.message || 'خطأ في التحقق من البيانات'
@@ -878,19 +871,19 @@ const Index = () => {
                     default:
                         errorMessage = result.message || errorMessage
                 }
-                
+
                 throw new Error(errorMessage)
             }
         } catch (error) {
             const { message } = await import('antd');
-            
+
             // Check if it's a network error and suggest retry
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             } else {
                 message.error(error.message || 'فشل في نقل الاختبار')
             }
-            
+
             console.error('Error moving exam:', error)
         }
     }
@@ -927,7 +920,7 @@ const Index = () => {
                 ...(folderFormData.description && { description: folderFormData.description }),
                 isActive: folderFormData.isActive.toString()
             })
-            
+
             const response = await fetch(`/auth/route/fetch?${queryParams}`, {
                 method: 'GET',
                 headers: {
@@ -935,7 +928,7 @@ const Index = () => {
                     'Content-Type': 'application/json'
                 }
             })
-            
+
             // Handle HTTP status codes
             if (response.status === 401 && retryCount === 0) {
                 try {
@@ -945,25 +938,25 @@ const Index = () => {
                     throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
                 }
             }
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`)
             }
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 const { message } = await import('antd');
                 message.success('تم تحديث المجلد بنجاح')
                 setIsEditFolderModal(false)
                 setSelectedFolderForAction(null)
                 setFolderFormData({ name: '', description: '', isActive: true })
-                
+
                 // Refresh folders list
                 fetchSimulationExamFolders()
             } else {
                 let errorMessage = 'فشل في تحديث المجلد'
-                
+
                 switch (result.errorCode) {
                     case 'VALIDATION_ERROR':
                         errorMessage = result.message || 'خطأ في التحقق من البيانات'
@@ -977,18 +970,18 @@ const Index = () => {
                     default:
                         errorMessage = result.message || errorMessage
                 }
-                
+
                 throw new Error(errorMessage)
             }
         } catch (error) {
             const { message } = await import('antd');
-            
+
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             } else {
                 message.error(error.message || 'فشل في تحديث المجلد')
             }
-            
+
             console.error('Error updating folder:', error)
         } finally {
             setFolderActionLoading(false)
@@ -1003,7 +996,7 @@ const Index = () => {
                 folderId: selectedFolderForAction._id,
                 forceDelete: forceDelete.toString()
             })
-            
+
             const response = await fetch(`/auth/route/fetch?${queryParams}`, {
                 method: 'GET',
                 headers: {
@@ -1011,7 +1004,7 @@ const Index = () => {
                     'Content-Type': 'application/json'
                 }
             })
-            
+
             // Handle HTTP status codes
             if (response.status === 401 && retryCount === 0) {
                 try {
@@ -1021,29 +1014,29 @@ const Index = () => {
                     throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
                 }
             }
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`)
             }
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 const { message } = await import('antd');
                 message.success('تم حذف المجلد بنجاح')
                 setIsDeleteFolderModal(false)
                 setSelectedFolderForAction(null)
-                
+
                 // Refresh folders list
                 fetchSimulationExamFolders()
-                
+
                 // If we were viewing this folder, go back to folders list
                 if (selectedFolder && selectedFolder._id === selectedFolderForAction._id) {
                     handleBackToFolders()
                 }
             } else {
                 let errorMessage = 'فشل في حذف المجلد'
-                
+
                 switch (result.errorCode) {
                     case 'VALIDATION_ERROR':
                         errorMessage = result.message || 'خطأ في التحقق من البيانات'
@@ -1057,18 +1050,18 @@ const Index = () => {
                     default:
                         errorMessage = result.message || errorMessage
                 }
-                
+
                 throw new Error(errorMessage)
             }
         } catch (error) {
             const { message } = await import('antd');
-            
+
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             } else {
                 message.error(error.message || 'فشل في حذف المجلد')
             }
-            
+
             console.error('Error deleting folder:', error)
         } finally {
             setFolderActionLoading(false)
@@ -1348,13 +1341,15 @@ const Index = () => {
                                                 pagination={{
                                                     current: currentPage,
                                                     pageSize: pageSize,
+                                                    defaultPageSize: 10,
+                                                    pageSizeOptions: ['10', '25', '50'],
                                                     total: totalResults,
                                                     showSizeChanger: true,
                                                     showQuickJumper: true,
                                                     showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة`,
-                                                    onChange: (page, pageSize) => {
+                                                    onChange: (page, newPageSize) => {
                                                         setCurrentPage(page)
-                                                        setPageSize(pageSize)
+                                                        setPageSize(newPageSize)
                                                     }
                                                 }}
                                             />
