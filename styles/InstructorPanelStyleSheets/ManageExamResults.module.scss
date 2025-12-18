@@ -1,244 +1,250 @@
 .examResultsHeadArea {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0px;
-    padding: 0 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+  padding: 0 0 0 0;
 }
 
 .createExamResultsBtnBox {
-    width: 107px;
-    height: 36px;
-    margin-left: auto;
-    button {
-        padding: 9px 10px !important;
-        font-size: 16px;
-    }
+  width: 107px;
+  height: 36px;
+  margin-left: auto;
+
+  button {
+    padding: 9px 10px !important;
+    font-size: 16px;
+  }
 }
 
 .borderBottomNavbar {
-    margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .filtersArea {
-    font-size: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    margin-bottom: 0px;
-    align-items: stretch;
-    background: #fff;
-    border-radius: 4px;
-    padding: 24px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  margin-bottom: 0px;
+  align-items: stretch;
+  background: #fff;
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .tableArea {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: #fff;
-    border-radius: 4px;
-    margin-bottom: 30px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .tableHeaderArea th {
-    font-size: 16px;
-    font-weight: 600;
-    color: #222;
-    background: #f7f7f7;
-    padding: 12px 16px;
-    border-bottom: 1px solid #eee;
-    text-align: right;
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  background: #f7f7f7;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  text-align: right;
 }
 
 .tableRow {
-    border-bottom: 1px solid #f0f0f0;
-    transition: background 0.2s;
-    &:hover {
-        background: #fafafa;
-    }
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #fafafa;
+  }
 }
 
 .tableRow td {
-    font-size: 15px;
-    padding: 12px 16px;
-    color: #222;
-    vertical-align: middle;
+  font-size: 15px;
+  padding: 12px 16px;
+  color: #222;
+  vertical-align: middle;
 }
 
 .studentInfo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-    .studentAvatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        overflow: hidden;
-        flex-shrink: 0;
+  .studentAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
 
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
+  }
 
-    span {
-        font-weight: 500;
-    }
+  span {
+    font-weight: 500;
+  }
 }
 
 .score {
-    font-weight: bold;
-    font-size: 16px;
-    padding: 4px 8px;
-    border-radius: 4px;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
 
-    &.pass {
-        color: #52c41a;
-        background-color: #f6ffed;
-        border: 1px solid #b7eb8f;
-    }
+  &.pass {
+    color: #52c41a;
+    background-color: #f6ffed;
+    border: 1px solid #b7eb8f;
+  }
 
-    &.fail {
-        color: #f5222d;
-        background-color: #fff2f0;
-        border: 1px solid #ffccc7;
-    }
+  &.fail {
+    color: #f5222d;
+    background-color: #fff2f0;
+    border: 1px solid #ffccc7;
+  }
 }
 
 .statusContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
 }
 
 .status {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
 
-    &.passStatus {
-        color: #52c41a;
-        background-color: #f6ffed;
-        border: 1px solid #b7eb8f;
-    }
+  &.passStatus {
+    color: #52c41a;
+    background-color: #f6ffed;
+    border: 1px solid #b7eb8f;
+  }
 
-    &.failStatus {
-        color: #f5222d;
-        background-color: #fff2f0;
-        border: 1px solid #ffccc7;
-    }
+  &.failStatus {
+    color: #f5222d;
+    background-color: #fff2f0;
+    border: 1px solid #ffccc7;
+  }
 }
 
 .terminatedBadge {
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-weight: 500;
-    font-size: 10px;
-    color: #d4380d;
-    background-color: #fff2e8;
-    border: 1px solid #ffbb96;
-    cursor: help;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 10px;
+  color: #d4380d;
+  background-color: #fff2e8;
+  border: 1px solid #ffbb96;
+  cursor: help;
 }
 
 .actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 
-    .ant-btn {
-        padding: 4px 8px;
-        height: auto;
-        min-width: 32px;
-    }
+  .ant-btn {
+    padding: 4px 8px;
+    height: auto;
+    min-width: 32px;
+  }
 }
 
 // Termination-specific styles
 .strikesCount {
-    font-weight: bold;
-    color: #d4380d;
-    background-color: #fff2e8;
-    padding: 2px 6px;
-    border-radius: 3px;
-    border: 1px solid #ffbb96;
+  font-weight: bold;
+  color: #d4380d;
+  background-color: #fff2e8;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #ffbb96;
 }
 
 .eventsCount {
-    font-weight: bold;
-    color: #722ed1;
-    background-color: #f9f0ff;
-    padding: 2px 6px;
-    border-radius: 3px;
-    border: 1px solid #d3adf7;
+  font-weight: bold;
+  color: #722ed1;
+  background-color: #f9f0ff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #d3adf7;
 }
 
 .distractionTypes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    max-width: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
 }
 
 .noTypes {
-    color: #999;
-    font-style: italic;
-    font-size: 12px;
+  color: #999;
+  font-style: italic;
+  font-size: 12px;
 }
 
 .terminationTime {
-    color: #1890ff;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  color: #1890ff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 // Tab styles
 .tabContainer {
-    :global(.ant-tabs-nav) {
-        margin-bottom: 0 !important;
-    }
-    :global(.ant-tabs-tab) {
-        font-weight: 500;
-        font-size: 18px;
-        padding: 0 24px !important;
-        color: #222;
-        background: none;
-        border: none;
-        margin: 0 0 0 24px;
-    }
-    :global(.ant-tabs-tab-active) {
-        font-weight: 700;
-        color: #F26722 !important;
-        background: none;
-    }
-    :global(.ant-tabs-ink-bar) {
-        background: #F26722 !important;
-        height: 3px !important;
-        border-radius: 2px 2px 0 0;
-    }
-    :global(.customTabBadge) {
-        display: inline-block;
-        min-width: 24px;
-        padding: 0 8px;
-        height: 22px;
-        line-height: 22px;
-        font-size: 14px;
-        font-weight: 700;
-        color: #fff;
-        background: #F26722;
-        border-radius: 12px;
-        margin: 0 8px;
-        text-align: center;
-        vertical-align: middle;
-    }
+  :global(.ant-tabs-nav) {
+    margin-bottom: 0 !important;
+  }
+
+  :global(.ant-tabs-tab) {
+    font-weight: 500;
+    font-size: 18px;
+    padding: 0 24px !important;
+    color: #222;
+    background: none;
+    border: none;
+    margin: 0 0 0 24px;
+  }
+
+  :global(.ant-tabs-tab-active) {
+    font-weight: 700;
+    color: #F26722 !important;
+    background: none;
+  }
+
+  :global(.ant-tabs-ink-bar) {
+    background: #F26722 !important;
+    height: 3px !important;
+    border-radius: 2px 2px 0 0;
+  }
+
+  :global(.customTabBadge) {
+    display: inline-block;
+    min-width: 24px;
+    padding: 0 8px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: #F26722;
+    border-radius: 12px;
+    margin: 0 8px;
+    text-align: center;
+    vertical-align: middle;
+  }
 }
 
 // Enhanced Exam Actions
@@ -264,12 +270,12 @@
   height: 32px;
   border-radius: 6px;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -284,13 +290,13 @@
     border-radius: 16px;
     overflow: hidden;
   }
-  
+
   .ant-modal-header {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     border-bottom: 1px solid #e2e8f0;
     padding: 1.5rem 2rem;
   }
-  
+
   .ant-modal-body {
     padding: 0;
   }
@@ -301,12 +307,12 @@
   align-items: center;
   gap: 0.75rem;
   margin: 0;
-  
+
   .modalIcon {
     font-size: 1.5rem;
     color: #F26722;
   }
-  
+
   span {
     font-size: 1.25rem;
     font-weight: 700;
@@ -321,7 +327,7 @@
 // Exam Info Section
 .examInfoSection {
   margin-bottom: 1.5rem;
-  
+
   h4 {
     font-size: 1.125rem;
     font-weight: 600;
@@ -330,7 +336,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     &::before {
       content: '';
       width: 4px;
@@ -354,13 +360,13 @@
   background: #f8fafc;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
-  
+
   .label {
     font-weight: 500;
     color: #64748b;
     font-size: 0.875rem;
   }
-  
+
   .value {
     font-weight: 600;
     color: #1f2937;
@@ -374,7 +380,7 @@
 // Folder Selection Section
 .folderSelectionSection {
   margin-bottom: 1.5rem;
-  
+
   h4 {
     font-size: 1.125rem;
     font-weight: 600;
@@ -383,7 +389,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     &::before {
       content: '';
       width: 4px;
@@ -399,12 +405,12 @@
     border-radius: 8px;
     border: 2px solid #e2e8f0;
     transition: all 0.2s ease;
-    
+
     &:hover {
       border-color: #3b82f6;
     }
   }
-  
+
   &.ant-select-focused .ant-select-selector {
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
@@ -416,12 +422,12 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0;
-  
+
   .folderIcon {
     color: #3b82f6;
     font-size: 1rem;
   }
-  
+
   .folderCount {
     color: #64748b;
     font-size: 0.75rem;
@@ -432,7 +438,7 @@
 // Options Section
 .optionsSection {
   margin-bottom: 1.5rem;
-  
+
   h4 {
     font-size: 1.125rem;
     font-weight: 600;
@@ -441,7 +447,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     &::before {
       content: '';
       width: 4px;
@@ -462,7 +468,7 @@
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    
+
     .ant-checkbox {
       margin-top: 0.125rem;
     }
@@ -487,7 +493,7 @@
 // Move Effects Section
 .moveEffectsSection {
   margin-bottom: 1.5rem;
-  
+
   h4 {
     font-size: 1.125rem;
     font-weight: 600;
@@ -496,7 +502,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     &::before {
       content: '';
       width: 4px;
@@ -524,7 +530,7 @@
   margin-bottom: 1.5rem;
   border-radius: 8px;
   border: 1px solid #fbbf24;
-  
+
   .ant-alert-icon {
     color: #f59e0b;
   }
@@ -534,7 +540,7 @@
   margin-bottom: 1.5rem;
   border-radius: 8px;
   border: 1px solid #93c5fd;
-  
+
   .ant-alert-icon {
     color: #3b82f6;
   }
@@ -544,7 +550,7 @@
   margin-bottom: 1.5rem;
   border-radius: 8px;
   border: 1px solid #fca5a5;
-  
+
   .ant-alert-icon {
     color: #ef4444;
   }
@@ -554,7 +560,7 @@
   margin-top: 1rem;
   border-radius: 8px;
   border: 1px solid #fbbf24;
-  
+
   .ant-alert-icon {
     color: #f59e0b;
   }
@@ -578,7 +584,7 @@
   border: 2px solid #e2e8f0;
   color: #64748b;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: #cbd5e1;
     color: #475569;
@@ -595,13 +601,13 @@
   border: none;
   color: white;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -616,13 +622,13 @@
   border: none;
   color: white;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -631,7 +637,7 @@
 // Folder Info Section
 .folderInfoSection {
   margin-bottom: 1.5rem;
-  
+
   h4 {
     font-size: 1.125rem;
     font-weight: 600;
@@ -640,7 +646,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     &::before {
       content: '';
       width: 4px;
@@ -664,13 +670,13 @@
   background: #f8fafc;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
-  
+
   .label {
     font-weight: 500;
     color: #64748b;
     font-size: 0.875rem;
   }
-  
+
   .value {
     font-weight: 600;
     color: #1f2937;
@@ -684,8 +690,8 @@
 // Edit Form Styles
 .editForm {
   margin-bottom: 1.5rem;
-  
-  .ant-form-item-label > label {
+
+  .ant-form-item-label>label {
     font-weight: 600;
     color: #1f2937;
     font-size: 0.875rem;
@@ -697,11 +703,11 @@
   border-radius: 8px;
   border: 2px solid #e2e8f0;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: #3b82f6;
   }
-  
+
   &:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
@@ -726,7 +732,7 @@
 // Delete Options Section
 .deleteOptionsSection {
   margin-bottom: 1.5rem;
-  
+
   h4 {
     font-size: 1.125rem;
     font-weight: 600;
@@ -735,7 +741,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     &::before {
       content: '';
       width: 4px;
@@ -756,7 +762,7 @@
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    
+
     .ant-checkbox {
       margin-top: 0.125rem;
     }
@@ -783,7 +789,7 @@
   margin-bottom: 1.5rem;
   border-radius: 8px;
   border: 1px solid #fca5a5;
-  
+
   .ant-alert-icon {
     color: #ef4444;
   }
@@ -794,7 +800,7 @@
   margin-bottom: 1.5rem;
   border-radius: 8px;
   border: 1px solid #fca5a5;
-  
+
   .ant-alert-icon {
     color: #ef4444;
   }
@@ -810,13 +816,13 @@
   border: none;
   color: white;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: linear-gradient(135deg, #059669 0%, #047857 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -832,13 +838,13 @@
   border: none;
   color: white;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -846,69 +852,122 @@
 
 // Responsive Design
 @media (max-width: 768px) {
-    .examResultsHeadArea {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
+  .examResultsHeadArea {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
 
-    .filtersArea {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
+  .filtersArea {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
 
-        .filterGroup {
-            width: 100%;
-        }
+    .filterGroup {
+      width: 100%;
     }
+  }
 
-    .actions {
-        flex-direction: column;
-        gap: 4px;
-    }
+  .actions {
+    flex-direction: column;
+    gap: 4px;
+  }
 
-    .distractionTypes {
-        max-width: 150px;
-    }
+  .distractionTypes {
+    max-width: 150px;
+  }
 
-    .modalContent {
-        padding: 1.5rem;
+  .modalContent {
+    padding: 1.5rem;
+  }
+
+  .modalActions {
+    flex-direction: column;
+
+    .cancelButton,
+    .copyButton,
+    .moveButton {
+      width: 100%;
     }
-    
-    .modalActions {
-        flex-direction: column;
-        
-        .cancelButton,
-        .copyButton,
-        .moveButton {
-            width: 100%;
-        }
-    }
-    
-    .examDetail {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
+  }
+
+  .examDetail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
 
 @media (max-width: 480px) {
   .modalContent {
     padding: 1rem;
   }
-  
+
   .modalTitle {
     font-size: 1rem;
-    
+
     .modalIcon {
       font-size: 1.25rem;
     }
   }
-  
+
   .examInfoSection h4,
   .folderSelectionSection h4,
   .optionsSection h4,
   .moveEffectsSection h4 {
     font-size: 1rem;
   }
-} 
+}
+
+// RTL Pagination Styles
+:global {
+
+  [dir="rtl"] .ant-pagination,
+  .ant-pagination {
+    direction: rtl;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .ant-pagination-total-text {
+      order: 1;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    .ant-pagination-options {
+      order: 2;
+      margin-left: 8px;
+      margin-right: 0;
+    }
+
+    .ant-pagination-prev {
+      order: 3;
+      transform: rotate(180deg);
+    }
+
+    .ant-pagination-next {
+      order: 5;
+      transform: rotate(180deg);
+    }
+
+    .ant-pagination-item,
+    .ant-pagination-jump-prev,
+    .ant-pagination-jump-next {
+      order: 4;
+    }
+
+    .ant-pagination-options-quick-jumper {
+      margin-left: 8px;
+      margin-right: 0;
+      order: 6;
+    }
+
+    .ant-select-selector {
+      direction: ltr;
+    }
+  }
+}

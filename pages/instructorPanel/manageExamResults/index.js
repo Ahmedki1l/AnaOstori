@@ -108,6 +108,9 @@ const Index = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [totalResults, setTotalResults] = useState(0)
+    const [totalPages, setTotalPages] = useState(0)
+    const [hasNextPage, setHasNextPage] = useState(false)
+    const [hasPrevPage, setHasPrevPage] = useState(false)
     // Folder Management States
     const [isEditFolderModal, setIsEditFolderModal] = useState(false)
     const [isDeleteFolderModal, setIsDeleteFolderModal] = useState(false)
@@ -502,7 +505,17 @@ const Index = () => {
                 }
             })
             setExamResultsList(results || [])
-            setTotalResults(responseData.total || responseData.totalCount || 0)
+
+            // Use pagination data from backend response
+            const pagination = responseData.pagination || {}
+            setTotalResults(pagination.totalCount || responseData.total || responseData.totalCount || 0)
+            setTotalPages(pagination.totalPages || Math.ceil((pagination.totalCount || 0) / pageSize))
+            setHasNextPage(pagination.hasNextPage || false)
+            setHasPrevPage(pagination.hasPrevPage || false)
+            // Sync pageSize if backend returns different limit
+            if (pagination.limit && pagination.limit !== pageSize) {
+                setPageSize(pagination.limit)
+            }
         } catch (error) {
             console.error('Error fetching exam results:', error)
             if (TESTING_MODE) {
@@ -1346,10 +1359,17 @@ const Index = () => {
                                                     total: totalResults,
                                                     showSizeChanger: true,
                                                     showQuickJumper: true,
-                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة`,
+                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة (صفحة ${currentPage} من ${totalPages})`,
                                                     onChange: (page, newPageSize) => {
                                                         setCurrentPage(page)
-                                                        setPageSize(newPageSize)
+                                                        if (newPageSize !== pageSize) {
+                                                            setPageSize(newPageSize)
+                                                            setCurrentPage(1) // Reset to page 1 when changing page size
+                                                        }
+                                                    },
+                                                    onShowSizeChange: (current, size) => {
+                                                        setPageSize(size)
+                                                        setCurrentPage(1) // Reset to page 1 when changing page size
                                                     }
                                                 }}
                                             />
