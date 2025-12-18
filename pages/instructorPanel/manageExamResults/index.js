@@ -1346,33 +1346,35 @@ const Index = () => {
                                                     />
                                                 </div>
                                             </div>
-                                            <Table
-                                                columns={tableColumns}
-                                                dataSource={filteredResults}
-                                                loading={loading}
-                                                locale={{ emptyText: customEmptyComponent }}
-                                                pagination={{
-                                                    current: currentPage,
-                                                    pageSize: pageSize,
-                                                    defaultPageSize: 10,
-                                                    pageSizeOptions: ['10', '25', '50'],
-                                                    total: totalResults,
-                                                    showSizeChanger: true,
-                                                    showQuickJumper: true,
-                                                    showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة (صفحة ${currentPage} من ${totalPages})`,
-                                                    onChange: (page, newPageSize) => {
-                                                        setCurrentPage(page)
-                                                        if (newPageSize !== pageSize) {
-                                                            setPageSize(newPageSize)
+                                            <div className={styles.paginationWrapper}>
+                                                <Table
+                                                    columns={tableColumns}
+                                                    dataSource={filteredResults}
+                                                    loading={loading}
+                                                    locale={{ emptyText: customEmptyComponent }}
+                                                    pagination={{
+                                                        current: currentPage,
+                                                        pageSize: pageSize,
+                                                        defaultPageSize: 10,
+                                                        pageSizeOptions: ['10', '25', '50'],
+                                                        total: totalResults,
+                                                        showSizeChanger: true,
+                                                        showQuickJumper: true,
+                                                        showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة (صفحة ${currentPage} من ${totalPages})`,
+                                                        onChange: (page, newPageSize) => {
+                                                            setCurrentPage(page)
+                                                            if (newPageSize !== pageSize) {
+                                                                setPageSize(newPageSize)
+                                                                setCurrentPage(1) // Reset to page 1 when changing page size
+                                                            }
+                                                        },
+                                                        onShowSizeChange: (current, size) => {
+                                                            setPageSize(size)
                                                             setCurrentPage(1) // Reset to page 1 when changing page size
                                                         }
-                                                    },
-                                                    onShowSizeChange: (current, size) => {
-                                                        setPageSize(size)
-                                                        setCurrentPage(1) // Reset to page 1 when changing page size
-                                                    }
-                                                }}
-                                            />
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                     )
                                 },

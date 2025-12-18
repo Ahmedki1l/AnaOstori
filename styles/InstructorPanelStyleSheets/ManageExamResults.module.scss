@@ -919,11 +919,9 @@
   }
 }
 
-// RTL Pagination Styles
-:global {
-
-  [dir="rtl"] .ant-pagination,
-  .ant-pagination {
+// RTL Pagination Styles - wrapped in a local class for CSS Modules compatibility
+.paginationWrapper {
+  :global(.ant-pagination) {
     direction: rtl;
     display: flex;
     flex-direction: row-reverse;
