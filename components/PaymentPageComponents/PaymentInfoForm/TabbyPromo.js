@@ -3,11 +3,8 @@ import React, { useEffect, useRef } from 'react';
 const TabbyPomoForm = ({ checkoutID, orderID, redirectURL, amount, couponAppliedData, onError }) => {
   const tabbyPublicKey = process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY;
   
-  if (!amount) {
-    return null;
-  }
-  
   // Generate a unique container ID for this widget instance.
+  // Using a stable ID that doesn't change on re-renders when amount is missing
   const widgetIdRef = useRef(`TabbyPromo_${Math.random().toString(36).substr(2, 9)}`);
   const containerRef = useRef(null);
   
@@ -65,6 +62,9 @@ const TabbyPomoForm = ({ checkoutID, orderID, redirectURL, amount, couponApplied
   };
   
   useEffect(() => {
+    // Guard: only run effect logic when amount is present
+    if (!amount) return;
+    
     let isMounted = true;
     console.log("🚀 ~ TabbyPomoForm ~ amount:", amount);
     loadScript()
@@ -81,6 +81,11 @@ const TabbyPomoForm = ({ checkoutID, orderID, redirectURL, amount, couponApplied
       isMounted = false;
     };
   }, [amount, tabbyPublicKey]);
+  
+  // Early return AFTER all hooks are declared
+  if (!amount) {
+    return null;
+  }
   
   // Wrap the widget container in a fixed width div to preserve the spacing (77rem).
   return (

@@ -147,9 +147,9 @@ const ExamPage = () => {
         }
         checkAuth();
     }, [accessToken, router, dispatch]);
-    if (!accessToken) {
-        return <Spinner />;
-    }
+    
+    // NOTE: Do not return early here for !accessToken - hooks must be declared unconditionally.
+    // The auth check spinner is rendered at the end of the component, after all hooks.
     const { examId } = router.query;
     const isFirstRun = useRef(true);
     const isAbleToAddTime = useRef(false);
@@ -1113,6 +1113,11 @@ const ExamPage = () => {
             submitExamResults();
         }
     }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, allElapsedFormatted, examSections]);
+
+    // Early returns AFTER all hooks are declared (required by React rules of hooks)
+    if (!accessToken) {
+        return <Spinner />;
+    }
 
     if (loading) {
         return (
