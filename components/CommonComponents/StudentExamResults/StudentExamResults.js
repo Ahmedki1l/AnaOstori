@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import styles from './StudentExamResults.module.scss'
 import { examResultService } from '../../../services/examResultService'
 import { getRouteAPI } from '../../../services/apisService'
-import { getNewToken } from '../../../lib/metaData'
+import { getNewToken } from '../../../services/fireBaseAuthService';
 import Spinner from '../spinner'
 import AllIconsComponenet from '../../../Icons/AllIconsComponenet'
 import { fullDate } from '../../../constants/DateConverter'

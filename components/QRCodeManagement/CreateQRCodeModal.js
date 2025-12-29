@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { getAuthRouteAPI, getNewToken } from '../../services/apisService'
+import { getAuthRouteAPI } from '../../services/apisService'
+import { getNewToken } from '../../services/fireBaseAuthService'
 import { toast } from 'react-toastify'
 import styles from './CreateQRCodeModal.module.scss'
 
