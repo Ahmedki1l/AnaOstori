@@ -332,7 +332,7 @@ function MyApp({ Component, pageProps }) {
 						;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
 
-						  ttq.load('CO7I57JC77UCLVHEH8N0');
+						  ttq.load('D59TH3RC77U3FL78VLCG');
 						  ttq.page();
 						}(window, document, 'ttq');
 						`,
