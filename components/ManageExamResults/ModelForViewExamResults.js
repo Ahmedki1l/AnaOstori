@@ -163,9 +163,9 @@ const ModelForViewExamResults = ({
                     lesson: question.lesson || sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
                     // Ensure we have the correct answer - use from fetched question or determine from review
                     correctAnswer: question.correctAnswer || question.answer || (reviewQuestion?.isCorrect ? reviewQuestion.selectedAnswer : "أ"),
-                    // Use skills from the sections array, fallback to question skills, then default
-                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
-                        question.skills ||
+                    // Use skills from the question itself first, then fallback to section skills, then default
+                    skills: question.skills ||
+                        sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
                         [{ text: "مهارة أساسية" }]
                 }
             })
@@ -198,7 +198,7 @@ const ModelForViewExamResults = ({
                     correctAnswer: reviewQuestion.isCorrect ? reviewQuestion.selectedAnswer : "أ",
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
                     lesson: sectionDetail?.title || `الدرس ${sectionIndex + 1}`,
-                    // Use skills from the sections array
+                    // No fetched question data available, use section skills as fallback
                     skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
                         [{ text: "مهارة أساسية" }]
                 }
@@ -540,9 +540,9 @@ const ModelForViewExamResults = ({
                     _id: fetchedQuestion._id,
                     id: fetchedQuestion._id, // ReviewAnswers expects both _id and id
                     section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
-                    // Use skills from the sections array, fallback to question skills, then default
-                    skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
-                        fetchedQuestion.skills ||
+                    // Use skills from the question itself first, then fallback to section skills, then default
+                    skills: fetchedQuestion.skills ||
+                        sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
                         [{ text: "مهارة أساسية" }]
                 }
             }
@@ -561,7 +561,7 @@ const ModelForViewExamResults = ({
                 ],
                 correctAnswer: "أ",
                 section: sectionDetail?.title || `القسم ${sectionIndex + 1}`,
-                // Use skills from the sections array
+                // No fetched question data available, use section skills as fallback
                 skills: sectionWithSkills?.skills?.map(skill => ({ text: skill.title })) ||
                     [{ text: "مهارة أساسية" }]
             }
