@@ -388,8 +388,8 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         return SKILL_CATEGORIES[skillName] || 'أخرى';
     };
 
-    // Aggregate scores by category based on skills across all sections
-    // Each question should only be counted once, using its FIRST skill to determine category
+    // Aggregate scores by category based on the question's lesson field (كمي/لفظي)
+    // Each question has a lesson field that directly specifies its category
     const getAggregatedCategories = (examData, allReviews) => {
         if (!examData || !allReviews || allReviews.length === 0) {
             return [];
@@ -405,15 +405,12 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 const reviewQuestion = sectionReviewQuestions[qIndex];
                 const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
 
-                // Get only the FIRST skill from the question to determine its category
-                // Each question should belong to only ONE category
-                const skills = question?.skills;
-                if (!skills || skills.length === 0) return;
-
-                // Use only the first skill
-                const firstSkill = skills[0];
-                const skillName = firstSkill.text || firstSkill;
-                const category = getCategoryFromSkill(skillName);
+                // Use the lesson field directly as the category (كمي or لفظي)
+                // This is more reliable than deriving from skill mapping
+                const category = question?.lesson || getCategoryFromSkill(question?.skills?.[0]?.text || '');
+                
+                // Get the skill name for grouping within the category
+                const skillName = question?.skills?.[0]?.text || question?.skills?.[0] || 'أخرى';
 
                 // Initialize category if not exists
                 if (!categoriesMap.has(category)) {
@@ -433,7 +430,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                     categoryData.score++;
                 }
 
-                // Track the skill within the category
+                // Group by skill within the category
                 if (!categoryData.skillsMap.has(skillName)) {
                     categoryData.skillsMap.set(skillName, {
                         title: skillName,
