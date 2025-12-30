@@ -405,6 +405,15 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 const reviewQuestion = sectionReviewQuestions[qIndex];
                 const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
 
+                // Debug: Log the first few questions to see their structure
+                if (sectionIndex === 0 && qIndex < 3) {
+                    console.log(`🔍 Question ${qIndex} structure:`, {
+                        lesson: question?.lesson,
+                        skills: question?.skills,
+                        hasLesson: !!question?.lesson
+                    });
+                }
+
                 // Use the lesson field directly as the category (كمي or لفظي)
                 // This is more reliable than deriving from skill mapping
                 const category = question?.lesson || getCategoryFromSkill(question?.skills?.[0]?.text || '');
