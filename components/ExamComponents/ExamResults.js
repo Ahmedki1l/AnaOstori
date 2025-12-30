@@ -389,6 +389,7 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     };
 
     // Aggregate scores by category based on skills across all sections
+    // Each question should only be counted once, using its FIRST skill to determine category
     const getAggregatedCategories = (examData, allReviews) => {
         if (!examData || !allReviews || allReviews.length === 0) {
             return [];
@@ -404,51 +405,48 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 const reviewQuestion = sectionReviewQuestions[qIndex];
                 const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
 
-                // Track which categories this question has been counted for
-                // to avoid counting the same question multiple times per category
-                const countedCategories = new Set();
+                // Get only the FIRST skill from the question to determine its category
+                // Each question should belong to only ONE category
+                const skills = question?.skills;
+                if (!skills || skills.length === 0) return;
 
-                // Get category from the question's skills
-                question?.skills?.forEach(skill => {
-                    const skillName = skill.text || skill;
-                    const category = getCategoryFromSkill(skillName);
+                // Use only the first skill
+                const firstSkill = skills[0];
+                const skillName = firstSkill.text || firstSkill;
+                const category = getCategoryFromSkill(skillName);
 
-                    // Initialize category if not exists
-                    if (!categoriesMap.has(category)) {
-                        categoriesMap.set(category, {
-                            title: category,
-                            score: 0,
-                            totalQuestions: 0,
-                            skillsMap: new Map()
-                        });
-                    }
+                // Initialize category if not exists
+                if (!categoriesMap.has(category)) {
+                    categoriesMap.set(category, {
+                        title: category,
+                        score: 0,
+                        totalQuestions: 0,
+                        skillsMap: new Map()
+                    });
+                }
 
-                    const categoryData = categoriesMap.get(category);
+                const categoryData = categoriesMap.get(category);
 
-                    // Only count the question once per category (even if it has multiple skills in the same category)
-                    if (!countedCategories.has(category)) {
-                        countedCategories.add(category);
-                        categoryData.totalQuestions++;
-                        if (isCorrect) {
-                            categoryData.score++;
-                        }
-                    }
+                // Count the question once for this category
+                categoryData.totalQuestions++;
+                if (isCorrect) {
+                    categoryData.score++;
+                }
 
-                    // Group by skills within category (skills are still counted individually)
-                    if (!categoryData.skillsMap.has(skillName)) {
-                        categoryData.skillsMap.set(skillName, {
-                            title: skillName,
-                            correctAnswers: 0,
-                            numberOfQuestions: 0
-                        });
-                    }
+                // Track the skill within the category
+                if (!categoryData.skillsMap.has(skillName)) {
+                    categoryData.skillsMap.set(skillName, {
+                        title: skillName,
+                        correctAnswers: 0,
+                        numberOfQuestions: 0
+                    });
+                }
 
-                    const skillData = categoryData.skillsMap.get(skillName);
-                    skillData.numberOfQuestions++;
-                    if (isCorrect) {
-                        skillData.correctAnswers++;
-                    }
-                });
+                const skillData = categoryData.skillsMap.get(skillName);
+                skillData.numberOfQuestions++;
+                if (isCorrect) {
+                    skillData.correctAnswers++;
+                }
             });
         });
 
