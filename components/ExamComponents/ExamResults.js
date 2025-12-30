@@ -404,6 +404,10 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 const reviewQuestion = sectionReviewQuestions[qIndex];
                 const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
 
+                // Track which categories this question has been counted for
+                // to avoid counting the same question multiple times per category
+                const countedCategories = new Set();
+
                 // Get category from the question's skills
                 question?.skills?.forEach(skill => {
                     const skillName = skill.text || skill;
@@ -420,12 +424,17 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                     }
 
                     const categoryData = categoriesMap.get(category);
-                    categoryData.totalQuestions++;
-                    if (isCorrect) {
-                        categoryData.score++;
+
+                    // Only count the question once per category (even if it has multiple skills in the same category)
+                    if (!countedCategories.has(category)) {
+                        countedCategories.add(category);
+                        categoryData.totalQuestions++;
+                        if (isCorrect) {
+                            categoryData.score++;
+                        }
                     }
 
-                    // Group by skills within category
+                    // Group by skills within category (skills are still counted individually)
                     if (!categoryData.skillsMap.has(skillName)) {
                         categoryData.skillsMap.set(skillName, {
                             title: skillName,
