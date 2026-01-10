@@ -12,6 +12,7 @@ import WhatsAppLinkComponent from '../../../../components/CommonComponents/Whats
 import { getAuthRouteAPI } from '../../../../services/apisService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { savePaymentFormData, getPaymentFormData, clearPaymentFormData } from '../../../../lib/formPersistence';
 
 export async function getServerSideProps({ req, res, resolvedUrl }) {
 
@@ -144,45 +145,25 @@ export default function Index(props) {
 
 	const isUserLogin = localStorage.getItem('accessToken') ? true : false;
 
-	// Check if there's data in localStorage on load and populate the state
+	// Check if there's saved form data on load and restore it
 	useEffect(() => {
-
-		const isFromUserForm = JSON.parse(localStorage.getItem('isFromUserForm'));
-		const isBackToUserForm = JSON.parse(localStorage.getItem('isBackToUserForm'));
-		console.log("isFromUserForm: ", isFromUserForm);
-		console.log("isBackToUserForm: ", isBackToUserForm);
-
-		if (isFromUserForm && isBackToUserForm) {
-			console.log('User navigated from login or register page.');
-
-			if (localStorage.getItem('studentsData') && localStorage.getItem('courseType') && localStorage.getItem('userAgree')) {
-				console.log("There are some local storage data");
-
-				const savedStudentsData = JSON.parse(localStorage.getItem('studentsData'));
-				const savedCourseType = JSON.parse(localStorage.getItem('courseType'));
-				const savedUserAgree = JSON.parse(localStorage.getItem('userAgree'));
-
-				changePageFunction(savedStudentsData, savedCourseType, savedUserAgree);
-
-				// Remove saved data from localStorage
-				localStorage.removeItem('studentsData');
-				localStorage.removeItem('courseType');
-				localStorage.removeItem('userAgree');
-				localStorage.removeItem('isFromUserForm');
-				localStorage.removeItem('isBackToUserForm');
-			} else {
-				console.log("There are no local storage data");
-			}
+		const savedFormData = getPaymentFormData(courseDetails?.id);
+		
+		if (savedFormData && savedFormData.studentsData) {
+			console.log('[BookSit] Restoring saved form data:', savedFormData);
+			
+			// Restore form data and proceed to payment page
+			changePageFunction(
+				savedFormData.studentsData,
+				savedFormData.courseType || courseDetails?.type,
+				savedFormData.userAgree !== undefined ? savedFormData.userAgree : true
+			);
+			
+			// Clear the saved data after restoring
+			clearPaymentFormData();
 		} else {
-			// Remove saved data from localStorage
-			localStorage.removeItem('studentsData');
-			localStorage.removeItem('courseType');
-			localStorage.removeItem('userAgree');
-			localStorage.removeItem('isFromUserForm');
-			localStorage.removeItem('isBackToUserForm');
-			console.log('User navigated from another page.');
+			console.log('[BookSit] No saved form data found for this course');
 		}
-
 	}, []);
 
 	useEffect(() => {
@@ -363,15 +344,9 @@ export default function Index(props) {
 				people: createOrderData
 			}
 
-			// Save data to localStorage before making the API call
-			localStorage.setItem('studentsData', JSON.stringify(studentsData));
-			localStorage.setItem('courseType', JSON.stringify(courseType));
-			localStorage.setItem('userAgree', JSON.stringify(userAgree));
-
 			await postAuthRouteAPI(orderData).then(async (res) => {
 				// Clear saved form data after successful order creation
-				localStorage.removeItem('courseBookingFormData')
-				localStorage.removeItem('isFromCourseBooking')
+				clearPaymentFormData();
 				
 				let registeredDate;
 
@@ -413,24 +388,21 @@ export default function Index(props) {
 						type: 'SET_RETURN_URL',
 						returnUrl: window.location.pathname,
 					});
-					localStorage.setItem('isFromUserForm', true);
-					// Enhanced form data persistence - save comprehensive form data
-					const formData = {
+					
+					// Save form data using centralized utility
+					savePaymentFormData({
 						studentsData: studentsData,
 						courseType: courseType,
 						userAgree: userAgree,
 						courseId: courseDetails.id,
 						courseName: courseDetails.name,
-						timestamp: Date.now()
-					}
-					localStorage.setItem('courseBookingFormData', JSON.stringify(formData))
-					localStorage.setItem('isFromCourseBooking', 'true')
+						categoryName: router.query.catagoryName
+					});
 					
 					await getNewToken().then(async (token) => {
 						await postAuthRouteAPI(orderData).then(res => {
 							// Clear saved form data after successful order creation
-							localStorage.removeItem('courseBookingFormData')
-							localStorage.removeItem('isFromCourseBooking')
+							clearPaymentFormData();
 							
 							let registeredDate;
 

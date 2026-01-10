@@ -11,6 +11,7 @@ import AllIconsComponenet from '../Icons/AllIconsComponenet'
 import Spinner from '../components/CommonComponents/spinner'
 import { inputErrorMessages, toastErrorMessage, toastSuccessMessage } from '../constants/ar'
 import ModelForUpdateProfile from '../components/ModalForUpdateProfile/ModalForUpdateProfile'
+import { getPaymentFormData, getReturnPath, clearPaymentFormData } from '../lib/formPersistence';
 
 export default function Login() {
 	const [email, setEmail] = useState("");
@@ -95,37 +96,14 @@ export default function Login() {
 					if (((dayDifference >= 7) && (reminderPopUpCount === null || reminderPopUpCount < 3))) {
 						setUpdateProfileModalOpen(true);
 					} else {
-						// Check if user was redirected from course registration
-						const isFromCourseRegistration = localStorage.getItem('isFromCourseRegistration')
-						const savedFormData = localStorage.getItem('courseRegistrationFormData')
-						
-						// Check if user was redirected from course booking
-						const isFromCourseBooking = localStorage.getItem('isFromCourseBooking')
-						const savedBookingData = localStorage.getItem('courseBookingFormData')
-						
-						if (isFromCourseRegistration === 'true' && savedFormData) {
-							try {
-								const formData = JSON.parse(savedFormData)
-								// Redirect back to course registration page
-								router.push(`/${formData.courseName?.toLowerCase().replace(/\s+/g, '-')}/bookSit`)
-								return
-							} catch (error) {
-								console.error('Error parsing saved form data:', error)
-								localStorage.removeItem('courseRegistrationFormData')
-								localStorage.removeItem('isFromCourseRegistration')
-							}
-						}
-						
-						if (isFromCourseBooking === 'true' && savedBookingData) {
-							try {
-								const bookingData = JSON.parse(savedBookingData)
-								// Redirect back to course booking page
-								router.push(`/${bookingData.courseName?.toLowerCase().replace(/\s+/g, '-')}/bookSit`)
-								return
-							} catch (error) {
-								console.error('Error parsing saved booking data:', error)
-								localStorage.removeItem('courseBookingFormData')
-								localStorage.removeItem('isFromCourseBooking')
+						// Check if user was redirected from payment form - use centralized utility
+						const savedFormData = getPaymentFormData();
+						if (savedFormData) {
+							const returnPath = getReturnPath();
+							if (returnPath) {
+								console.log('[Login] Found saved form data, redirecting to:', returnPath);
+								router.push(returnPath);
+								return;
 							}
 						}
 						

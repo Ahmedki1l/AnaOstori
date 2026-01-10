@@ -14,6 +14,7 @@ import { getRouteAPI } from '../../../services/apisService';
 import * as PaymentConst from '../../../constants/PaymentConst';
 // import TabbyPomoForm from '../PaymentInfoForm/TabbyPromo';
 import { toast } from 'react-toastify';
+import { savePaymentFormData, getPaymentFormData, clearPaymentFormData } from '../../../lib/formPersistence';
 
 export default function UserInfoForm(props) {
 	console.log("🚀 ~ UserInfoForm ~ props:", props);
@@ -110,9 +111,9 @@ export default function UserInfoForm(props) {
 		getRegionAndBranchList();
 	}, []);
 
-	// Enhanced form data persistence functions
+	// Enhanced form data persistence functions - using centralized utility
 	const saveFormDataToStorage = () => {
-		const formData = {
+		savePaymentFormData({
 			studentsData: studentsData,
 			totalStudent: totalStudent,
 			userAgree: userAgree,
@@ -122,65 +123,41 @@ export default function UserInfoForm(props) {
 			selectedRegionId: selectedRegionId,
 			courseId: courseDetail.id,
 			courseName: courseDetail.name,
-			courseType: courseDetail.type,
-			timestamp: Date.now()
-		}
-		
-		localStorage.setItem('courseRegistrationFormData', JSON.stringify(formData))
-		localStorage.setItem('isFromCourseRegistration', 'true')
-		setFormDataSaved(true)
+			courseType: courseDetail.type
+		});
+		setFormDataSaved(true);
 	}
 
 	const restoreFormDataFromStorage = () => {
-		const savedFormData = localStorage.getItem('courseRegistrationFormData')
+		const savedFormData = getPaymentFormData(courseDetail.id);
 		if (savedFormData) {
-			try {
-				const parsedData = JSON.parse(savedFormData)
-				const currentTime = Date.now()
-				const timeDiff = currentTime - parsedData.timestamp
-				const hoursDiff = timeDiff / (1000 * 60 * 60)
-				
-				// Only restore data if it's less than 24 hours old
-				if (hoursDiff < 24 && parsedData.courseId === courseDetail.id) {
-					setStudentsData(parsedData.studentsData || studentsData)
-					setTotalStudent(parsedData.totalStudent || totalStudent)
-					setUserAgree(parsedData.userAgree || false)
-					setEnrollForMe(parsedData.enrollForMe || false)
-					setSelectedGender(parsedData.selectedGender || selectedGender)
-					setSelectedDate(parsedData.selectedDate || selectedDate)
-					setSelectedRegionId(parsedData.selectedRegionId || selectedRegionId)
-					
-					
-					// Show success message
-					toast.success('تم استعادة بيانات التسجيل المحفوظة', { rtl: true })
-					return true
-				} else {
-					// Clear expired data
-					localStorage.removeItem('courseRegistrationFormData')
-					localStorage.removeItem('isFromCourseRegistration')
-				}
-			} catch (error) {
-				console.error('Error restoring form data:', error)
-				localStorage.removeItem('courseRegistrationFormData')
-				localStorage.removeItem('isFromCourseRegistration')
-			}
+			if (savedFormData.studentsData) setStudentsData(savedFormData.studentsData);
+			if (savedFormData.totalStudent) setTotalStudent(savedFormData.totalStudent);
+			if (savedFormData.userAgree !== undefined) setUserAgree(savedFormData.userAgree);
+			if (savedFormData.enrollForMe !== undefined) setEnrollForMe(savedFormData.enrollForMe);
+			if (savedFormData.selectedGender) setSelectedGender(savedFormData.selectedGender);
+			if (savedFormData.selectedDate) setSelectedDate(savedFormData.selectedDate);
+			if (savedFormData.selectedRegionId) setSelectedRegionId(savedFormData.selectedRegionId);
+			
+			// Show success message
+			toast.success('تم استعادة بيانات التسجيل المحفوظة', { rtl: true });
+			return true;
 		}
-		return false
+		return false;
 	}
 
 	const clearSavedFormData = () => {
-		localStorage.removeItem('courseRegistrationFormData')
-		localStorage.removeItem('isFromCourseRegistration')
-		setFormDataSaved(false)
+		clearPaymentFormData();
+		setFormDataSaved(false);
 	}
 
 	// Check for saved form data on component mount
 	useEffect(() => {
-		const isFromRegistration = localStorage.getItem('isFromCourseRegistration')
-		if (isFromRegistration === 'true') {
-			restoreFormDataFromStorage()
+		const savedFormData = getPaymentFormData(courseDetail.id);
+		if (savedFormData) {
+			restoreFormDataFromStorage();
 		}
-	}, [])
+	}, []);
 
 	// Add visual indicator for saved form data
 	const renderFormDataIndicator = () => {
