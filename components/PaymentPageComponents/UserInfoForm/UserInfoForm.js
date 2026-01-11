@@ -162,25 +162,30 @@ export default function UserInfoForm(props) {
 			
 			// Restore studentsData (includes personal info)
 			if (saved.studentsData && saved.studentsData.length > 0) {
+				console.log('[UserInfoForm] Restoring studentsData:', saved.studentsData);
 				setStudentsData(saved.studentsData);
 				setTotalStudent(saved.studentsData.length > 2 ? 3 : saved.studentsData.length);
 				
 				// Extract selection info from the first student's data
 				const firstStudent = saved.studentsData[0];
+				console.log('[UserInfoForm] First student data:', firstStudent);
+				
 				if (firstStudent.gender) {
+					console.log('[UserInfoForm] Setting selectedGender to:', firstStudent.gender);
 					setSelectedGender(firstStudent.gender);
 				}
 				if (firstStudent.availabilityId) {
-					// Find the date info from availabilityId
-					const allDates = [...initialMaleDate, ...initialFemaleDate, ...mixDates];
-					const selectedDateInfo = allDates.find(d => d.id === firstStudent.availabilityId);
-					if (selectedDateInfo) {
-						setSelectedDate(firstStudent.date || selectedDateInfo.dateFrom);
-					}
+					// Set selectedDate to availabilityId - this is what radio buttons check against
+					console.log('[UserInfoForm] Setting selectedDate to availabilityId:', firstStudent.availabilityId);
+					setSelectedDate(firstStudent.availabilityId);
+				}
+				if (firstStudent.region) {
+					console.log('[UserInfoForm] Setting selectedRegionId to:', firstStudent.region);
+					setSelectedRegionId(firstStudent.region);
 				}
 			}
 			
-			// Restore additional form state if stored
+			// Restore additional form state if stored (overrides above if present)
 			if (saved.selectedGender) setSelectedGender(saved.selectedGender);
 			if (saved.selectedDate) setSelectedDate(saved.selectedDate);
 			if (saved.selectedCity) setSelectedCity(saved.selectedCity);
@@ -189,6 +194,8 @@ export default function UserInfoForm(props) {
 			if (saved.userAgree !== undefined) setUserAgree(saved.userAgree);
 			if (saved.enrollForMe !== undefined) setEnrollForMe(saved.enrollForMe);
 			if (saved.totalStudent) setTotalStudent(saved.totalStudent > 2 ? 3 : saved.totalStudent);
+			
+			console.log('[UserInfoForm] Form state restoration complete');
 		}
 	}, [props.savedFormState]);
 
