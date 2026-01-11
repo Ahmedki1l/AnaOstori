@@ -154,48 +154,52 @@ export default function UserInfoForm(props) {
 	}
 
 	// Restore form state from savedFormState prop (from login/register redirect)
+	// Uses staged delays to allow conditional sections to render before filling them
 	useEffect(() => {
 		if (props.savedFormState) {
-			console.log('[UserInfoForm] Restoring form state from savedFormState:', props.savedFormState);
+			console.log('[UserInfoForm] Starting staged form restoration from savedFormState:', props.savedFormState);
 			
 			const saved = props.savedFormState;
 			
-			// Restore studentsData (includes personal info)
 			if (saved.studentsData && saved.studentsData.length > 0) {
-				console.log('[UserInfoForm] Restoring studentsData:', saved.studentsData);
-				setStudentsData(saved.studentsData);
+				const firstStudent = saved.studentsData[0];
+				
+				// Stage 1: Set number of students first
+				console.log('[UserInfoForm] Stage 1: Setting total students');
 				setTotalStudent(saved.studentsData.length > 2 ? 3 : saved.studentsData.length);
 				
-				// Extract selection info from the first student's data
-				const firstStudent = saved.studentsData[0];
-				console.log('[UserInfoForm] First student data:', firstStudent);
-				
-				if (firstStudent.gender) {
-					console.log('[UserInfoForm] Setting selectedGender to:', firstStudent.gender);
-					setSelectedGender(firstStudent.gender);
-				}
-				if (firstStudent.availabilityId) {
-					// Set selectedDate to availabilityId - this is what radio buttons check against
-					console.log('[UserInfoForm] Setting selectedDate to availabilityId:', firstStudent.availabilityId);
-					setSelectedDate(firstStudent.availabilityId);
-				}
-				if (firstStudent.region) {
-					console.log('[UserInfoForm] Setting selectedRegionId to:', firstStudent.region);
-					setSelectedRegionId(firstStudent.region);
-				}
+				// Stage 2: Set gender and region (after 300ms) - this triggers appointment section to show
+				setTimeout(() => {
+					console.log('[UserInfoForm] Stage 2: Setting gender and region');
+					if (firstStudent.gender) {
+						setSelectedGender(firstStudent.gender);
+					}
+					if (firstStudent.region) {
+						setSelectedRegionId(firstStudent.region);
+					}
+					if (saved.selectedCity) setSelectedCity(saved.selectedCity);
+					if (saved.selectedDistrict) setSelectedDistrict(saved.selectedDistrict);
+					
+					// Stage 3: Select appointment (after 600ms) - this triggers personal data section to show
+					setTimeout(() => {
+						console.log('[UserInfoForm] Stage 3: Selecting appointment');
+						if (firstStudent.availabilityId) {
+							setSelectedDate(firstStudent.availabilityId);
+						}
+						
+						// Stage 4: Fill personal data (after 900ms) - form is now fully rendered
+						setTimeout(() => {
+							console.log('[UserInfoForm] Stage 4: Filling personal data', saved.studentsData);
+							setStudentsData(saved.studentsData);
+							
+							if (saved.userAgree !== undefined) setUserAgree(saved.userAgree);
+							if (saved.enrollForMe !== undefined) setEnrollForMe(saved.enrollForMe);
+							
+							console.log('[UserInfoForm] Form state restoration complete');
+						}, 300);
+					}, 300);
+				}, 300);
 			}
-			
-			// Restore additional form state if stored (overrides above if present)
-			if (saved.selectedGender) setSelectedGender(saved.selectedGender);
-			if (saved.selectedDate) setSelectedDate(saved.selectedDate);
-			if (saved.selectedCity) setSelectedCity(saved.selectedCity);
-			if (saved.selectedDistrict) setSelectedDistrict(saved.selectedDistrict);
-			if (saved.selectedRegionId) setSelectedRegionId(saved.selectedRegionId);
-			if (saved.userAgree !== undefined) setUserAgree(saved.userAgree);
-			if (saved.enrollForMe !== undefined) setEnrollForMe(saved.enrollForMe);
-			if (saved.totalStudent) setTotalStudent(saved.totalStudent > 2 ? 3 : saved.totalStudent);
-			
-			console.log('[UserInfoForm] Form state restoration complete');
 		}
 	}, [props.savedFormState]);
 
