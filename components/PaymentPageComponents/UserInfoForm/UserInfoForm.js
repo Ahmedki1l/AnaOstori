@@ -151,6 +151,21 @@ export default function UserInfoForm(props) {
 		setFormDataSaved(false);
 	}
 
+	// Sync studentsData when props change (e.g., when parent restores saved form data)
+	useEffect(() => {
+		if (props.studentsData && props.studentsData.length > 0) {
+			// Check if the props data has actual user info (not just the empty template)
+			const hasUserInfo = props.studentsData.some(student => 
+				student.fullName || student.phoneNumber || student.email
+			);
+			if (hasUserInfo) {
+				console.log('[UserInfoForm] Syncing studentsData from props:', props.studentsData);
+				setStudentsData(props.studentsData);
+				setTotalStudent(props.studentsData.length > 2 ? 3 : props.studentsData.length);
+			}
+		}
+	}, [props.studentsData]);
+
 	// Check for saved form data on component mount
 	useEffect(() => {
 		const savedFormData = getPaymentFormData(courseDetail.id);

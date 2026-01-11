@@ -152,14 +152,13 @@ export default function Index(props) {
 		if (savedFormData && savedFormData.studentsData) {
 			console.log('[BookSit] Restoring saved form data:', savedFormData);
 			
-			// Restore form data and proceed to payment page
-			changePageFunction(
-				savedFormData.studentsData,
-				savedFormData.courseType || courseDetails?.type,
-				savedFormData.userAgree !== undefined ? savedFormData.userAgree : true
-			);
+			// Restore form data to state - this will pre-populate the form fields
+			setStudentsData(savedFormData.studentsData);
 			
-			// Clear the saved data after restoring
+			// Show a toast message to inform user their data was restored
+			toast.success('تم استعادة بياناتك المحفوظة', { rtl: true });
+			
+			// Clear the saved data after restoring to state
 			clearPaymentFormData();
 		} else {
 			console.log('[BookSit] No saved form data found for this course');
