@@ -38,8 +38,17 @@ export const signInWithApple = async () => {
 export const forgotPassword = async (email) => {
 	await sendPasswordResetEmail(auth, email).then((res) => {
 		toast.success(toastSuccessMessage.forgotPasswordLinkSend, { rtl: true, });
+		
+		// Preserve payment form data before clearing localStorage
+		const paymentFormData = localStorage.getItem('paymentFormData');
+		
 		// Clear localStorage
 		localStorage.clear();
+		
+		// Restore payment form data if it existed (for 401 redirect flow)
+		if (paymentFormData) {
+			localStorage.setItem('paymentFormData', paymentFormData);
+		}
 
 		// Clear sessionStorage
 		sessionStorage.clear();
@@ -72,7 +81,15 @@ export const startEmailPasswordLogin = async (email, password) => {
 
 export const signOutUser = async () => {
 	signOut(auth).then(() => {
+		// Preserve payment form data before clearing localStorage
+		const paymentFormData = localStorage.getItem('paymentFormData');
+		
 		localStorage.clear();
+		
+		// Restore payment form data if it existed (for 401 redirect flow)
+		if (paymentFormData) {
+			localStorage.setItem('paymentFormData', paymentFormData);
+		}
 	}).catch((error) => {
 		console.log(error);
 	});

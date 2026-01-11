@@ -211,9 +211,17 @@ class ErrorHandler {
 
       toast.error(ERROR_MESSAGES[401], { rtl: true });
       
+      // Preserve payment form data before clearing localStorage
+      const paymentFormData = localStorage.getItem('paymentFormData');
+      
       // Clear storage and redirect
       localStorage.clear();
       sessionStorage.clear();
+      
+      // Restore payment form data if it existed (for 401 redirect flow)
+      if (paymentFormData) {
+        localStorage.setItem('paymentFormData', paymentFormData);
+      }
       
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
