@@ -97,6 +97,9 @@ export default function Index(props) {
 	const [createdOrder, setCreatedOrder] = useState()
 	const [checkoutId, setCheckoutId] = useState('')
 	const [userAgreeError, setUserAgreeError] = useState()
+	
+	// Saved form state from login/register redirect - includes appointment selections
+	const [savedFormState, setSavedFormState] = useState(null)
 
 	const storeData = useSelector((state) => state?.globalStore);
 	const dispatch = useDispatch();
@@ -152,13 +155,14 @@ export default function Index(props) {
 		if (savedFormData && savedFormData.studentsData) {
 			console.log('[BookSit] Restoring saved form data:', savedFormData);
 			
-			// Restore form data to state - this will pre-populate the form fields
+			// Store entire saved state - UserInfoForm will use this to restore selections
+			setSavedFormState(savedFormData);
 			setStudentsData(savedFormData.studentsData);
 			
 			// Show a toast message to inform user their data was restored
 			toast.success('تم استعادة بياناتك المحفوظة', { rtl: true });
 			
-			// Clear the saved data after restoring to state
+			// Clear the saved data after storing to state
 			clearPaymentFormData();
 		} else {
 			console.log('[BookSit] No saved form data found for this course');
@@ -475,6 +479,7 @@ export default function Index(props) {
 							femaleDates={femaleDates}
 							mixDates={mixDates}
 							userAgreeError={userAgreeError}
+							savedFormState={savedFormState}
 						/>
 					)}
 				</>

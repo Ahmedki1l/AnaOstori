@@ -121,6 +121,8 @@ export default function UserInfoForm(props) {
 			selectedGender: selectedGender,
 			selectedDate: selectedDate,
 			selectedRegionId: selectedRegionId,
+			selectedCity: selectedCity,
+			selectedDistrict: selectedDistrict,
 			courseId: courseDetail.id,
 			courseName: courseDetail.name,
 			courseType: courseDetail.type
@@ -151,9 +153,48 @@ export default function UserInfoForm(props) {
 		setFormDataSaved(false);
 	}
 
+	// Restore form state from savedFormState prop (from login/register redirect)
+	useEffect(() => {
+		if (props.savedFormState) {
+			console.log('[UserInfoForm] Restoring form state from savedFormState:', props.savedFormState);
+			
+			const saved = props.savedFormState;
+			
+			// Restore studentsData (includes personal info)
+			if (saved.studentsData && saved.studentsData.length > 0) {
+				setStudentsData(saved.studentsData);
+				setTotalStudent(saved.studentsData.length > 2 ? 3 : saved.studentsData.length);
+				
+				// Extract selection info from the first student's data
+				const firstStudent = saved.studentsData[0];
+				if (firstStudent.gender) {
+					setSelectedGender(firstStudent.gender);
+				}
+				if (firstStudent.availabilityId) {
+					// Find the date info from availabilityId
+					const allDates = [...initialMaleDate, ...initialFemaleDate, ...mixDates];
+					const selectedDateInfo = allDates.find(d => d.id === firstStudent.availabilityId);
+					if (selectedDateInfo) {
+						setSelectedDate(firstStudent.date || selectedDateInfo.dateFrom);
+					}
+				}
+			}
+			
+			// Restore additional form state if stored
+			if (saved.selectedGender) setSelectedGender(saved.selectedGender);
+			if (saved.selectedDate) setSelectedDate(saved.selectedDate);
+			if (saved.selectedCity) setSelectedCity(saved.selectedCity);
+			if (saved.selectedDistrict) setSelectedDistrict(saved.selectedDistrict);
+			if (saved.selectedRegionId) setSelectedRegionId(saved.selectedRegionId);
+			if (saved.userAgree !== undefined) setUserAgree(saved.userAgree);
+			if (saved.enrollForMe !== undefined) setEnrollForMe(saved.enrollForMe);
+			if (saved.totalStudent) setTotalStudent(saved.totalStudent > 2 ? 3 : saved.totalStudent);
+		}
+	}, [props.savedFormState]);
+
 	// Sync studentsData when props change (e.g., when parent restores saved form data)
 	useEffect(() => {
-		if (props.studentsData && props.studentsData.length > 0) {
+		if (props.studentsData && props.studentsData.length > 0 && !props.savedFormState) {
 			// Check if the props data has actual user info (not just the empty template)
 			const hasUserInfo = props.studentsData.some(student => 
 				student.fullName || student.phoneNumber || student.email
@@ -166,11 +207,13 @@ export default function UserInfoForm(props) {
 		}
 	}, [props.studentsData]);
 
-	// Check for saved form data on component mount
+	// Check for saved form data on component mount (fallback)
 	useEffect(() => {
-		const savedFormData = getPaymentFormData(courseDetail.id);
-		if (savedFormData) {
-			restoreFormDataFromStorage();
+		if (!props.savedFormState) {
+			const savedFormData = getPaymentFormData(courseDetail.id);
+			if (savedFormData) {
+				restoreFormDataFromStorage();
+			}
 		}
 	}, []);
 
