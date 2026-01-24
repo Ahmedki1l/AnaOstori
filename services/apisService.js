@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getNewToken } from './fireBaseAuthService';
 
 const baseUrl = process.env.API_BASE_URL;
 
@@ -21,6 +22,51 @@ instance.interceptors.request.use(
 	}
 );
 
+// Response interceptor for automatic token refresh on 401 errors
+instance.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
+
+		// Handle 401 errors (expired token)
+		if (error?.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+
+			try {
+				// Refresh the token
+				const newToken = await getNewToken();
+				
+				// Update the failed request with new token
+				originalRequest.headers.Authorization = `Bearer ${newToken}`;
+				
+				// Retry the original request
+				return instance.request(originalRequest);
+			} catch (refreshError) {
+				// Token refresh failed, redirect to login
+				console.error('Token refresh failed:', refreshError);
+				
+				// Preserve payment form data before clearing
+				const paymentFormData = localStorage.getItem('paymentFormData');
+				
+				localStorage.clear();
+				sessionStorage.clear();
+				
+				if (paymentFormData) {
+					localStorage.setItem('paymentFormData', paymentFormData);
+				}
+				
+				if (typeof window !== 'undefined') {
+					window.location.href = '/login';
+				}
+				
+				return Promise.reject(refreshError);
+			}
+		}
+
+		return Promise.reject(error);
+	}
+);
+
 const instance2 = axios.create({
 	baseURL: baseUrl,
 	headers: () => ({
@@ -34,6 +80,51 @@ instance2.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+// Response interceptor for automatic token refresh on 401 errors (multipart instance)
+instance2.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
+
+		// Handle 401 errors (expired token)
+		if (error?.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+
+			try {
+				// Refresh the token
+				const newToken = await getNewToken();
+				
+				// Update the failed request with new token
+				originalRequest.headers.Authorization = `Bearer ${newToken}`;
+				
+				// Retry the original request
+				return instance2.request(originalRequest);
+			} catch (refreshError) {
+				// Token refresh failed, redirect to login
+				console.error('Token refresh failed:', refreshError);
+				
+				// Preserve payment form data before clearing
+				const paymentFormData = localStorage.getItem('paymentFormData');
+				
+				localStorage.clear();
+				sessionStorage.clear();
+				
+				if (paymentFormData) {
+					localStorage.setItem('paymentFormData', paymentFormData);
+				}
+				
+				if (typeof window !== 'undefined') {
+					window.location.href = '/login';
+				}
+				
+				return Promise.reject(refreshError);
+			}
+		}
+
 		return Promise.reject(error);
 	}
 );

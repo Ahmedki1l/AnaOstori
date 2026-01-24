@@ -21,9 +21,7 @@ export default function MyProfile() {
 	const [loading, setIsLoading] = useState(false)
 
 	useEffect(() => {
-		if (storeData?.viewProfileData) {
-			getMyCourseReq()
-		}
+		getMyCourseReq()
 	}, [])
 
 	const getMyCourseReq = async () => {
