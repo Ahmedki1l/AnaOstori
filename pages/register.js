@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from '../styles/Login.module.scss'
-import { signupWithEmailAndPassword, signInWithApple, GoogleLogin, startEmailPasswordLogin } from '../services/fireBaseAuthService'
+import { signupWithEmailAndPassword, signInWithApple, GoogleLogin, startEmailPasswordLogin, getFreshIdToken } from '../services/fireBaseAuthService'
 import { useRouter } from 'next/router'
 import { getAuthRouteAPI, getRouteAPI, postAuthRouteAPI } from '../services/apisService'
 import { toast } from "react-toastify";
@@ -166,10 +166,11 @@ export default function Register() {
 		await GoogleLogin().then(async (result) => {
 			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
-			localStorage.setItem("accessToken", user?.accessToken);
+			// Use getFreshIdToken instead of deprecated user.accessToken
+			const token = await getFreshIdToken(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
-				accessToken: user?.accessToken,
+				accessToken: token,
 			});
 			dispatch({
 				type: 'IS_USER_FROM_GOOGLE',
@@ -183,13 +184,14 @@ export default function Register() {
 
 	const handleAppleLogin = async () => {
 		setLoading(true)
-		await signInWithApple().then((result) => {
+		await signInWithApple().then(async (result) => {
 			const user = result?.user;
 			const isUserNew = result._tokenResponse.isNewUser
-			localStorage.setItem("accessToken", user?.accessToken);
+			// Use getFreshIdToken instead of deprecated user.accessToken
+			const token = await getFreshIdToken(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
-				accessToken: user?.accessToken,
+				accessToken: token,
 			});
 			dispatch({
 				type: 'LOGIN_WITHOUT_PASSWORD',
@@ -302,10 +304,11 @@ export default function Register() {
 				await postAuthRouteAPI(params).then(async (res) => {
 					await startEmailPasswordLogin(email, password).then(async (result) => {
 						const user = result.user;
-						localStorage.setItem("accessToken", user?.accessToken);
+						// Use getFreshIdToken instead of deprecated user.accessToken
+						const token = await getFreshIdToken(user);
 						dispatch({
 							type: 'ADD_AUTH_TOKEN',
-							accessToken: user?.accessToken,
+							accessToken: token,
 						});
 						dispatch({
 							type: 'IS_USER_FROM_GOOGLE',

@@ -2,7 +2,7 @@ import Image from 'next/legacy/image'
 import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Login.module.scss'
-import { GoogleLogin, signInWithApple, startEmailPasswordLogin } from '../services/fireBaseAuthService'
+import { GoogleLogin, signInWithApple, startEmailPasswordLogin, getFreshIdToken } from '../services/fireBaseAuthService'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuthRouteAPI } from '../services/apisService';
 import { toast } from "react-toastify";
@@ -189,13 +189,14 @@ export default function Login() {
 
 	const hendelGoogleLogin = async () => {
 		setLoading(true)
-		await GoogleLogin().then((result) => {
+		await GoogleLogin().then(async (result) => {
 			const isUserNew = result._tokenResponse.isNewUser
 			const user = result?.user;
-			localStorage.setItem("accessToken", user?.accessToken);
+			// Use getFreshIdToken instead of deprecated user.accessToken
+			const token = await getFreshIdToken(user);
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
-				accessToken: user?.accessToken,
+				accessToken: token,
 			});
 			dispatch({
 				type: 'IS_USER_FROM_GOOGLE',
@@ -217,12 +218,13 @@ export default function Login() {
 		}
 		if (email && password) {
 			setLoading(true)
-			await startEmailPasswordLogin(email, password).then((result) => {
+			await startEmailPasswordLogin(email, password).then(async (result) => {
 				const user = result.user;
-				localStorage.setItem("accessToken", user?.accessToken);
+				// Use getFreshIdToken instead of deprecated user.accessToken
+				const token = await getFreshIdToken(user);
 				dispatch({
 					type: 'ADD_AUTH_TOKEN',
-					accessToken: user?.accessToken,
+					accessToken: token,
 				});
 				dispatch({
 					type: 'IS_USER_FROM_GOOGLE',
@@ -244,14 +246,15 @@ export default function Login() {
 	}
 	const handleAppleLogin = async () => {
 		setLoading(true)
-		await signInWithApple().then((result) => {
+		await signInWithApple().then(async (result) => {
 			const user = result.user;
 			const isUserNew = result._tokenResponse.isNewUser
-			localStorage.setItem("accessToken", user?.accessToken);
+			// Use getFreshIdToken instead of deprecated user.accessToken
+			const token = await getFreshIdToken(user);
 			handleStoreUpdate(isUserNew)
 			dispatch({
 				type: 'ADD_AUTH_TOKEN',
-				accessToken: user?.accessToken,
+				accessToken: token,
 			});
 			dispatch({
 				type: 'LOGIN_WITHOUT_PASSWORD',

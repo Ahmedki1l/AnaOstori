@@ -4,7 +4,8 @@ import {
 	signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateEmail,
 	updatePassword,
 	OAuthProvider,
-	getIdToken
+	getIdToken,
+	onAuthStateChanged
 } from "firebase/auth";
 import Router from "next/router";
 import { toast } from "react-toastify";
@@ -112,25 +113,56 @@ export const handleUpdatePassword = async (newPassword) => {
 	return await updatePassword(auth.currentUser, newPassword);
 }
 
+/**
+ * Get a fresh ID token from Firebase for the given user.
+ * Use this after login instead of user.accessToken (which is deprecated).
+ */
+export const getFreshIdToken = async (user) => {
+	try {
+		const idToken = await getIdToken(user, false);
+		localStorage.setItem("accessToken", idToken);
+		console.log('[Auth] Fresh ID token obtained and stored');
+		return idToken;
+	} catch (error) {
+		console.error('[Auth] Failed to get ID token:', error);
+		throw error;
+	}
+};
+
 export const getNewToken = async () => {
 	// Wait for Firebase auth state to be ready
 	const user = await new Promise((resolve) => {
 		// Check if we already have current user
 		if (auth.currentUser) {
+			console.log('[Auth] Current user already available');
 			resolve(auth.currentUser);
 			return;
 		}
 		
+		console.log('[Auth] Waiting for auth state to restore...');
+		let resolved = false;
+		let timeoutId;
+		
 		// Wait for auth state to be restored (happens after page reload)
-		const unsubscribe = auth.onAuthStateChanged((user) => {
-			unsubscribe();
-			resolve(user);
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			if (!resolved) {
+				resolved = true;
+				clearTimeout(timeoutId);
+				unsubscribe();
+				console.log('[Auth] Auth state restored, user:', user ? 'found' : 'not found');
+				resolve(user);
+			}
 		});
 		
-		// Timeout after 5 seconds to prevent infinite waiting
-		setTimeout(() => {
-			resolve(null);
-		}, 5000);
+		// Timeout after 10 seconds to prevent infinite waiting
+		timeoutId = setTimeout(() => {
+			if (!resolved) {
+				resolved = true;
+				unsubscribe();
+				console.log('[Auth] Auth state check timed out');
+				resolve(null);
+			}
+		}, 10000);
 	});
 
 	if (user) {
