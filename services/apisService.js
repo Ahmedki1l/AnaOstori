@@ -27,14 +27,17 @@ instance.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
+		const requestUrl = originalRequest?.url || 'unknown';
 
 		// Handle 401 errors (expired token)
 		if (error?.response?.status === 401 && !originalRequest._retry) {
+			console.log(`[API] 401 received for ${requestUrl}, attempting token refresh...`);
 			originalRequest._retry = true;
 
 			try {
-				// Refresh the token
+				// Refresh the token (uses singleton pattern, so concurrent calls wait)
 				const newToken = await getNewToken();
+				console.log(`[API] Token refresh successful, retrying ${requestUrl}`);
 				
 				// Update the failed request with new token
 				originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -43,7 +46,7 @@ instance.interceptors.response.use(
 				return instance.request(originalRequest);
 			} catch (refreshError) {
 				// Token refresh failed, redirect to login
-				console.error('Token refresh failed:', refreshError);
+				console.error(`[API] Token refresh failed for ${requestUrl}:`, refreshError);
 				
 				// Preserve payment form data before clearing
 				const paymentFormData = localStorage.getItem('paymentFormData');

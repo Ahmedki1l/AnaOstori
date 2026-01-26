@@ -64,7 +64,9 @@ export const signupWithEmailAndPassword = (email, password) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-			localStorage.setItem("accessToken", userCredential?.user?.accessToken);
+			// Use getIdToken instead of deprecated user.accessToken
+			const idToken = await getIdToken(userCredential.user, false);
+			localStorage.setItem("accessToken", idToken);
 			resolve(userCredential);
 		} catch (error) {
 			console.log(error);
@@ -129,57 +131,105 @@ export const getFreshIdToken = async (user) => {
 	}
 };
 
-export const getNewToken = async () => {
-	// Wait for Firebase auth state to be ready
-	const user = await new Promise((resolve) => {
-		// Check if we already have current user
-		if (auth.currentUser) {
-			console.log('[Auth] Current user already available');
-			resolve(auth.currentUser);
-			return;
-		}
-		
-		console.log('[Auth] Waiting for auth state to restore...');
-		let resolved = false;
-		let timeoutId;
-		
-		// Wait for auth state to be restored (happens after page reload)
-		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			if (!resolved) {
-				resolved = true;
-				clearTimeout(timeoutId);
-				unsubscribe();
-				console.log('[Auth] Auth state restored, user:', user ? 'found' : 'not found');
-				resolve(user);
-			}
-		});
-		
-		// Timeout after 10 seconds to prevent infinite waiting
-		timeoutId = setTimeout(() => {
-			if (!resolved) {
-				resolved = true;
-				unsubscribe();
-				console.log('[Auth] Auth state check timed out');
-				resolve(null);
-			}
-		}, 10000);
-	});
+// Token refresh singleton - prevents multiple concurrent refresh attempts
+let isRefreshing = false;
+let refreshSubscribers = [];
 
-	if (user) {
-		try {
+const subscribeTokenRefresh = (callback) => {
+	refreshSubscribers.push(callback);
+};
+
+const onTokenRefreshed = (token) => {
+	refreshSubscribers.forEach((callback) => callback(token));
+	refreshSubscribers = [];
+};
+
+const onTokenRefreshFailed = (error) => {
+	refreshSubscribers.forEach((callback) => callback(null, error));
+	refreshSubscribers = [];
+};
+
+export const getNewToken = async () => {
+	// If already refreshing, wait for the current refresh to complete
+	if (isRefreshing) {
+		console.log('[Auth] Token refresh already in progress, waiting...');
+		return new Promise((resolve, reject) => {
+			subscribeTokenRefresh((token, error) => {
+				if (error) {
+					reject(error);
+				} else if (token) {
+					resolve(token);
+				} else {
+					reject(new Error('Token refresh failed'));
+				}
+			});
+		});
+	}
+
+	isRefreshing = true;
+	console.log('[Auth] Starting token refresh...');
+
+	try {
+		// Wait for Firebase auth state to be ready
+		const user = await new Promise((resolve) => {
+			// Check if we already have current user
+			if (auth.currentUser) {
+				console.log('[Auth] Current user already available');
+				resolve(auth.currentUser);
+				return;
+			}
+			
+			console.log('[Auth] Waiting for auth state to restore...');
+			let resolved = false;
+			let timeoutId;
+			
+			// Wait for auth state to be restored (happens after page reload)
+			const unsubscribe = onAuthStateChanged(auth, (user) => {
+				if (!resolved) {
+					resolved = true;
+					clearTimeout(timeoutId);
+					unsubscribe();
+					console.log('[Auth] Auth state restored, user:', user ? 'found' : 'not found');
+					resolve(user);
+				}
+			});
+			
+			// Timeout after 10 seconds to prevent infinite waiting
+			timeoutId = setTimeout(() => {
+				if (!resolved) {
+					resolved = true;
+					unsubscribe();
+					console.log('[Auth] Auth state check timed out');
+					resolve(null);
+				}
+			}, 10000);
+		});
+
+		if (user) {
 			// Force refresh the token to get a new one
 			const idToken = await getIdToken(user, true);
 			localStorage.setItem("accessToken", idToken);
 			console.log('[Auth] Token refreshed successfully');
+			
+			// Notify all waiting subscribers
+			onTokenRefreshed(idToken);
+			isRefreshing = false;
+			
 			return idToken;
-		} catch (error) {
-			console.error('[Auth] Token refresh failed:', error);
+		} else {
+			console.log('[Auth] User is not signed in, redirecting to login');
+			const error = new Error('User not authenticated');
+			onTokenRefreshFailed(error);
+			isRefreshing = false;
+			
+			await signOutUser();
+			Router.push('/login');
 			throw error;
 		}
-	} else {
-		console.log('[Auth] User is not signed in, redirecting to login');
-		await signOutUser();
-		Router.push('/login');
-		throw new Error('User not authenticated');
+	} catch (error) {
+		console.error('[Auth] Token refresh failed:', error);
+		onTokenRefreshFailed(error);
+		isRefreshing = false;
+		throw error;
 	}
 };
