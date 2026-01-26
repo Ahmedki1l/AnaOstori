@@ -113,19 +113,41 @@ export const handleUpdatePassword = async (newPassword) => {
 }
 
 export const getNewToken = async () => {
-	const user = auth.currentUser;
+	// Wait for Firebase auth state to be ready
+	const user = await new Promise((resolve) => {
+		// Check if we already have current user
+		if (auth.currentUser) {
+			resolve(auth.currentUser);
+			return;
+		}
+		
+		// Wait for auth state to be restored (happens after page reload)
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			unsubscribe();
+			resolve(user);
+		});
+		
+		// Timeout after 5 seconds to prevent infinite waiting
+		setTimeout(() => {
+			resolve(null);
+		}, 5000);
+	});
 
 	if (user) {
 		try {
-			const idToken = await getIdToken(user);
+			// Force refresh the token to get a new one
+			const idToken = await getIdToken(user, true);
 			localStorage.setItem("accessToken", idToken);
+			console.log('[Auth] Token refreshed successfully');
 			return idToken;
 		} catch (error) {
+			console.error('[Auth] Token refresh failed:', error);
 			throw error;
 		}
 	} else {
-		console.log('User is not signed in');
+		console.log('[Auth] User is not signed in, redirecting to login');
 		await signOutUser();
 		Router.push('/login');
+		throw new Error('User not authenticated');
 	}
 };
