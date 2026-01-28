@@ -83,6 +83,21 @@ export default function Index() {
                     <AllIconsComponenet width={39} height={39} iconName='manageCoupons' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة رموز QR</p>
                 </Link>
+                
+                {/* Book Shop Management */}
+                <Link href={'/instructorPanel/manageBooks'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={39} height={39} iconName='manageLibrary' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إدارة الكتب</p>
+                </Link>
+                <Link href={'/instructorPanel/manageBookOrders'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={39} height={39} iconName='managePurchaseOrder' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>طلبات الكتب</p>
+                </Link>
+                <Link href={'/instructorPanel/manageShopConfiguration'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
+                    <AllIconsComponenet width={39} height={39} iconName='manageAdminOverView' color={'#000000'} />
+                    <p className={`fontMedium ${styles.dashboardItemName}`}>إعدادات المتجر</p>
+                </Link>
+
                 {/* this is used to add city */}
                 {/* <Link href={`/instructorPanel/manageBranches?region=all`} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='locationDoubleColor' color={'#000000'} />

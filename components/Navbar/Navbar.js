@@ -426,7 +426,7 @@ export default function Navbar() {
 									</div>
 									<div className='border-b border-inherit'></div>
 									<div className={`p-4 ${styles.mainMenuWrapper}`}>
-										<Link href={'/books'} onClick={() => handleClickOnLink()} className={styles.homeText}>المتجر</Link>
+										<Link href={'/books'} onClick={() => handleClickOnLink()} className={styles.homeText}>متجر الكتب</Link>
 									</div>
 								</div>
 							</StyledDrawer>
@@ -476,7 +476,7 @@ export default function Navbar() {
 										<Link href={'/blog'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>المدونة</p></Link>
 									</div>
 									<div className={`pl-6 my-auto`}>
-										<Link href={'/books'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>المتجر</p></Link>
+										<Link href={'/books'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>متجر الكتب</p></Link>
 									</div>
 								</>
 							}
