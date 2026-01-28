@@ -476,7 +476,7 @@ export default function Navbar() {
 										<Link href={'/blog'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>المدونة</p></Link>
 									</div>
 									<div className={`pl-6 my-auto`}>
-										<Link href={'/books'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`}>متجر الكتب</p></Link>
+										<Link href={'/books'} className='normalLinkText'><p className={`${styles.homeText} ${`fontBold`}`} style={{ whiteSpace: 'nowrap' }}>متجر الكتب</p></Link>
 									</div>
 								</>
 							}
