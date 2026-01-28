@@ -4,7 +4,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined } from '@ant
 import axios from 'axios';
 import styled from 'styled-components';
 import BackToPath from '../../../components/CommonComponents/BackToPath';
-import { uploadFileAPI } from '../../../services/apisService';
+import { uploadFileSevices } from '../../../services/UploadFileSevices';
 import { mediaUrl } from '../../../constants/DataManupulation';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageBooks.module.scss';
 
@@ -91,14 +91,29 @@ export default function ManageBooksPage() {
 
             // Upload image if new file selected
             if (imageFile) {
-                const formData = new FormData();
-                formData.append('file', imageFile);
-                formData.append('folder', 'books');
-                
-                const uploadResponse = await uploadFileAPI(formData);
-                if (uploadResponse.data) {
-                    pictureKey = uploadResponse.data.key;
-                    pictureBucket = uploadResponse.data.bucket;
+                try {
+                    const uploadedUrl = await uploadFileSevices(
+                        imageFile, 
+                        (progress) => console.log('Upload progress:', progress),
+                        null,
+                        'book' // type for books
+                    );
+                    
+                    // Extract key from the uploaded URL
+                    if (uploadedUrl) {
+                        // The URL format is: https://bucket.s3.amazonaws.com/key
+                        const urlParts = uploadedUrl.split('.s3.');
+                        if (urlParts.length > 1) {
+                            const pathParts = urlParts[1].split('/');
+                            pictureBucket = urlParts[0].replace('https://', '');
+                            pictureKey = pathParts.slice(1).join('/').split('?')[0];
+                        }
+                    }
+                } catch (uploadError) {
+                    console.error('Upload error:', uploadError);
+                    message.error('خطأ في رفع الصورة');
+                    setSubmitting(false);
+                    return;
                 }
             }
 
