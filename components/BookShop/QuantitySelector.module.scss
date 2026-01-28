@@ -1,0 +1,74 @@
+.quantitySelector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    direction: ltr;
+}
+
+.quantityBtn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #E5E5E5;
+    background-color: #FFFFFF;
+    color: #333333;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background-color: #F26722;
+        border-color: #F26722;
+        color: #FFFFFF;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    span {
+        line-height: 1;
+    }
+}
+
+.decrementBtn {
+    border-radius: 8px 0 0 8px;
+    border-right: none;
+}
+
+.incrementBtn {
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+}
+
+.quantityValue {
+    min-width: 48px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAFAFA;
+    border: 1px solid #E5E5E5;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+}
+
+@media (max-width: 768px) {
+    .quantityBtn {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+
+    .quantityValue {
+        min-width: 40px;
+        height: 32px;
+        font-size: 14px;
+    }
+}

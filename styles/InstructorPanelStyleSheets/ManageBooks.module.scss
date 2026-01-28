@@ -1,0 +1,128 @@
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 0;
+}
+
+.pageTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin: 0;
+}
+
+.addButton {
+    background-color: #F26722 !important;
+    border-color: #F26722 !important;
+    height: 42px;
+    padding: 0 24px;
+    font-weight: 600;
+    border-radius: 8px;
+
+    &:hover {
+        background-color: #E55A12 !important;
+        border-color: #E55A12 !important;
+    }
+}
+
+.bookThumbnail {
+    width: 50px;
+    height: 65px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thumbnailImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.noImage {
+    font-size: 24px;
+}
+
+.statusActive {
+    color: #00BD5D;
+    font-weight: 600;
+    padding: 4px 12px;
+    background-color: rgba(0, 189, 93, 0.1);
+    border-radius: 4px;
+}
+
+.statusInactive {
+    color: #999999;
+    font-weight: 600;
+    padding: 4px 12px;
+    background-color: rgba(153, 153, 153, 0.1);
+    border-radius: 4px;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.bookForm {
+    padding-top: 16px;
+}
+
+.formRow {
+    display: flex;
+    gap: 20px;
+
+    >* {
+        flex: 1;
+    }
+}
+
+.imagePreview {
+    margin-top: 12px;
+    width: 100px;
+    height: 130px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #E5E5E5;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #F0F0F0;
+}
+
+@media (max-width: 768px) {
+    .pageHeader {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .pageTitle {
+        font-size: 20px;
+    }
+
+    .addButton {
+        width: 100%;
+    }
+
+    .formRow {
+        flex-direction: column;
+        gap: 0;
+    }
+}

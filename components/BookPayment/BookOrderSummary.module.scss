@@ -1,0 +1,159 @@
+.summaryContainer {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 100px;
+}
+
+.summaryTitle {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #F5F5F5;
+}
+
+.bookInfo {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.bookImageWrapper {
+    position: relative;
+    width: 80px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: #F5F5F5;
+}
+
+.bookImage {
+    border-radius: 8px;
+}
+
+.bookDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bookTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+}
+
+.bookQuantity {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+}
+
+.priceBreakdown {
+    margin-bottom: 20px;
+}
+
+.priceRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.priceLabel {
+    font-size: 14px;
+    color: #666666;
+}
+
+.priceValue {
+    font-size: 14px;
+    color: #333333;
+    font-weight: 500;
+}
+
+.totalRow {
+    border-top: 2px solid #F26722;
+    margin-top: 12px;
+    padding-top: 16px;
+}
+
+.totalLabel {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A1A1A;
+}
+
+.totalValue {
+    font-size: 20px;
+    font-weight: 700;
+    color: #F26722;
+}
+
+.noteBox {
+    background: linear-gradient(135deg, #FFF8F3 0%, #FFF5EE 100%);
+    border-radius: 12px;
+    padding: 16px;
+    border-right: 4px solid #F26722;
+}
+
+.noteText {
+    font-size: 13px;
+    color: #666666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .summaryContainer {
+        position: static;
+        padding: 20px 16px;
+        border-radius: 12px;
+    }
+
+    .summaryTitle {
+        font-size: 18px;
+    }
+
+    .bookInfo {
+        gap: 12px;
+    }
+
+    .bookImageWrapper {
+        width: 60px;
+        height: 80px;
+    }
+
+    .bookTitle {
+        font-size: 14px;
+    }
+
+    .bookQuantity {
+        font-size: 13px;
+    }
+
+    .priceLabel,
+    .priceValue {
+        font-size: 13px;
+    }
+
+    .totalLabel {
+        font-size: 14px;
+    }
+
+    .totalValue {
+        font-size: 18px;
+    }
+
+    .noteText {
+        font-size: 12px;
+    }
+}

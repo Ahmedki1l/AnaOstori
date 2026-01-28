@@ -1,0 +1,80 @@
+.shopContainer {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%);
+    padding: 40px 20px 80px;
+}
+
+.shopHeader {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-top: 20px;
+}
+
+.shopTitle {
+    font-size: 40px;
+    font-weight: 800;
+    color: #1A1A1A;
+    margin: 0 0 16px 0;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #F26722 0%, #FF8A50 100%);
+        border-radius: 2px;
+    }
+}
+
+.shopSubtitle {
+    font-size: 18px;
+    color: #666666;
+    margin: 24px 0 0 0;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.booksSection {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .shopContainer {
+        padding: 24px 16px 60px;
+    }
+
+    .shopHeader {
+        margin-bottom: 32px;
+    }
+
+    .shopTitle {
+        font-size: 28px;
+
+        &::after {
+            width: 60px;
+            height: 3px;
+        }
+    }
+
+    .shopSubtitle {
+        font-size: 15px;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .shopTitle {
+        font-size: 24px;
+    }
+
+    .shopSubtitle {
+        font-size: 14px;
+    }
+}

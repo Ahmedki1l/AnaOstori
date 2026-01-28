@@ -1,0 +1,272 @@
+.loadingContainer {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    p {
+        font-size: 16px;
+        color: #666666;
+    }
+}
+
+.paymentContainer {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%);
+    padding: 32px 20px 80px;
+}
+
+.progressIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    padding: 0 40px;
+}
+
+.progressStep {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stepNumber {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #E5E5E5;
+    color: #999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.progressStep.active .stepNumber {
+    background-color: #F26722;
+    color: #FFFFFF;
+}
+
+.stepLabel {
+    font-size: 14px;
+    color: #999999;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.progressStep.active .stepLabel {
+    color: #333333;
+    font-weight: 600;
+}
+
+.progressLine {
+    flex: 1;
+    max-width: 120px;
+    height: 2px;
+    background-color: #E5E5E5;
+    margin: 0 20px;
+    margin-bottom: 28px;
+}
+
+.contentWrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.formSection {
+    flex: 1;
+    max-width: 700px;
+}
+
+.summarySection {
+    width: 380px;
+    flex-shrink: 0;
+}
+
+.actionButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.submitBtn {
+    width: 100%;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}
+
+.backBtn {
+    width: 100%;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.paymentSection {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.paymentTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin: 0 0 24px 0;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #F5F5F5;
+}
+
+.paymentOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.paymentOption {
+    cursor: pointer;
+
+    input {
+        display: none;
+    }
+
+    input:checked+.paymentCard {
+        border-color: #F26722;
+        background: linear-gradient(135deg, #FFF8F3 0%, #FFFFFF 100%);
+    }
+}
+
+.paymentCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border: 2px solid #E5E5E5;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: #F26722;
+    }
+}
+
+.paymentInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.paymentLabel {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.paymentSubtext {
+    font-size: 12px;
+    color: #00BD5D;
+    font-weight: 500;
+}
+
+.paymentFormContainer {
+    margin: 24px 0;
+    padding: 20px;
+    background-color: #FAFAFA;
+    border-radius: 12px;
+}
+
+@media (max-width: 1024px) {
+    .contentWrapper {
+        flex-direction: column-reverse;
+    }
+
+    .formSection {
+        max-width: 100%;
+    }
+
+    .summarySection {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .paymentContainer {
+        padding: 20px 16px 60px;
+    }
+
+    .progressIndicator {
+        padding: 0;
+        margin-bottom: 32px;
+    }
+
+    .stepNumber {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .stepLabel {
+        font-size: 12px;
+    }
+
+    .progressLine {
+        max-width: 80px;
+        margin: 0 12px;
+        margin-bottom: 24px;
+    }
+
+    .contentWrapper {
+        gap: 24px;
+    }
+
+    .paymentSection {
+        padding: 20px 16px;
+        border-radius: 12px;
+    }
+
+    .paymentTitle {
+        font-size: 18px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+    }
+
+    .paymentCard {
+        padding: 14px 16px;
+    }
+
+    .paymentLabel {
+        font-size: 14px;
+    }
+
+    .submitBtn {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+
+    .backBtn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+}

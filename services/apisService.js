@@ -163,3 +163,8 @@ export const getAuthRouteAPI = (data) => {
 
 	return instance.get(`/auth/route/fetch?${queryParams}`)
 }
+
+// Book Order APIs
+export const createBookOrderAPI = (data) => { return instance.post('/order/createBookOrder', data) }
+export const getBookPaymentInfoAPI = (data) => { return instance.post('/orders/verifyBookPayment', data) }
+export const createBookPaymentCheckoutAPI = (data) => { return instance.post('/order/bookPaymentGateway', data) }
