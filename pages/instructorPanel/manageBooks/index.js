@@ -96,7 +96,7 @@ export default function ManageBooksPage() {
                         imageFile, 
                         (progress) => console.log('Upload progress:', progress),
                         null,
-                        'book' // type for books
+                        null // use default signedUrl type
                     );
                     
                     // Extract key from the uploaded URL
