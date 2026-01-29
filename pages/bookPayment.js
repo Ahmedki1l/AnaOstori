@@ -228,8 +228,31 @@ export default function BookPaymentPage() {
         }
     };
 
+    const clearPaymentWidget = () => {
+        // Clear checkout state
+        setCheckoutId(null);
+        setHyperPayIntegrity(null);
+        setPaymentType(null);
+        
+        // Remove any existing HyperPay scripts and widget
+        const existingScripts = document.querySelectorAll('script[src*="paymentWidgets"]');
+        existingScripts.forEach(script => script.remove());
+        
+        // Clear wpwlOptions
+        if (typeof window !== 'undefined') {
+            window.wpwlOptions = undefined;
+        }
+        
+        // Clear any existing widget elements
+        const widgetElements = document.querySelectorAll('.wpwl-container, .wpwl-form');
+        widgetElements.forEach(el => el.remove());
+    };
+
     const generateCheckoutId = async (type) => {
         if (!createdOrder) return;
+
+        // Clear existing widget first
+        clearPaymentWidget();
 
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: type });
 
@@ -265,6 +288,9 @@ export default function BookPaymentPage() {
 
     const handleBankTransfer = async () => {
         if (!createdOrder) return;
+
+        // Clear existing widget first
+        clearPaymentWidget();
 
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' });
 
@@ -323,6 +349,9 @@ export default function BookPaymentPage() {
 
     const handleTamaraPayment = async () => {
         if (!createdOrder) return;
+
+        // Clear existing widget first
+        clearPaymentWidget();
 
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'tamara' });
 
