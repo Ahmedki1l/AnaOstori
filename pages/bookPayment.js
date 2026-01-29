@@ -10,6 +10,8 @@ import Logo from '../components/CommonComponents/Logo';
 import Spinner from '../components/CommonComponents/spinner';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import * as fbq from '../lib/fpixel';
+import { createBookOrderAPI, createBookPaymentCheckoutAPI } from '../services/apisService';
+import { getNewToken } from '../services/fireBaseAuthService';
 
 export default function BookPaymentPage() {
     const router = useRouter();
@@ -27,9 +29,13 @@ export default function BookPaymentPage() {
         buyerFullName: '',
         buyerPhone: '',
         buyerEmail: '',
-        street: '',
         city: '',
+        district: '',
+        street: '',
+        buildingNumber: '',
+        additionalCode: '',
         postalCode: '',
+        shortAddress: '',
         country: 'Saudi Arabia'
     });
 
@@ -141,12 +147,24 @@ export default function BookPaymentPage() {
             newErrors.buyerEmail = 'البريد الإلكتروني غير صحيح';
         }
 
-        if (!formData.street.trim()) {
-            newErrors.street = 'العنوان التفصيلي مطلوب';
-        }
-
         if (!formData.city.trim()) {
             newErrors.city = 'المدينة مطلوبة';
+        }
+
+        if (!formData.district.trim()) {
+            newErrors.district = 'الحي مطلوب';
+        }
+
+        if (!formData.street.trim()) {
+            newErrors.street = 'الشارع مطلوب';
+        }
+
+        if (!formData.buildingNumber.trim()) {
+            newErrors.buildingNumber = 'رقم المبنى مطلوب';
+        }
+
+        if (!formData.postalCode.trim()) {
+            newErrors.postalCode = 'الرمز البريدي مطلوب';
         }
 
         setErrors(newErrors);
@@ -170,23 +188,28 @@ export default function BookPaymentPage() {
                 buyerPhone: formData.buyerPhone,
                 buyerEmail: formData.buyerEmail,
                 deliveryAddress: {
-                    street: formData.street,
                     city: formData.city,
+                    district: formData.district,
+                    street: formData.street,
+                    buildingNumber: formData.buildingNumber,
+                    additionalCode: formData.additionalCode,
                     postalCode: formData.postalCode,
+                    shortAddress: formData.shortAddress,
                     country: formData.country
                 }
             };
 
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/createBookOrder`,
-                orderPayload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json'
-                    }
+            let response;
+            try {
+                response = await createBookOrderAPI(orderPayload);
+            } catch (err) {
+                if (err?.response?.status === 401) {
+                    await getNewToken();
+                    response = await createBookOrderAPI(orderPayload);
+                } else {
+                    throw err;
                 }
-            );
+            }
 
             if (response.data) {
                 setCreatedOrder(response.data);
@@ -217,16 +240,17 @@ export default function BookPaymentPage() {
         };
 
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/bookPaymentGateway`,
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json'
-                    }
+            let response;
+            try {
+                response = await createBookPaymentCheckoutAPI(payload);
+            } catch (err) {
+                if (err?.response?.status === 401) {
+                    await getNewToken();
+                    response = await createBookPaymentCheckoutAPI(payload);
+                } else {
+                    throw err;
                 }
-            );
+            }
 
             if (response.status === 200) {
                 setPaymentType(type);
@@ -245,16 +269,17 @@ export default function BookPaymentPage() {
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' });
 
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/chooseBookPaymentMethod`,
-                { orderId: createdOrder.id },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json'
-                    }
+            let response;
+            try {
+                response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'bank_transfer' });
+            } catch (err) {
+                if (err?.response?.status === 401) {
+                    await getNewToken();
+                    response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'bank_transfer' });
+                } else {
+                    throw err;
                 }
-            );
+            }
 
             if (response.status === 200) {
                 router.push({
@@ -274,16 +299,17 @@ export default function BookPaymentPage() {
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'tabby' });
 
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/bookPaymentGateway`,
-                { orderId: createdOrder.id, type: 'tabby' },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json'
-                    }
+            let response;
+            try {
+                response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'tabby' });
+            } catch (err) {
+                if (err?.response?.status === 401) {
+                    await getNewToken();
+                    response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'tabby' });
+                } else {
+                    throw err;
                 }
-            );
+            }
 
             if (response.status === 200 && response.data?.[0]?.url) {
                 // Redirect to Tabby checkout
@@ -301,16 +327,17 @@ export default function BookPaymentPage() {
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'tamara' });
 
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/bookPaymentGateway`,
-                { orderId: createdOrder.id, type: 'tamara' },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json'
-                    }
+            let response;
+            try {
+                response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'tamara' });
+            } catch (err) {
+                if (err?.response?.status === 401) {
+                    await getNewToken();
+                    response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'tamara' });
+                } else {
+                    throw err;
                 }
-            );
+            }
 
             if (response.status === 200 && response.data?.[0]?.url) {
                 // Redirect to Tamara checkout

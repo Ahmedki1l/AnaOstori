@@ -3,15 +3,14 @@ import Image from 'next/legacy/image';
 import styles from './BookOrderSummary.module.scss';
 import { mediaUrl } from '../../constants/DataManupulation';
 
-export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, vatPercentage = 15 }) {
+export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0 }) {
     const bookImageUrl = bookData.bookPictureKey && bookData.bookPictureBucket 
         ? mediaUrl(bookData.bookPictureBucket, bookData.bookPictureKey)
         : '/images/book-placeholder.png';
 
     const unitPrice = Number(bookData.bookPrice) || 0;
     const subtotal = unitPrice * quantity;
-    const vatAmount = (subtotal * vatPercentage) / 100;
-    const grandTotal = subtotal + vatAmount + Number(deliveryFee);
+    const grandTotal = subtotal + Number(deliveryFee);
 
     return (
         <div className={styles.summaryContainer}>
@@ -40,11 +39,6 @@ export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, 
                 </div>
 
                 <div className={styles.priceRow}>
-                    <span className={styles.priceLabel}>ضريبة القيمة المضافة ({vatPercentage}%)</span>
-                    <span className={styles.priceValue}>{vatAmount.toFixed(2)} ر.س</span>
-                </div>
-
-                <div className={styles.priceRow}>
                     <span className={styles.priceLabel}>رسوم التوصيل</span>
                     <span className={styles.priceValue}>{Number(deliveryFee).toFixed(2)} ر.س</span>
                 </div>
@@ -52,6 +46,10 @@ export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, 
                 <div className={`${styles.priceRow} ${styles.totalRow}`}>
                     <span className={styles.totalLabel}>المبلغ الإجمالي</span>
                     <span className={styles.totalValue}>{grandTotal.toFixed(2)} ر.س</span>
+                </div>
+
+                <div className={styles.vatNote}>
+                    <span>* الأسعار شاملة ضريبة القيمة المضافة</span>
                 </div>
             </div>
 

@@ -13,7 +13,7 @@ export default function DeliveryInfoForm({ formData, setFormData, errors }) {
 
     return (
         <div className={styles.formContainer}>
-            <h2 className={styles.formTitle}>معلومات التوصيل</h2>
+            <h2 className={styles.formTitle}>بيانات المستلم</h2>
             
             <div className={styles.inputGroup}>
                 <FormItem
@@ -78,25 +78,6 @@ export default function DeliveryInfoForm({ formData, setFormData, errors }) {
                 <span>عنوان التوصيل</span>
             </div>
 
-            <div className={styles.inputGroup}>
-                <FormItem
-                    name="street"
-                    validateStatus={errors?.street ? 'error' : ''}
-                    help={errors?.street}
-                >
-                    <div className={styles.inputWrapper}>
-                        <label className={styles.inputLabel}>العنوان التفصيلي *</label>
-                        <Input
-                            placeholder="الشارع، الحي، رقم المبنى"
-                            value={formData.street}
-                            onChange={(e) => handleInputChange('street', e.target.value)}
-                            height={48}
-                            fontSize={16}
-                        />
-                    </div>
-                </FormItem>
-            </div>
-
             <div className={styles.inputRow}>
                 <div className={styles.inputGroup}>
                     <FormItem
@@ -119,12 +100,92 @@ export default function DeliveryInfoForm({ formData, setFormData, errors }) {
 
                 <div className={styles.inputGroup}>
                     <FormItem
+                        name="district"
+                        validateStatus={errors?.district ? 'error' : ''}
+                        help={errors?.district}
+                    >
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.inputLabel}>الحي *</label>
+                            <Input
+                                placeholder="حي النرجس"
+                                value={formData.district}
+                                onChange={(e) => handleInputChange('district', e.target.value)}
+                                height={48}
+                                fontSize={16}
+                            />
+                        </div>
+                    </FormItem>
+                </div>
+            </div>
+
+            <div className={styles.inputRow}>
+                <div className={styles.inputGroup}>
+                    <FormItem
+                        name="street"
+                        validateStatus={errors?.street ? 'error' : ''}
+                        help={errors?.street}
+                    >
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.inputLabel}>الشارع *</label>
+                            <Input
+                                placeholder="شارع الملك فهد"
+                                value={formData.street}
+                                onChange={(e) => handleInputChange('street', e.target.value)}
+                                height={48}
+                                fontSize={16}
+                            />
+                        </div>
+                    </FormItem>
+                </div>
+
+                <div className={styles.inputGroup}>
+                    <FormItem
+                        name="buildingNumber"
+                        validateStatus={errors?.buildingNumber ? 'error' : ''}
+                        help={errors?.buildingNumber}
+                    >
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.inputLabel}>رقم المبنى *</label>
+                            <Input
+                                placeholder="1234"
+                                value={formData.buildingNumber}
+                                onChange={(e) => handleInputChange('buildingNumber', e.target.value)}
+                                height={48}
+                                fontSize={16}
+                            />
+                        </div>
+                    </FormItem>
+                </div>
+            </div>
+
+            <div className={styles.inputRow}>
+                <div className={styles.inputGroup}>
+                    <FormItem
+                        name="additionalCode"
+                        validateStatus={errors?.additionalCode ? 'error' : ''}
+                        help={errors?.additionalCode}
+                    >
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.inputLabel}>الرمز الإضافي</label>
+                            <Input
+                                placeholder="1234"
+                                value={formData.additionalCode}
+                                onChange={(e) => handleInputChange('additionalCode', e.target.value)}
+                                height={48}
+                                fontSize={16}
+                            />
+                        </div>
+                    </FormItem>
+                </div>
+
+                <div className={styles.inputGroup}>
+                    <FormItem
                         name="postalCode"
                         validateStatus={errors?.postalCode ? 'error' : ''}
                         help={errors?.postalCode}
                     >
                         <div className={styles.inputWrapper}>
-                            <label className={styles.inputLabel}>الرمز البريدي</label>
+                            <label className={styles.inputLabel}>الرمز البريدي *</label>
                             <Input
                                 placeholder="12345"
                                 value={formData.postalCode}
@@ -138,15 +199,22 @@ export default function DeliveryInfoForm({ formData, setFormData, errors }) {
             </div>
 
             <div className={styles.inputGroup}>
-                <div className={styles.inputWrapper}>
-                    <label className={styles.inputLabel}>الدولة</label>
-                    <Input
-                        value="المملكة العربية السعودية"
-                        disabled={true}
-                        height={48}
-                        fontSize={16}
-                    />
-                </div>
+                <FormItem
+                    name="shortAddress"
+                    validateStatus={errors?.shortAddress ? 'error' : ''}
+                    help={errors?.shortAddress}
+                >
+                    <div className={styles.inputWrapper}>
+                        <label className={styles.inputLabel}>العنوان المختصر</label>
+                        <Input
+                            placeholder="AAAA1234"
+                            value={formData.shortAddress}
+                            onChange={(e) => handleInputChange('shortAddress', e.target.value)}
+                            height={48}
+                            fontSize={16}
+                        />
+                    </div>
+                </FormItem>
             </div>
         </div>
     );
