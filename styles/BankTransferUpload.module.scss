@@ -1,0 +1,338 @@
+.loadingContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #F8F9FA 0%, #EEEEEE 100%);
+}
+
+.container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #F8F9FA 0%, #EEEEEE 100%);
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.uploadCard {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.successCard {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 48px 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.iconWrapper {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFEBE0 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin: 0 0 8px 0;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+}
+
+.orderInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F8F9FA;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.orderLabel {
+    font-size: 14px;
+    color: #666666;
+}
+
+.orderValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A1A1A;
+    direction: ltr;
+}
+
+.uploadSection {
+    margin-bottom: 24px;
+}
+
+.uploadZone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #E0E0E0;
+    border-radius: 16px;
+    padding: 40px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #FAFAFA;
+
+    &:hover {
+        border-color: #F26722;
+        background: #FFF8F3;
+    }
+}
+
+.fileInput {
+    display: none;
+}
+
+.uploadContent {
+    text-align: center;
+}
+
+.uploadText {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin: 16px 0 8px 0;
+}
+
+.uploadHint {
+    font-size: 13px;
+    color: #888888;
+}
+
+.previewContainer {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #E0E0E0;
+}
+
+.previewImage {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    display: block;
+    background: #F5F5F5;
+}
+
+.pdfPreview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px;
+    background: #F8F9FA;
+
+    span {
+        font-size: 14px;
+        color: #666666;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.removeBtn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.progressContainer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.progressBar {
+    flex: 1;
+    height: 8px;
+    background: #E0E0E0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #F26722, #FF8A50);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progressText {
+    font-size: 14px;
+    font-weight: 600;
+    color: #F26722;
+    min-width: 40px;
+    text-align: left;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.submitBtn {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #F26722 0%, #E85A1B 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(242, 103, 34, 0.35);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.cancelBtn {
+    width: 100%;
+    padding: 14px 24px;
+    background: transparent;
+    color: #666666;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background-color: #F5F5F5;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.noteBox {
+    background: linear-gradient(135deg, #FFF8F3 0%, #FFF5EE 100%);
+    border-radius: 12px;
+    padding: 16px;
+    border-right: 4px solid #F26722;
+
+    p {
+        font-size: 13px;
+        color: #666666;
+        margin: 0;
+        line-height: 1.6;
+    }
+}
+
+// Success State Styles
+.successIcon {
+    margin-bottom: 24px;
+}
+
+.successTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #22C55E;
+    margin: 0 0 16px 0;
+}
+
+.successMessage {
+    font-size: 15px;
+    color: #666666;
+    line-height: 1.7;
+    margin: 0 0 24px 0;
+}
+
+.homeBtn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #F26722 0%, #E85A1B 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(242, 103, 34, 0.35);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 16px;
+    }
+
+    .uploadCard,
+    .successCard {
+        padding: 24px 20px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .uploadZone {
+        padding: 30px 16px;
+    }
+}

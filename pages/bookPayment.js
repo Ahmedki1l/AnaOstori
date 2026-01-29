@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import styles from '../styles/BookPayment.module.scss';
 import DeliveryInfoForm from '../components/BookPayment/DeliveryInfoForm';
 import BookOrderSummary from '../components/BookPayment/BookOrderSummary';
+import BankTransferConfirmModal from '../components/BookPayment/BankTransferConfirmModal';
 import Logo from '../components/CommonComponents/Logo';
 import Spinner from '../components/CommonComponents/spinner';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
@@ -24,6 +25,8 @@ export default function BookPaymentPage() {
     const [checkoutId, setCheckoutId] = useState(null);
     const [paymentType, setPaymentType] = useState('');
     const [hyperPayIntegrity, setHyperPayIntegrity] = useState(null);
+    const [showBankTransferModal, setShowBankTransferModal] = useState(false);
+    const [bankTransferLoading, setBankTransferLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         buyerFullName: '',
@@ -286,12 +289,18 @@ export default function BookPaymentPage() {
         }
     };
 
-    const handleBankTransfer = async () => {
+    const openBankTransferModal = () => {
         if (!createdOrder) return;
-
+        
         // Clear existing widget first
         clearPaymentWidget();
+        setShowBankTransferModal(true);
+    };
 
+    const confirmBankTransfer = async () => {
+        if (!createdOrder) return;
+
+        setBankTransferLoading(true);
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'Bank Transfer' });
 
         try {
@@ -308,14 +317,18 @@ export default function BookPaymentPage() {
             }
 
             if (response.status === 200) {
+                setShowBankTransferModal(false);
+                // Navigate to upload page with order ID
                 router.push({
-                    pathname: '/receiveRequest',
-                    query: { orderId: response.data.id, type: 'book' }
+                    pathname: '/bankTransferUpload',
+                    query: { orderId: createdOrder.id }
                 });
             }
         } catch (error) {
             console.error('Error processing bank transfer:', error);
             toast.error('حدث خطأ. يرجى المحاولة مرة أخرى.');
+        } finally {
+            setBankTransferLoading(false);
         }
     };
 
@@ -482,7 +495,7 @@ export default function BookPaymentPage() {
                                             <input 
                                                 type="radio" 
                                                 name="paymentMethod" 
-                                                onClick={handleBankTransfer}
+                                                onClick={openBankTransferModal}
                                             />
                                             <div className={styles.paymentCard}>
                                                 <div className={styles.paymentInfo}>
@@ -543,6 +556,14 @@ export default function BookPaymentPage() {
                     </div>
                 </div>
             </main>
+
+            {/* Bank Transfer Confirmation Modal */}
+            <BankTransferConfirmModal
+                isOpen={showBankTransferModal}
+                onClose={() => setShowBankTransferModal(false)}
+                onConfirm={confirmBankTransfer}
+                loading={bankTransferLoading}
+            />
         </>
     );
 }

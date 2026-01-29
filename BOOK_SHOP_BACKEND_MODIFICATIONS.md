@@ -87,3 +87,152 @@ The `bookPaymentGateway` handler must allow payment initiation for orders with s
 
 **Priority:** CRITICAL - Blocking all book purchases
 
+---
+
+## 4. Bank Transfer Receipt Upload Flow (NEW)
+
+The frontend now implements a bank transfer payment flow where users upload their transfer receipt. The backend needs to support this.
+
+### 4.1 New Endpoint: `uploadBankTransferReceipt`
+
+**Route:** `POST /order/uploadBankTransferReceipt` (or via `postAuthRoute`)
+
+**Request Payload:**
+```json
+{
+  "routeName": "uploadBankTransferReceipt",
+  "orderId": "string",
+  "receiptUrl": "string (S3 URL)",
+  "receiptKey": "string (S3 key)",
+  "receiptBucket": "string (S3 bucket)"
+}
+```
+
+**Expected Behavior:**
+1. Update the BookOrder with the receipt information
+2. Change order status to `"pending_review"` or `"receipt_uploaded"`
+3. Return success response
+
+### 4.2 Schema Updates for `BookOrders`
+
+Add these fields to store receipt information:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `receiptUrl` | string | Full S3 URL of the uploaded receipt |
+| `receiptKey` | string | S3 object key |
+| `receiptBucket` | string | S3 bucket name |
+| `receiptUploadedAt` | datetime | When the receipt was uploaded |
+| `paymentVerifiedAt` | datetime | When admin verified the payment |
+| `paymentVerifiedBy` | string | Admin user who verified |
+
+### 4.3 New Order Statuses
+
+Add these statuses for bank transfer orders:
+
+| Status | Description |
+|--------|-------------|
+| `pending_receipt` | Order created, waiting for receipt upload |
+| `pending_review` | Receipt uploaded, waiting for admin review |
+| `payment_verified` | Admin verified, ready to ship |
+| `payment_rejected` | Admin rejected the receipt |
+
+### 4.4 Admin Order Management Updates
+
+The admin "إدارة طلبات الكتب" (Book Orders Management) page needs to:
+
+1. **Filter by payment status** - Show orders pending receipt review
+2. **Display receipt** - View uploaded receipt image/PDF
+3. **Verify/Reject actions:**
+   - "تأكيد الدفع" (Verify Payment) → Changes status to `payment_verified`
+   - "رفض الإيصال" (Reject Receipt) → Changes status to `payment_rejected` + optional reason
+
+#### Updated `bookOrderList` Response
+
+The `bookOrderList` endpoint must include these additional fields in each order object:
+
+```json
+{
+  "id": "string",
+  "bookTitle": "string",
+  "quantity": "number",
+  "buyerFullName": "string",
+  "status": "string",
+  "grandTotal": "number",
+  "createdAt": "datetime",
+  
+  // NEW: Receipt fields (for bank transfer orders)
+  "receiptUrl": "string | null",
+  "receiptKey": "string | null",
+  "receiptBucket": "string | null",
+  "receiptUploadedAt": "datetime | null",
+  
+  // NEW: Verification fields
+  "paymentVerifiedAt": "datetime | null",
+  "paymentVerifiedBy": "string | null",
+  "paymentRejectionReason": "string | null",
+  
+  // Existing fields...
+  "buyerPhone": "string",
+  "buyerEmail": "string",
+  "deliveryStreet": "string",
+  "deliveryCity": "string",
+  "deliveryPostalCode": "string",
+  "deliveryCountry": "string",
+  "unitPrice": "number",
+  "totalPrice": "number",
+  "totalVat": "number",
+  "deliveryFee": "number",
+  "invoiceKey": "string | null",
+  "invoiceBucket": "string | null"
+}
+```
+
+**Frontend expects:**
+- Receipt is viewable if `receiptUrl` OR (`receiptKey` AND `receiptBucket`) is present
+- Verify/Reject buttons shown only when `status === 'pending_review'`
+- Verification info shown when `paymentVerifiedAt` is present
+
+### 4.5 New Admin Endpoint: `verifyBankTransferPayment`
+
+**Route:** `POST /order/verifyBankTransferPayment` (or via `postAuthRoute`)
+
+**Request Payload:**
+```json
+{
+  "routeName": "verifyBankTransferPayment",
+  "orderId": "string",
+  "action": "verify" | "reject",
+  "rejectionReason": "string (optional, for reject action)"
+}
+```
+
+**Expected Behavior:**
+- **verify:** Update status to `payment_verified`, set `paymentVerifiedAt` and `paymentVerifiedBy`
+- **reject:** Update status to `payment_rejected`, store reason, send notification to user
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Payment verified successfully" | "Payment rejected",
+  "order": { /* updated order object */ }
+}
+```
+
+---
+
+## Updated Summary
+
+| Component | Change | Priority |
+|-----------|--------|----------|
+| `BookOrders` schema | Add 4 new address fields | High |
+| `BookOrders` schema | Add receipt upload fields | High |
+| `BookOrders` schema | Add new bank transfer statuses | High |
+| `createBookOrder` handler | Accept new address fields | High |
+| `bookPaymentGateway` handler | Allow "waiting" status | CRITICAL |
+| `uploadBankTransferReceipt` | New endpoint for receipt upload | High |
+| `verifyBankTransferPayment` | New admin endpoint | High |
+| `bookOrderList` response | Include receipt & verification fields | High |
+| Admin orders page | View receipt, verify/reject actions | High |
+| VAT calculation | No change needed | - |

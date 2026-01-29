@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ConfigProvider, Table, Drawer, Select, Input, DatePicker, Button, Tag, message } from 'antd';
-import { SearchOutlined, FilterOutlined, DownloadOutlined } from '@ant-design/icons';
+import { ConfigProvider, Table, Drawer, Select, Input, DatePicker, Button, Tag, message, Modal, Image } from 'antd';
+import { SearchOutlined, FilterOutlined, DownloadOutlined, EyeOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import BackToPath from '../../../components/CommonComponents/BackToPath';
 import { postRouteAPI, postAuthRouteAPI } from '../../../services/apisService';
 import { mediaUrl } from '../../../constants/DataManupulation';
+import { getNewToken } from '../../../services/fireBaseAuthService';
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageBookOrders.module.scss';
 
 const { RangePicker } = DatePicker;
@@ -21,7 +22,11 @@ const orderStatusOptions = [
     { value: '', label: 'جميع الحالات' },
     { value: 'pending', label: 'قيد الانتظار' },
     { value: 'waiting', label: 'بانتظار الدفع' },
+    { value: 'pending_receipt', label: 'بانتظار الإيصال' },
+    { value: 'pending_review', label: 'بانتظار المراجعة' },
     { value: 'paid', label: 'مدفوع' },
+    { value: 'payment_verified', label: 'تم التحقق' },
+    { value: 'payment_rejected', label: 'مرفوض' },
     { value: 'processing', label: 'قيد التجهيز' },
     { value: 'shipped', label: 'قيد الشحن' },
     { value: 'delivered', label: 'تم التوصيل' },
@@ -32,7 +37,11 @@ const orderStatusOptions = [
 const statusColors = {
     pending: '#FFA500',
     waiting: '#FAAD14',
+    pending_receipt: '#FA8C16',
+    pending_review: '#EB2F96',
     paid: '#1890FF',
+    payment_verified: '#52C41A',
+    payment_rejected: '#FF4D4F',
     processing: '#722ED1',
     shipped: '#13C2C2',
     delivered: '#52C41A',
@@ -43,7 +52,11 @@ const statusColors = {
 const statusLabels = {
     pending: 'قيد الانتظار',
     waiting: 'بانتظار الدفع',
+    pending_receipt: 'بانتظار الإيصال',
+    pending_review: 'بانتظار المراجعة',
     paid: 'مدفوع',
+    payment_verified: 'تم التحقق',
+    payment_rejected: 'مرفوض',
     processing: 'قيد التجهيز',
     shipped: 'قيد الشحن',
     delivered: 'تم التوصيل',
@@ -58,6 +71,8 @@ export default function ManageBookOrdersPage() {
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [updatingStatus, setUpdatingStatus] = useState(false);
+    const [receiptModalVisible, setReceiptModalVisible] = useState(false);
+    const [verifyingPayment, setVerifyingPayment] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
@@ -156,6 +171,53 @@ export default function ManageBookOrdersPage() {
         } finally {
             setUpdatingStatus(false);
         }
+    };
+
+    const handleVerifyPayment = async (action) => {
+        if (!selectedOrder) return;
+
+        setVerifyingPayment(true);
+        try {
+            let response;
+            try {
+                response = await postAuthRouteAPI({
+                    routeName: 'verifyBankTransferPayment',
+                    orderId: selectedOrder.id,
+                    action: action
+                });
+            } catch (err) {
+                if (err?.response?.status === 401) {
+                    await getNewToken();
+                    response = await postAuthRouteAPI({
+                        routeName: 'verifyBankTransferPayment',
+                        orderId: selectedOrder.id,
+                        action: action
+                    });
+                } else {
+                    throw err;
+                }
+            }
+
+            const newStatus = action === 'verify' ? 'payment_verified' : 'payment_rejected';
+            message.success(action === 'verify' ? 'تم تأكيد الدفع بنجاح' : 'تم رفض الإيصال');
+            setSelectedOrder({ ...selectedOrder, status: newStatus });
+            fetchOrders(currentPage);
+        } catch (error) {
+            console.error('Error verifying payment:', error);
+            message.error('حدث خطأ أثناء تحديث الحالة');
+        } finally {
+            setVerifyingPayment(false);
+        }
+    };
+
+    const getReceiptUrl = () => {
+        if (selectedOrder?.receiptUrl) {
+            return selectedOrder.receiptUrl;
+        }
+        if (selectedOrder?.receiptBucket && selectedOrder?.receiptKey) {
+            return mediaUrl(selectedOrder.receiptBucket, selectedOrder.receiptKey);
+        }
+        return null;
     };
 
     const columns = [
@@ -362,6 +424,56 @@ export default function ManageBookOrdersPage() {
                                 />
                             </div>
 
+                            {/* Bank Transfer Receipt Section */}
+                            {(selectedOrder.receiptUrl || selectedOrder.receiptKey) && (
+                                <div className={styles.detailSection}>
+                                    <h3>إيصال التحويل البنكي</h3>
+                                    <div className={styles.receiptActions}>
+                                        <Button 
+                                            icon={<EyeOutlined />}
+                                            onClick={() => setReceiptModalVisible(true)}
+                                        >
+                                            عرض الإيصال
+                                        </Button>
+                                        <Button 
+                                            icon={<DownloadOutlined />}
+                                            href={getReceiptUrl()}
+                                            target="_blank"
+                                        >
+                                            تحميل
+                                        </Button>
+                                    </div>
+                                    
+                                    {selectedOrder.status === 'pending_review' && (
+                                        <div className={styles.verifyActions}>
+                                            <Button
+                                                type="primary"
+                                                icon={<CheckCircleOutlined />}
+                                                onClick={() => handleVerifyPayment('verify')}
+                                                loading={verifyingPayment}
+                                                style={{ background: '#52C41A', borderColor: '#52C41A' }}
+                                            >
+                                                تأكيد الدفع
+                                            </Button>
+                                            <Button
+                                                danger
+                                                icon={<CloseCircleOutlined />}
+                                                onClick={() => handleVerifyPayment('reject')}
+                                                loading={verifyingPayment}
+                                            >
+                                                رفض الإيصال
+                                            </Button>
+                                        </div>
+                                    )}
+
+                                    {selectedOrder.paymentVerifiedAt && (
+                                        <div className={styles.verifiedInfo}>
+                                            <Tag color="green">تم التحقق بتاريخ {dayjs(selectedOrder.paymentVerifiedAt).format('DD/MM/YYYY HH:mm')}</Tag>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {selectedOrder.invoiceKey && (
                                 <div className={styles.invoiceSection}>
                                     <Button 
@@ -376,6 +488,35 @@ export default function ManageBookOrdersPage() {
                         </div>
                     )}
                 </Drawer>
+
+                {/* Receipt View Modal */}
+                <Modal
+                    title="إيصال التحويل البنكي"
+                    open={receiptModalVisible}
+                    onCancel={() => setReceiptModalVisible(false)}
+                    footer={null}
+                    width={700}
+                    centered
+                >
+                    {getReceiptUrl() && (
+                        <div style={{ textAlign: 'center' }}>
+                            {getReceiptUrl()?.toLowerCase().endsWith('.pdf') ? (
+                                <iframe
+                                    src={getReceiptUrl()}
+                                    width="100%"
+                                    height="500px"
+                                    style={{ border: 'none' }}
+                                />
+                            ) : (
+                                <Image
+                                    src={getReceiptUrl()}
+                                    alt="Bank Transfer Receipt"
+                                    style={{ maxWidth: '100%', maxHeight: '70vh' }}
+                                />
+                            )}
+                        </div>
+                    )}
+                </Modal>
             </ConfigProvider>
         </div>
     );

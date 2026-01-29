@@ -100,6 +100,24 @@
     margin: 0;
 }
 
+.receiptActions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.verifyActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #E0E0E0;
+}
+
+.verifiedInfo {
+    margin-top: 12px;
+}
+
 .invoiceSection {
     margin-top: 24px;
     padding-top: 20px;
