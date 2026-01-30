@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Image from 'next/legacy/image';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import styles from '../styles/BookPayment.module.scss';
@@ -27,6 +28,7 @@ export default function BookPaymentPage() {
     const [hyperPayIntegrity, setHyperPayIntegrity] = useState(null);
     const [showBankTransferModal, setShowBankTransferModal] = useState(false);
     const [bankTransferLoading, setBankTransferLoading] = useState(false);
+    const [isApplePayAvailable, setIsApplePayAvailable] = useState(false);
 
     const [formData, setFormData] = useState({
         buyerFullName: '',
@@ -64,6 +66,30 @@ export default function BookPaymentPage() {
         // Fetch shop configuration for delivery fee
         fetchShopConfiguration();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Detect Apple Pay availability (works on Apple devices in any browser)
+    useEffect(() => {
+        const checkApplePay = () => {
+            // Method 1: Check for ApplePaySession API (Safari and WKWebView on iOS)
+            if (window.ApplePaySession) {
+                setIsApplePayAvailable(true);
+                return;
+            }
+            
+            // Method 2: Check if we're on an Apple device (iOS/macOS) for HyperPay Apple Pay
+            const userAgent = navigator.userAgent || navigator.vendor;
+            const platform = navigator.platform || '';
+            const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isMacOS = /Mac/.test(platform);
+            
+            // Apple Pay via HyperPay works on Apple devices even in Chrome
+            if (isIOS || isMacOS) {
+                setIsApplePayAvailable(true);
+            }
+        };
+        
+        checkApplePay();
+    }, []);
 
     // Load HyperPay script dynamically when checkoutId is available
     useEffect(() => {
@@ -490,6 +516,23 @@ export default function BookPaymentPage() {
                                             </div>
                                         </label>
 
+                                        {/* Apple Pay - Only shown on Apple devices */}
+                                        {isApplePayAvailable && (
+                                            <label className={styles.paymentOption}>
+                                                <input 
+                                                    type="radio" 
+                                                    name="paymentMethod" 
+                                                    onClick={() => generateCheckoutId('applepay')}
+                                                />
+                                                <div className={styles.paymentCard}>
+                                                    <div className={styles.paymentInfo}>
+                                                        <span className={styles.paymentLabel}>Apple Pay</span>
+                                                    </div>
+                                                    <Logo height={27} width={60} logoName={'applePayLogo'} alt={'Apple Pay'} />
+                                                </div>
+                                            </label>
+                                        )}
+
                                         {/* Bank Transfer */}
                                         <label className={styles.paymentOption}>
                                             <input 
@@ -517,7 +560,9 @@ export default function BookPaymentPage() {
                                                     <span className={styles.paymentLabel}>تمارا - اشتري الآن وادفع لاحقاً</span>
                                                     <span className={styles.paymentSubtext}>بدون فوائد</span>
                                                 </div>
-                                                <Logo height={27} width={80} logoName={'tamaraPaymentLogo'} alt={'Tamara'} />
+                                                <div style={{ width: '70px', height: '40px', position: 'relative' }}>
+                                                    <Image src="/logos/Tamara.png" alt="Tamara" layout="fill" objectFit="contain" />
+                                                </div>
                                             </div>
                                         </label>
                                     </div>
