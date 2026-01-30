@@ -126,6 +126,17 @@ Add these fields to store receipt information:
 | `paymentVerifiedAt` | datetime | When admin verified the payment |
 | `paymentVerifiedBy` | string | Admin user who verified |
 
+> [!IMPORTANT]
+> **S3 Presigned URLs Required**
+> 
+> The S3 bucket storing receipts is **private**. The frontend cannot access files using direct S3 URLs.
+> 
+> **Solution (choose one):**
+> 1. **Recommended:** When returning orders via `bookOrderList`, generate a fresh presigned URL for `receiptUrl` with 1+ hour expiration
+> 2. **Alternative:** Make the receipts bucket publicly readable (not recommended for privacy)
+> 
+> If the backend only stores `receiptKey` and `receiptBucket`, it MUST generate a presigned URL when returning order data.
+
 ### 4.3 New Order Statuses
 
 Add these statuses for bank transfer orders:

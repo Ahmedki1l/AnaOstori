@@ -141,7 +141,13 @@
     }
 
     .imageContainer {
-        height: 300px;
+        height: auto;
+        aspect-ratio: 3 / 4;
+
+        // Override the Next.js Image objectFit to prevent cropping
+        :global(img) {
+            object-fit: contain !important;
+        }
     }
 
     .contentContainer {
@@ -165,5 +171,44 @@
     .buyButton {
         padding: 12px 20px;
         font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .imageContainer {
+        aspect-ratio: 4 / 5;
+    }
+
+    .contentContainer {
+        padding: 14px;
+    }
+
+    .bookTitle {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .bookDescription {
+        font-size: 12px;
+        -webkit-line-clamp: 2;
+        margin-bottom: 12px;
+    }
+
+    .priceSection {
+        margin-bottom: 12px;
+        padding-top: 10px;
+    }
+
+    .price {
+        font-size: 18px;
+    }
+
+    .actionSection {
+        gap: 12px;
+    }
+
+    .buyButton {
+        padding: 10px 16px;
+        font-size: 13px;
     }
 }

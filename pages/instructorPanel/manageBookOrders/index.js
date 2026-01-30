@@ -386,11 +386,67 @@ export default function ManageBookOrdersPage() {
 
                             <div className={styles.detailSection}>
                                 <h3>عنوان التوصيل</h3>
-                                <p className={styles.addressText}>
-                                    {selectedOrder.deliveryStreet}<br />
-                                    {selectedOrder.deliveryCity}, {selectedOrder.deliveryPostalCode}<br />
-                                    {selectedOrder.deliveryCountry}
-                                </p>
+                                {/* Handle both flat format and nested deliveryAddress JSON */}
+                                {(() => {
+                                    // Try to parse nested deliveryAddress first
+                                    let addr = selectedOrder.deliveryAddress;
+                                    if (typeof addr === 'string') {
+                                        try { addr = JSON.parse(addr); } catch(e) { addr = null; }
+                                    }
+                                    
+                                    if (addr && typeof addr === 'object') {
+                                        // New nested format
+                                        return (
+                                            <div className={styles.addressDetails}>
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>المدينة:</span>
+                                                    <span className={styles.detailValue}>{addr.city || '-'}</span>
+                                                </div>
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>الحي:</span>
+                                                    <span className={styles.detailValue}>{addr.district || '-'}</span>
+                                                </div>
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>الشارع:</span>
+                                                    <span className={styles.detailValue}>{addr.street || '-'}</span>
+                                                </div>
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>رقم المبنى:</span>
+                                                    <span className={styles.detailValue}>{addr.buildingNumber || '-'}</span>
+                                                </div>
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>الرمز البريدي:</span>
+                                                    <span className={styles.detailValue}>{addr.postalCode || '-'}</span>
+                                                </div>
+                                                {addr.additionalCode && (
+                                                    <div className={styles.detailRow}>
+                                                        <span className={styles.detailLabel}>الرمز الإضافي:</span>
+                                                        <span className={styles.detailValue}>{addr.additionalCode}</span>
+                                                    </div>
+                                                )}
+                                                {addr.shortAddress && (
+                                                    <div className={styles.detailRow}>
+                                                        <span className={styles.detailLabel}>العنوان المختصر:</span>
+                                                        <span className={styles.detailValue}>{addr.shortAddress}</span>
+                                                    </div>
+                                                )}
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>الدولة:</span>
+                                                    <span className={styles.detailValue}>{addr.country || 'المملكة العربية السعودية'}</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    } else {
+                                        // Old flat format fallback
+                                        return (
+                                            <p className={styles.addressText}>
+                                                {selectedOrder.deliveryStreet || '-'}<br />
+                                                {selectedOrder.deliveryCity || '-'}, {selectedOrder.deliveryPostalCode || '-'}<br />
+                                                {selectedOrder.deliveryCountry || 'المملكة العربية السعودية'}
+                                            </p>
+                                        );
+                                    }
+                                })()}
                             </div>
 
                             <div className={styles.detailSection}>

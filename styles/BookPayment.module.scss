@@ -269,4 +269,24 @@
         padding: 12px 24px;
         font-size: 14px;
     }
+
+    .paymentOptions {
+        gap: 12px;
+    }
+
+    .paymentCard {
+        flex-wrap: wrap;
+        gap: 12px;
+
+        img {
+            max-width: 60px;
+            height: auto;
+            object-fit: contain;
+        }
+    }
+
+    .paymentInfo {
+        flex: 1;
+        min-width: 150px;
+    }
 }
