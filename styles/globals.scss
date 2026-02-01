@@ -599,15 +599,26 @@ input:-internal-autofill-selected {
 }
 
 // ******************************************** payment Form Design **************************************************** //
+
+// Fix for clearfix float collapse - force the container to contain floated children
+.wpwl-clearfix {
+    &::after {
+        content: "" !important;
+        display: table !important;
+        clear: both !important;
+    }
+}
+
 .wpwl-group {
     padding: 0 1rem;
+    float: none !important; // Prevent float-based layout collapse
 }
 
 .wpwl-form {
     display: flex !important;
     flex-direction: column !important;
     margin: 2rem;
-    min-height: 300px !important;
+    min-height: 350px !important;
     height: auto !important;
     overflow: visible !important;
 }
@@ -616,18 +627,66 @@ input:-internal-autofill-selected {
     display: none !important;
 }
 
-// Ensure all HyperPay form fields are visible
+// ==================== CRITICAL FIX ====================
+// Force all HyperPay form field groups to be visible
+// This addresses the height:0 collapse issue
 .wpwl-group-cardHolder,
 .wpwl-group-expiry,
 .wpwl-group-cardNumber,
-.wpwl-group-cvv {
+.wpwl-group-cvv,
+.wpwl-group-brand {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    min-height: 4rem !important;
     height: auto !important;
     overflow: visible !important;
-    margin-bottom: 1rem;
+    margin-bottom: 1rem !important;
+    float: none !important;
+    clear: both !important;
 }
+
+// Force visibility on specific wrapper classes
+.wpwl-wrapper-cardHolder,
+.wpwl-wrapper-expiry,
+.wpwl-wrapper-cardNumber,
+.wpwl-wrapper-cvv {
+    display: block !important;
+    visibility: visible !important;
+    min-height: 3rem !important;
+    height: auto !important;
+    width: 100% !important;
+    float: none !important;
+}
+
+// Force visibility on specific control/input classes
+.wpwl-control-cardHolder,
+.wpwl-control-expiry {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 3rem !important;
+    height: 3rem !important;
+    width: 100% !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 0.5rem 1rem !important;
+    box-sizing: border-box !important;
+}
+
+// Card number and CVV are iframes - they need specific handling
+.wpwl-control-cardNumber,
+.wpwl-control-cvv {
+    display: block !important;
+    visibility: visible !important;
+    min-height: 3rem !important;
+    height: 3rem !important;
+    width: 100% !important;
+    border-radius: 4px;
+    padding-right: 1rem;
+}
+
+// ==================== END CRITICAL FIX ====================
 
 .wpwl-control {
     font-family: 'Times New Roman', Times, serif;
@@ -656,18 +715,10 @@ input:-internal-autofill-selected {
     height: 24px;
 }
 
-.wpwl-wrapper-cardNumber {
-    width: 100%;
-}
-
-.wpwl-wrapper-expiry {
-    width: 100%;
-}
-
-.wpwl-wrapper-cardHolder {
-    width: 100%;
-}
-
+// Ensure wrappers take full width
+.wpwl-wrapper-cardNumber,
+.wpwl-wrapper-expiry,
+.wpwl-wrapper-cardHolder,
 .wpwl-wrapper-cvv {
     width: 100%;
 }
@@ -688,15 +739,6 @@ input:-internal-autofill-selected {
         background-color: $primary-hover-color;
         border-color: $primary-hover-color;
     }
-}
-
-.wpwl-control-cardHolder,
-.wpwl-control-expiry,
-.wpwl-control-cardNumber,
-.wpwl-control-cvv {
-    height: 3rem;
-    border-radius: 4px;
-    padding-right: 1rem;
 }
 
 .wpwl-button-pay[disabled],
