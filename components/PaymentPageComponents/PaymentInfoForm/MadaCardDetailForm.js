@@ -14,7 +14,12 @@ export default function MadaCardDetailForm(props) {
 		madaCardForm.async = true;
 		document.head.appendChild(madaCardForm);
 
-		return () => document.head.removeChild(madaCardForm);
+		return () => {
+			// Safely remove script only if it's still attached to the DOM
+			if (madaCardForm.parentNode) {
+				madaCardForm.parentNode.removeChild(madaCardForm);
+			}
+		};
 
 	}, [checkoutID]);
 
@@ -54,7 +59,12 @@ export default function MadaCardDetailForm(props) {
 			},
 		}`
 		document.head.appendChild(madaDesignScript);
-		return () => document.head.removeChild(madaDesignScript);
+		return () => {
+			// Safely remove script only if it's still attached to the DOM
+			if (madaDesignScript.parentNode) {
+				madaDesignScript.parentNode.removeChild(madaDesignScript);
+			}
+		};
 	}, [])
 
 	return (

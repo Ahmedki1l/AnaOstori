@@ -13,7 +13,12 @@ export default function ApplePayForm(props) {
 		applePayCardForm.async = true;
 		document.head.appendChild(applePayCardForm);
 
-		return () => document.head.removeChild(applePayCardForm);
+		return () => {
+			// Safely remove script only if it's still attached to the DOM
+			if (applePayCardForm.parentNode) {
+				applePayCardForm.parentNode.removeChild(applePayCardForm);
+			}
+		};
 
 	}, [checkoutID]);
 
@@ -45,7 +50,12 @@ export default function ApplePayForm(props) {
 		}`
 		document.head.appendChild(applePayDesignScript);
 
-		return () => document.head.removeChild(applePayDesignScript);
+		return () => {
+			// Safely remove script only if it's still attached to the DOM
+			if (applePayDesignScript.parentNode) {
+				applePayDesignScript.parentNode.removeChild(applePayDesignScript);
+			}
+		};
 	}, [])
 
 	return (

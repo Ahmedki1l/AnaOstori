@@ -15,7 +15,12 @@ export default function CreditCardDetailForm(props) {
 		creditCardForm.async = true;
 		document.head.appendChild(creditCardForm);
 
-		return () => document.head.removeChild(creditCardForm);
+		return () => {
+			// Safely remove script only if it's still attached to the DOM
+			if (creditCardForm.parentNode) {
+				creditCardForm.parentNode.removeChild(creditCardForm);
+			}
+		};
 
 	}, [checkoutID]);
 
@@ -90,7 +95,12 @@ export default function CreditCardDetailForm(props) {
 		}`
 		document.head.appendChild(creditDesignScript);
 
-		return () => document.head.removeChild(creditDesignScript);
+		return () => {
+			// Safely remove script only if it's still attached to the DOM
+			if (creditDesignScript.parentNode) {
+				creditDesignScript.parentNode.removeChild(creditDesignScript);
+			}
+		};
 	}, [])
 
 	return (
