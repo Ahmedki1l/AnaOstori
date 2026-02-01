@@ -63,28 +63,16 @@ export default function CreditCardDetailForm(props) {
 					
 			onReady: function() {
 				ready = true;
-				// Safely check if jQuery is available before using it
-				if (typeof $ !== 'undefined' && $) {
-					$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-					$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-					$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
-				} else {
-					// Fallback using native JavaScript for iOS Safari
-					var cardHolder = document.querySelector(".wpwl-group-cardHolder");
-					var expiry = document.querySelector(".wpwl-group-expiry");
-					var cardNumber = document.querySelector(".wpwl-group-cardNumber");
-					var cardNumberControl = document.querySelector(".wpwl-control-cardNumber");
-					
-					if (cardHolder && expiry && cardHolder.parentNode) {
-						cardHolder.parentNode.insertBefore(expiry, cardHolder.nextSibling);
+				// Try to use jQuery for field rearrangement (styling only)
+				// Widget still works without this - it's just for RTL/Arabic layout
+				try {
+					if (typeof $ !== 'undefined' && $) {
+						$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
+						$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
+						$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
 					}
-					if (cardNumber && cardHolder && cardNumber.parentNode) {
-						cardNumber.parentNode.insertBefore(cardHolder, cardNumber);
-					}
-					if (cardNumberControl) {
-						cardNumberControl.style.direction = 'ltr';
-						cardNumberControl.style.textAlign = 'right';
-					}
+				} catch (e) {
+					console.warn('jQuery not available for field rearrangement:', e);
 				}
 			},
 			onChangeBrand: function() {
@@ -99,30 +87,34 @@ export default function CreditCardDetailForm(props) {
 				return;
 			}
 			
-			// Safely check if jQuery is available
-			if (typeof $ === 'undefined' || !$) {
-				return; // Skip brand hiding on iOS if jQuery not available
+			// Try to use jQuery for brand hiding (optional styling)
+			try {
+				if (typeof $ === 'undefined' || !$) {
+					return;
+				}
+				
+				// Clears all previous dots-hidden logos, if any
+				$(".wpwl-group-card-logos-horizontal > div").removeClass("dots-hidden");
+				
+				// Selects all non-hidden logos
+				var $logos = $(".wpwl-group-card-logos-horizontal > div:not(.wpwl-hidden)");
+				if ($logos.length < 2) {
+					return;
+				}
+				
+				// Hides all except the first logo, and displays three dots (...)
+				$logos.first().after($("<div>...</div>").addClass("dots"));
+				$logos.filter(function(index) { return index > 0; }).addClass("dots-hidden");
+				
+				// If ... is clicked, un-hides the logos
+				$(".dots").click(function() {
+					dotsClicked = true;
+					$(".dots-hidden").removeClass("dots-hidden");
+					$(this).remove();
+				});
+			} catch (e) {
+				console.warn('jQuery not available for brand hiding:', e);
 			}
-			
-			// Clears all previous dots-hidden logos, if any
-			$(".wpwl-group-card-logos-horizontal > div").removeClass("dots-hidden");
-			
-			// Selects all non-hidden logos. They are detected brands which otherwise would be shown by default.
-			var $logos = $(".wpwl-group-card-logos-horizontal > div:not(.wpwl-hidden)");
-			if ($logos.length < 2) {
-				return;
-			}
-			
-			// Hides all except the first logo, and displays three dots (...)
-			$logos.first().after($("<div>...</div>").addClass("dots"));
-			$logos.filter(function(index) { return index > 0; }).addClass("dots-hidden");
-			
-			// If ... is clicked, un-hides the logos
-			$(".dots").click(function() {
-				dotsClicked = true;
-				$(".dots-hidden").removeClass("dots-hidden");
-				$(this).remove();
-			});
 		}`
 		document.head.appendChild(creditDesignScript);
 

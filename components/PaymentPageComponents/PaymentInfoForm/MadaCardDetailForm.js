@@ -58,28 +58,16 @@ export default function MadaCardDetailForm(props) {
 			},
 								
 			onReady: function() {
-				// Safely check if jQuery is available before using it
-				if (typeof $ !== 'undefined' && $) {
-					$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-					$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-					$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
-				} else {
-					// Fallback using native JavaScript for iOS Safari
-					var cardHolder = document.querySelector(".wpwl-group-cardHolder");
-					var expiry = document.querySelector(".wpwl-group-expiry");
-					var cardNumber = document.querySelector(".wpwl-group-cardNumber");
-					var cardNumberControl = document.querySelector(".wpwl-control-cardNumber");
-					
-					if (cardHolder && expiry && cardHolder.parentNode) {
-						cardHolder.parentNode.insertBefore(expiry, cardHolder.nextSibling);
+				// Try to use jQuery for field rearrangement (styling only)
+				// Widget still works without this - it's just for RTL/Arabic layout
+				try {
+					if (typeof $ !== 'undefined' && $) {
+						$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
+						$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
+						$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
 					}
-					if (cardNumber && cardHolder && cardNumber.parentNode) {
-						cardNumber.parentNode.insertBefore(cardHolder, cardNumber);
-					}
-					if (cardNumberControl) {
-						cardNumberControl.style.direction = 'ltr';
-						cardNumberControl.style.textAlign = 'right';
-					}
+				} catch (e) {
+					console.warn('jQuery not available for field rearrangement:', e);
 				}
 			},
 		}`

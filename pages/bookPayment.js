@@ -653,6 +653,7 @@ export default function BookPaymentPage() {
                                                             checkoutId={checkoutId}
                                                             tamaraLabel={tamaraLabel}
                                                             selectedLocale={selectedLocale}
+                                                            orderType="book"
                                                             onError={(error) => {
                                                                 console.error('Tamara payment error:', error);
                                                                 toast.error(selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en);
