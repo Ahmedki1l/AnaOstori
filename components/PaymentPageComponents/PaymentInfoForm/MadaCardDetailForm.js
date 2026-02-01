@@ -4,6 +4,12 @@ export default function MadaCardDetailForm(props) {
 
 	const checkoutID = props.checkoutID
 	const orderID = props.orderID
+	const orderType = props.orderType || 'course' // Default to course for backward compatibility
+	
+	// Use different verification URL based on order type
+	const verifyUrl = orderType === 'book' 
+		? `${process.env.NEXT_PUBLIC_WEB_URL}/bookPaymentVerify?orderId=${orderID}`
+		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
 		const madaCardForm = document.createElement('script');
@@ -50,7 +56,7 @@ export default function MadaCardDetailForm(props) {
 					'font-size': '16px',
 				},
 			},
-									
+								
 			onReady: function() {
 				ready = true;
 				$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
@@ -70,7 +76,8 @@ export default function MadaCardDetailForm(props) {
 	return (
 		<div>
 			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form> */}
-			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form>
+			<form action={verifyUrl} className="paymentWidgets" data-brands="MADA"></form>
 		</div>
 	)
 }
+

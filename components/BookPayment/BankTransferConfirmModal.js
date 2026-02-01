@@ -29,17 +29,17 @@ export default function BankTransferConfirmModal({ isOpen, onClose, onConfirm, l
                     
                     <div className={styles.infoRow}>
                         <span className={styles.label}>اسم المستفيد:</span>
-                        <span className={styles.value}>مؤسسة أنا أستوري</span>
+                        <span className={styles.value}>شركة سنام لخدمات الأعمال</span>
                     </div>
                     
                     <div className={styles.infoRow}>
                         <span className={styles.label}>رقم الحساب:</span>
-                        <span className={styles.value}>1234567890</span>
+                        <span className={styles.value}>497608010167872</span>
                     </div>
                     
                     <div className={styles.infoRow}>
                         <span className={styles.label}>رقم الآيبان:</span>
-                        <span className={styles.value}>SA1234567890123456789012</span>
+                        <span className={styles.value}>SA7480000497608010167872</span>
                     </div>
                 </div>
 

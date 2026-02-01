@@ -5,10 +5,16 @@ export default function TamaraCheckoutForm({
 	checkoutId,
 	tamaraLabel,
 	selectedLocale = 'ar',
+	orderType = 'course', // Default to course for backward compatibility
 	onError,
 }) {
 	const formRef = useRef(null)
 	const locale = selectedLocale === 'ar' ? 'ar' : 'en'
+
+	// Use different verification URL based on order type
+	const verifyUrl = orderType === 'book' 
+		? `${process.env.NEXT_PUBLIC_WEB_URL}/bookPaymentVerify?type=tamara&orderId=${orderId}`
+		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?type=tamara&orderId=${orderId}`
 
 	const tamaraCopy = useMemo(() => {
 		if (!tamaraLabel) {
@@ -76,7 +82,7 @@ export default function TamaraCheckoutForm({
 			)}
 			<form
 				ref={formRef}
-				action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?type=tamara&orderId=${orderId}`}
+				action={verifyUrl}
 				className="paymentWidgets"
 				data-brands="TAMARA"
 			/>

@@ -623,7 +623,7 @@ export default function BookPaymentPage() {
                                         </label>
 
                                         {/* Tamara - Buy Now Pay Later */}
-                                        {tamaraAvailability.status !== 'unavailable' && (
+                                        {/* {tamaraAvailability.status !== 'unavailable' && (
                                             <label className={styles.paymentOption}>
                                                 <input 
                                                     type="radio" 
@@ -640,7 +640,6 @@ export default function BookPaymentPage() {
                                                         <Image src="/logos/Tamara.png" alt="Tamara" layout="fill" objectFit="contain" />
                                                     </div>
                                                 </div>
-                                                {/* Tamara loading and form container */}
                                                 {tamaraCheckoutLoading && (
                                                     <div className={styles.tamaraLoadingState}>
                                                         <span>{selectedLocale === 'ar' ? 'جارٍ تجهيز خيار تمارا...' : 'Preparing Tamara checkout…'}</span>
@@ -676,7 +675,7 @@ export default function BookPaymentPage() {
                                             <p className={styles.paymentError}>
                                                 {tamaraAvailability.message}
                                             </p>
-                                        )}
+                                        )} */}
                                     </div>
 
                                     <button 

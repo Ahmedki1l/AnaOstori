@@ -4,6 +4,12 @@ export default function CreditCardDetailForm(props) {
 
 	const checkoutID = props.checkoutID
 	const orderID = props.orderID
+	const orderType = props.orderType || 'course' // Default to course for backward compatibility
+	
+	// Use different verification URL based on order type
+	const verifyUrl = orderType === 'book' 
+		? `${process.env.NEXT_PUBLIC_WEB_URL}/bookPaymentVerify?orderId=${orderID}`
+		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
 
@@ -106,7 +112,7 @@ export default function CreditCardDetailForm(props) {
 	return (
 		<div>
 			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form> */}
-			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
+			<form action={verifyUrl} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
 		</div>
 	)
 }
