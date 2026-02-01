@@ -12,7 +12,11 @@ import Logo from '../components/CommonComponents/Logo';
 import Spinner from '../components/CommonComponents/spinner';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import * as fbq from '../lib/fpixel';
-import { createBookOrderAPI, createBookPaymentCheckoutAPI } from '../services/apisService';
+import { createBookOrderAPI, createBookPaymentCheckoutAPI, createTamaraCheckoutAPI } from '../services/apisService';
+import TamaraCheckoutForm from '../components/PaymentPageComponents/PaymentInfoForm/TamaraCheckout';
+import ApplePayForm from '../components/PaymentPageComponents/PaymentInfoForm/ApplePayForm';
+import MadaCardDetailForm from '../components/PaymentPageComponents/PaymentInfoForm/MadaCardDetailForm';
+import CreditCardDetailForm from '../components/PaymentPageComponents/PaymentInfoForm/CreditCardDetailForm';
 import { getNewToken } from '../services/fireBaseAuthService';
 
 export default function BookPaymentPage() {
@@ -45,6 +49,30 @@ export default function BookPaymentPage() {
     });
 
     const [errors, setErrors] = useState({});
+    
+    // Tamara payment state (matching PaymentInfoForm pattern)
+    const [tamaraLabel, setTamaraLabel] = useState(null);
+    const [tamaraAvailability, setTamaraAvailability] = useState({ status: 'unknown', message: '' });
+    const [tamaraCheckoutLoading, setTamaraCheckoutLoading] = useState(false);
+    const selectedLocale = router.locale || 'ar';
+    const tamaraFallbackCopy = {
+        ar: 'تمارا غير متاحة لهذا المبلغ.',
+        en: 'Tamara is not available for this amount.',
+    };
+    const tamaraGenericErrorCopy = {
+        ar: 'حدث خطأ أثناء إنشاء جلسة تمارا. يرجى المحاولة مرة أخرى.',
+        en: 'Something went wrong while starting the Tamara checkout. Please try again.',
+    };
+
+    const clearSelectedPaymentRadio = () => {
+        if (typeof document === 'undefined') {
+            return;
+        }
+        const selected = document.querySelector('input[type=radio][name=paymentMethod]:checked');
+        if (selected) {
+            selected.checked = false;
+        }
+    };
 
     // Fetch book data from localStorage on mount
     useEffect(() => {
@@ -90,57 +118,6 @@ export default function BookPaymentPage() {
         
         checkApplePay();
     }, []);
-
-    // Load HyperPay script dynamically when checkoutId is available
-    useEffect(() => {
-        if (!checkoutId || !hyperPayIntegrity) return;
-
-        // Load wpwlOptions script
-        const wpwlScript = document.createElement('script');
-        wpwlScript.nonce = Math.random().toString(36).substring(2, 15);
-        wpwlScript.innerHTML = `
-            var wpwlOptions = {
-                style: "plain",
-                locale: "ar",
-                paymentTarget: "_top",
-                iframeStyles: {
-                    'card-number-placeholder': {
-                        'font-family': 'Tajawal-Regular',
-                        'color': '#ccc',
-                        'font-size': '16px',
-                    },
-                    'cvv-placeholder': {
-                        'font-family': 'Tajawal-Regular',
-                        'color': '#ccc',
-                        'font-size': '16px',
-                    },
-                },
-                onReady: function() {
-                    $(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-                    $(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-                    $(".wpwl-control-cardNumber").css({'direction': 'ltr', "text-align":"right"});
-                },
-            }
-        `;
-        document.head.appendChild(wpwlScript);
-
-        // Load HyperPay widget script
-        const hyperPayScript = document.createElement('script');
-        hyperPayScript.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
-        hyperPayScript.integrity = hyperPayIntegrity;
-        hyperPayScript.crossOrigin = 'anonymous';
-        hyperPayScript.async = true;
-        document.head.appendChild(hyperPayScript);
-
-        return () => {
-            if (document.head.contains(wpwlScript)) {
-                document.head.removeChild(wpwlScript);
-            }
-            if (document.head.contains(hyperPayScript)) {
-                document.head.removeChild(hyperPayScript);
-            }
-        };
-    }, [checkoutId, hyperPayIntegrity]);
 
     const fetchShopConfiguration = async () => {
         try {
@@ -394,26 +371,74 @@ export default function BookPaymentPage() {
 
         fbq.event('Initiate checkout', { orderId: createdOrder.id, paymentMode: 'tamara' });
 
+        const basePayload = {
+            orderId: createdOrder.id,
+            orderType: 'book',
+            type: 'tamara',
+        };
+
+        setTamaraCheckoutLoading(true);
         try {
             let response;
             try {
-                response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'tamara' });
+                response = await createTamaraCheckoutAPI(basePayload);
             } catch (err) {
                 if (err?.response?.status === 401) {
                     await getNewToken();
-                    response = await createBookPaymentCheckoutAPI({ orderId: createdOrder.id, type: 'tamara' });
+                    response = await createTamaraCheckoutAPI(basePayload);
                 } else {
                     throw err;
                 }
             }
 
-            if (response.status === 200 && response.data?.[0]?.url) {
-                // Redirect to Tamara checkout
-                window.location.href = response.data[0].url;
+            const checkoutResult = response?.data?.[0];
+            const orderDetails = response?.data?.[1];
+            const availableLabels = checkoutResult?.tamaraOptions?.available_payment_labels || [];
+
+            if (!availableLabels.length) {
+                setTamaraAvailability({
+                    status: 'unavailable',
+                    message: selectedLocale === 'ar' ? tamaraFallbackCopy.ar : tamaraFallbackCopy.en,
+                });
+                setTamaraLabel(null);
+                setCheckoutId(null);
+                setPaymentType('');
+                clearSelectedPaymentRadio();
+                toast.info(selectedLocale === 'ar' ? tamaraFallbackCopy.ar : tamaraFallbackCopy.en);
+                window.localStorage.removeItem('tamaraCheckoutContext');
+                return;
             }
+
+            setTamaraAvailability({ status: 'available', message: '' });
+            setPaymentType('tamara');
+            setCheckoutId(checkoutResult?.id || null);
+            setTamaraLabel(availableLabels[0]);
+            setHyperPayIntegrity(null);
+
+            const tamaraContext = {
+                orderId: orderDetails?.id || createdOrder.id,
+                checkoutId: checkoutResult?.id,
+                ndc: checkoutResult?.ndc,
+                timestamp: Date.now(),
+                availablePaymentLabels: availableLabels,
+                tamaraPaymentId: orderDetails?.tamaraPaymentId || orderDetails?.paymentId || null,
+            };
+
+            window.localStorage.setItem('tamaraCheckoutContext', JSON.stringify(tamaraContext));
         } catch (error) {
-            console.error('Error initiating Tamara payment:', error);
-            toast.error('حدث خطأ في تمارا. يرجى المحاولة مرة أخرى.');
+            console.error('Error generating Tamara checkout ID:', error);
+            setTamaraAvailability({
+                status: 'error',
+                message: selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en,
+            });
+            setTamaraLabel(null);
+            setCheckoutId(null);
+            setPaymentType('');
+            clearSelectedPaymentRadio();
+            toast.error(selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en);
+            window.localStorage.removeItem('tamaraCheckoutContext');
+        } finally {
+            setTamaraCheckoutLoading(false);
         }
     };
 
@@ -499,6 +524,16 @@ export default function BookPaymentPage() {
                                                 </div>
                                                 <Logo height={27} width={53} logoName={'madaPaymentLogo'} alt={'Mada'} />
                                             </div>
+                                            {/* Mada form rendered when selected */}
+                                            {(checkoutId && paymentType === 'mada' && hyperPayIntegrity) && (
+                                                <div className={styles.paymentFormContainer}>
+                                                    <MadaCardDetailForm 
+                                                        checkoutID={checkoutId} 
+                                                        orderID={createdOrder.id} 
+                                                        integrity={hyperPayIntegrity} 
+                                                    />
+                                                </div>
+                                            )}
                                         </label>
 
                                         {/* Credit Card */}
@@ -514,6 +549,16 @@ export default function BookPaymentPage() {
                                                 </div>
                                                 <Logo height={27} width={120} logoName={'creditCardPaymentLogo'} alt={'Credit Card'} />
                                             </div>
+                                            {/* Credit Card form rendered when selected */}
+                                            {(checkoutId && paymentType === 'credit' && hyperPayIntegrity) && (
+                                                <div className={styles.paymentFormContainer}>
+                                                    <CreditCardDetailForm 
+                                                        checkoutID={checkoutId} 
+                                                        orderID={createdOrder.id} 
+                                                        integrity={hyperPayIntegrity} 
+                                                    />
+                                                </div>
+                                            )}
                                         </label>
 
                                         {/* Apple Pay - Only shown on Apple devices */}
@@ -530,6 +575,16 @@ export default function BookPaymentPage() {
                                                     </div>
                                                     <Logo height={27} width={60} logoName={'applePayLogo'} alt={'Apple Pay'} />
                                                 </div>
+                                                {/* Apple Pay form rendered when selected */}
+                                                {(checkoutId && paymentType === 'applepay' && hyperPayIntegrity) && (
+                                                    <div className={styles.paymentFormContainer}>
+                                                        <ApplePayForm 
+                                                            checkoutID={checkoutId} 
+                                                            orderID={createdOrder.id} 
+                                                            integrity={hyperPayIntegrity} 
+                                                        />
+                                                    </div>
+                                                )}
                                             </label>
                                         )}
 
@@ -549,35 +604,60 @@ export default function BookPaymentPage() {
                                         </label>
 
                                         {/* Tamara - Buy Now Pay Later */}
-                                        <label className={styles.paymentOption}>
-                                            <input 
-                                                type="radio" 
-                                                name="paymentMethod" 
-                                                onClick={handleTamaraPayment}
-                                            />
-                                            <div className={styles.paymentCard}>
-                                                <div className={styles.paymentInfo}>
-                                                    <span className={styles.paymentLabel}>تمارا - اشتري الآن وادفع لاحقاً</span>
-                                                    <span className={styles.paymentSubtext}>بدون فوائد</span>
+                                        {tamaraAvailability.status !== 'unavailable' && (
+                                            <label className={styles.paymentOption}>
+                                                <input 
+                                                    type="radio" 
+                                                    name="paymentMethod" 
+                                                    onClick={handleTamaraPayment}
+                                                    disabled={tamaraCheckoutLoading}
+                                                />
+                                                <div className={`${styles.paymentCard} ${tamaraCheckoutLoading ? styles.paymentCardDisabled : ''}`}>
+                                                    <div className={styles.paymentInfo}>
+                                                        <span className={styles.paymentLabel}>تمارا - اشتري الآن وادفع لاحقاً</span>
+                                                        <span className={styles.paymentSubtext}>بدون فوائد</span>
+                                                    </div>
+                                                    <div style={{ width: '70px', height: '40px', position: 'relative' }}>
+                                                        <Image src="/logos/Tamara.png" alt="Tamara" layout="fill" objectFit="contain" />
+                                                    </div>
                                                 </div>
-                                                <div style={{ width: '70px', height: '40px', position: 'relative' }}>
-                                                    <Image src="/logos/Tamara.png" alt="Tamara" layout="fill" objectFit="contain" />
-                                                </div>
+                                                {/* Tamara loading and form container */}
+                                                {tamaraCheckoutLoading && (
+                                                    <div className={styles.tamaraLoadingState}>
+                                                        <span>{selectedLocale === 'ar' ? 'جارٍ تجهيز خيار تمارا...' : 'Preparing Tamara checkout…'}</span>
+                                                    </div>
+                                                )}
+                                                {(checkoutId && paymentType === 'tamara') && (
+                                                    <div className={styles.paymentFormContainer}>
+                                                        <TamaraCheckoutForm
+                                                            orderId={createdOrder.id}
+                                                            checkoutId={checkoutId}
+                                                            tamaraLabel={tamaraLabel}
+                                                            selectedLocale={selectedLocale}
+                                                            onError={(error) => {
+                                                                console.error('Tamara payment error:', error);
+                                                                toast.error(selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en);
+                                                                setTamaraAvailability({
+                                                                    status: 'error',
+                                                                    message: selectedLocale === 'ar' ? tamaraGenericErrorCopy.ar : tamaraGenericErrorCopy.en,
+                                                                });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </label>
+                                        )}
+                                        {tamaraAvailability.status === 'unavailable' && (
+                                            <div className={styles.paymentUnavailable}>
+                                                <p>{tamaraAvailability.message}</p>
                                             </div>
-                                        </label>
+                                        )}
+                                        {tamaraAvailability.status === 'error' && tamaraAvailability.message && (
+                                            <p className={styles.paymentError}>
+                                                {tamaraAvailability.message}
+                                            </p>
+                                        )}
                                     </div>
-
-                                    {/* HyperPay Payment Form will be rendered here when checkoutId is available */}
-                                    {checkoutId && paymentType && (
-                                        <div className={styles.paymentFormContainer}>
-                                            <form 
-                                                action={`${process.env.NEXT_PUBLIC_BASE_URL}/bookPaymentVerify?orderId=${createdOrder?.id}`}
-                                                className="paymentWidgets" 
-                                                data-brands={paymentType === 'mada' ? 'MADA' : 'VISA MASTER'}
-                                            ></form>
-                                            {/* HyperPay script loaded dynamically in useEffect below */}
-                                        </div>
-                                    )}
 
                                     <button 
                                         className={`primaryStrockedBtn ${styles.backBtn}`}

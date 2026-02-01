@@ -197,6 +197,44 @@
     border-radius: 12px;
 }
 
+.paymentCardDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.tamaraLoadingState {
+    padding: 16px;
+    text-align: center;
+    color: #666666;
+    font-size: 14px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.paymentUnavailable {
+    padding: 16px 20px;
+    background-color: #FFF3CD;
+    border: 1px solid #FFE69C;
+    border-radius: 12px;
+    color: #856404;
+    font-size: 14px;
+
+    p {
+        margin: 0;
+    }
+}
+
+.paymentError {
+    color: #DC3545;
+    font-size: 13px;
+    margin: 8px 0 0 0;
+    padding: 8px 12px;
+    background-color: #FFF5F5;
+    border-radius: 6px;
+}
+
 @media (max-width: 1024px) {
     .contentWrapper {
         flex-direction: column-reverse;
