@@ -195,6 +195,9 @@
     padding: 20px;
     background-color: #FAFAFA;
     border-radius: 12px;
+    min-height: 350px !important;
+    height: auto !important;
+    overflow: visible !important;
 }
 
 .paymentCardDisabled {

@@ -607,6 +607,9 @@ input:-internal-autofill-selected {
     display: flex !important;
     flex-direction: column !important;
     margin: 2rem;
+    min-height: 300px !important;
+    height: auto !important;
+    overflow: visible !important;
 }
 
 .wpwl-label {
