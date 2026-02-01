@@ -546,7 +546,8 @@ export default function BookPaymentPage() {
                                                     <MadaCardDetailForm 
                                                         checkoutID={checkoutId} 
                                                         orderID={createdOrder.id} 
-                                                        integrity={hyperPayIntegrity} 
+                                                        integrity={hyperPayIntegrity}
+                                                        orderType="book"
                                                     />
                                                 </div>
                                             )}
@@ -571,7 +572,8 @@ export default function BookPaymentPage() {
                                                     <CreditCardDetailForm 
                                                         checkoutID={checkoutId} 
                                                         orderID={createdOrder.id} 
-                                                        integrity={hyperPayIntegrity} 
+                                                        integrity={hyperPayIntegrity}
+                                                        orderType="book"
                                                     />
                                                 </div>
                                             )}
@@ -597,7 +599,8 @@ export default function BookPaymentPage() {
                                                         <ApplePayForm 
                                                             checkoutID={checkoutId} 
                                                             orderID={createdOrder.id} 
-                                                            integrity={hyperPayIntegrity} 
+                                                            integrity={hyperPayIntegrity}
+                                                            orderType="book"
                                                         />
                                                     </div>
                                                 )}

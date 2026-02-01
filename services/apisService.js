@@ -145,7 +145,12 @@ export const createTamaraCheckoutAPI = (data = {}) => {
 		type: 'tamara',
 	};
 
-	return axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/testPaymentGateway`, payload);
+	// Use the correct endpoint based on orderType
+	const endpoint = data.orderType === 'book' 
+		? '/order/bookPaymentGateway' 
+		: '/order/testPaymentGateway';
+
+	return axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`, payload);
 }
 
 export const postRouteAPI = (data) => { return instance.post(`/route`, data) }
