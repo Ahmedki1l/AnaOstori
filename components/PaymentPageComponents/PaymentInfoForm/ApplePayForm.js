@@ -3,12 +3,6 @@ import React, { useEffect } from 'react'
 export default function ApplePayForm(props) {
 	const checkoutID = props.checkoutID
 	const orderID = props.orderID
-	const orderType = props.orderType || 'course' // Default to course for backward compatibility
-	
-	// Use different verification URL based on order type
-	const verifyUrl = orderType === 'book' 
-		? `${process.env.NEXT_PUBLIC_WEB_URL}/bookPaymentVerify?orderId=${orderID}`
-		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
 
@@ -66,7 +60,7 @@ export default function ApplePayForm(props) {
 
 	return (
 		<div>
-			<form action={verifyUrl} className="paymentWidgets" data-brands="APPLEPAY"></form>
+			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="APPLEPAY"></form>
 		</div>
 	)
 }

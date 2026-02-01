@@ -4,12 +4,6 @@ export default function CreditCardDetailForm(props) {
 
 	const checkoutID = props.checkoutID
 	const orderID = props.orderID
-	const orderType = props.orderType || 'course' // Default to course for backward compatibility
-	
-	// Use different verification URL based on order type
-	const verifyUrl = orderType === 'book' 
-		? `${process.env.NEXT_PUBLIC_WEB_URL}/bookPaymentVerify?orderId=${orderID}`
-		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
 
@@ -63,17 +57,9 @@ export default function CreditCardDetailForm(props) {
 					
 			onReady: function() {
 				ready = true;
-				// Try to use jQuery for field rearrangement (styling only)
-				// Widget still works without this - it's just for RTL/Arabic layout
-				try {
-					if (typeof $ !== 'undefined' && $) {
-						$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-						$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-						$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
-					}
-				} catch (e) {
-					console.warn('jQuery not available for field rearrangement:', e);
-				}
+				$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
+				$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
+				$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
 			},
 			onChangeBrand: function() {
 				hideBrands();
@@ -87,34 +73,25 @@ export default function CreditCardDetailForm(props) {
 				return;
 			}
 			
-			// Try to use jQuery for brand hiding (optional styling)
-			try {
-				if (typeof $ === 'undefined' || !$) {
-					return;
-				}
-				
-				// Clears all previous dots-hidden logos, if any
-				$(".wpwl-group-card-logos-horizontal > div").removeClass("dots-hidden");
-				
-				// Selects all non-hidden logos
-				var $logos = $(".wpwl-group-card-logos-horizontal > div:not(.wpwl-hidden)");
-				if ($logos.length < 2) {
-					return;
-				}
-				
-				// Hides all except the first logo, and displays three dots (...)
-				$logos.first().after($("<div>...</div>").addClass("dots"));
-				$logos.filter(function(index) { return index > 0; }).addClass("dots-hidden");
-				
-				// If ... is clicked, un-hides the logos
-				$(".dots").click(function() {
-					dotsClicked = true;
-					$(".dots-hidden").removeClass("dots-hidden");
-					$(this).remove();
-				});
-			} catch (e) {
-				console.warn('jQuery not available for brand hiding:', e);
+			// Clears all previous dots-hidden logos, if any
+			$(".wpwl-group-card-logos-horizontal > div").removeClass("dots-hidden");
+			
+			// Selects all non-hidden logos. They are detected brands which otherwise would be shown by default.
+			var $logos = $(".wpwl-group-card-logos-horizontal > div:not(.wpwl-hidden)");
+			if ($logos.length < 2) {
+				return;
 			}
+			
+			// Hides all except the first logo, and displays three dots (...)
+			$logos.first().after($("<div>...</div>").addClass("dots"));
+			$logos.filter(function(index) { return index > 0; }).addClass("dots-hidden");
+			
+			// If ... is clicked, un-hides the logos
+			$(".dots").click(function() {
+				dotsClicked = true;
+				$(".dots-hidden").removeClass("dots-hidden");
+				$(this).remove();
+			});
 		}`
 		document.head.appendChild(creditDesignScript);
 
@@ -129,7 +106,7 @@ export default function CreditCardDetailForm(props) {
 	return (
 		<div>
 			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form> */}
-			<form action={verifyUrl} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
+			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
 		</div>
 	)
 }

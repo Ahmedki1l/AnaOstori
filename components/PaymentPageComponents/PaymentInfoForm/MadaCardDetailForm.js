@@ -4,12 +4,6 @@ export default function MadaCardDetailForm(props) {
 
 	const checkoutID = props.checkoutID
 	const orderID = props.orderID
-	const orderType = props.orderType || 'course' // Default to course for backward compatibility
-	
-	// Use different verification URL based on order type
-	const verifyUrl = orderType === 'book' 
-		? `${process.env.NEXT_PUBLIC_WEB_URL}/bookPaymentVerify?orderId=${orderID}`
-		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
 		const madaCardForm = document.createElement('script');
@@ -56,19 +50,12 @@ export default function MadaCardDetailForm(props) {
 					'font-size': '16px',
 				},
 			},
-								
+									
 			onReady: function() {
-				// Try to use jQuery for field rearrangement (styling only)
-				// Widget still works without this - it's just for RTL/Arabic layout
-				try {
-					if (typeof $ !== 'undefined' && $) {
-						$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-						$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-						$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
-					}
-				} catch (e) {
-					console.warn('jQuery not available for field rearrangement:', e);
-				}
+				ready = true;
+				$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
+				$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
+				$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
 			},
 		}`
 		document.head.appendChild(madaDesignScript);
@@ -83,7 +70,7 @@ export default function MadaCardDetailForm(props) {
 	return (
 		<div>
 			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form> */}
-			<form action={verifyUrl} className="paymentWidgets" data-brands="MADA"></form>
+			<form action={`${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="MADA"></form>
 		</div>
 	)
 }
