@@ -298,6 +298,14 @@ export default function BookPaymentPage() {
             }
 
             if (response.status === 200) {
+                // DEBUG: Log the full response to compare with course payment
+                console.log('=== BOOK PAYMENT DEBUG ===');
+                console.log('Full response.data:', JSON.stringify(response.data, null, 2));
+                console.log('checkoutId (response.data[0]?.id):', response.data[0]?.id);
+                console.log('integrity (response.data[2]):', response.data[2]);
+                console.log('Full response.data[0]:', response.data[0]);
+                console.log('==========================');
+                
                 setPaymentType(type);
                 setCheckoutId(response.data[0]?.id);
                 setHyperPayIntegrity(response.data[2]);
