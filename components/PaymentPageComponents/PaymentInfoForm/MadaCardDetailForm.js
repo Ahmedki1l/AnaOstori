@@ -12,38 +12,12 @@ export default function MadaCardDetailForm(props) {
 		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
-		const madaCardForm = document.createElement('script');
-		// madaCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
-		madaCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`
-		madaCardForm.integrity = `${props.integrity}`;
-		madaCardForm.crossOrigin = "anonymous";
-		madaCardForm.async = true;
-		document.head.appendChild(madaCardForm);
-
-		return () => {
-			// Safely remove script only if it's still attached to the DOM
-			if (madaCardForm.parentNode) {
-				madaCardForm.parentNode.removeChild(madaCardForm);
-			}
-		};
-
-	}, [checkoutID]);
-
-	// function generateSecureNonce(length) {
-	// 	const array = new Uint8Array(length);
-	// 	window.crypto.getRandomValues(array);
-	// 	// Convert each byte to a hexadecimal string and join them together
-	// 	return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
-	// }
-
-	useEffect(() => {
-		const madaDesignScript = document.createElement('script');
-		madaDesignScript.nonce = Math.random().toString(36).substring(2, 15);
-		madaDesignScript.innerHTML = `
-		var wpwlOptions = {
+		// IMPORTANT: Set wpwlOptions BEFORE loading the HyperPay script
+		// The widget reads these options when it initializes
+		window.wpwlOptions = {
 			style: "plain",
 			locale: "ar",
-			paymentTarget:"_top",
+			paymentTarget: "_top",
 			iframeStyles: {
 				'card-number-placeholder': {
 					'font-family': 'Tajawal-Regular',
@@ -56,22 +30,44 @@ export default function MadaCardDetailForm(props) {
 					'font-size': '16px',
 				},
 			},
-								
 			onReady: function() {
-				ready = true;
-				$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-				$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-				$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
+				try {
+					if (typeof $ !== 'undefined' && $) {
+						$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
+						$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
+						$(".wpwl-control-cardNumber").css({'direction': 'ltr', "text-align": "right"});
+					}
+				} catch (e) {
+					console.warn('jQuery not available for field rearrangement:', e);
+				}
 			},
-		}`
-		document.head.appendChild(madaDesignScript);
-		return () => {
-			// Safely remove script only if it's still attached to the DOM
-			if (madaDesignScript.parentNode) {
-				madaDesignScript.parentNode.removeChild(madaDesignScript);
-			}
 		};
-	}, [])
+
+		// Now load the HyperPay script
+		const madaCardForm = document.createElement('script');
+		madaCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
+		madaCardForm.integrity = `${props.integrity}`;
+		madaCardForm.crossOrigin = "anonymous";
+		madaCardForm.async = true;
+		document.head.appendChild(madaCardForm);
+
+		return () => {
+			// Cleanup
+			if (madaCardForm.parentNode) {
+				madaCardForm.parentNode.removeChild(madaCardForm);
+			}
+			// Clean up wpwlOptions
+			delete window.wpwlOptions;
+		};
+
+	}, [checkoutID, props.integrity]);
+
+	// function generateSecureNonce(length) {
+	// 	const array = new Uint8Array(length);
+	// 	window.crypto.getRandomValues(array);
+	// 	// Convert each byte to a hexadecimal string and join them together
+	// 	return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
+	// }
 
 	return (
 		<div>
@@ -80,4 +76,3 @@ export default function MadaCardDetailForm(props) {
 		</div>
 	)
 }
-

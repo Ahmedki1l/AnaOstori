@@ -12,39 +12,12 @@ export default function CreditCardDetailForm(props) {
 		: `${process.env.NEXT_PUBLIC_WEB_URL}/payment?orderId=${orderID}`
 
 	useEffect(() => {
-
-		const creditCardForm = document.createElement('script');
-		// creditCardForm.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
-		creditCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`
-		creditCardForm.integrity = `${props.integrity}`;
-		creditCardForm.crossOrigin = "anonymous";
-		creditCardForm.async = true;
-		document.head.appendChild(creditCardForm);
-
-		return () => {
-			// Safely remove script only if it's still attached to the DOM
-			if (creditCardForm.parentNode) {
-				creditCardForm.parentNode.removeChild(creditCardForm);
-			}
-		};
-
-	}, [checkoutID]);
-
-	// function generateSecureNonce(length) {
-	// 	const array = new Uint8Array(length);
-	// 	window.crypto.getRandomValues(array);
-	// 	// Convert each byte to a hexadecimal string and join them together
-	// 	return Array.from(array, byte => ('0' + byte.toString(16)).slice(-2)).join('');
-	// }
-
-	useEffect(() => {
-		const creditDesignScript = document.createElement('script');
-		creditDesignScript.nonce = Math.random().toString(36).substring(2, 15);
-		creditDesignScript.innerHTML = `
-		var wpwlOptions = {
+		// IMPORTANT: Set wpwlOptions BEFORE loading the HyperPay script
+		// The widget reads these options when it initializes
+		window.wpwlOptions = {
 			style: "plain",
 			locale: "ar",
-			paymentTarget:"_top",
+			paymentTarget: "_top",
 			iframeStyles: {
 				'card-number-placeholder': {
 					'color': '#ccc',
@@ -59,60 +32,64 @@ export default function CreditCardDetailForm(props) {
 			},
 			brandDetection: true,
 			brandDetectionType: "binlist",
-			brandDetectionPriority: ["CARTEBANCAIRE","VISA","MAESTRO","MASTER"],
-					
+			brandDetectionPriority: ["CARTEBANCAIRE", "VISA", "MAESTRO", "MASTER"],
 			onReady: function() {
-				ready = true;
-				$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
-				$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
-				$(".wpwl-control-cardNumber").css({'direction': 'ltr' , "text-align":"right"});
+				try {
+					if (typeof $ !== 'undefined' && $) {
+						$(".wpwl-group-cardHolder").after($(".wpwl-group-expiry"));
+						$(".wpwl-group-cardNumber").before($(".wpwl-group-cardHolder"));
+						$(".wpwl-control-cardNumber").css({'direction': 'ltr', "text-align": "right"});
+					}
+				} catch (e) {
+					console.warn('jQuery not available for field rearrangement:', e);
+				}
 			},
 			onChangeBrand: function() {
-				hideBrands();
+				try {
+					if (typeof $ !== 'undefined' && $) {
+						// Hide brands logic
+						var $logos = $(".wpwl-group-card-logos-horizontal > div:not(.wpwl-hidden)");
+						if ($logos.length >= 2) {
+							$(".wpwl-group-card-logos-horizontal > div").removeClass("dots-hidden");
+							if (!$(".dots").length) {
+								$logos.first().after($("<div>...</div>").addClass("dots"));
+								$logos.filter(function(index) { return index > 0; }).addClass("dots-hidden");
+								$(".dots").click(function() {
+									$(".dots-hidden").removeClass("dots-hidden");
+									$(this).remove();
+								});
+							}
+						}
+					}
+				} catch (e) {
+					console.warn('jQuery not available for brand hiding:', e);
+				}
 			}
 		};
 
-		var ready = false;
-		var dotsClicked = false;
-		function hideBrands() {
-			if (!ready || dotsClicked) {
-				return;
-			}
-			
-			// Clears all previous dots-hidden logos, if any
-			$(".wpwl-group-card-logos-horizontal > div").removeClass("dots-hidden");
-			
-			// Selects all non-hidden logos. They are detected brands which otherwise would be shown by default.
-			var $logos = $(".wpwl-group-card-logos-horizontal > div:not(.wpwl-hidden)");
-			if ($logos.length < 2) {
-				return;
-			}
-			
-			// Hides all except the first logo, and displays three dots (...)
-			$logos.first().after($("<div>...</div>").addClass("dots"));
-			$logos.filter(function(index) { return index > 0; }).addClass("dots-hidden");
-			
-			// If ... is clicked, un-hides the logos
-			$(".dots").click(function() {
-				dotsClicked = true;
-				$(".dots-hidden").removeClass("dots-hidden");
-				$(this).remove();
-			});
-		}`
-		document.head.appendChild(creditDesignScript);
+		// Now load the HyperPay script
+		const creditCardForm = document.createElement('script');
+		creditCardForm.src = `${process.env.NEXT_PUBLIC_HYPERPAY}/v1/paymentWidgets.js?checkoutId=${checkoutID}`;
+		creditCardForm.integrity = `${props.integrity}`;
+		creditCardForm.crossOrigin = "anonymous";
+		creditCardForm.async = true;
+		document.head.appendChild(creditCardForm);
 
 		return () => {
-			// Safely remove script only if it's still attached to the DOM
-			if (creditDesignScript.parentNode) {
-				creditDesignScript.parentNode.removeChild(creditDesignScript);
+			// Cleanup
+			if (creditCardForm.parentNode) {
+				creditCardForm.parentNode.removeChild(creditCardForm);
 			}
+			// Clean up wpwlOptions
+			delete window.wpwlOptions;
 		};
-	}, [])
+
+	}, [checkoutID, props.integrity]);
 
 	return (
 		<div>
-			{/* <form action={`https://www.anaostori.com/payment?orderId=${orderID}`} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form> */}
 			<form action={verifyUrl} className="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
 		</div>
 	)
 }
+
