@@ -613,6 +613,19 @@ input:-internal-autofill-selected {
     display: none !important;
 }
 
+// Ensure all HyperPay form fields are visible
+.wpwl-group-cardHolder,
+.wpwl-group-expiry,
+.wpwl-group-cardNumber,
+.wpwl-group-cvv {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin-bottom: 1rem;
+}
+
 .wpwl-control {
     font-family: 'Times New Roman', Times, serif;
 
@@ -816,7 +829,8 @@ input:-internal-autofill-selected {
         bottom: -16px;
         right: 20px;
         height: 80px;
-        max-width: 90%; /* Limits the width on mobile to avoid stretching */
+        max-width: 90%;
+        /* Limits the width on mobile to avoid stretching */
     }
 
     .whatsAppLogoRoundWrapper {
@@ -825,8 +839,10 @@ input:-internal-autofill-selected {
     }
 
     .whatsAppMessageWrapper {
-        max-width: 160px; /* Further limit width on mobile */
-        padding: 8px; /* Adjust padding for mobile */
+        max-width: 160px;
+        /* Further limit width on mobile */
+        padding: 8px;
+        /* Adjust padding for mobile */
     }
 
     /* Adjustments for different button states */
