@@ -240,18 +240,34 @@ export default function BookPaymentPage() {
         setHyperPayIntegrity(null);
         setPaymentType(null);
         
-        // Remove any existing HyperPay scripts and widget
-        const existingScripts = document.querySelectorAll('script[src*="paymentWidgets"]');
-        existingScripts.forEach(script => script.remove());
+        // Remove any existing HyperPay scripts and widget safely
+        try {
+            const existingScripts = document.querySelectorAll('script[src*="paymentWidgets"]');
+            existingScripts.forEach(script => {
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            });
+        } catch (e) {
+            console.warn('Error removing payment scripts:', e);
+        }
         
         // Clear wpwlOptions
         if (typeof window !== 'undefined') {
             window.wpwlOptions = undefined;
         }
         
-        // Clear any existing widget elements
-        const widgetElements = document.querySelectorAll('.wpwl-container, .wpwl-form');
-        widgetElements.forEach(el => el.remove());
+        // Clear any existing widget elements safely
+        try {
+            const widgetElements = document.querySelectorAll('.wpwl-container, .wpwl-form');
+            widgetElements.forEach(el => {
+                if (el.parentNode) {
+                    el.parentNode.removeChild(el);
+                }
+            });
+        } catch (e) {
+            console.warn('Error removing widget elements:', e);
+        }
     };
 
     const generateCheckoutId = async (type) => {
