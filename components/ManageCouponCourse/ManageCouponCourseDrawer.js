@@ -22,6 +22,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
     // ^ tracks whether we are using "percentage" or "fixedAmount"
     const [singlePersonBooking, setSinglePersonBooking] = useState(false);
     const [codeLength, setCodeLength] = useState(8);
+    const [selectedApplicableTo, setSelectedApplicableTo] = useState('course');
 
     /**
      * Build an array of { value: courseId, label: courseName, price: coursePrice }
@@ -61,6 +62,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             courseIds: courseIds,
             applicableTo: selectedCoupon?.applicableTo || 'course', // Default to 'course' for existing coupons
         })
+        setSelectedApplicableTo(selectedCoupon?.applicableTo || 'course');
         
         // Handle existing conditions
         const existingConditions = selectedCoupon?.conditions;
@@ -392,6 +394,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                         fontSize={16}
                         placeholder={manageCouponConst.couponApplicableToPlaceHolder}
                         OptionData={applicableToOptions}
+                        onChange={(value) => setSelectedApplicableTo(value)}
                     />
                 </FormItem>
                 
@@ -452,32 +455,37 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                     </p>
                 </div>
 
-                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponAppliedCourseHead}</p>
-                <FormItem
-                    name={'courseIds'}
-                    rules={[{ required: true, message: manageCouponConst.couponAppliedCourseError }]}
-                >
-                    <Select
-                        width={425}
-                        height={47}
-                        fontSize={16}
-                        placeholder={manageCouponConst.couponAppliedCoursePlaceHolder}
-                        OptionData={course}
-                        mode='multiple'
-                        maxTagCount='responsive'
-                        onChange={handleSelectCourse}
-                        defaultValue={selectedCoupon?.couponCourses.map((item) => {
-                            return item.course.id
-                        })}
-                    />
-                </FormItem>
-                <div className={styles.courseNames}>
-                    {
-                        course.filter((item) => selectedCourse?.includes(item.value)).map((item, index) => {
-                            return <p style={{ fontSize: '16px' }} key={item?.value}>{item?.label}</p>
-                        })
-                    }
-                </div>
+                {/* Only show course selection for 'course' and 'all' types */}
+                {selectedApplicableTo !== 'book' && (
+                    <>
+                        <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponAppliedCourseHead}</p>
+                        <FormItem
+                            name={'courseIds'}
+                            rules={[{ required: selectedApplicableTo !== 'book', message: manageCouponConst.couponAppliedCourseError }]}
+                        >
+                            <Select
+                                width={425}
+                                height={47}
+                                fontSize={16}
+                                placeholder={manageCouponConst.couponAppliedCoursePlaceHolder}
+                                OptionData={course}
+                                mode='multiple'
+                                maxTagCount='responsive'
+                                onChange={handleSelectCourse}
+                                defaultValue={selectedCoupon?.couponCourses?.map((item) => {
+                                    return item.course.id
+                                })}
+                            />
+                        </FormItem>
+                        <div className={styles.courseNames}>
+                            {
+                                course.filter((item) => selectedCourse?.includes(item.value)).map((item, index) => {
+                                    return <p style={{ fontSize: '16px' }} key={item?.value}>{item?.label}</p>
+                                })
+                            }
+                        </div>
+                    </>
+                )}
                 <div className={styles.couponBtnBox}>
                     <CustomButton
                         btnText={selectedCoupon ? manageCouponConst.saveBtnText : manageCouponConst.addBtnText}
