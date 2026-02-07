@@ -4,7 +4,7 @@ import * as linkConst from '../constants/LinkConst';
 import Link from "next/link";
 import useWindowSize from "../hooks/useWindoSize";
 import { useRouter } from "next/router";
-import { getAuthRouteAPI } from "../services/apisService";
+import { getAuthRouteAPI, getMyBookOrdersAPI } from "../services/apisService";
 import { getNewToken } from "../services/fireBaseAuthService";
 import AllIconsComponenet from "../Icons/AllIconsComponenet";
 import { mediaUrl } from "../constants/DataManupulation";
@@ -32,28 +32,63 @@ export default function PurchaseInquiry(props) {
 	useEffect(() => {
 		const getMyOrder = async () => {
 			setLoading(true)
-			const data = {
-				routeName: "orderQuery"
-			}
-			await getAuthRouteAPI(data).then((res) => {
-				setSearchData(res.data.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing")).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
-				setLoading(false)
-			}).catch(async (error) => {
+			try {
+				// Fetch both course orders and book orders in parallel
+				const [courseOrdersRes, bookOrdersRes] = await Promise.all([
+					getAuthRouteAPI({ routeName: "orderQuery" }).catch(() => ({ data: [] })),
+					getMyBookOrdersAPI().catch(() => ({ data: [] }))
+				]);
+
+				// Tag course orders
+				const courseOrders = (courseOrdersRes.data || [])
+					.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing"))
+					.map(order => ({ ...order, orderType: 'course' }));
+
+				// Tag book orders
+				const bookOrders = (bookOrdersRes.data || [])
+					.map(order => ({ ...order, orderType: 'book' }));
+
+				// Combine and sort by date
+				const allOrders = [...courseOrders, ...bookOrders]
+					.sort((a, b) => -a.createdAt.localeCompare(b.createdAt));
+
+				setSearchData(allOrders);
+				setLoading(false);
+			} catch (error) {
 				if (error?.response?.status == 401) {
-					await getNewToken().then(async (token) => {
-						await getAuthRouteAPI(data).then((res) => {
-							setSearchData(res.data.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing")).sort((a, b) => -a.createdAt.localeCompare(b.createdAt)))
-						})
-					}).catch(error => {
-						console.error("Error:", error);
-					});
+					try {
+						await getNewToken();
+						// Retry after token refresh
+						const [courseOrdersRes, bookOrdersRes] = await Promise.all([
+							getAuthRouteAPI({ routeName: "orderQuery" }).catch(() => ({ data: [] })),
+							getMyBookOrdersAPI().catch(() => ({ data: [] }))
+						]);
+						const courseOrders = (courseOrdersRes.data || [])
+							.filter((item) => !(item.paymentMethod == "hyperpay" && item.status == "witing"))
+							.map(order => ({ ...order, orderType: 'course' }));
+						const bookOrders = (bookOrdersRes.data || [])
+							.map(order => ({ ...order, orderType: 'book' }));
+						setSearchData([...courseOrders, ...bookOrders].sort((a, b) => -a.createdAt.localeCompare(b.createdAt)));
+					} catch (retryError) {
+						console.error("Error:", retryError);
+					}
 				}
-				console.log(error)
-				setLoading(false)
-			})
+				console.log(error);
+				setLoading(false);
+			}
 		}
 		getMyOrder()
 	}, [])
+
+	// Shipping status mapping for book orders
+	const shippingStatusMap = {
+		'pending': 'في الانتظار',
+		'processing': 'قيد التجهيز',
+		'shipped': 'تم الشحن',
+		'in_transit': 'في الطريق',
+		'delivered': 'تم التوصيل',
+		'returned': 'مرتجع'
+	};
 
 
 
@@ -86,15 +121,31 @@ export default function PurchaseInquiry(props) {
 											<td className={styles.tbodyOrder}>{data?.status == "accepted" ? data.id : "-"}</td>
 											<td >{fullDate(data.createdAt)}</td>
 											<td className={styles.tbodyName}>
-												{data.orderItems?.map((student, j = index) => {
-													return (
-														<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
-															<p>{student.fullName}</p>
-															<p>{data.courseName}</p>
-															{data.course.type != "on-demand" && <p>{dateRange(student?.availability?.dateFrom, student?.availability?.dateTo)}</p>}
-														</div>
-													)
-												})}
+												{data.orderType === 'book' ? (
+													// Book order display
+													<div className={`pb-4 ${styles.userInfoBox}`}>
+														<p className="font-bold">📚 {data.bookTitle}</p>
+														<p>الكمية: {data.quantity}</p>
+														<p>{data.grandTotal?.toFixed(2)} ر.س</p>
+														{data.deliveryAddress && (
+															<p className="text-gray-600">{data.deliveryAddress.city}, {data.deliveryAddress.district}</p>
+														)}
+														{data.shippingStatus && (
+															<p className="text-blue-600">{shippingStatusMap[data.shippingStatus] || data.shippingStatus}</p>
+														)}
+													</div>
+												) : (
+													// Course order display (existing)
+													data.orderItems?.map((student, j = index) => {
+														return (
+															<div className={`pb-4 ${styles.userInfoBox}`} key={`student${j}`}>
+																<p>{student.fullName}</p>
+																<p>{data.courseName}</p>
+																{data.course?.type != "on-demand" && <p>{dateRange(student?.availability?.dateFrom, student?.availability?.dateTo)}</p>}
+															</div>
+														)
+													})
+												)}
 											</td>
 											<td className={styles.tbodyStatus}>
 												{data?.status == "accepted" ?
@@ -168,19 +219,35 @@ export default function PurchaseInquiry(props) {
 													<td className={styles.tbodyDate}>{fullDate(data.createdAt)}</td>
 												</tr>
 												<tr>
-													<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
-													<td className={styles.tbodyName}>
-														{data.orderItems?.map((student, j = index) => {
-															return (
-																<div className={styles.userInfoBox} key={`student${j}`}>
-																	<p>{student.fullName}</p>
-																	<p>{data.courseName}</p>
-																	{data.course.type != 'on-demand' && <p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}</p>}
-																</div>
-															)
-														})}
-													</td>
-												</tr>
+									<th className={styles.theadName}>{inqTabelHeaderConst.header3}</th>
+									<td className={styles.tbodyName}>
+										{data.orderType === 'book' ? (
+											// Book order display for mobile
+											<div className={styles.userInfoBox}>
+												<p className="font-bold">📚 {data.bookTitle}</p>
+												<p>الكمية: {data.quantity}</p>
+												<p>{data.grandTotal?.toFixed(2)} ر.س</p>
+												{data.deliveryAddress && (
+													<p>{data.deliveryAddress.city}, {data.deliveryAddress.district}</p>
+												)}
+												{data.shippingStatus && (
+													<p style={{color: '#2563eb'}}>{shippingStatusMap[data.shippingStatus] || data.shippingStatus}</p>
+												)}
+											</div>
+										) : (
+											// Course order display for mobile
+											data.orderItems?.map((student, j = index) => {
+												return (
+													<div className={styles.userInfoBox} key={`student${j}`}>
+														<p>{student.fullName}</p>
+														<p>{data.courseName}</p>
+														{data.course?.type != 'on-demand' && <p>{dateRange(student.availability?.dateFrom, student.availability?.dateTo)}</p>}
+													</div>
+												)
+											})
+										)}
+									</td>
+								</tr>
 												<tr>
 													<th className={styles.theadStatus}>{inqTabelHeaderConst.header4}</th>
 													<td className={styles.tbodyStatus}>

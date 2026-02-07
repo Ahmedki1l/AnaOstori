@@ -132,6 +132,23 @@ const Index = () => {
             }
         },
         {
+            title: 'ينطبق على',
+            dataIndex: 'applicableTo',
+            render: (applicableTo) => {
+                const typeConfig = {
+                    'course': { label: 'دورات فقط', color: 'blue' },
+                    'book': { label: 'كتب فقط', color: 'green' },
+                    'all': { label: 'الكل', color: 'orange' }
+                };
+                const config = typeConfig[applicableTo] || { label: applicableTo || 'دورات فقط', color: 'blue' };
+                return (
+                    <Tag color={config.color} style={{ fontFamily: 'Tajawal-Regular' }}>
+                        {config.label}
+                    </Tag>
+                );
+            }
+        },
+        {
             title: 'تاريخ الانتهاء',
             dataIndex: 'expires',
             sorter: (a, b) => a.expires.localeCompare(b.expires),

@@ -12,7 +12,7 @@ import Logo from '../components/CommonComponents/Logo';
 import Spinner from '../components/CommonComponents/spinner';
 import AllIconsComponenet from '../Icons/AllIconsComponenet';
 import * as fbq from '../lib/fpixel';
-import { createBookOrderAPI, createBookPaymentCheckoutAPI, createTamaraCheckoutAPI } from '../services/apisService';
+import { createBookOrderAPI, createBookPaymentCheckoutAPI, createTamaraCheckoutAPI, validateBookCouponAPI, createGuestBookOrderAPI } from '../services/apisService';
 import TamaraCheckoutForm from '../components/PaymentPageComponents/PaymentInfoForm/TamaraCheckout';
 import ApplePayForm from '../components/PaymentPageComponents/PaymentInfoForm/ApplePayForm';
 import MadaCardDetailForm from '../components/PaymentPageComponents/PaymentInfoForm/MadaCardDetailForm';
@@ -49,6 +49,12 @@ export default function BookPaymentPage() {
     });
 
     const [errors, setErrors] = useState({});
+
+    // Coupon state
+    const [couponCode, setCouponCode] = useState('');
+    const [couponData, setCouponData] = useState(null);
+    const [couponError, setCouponError] = useState('');
+    const [couponLoading, setCouponLoading] = useState(false);
     
     // Tamara payment state (matching PaymentInfoForm pattern)
     const [tamaraLabel, setTamaraLabel] = useState(null);
@@ -119,6 +125,22 @@ export default function BookPaymentPage() {
         checkApplePay();
     }, []);
 
+    // Handle browser back button - return to step 1 instead of leaving page
+    useEffect(() => {
+        if (step === 2) {
+            window.history.pushState({ step: 2 }, '', window.location.href);
+        }
+        const handlePopState = (e) => {
+            if (step === 2) {
+                e.preventDefault();
+                setStep(1);
+                window.history.pushState({ step: 1 }, '', window.location.href);
+            }
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, [step]);
+
     const fetchShopConfiguration = async () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/get-any`, {
@@ -143,8 +165,13 @@ export default function BookPaymentPage() {
 
         if (!formData.buyerPhone.trim()) {
             newErrors.buyerPhone = 'رقم الجوال مطلوب';
-        } else if (!/^[\d+\s-]{9,15}$/.test(formData.buyerPhone.replace(/\s/g, ''))) {
-            newErrors.buyerPhone = 'رقم الجوال غير صحيح';
+        } else {
+            // Saudi phone: 05XXXXXXXX, 5XXXXXXXX, 9665XXXXXXXX, +9665XXXXXXXX, 009665XXXXXXXX
+            const normalizedPhone = formData.buyerPhone.replace(/[\s-]/g, '');
+            const saudiPhoneRegex = /^(05|5|9665|00966|\+9665)[0-9]{8}$/;
+            if (!saudiPhoneRegex.test(normalizedPhone)) {
+                newErrors.buyerPhone = 'رقم الجوال غير صحيح - يجب أن يبدأ بـ 05 أو 9665';
+            }
         }
 
         if (!formData.buyerEmail.trim()) {
@@ -177,6 +204,36 @@ export default function BookPaymentPage() {
         return Object.keys(newErrors).length === 0;
     };
 
+    // Coupon validation handler
+    const handleValidateCoupon = async () => {
+        if (!couponCode.trim()) return;
+        setCouponLoading(true);
+        setCouponError('');
+        try {
+            const bookPrice = (bookData?.bookPrice || 0) * (bookData?.quantity || 1);
+            const res = await validateBookCouponAPI({ couponCode, bookPrice });
+            if (res.data.valid) {
+                setCouponData(res.data);
+                toast.success(res.data.message);
+            } else {
+                setCouponError(res.data.message);
+                setCouponData(null);
+            }
+        } catch (error) {
+            console.error('Coupon validation error:', error);
+            setCouponError('حدث خطأ أثناء التحقق من الكوبون');
+            setCouponData(null);
+        }
+        setCouponLoading(false);
+    };
+
+    // Remove applied coupon
+    const handleRemoveCoupon = () => {
+        setCouponCode('');
+        setCouponData(null);
+        setCouponError('');
+    };
+
     const handleSubmitDeliveryInfo = async () => {
         if (!validateForm()) {
             toast.error('يرجى ملء جميع الحقول المطلوبة');
@@ -186,7 +243,10 @@ export default function BookPaymentPage() {
         setSubmitting(true);
 
         try {
-            // Create book order
+            // Check if guest (no access token)
+            const isGuest = !localStorage.getItem('accessToken');
+
+            // Create book order payload
             const orderPayload = {
                 bookId: bookData.bookId,
                 quantity: bookData.quantity,
@@ -202,18 +262,27 @@ export default function BookPaymentPage() {
                     postalCode: formData.postalCode,
                     shortAddress: formData.shortAddress,
                     country: formData.country
-                }
+                },
+                // Include coupon code if valid
+                ...(couponData?.valid && { couponCode: couponCode })
             };
 
             let response;
-            try {
-                response = await createBookOrderAPI(orderPayload);
-            } catch (err) {
-                if (err?.response?.status === 401) {
-                    await getNewToken();
+            
+            if (isGuest) {
+                // Guest checkout - no auth required
+                response = await createGuestBookOrderAPI(orderPayload);
+            } else {
+                // Authenticated user checkout
+                try {
                     response = await createBookOrderAPI(orderPayload);
-                } else {
-                    throw err;
+                } catch (err) {
+                    if (err?.response?.status === 401) {
+                        await getNewToken();
+                        response = await createBookOrderAPI(orderPayload);
+                    } else {
+                        throw err;
+                    }
                 }
             }
 
@@ -221,9 +290,10 @@ export default function BookPaymentPage() {
                 setCreatedOrder(response.data);
                 setStep(2);
                 fbq.event('InitiateCheckout', { 
-                    orderId: response.data.id,
+                    orderId: response.data.id || response.data.order?.id,
                     bookId: bookData.bookId,
-                    quantity: bookData.quantity 
+                    quantity: bookData.quantity,
+                    couponUsed: couponData?.valid || false
                 });
             }
         } catch (error) {
@@ -512,6 +582,46 @@ export default function BookPaymentPage() {
                                         setFormData={setFormData}
                                         errors={errors}
                                     />
+
+                                    {/* Coupon Section */}
+                                    <div className={styles.couponSection}>
+                                        <h3 className={styles.sectionTitle}>كود الخصم</h3>
+                                        <div className={styles.couponInputWrapper}>
+                                            <input 
+                                                type="text"
+                                                value={couponCode}
+                                                onChange={(e) => setCouponCode(e.target.value)}
+                                                placeholder="أدخل كود الخصم"
+                                                className={styles.couponInput}
+                                                disabled={couponData?.valid || couponLoading}
+                                            />
+                                            {couponData?.valid ? (
+                                                <button 
+                                                    onClick={handleRemoveCoupon}
+                                                    className={styles.couponRemoveBtn}
+                                                >
+                                                    إزالة
+                                                </button>
+                                            ) : (
+                                                <button 
+                                                    onClick={handleValidateCoupon}
+                                                    className={styles.couponApplyBtn}
+                                                    disabled={couponLoading || !couponCode.trim()}
+                                                >
+                                                    {couponLoading ? 'جاري التحقق...' : 'تطبيق'}
+                                                </button>
+                                            )}
+                                        </div>
+                                        {couponError && (
+                                            <p className={styles.couponError}>{couponError}</p>
+                                        )}
+                                        {couponData?.valid && (
+                                            <p className={styles.couponSuccess}>
+                                                ✓ تم تطبيق خصم {couponData.discountAmount} ر.س
+                                            </p>
+                                        )}
+                                    </div>
+
                                     <div className={styles.actionButtons}>
                                         <button 
                                             className={`primarySolidBtn ${styles.submitBtn}`}
@@ -703,6 +813,7 @@ export default function BookPaymentPage() {
                                 bookData={bookData}
                                 quantity={bookData.quantity}
                                 deliveryFee={deliveryFee}
+                                discount={couponData?.valid ? Number(couponData.discountAmount) : 0}
                             />
                         </div>
                     </div>

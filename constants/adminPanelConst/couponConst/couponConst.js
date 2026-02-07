@@ -8,6 +8,12 @@ export const discountModes = [
     { label: 'قيمة ثابتة', value: 'fixedAmount' },
 ]
 
+export const applicableToOptions = [
+    { label: 'دورات فقط', value: 'course' },
+    { label: 'كتب فقط', value: 'book' },
+    { label: 'الكل (دورات وكتب)', value: 'all' }
+]
+
 export const manageCouponConst = {
     createCouponHead: 'إضافة كوبون',
     updateCouponHead: 'تعديل الكوبون',
@@ -44,6 +50,10 @@ export const manageCouponConst = {
     couponAppliedCourseHead: 'تطبق على هذه الدورات*',
     couponAppliedCoursePlaceHolder: 'اختر الدورات',
     couponAppliedCourseError: 'اختار الدورات',
+
+    couponApplicableToHead: 'نوع الكوبون*',
+    couponApplicableToPlaceHolder: 'اختر نوع الكوبون',
+    couponApplicableToError: 'حدد نوع الكوبون',
 
     couponLimitHead: 'اكتب العدد*',
     couponLimitPlaceHolder: 'محدد بعدد (من سبق لبق)',

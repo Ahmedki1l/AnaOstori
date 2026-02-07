@@ -173,3 +173,14 @@ export const getAuthRouteAPI = (data) => {
 export const createBookOrderAPI = (data) => { return instance.post('/order/createBookOrder', data) }
 export const getBookPaymentInfoAPI = (data) => { return instance.post('/orders/verifyBookPayment', data) }
 export const createBookPaymentCheckoutAPI = (data) => { return instance.post('/order/bookPaymentGateway', data) }
+
+// Phase 2: Coupon, Guest Checkout, Book Orders APIs
+export const validateBookCouponAPI = (data) => { 
+    return axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/validateBookCoupon`, data);
+}
+export const createGuestBookOrderAPI = (data) => { 
+    return axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/createGuestBookOrder`, data);
+}
+export const getMyBookOrdersAPI = () => { 
+    return instance.get('/order/myBookOrders');
+}

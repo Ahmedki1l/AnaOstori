@@ -4,7 +4,7 @@ import Select from '../antDesignCompo/Select';
 import Input from '../../components/antDesignCompo/Input'
 import CheckBox from '../antDesignCompo/CheckBox';
 import CustomButton from '../CommonComponents/CustomButton';
-import { couponTypes, discountModes, manageCouponConst } from '../../constants/adminPanelConst/couponConst/couponConst';
+import { couponTypes, discountModes, applicableToOptions, manageCouponConst } from '../../constants/adminPanelConst/couponConst/couponConst';
 import { postRouteAPI } from '../../services/apisService';
 import DatePicker from '../antDesignCompo/Datepicker';
 import dayjs from 'dayjs';
@@ -59,6 +59,7 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
             limit: selectedCoupon?.limit,
             discountMode: discountMode,
             courseIds: courseIds,
+            applicableTo: selectedCoupon?.applicableTo || 'course', // Default to 'course' for existing coupons
         })
         
         // Handle existing conditions
@@ -377,6 +378,23 @@ const ManageCouponCourseDrawer = ({ selectedCoupon, category, getCouponList, set
                         onChange={handleSelectCouponChange}
                     />
                 </FormItem>
+                
+                {/* Applicable To Field - NEW */}
+                <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponApplicableToHead}</p>
+                <FormItem
+                    name={'applicableTo'}
+                    initialValue={'course'}
+                    rules={[{ required: true, message: manageCouponConst.couponApplicableToError }]}
+                >
+                    <Select
+                        width={425}
+                        height={47}
+                        fontSize={16}
+                        placeholder={manageCouponConst.couponApplicableToPlaceHolder}
+                        OptionData={applicableToOptions}
+                    />
+                </FormItem>
+                
                 {selectedCouponType == 'limited' &&
                     <>
                         <p className='fontMedium py-2' style={{ fontSize: '18px' }}>{manageCouponConst.couponLimitHead}</p>

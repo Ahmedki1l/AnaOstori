@@ -3,14 +3,14 @@ import Image from 'next/legacy/image';
 import styles from './BookOrderSummary.module.scss';
 import { mediaUrl } from '../../constants/DataManupulation';
 
-export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0 }) {
+export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, discount = 0 }) {
     const bookImageUrl = bookData.bookPictureKey && bookData.bookPictureBucket 
         ? mediaUrl(bookData.bookPictureBucket, bookData.bookPictureKey)
         : '/images/book-placeholder.png';
 
     const unitPrice = Number(bookData.bookPrice) || 0;
     const subtotal = unitPrice * quantity;
-    const grandTotal = subtotal + Number(deliveryFee);
+    const grandTotal = subtotal + Number(deliveryFee) - Number(discount);
 
     return (
         <div className={styles.summaryContainer}>
@@ -42,6 +42,13 @@ export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0 }
                     <span className={styles.priceLabel}>رسوم التوصيل</span>
                     <span className={styles.priceValue}>{Number(deliveryFee).toFixed(2)} ر.س</span>
                 </div>
+
+                {discount > 0 && (
+                    <div className={`${styles.priceRow} ${styles.discountRow}`}>
+                        <span className={styles.priceLabel}>الخصم</span>
+                        <span className={styles.discountValue}>-{Number(discount).toFixed(2)} ر.س</span>
+                    </div>
+                )}
 
                 <div className={`${styles.priceRow} ${styles.totalRow}`}>
                     <span className={styles.totalLabel}>المبلغ الإجمالي</span>

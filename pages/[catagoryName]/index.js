@@ -188,6 +188,23 @@ export default function Index(props) {
 									)
 								})}
 							</ul>
+						
+							{/* Books promotional link for Tahsili category */}
+						{(catagoryName === 'التحصيلي' || catagoryName?.includes('التحصيلي') || catagoryName?.includes('تحصيلي')) && (
+							<Link href="/books" className="block mt-4 mb-2">
+								<div className="bg-gradient-to-l from-orange-500 to-orange-600 text-white p-4 rounded-lg flex items-center justify-between hover:from-orange-600 hover:to-orange-700 transition-all cursor-pointer shadow-md">
+									<div className="flex items-center gap-3">
+										<span className="text-2xl">📚</span>
+										<div>
+											<p className="font-bold text-lg">كتب التحصيلي</p>
+											<p className="text-sm opacity-90">تصفح مجموعتنا من الكتب المساعدة</p>
+										</div>
+									</div>
+									<span className="text-2xl">←</span>
+								</div>
+							</Link>
+						)}
+						
 							<h1 className='head1 pt-8'>كيف ودك تحضر الدورة؟</h1>
 
 							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center mt-8 mb-20 px-4 md:px-0">
