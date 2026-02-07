@@ -643,31 +643,26 @@ export default function Index(props) {
 
 					{/* Bookstore promotional link for Tahsili courses */}
 					{(currentCategory === 'التحصيلي' || currentCategory?.includes('التحصيلي') || currentCategory?.includes('تحصيلي')) && (
-						<div className="maxWidthDefault px-4 md:px-0">
-							<Link href="/books" style={{ textDecoration: 'none' }}>
-								<div style={{
+						<div className="maxWidthDefault px-4 md:px-0" style={{ marginTop: '12px', marginBottom: '4px' }}>
+							<Link href="/books" style={{ textDecoration: 'none', display: 'inline-block' }}>
+								<button style={{
 									background: 'linear-gradient(to left, #F26722, #e05a1a)',
 									color: 'white',
-									padding: '16px 20px',
-									borderRadius: '10px',
+									padding: '8px 20px',
+									borderRadius: '8px',
+									border: 'none',
+									cursor: 'pointer',
 									display: 'flex',
 									alignItems: 'center',
-									justifyContent: 'space-between',
-									cursor: 'pointer',
-									boxShadow: '0 2px 8px rgba(242, 103, 34, 0.3)',
-									marginTop: '16px',
-									marginBottom: '8px',
+									gap: '8px',
+									fontSize: '15px',
+									fontFamily: 'Tajawal-Bold',
+									boxShadow: '0 2px 6px rgba(242, 103, 34, 0.25)',
 									transition: 'opacity 0.2s',
 								}}>
-									<div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-										<span style={{ fontSize: '28px' }}>📚</span>
-										<div>
-											<p style={{ fontWeight: 'bold', fontSize: '18px', margin: 0, fontFamily: 'Tajawal-Bold' }}>متجر الكتب</p>
-											<p style={{ fontSize: '14px', opacity: 0.9, margin: 0, fontFamily: 'Tajawal-Regular' }}>تصفح مجموعتنا من الكتب المساعدة</p>
-										</div>
-									</div>
-									<span style={{ fontSize: '24px' }}>←</span>
-								</div>
+									<span>📚</span>
+									<span>متجر الكتب</span>
+								</button>
 							</Link>
 						</div>
 					)}
