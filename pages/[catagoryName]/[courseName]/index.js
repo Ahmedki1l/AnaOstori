@@ -640,6 +640,37 @@ export default function Index(props) {
 						setDiscountShow={setDiscountShow}
 						discountShow={discountShow}
 					/>
+
+					{/* Bookstore promotional link for Tahsili courses */}
+					{(currentCategory === 'التحصيلي' || currentCategory?.includes('التحصيلي') || currentCategory?.includes('تحصيلي')) && (
+						<div className="maxWidthDefault px-4 md:px-0">
+							<Link href="/books" style={{ textDecoration: 'none' }}>
+								<div style={{
+									background: 'linear-gradient(to left, #F26722, #e05a1a)',
+									color: 'white',
+									padding: '16px 20px',
+									borderRadius: '10px',
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'space-between',
+									cursor: 'pointer',
+									boxShadow: '0 2px 8px rgba(242, 103, 34, 0.3)',
+									marginTop: '16px',
+									marginBottom: '8px',
+									transition: 'opacity 0.2s',
+								}}>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+										<span style={{ fontSize: '28px' }}>📚</span>
+										<div>
+											<p style={{ fontWeight: 'bold', fontSize: '18px', margin: 0, fontFamily: 'Tajawal-Bold' }}>متجر الكتب</p>
+											<p style={{ fontSize: '14px', opacity: 0.9, margin: 0, fontFamily: 'Tajawal-Regular' }}>تصفح مجموعتنا من الكتب المساعدة</p>
+										</div>
+									</div>
+									<span style={{ fontSize: '24px' }}>←</span>
+								</div>
+							</Link>
+						</div>
+					)}
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
 							{/* {(screenWidth <= 767) ?
