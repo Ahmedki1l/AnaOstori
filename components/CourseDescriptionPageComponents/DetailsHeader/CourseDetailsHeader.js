@@ -227,7 +227,7 @@ export default function CourseDetailsHeader(props) {
                         screenWidth > 767 ? "items-center" : "flex-col"
                       }`}
                     >
-                      {/* First group of locations */}
+                      {/* Riyadh locations */}
                       {(locationNames.includes("الرياض") ||
                         locationNames.includes("RIYADH")) && (
                         <>
@@ -279,47 +279,12 @@ export default function CourseDetailsHeader(props) {
                                     : "حي اليرموك"}
                                 </p>
                               </div>
-
-                              {/* {(screenWidth > 767) && <span className="mx-2 text-gray-400">-</span>}
-
-													<div className="flex items-center ml-2 mr-2">
-														<a
-															href="https://maps.app.goo.gl/Un9XNuHwCREta9CV6"
-															target="_blank"
-															rel="noopener noreferrer"
-															style={{ color: '#fff' }}
-															className="flex items-center hover:opacity-75 transition-opacity"
-														>
-															<GoogleMapsIcon />
-														</a>
-														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
-															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي طويق"}
-														</p>
-													</div>
-
-													{(screenWidth > 767) && <span className="mx-2 text-gray-400">-</span>}
-
-													<div className="flex items-center ml-2 mr-2">
-														<a
-															href="https://maps.app.goo.gl/jSqnTmkKaNECq7Ct9"
-															target="_blank"
-															rel="noopener noreferrer"
-															style={{ color: '#fff' }}
-															className="flex items-center hover:opacity-75 transition-opacity"
-														>
-															<GoogleMapsIcon />
-														</a>
-														<p className={lang === 'en' ? "ml-2" : "mr-2"}>
-															{lang === 'en' ? "Riyadh, Al-Yasmeen District" : "حي قرطبة"}
-														</p>
-													</div> */}
-
-                              {/* {(screenWidth > 767) && <p className={lang === 'en' ? "ml-2" : "mr-2"}>)</p>} */}
                             </div>
                           </div>
                         </>
                       )}
 
+                      {/* Dammam locations */}
                       {(locationNames.includes("الدمام") ||
                         locationNames.includes("DAMMAM")) && (
                         <>
@@ -336,7 +301,6 @@ export default function CourseDetailsHeader(props) {
                             <p className={lang === "en" ? "ml-2" : "mr-2"}>
                               {lang === "en" ? "Dammam:" : "الدمام:"}
                             </p>
-                            {/* Second group */}
                             <div
                               className={`flex items-center ${
                                 screenWidth > 767
@@ -363,6 +327,7 @@ export default function CourseDetailsHeader(props) {
                         </>
                       )}
 
+                      {/* Jeddah locations */}
                       {(locationNames.includes("جدة") ||
                         locationNames.includes("JEDDAH")) && (
                         <>
@@ -379,7 +344,6 @@ export default function CourseDetailsHeader(props) {
                             <p className={lang === "en" ? "ml-2" : "mr-2"}>
                               {lang === "en" ? "Jeddah:" : "جدة:"}
                             </p>
-                            {/* Third group */}
                             <div
                               className={`flex items-center ${
                                 screenWidth > 767

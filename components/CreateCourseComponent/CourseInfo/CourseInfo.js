@@ -65,6 +65,8 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     })
 
     const onFinishCreateCourse = async (values) => {
+        console.log("🔍 FORM VALUES:", values);
+        console.log("🔍 locationName in form values:", values.locationName);
         setShowLoader(true)
         if (isCourseEdit) {
             editCourse(values)
@@ -216,6 +218,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         values.groupDiscountEligible = groupDiscountEligible
         values.language = englishCourse ? "en" : "ar"
         values.type = courseType == "onDemand" ? "on-demand" : courseType
+        values.locationName = courseType == "onDemand" ? 'بجودة عالية' : values.locationName
         delete values.courseMetaData
         delete values.courseDetailsMetaData
 
@@ -264,6 +267,9 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             id: editCourseData?.id,
             routeName: 'updateCourse'
         }
+        console.log("🔍 COURSE BODY PAYLOAD:", courseBody);
+        console.log("🔍 locationName in courseBody:", courseBody.locationName);
+
 
         try {
             const promiseArray = [];
