@@ -433,7 +433,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
 
     return (
         <div>
-            <Form form={courseInfoForm} onFinish={onFinishCreateCourse} >
+            <Form form={courseInfoForm} onFinish={onFinishCreateCourse} onFinishFailed={(errorInfo) => { console.log("🔴 FORM VALIDATION FAILED:", errorInfo) }} >
                 <div className='px-6'>
                     <FormItem
                         name={'name'}

@@ -6,7 +6,7 @@ import loader from '../../public/icons/loader.svg'
 const CustomButton = (props) => {
     return (
         <div style={{ width: props.width, height: props.height }} >
-            <button style={{ fontSize: props.fontSize }} onClick={props.onClick} className='primarySolidBtn' htmltype={props.type} disabled={props.showLoader}>
+            <button style={{ fontSize: props.fontSize }} onClick={props.onClick} className='primarySolidBtn' type={props.type || 'submit'} disabled={props.showLoader}>
                 {props.showLoader ? <Image src={loader} width={30} height={30} alt={'loader'} /> : ""}
                 {props.btnText}
             </button>
