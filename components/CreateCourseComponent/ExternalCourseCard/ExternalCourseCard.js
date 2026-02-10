@@ -14,7 +14,7 @@ import { getNewToken } from '../../../services/fireBaseAuthService';
 import CustomButton from '../../CommonComponents/CustomButton';
 import { toastSuccessMessage } from '../../../constants/ar';
 import { toast } from 'react-toastify';
-import { externalCourseCardDetailsConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
+import { externalCourseCardDetailsConst, physicalCourseConst, onlineCourseConst } from '../../../constants/adminPanelConst/courseConst/courseConst';
 
 
 
@@ -91,6 +91,7 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
             cardDescription: cardDescription,
             id: courseDetail.id,
             routeName: 'updateCourse',
+            locationName: values.locationName || editCourseData?.locationName,
         }
         try {
             const updateCourseCardMetaDataReq = postRouteAPI(body)
@@ -183,6 +184,20 @@ const ExternalCourseCard = ({ createCourseApiRes }) => {
                                 onChange={(e) => handleCourseDetailDiscription(e.target.value, "cardDescription", null, null)}
                             />
                         </FormItem>
+                        {editCourseData?.type != "on-demand" &&
+                            <div style={{ marginBottom: '16px' }}>
+                                <p className={styles.secDetails} style={{ marginBottom: '8px' }}>
+                                    {editCourseData?.type == "physical" ? (physicalCourseConst?.locationInputPlaceHolder || 'موقع الدورة') : (onlineCourseConst?.locationInputPlaceHolder || 'رابط الدورة')}
+                                </p>
+                                <FormItem name={'locationName'}>
+                                    <Input
+                                        placeholder={editCourseData?.type == "physical" ? 'مثال: الرياض - الدمام - جدة' : 'رابط الدورة'}
+                                        width={549}
+                                        height={47}
+                                    />
+                                </FormItem>
+                            </div>
+                        }
                         <div className='w-[872px]'>
                             <div>
                                 <Form.List name="CourseCardMetaData" initialValue={[{
