@@ -127,7 +127,7 @@ export default function CourseDetailsHeader(props) {
     },
     {
       name: lang === "en" ? "Dammam" : "الدمام، حي الإتصالات",
-      mapUrl: "https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7",
+      mapUrl: "https://maps.app.goo.gl/wqcwRCvP55LBD6q29",
     },
     {
       name: lang === "en" ? "Gadda" : "جدة، حي السلامة",
@@ -309,7 +309,7 @@ export default function CourseDetailsHeader(props) {
                               }`}
                             >
                               <a
-                                href="https://maps.app.goo.gl/Yr2Ecny4owTUhCCu7"
+                                href="https://maps.app.goo.gl/wqcwRCvP55LBD6q29"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ color: "#fff" }}
