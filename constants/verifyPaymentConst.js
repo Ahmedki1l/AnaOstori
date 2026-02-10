@@ -9,4 +9,5 @@ export const VerifyPaymentConst = {
     subsciptionInformationConst: 'نحتاج منك 4 دقائق تعبي فيها بيانات الاشتراك عشان تضمن أفضل تجربة بالدورة',
     downloadInvoiceBtnText: 'تحميل الفاتورة',
     fillInformationBtnText: 'تعبئة بيانات الاشتراك',
+    bookShopLinkText: 'تصفح متجر الكتب الدراسية',
 }

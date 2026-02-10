@@ -641,31 +641,7 @@ export default function Index(props) {
 						discountShow={discountShow}
 					/>
 
-					{/* Bookstore promotional link for Tahsili courses */}
-					{(currentCategory === 'التحصيلي' || currentCategory?.includes('التحصيلي') || currentCategory?.includes('تحصيلي')) && (
-						<div className="maxWidthDefault px-4 md:px-0" style={{ marginTop: '12px', marginBottom: '4px' }}>
-							<Link href="/books" style={{ textDecoration: 'none', display: 'inline-block' }}>
-								<button style={{
-									background: 'linear-gradient(to left, #F26722, #e05a1a)',
-									color: 'white',
-									padding: '8px 20px',
-									borderRadius: '8px',
-									border: 'none',
-									cursor: 'pointer',
-									display: 'flex',
-									alignItems: 'center',
-									gap: '8px',
-									fontSize: '15px',
-									fontFamily: 'Tajawal-Bold',
-									boxShadow: '0 2px 6px rgba(242, 103, 34, 0.25)',
-									transition: 'opacity 0.2s',
-								}}>
-									<span>📚</span>
-									<span>متجر الكتب</span>
-								</button>
-							</Link>
-						</div>
-					)}
+
 					<div className={`${styles.courseDetailsNavbarWrapper} ${offset > (screenWidth > 1280 ? 353 : screenWidth < 1024 ? 313 : 336) ? ` ${styles.courseDetailsNavbarSticky}` : ''}`}>
 						<div className='maxWidthDefault md:flex md:justify-between md:items-center'>
 							{/* {(screenWidth <= 767) ?

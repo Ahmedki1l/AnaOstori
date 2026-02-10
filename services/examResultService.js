@@ -22,7 +22,6 @@ export const examResultService = {
                 routeName: 'submitExamResult',
                 examId: examId,
                 studentId: studentId,
-                courseId: options.courseId || examData.courseId || null, // Include courseId if available
                 examData: {
                     examName: examData.title,
                     examDuration: examData.duration,

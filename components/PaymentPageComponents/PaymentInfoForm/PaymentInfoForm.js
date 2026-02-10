@@ -616,7 +616,7 @@ export default function PaymentInfoForm(props) {
 						</div>
 						<div className='flex justify-between  py-2'>
 							<p>ضريبة القيمة المضافة</p>
-							<p>{Number(createdOrder.totalVat || 0).toFixed(2)} ر.س</p>
+							<p>{Number(createdOrder.totalVat || 0) > 0 ? `${Number(createdOrder.totalVat || 0).toFixed(2)} ر.س` : 'شاملة السعر'}</p>
 						</div>
 						<div className='flex justify-between py-2 '>
 							<p className='fontBold'>المبلغ الإجمالي</p>

@@ -129,10 +129,12 @@ export default function ApproveTrans(props) {
                         <p className={styles.paymentInfoText}>سعر الدورة</p>
                         <p className={styles.paymentInfoText}>{Number(courseDetail?.totalPrice).toFixed(2)} ر.س</p>
                     </div>
+                    {Number(courseDetail?.totalVat) > 0 &&
                     <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>ضريبة القيمة المضافة</p>
                         <p className={styles.paymentInfoText}>{Number(courseDetail?.totalVat).toFixed(2)} ر.س</p>
                     </div>
+                    }
                     {courseDetail?.couponUsed && <div className={`flex justify-between ${styles.paymentInfoBox}`}>
                         <p className={styles.paymentInfoText}>خصم الكود ({courseDetail.couponName})</p>
                         <p className={styles.paymentInfoText}>  {Number(totalDiscount)}- ر.س</p>

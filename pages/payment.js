@@ -491,6 +491,18 @@ export default function Payment(props) {
                                         </Link>
                                     }
                                 </div>
+                                {(courseType === 'on-demand' || courseType === 'online') &&
+                                    <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                                        <Link href={'/books'} className='no-underline'>
+                                            <button className='primaryStrockedBtn flex justify-center items-center' style={{ margin: '0 auto', padding: '0.5rem 2rem' }}>
+                                                <div className='pl-2' style={{ height: '1.5rem' }}>
+                                                    <AllIconsComponenet height={20} width={20} iconName={'bookIcon'} color={'#F26722'} />
+                                                </div>
+                                                {VerifyPaymentConst.bookShopLinkText}
+                                            </button>
+                                        </Link>
+                                    </div>
+                                }
                             </div>
                         </div>
                         :

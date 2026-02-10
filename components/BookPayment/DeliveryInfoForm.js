@@ -44,9 +44,15 @@ export default function DeliveryInfoForm({ formData, setFormData, errors }) {
                         <div className={styles.inputWrapper}>
                             <label className={styles.inputLabel}>رقم الجوال *</label>
                             <Input
-                                placeholder="+966501234567"
+                                placeholder="05xxxxxxxx"
                                 value={formData.buyerPhone}
-                                onChange={(e) => handleInputChange('buyerPhone', e.target.value)}
+                                onChange={(e) => {
+                                    const digits = e.target.value.replace(/\D/g, '');
+                                    if (digits.length <= 10) {
+                                        handleInputChange('buyerPhone', digits);
+                                    }
+                                }}
+                                maxLength={10}
                                 height={48}
                                 fontSize={16}
                             />

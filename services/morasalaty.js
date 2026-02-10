@@ -31,7 +31,8 @@ export const sendMessage = async (
             gender,
             whatsapplink,
             courseType,
-            classRoomCode
+            classRoomCode,
+            bookShopLink: (courseType === 'online' || courseType === 'on-demand') ? 'https://www.anaostori.com/books' : ''
         };
 
         // Call the proxy endpoint on my Flask server
