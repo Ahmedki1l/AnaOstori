@@ -65,8 +65,6 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
     })
 
     const onFinishCreateCourse = async (values) => {
-        console.log("🔍 FORM VALUES:", values);
-        console.log("🔍 locationName in form values:", values.locationName);
         setShowLoader(true)
         if (isCourseEdit) {
             editCourse(values)
@@ -218,7 +216,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
         values.groupDiscountEligible = groupDiscountEligible
         values.language = englishCourse ? "en" : "ar"
         values.type = courseType == "onDemand" ? "on-demand" : courseType
-        values.locationName = courseType == "onDemand" ? 'بجودة عالية' : values.locationName
+        values.locationName = courseType == "onDemand" ? 'بجودة عالية' : (values.locationName || editCourseData?.locationName)
         delete values.courseMetaData
         delete values.courseDetailsMetaData
 
@@ -267,8 +265,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
             id: editCourseData?.id,
             routeName: 'updateCourse'
         }
-        console.log("🔍 COURSE BODY PAYLOAD:", courseBody);
-        console.log("🔍 locationName in courseBody:", courseBody.locationName);
+
 
 
         try {
@@ -433,7 +430,7 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
 
     return (
         <div>
-            <Form form={courseInfoForm} onFinish={onFinishCreateCourse} onFinishFailed={(errorInfo) => { console.log("🔴 FORM VALIDATION FAILED:", errorInfo) }} >
+            <Form form={courseInfoForm} onFinish={onFinishCreateCourse} >
                 <div className='px-6'>
                     <FormItem
                         name={'name'}
@@ -842,6 +839,20 @@ const CourseInfo = ({ setShowExtraNavItem, setCreateCourseApiRes, courseType }) 
                 </div>
                 {showCourseMetaDataFields &&
                     <>
+                        {courseType != "onDemand" &&
+                            <div className='px-6 pb-4'>
+                                <p className={styles.secDetails} style={{ marginBottom: '8px' }}>{courseType == "physical" ? physicalCourseConst.locationInputPlaceHolder : onlineCourseConst.locationInputPlaceHolder}</p>
+                                <FormItem
+                                    name={'locationName'}
+                                >
+                                    <Input
+                                        placeholder={courseType == "physical" ? physicalCourseConst.locationInputPlaceHolder : onlineCourseConst.locationInputPlaceHolder}
+                                        width={400}
+                                        height={47}
+                                    />
+                                </FormItem>
+                            </div>
+                        }
                         <div className={styles.borderline}>
                             <div className="w-[95%] p-6">
                                 <div>
