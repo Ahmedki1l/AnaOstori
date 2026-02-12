@@ -277,7 +277,8 @@ export default function Register() {
 				setLoading(true)
 				const data = {
 					fullName: fullName,
-					phone: phoneNumber.replace(/[0-9]/, "+966"),
+					// Fix: Replace leading 0 with +966, not the first digit
+					phone: phoneNumber.replace(/^0/, "+966"),
 					gender: gender
 				}
 				if (!gender?.length) {

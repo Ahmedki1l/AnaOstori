@@ -187,9 +187,9 @@ const UpdateProfile = () => {
             setShowLoader(true)
             const data = {
                 fullName: fullName,
-                phone: phoneNumber && phoneNumber.replace(/[0-9]/, '+966'),
+                phone: phoneNumber && phoneNumber.replace(/^0/, '+966'),
                 gender: gender,
-                parentsContact: parentPhoneNo ? parentPhoneNo.replace(/[0-9]/, '+966') : null,
+                parentsContact: parentPhoneNo ? parentPhoneNo.replace(/^0/, '+966') : null,
                 city: selectedCity ? selectedCity : null,
                 educationLevel: selectedEducationLevel ? selectedEducationLevel : null,
                 reminderPopUpAttempt: storeData?.viewProfileData?.reminderPopUpAttempt

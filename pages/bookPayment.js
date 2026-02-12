@@ -18,6 +18,7 @@ import ApplePayForm from '../components/PaymentPageComponents/PaymentInfoForm/Ap
 import MadaCardDetailForm from '../components/PaymentPageComponents/PaymentInfoForm/MadaCardDetailForm';
 import CreditCardDetailForm from '../components/PaymentPageComponents/PaymentInfoForm/CreditCardDetailForm';
 import { getNewToken } from '../services/fireBaseAuthService';
+import { convertPhoneToBackendFormat } from '../utils/phoneUtils';
 
 export default function BookPaymentPage() {
     const router = useRouter();
@@ -251,7 +252,7 @@ export default function BookPaymentPage() {
                 bookId: bookData.bookId,
                 quantity: bookData.quantity,
                 buyerFullName: formData.buyerFullName,
-                buyerPhone: formData.buyerPhone,
+                buyerPhone: convertPhoneToBackendFormat(formData.buyerPhone),
                 buyerEmail: formData.buyerEmail,
                 deliveryAddress: {
                     city: formData.city,

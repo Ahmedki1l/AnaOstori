@@ -338,7 +338,8 @@ export default function Index(props) {
 				delete data.phoneNoCheck;
 				delete data.phoneNoLengthCheck;
 				delete data.validPhoneNumber;
-				data.phoneNumber = data.phoneNumber.replace(/[0-9]/, "+966")
+				// Fix: Replace leading 0 with +966, not the first digit
+				data.phoneNumber = data.phoneNumber.replace(/^0/, "+966")
 				if (courseType == 'on-demand') data.availabilityId = null
 			})
 			let orderData = {
