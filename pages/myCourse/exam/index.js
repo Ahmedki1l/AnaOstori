@@ -605,7 +605,22 @@ const ExamPage = () => {
                 setTimeLeft(prev => {
                     if (prev <= 1) {
                         clearInterval(timerRef.current);
-                        setExamStage('results');
+                        // Auto-advance to next section when timer expires (mirrors handleFinishReview logic)
+                        isAbleToAddTime.current = true;
+                        if (selectedSectionId < selectedExam.sections.length - 1 && !sectionsFinished.includes(selectedSectionId)) {
+                            setSectionsFinished(prev => [...prev, selectedSectionId]);
+                            setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                            setDisplayExamData(mockExamData1);
+                            setExamStage('sections');
+                            setSelectedSectionId(selectedSectionId + 1);
+                        } else {
+                            // Last section — finish the exam
+                            if (isFirstRun.current) {
+                                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                                isFirstRun.current = false;
+                            }
+                            setExamStage('results');
+                        }
                         return 0;
                     }
                     return prev - 1;
@@ -618,7 +633,7 @@ const ExamPage = () => {
                 clearInterval(timerRef.current);
             }
         };
-    }, [examStage]);
+    }, [examStage, selectedSectionId, selectedExam, sectionsFinished, reviewQuestions]);
 
     // Cleanup distraction detection timers when exam stage changes or component unmounts
     useEffect(() => {

@@ -201,7 +201,15 @@ export default function PaymentInfoForm(props) {
 			const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order/confirmFreePayment`, data);
 			if (res.status === 200) {
 				setFreePayment(true);
-
+				// Redirect to payment verification page with orderId
+				router.push({
+					pathname: '/payment',
+					query: {
+						orderId: res.data.id || createdOrder.id,
+						id: res.data.id || createdOrder.id,
+						freePayment: true
+					}
+				});
 			}
 		} catch (error) {
 			console.error("Error confirming free payment:", error);

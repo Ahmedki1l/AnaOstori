@@ -158,11 +158,36 @@ const Index = () => {
             }
         },
         {
+            title: 'كوبون',
+            dataIndex: 'couponUsed',
+            render: (text, _record) => {
+                if (_record.couponUsed && _record.couponName) {
+                    return (
+                        <Tag color='green' style={{ direction: 'rtl' }}>
+                            🏷️ {_record.couponName}
+                            {_record.couponDiscount ? ` (-${_record.couponDiscount}%)` : ''}
+                        </Tag>
+                    )
+                }
+                return '-'
+            }
+        },
+        {
             title: 'المبلغ المدفوع مع الضريبة',
             dataIndex: 'priceWithVat',
             sorter: (a, b) => a.totalPrice - b.totalPrice,
             render: (text, _record) => {
-                return (Number(Number(_record.totalPrice) + Number(_record.totalVat)).toFixed(2))
+                const paidAmount = Number(Number(_record.totalPrice) + Number(_record.totalVat)).toFixed(2);
+                if (_record.couponUsed && _record.totalDiscount > 0) {
+                    const originalAmount = (Number(_record.totalPrice) + Number(_record.totalVat) + Number(_record.totalDiscount)).toFixed(2);
+                    return (
+                        <div style={{ direction: 'rtl' }}>
+                            <span style={{ textDecoration: 'line-through', color: '#999', marginLeft: '6px' }}>{originalAmount}</span>
+                            <span style={{ color: '#00bd5d', fontWeight: 'bold' }}>{paidAmount}</span>
+                        </div>
+                    )
+                }
+                return paidAmount;
             }
         },
         {

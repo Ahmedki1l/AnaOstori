@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Tag } from 'antd'
 import { Form, FormItem } from '../antDesignCompo/FormItem'
 import Select from '../antDesignCompo/Select'
 import { postAuthRouteAPI } from '../../services/apisService'
@@ -181,9 +182,20 @@ const PurchaseOrderDrawer = (props) => {
             <div className={styles.purchaseOrderBox}>
                 <p>{Number(selectedOrder.totalVat)}</p>
             </div>
+            {selectedOrder.couponUsed && selectedOrder.couponName && (
+                <>
+                    <p style={{ fontSize: '18px' }}>كوبون الخصم</p>
+                    <div className={styles.purchaseOrderBox} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Tag color='green' style={{ fontSize: '14px', margin: 0 }}>🏷️ {selectedOrder.couponName}</Tag>
+                        {selectedOrder.couponDiscount > 0 && (
+                            <span style={{ color: '#666' }}>({selectedOrder.couponDiscount}% خصم)</span>
+                        )}
+                    </div>
+                </>
+            )}
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.totalDiscountTitle}</p>
             <div className={styles.purchaseOrderBox}>
-                <p>{Number(selectedOrder.totalDiscount)}</p>
+                <p>{Number(selectedOrder.totalDiscount)} ر.س</p>
             </div>
             <p style={{ fontSize: '18px' }}>{managePuchaseOrderDrawerConst.askingPriceTitle}</p>
             <div className={styles.purchaseOrderBox}>
