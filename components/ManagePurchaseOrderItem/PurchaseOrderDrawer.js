@@ -187,8 +187,8 @@ const PurchaseOrderDrawer = (props) => {
                     <p style={{ fontSize: '18px' }}>كوبون الخصم</p>
                     <div className={styles.purchaseOrderBox} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Tag color='green' style={{ fontSize: '14px', margin: 0 }}>🏷️ {selectedOrder.couponName}</Tag>
-                        {selectedOrder.couponDiscount > 0 && (
-                            <span style={{ color: '#666' }}>({selectedOrder.couponDiscount}% خصم)</span>
+                        {selectedOrder.totalDiscount > 0 && (
+                            <span style={{ color: '#666' }}>(-{Number(selectedOrder.totalDiscount).toFixed(2)} ر.س)</span>
                         )}
                     </div>
                 </>

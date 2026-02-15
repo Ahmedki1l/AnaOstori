@@ -165,7 +165,7 @@ const Index = () => {
                     return (
                         <Tag color='green' style={{ direction: 'rtl' }}>
                             🏷️ {_record.couponName}
-                            {_record.couponDiscount ? ` (-${_record.couponDiscount}%)` : ''}
+                            {_record.totalDiscount > 0 ? ` (-${Number(_record.totalDiscount).toFixed(2)} ر.س)` : ''}
                         </Tag>
                     )
                 }
