@@ -148,6 +148,16 @@ const Index = () => {
                         <Logo height={20} width={30} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
                     )
                 }
+                if(_record.paymentMethod == 'tamara') {
+                    return (
+                        <Tag color='blue' style={{ margin: 0 }}>تمارا</Tag>
+                    )
+                }
+                if(_record.paymentMethod == 'free') {
+                    return (
+                        <Tag color='green' style={{ margin: 0 }}>مجاني</Tag>
+                    )
+                }
 
                 const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
                     _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
@@ -181,8 +191,8 @@ const Index = () => {
                 if (_record.couponUsed && _record.totalDiscount > 0) {
                     const originalAmount = (Number(_record.totalPrice) + Number(_record.totalVat) + Number(_record.totalDiscount)).toFixed(2);
                     return (
-                        <div style={{ direction: 'rtl' }}>
-                            <span style={{ textDecoration: 'line-through', color: '#999', marginLeft: '6px' }}>{originalAmount}</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', whiteSpace: 'nowrap' }}>
+                            <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '12px' }}>{originalAmount}</span>
                             <span style={{ color: '#00bd5d', fontWeight: 'bold' }}>{paidAmount}</span>
                         </div>
                     )

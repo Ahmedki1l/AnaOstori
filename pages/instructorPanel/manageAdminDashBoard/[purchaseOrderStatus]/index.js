@@ -16,6 +16,7 @@ import dayjs from 'dayjs'
 import styled from 'styled-components'
 import PurchaseOrderDrawer from '../../../../components/ManagePurchaseOrderItem/PurchaseOrderDrawer'
 import * as PaymentConst from '../../../../constants/PaymentConst'
+import Logo from '../../../../components/CommonComponents/Logo';
 import Spinner from '../../../../components/CommonComponents/spinner'
 import { getNewToken } from '../../../../services/fireBaseAuthService'
 import Empty from '../../../../components/CommonComponents/Empty'
@@ -340,7 +341,22 @@ const Index = () => {
             {
                 title: 'طريقة الدفع',
                 dataIndex: 'paymentMethod',
-                render: (text, _record) => {
+            render: (text, _record) => {
+                    if(_record.paymentMethod == 'tabby') {
+                        return (
+                            <Logo height={20} width={30} logoName={'tabbyPaymentLogo'} alt={'Payment Methode Logo'} />
+                        )
+                    }
+                    if(_record.paymentMethod == 'tamara') {
+                        return (
+                            <Tag color='blue' style={{ margin: 0 }}>تمارا</Tag>
+                        )
+                    }
+                    if(_record.paymentMethod == 'free') {
+                        return (
+                            <Tag color='green' style={{ margin: 0 }}>مجاني</Tag>
+                        )
+                    }
                     const paymentMode = _record.paymentMethod == 'hyperpay' ? _record.cardType == 'credit' ? _record.cardBrand == 'visa' ? 'visaPayment' : 'masterCardPayment' :
                         _record.cardType == 'mada' ? 'madaPayment' : 'applePayment' :
                         (_record.paymentMethod == 'bank_transfer' ? 'bankTransfer' : 'inAppPurchaseIcon')
@@ -352,6 +368,19 @@ const Index = () => {
             {
                 title: 'المبلغ المدفوع مع الضريبة',
                 dataIndex: 'totalPrice',
+                render: (text, _record) => {
+                    const paidAmount = Number(Number(_record.totalPrice) + Number(_record.totalVat)).toFixed(2);
+                    if (_record.couponUsed && _record.totalDiscount > 0) {
+                        const originalAmount = (Number(_record.totalPrice) + Number(_record.totalVat) + Number(_record.totalDiscount)).toFixed(2);
+                        return (
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', whiteSpace: 'nowrap' }}>
+                                <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '12px' }}>{originalAmount}</span>
+                                <span style={{ color: '#00bd5d', fontWeight: 'bold' }}>{paidAmount}</span>
+                            </div>
+                        )
+                    }
+                    return paidAmount;
+                }
             },
             {
                 title: 'تاريخ الحجز',
