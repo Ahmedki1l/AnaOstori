@@ -17,9 +17,10 @@
 
 .footerMainBox {
 	display: grid;
-	grid-template-columns: auto 24rem 15rem;
-	grid-template-rows: 14rem auto;
-	padding: 1rem 1rem 0 1rem;
+	grid-template-columns: minmax(0, 1.4fr) minmax(260px, 24rem) minmax(220px, 15rem);
+	grid-template-rows: auto auto;
+	padding: 1rem 0 0;
+	gap: 1.5rem;
 }
 
 .section1 {
@@ -32,9 +33,10 @@
 }
 
 .footerSubText {
-	margin: 2rem 0 1rem 60px;
-	width: 780px;
-	margin-left: 6px;
+	margin: 1.25rem 0 1rem 0;
+	width: 100%;
+	max-width: 780px;
+	margin-left: 0;
 }
 
 .footerMainSections {
@@ -243,8 +245,8 @@
 
 @media (max-width: 930px) {
 	.footerMainBox {
-		grid-template-columns: auto 19rem;
-		grid-template-rows: 17rem 15.5rem auto;
+		grid-template-columns: minmax(0, 1fr) minmax(220px, 19rem);
+		grid-template-rows: auto auto auto;
 	}
 
 	.section5 {
@@ -271,8 +273,8 @@
 
 @media (max-width: 640px) {
 	.footerMainBox {
-		grid-template-columns: auto;
-		grid-template-rows: 14.5rem 12.5rem 8rem auto;
+		grid-template-columns: 1fr;
+		grid-template-rows: auto auto auto auto;
 		grid-gap: 16px;
 	}
 

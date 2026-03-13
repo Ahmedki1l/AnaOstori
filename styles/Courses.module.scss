@@ -1,5 +1,5 @@
 .mainArea {
-	padding: 2rem;
+	padding: 2rem 0;
 }
 
 .tagline {
@@ -27,14 +27,18 @@
 }
 
 .coursesWrapper {
-    display: flex;
-    flex-wrap: wrap;
-    padding-bottom: 1rem;
-    width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1rem;
+	padding-bottom: 1rem;
+	width: 100%;
 }
 
 .courseCardMetaDataWrapper {
-	margin: 0.5rem;
+	margin: 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 .typeOfCourseCardWrapper {
@@ -253,8 +257,8 @@
 
 @media (max-width: 1380px) {
 	.courseCardMetaDataWrapper {
-		width: 32.5%;
-		margin: 0.5rem 0;
+		width: 100%;
+		margin: 0;
 	}
 
 	.typeOfCourseCardWrapper {
@@ -327,12 +331,13 @@
 
 @media (max-width: 1024px) {
 	.courseCardMetaDataWrapper {
-		width: 360px;
-		margin: 0.5rem;
+		width: 100%;
+		margin: 0;
 	}
 
 	.typeOfCourseCardWrapper {
-		width: 360px;
+		width: 100%;
+		max-width: 360px;
 	}
 
 	.onePersonPriceBox {

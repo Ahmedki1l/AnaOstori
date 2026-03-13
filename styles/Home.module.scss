@@ -30,14 +30,18 @@
 }
 
 .mainSection {
-	padding: 2rem 1rem;
+	padding: 2rem 0;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	gap: 2rem;
+	flex-wrap: wrap;
 }
 
 .textSection {
-	width: 588px;
+	width: 100%;
+	max-width: 588px;
+	flex: 1 1 420px;
 
 	p {
 		font-size: 22px;
@@ -143,8 +147,10 @@
 }
 
 .videoThumnail {
-	width: 29rem;
+	width: 100%;
+	max-width: 29rem;
 	margin-right: auto;
+	flex: 1 1 320px;
 }
 
 .analyticsBarWrapper {
@@ -177,18 +183,23 @@
 }
 
 .courseTypesWrapper {
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 1rem;
 	justify-content: center;
 }
 
 .courseTypeCard {
-	width: 250px;
+	width: 100%;
+	max-width: 250px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin: 0 auto;
 
 	p {
 		font-size: 24px;
+		text-align: center;
 	}
 }
 
@@ -243,33 +254,23 @@
 
 .courseCardsWraper {
 	display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    padding: 0 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-	justify-items: center;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 1.5rem;
+	padding: 0;
+	max-width: 1400px;
+	margin: 0 auto;
+	justify-items: stretch;
 }
 
 .courseCardWraper {
-	width: 318px;
+	width: 100%;
+	max-width: 318px;
 	height: 246px;
 	border: 0.5px solid rgba(0, 0, 0, 0.5);
 	border-radius: 4px;
 	cursor: pointer;
 	overflow: hidden;
-}
-
-.courseCardWraper:nth-child(3n + 1) {
-	margin: 1rem 0 1rem auto;
-}
-
-.courseCardWraper:nth-child(3n + 2) {
-	margin: 1rem auto;
-}
-
-.courseCardWraper:nth-child(3n + 3) {
-	margin: 1rem auto 1rem 0;
+	margin: 0 auto;
 }
 
 .courseImgBox {
@@ -433,13 +434,15 @@
 	}
 
 	.videoThumnail {
-		width: 530px;
+		width: 100%;
+		max-width: 530px;
 		margin: 0 auto;
 	}
 
 	.textSection {
 		padding-top: 1rem;
-		width: 530px;
+		width: 100%;
+		max-width: 530px;
 	}
 
 	.imagesWrapper {
@@ -562,8 +565,9 @@
 
 	.courseCardWraper {
 		height: auto;
-		width: 358px;
-		margin: 0 0px 1rem;
+		width: 100%;
+		max-width: 358px;
+		margin: 0 auto 1rem;
 	}
 
 	.notificationText {
