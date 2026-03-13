@@ -330,8 +330,8 @@ const Index = () => {
                             <Spinner borderwidth={6} width={6} height={6} margin={0.5} />
                         </div>
                         :
-                        <div className='flex justify-between'>
-                            <div className='w-3/4'>
+                        <div className='flex flex-col xl:flex-row gap-4 justify-between'>
+                            <div className='w-full xl:w-3/4 min-w-0'>
                                 <div className={`${styles.graphWrapper} flex justify-center`}>
                                     {
                                         dateRange == null ?
@@ -409,7 +409,7 @@ const Index = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className={`w-1/4 ${styles.cardContainer}`}>
+                            <div className={`w-full xl:w-1/4 ${styles.cardContainer}`}>
                                 {adminDashBoardData.map((data, index) => (
                                     <div key={`index ${index}`} className={styles.cardWrapper}>
                                         <div style={{ textAlign: 'right' }}>

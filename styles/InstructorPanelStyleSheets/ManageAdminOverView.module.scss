@@ -3,7 +3,7 @@
   gap: 20px;
   direction: ltr;
   flex-direction: column;
-  margin-right: 1.5rem;
+  margin-right: 0;
 }
 
 .graphWrapper {
@@ -13,7 +13,7 @@
   margin-bottom: 1.75rem;
   padding: 1rem;
   position: relative;
-  // height: max-content;
+  min-width: 0;
 
   .linkWrapper {
     position: absolute;
@@ -28,11 +28,13 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  min-width: 0;
 }
 
 .graphContainer {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .cardWrapper {
@@ -44,10 +46,7 @@
 
 .pieChartLabels {
   display: inline-flex;
-  // grid-template-columns: repeat(2, 1fr);
-  // gap: 10px
-  // display: flex;
-  // justify-content: center;
+  flex-wrap: wrap;
 }
 
 .courseInfoImage {
@@ -63,6 +62,19 @@
 .labelsWrapper {
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  height: 8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  height: auto;
+}
+
+@media (max-width: 1024px) {
+  .graphContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .labelsWrapper {
+    grid-template-columns: 1fr;
+  }
 }

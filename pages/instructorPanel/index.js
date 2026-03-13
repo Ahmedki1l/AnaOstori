@@ -18,7 +18,7 @@ export default function Index() {
     return (
         <div className='maxWidthDefault'>
             <h1 className={`${styles.instructorName} fontBold`}> <span className='fontMedium'> حياك الله</span> {instructorName}</h1>
-            <div className='flex flex-wrap p-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 py-4'>
                 <Link href={'/instructorPanel/manageAdminDashBoard'} className={`${styles.dashboardItemWrapper} normalLinkText`}>
                     <AllIconsComponenet width={39} height={39} iconName='manageAdminOverView' color={'#000000'} />
                     <p className={`fontMedium ${styles.dashboardItemName}`}>إحصائيات الموقع</p>

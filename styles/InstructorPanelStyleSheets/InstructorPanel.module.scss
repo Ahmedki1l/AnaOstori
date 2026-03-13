@@ -1,22 +1,36 @@
 .instructorName {
     font-size: 24px;
-    padding: 2rem 1rem;
+    padding: 2rem 0;
 }
 
 .dashboardItemWrapper {
-    width: 319px;
-    height: 178px;
+    width: 100%;
+    max-width: 319px;
+    min-height: 178px;
     border: 0.5px solid #C8C8C8;
     border-radius: 4px;
-    margin: 0 33px 33px 0;
+    margin: 0;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     cursor: pointer;
 }
 
 .dashboardItemName {
     margin-top: 12px;
     font-size: 20px;
+}
+
+@media (max-width: 768px) {
+    .dashboardItemWrapper {
+        max-width: none;
+        min-height: 150px;
+    }
+
+    .dashboardItemName {
+        font-size: 18px;
+    }
 }
