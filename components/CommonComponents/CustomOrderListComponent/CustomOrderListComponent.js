@@ -15,6 +15,8 @@ const CustomOrderListComponent = ({ data }) => {
                 pagination={data?.paginationConfig}
                 locale={{ emptyText: customEmptyComponent }}
                 onChange={data?.handleTableChange}
+                scroll={{ x: 'max-content' }}
+
             />
         </div>
     )

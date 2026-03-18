@@ -80,14 +80,24 @@ export default function PurchaseInquiry(props) {
 		getMyOrder()
 	}, [])
 
-	// Shipping status mapping for book orders
+	// Shipping status mapping for book orders (Torod + internal statuses)
 	const shippingStatusMap = {
+		'quote_created': 'تم طلب عرض الشحن',
 		'pending': 'في الانتظار',
+		'created': 'تم إنشاء الشحنة',
+		'ready_for_pickup': 'جاهز للشحن',
+		'picked_up': 'تم الاستلام',
 		'processing': 'قيد التجهيز',
 		'shipped': 'تم الشحن',
 		'in_transit': 'في الطريق',
+		'out_for_delivery': 'خارج للتسليم',
 		'delivered': 'تم التوصيل',
-		'returned': 'مرتجع'
+		'returned': 'مرتجع',
+		'cancelled': 'ملغي',
+		'shipment_failed': 'فشل الشحن',
+		'on_hold': 'معلق',
+		'undelivered': 'لم يتم التسليم',
+		'exception': 'استثناء'
 	};
 
 
@@ -132,6 +142,11 @@ export default function PurchaseInquiry(props) {
 														)}
 														{data.shippingStatus && (
 															<p className="text-blue-600">{shippingStatusMap[data.shippingStatus] || data.shippingStatus}</p>
+														)}
+														{data.shippingTrackingUrl && (
+															<a href={data.shippingTrackingUrl} target="_blank" rel="noopener noreferrer"
+																style={{ color: '#F26722', fontSize: '13px', textDecoration: 'underline' }}
+															>📦 تتبع الشحنة</a>
 														)}
 													</div>
 												) : (
@@ -232,6 +247,11 @@ export default function PurchaseInquiry(props) {
 												)}
 												{data.shippingStatus && (
 													<p style={{color: '#2563eb'}}>{shippingStatusMap[data.shippingStatus] || data.shippingStatus}</p>
+												)}
+												{data.shippingTrackingUrl && (
+													<a href={data.shippingTrackingUrl} target="_blank" rel="noopener noreferrer"
+														style={{ color: '#F26722', fontSize: '13px', textDecoration: 'underline' }}
+													>📦 تتبع الشحنة</a>
 												)}
 											</div>
 										) : (

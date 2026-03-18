@@ -49,6 +49,44 @@ const statusColors = {
     failed: '#FF4D4F'
 };
 
+const shippingStatusColors = {
+    quote_created: '#FAAD14',
+    pending: '#FFA500',
+    created: '#1890FF',
+    ready_for_pickup: '#722ED1',
+    picked_up: '#13C2C2',
+    processing: '#722ED1',
+    shipped: '#13C2C2',
+    in_transit: '#2F54EB',
+    out_for_delivery: '#FA8C16',
+    delivered: '#52C41A',
+    returned: '#FF4D4F',
+    cancelled: '#999999',
+    shipment_failed: '#FF4D4F',
+    on_hold: '#EB2F96',
+    undelivered: '#FF4D4F',
+    exception: '#FF4D4F'
+};
+
+const shippingStatusLabels = {
+    quote_created: 'تم طلب عرض الشحن',
+    pending: 'في الانتظار',
+    created: 'تم إنشاء الشحنة',
+    ready_for_pickup: 'جاهز للشحن',
+    picked_up: 'تم الاستلام',
+    processing: 'قيد التجهيز',
+    shipped: 'تم الشحن',
+    in_transit: 'في الطريق',
+    out_for_delivery: 'خارج للتسليم',
+    delivered: 'تم التوصيل',
+    returned: 'مرتجع',
+    cancelled: 'ملغي',
+    shipment_failed: 'فشل الشحن',
+    on_hold: 'معلق',
+    undelivered: 'لم يتم التسليم',
+    exception: 'استثناء'
+};
+
 const statusLabels = {
     pending: 'قيد الانتظار',
     waiting: 'بانتظار الدفع',
@@ -266,6 +304,16 @@ export default function ManageBookOrdersPage() {
             render: (date) => dayjs(date).format('DD/MM/YYYY HH:mm')
         },
         {
+            title: 'الشحن',
+            dataIndex: 'shippingStatus',
+            width: 120,
+            render: (status) => status ? (
+                <Tag color={shippingStatusColors[status] || '#999'}>
+                    {shippingStatusLabels[status] || status}
+                </Tag>
+            ) : <span style={{ color: '#ccc' }}>-</span>
+        },
+        {
             title: '',
             dataIndex: 'actions',
             width: 100,
@@ -468,6 +516,52 @@ export default function ManageBookOrdersPage() {
                                     <span className={styles.detailValue}>{selectedOrder.grandTotal} ر.س</span>
                                 </div>
                             </div>
+
+                            {/* Shipping Info Section */}
+                            {selectedOrder.shippingProvider && (
+                                <div className={styles.detailSection}>
+                                    <h3>معلومات الشحن</h3>
+                                    <div className={styles.detailRow}>
+                                        <span className={styles.detailLabel}>مزود الشحن:</span>
+                                        <span className={styles.detailValue}>{selectedOrder.shippingProvider === 'torod' ? 'Torod' : selectedOrder.shippingProvider}</span>
+                                    </div>
+                                    {selectedOrder.shippingStatus && (
+                                        <div className={styles.detailRow}>
+                                            <span className={styles.detailLabel}>حالة الشحن:</span>
+                                            <span className={styles.detailValue}>
+                                                <Tag color={shippingStatusColors[selectedOrder.shippingStatus] || '#999'}>
+                                                    {shippingStatusLabels[selectedOrder.shippingStatus] || selectedOrder.shippingStatus}
+                                                </Tag>
+                                            </span>
+                                        </div>
+                                    )}
+                                    {selectedOrder.shippingTrackingNumber && (
+                                        <div className={styles.detailRow}>
+                                            <span className={styles.detailLabel}>رقم التتبع:</span>
+                                            <span className={styles.detailValue}>
+                                                {selectedOrder.shippingTrackingUrl ? (
+                                                    <a href={selectedOrder.shippingTrackingUrl} target="_blank" rel="noopener noreferrer"
+                                                        style={{ color: '#F26722' }}>
+                                                        {selectedOrder.shippingTrackingNumber} 📦
+                                                    </a>
+                                                ) : selectedOrder.shippingTrackingNumber}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {selectedOrder.torodCarrierCode && (
+                                        <div className={styles.detailRow}>
+                                            <span className={styles.detailLabel}>شركة الشحن:</span>
+                                            <span className={styles.detailValue}>{selectedOrder.torodCarrierCode}</span>
+                                        </div>
+                                    )}
+                                    {selectedOrder.shippingCost != null && (
+                                        <div className={styles.detailRow}>
+                                            <span className={styles.detailLabel}>تكلفة الشحن:</span>
+                                            <span className={styles.detailValue}>{Number(selectedOrder.shippingCost).toFixed(2)} ر.س</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             <div className={styles.detailSection}>
                                 <h3>تحديث الحالة</h3>

@@ -3,7 +3,7 @@ import Image from 'next/legacy/image';
 import styles from './BookOrderSummary.module.scss';
 import { mediaUrl } from '../../constants/DataManupulation';
 
-export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, discount = 0 }) {
+export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, discount = 0, shippingProvider = null }) {
     const bookImageUrl = bookData.bookPictureKey && bookData.bookPictureBucket 
         ? mediaUrl(bookData.bookPictureBucket, bookData.bookPictureKey)
         : '/images/book-placeholder.png';
@@ -39,7 +39,10 @@ export default function BookOrderSummary({ bookData, quantity, deliveryFee = 0, 
                 </div>
 
                 <div className={styles.priceRow}>
-                    <span className={styles.priceLabel}>رسوم التوصيل</span>
+                    <span className={styles.priceLabel}>
+                        رسوم التوصيل
+                        {shippingProvider === 'torod' && <small style={{ color: '#888', marginRight: '4px' }}>(توصيل سريع)</small>}
+                    </span>
                     <span className={styles.priceValue}>{Number(deliveryFee).toFixed(2)} ر.س</span>
                 </div>
 

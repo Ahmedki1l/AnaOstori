@@ -289,6 +289,10 @@ export default function BookPaymentPage() {
 
             if (response.data) {
                 setCreatedOrder(response.data);
+                // Update deliveryFee from backend response (may include Torod dynamic rate)
+                if (response.data.deliveryFee != null) {
+                    setDeliveryFee(response.data.deliveryFee);
+                }
                 setStep(2);
                 fbq.event('InitiateCheckout', { 
                     orderId: response.data.id || response.data.order?.id,
@@ -815,6 +819,7 @@ export default function BookPaymentPage() {
                                 quantity={bookData.quantity}
                                 deliveryFee={deliveryFee}
                                 discount={couponData?.valid ? Number(couponData.discountAmount) : 0}
+                                shippingProvider={createdOrder?.shippingProvider || null}
                             />
                         </div>
                     </div>

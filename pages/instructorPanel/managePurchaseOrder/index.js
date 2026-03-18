@@ -407,6 +407,8 @@ const Index = () => {
                     pagination={paginationConfig}
                     locale={{ emptyText: customEmptyComponent }}
                     onChange={handleTableChange}
+                    scroll={{ x: 'max-content' }}
+
                 />
 
                 {purchaseOrderOpen &&
