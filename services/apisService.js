@@ -184,3 +184,11 @@ export const createGuestBookOrderAPI = (data) => {
 export const getMyBookOrdersAPI = () => { 
     return instance.get('/order/myBookOrders');
 }
+
+// Torod Address APIs (for delivery city dropdown)
+export const getTorodRegionsAPI = () => {
+    return axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/torod/regions`);
+}
+export const getTorodCitiesAPI = (regionId) => {
+    return axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/torod/cities?region_id=${regionId}`);
+}

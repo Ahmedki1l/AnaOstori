@@ -39,7 +39,10 @@ export default function BookPaymentPage() {
         buyerFullName: '',
         buyerPhone: '',
         buyerEmail: '',
+        region: '',
+        regionId: null,
         city: '',
+        torodCityId: null,
         district: '',
         street: '',
         buildingNumber: '',
@@ -262,7 +265,9 @@ export default function BookPaymentPage() {
                     additionalCode: formData.additionalCode,
                     postalCode: formData.postalCode,
                     shortAddress: formData.shortAddress,
-                    country: formData.country
+                    country: formData.country,
+                    torodCityId: formData.torodCityId || null,
+                    regionId: formData.regionId || null
                 },
                 // Include coupon code if valid
                 ...(couponData?.valid && { couponCode: couponCode })
