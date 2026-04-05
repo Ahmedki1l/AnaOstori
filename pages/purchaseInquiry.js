@@ -202,7 +202,7 @@ export default function PurchaseInquiry(props) {
 												}
 											</td>
 											<td className={styles.tbodyInvoice}>
-												{(data?.status == "accepted" && data?.invoiceKey) ?
+												{(data?.orderType === 'book' ? data?.invoiceKey : (data?.status == "accepted" && data?.invoiceKey)) ?
 													<Link href={mediaUrl(data?.invoiceBucket, data?.invoiceKey)} target={'_blank'} className="noUnderlineLink flex items-center justify-center">
 														<div>
 															<AllIconsComponenet height={20} width={20} iconName={'downloadIcon'} color={'#0075FF'} />
@@ -311,7 +311,7 @@ export default function PurchaseInquiry(props) {
 												<tr>
 													<th className={styles.theadInvoice}>{inqTabelHeaderConst.header5}</th>
 													<td className={styles.tbodyInvoice}>
-														{(data?.status == "accepted" && data?.invoiceKey) ?
+														{(data?.orderType === 'book' ? data?.invoiceKey : (data?.status == "accepted" && data?.invoiceKey)) ?
 															<Link href={mediaUrl(data.invoiceBucket, data.invoiceKey)} target={'_blank'} className="flex items-center normalLinkText">
 																<div style={{ height: '34px' }}>
 																	<AllIconsComponenet height={14} width={14} iconName={'downloadIcon'} color={'#0075FF'} />
