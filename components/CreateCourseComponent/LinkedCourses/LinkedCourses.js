@@ -85,43 +85,43 @@ const LinkedCourses = ({ courseId }) => {
         }
     };
 
-    const existingLinkedIds = links.map((l) => l?.linkedCourse?.id).filter(Boolean);
+    const existingLinkedIds = links.map((l) => l?.targetCourse?.id).filter(Boolean);
 
     const columns = [
         {
             key: 'courseCell',
             title: manageLinkedCoursesConst.columnCourse,
-            dataIndex: 'linkedCourse',
-            render: (linkedCourse) => (
+            dataIndex: 'targetCourse',
+            render: (targetCourse) => (
                 <div className={styles.courseCell}>
-                    {linkedCourse?.pictureKey && (
+                    {targetCourse?.pictureKey && (
                         <img
                             className={styles.thumbnail}
-                            src={mediaUrl(linkedCourse.pictureBucket, linkedCourse.pictureKey)}
-                            alt={linkedCourse.name}
+                            src={mediaUrl(targetCourse.pictureBucket, targetCourse.pictureKey)}
+                            alt={targetCourse.name}
                         />
                     )}
-                    <span className="fontBold">{linkedCourse?.name}</span>
+                    <span className="fontBold">{targetCourse?.name}</span>
                 </div>
             ),
         },
         {
             key: 'category',
             title: manageLinkedCoursesConst.columnCategory,
-            dataIndex: 'linkedCourse',
-            render: (linkedCourse) => <span>{linkedCourse?.catagory?.name || '—'}</span>,
+            dataIndex: 'targetCourse',
+            render: (targetCourse) => <span>{targetCourse?.catagory?.name || '—'}</span>,
         },
         {
             key: 'language',
             title: manageLinkedCoursesConst.columnLanguage,
-            dataIndex: 'linkedCourse',
-            render: (linkedCourse) => <span>{courseLanguageLabel(linkedCourse?.language)}</span>,
+            dataIndex: 'targetCourse',
+            render: (targetCourse) => <span>{courseLanguageLabel(targetCourse?.language)}</span>,
         },
         {
             key: 'type',
             title: manageLinkedCoursesConst.columnType,
-            dataIndex: 'linkedCourse',
-            render: (linkedCourse) => <span>{courseTypeLabel(linkedCourse?.type)}</span>,
+            dataIndex: 'targetCourse',
+            render: (targetCourse) => <span>{courseTypeLabel(targetCourse?.type)}</span>,
         },
         {
             key: 'createdAt',
