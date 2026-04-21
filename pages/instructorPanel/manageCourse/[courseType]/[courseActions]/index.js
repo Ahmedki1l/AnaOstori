@@ -7,6 +7,7 @@ import ExternalCourseCard from '../../../../../components/CreateCourseComponent/
 import TestsResults from '../../../../../components/CreateCourseComponent/TestsResults/TestResults';
 import TheStudents from '../../../../../components/CreateCourseComponent/TheStudents/TheStudents';
 import Attendance from '../../../../../components/CreateCourseComponent/Attendance/Attendance';
+import LinkedCourses from '../../../../../components/CreateCourseComponent/LinkedCourses/LinkedCourses';
 import { useSelector } from 'react-redux';
 import { getAuthRouteAPI } from '../../../../../services/apisService';
 import { useDispatch } from 'react-redux';
@@ -37,6 +38,7 @@ export default function Index() {
         fourthTab: false,
         fifthTab: false,
         sixthTab: false,
+        seventhTab: false,
     })
     const handleItemSelect = (id) => {
         setSelectedItem(id)
@@ -87,6 +89,7 @@ export default function Index() {
             fourthTab: (((courseType == 'onDemand' && router?.query?.courseActions == 'editCourse') || (courseType != 'onDemand' && router?.query?.courseActions == 'appointments')) ? true : false),
             fifthTab: (((courseType == 'onDemand' && router?.query?.courseActions == 'editCourse') || (courseType != 'onDemand' && router?.query?.courseActions == 'appointments')) ? true : false),
             sixthTab: (courseType != 'onDemand' && router?.query?.courseActions == 'appointments' ? true : false),
+            seventhTab: (router?.query?.courseActions == 'editCourse' && !!courseId ? true : false),
         })
     }, [router])
 
@@ -129,6 +132,7 @@ export default function Index() {
                                 {tabShown.fourthTab && <p onClick={() => handleItemSelect(4)} className={selectedItem == 4 ? styles.activeItem : ""}>الطلاب</p>}
                                 {tabShown.fifthTab && <p onClick={() => handleItemSelect(5)} className={selectedItem == 5 ? styles.activeItem : ""}>نتائج الاختبارات</p>}
                                 {tabShown.sixthTab && <p onClick={() => handleItemSelect(6)} className={selectedItem == 6 ? styles.activeItem : ""}>الحضور والغياب</p>}
+                                {tabShown.seventhTab && <p onClick={() => handleItemSelect(7)} className={selectedItem == 7 ? styles.activeItem : ""}>الدورات المرتبطة</p>}
                             </>
                         </div>
                     </div>
@@ -149,6 +153,7 @@ export default function Index() {
                         {selectedItem == 4 && <TheStudents courseId={courseId} courseType={courseType} availabilityList={availabilityList} />}
                         {selectedItem == 5 && <TestsResults courseId={courseId} courseType={courseType} />}
                         {selectedItem == 6 && <Attendance courseId={courseId} />}
+                        {selectedItem == 7 && <LinkedCourses courseId={courseId} />}
                     </div>
                 </div >
             </div >

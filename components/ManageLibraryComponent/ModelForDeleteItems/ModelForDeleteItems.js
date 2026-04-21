@@ -94,6 +94,11 @@ const ModelForDeleteItems = ({
             messageText: 'متأكد انك تبي تحذف الكوبون؟',
             btnText: 'تأكيد الحذف'
         },
+        linkedCourse: {
+            title: 'تأكيد حذف الربط',
+            messageText: 'متأكد انك تبي تحذف الربط بين الدورتين؟',
+            btnText: 'تأكيد الحذف'
+        },
         studentReview: {
             title: deleteReviewsConst.title,
             messageText: deleteReviewsConst.messageText,

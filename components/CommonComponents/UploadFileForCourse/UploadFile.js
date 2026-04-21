@@ -7,6 +7,7 @@ import CoverImg from '../CoverImg'
 import VideoThumnail from '../../CourseDescriptionPageComponents/DetailsHeader/Common/VideoThumnail'
 import { mediaUrl } from '../../../constants/DataManupulation'
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const UploadFile = ({
     label,
@@ -49,6 +50,7 @@ const UploadFile = ({
         }).catch((error) => {
             console.log(error);
             setShowLoader(false)
+            toast.error('فشل رفع الملف. تأكد من الاتصال أو جرّب مرة أخرى.')
         })
 
     }

@@ -1,0 +1,82 @@
+.wrapper {
+    padding: 0 8px;
+}
+
+.headerArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.headerText {
+    font-size: 22px;
+}
+
+.helperText {
+    color: #00000099;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.addBtnBox {
+    width: 120px;
+    height: 36px;
+
+    button {
+        padding: 9px 10px !important;
+        font-size: 16px;
+    }
+}
+
+.courseCell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.thumbnail {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+    background-color: #f2f2f2;
+}
+
+.actionWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.drawerBody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.drawerFilters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.drawerFooter {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.cancelBtn {
+    border: 0.5px solid #00000081;
+    border-radius: 4px;
+    padding: 8px 22px;
+    font-size: 16px;
+    background: #fff;
+}
+
+.drawerTitleText {
+    font-size: 18px;
+}

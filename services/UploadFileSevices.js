@@ -24,7 +24,8 @@ export const uploadFileSevices = async (file, onUploadProgress, cancelToken, dTy
             const publicUrl = dType ? res.data.publicUrl : signedUrl
             await axios.put(signedUrl, binaryData, {
                 headers: {
-                    'Content-Type': 'application/octet-stream',
+                    'Content-Type': file.type || 'application/octet-stream',
+                    'x-amz-acl': 'public-read',
                 },
                 onUploadProgress: (progressEvent) => {
                     console.log(progressEvent);
@@ -40,6 +41,7 @@ export const uploadFileSevices = async (file, onUploadProgress, cancelToken, dTy
             })
         }).catch((error) => {
             console.log(error);
+            reject(error)
         })
     })
 }
