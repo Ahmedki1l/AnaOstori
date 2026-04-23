@@ -134,6 +134,146 @@ const ModelForAddQuestion = ({
         return skill;
     });
 
+    // SAAT (تحصيلي) — Arabic skill lists. Strings must match SKILL_CATEGORIES
+    // in components/ExamComponents/ExamResults.js so result aggregation works.
+    const mathSAATAR = [
+        'التبرير والبرهان والمنطق الرياضي',
+        'هندسة المثلثات',
+        'الاشكال الرباعية والتحويلات الهندسية',
+        'تحليل الدوال',
+        'ضرب العبارات النسبية وقسمتها',
+        'المصفوفات والمحددات',
+        'كثيرات الحدود',
+        'الأسس والجذور واللوغاريتمات',
+        'المتتابعات والمتسلسلات',
+        'الإحصاء والاحتمال',
+        'حساب المثلثات',
+        'النهايات والدوال المتصلة',
+        'التفاضل والتكامل',
+        'القطوع المخروطية',
+        'المتجهات والإحداثيات القطبية',
+    ];
+
+    const physicsSAATAR = [
+        'علم الفيزياء',
+        'الحركة والسرعة',
+        'التسارع',
+        'القوة',
+        'قوانين كبلر والجاذبية',
+        'العزم',
+        'الدفع والزخم',
+        'الشغل والطاقة',
+        'الطاقة الحرارية',
+        'الموائع',
+        'الموجات',
+        'الصوت',
+        'الضوء',
+        'الانعكاس في الضوء والمرايا',
+        'الانكسار في الضوء والعدسات',
+        'الكهرباء الساكنة والمجال الكهربي',
+        'التيار الكهربي',
+        'القوى والمجالات المغناطيسية',
+        'الفيزياء الحديثة',
+        'إلكترونيات الحالة الصلبة',
+        'الفيزياء النووية',
+    ];
+
+    const chemistrySAATAR = [
+        'تركيب الذرة والنشاط الإشعاعي',
+        'نظرية الكم والتوزيع الإلكتروني',
+        'الجدول الدوري وتدرج الخواص',
+        'الروابط الكيميائية والفيزيائية',
+        'التفاعلات والحسابات الكيميائية',
+        'المحاليل الكيميائية',
+        'الغازات',
+        'الكيمياء الحرارية',
+        'الاتزان الكيميائي',
+        'الأحماض والقواعد',
+        'الأكسدة والاختزال',
+        'الكيمياء الكهربائية',
+        'الهيدروكربونات',
+        'مشتقات الهيدروكربونات',
+        'الكيمياء الحيوية',
+        'العلماء في الكيمياء',
+    ];
+
+    const biologySAATAR = [
+        'دراسة الحياة',
+        'تنظيم تنوع الحياة',
+        'البكتيريا والفيروسات',
+        'الطلائعيات',
+        'الفطريات',
+        'مدخل إلى الحيوانات',
+        'الديدان والرخويات',
+        'المفصليات',
+        'شوكيات الجلد واللافقاريات الحبلية',
+        'الأسماك والبرمائيات',
+        'الزواحف والطيور',
+        'الثدييات',
+        'مقدمة في النبات',
+        'تركيب النبات ووظائف أجزائه',
+        'التكاثر في النباتات الزهرية',
+        'الجهازان الهيكلي والعضلي',
+        'الجهاز العصبي',
+        'أجهزة الدوران والتنفس والإخراج',
+        'جهاز الهضم والغدد الصم',
+        'التكاثر والنمو في الإنسان',
+        'جهاز المناعة',
+        'أجهزة جسم الإنسان',
+        'تركيب الخلية ووظائفها',
+        'الطاقة الخلوية',
+        'التكاثر الخلوي',
+        'التكاثر الجنسي والوراثة',
+        'الوراثة المعقدة والوراثة البشرية',
+        'مبادئ علم البيئة',
+        'المجتمعات والمناطق الحيوية والأنظمة البيئية',
+        'علم بيئة الجماعات الحيوية',
+        'التنوع الحيوي والمحافظة عليه',
+        'سلوك الحيوان',
+    ];
+
+    // SAAT (SAAT) — English skill lists.
+    const mathSAATEN = [
+        'Mathematical Reasoning', 'Triangle Geometry', 'Quadrilaterals and Geometric Transformations',
+        'Function Analysis', 'Rational Expressions', 'Matrices and Determinants',
+        'Polynomials', 'Exponents and Logarithms', 'Sequences and Series',
+        'Statistics and Probability', 'Trigonometry', 'Limits and Continuous Functions',
+        'Calculus', 'Conic Sections', 'Vectors and Polar Coordinates',
+    ];
+
+    const physicsSAATEN = [
+        'Physics Science', 'Motion and Speed', 'Acceleration', 'Force', 'Kepler Laws and Gravity',
+        'Torque', 'Impulse and Momentum', 'Work and Energy', 'Thermal Energy', 'Fluids',
+        'Waves', 'Sound', 'Light', 'Reflection and Mirrors', 'Refraction and Lenses',
+        'Electrostatics', 'Electric Current', 'Magnetic Forces and Fields',
+        'Modern Physics', 'Solid State Electronics', 'Nuclear Physics',
+    ];
+
+    const chemistrySAATEN = [
+        'Atomic Structure and Radioactivity', 'Quantum Theory and Electron Configuration',
+        'Periodic Table and Properties', 'Chemical and Physical Bonds',
+        'Chemical Reactions and Calculations', 'Chemical Solutions', 'Gases',
+        'Thermochemistry', 'Chemical Equilibrium', 'Acids and Bases',
+        'Oxidation and Reduction', 'Electrochemistry', 'Hydrocarbons',
+        'Hydrocarbon Derivatives', 'Biochemistry',
+    ];
+
+    const biologySAATEN = [
+        'Study of Life', 'Diversity of Life', 'Bacteria and Viruses', 'Protists', 'Fungi',
+        'Introduction to Animals', 'Worms and Mollusks', 'Arthropods',
+        'Echinoderms and Invertebrate Chordates', 'Fish and Amphibians',
+        'Reptiles and Birds', 'Mammals', 'Introduction to Plants',
+        'Plant Structure and Function', 'Plant Reproduction',
+        'Skeletal and Muscular Systems', 'Nervous System',
+        'Circulatory Respiratory and Excretory Systems',
+        'Digestive and Endocrine Systems', 'Human Reproduction and Development',
+        'Immune System', 'Cell Structure and Function', 'Cellular Energy',
+        'Cell Reproduction', 'Sexual Reproduction and Genetics',
+        'Complex Inheritance and Human Genetics', 'Principles of Ecology',
+        'Communities and Biomes', 'Population Ecology',
+        'Biodiversity and Conservation', 'Animal Behavior',
+    ];
+
     const ALL_SKILLS = [
         ...verbalARSkills,
         ...quantitativeARSkills,
@@ -209,6 +349,11 @@ const ModelForAddQuestion = ({
                 if (selectedSection === 'قدرات') {
                     if (selectedLesson === 'كمي') setAvailableSkills(quantitativeARSkills);
                     else if (selectedLesson === 'لفظي') setAvailableSkills(verbalARSkills);
+                } else if (selectedSection === 'تحصيلي') {
+                    if (selectedLesson === 'رياضيات') setAvailableSkills(mathSAATAR);
+                    else if (selectedLesson === 'فيزياء') setAvailableSkills(physicsSAATAR);
+                    else if (selectedLesson === 'كيمياء') setAvailableSkills(chemistrySAATAR);
+                    else if (selectedLesson === 'أحياء') setAvailableSkills(biologySAATAR);
                 }
             } else {
                 setAvailableSkills([]);
@@ -218,6 +363,11 @@ const ModelForAddQuestion = ({
                 if (selectedSection === 'GAT') {
                     if (selectedLesson === 'Quantitative') setAvailableSkills(quantitativeENSkills);
                     else if (selectedLesson === 'Verbal') setAvailableSkills(verbalENSkills);
+                } else if (selectedSection === 'SAAT') {
+                    if (selectedLesson === 'Mathematics') setAvailableSkills(mathSAATEN);
+                    else if (selectedLesson === 'Physics') setAvailableSkills(physicsSAATEN);
+                    else if (selectedLesson === 'Chemistry') setAvailableSkills(chemistrySAATEN);
+                    else if (selectedLesson === 'Biology') setAvailableSkills(biologySAATEN);
                 }
             } else {
                 setAvailableSkills([]);
