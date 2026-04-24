@@ -44,7 +44,7 @@ export default function ImageLightbox({ src, alt }) {
             onLoadingComplete={() => { setLoading(false); console.log('Thumbnail image loaded:', src); }}
             onError={(e) => { setLoading(false); console.log('Thumbnail image failed to load:', src, e); }}
             style={{ objectFit: 'contain', display: loading ? 'none' : 'block', cursor: 'pointer' }}
-            unoptimized={false}
+            unoptimized={true}
             priority={true}
           />
         </div>
@@ -69,7 +69,7 @@ export default function ImageLightbox({ src, alt }) {
               fill
               onLoadingComplete={() => { setOverlayLoading(false); console.log('Overlay image loaded:', src); }}
               onError={(e) => { setOverlayLoading(false); console.log('Overlay image failed to load:', src, e); }}
-              unoptimized={false}
+              unoptimized={true}
               priority={true}
             />
             <button
