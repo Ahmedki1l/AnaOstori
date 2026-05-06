@@ -104,42 +104,6 @@ export const examResultService = {
         }
     },
 
-    async submitExamResults(examData, results, examId, studentId, options = {}, retryCount = 0) {
-        const MAX_RETRIES = 3;
-
-        try {
-            const examResultData = this.buildExamResultPayload(examData, results, examId, studentId, options);
-
-            const response = await postAuthRouteAPI(examResultData)
-            console.log('Exam results submitted successfully:', response)
-            return response
-        } catch (error) {
-            console.error(`Error submitting exam results (attempt ${retryCount + 1}/${MAX_RETRIES}):`, error)
-
-            // Handle token refresh
-            if (error?.response?.status === 401) {
-                try {
-                    await getNewToken()
-                    return await this.submitExamResults(examData, results, examId, studentId, options, retryCount)
-                } catch (refreshError) {
-                    console.error('Token refresh failed:', refreshError)
-                    throw refreshError
-                }
-            }
-
-            // Retry with exponential backoff for network errors (not 4xx client errors)
-            const isNetworkError = !error?.response?.status || error?.response?.status >= 500
-            if (isNetworkError && retryCount < MAX_RETRIES) {
-                const delay = 1000 * Math.pow(2, retryCount) // 1s, 2s, 4s
-                console.log(`Retrying submission in ${delay}ms...`)
-                await new Promise(resolve => setTimeout(resolve, delay))
-                return await this.submitExamResults(examData, results, examId, studentId, options, retryCount + 1)
-            }
-
-            throw error
-        }
-    },
-
     /**
      * Get exam results for a specific student and exam
      * @param {string} examId - Exam ID
@@ -436,80 +400,6 @@ export const examResultService = {
             };
         });
     },
-
-    /**
-     * Prepare sections data for submission (OLD STRUCTURE - kept for reference)
-     * @param {Object} examData - Exam data
-     * @param {Array} allReviewQuestions - All review questions
-     * @param {Array} allExamQuestions - All exam questions
-     * @returns {Array} - Sections data
-     */
-    prepareSectionsData(examData, allReviewQuestions, allExamQuestions) {
-        const flatExamQuestions = allExamQuestions.flat();
-        const flatReviewQuestions = allReviewQuestions.flat();
-
-        if (!flatExamQuestions || !flatReviewQuestions || flatReviewQuestions.length === 0) {
-            return [];
-        }
-
-        const sectionMap = new Map();
-
-        flatExamQuestions.forEach((question, index) => {
-            question?.skills?.forEach(skill => {
-                const sectionTitle = question?.section + " - " + question?.lesson;
-
-                if (!sectionMap.has(sectionTitle)) {
-                    sectionMap.set(sectionTitle, {
-                        title: sectionTitle,
-                        questions: [],
-                        skills: new Map()
-                    });
-                }
-
-                const section = sectionMap.get(sectionTitle);
-                section.questions.push({
-                    question,
-                    selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null,
-                    skill: skill.text
-                });
-
-                if (!section.skills.has(skill.text)) {
-                    section.skills.set(skill.text, []);
-                }
-                section.skills.get(skill.text).push({
-                    question,
-                    selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null
-                });
-            });
-        });
-
-        return Array.from(sectionMap.values()).map(section => {
-            const correctInSection = section.questions.filter(q =>
-                q.selectedAnswer === q.question.correctAnswer
-            ).length;
-
-            const skills = Array.from(section.skills.entries()).map(([skillTitle, questions]) => {
-                const correctInSkill = questions.filter(q =>
-                    q.selectedAnswer === q.question.correctAnswer
-                ).length;
-
-                return {
-                    title: skillTitle,
-                    correctAnswers: correctInSkill,
-                    numberOfQuestions: questions.length,
-                    score: Math.round((correctInSkill / questions.length) * 100)
-                };
-            });
-
-            return {
-                title: section.title,
-                score: correctInSection,
-                totalQuestions: section.questions.length,
-                skills: skills
-            };
-        });
-    },
-
 
     /**
      * Prepare section details for submission

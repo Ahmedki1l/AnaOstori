@@ -16,109 +16,6 @@ import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsR
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
 import { toast } from 'react-toastify';
 
-/**
- * Enhanced Distraction Detection System
- * 
- * This exam page implements a sophisticated distraction detection system with:
- * 
- * 1. 3-Strike Rule:
- *    - Each distraction event starts a 3-second timer
- *    - If the distraction continues for 3 seconds, it counts as 1 strike
- *    - After 3 strikes, the exam is immediately terminated
- * 
- * 2. 30-Second Continuous Distraction Detection:
- *    - If distraction continues for 30 seconds without interruption
- *    - The exam is terminated immediately regardless of strike count
- * 
- * 3. Distraction Detection Methods:
- *    - Page visibility changes (tab switching)
- *    - Window blur/focus events
- *    - Route changes within the app
- * 
- * 4. Visual Indicators:
- *    - Fixed warning banner showing current strikes
- *    - Timer indicator showing distraction status
- *    - Color-coded warnings (orange → red)
- * 
- * 5. Automatic Cleanup:
- *    - Timers are cleared when user returns to exam
- *    - All timers are cleaned up on component unmount
- */
-
-function useCheatDetection(onCheat, onContinuousCheat) {
-    const router = useRouter();
-    const isCheatingRef = useRef(false);
-    const cheatStartTimeRef = useRef(null);
-
-    useEffect(() => {
-        // 1) Page Visibility API
-        const handleVisibility = () => {
-            if (document.visibilityState === 'hidden') {
-                handleCheatEvent('tab_hidden');
-            } else {
-                // When tab becomes visible again, reset continuous cheating timer
-                if (isCheatingRef.current) {
-                    isCheatingRef.current = false;
-                    if (cheatStartTimeRef.current) {
-                        cheatStartTimeRef.current = null;
-                    }
-                    // Notify that cheating has stopped
-                    onContinuousCheat(false);
-                }
-            }
-        };
-        document.addEventListener('visibilitychange', handleVisibility);
-
-        // 2) Window blur (fallback for very old browsers)
-        const handleBlur = () => handleCheatEvent('window_blur');
-        window.addEventListener('blur', handleBlur);
-
-        // 3) Window focus - reset cheating state when user returns
-        const handleFocus = () => {
-            if (isCheatingRef.current) {
-                isCheatingRef.current = false;
-                if (cheatStartTimeRef.current) {
-                    cheatStartTimeRef.current = null;
-                }
-                // Notify that cheating has stopped
-                onContinuousCheat(false);
-            }
-        };
-        window.addEventListener('focus', handleFocus);
-
-        // 4) Next.js route change (in-app navigation)
-        const handleRoute = (url) => {
-            // if they try to navigate inside your app
-            handleCheatEvent('route_change', { to: url });
-        };
-        router.events.on('routeChangeStart', handleRoute);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibility);
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
-            router.events.off('routeChangeStart', handleRoute);
-        };
-    }, [router.events, onCheat, onContinuousCheat]);
-
-    const handleCheatEvent = (type, data = {}) => {
-        console.warn('Cheat detected:', type, data);
-
-        // If this is the first cheat event, start the continuous cheating timer
-        if (!isCheatingRef.current) {
-            isCheatingRef.current = true;
-            cheatStartTimeRef.current = Date.now();
-
-            // Notify that continuous cheating has started
-            onContinuousCheat(true);
-        }
-
-        // Call the original onCheat callback
-        onCheat(type, data);
-    };
-}
-
-
 const ExamPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -172,141 +69,10 @@ const ExamPage = () => {
 
     const [selectedSectionidForReview, setSelectedSectionidForReview] = useState([]);
 
-    // Distraction detection
-    const [distractionEvents, setDistractionEvents] = useState([]);
-    const [distractionStrikes, setDistractionStrikes] = useState(0);
-    const [isDistracted, setIsDistracted] = useState(false);
-    const [distractionStartTime, setDistractionStartTime] = useState(null);
-    const [terminationReason, setTerminationReason] = useState(null);
-    const distractionStrikeTimerRef = useRef(null);
-    const continuousDistractionTimerRef = useRef(null);
-
     // Exam result submission
     const [examResultsSubmitted, setExamResultsSubmitted] = useState(false);
     const [submittingResults, setSubmittingResults] = useState(false);
     const [submissionFailed, setSubmissionFailed] = useState(false);
-
-    // callback whenever a "distraction" happens
-    const reportDistraction = (type, data = {}) => {
-        console.warn('Distraction detected:', type, data);
-        const currentTime = Date.now();
-
-        setDistractionEvents(evts => [...evts, { eventType: type, timestamp: new Date(currentTime).toISOString(), ...data }]);
-
-        // If this is the first distraction event, start the 3-second timer
-        if (!isDistracted) {
-            setIsDistracted(true);
-            setDistractionStartTime(currentTime);
-
-            // Set 3-second timer for this distraction event
-            distractionStrikeTimerRef.current = setTimeout(() => {
-                // After 3 seconds, count this as a strike
-                setDistractionStrikes(prev => {
-                    const newStrikes = prev + 1;
-                    console.warn(`Distraction strike ${newStrikes}/3 recorded`);
-
-                    if (newStrikes >= 3) {
-                        console.warn('3 strikes reached - terminating exam');
-                        setTerminationReason('three_strikes');
-                        // handleExamTermination('three_strikes');
-                    }
-
-                    return newStrikes;
-                });
-
-                setIsDistracted(false);
-                setDistractionStartTime(null);
-            }, 3000); // 3 seconds
-        }
-
-        // you could also POST this to your backend:
-        // postAuthRouteAPI({ routeName:'logDistraction', examId, type, timestamp: currentTime })
-    };
-
-    // Cheat/distraction detection disabled — handlers are no-ops
-    const handleContinuousDistraction = () => { };
-
-    // Handle exam termination
-    const handleExamTermination = async () => {
-        console.warn('Exam terminated due to:', terminationReason);
-
-        // Clear all timers
-        if (distractionStrikeTimerRef.current) {
-            clearTimeout(distractionStrikeTimerRef.current);
-        }
-        if (continuousDistractionTimerRef.current) {
-            clearTimeout(continuousDistractionTimerRef.current);
-        }
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
-
-        // Submit exam results even if terminated (with termination reason)
-        if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
-            try {
-                await submitExamResultsWithTermination();
-            } catch (error) {
-                console.error('Error submitting terminated exam results:', error);
-            }
-        }
-
-        // Log the termination to backend
-        const terminationData = {
-            routeName: 'logExamTermination',
-            examId,
-            reason: terminationReason,
-            distractionEvents,
-            distractionStrikes,
-            timestamp: Date.now()
-        };
-        console.log("🚀 ~ handleExamTermination ~ terminationData:", terminationData);
-
-        // Log the termination to backend
-        postAuthRouteAPI(terminationData).catch(console.error);
-
-        // Show termination message to user
-        toast.error('تم إنهاء الاختبار بسبب التشتيت المتكرر');
-
-        // Force exam to results stage
-        if (examStage !== 'results') {
-            setExamStage('results');
-        }
-
-        // // Align allReviewQuestions to match examData
-        // if (selectedExam && allReviewQuestions) {
-        //     setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
-        // }
-    };
-
-    // Kept as a thin wrapper for backward compatibility with handleExamTermination.
-    const submitExamResultsWithTermination = async () => {
-        return submitExamResults(undefined, {
-            isTerminated: true,
-            terminationReason: terminationReason
-        });
-    };
-
-    // Cheat detection disabled
-    useCheatDetection(() => { }, () => { });
-
-    // // enable the hook
-    // const cheatDetectionCleanup = useRef(null);
-    // useEffect(() => {
-    //     if (["questions", "review", "reviewQuestion"].includes(examStage)) {
-    //         cheatDetectionCleanup.current = useCheatDetection(reportDistraction, handleContinuousDistraction);
-    //     } else {
-    //         if (cheatDetectionCleanup.current) {
-    //             cheatDetectionCleanup.current();
-    //             cheatDetectionCleanup.current = null;
-    //         }
-    //     }
-    //     return () => {
-    //         if (cheatDetectionCleanup.current) {
-    //             cheatDetectionCleanup.current();
-    //             cheatDetectionCleanup.current = null;
-    //         }
-    //     };
-    // }, [examStage]);
 
     // near the top of your component
     // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
@@ -557,52 +323,14 @@ const ExamPage = () => {
         };
     }, [examStage, selectedSectionId, selectedExam, sectionsFinished, reviewQuestions]);
 
-    // Cleanup distraction detection timers when exam stage changes or component unmounts
+    // Cleanup the section timer on unmount.
     useEffect(() => {
         return () => {
-            if (distractionStrikeTimerRef.current) {
-                clearTimeout(distractionStrikeTimerRef.current);
-            }
-            if (continuousDistractionTimerRef.current) {
-                clearTimeout(continuousDistractionTimerRef.current);
-            }
-        };
-    }, [examStage]);
-
-    // Cleanup timers when component unmounts
-    useEffect(() => {
-        return () => {
-            if (distractionStrikeTimerRef.current) {
-                clearTimeout(distractionStrikeTimerRef.current);
-            }
-            if (continuousDistractionTimerRef.current) {
-                clearTimeout(continuousDistractionTimerRef.current);
-            }
             if (timerRef.current) {
                 clearInterval(timerRef.current);
             }
         };
     }, []);
-
-    useEffect(() => {
-        console.log("🚀 ~ ExamPage ~ allElapsedFormatted:", allElapsedFormatted);
-        console.log("🚀 ~ ExamPage ~ timeLeft:", timeLeft);
-    }, [timeLeft, allElapsedFormatted])
-
-    // Log distraction strikes for debugging
-    useEffect(() => {
-        if (distractionStrikes > 0) {
-            console.log(`🚨 Distraction strikes: ${distractionStrikes}/3`);
-        }
-    }, [distractionStrikes]);
-
-    // Log distraction state for debugging
-    useEffect(() => {
-        if (isDistracted) {
-            console.log('🚨 Distraction detected - 3 second timer started');
-        }
-    }, [isDistracted]);
-
 
     useEffect(() => {
         if (sectionIDRef.current >= 0 && sectionsCounterRef.current < examSections && isAbleToAddTime.current) {
@@ -911,9 +639,7 @@ const ExamPage = () => {
             selectedExam,
             mergedReviewQuestions,
             allExamQuestions,
-            filledTimes,
-            distractionEvents,
-            distractionStrikes
+            filledTimes
         );
 
         return examResultService.buildExamResultPayload(selectedExam, results, examId, studentId, options);
@@ -1157,8 +883,6 @@ const ExamPage = () => {
                     reviewQuestions={reviewQuestions}
                     setReviewQuestions={setReviewQuestions}
                     section={selectedExam.sections[selectedSectionId]}
-                    cheatStrikes={distractionStrikes}
-                    isCheating={isDistracted}
                 />
             )}
 
@@ -1201,8 +925,6 @@ const ExamPage = () => {
                     showReviewSection={() => { setExamStage('review'); }}
                     finishReview={handleFinishReview}
                     section={selectedExam.sections[selectedSectionId]}
-                    cheatStrikes={distractionStrikes}
-                    isCheating={isDistracted}
                 />
             )}
 
