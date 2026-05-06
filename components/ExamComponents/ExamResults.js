@@ -1,54 +1,17 @@
 import React from 'react';
 import styles from '../../styles/ExamPage.module.scss';
+import { examScoreUtils } from '../../services/examScoreUtils';
 
 const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQuestions, onReviewAnswers, onRetakeExam, hideRetakeButton = false, savedSections, savedSectionDetails }) => {
-    console.log("🚀 ~ ExamResults ~ elapsedTime:", elapsedTime);
     const allReviews = reviewQuestions;
     const flatReviews = allReviews.flat();
     const flatQuestions = examData.flat();
 
-    const totalQuestions = allReviews.reduce(
-        (sum, block) => sum + block.length,
-        0
-    );
+    const totalQuestions = examScoreUtils.overallDenominator(CurrentExam) || flatQuestions.length;
+    const overall = examScoreUtils.overallScore(CurrentExam, examData, allReviews);
 
-    console.log("🚀 ~ ExamResults ~ examData:", examData)
-    console.log("🚀 ~ ExamResults ~ flatQuestions:", flatQuestions)
-    console.log("🚀 ~ ExamResults ~ reviewQuestions:", allReviews)
-    console.log("🚀 ~ ExamResults ~ flatReviews:", flatReviews)
-
-    const calculateScore = (examData, allReviews) => {
-        if (!examData || !allReviews || allReviews.length === 0) {
-            return 0;
-        }
-
-        let correctAnswers = 0;
-
-        allReviews.forEach((question, i) => {
-            if (question.selectedAnswer === examData[i]?.correctAnswer) {
-                correctAnswers++;
-            }
-        });
-
-        if (totalQuestions === 0) return 0;
-        return Math.round((correctAnswers / totalQuestions) * 100);
-    };
-
-    const getCorrectAnswers = (examData, allReviews) => {
-        if (!examData || !allReviews || allReviews.length === 0) {
-            return 0;
-        }
-
-        let correctAnswers = 0;
-
-        allReviews.forEach((question, i) => {
-            if (question.selectedAnswer === examData[i]?.correctAnswer) {
-                correctAnswers++;
-            }
-        });
-
-        return correctAnswers;
-    };
+    const calculateScore = () => overall.percentage;
+    const getCorrectAnswers = () => overall.correct;
 
     const getNotAnsweredQuestions = () => {
         if (!examData || !flatReviews || flatReviews.length === 0) {
@@ -90,19 +53,9 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         return examData.map((sectionQuestions, sectionIndex) => {
             const sectionReviewQuestions = allReviews[sectionIndex] || [];
 
-            // Calculate correct answers for this section
-            let correctInSection = 0;
-            sectionReviewQuestions.forEach((q, qIndex) => {
-                if (q.selectedAnswer === sectionQuestions[qIndex]?.correctAnswer) {
-                    correctInSection++;
-                }
-            });
+            const total = examScoreUtils.sectionDenominator(CurrentExam, sectionIndex) || sectionQuestions.length;
+            const correctInSection = examScoreUtils.countCorrectInSection(sectionReviewQuestions, sectionQuestions);
 
-            const sectionScore = sectionQuestions.length > 0
-                ? Math.round((correctInSection / sectionQuestions.length) * 100)
-                : 0;
-
-            // Group questions by skill within this section
             const skillsMap = new Map();
             sectionQuestions.forEach((question, qIndex) => {
                 question?.skills?.forEach(skill => {
@@ -119,24 +72,23 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
                 });
             });
 
-            // Calculate skill scores
             const skills = Array.from(skillsMap.entries()).map(([skillTitle, questions]) => {
                 const correctInSkill = questions.filter(q =>
-                    q.selectedAnswer === q.question.correctAnswer
+                    q.selectedAnswer != null && String(q.selectedAnswer) === String(q.question.correctAnswer)
                 ).length;
 
                 return {
                     title: skillTitle,
                     correctAnswers: correctInSkill,
                     numberOfQuestions: questions.length,
-                    score: Math.round((correctInSkill / questions.length) * 100)
+                    score: examScoreUtils.pct(correctInSkill, questions.length)
                 };
             });
 
             return {
                 title: CurrentExam?.sections?.[sectionIndex]?.title || `القسم ${sectionIndex + 1}`,
                 score: correctInSection,
-                totalQuestions: sectionQuestions.length,
+                totalQuestions: total,
                 skills: skills
             };
         });
@@ -488,55 +440,46 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
         return `${totalMinutes}:${totalSeconds}`
     }
 
-    const score = calculateScore(flatQuestions, flatReviews);
-    const correctAnswers = getCorrectAnswers(flatQuestions, flatReviews);
+    const score = calculateScore();
+    const correctAnswers = getCorrectAnswers();
     const unAnswered = getNotAnsweredQuestions();
     const marked = getMarkedQuestions();
 
-    // Use saved sections if provided, otherwise calculate them
     const sections = savedSections || getSections(examData, reviewQuestions);
 
-    const getSectionDetails = (allReviews, examData) => {
-        if (!allReviews || !examData || allReviews.length === 0) {
+    const getSectionDetails = () => {
+        if (!CurrentExam?.sections) {
             return [];
         }
 
-        return allReviews.map((sectionQuestions, index) => {
-            // Calculate score for section
-            let correctAnswers = 0;
-            sectionQuestions.forEach((question, i) => {
-                const questionIndex = examData[index]?.findIndex(q => q._id === question.id);
-                if (questionIndex >= 0 && question?.selectedAnswer === examData[index][questionIndex]?.correctAnswer) {
-                    correctAnswers++;
-                }
-            });
+        return CurrentExam.sections.map((sectionData, index) => {
+            const sectionReview = (allReviews && allReviews[index]) || [];
+            const sectionExam = (examData && examData[index]) || [];
 
-            const sectionScore = Math.round((correctAnswers / sectionQuestions.length) * 100);
+            const total = examScoreUtils.sectionDenominator(CurrentExam, index);
+            const correctInSection = examScoreUtils.countCorrectInSection(sectionReview, sectionExam);
 
             return {
-                title: CurrentExam?.sections?.[index]?.title || `القسم ${index + 1}`,
-                score: sectionScore || 0,
-                correctAnswers: correctAnswers || 0,
-                numberOfQuestions: sectionQuestions?.length || 0,
-                time: elapsedTime[index] || 0
+                title: sectionData?.title || `القسم ${index + 1}`,
+                score: examScoreUtils.pct(correctInSection, total),
+                correctAnswers: correctInSection,
+                numberOfQuestions: total,
+                time: (elapsedTime && elapsedTime[index]) || 0
             };
         });
     };
 
-    // Use saved section details if provided, otherwise calculate them
-    const sectionDetails = savedSectionDetails || getSectionDetails(allReviews, examData)
+    const sectionDetails = savedSectionDetails || getSectionDetails();
 
-    // Get aggregated categories (كمي/لفظي totals)
     const aggregatedCategories = getAggregatedCategories(examData, reviewQuestions);
 
-    // Add to results object
     const results = {
         score: score,
         totalQuestions: totalQuestions,
         totalTime: totalTime,
         timeSpent: calculateTime(),
         correctQuestions: correctAnswers,
-        wrongQuestions: totalQuestions - correctAnswers,
+        wrongQuestions: Math.max(0, totalQuestions - correctAnswers - unAnswered),
         unansweredQuestions: unAnswered,
         markedQuestions: marked,
         sections: sections,

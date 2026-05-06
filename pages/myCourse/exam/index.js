@@ -15,110 +15,6 @@ import ExamResults from '../../../components/ExamComponents/ExamResults';
 import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsReview';
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
 import { toast } from 'react-toastify';
-import CheatWarning from '../../../components/CommonComponents/CheatWarning';
-
-/**
- * Enhanced Distraction Detection System
- * 
- * This exam page implements a sophisticated distraction detection system with:
- * 
- * 1. 3-Strike Rule:
- *    - Each distraction event starts a 3-second timer
- *    - If the distraction continues for 3 seconds, it counts as 1 strike
- *    - After 3 strikes, the exam is immediately terminated
- * 
- * 2. 30-Second Continuous Distraction Detection:
- *    - If distraction continues for 30 seconds without interruption
- *    - The exam is terminated immediately regardless of strike count
- * 
- * 3. Distraction Detection Methods:
- *    - Page visibility changes (tab switching)
- *    - Window blur/focus events
- *    - Route changes within the app
- * 
- * 4. Visual Indicators:
- *    - Fixed warning banner showing current strikes
- *    - Timer indicator showing distraction status
- *    - Color-coded warnings (orange → red)
- * 
- * 5. Automatic Cleanup:
- *    - Timers are cleared when user returns to exam
- *    - All timers are cleaned up on component unmount
- */
-
-function useCheatDetection(onCheat, onContinuousCheat) {
-    const router = useRouter();
-    const isCheatingRef = useRef(false);
-    const cheatStartTimeRef = useRef(null);
-
-    useEffect(() => {
-        // 1) Page Visibility API
-        const handleVisibility = () => {
-            if (document.visibilityState === 'hidden') {
-                handleCheatEvent('tab_hidden');
-            } else {
-                // When tab becomes visible again, reset continuous cheating timer
-                if (isCheatingRef.current) {
-                    isCheatingRef.current = false;
-                    if (cheatStartTimeRef.current) {
-                        cheatStartTimeRef.current = null;
-                    }
-                    // Notify that cheating has stopped
-                    onContinuousCheat(false);
-                }
-            }
-        };
-        document.addEventListener('visibilitychange', handleVisibility);
-
-        // 2) Window blur (fallback for very old browsers)
-        const handleBlur = () => handleCheatEvent('window_blur');
-        window.addEventListener('blur', handleBlur);
-
-        // 3) Window focus - reset cheating state when user returns
-        const handleFocus = () => {
-            if (isCheatingRef.current) {
-                isCheatingRef.current = false;
-                if (cheatStartTimeRef.current) {
-                    cheatStartTimeRef.current = null;
-                }
-                // Notify that cheating has stopped
-                onContinuousCheat(false);
-            }
-        };
-        window.addEventListener('focus', handleFocus);
-
-        // 4) Next.js route change (in-app navigation)
-        const handleRoute = (url) => {
-            // if they try to navigate inside your app
-            handleCheatEvent('route_change', { to: url });
-        };
-        router.events.on('routeChangeStart', handleRoute);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibility);
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
-            router.events.off('routeChangeStart', handleRoute);
-        };
-    }, [router.events, onCheat, onContinuousCheat]);
-
-    const handleCheatEvent = (type, data = {}) => {
-        console.warn('Cheat detected:', type, data);
-
-        // If this is the first cheat event, start the continuous cheating timer
-        if (!isCheatingRef.current) {
-            isCheatingRef.current = true;
-            cheatStartTimeRef.current = Date.now();
-
-            // Notify that continuous cheating has started
-            onContinuousCheat(true);
-        }
-
-        // Call the original onCheat callback
-        onCheat(type, data);
-    };
-}
-
 
 const ExamPage = () => {
     const router = useRouter();
@@ -173,220 +69,10 @@ const ExamPage = () => {
 
     const [selectedSectionidForReview, setSelectedSectionidForReview] = useState([]);
 
-    // Distraction detection
-    const [distractionEvents, setDistractionEvents] = useState([]);
-    const [distractionStrikes, setDistractionStrikes] = useState(0);
-    const [isDistracted, setIsDistracted] = useState(false);
-    const [distractionStartTime, setDistractionStartTime] = useState(null);
-    const [terminationReason, setTerminationReason] = useState(null);
-    const distractionStrikeTimerRef = useRef(null);
-    const continuousDistractionTimerRef = useRef(null);
-
     // Exam result submission
     const [examResultsSubmitted, setExamResultsSubmitted] = useState(false);
     const [submittingResults, setSubmittingResults] = useState(false);
     const [submissionFailed, setSubmissionFailed] = useState(false);
-
-    // callback whenever a "distraction" happens
-    const reportDistraction = (type, data = {}) => {
-        console.warn('Distraction detected:', type, data);
-        const currentTime = Date.now();
-
-        setDistractionEvents(evts => [...evts, { eventType: type, timestamp: new Date(currentTime).toISOString(), ...data }]);
-
-        // If this is the first distraction event, start the 3-second timer
-        if (!isDistracted) {
-            setIsDistracted(true);
-            setDistractionStartTime(currentTime);
-
-            // Set 3-second timer for this distraction event
-            distractionStrikeTimerRef.current = setTimeout(() => {
-                // After 3 seconds, count this as a strike
-                setDistractionStrikes(prev => {
-                    const newStrikes = prev + 1;
-                    console.warn(`Distraction strike ${newStrikes}/3 recorded`);
-
-                    if (newStrikes >= 3) {
-                        console.warn('3 strikes reached - terminating exam');
-                        setTerminationReason('three_strikes');
-                        // handleExamTermination('three_strikes');
-                    }
-
-                    return newStrikes;
-                });
-
-                setIsDistracted(false);
-                setDistractionStartTime(null);
-            }, 3000); // 3 seconds
-        }
-
-        // you could also POST this to your backend:
-        // postAuthRouteAPI({ routeName:'logDistraction', examId, type, timestamp: currentTime })
-    };
-
-    useEffect(() => {
-        if (distractionStrikes >= 3) {
-            // Force exam to results stage
-            if (examStage !== 'results') {
-                setExamStage('results');
-            }
-        }
-    }, [distractionStrikes]);
-
-    // Handle continuous distraction detection
-    const handleContinuousDistraction = (isContinuous) => {
-        if (isContinuous) {
-            // Start 30-second timer for continuous distraction
-            continuousDistractionTimerRef.current = setTimeout(() => {
-                console.warn('Continuous distraction detected for 30 seconds - terminating exam');
-                setTerminationReason('continuous_distraction_30_seconds');
-                // handleExamTermination('continuous_distraction_30_seconds');
-                // Force exam to results stage
-                if (examStage !== 'results') {
-                    setExamStage('results');
-                }
-            }, 30000); // 30 seconds
-        } else {
-            // Clear the continuous distraction timer when user returns
-            if (continuousDistractionTimerRef.current) {
-                clearTimeout(continuousDistractionTimerRef.current);
-                continuousDistractionTimerRef.current = null;
-            }
-        }
-    };
-
-    // Handle exam termination
-    const handleExamTermination = async () => {
-        console.warn('Exam terminated due to:', terminationReason);
-
-        // Clear all timers
-        if (distractionStrikeTimerRef.current) {
-            clearTimeout(distractionStrikeTimerRef.current);
-        }
-        if (continuousDistractionTimerRef.current) {
-            clearTimeout(continuousDistractionTimerRef.current);
-        }
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
-
-        // Submit exam results even if terminated (with termination reason)
-        if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
-            try {
-                await submitExamResultsWithTermination();
-            } catch (error) {
-                console.error('Error submitting terminated exam results:', error);
-            }
-        }
-
-        // Log the termination to backend
-        const terminationData = {
-            routeName: 'logExamTermination',
-            examId,
-            reason: terminationReason,
-            distractionEvents,
-            distractionStrikes,
-            timestamp: Date.now()
-        };
-        console.log("🚀 ~ handleExamTermination ~ terminationData:", terminationData);
-
-        // Log the termination to backend
-        postAuthRouteAPI(terminationData).catch(console.error);
-
-        // Show termination message to user
-        toast.error('تم إنهاء الاختبار بسبب التشتيت المتكرر');
-
-        // Force exam to results stage
-        if (examStage !== 'results') {
-            setExamStage('results');
-        }
-
-        // // Align allReviewQuestions to match examData
-        // if (selectedExam && allReviewQuestions) {
-        //     setAllReviewQuestions(prev => alignAllReviewQuestions(selectedExam.sections, prev));
-        // }
-    };
-
-    // Function to submit exam results with termination reason
-    const submitExamResultsWithTermination = async () => {
-        if (submittingResults || examResultsSubmitted) return;
-
-        try {
-            setSubmittingResults(true);
-
-            // Get student ID from store
-            const studentId = storeData?.viewProfileData?.id;
-
-            if (!studentId || !examId) {
-                console.error('Missing required data for exam submission:', { studentId, examId });
-                return;
-            }
-
-            // Check if student has already taken this exam
-            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
-            if (hasTaken) {
-                console.log('Student has already taken this exam');
-                setExamResultsSubmitted(true);
-                return;
-            }
-
-            // Prepare exam results data with termination info
-            const results = examResultService.prepareExamResults(
-                selectedExam,
-                allReviewQuestions,
-                allExamQuestions,
-                allElapsedFormatted,
-                distractionEvents,
-                distractionStrikes
-            );
-
-            // Submit exam results with termination info
-            await examResultService.submitExamResults(
-                selectedExam,
-                results,
-                examId,
-                studentId,
-                {
-                    isTerminated: true,
-                    terminationReason: terminationReason
-                }
-            );
-
-            setExamResultsSubmitted(true);
-            console.log('Terminated exam results submitted successfully');
-
-        } catch (error) {
-            console.error('Error submitting terminated exam results:', error);
-            throw error;
-        } finally {
-            setSubmittingResults(false);
-        }
-    };
-
-    const shouldEnableCheatDetection = ["questions", "review", "reviewQuestion"].includes(examStage);
-    useCheatDetection(
-        shouldEnableCheatDetection ? reportDistraction : () => { },
-        shouldEnableCheatDetection ? handleContinuousDistraction : () => { }
-    );
-
-    // // enable the hook
-    // const cheatDetectionCleanup = useRef(null);
-    // useEffect(() => {
-    //     if (["questions", "review", "reviewQuestion"].includes(examStage)) {
-    //         cheatDetectionCleanup.current = useCheatDetection(reportDistraction, handleContinuousDistraction);
-    //     } else {
-    //         if (cheatDetectionCleanup.current) {
-    //             cheatDetectionCleanup.current();
-    //             cheatDetectionCleanup.current = null;
-    //         }
-    //     }
-    //     return () => {
-    //         if (cheatDetectionCleanup.current) {
-    //             cheatDetectionCleanup.current();
-    //             cheatDetectionCleanup.current = null;
-    //         }
-    //     };
-    // }, [examStage]);
 
     // near the top of your component
     // ────── 1) Replace your old examTimer with timeLeft (in seconds) ──────
@@ -605,17 +291,19 @@ const ExamPage = () => {
                 setTimeLeft(prev => {
                     if (prev <= 1) {
                         clearInterval(timerRef.current);
-                        // Auto-advance to next section when timer expires (mirrors handleFinishReview logic)
                         isAbleToAddTime.current = true;
-                        if (selectedSectionId < selectedExam.sections.length - 1 && !sectionsFinished.includes(selectedSectionId)) {
-                            setSectionsFinished(prev => [...prev, selectedSectionId]);
-                            setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                        const isLastSection = selectedSectionId >= selectedExam.sections.length - 1;
+                        const alreadyRecorded = sectionsFinished.includes(selectedSectionId);
+                        if (!isLastSection) {
+                            if (!alreadyRecorded) {
+                                setSectionsFinished(prev => [...prev, selectedSectionId]);
+                                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                            }
                             setDisplayExamData(mockExamData1);
                             setExamStage('sections');
                             setSelectedSectionId(selectedSectionId + 1);
                         } else {
-                            // Last section — finish the exam
-                            if (isFirstRun.current) {
+                            if (!alreadyRecorded && isFirstRun.current) {
                                 setAllReviewQuestions(prev => [...prev, reviewQuestions]);
                                 isFirstRun.current = false;
                             }
@@ -635,52 +323,14 @@ const ExamPage = () => {
         };
     }, [examStage, selectedSectionId, selectedExam, sectionsFinished, reviewQuestions]);
 
-    // Cleanup distraction detection timers when exam stage changes or component unmounts
+    // Cleanup the section timer on unmount.
     useEffect(() => {
         return () => {
-            if (distractionStrikeTimerRef.current) {
-                clearTimeout(distractionStrikeTimerRef.current);
-            }
-            if (continuousDistractionTimerRef.current) {
-                clearTimeout(continuousDistractionTimerRef.current);
-            }
-        };
-    }, [examStage]);
-
-    // Cleanup timers when component unmounts
-    useEffect(() => {
-        return () => {
-            if (distractionStrikeTimerRef.current) {
-                clearTimeout(distractionStrikeTimerRef.current);
-            }
-            if (continuousDistractionTimerRef.current) {
-                clearTimeout(continuousDistractionTimerRef.current);
-            }
             if (timerRef.current) {
                 clearInterval(timerRef.current);
             }
         };
     }, []);
-
-    useEffect(() => {
-        console.log("🚀 ~ ExamPage ~ allElapsedFormatted:", allElapsedFormatted);
-        console.log("🚀 ~ ExamPage ~ timeLeft:", timeLeft);
-    }, [timeLeft, allElapsedFormatted])
-
-    // Log distraction strikes for debugging
-    useEffect(() => {
-        if (distractionStrikes > 0) {
-            console.log(`🚨 Distraction strikes: ${distractionStrikes}/3`);
-        }
-    }, [distractionStrikes]);
-
-    // Log distraction state for debugging
-    useEffect(() => {
-        if (isDistracted) {
-            console.log('🚨 Distraction detected - 3 second timer started');
-        }
-    }, [isDistracted]);
-
 
     useEffect(() => {
         if (sectionIDRef.current >= 0 && sectionsCounterRef.current < examSections && isAbleToAddTime.current) {
@@ -932,87 +582,120 @@ const ExamPage = () => {
 
     const handleFinishReview = async () => {
         isAbleToAddTime.current = true;
-        if (selectedSectionId < selectedExam.sections.length - 1 && !sectionsFinished.includes(selectedSectionId)) {
-            setSectionsFinished(prev => [...prev, selectedSectionId]);
+        const isLastSection = selectedSectionId >= selectedExam.sections.length - 1;
+        const alreadyRecorded = sectionsFinished.includes(selectedSectionId);
+        if (!isLastSection) {
+            if (!alreadyRecorded) {
+                setSectionsFinished(prev => [...prev, selectedSectionId]);
+                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+            }
             setDisplayExamData(mockExamData1);
             setExamStage('sections');
             setSelectedSectionId(selectedSectionId + 1);
-            setAllReviewQuestions(prev => {
-                return [...prev, reviewQuestions];
-            });
         } else {
-            if (isFirstRun.current) {
-                setAllReviewQuestions(prev => {
-                    return [...prev, reviewQuestions];
-                });
+            if (!alreadyRecorded && isFirstRun.current) {
+                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
                 isFirstRun.current = false;
             }
-
-            // // Automatically submit exam results when exam is completed
-            // if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
-            //     await submitExamResults();
-            // }
-
             setExamStage('results');
         }
     };
 
-    // Function to submit exam results automatically
-    const submitExamResults = async () => {
+    const snapshotKey = () => {
+        const studentId = storeData?.viewProfileData?.id;
+        if (!studentId || !examId) return null;
+        return `pendingExamResult:${examId}:${studentId}`;
+    };
+
+    // Build the final submit payload from current state. `elapsedOverride` lets
+    // callers supply a filled times array without waiting for setState.
+    //
+    // We merge the in-flight `reviewQuestions` (current section's working state)
+    // into `allReviewQuestions[selectedSectionId]` so partial saves include
+    // answers from the section the student is currently attempting — not just
+    // already-finished sections.
+    const buildPayload = (elapsedOverride, options = {}) => {
+        const studentId = storeData?.viewProfileData?.id;
+        if (!studentId || !examId || !selectedExam) return null;
+
+        const elapsedTimes = elapsedOverride || allElapsedFormatted;
+        const filledTimes = [...elapsedTimes];
+        while (filledTimes.length < examSections) filledTimes.push('00:00');
+
+        let mergedReviewQuestions = allReviewQuestions;
+        const isMidSection = examStage === 'questions' || examStage === 'review' || examStage === 'reviewQuestion';
+        const currentSectionReview = Array.isArray(reviewQuestions) ? reviewQuestions : null;
+        if (
+            isMidSection &&
+            currentSectionReview &&
+            currentSectionReview.length > 0 &&
+            !sectionsFinished.includes(selectedSectionId)
+        ) {
+            mergedReviewQuestions = [...allReviewQuestions];
+            mergedReviewQuestions[selectedSectionId] = currentSectionReview;
+        }
+
+        const results = examResultService.prepareExamResults(
+            selectedExam,
+            mergedReviewQuestions,
+            allExamQuestions,
+            filledTimes
+        );
+
+        return examResultService.buildExamResultPayload(selectedExam, results, examId, studentId, options);
+    };
+
+    const writeSnapshot = (payload) => {
+        const key = snapshotKey();
+        if (!key || !payload) return;
+        try {
+            localStorage.setItem(key, JSON.stringify(payload));
+        } catch (e) { }
+    };
+
+    const clearSnapshot = () => {
+        const key = snapshotKey();
+        if (!key) return;
+        try { localStorage.removeItem(key); } catch (e) { }
+    };
+
+    const submitExamResults = async (elapsedOverride, options = {}) => {
         if (submittingResults || examResultsSubmitted) return;
 
         try {
             setSubmittingResults(true);
 
-            // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
-
             if (!studentId || !examId) {
                 console.error('Missing required data for exam submission:', { studentId, examId });
                 return;
             }
 
-            // Check if student has already taken this exam
-            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
-            if (hasTaken) {
-                console.log('Student has already taken this exam');
-                setExamResultsSubmitted(true);
-                return;
-            }
+            const payload = buildPayload(elapsedOverride, options);
+            if (!payload) return;
 
-            // Prepare exam results data
-            const results = examResultService.prepareExamResults(
-                selectedExam,
-                allReviewQuestions,
-                allExamQuestions,
-                allElapsedFormatted,
-                distractionEvents,
-                distractionStrikes
-            );
+            writeSnapshot(payload);
 
-            // Submit exam results
-            await examResultService.submitExamResults(
-                selectedExam,
-                results,
-                examId,
-                studentId,
-                {
-                    isTerminated: false,
-                    terminationReason: null
-                }
-            );
+            await examResultService.submitExamResultPayload(payload);
 
             setExamResultsSubmitted(true);
+            clearSnapshot();
             toast.success('تم حفظ نتائج الاختبار بنجاح');
-            console.log('Exam results submitted successfully');
-
         } catch (error) {
             console.error('Error submitting exam results:', error);
-            toast.error('حدث خطأ في حفظ نتائج الاختبار. يمكنك المحاولة مرة أخرى.');
+            toast.error('حدث خطأ في حفظ نتائج الاختبار.');
             setSubmissionFailed(true);
         } finally {
             setSubmittingResults(false);
         }
+    };
+
+    // Fire-and-forget save (used at section boundaries — backend upserts).
+    const opportunisticSave = (options = {}) => {
+        const payload = buildPayload(undefined, options);
+        if (!payload) return;
+        writeSnapshot(payload);
+        examResultService.submitExamResultPayload(payload).catch(() => { });
     };
 
     // Manual retry function for failed submissions
@@ -1082,52 +765,83 @@ const ExamPage = () => {
     //     }
     // }, [selectedExam, examStage]);
 
+    // Submit eagerly when the exam reaches the results stage. We fill missing
+    // section times with "00:00" rather than waiting — saving the result is
+    // strictly more important than capturing exact timing data.
     useEffect(() => {
-        console.log('Exam Results Submission Check:', {
-            examStage,
-            examResultsSubmitted,
-            selectedExam,
-            allReviewQuestions,
-            allExamQuestions,
-            formattedTimesLength: allElapsedFormatted.length,
-            totalSections: examSections
-        });
-
-        // Early exit if not in results stage or already submitted
         if (examStage !== 'results' || examResultsSubmitted) return;
         if (!selectedExam || !allReviewQuestions || !allExamQuestions) return;
 
-        // WAIT: If we are in 'results' stage, ensure we have tallied time for ALL sections before submitting.
-        // But add a fallback timeout to prevent results from being lost if timing fails
-        if (examSections > 0 && allElapsedFormatted.length < examSections) {
-            console.log("⏳ Waiting for final section time calculation before submitting...");
+        const filledTimes = [...allElapsedFormatted];
+        while (filledTimes.length < examSections) filledTimes.push('00:00');
 
-            // Fallback: If section times don't arrive in 3 seconds, submit anyway
-            const fallbackTimeout = setTimeout(() => {
-                console.warn("⚠️ Fallback: Section time calculation timed out. Submitting with available data...");
-                // Fill missing times with "00:00" to prevent data loss
-                const missingCount = examSections - allElapsedFormatted.length;
-                if (missingCount > 0) {
-                    const filledTimes = [...allElapsedFormatted];
-                    for (let i = 0; i < missingCount; i++) {
-                        filledTimes.push("00:00");
-                    }
-                    setAllElapsedFormatted(filledTimes);
-                }
-            }, 3000);
+        submitExamResults(filledTimes, { isCompleted: true });
+    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, examSections]);
 
-            return () => clearTimeout(fallbackTimeout);
-        }
+    // Continuous local snapshot — keeps the latest payload in localStorage so
+    // it can be recovered after a crash, hard navigation, or tab close.
+    // Marked isCompleted=false because mid-exam state isn't a finished attempt.
+    // `reviewQuestions` is in the deps so per-answer changes update the snapshot;
+    // localStorage writes are cheap and the keepalive beacon reads from here.
+    useEffect(() => {
+        if (!selectedExam || examStage === 'introduction' || examStage === 'sections') return;
+        if (examResultsSubmitted) return;
+        const isFinal = examStage === 'results';
+        const payload = buildPayload(undefined, { isCompleted: isFinal });
+        if (payload) writeSnapshot(payload);
+    }, [allReviewQuestions, allExamQuestions, allElapsedFormatted, examStage, sectionsFinished, selectedSectionId, selectedExam, reviewQuestions, examResultsSubmitted]);
 
-        // Ready to submit - proceed with submission
-        if (distractionStrikes >= 3) {
-            // If terminated, submit with termination reason
-            submitExamResultsWithTermination('terminated_or_cheating');
-        } else {
-            // Normal completion
-            submitExamResults();
-        }
-    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, allElapsedFormatted, examSections]);
+    // Per-section opportunistic save: fires after sectionsFinished updates
+    // (so the closure has the latest allReviewQuestions). Skipped at the
+    // results stage — the eager final-submit useEffect handles that path.
+    const lastSavedSectionCountRef = useRef(0);
+    useEffect(() => {
+        if (!selectedExam || examStage === 'results') return;
+        if (sectionsFinished.length === 0) return;
+        if (sectionsFinished.length <= lastSavedSectionCountRef.current) return;
+        lastSavedSectionCountRef.current = sectionsFinished.length;
+        opportunisticSave({ isCompleted: false });
+    }, [sectionsFinished, examStage, selectedExam, allReviewQuestions]);
+
+    // Best-effort flush on tab close / navigation away / tab hide. Uses the
+    // fetch keepalive flag so the request survives the page going away.
+    useEffect(() => {
+        if (!selectedExam) return;
+
+        const flush = () => {
+            if (examResultsSubmitted) return;
+            const key = snapshotKey();
+            if (!key) return;
+            let payload = null;
+            try {
+                const raw = localStorage.getItem(key);
+                if (raw) payload = JSON.parse(raw);
+            } catch (e) { }
+            if (!payload) payload = buildPayload();
+            if (!payload) return;
+            examResultService.submitExamResultPayloadKeepalive(payload);
+        };
+
+        const onVisibility = () => {
+            if (typeof document !== 'undefined' && document.visibilityState === 'hidden') flush();
+        };
+        const onPageHide = () => flush();
+        const onBeforeUnload = () => flush();
+
+        window.addEventListener('beforeunload', onBeforeUnload);
+        window.addEventListener('pagehide', onPageHide);
+        document.addEventListener('visibilitychange', onVisibility);
+
+        const handleRouteChange = () => flush();
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            window.removeEventListener('beforeunload', onBeforeUnload);
+            window.removeEventListener('pagehide', onPageHide);
+            document.removeEventListener('visibilitychange', onVisibility);
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [selectedExam, examResultsSubmitted, allReviewQuestions, allExamQuestions, allElapsedFormatted, examStage, examId, storeData?.viewProfileData?.id, router.events]);
 
     // Early returns AFTER all hooks are declared (required by React rules of hooks)
     if (!accessToken) {
@@ -1144,12 +858,6 @@ const ExamPage = () => {
 
     return (
         <div className={styles.examPageContainer}>
-            {/* Distraction Warning Component */}
-            <CheatWarning
-                cheatStrikes={distractionStrikes}
-                isCheating={isDistracted}
-            />
-
             {examStage === 'introduction' && (
                 <ExamIntroduction
                     examData={displayExamData}
@@ -1175,8 +883,6 @@ const ExamPage = () => {
                     reviewQuestions={reviewQuestions}
                     setReviewQuestions={setReviewQuestions}
                     section={selectedExam.sections[selectedSectionId]}
-                    cheatStrikes={distractionStrikes}
-                    isCheating={isDistracted}
                 />
             )}
 
@@ -1219,8 +925,6 @@ const ExamPage = () => {
                     showReviewSection={() => { setExamStage('review'); }}
                     finishReview={handleFinishReview}
                     section={selectedExam.sections[selectedSectionId]}
-                    cheatStrikes={distractionStrikes}
-                    isCheating={isDistracted}
                 />
             )}
 

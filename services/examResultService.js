@@ -1,5 +1,6 @@
 import { getRouteAPI, postAuthRouteAPI, getAuthRouteAPI } from './apisService'
 import { getNewToken } from './fireBaseAuthService'
+import { examScoreUtils } from './examScoreUtils'
 
 /**
  * Service for handling exam result submission
@@ -14,66 +15,92 @@ export const examResultService = {
      * @param {Object} options - Additional options (termination info, courseId, etc.)
      * @returns {Promise<Object>} - API response
      */
-    async submitExamResults(examData, results, examId, studentId, options = {}, retryCount = 0) {
+    buildExamResultPayload(examData, results, examId, studentId, options = {}) {
+        // isCompleted distinguishes a finished exam from a partial in-progress
+        // snapshot. Partial saves must NOT block re-entry; only finished exams
+        // do. Termination forces isCompleted=false regardless of caller intent.
+        const isTerminated = options.isTerminated || false;
+        const isCompleted = isTerminated
+            ? false
+            : (typeof options.isCompleted === 'boolean' ? options.isCompleted : true);
+        const submissionType = isTerminated ? 'terminated' : (isCompleted ? 'completed' : 'in_progress');
+
+        return {
+            routeName: 'submitExamResult',
+            examId,
+            studentId,
+            examData: {
+                examName: examData.title,
+                examDuration: examData.duration,
+                totalQuestions: results.totalQuestions,
+                score: results.score,
+                correctAnswers: results.correctQuestions,
+                wrongAnswers: results.wrongQuestions,
+                unansweredQuestions: results.unansweredQuestions,
+                markedQuestions: results.markedQuestions,
+                timeSpent: results.timeSpent,
+                totalTime: results.totalTime,
+                sections: results.sections,
+                sectionDetails: results.sectionDetails,
+                reviewQuestions: results.reviewQuestions,
+                examDate: new Date().toISOString(),
+                status: results.score >= 60 ? 'pass' : 'fail',
+                distractionEvents: results.distractionEvents || [],
+                distractionStrikes: results.distractionStrikes || 0,
+                isCompleted,
+                isTerminated,
+                terminationReason: options.terminationReason || null,
+                submissionType
+            }
+        };
+    },
+
+    async submitExamResultPayload(payload, retryCount = 0) {
         const MAX_RETRIES = 3;
 
         try {
-            const examResultData = {
-                routeName: 'submitExamResult',
-                examId: examId,
-                studentId: studentId,
-                examData: {
-                    examName: examData.title,
-                    examDuration: examData.duration,
-                    totalQuestions: results.totalQuestions,
-                    score: results.score,
-                    correctAnswers: results.correctQuestions,
-                    wrongAnswers: results.wrongQuestions,
-                    unansweredQuestions: results.unansweredQuestions,
-                    markedQuestions: results.markedQuestions,
-                    timeSpent: results.timeSpent,
-                    totalTime: results.totalTime,
-                    sections: results.sections,
-                    sectionDetails: results.sectionDetails,
-                    reviewQuestions: results.reviewQuestions,
-                    examDate: new Date().toISOString(),
-                    status: results.score >= 60 ? 'pass' : 'fail',
-                    distractionEvents: results.distractionEvents || [],
-                    distractionStrikes: results.distractionStrikes || 0,
-                    isCompleted: !options.isTerminated,
-                    isTerminated: options.isTerminated || false,
-                    terminationReason: options.terminationReason || null,
-                    submissionType: options.isTerminated ? 'terminated' : 'completed'
-                }
-            }
-
-            const response = await postAuthRouteAPI(examResultData)
-            console.log('Exam results submitted successfully:', response)
-            return response
+            const response = await postAuthRouteAPI(payload);
+            return response;
         } catch (error) {
-            console.error(`Error submitting exam results (attempt ${retryCount + 1}/${MAX_RETRIES}):`, error)
-
-            // Handle token refresh
             if (error?.response?.status === 401) {
                 try {
-                    await getNewToken()
-                    return await this.submitExamResults(examData, results, examId, studentId, options, retryCount)
+                    await getNewToken();
+                    return await this.submitExamResultPayload(payload, retryCount);
                 } catch (refreshError) {
-                    console.error('Token refresh failed:', refreshError)
-                    throw refreshError
+                    throw refreshError;
                 }
             }
 
-            // Retry with exponential backoff for network errors (not 4xx client errors)
-            const isNetworkError = !error?.response?.status || error?.response?.status >= 500
+            const isNetworkError = !error?.response?.status || error?.response?.status >= 500;
             if (isNetworkError && retryCount < MAX_RETRIES) {
-                const delay = 1000 * Math.pow(2, retryCount) // 1s, 2s, 4s
-                console.log(`Retrying submission in ${delay}ms...`)
-                await new Promise(resolve => setTimeout(resolve, delay))
-                return await this.submitExamResults(examData, results, examId, studentId, options, retryCount + 1)
+                const delay = 1000 * Math.pow(2, retryCount);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return await this.submitExamResultPayload(payload, retryCount + 1);
             }
 
-            throw error
+            throw error;
+        }
+    },
+
+    submitExamResultPayloadKeepalive(payload) {
+        if (typeof window === 'undefined' || typeof fetch === 'undefined') return false;
+        const baseUrl = process.env.API_BASE_URL;
+        const accessToken = localStorage.getItem('accessToken');
+        if (!baseUrl || !accessToken) return false;
+
+        try {
+            fetch(`${baseUrl}/auth/route/post`, {
+                method: 'POST',
+                keepalive: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify(payload),
+            }).catch(() => { });
+            return true;
+        } catch (e) {
+            return false;
         }
     },
 
@@ -153,7 +180,6 @@ export const examResultService = {
         try {
             const result = await this.getStudentExamResult(examId, studentId)
 
-            // Handle the new backend response structure
             let responseData;
             if (result.body || result.data) {
                 const raw = result.body || result.data;
@@ -166,9 +192,28 @@ export const examResultService = {
                 return false
             }
 
-            return responseData.data && responseData.data.length > 0
+            const records = responseData.data;
+            if (!records) return false;
+
+            // Only treat the exam as "taken" when a completed record exists.
+            // Partial in-progress snapshots (mid-exam tab close, network drop)
+            // must not block re-entry — the student can resume and overwrite
+            // via the backend's idempotent upsert.
+            const isComplete = (r) => {
+                if (!r) return false;
+                if (r.isCompleted === true) return true;
+                if (r.isTerminated === true) return true; // terminated counts as taken
+                if (r.submissionType === 'completed' || r.submissionType === 'terminated') return true;
+                // Legacy records without isCompleted: treat as completed for backward compat
+                if (r.isCompleted === undefined && r.submissionType === undefined) return true;
+                return false;
+            };
+
+            if (Array.isArray(records)) {
+                return records.some(isComplete);
+            }
+            return isComplete(records);
         } catch (error) {
-            // If no result found, student hasn't taken the exam
             if (error?.response?.status === 404) {
                 return false
             }
@@ -190,22 +235,18 @@ export const examResultService = {
         const flatReviewQuestions = allReviewQuestions.flat();
         const flatExamQuestions = allExamQuestions.flat();
 
-        const totalQuestions = flatReviewQuestions.length;
-        let correctAnswers = 0;
         let unAnswered = 0;
         let marked = 0;
 
-        // Map reviewQuestions to required schema and count correct answers
         const reviewQuestions = flatReviewQuestions.map((q, index) => {
             const examQ = flatExamQuestions[index] || {};
-            const isCorrect = q.selectedAnswer === examQ.correctAnswer;
-            if (isCorrect) correctAnswers++;
+            const isCorrect = q.selectedAnswer != null && String(q.selectedAnswer) === String(examQ.correctAnswer);
             if (!q.answered) unAnswered++;
             if (q.isMarked) marked++;
 
             return {
-                questionId: typeof q.id === 'string' ? q.id : (q.id ? String(q.id) : ''),
-                selectedAnswer: typeof q.selectedAnswer === 'string' ? q.selectedAnswer : (q.selectedAnswer ? String(q.selectedAnswer) : ''),
+                questionId: typeof q.id === 'string' ? q.id : (q.id != null ? String(q.id) : ''),
+                selectedAnswer: typeof q.selectedAnswer === 'string' ? q.selectedAnswer : (q.selectedAnswer != null ? String(q.selectedAnswer) : ''),
                 isCorrect,
                 isMarked: !!q.isMarked,
                 answered: !!q.answered,
@@ -213,13 +254,16 @@ export const examResultService = {
             };
         });
 
-        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+        const overall = examScoreUtils.overallScore(examData, allExamQuestions, allReviewQuestions);
+        const totalQuestions = overall.total;
+        const correctAnswers = overall.correct;
+        const score = overall.percentage;
 
         const results = {
             totalQuestions,
             score,
             correctQuestions: correctAnswers,
-            wrongQuestions: totalQuestions - correctAnswers - unAnswered,
+            wrongQuestions: Math.max(0, totalQuestions - correctAnswers - unAnswered),
             unansweredQuestions: unAnswered,
             markedQuestions: marked,
             timeSpent: this.calculateTotalTime(elapsedTime),
@@ -269,28 +313,23 @@ export const examResultService = {
      * @returns {Array} - Sections data with nested questions
      */
     prepareSectionsDataWithQuestions(examData, allReviewQuestions, allExamQuestions, elapsedTime) {
-        if (!examData?.sections || !allReviewQuestions || allReviewQuestions.length === 0) {
+        if (!examData?.sections) {
             return [];
         }
 
-        return allReviewQuestions.map((sectionReviewQuestions, sectionIndex) => {
-            const sectionExamQuestions = allExamQuestions[sectionIndex] || [];
-            const sectionData = examData.sections[sectionIndex] || {};
+        return examData.sections.map((sectionData, sectionIndex) => {
+            const sectionReviewQuestions = (allReviewQuestions && allReviewQuestions[sectionIndex]) || [];
+            const sectionExamQuestions = (allExamQuestions && allExamQuestions[sectionIndex]) || [];
 
-            // Calculate correct answers for this section
-            let correctAnswers = 0;
-
-            // Prepare nested questions array with all required fields
             const questions = sectionReviewQuestions.map((reviewQ, questionIndex) => {
-                const examQ = sectionExamQuestions[questionIndex] || {};
-                const isCorrect = reviewQ.selectedAnswer === examQ.correctAnswer;
-
-                if (isCorrect) correctAnswers++;
+                const byIndex = sectionExamQuestions[questionIndex];
+                const examQ = byIndex || sectionExamQuestions.find(q => String(q?._id) === String(reviewQ?.id)) || {};
+                const isCorrect = reviewQ.selectedAnswer != null && String(reviewQ.selectedAnswer) === String(examQ.correctAnswer);
 
                 return {
-                    questionId: typeof reviewQ.id === 'string' ? reviewQ.id : (reviewQ.id ? String(reviewQ.id) : ''),
-                    correctAnswer: examQ.correctAnswer ? String(examQ.correctAnswer) : '',
-                    selectedAnswer: typeof reviewQ.selectedAnswer === 'string' ? reviewQ.selectedAnswer : (reviewQ.selectedAnswer ? String(reviewQ.selectedAnswer) : ''),
+                    questionId: typeof reviewQ.id === 'string' ? reviewQ.id : (reviewQ.id != null ? String(reviewQ.id) : ''),
+                    correctAnswer: examQ.correctAnswer != null ? String(examQ.correctAnswer) : '',
+                    selectedAnswer: typeof reviewQ.selectedAnswer === 'string' ? reviewQ.selectedAnswer : (reviewQ.selectedAnswer != null ? String(reviewQ.selectedAnswer) : ''),
                     isCorrect,
                     isMarked: !!reviewQ.isMarked,
                     answered: !!reviewQ.answered,
@@ -298,17 +337,17 @@ export const examResultService = {
                 };
             });
 
-            // Prepare skills data
             const skills = this.prepareSectionSkills(sectionExamQuestions, sectionReviewQuestions);
-
-            // Get time for this section - ensure last section has correct time
             const sectionTime = elapsedTime && elapsedTime[sectionIndex] ? String(elapsedTime[sectionIndex]) : "00:00";
+
+            const sectionTotal = examScoreUtils.sectionDenominator(examData, sectionIndex);
+            const sectionCorrect = examScoreUtils.countCorrectInSection(sectionReviewQuestions, sectionExamQuestions);
 
             return {
                 title: sectionData.title || `القسم ${sectionIndex + 1}`,
-                score: correctAnswers,
-                totalQuestions: sectionReviewQuestions.length,
-                correctAnswers: correctAnswers,
+                score: sectionCorrect,
+                totalQuestions: sectionTotal,
+                correctAnswers: sectionCorrect,
                 time: sectionTime,
                 skills: skills,
                 questions: questions
@@ -327,11 +366,12 @@ export const examResultService = {
             return [];
         }
 
-        // Group questions by skill
         const skillsMap = new Map();
 
         sectionExamQuestions.forEach((examQ, index) => {
-            const reviewQ = sectionReviewQuestions[index];
+            const reviewQ = sectionReviewQuestions
+                ? (sectionReviewQuestions[index] || sectionReviewQuestions.find(r => String(r?.id) === String(examQ?._id)))
+                : null;
             if (!examQ?.skills) return;
 
             examQ.skills.forEach(skill => {
@@ -343,101 +383,23 @@ export const examResultService = {
                     });
                 }
 
-                skillsMap.get(skillName).questions.push({
-                    examQ,
-                    reviewQ,
-                    isCorrect: reviewQ?.selectedAnswer === examQ.correctAnswer
-                });
+                const isCorrect = reviewQ?.selectedAnswer != null && String(reviewQ.selectedAnswer) === String(examQ.correctAnswer);
+                skillsMap.get(skillName).questions.push({ examQ, reviewQ, isCorrect });
             });
         });
 
-        // Calculate scores for each skill
         return Array.from(skillsMap.values()).map(skill => {
             const correctAnswers = skill.questions.filter(q => q.isCorrect).length;
             const totalQuestions = skill.questions.length;
 
             return {
                 title: skill.title,
-                correctAnswers: correctAnswers,
+                correctAnswers,
                 numberOfQuestions: totalQuestions,
-                score: totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0
+                score: examScoreUtils.pct(correctAnswers, totalQuestions)
             };
         });
     },
-
-    /**
-     * Prepare sections data for submission (OLD STRUCTURE - kept for reference)
-     * @param {Object} examData - Exam data
-     * @param {Array} allReviewQuestions - All review questions
-     * @param {Array} allExamQuestions - All exam questions
-     * @returns {Array} - Sections data
-     */
-    prepareSectionsData(examData, allReviewQuestions, allExamQuestions) {
-        const flatExamQuestions = allExamQuestions.flat();
-        const flatReviewQuestions = allReviewQuestions.flat();
-
-        if (!flatExamQuestions || !flatReviewQuestions || flatReviewQuestions.length === 0) {
-            return [];
-        }
-
-        const sectionMap = new Map();
-
-        flatExamQuestions.forEach((question, index) => {
-            question?.skills?.forEach(skill => {
-                const sectionTitle = question?.section + " - " + question?.lesson;
-
-                if (!sectionMap.has(sectionTitle)) {
-                    sectionMap.set(sectionTitle, {
-                        title: sectionTitle,
-                        questions: [],
-                        skills: new Map()
-                    });
-                }
-
-                const section = sectionMap.get(sectionTitle);
-                section.questions.push({
-                    question,
-                    selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null,
-                    skill: skill.text
-                });
-
-                if (!section.skills.has(skill.text)) {
-                    section.skills.set(skill.text, []);
-                }
-                section.skills.get(skill.text).push({
-                    question,
-                    selectedAnswer: flatReviewQuestions?.[index]?.selectedAnswer ?? null
-                });
-            });
-        });
-
-        return Array.from(sectionMap.values()).map(section => {
-            const correctInSection = section.questions.filter(q =>
-                q.selectedAnswer === q.question.correctAnswer
-            ).length;
-
-            const skills = Array.from(section.skills.entries()).map(([skillTitle, questions]) => {
-                const correctInSkill = questions.filter(q =>
-                    q.selectedAnswer === q.question.correctAnswer
-                ).length;
-
-                return {
-                    title: skillTitle,
-                    correctAnswers: correctInSkill,
-                    numberOfQuestions: questions.length,
-                    score: Math.round((correctInSkill / questions.length) * 100)
-                };
-            });
-
-            return {
-                title: section.title,
-                score: correctInSection,
-                totalQuestions: section.questions.length,
-                skills: skills
-            };
-        });
-    },
-
 
     /**
      * Prepare section details for submission
@@ -448,25 +410,21 @@ export const examResultService = {
      * @returns {Array} - Section details
      */
     prepareSectionDetails(examData, allReviewQuestions, allExamQuestions, elapsedTime) {
-        if (!examData?.sections || !allReviewQuestions || allReviewQuestions.length === 0) return []
+        if (!examData?.sections) return []
 
-        return allReviewQuestions.map((sectionQuestions, index) => {
-            let correctAnswers = 0;
-            sectionQuestions.forEach((question, i) => {
-                const questionIndex = allExamQuestions[index]?.findIndex(q => q._id === question.id);
-                if (questionIndex >= 0 && question?.selectedAnswer === allExamQuestions[index][questionIndex]?.correctAnswer) {
-                    correctAnswers++;
-                }
-            });
+        return examData.sections.map((sectionData, index) => {
+            const sectionReview = (allReviewQuestions && allReviewQuestions[index]) || [];
+            const sectionExam = (allExamQuestions && allExamQuestions[index]) || [];
 
-            const sectionScore = Math.round((correctAnswers / sectionQuestions.length) * 100);
+            const total = examScoreUtils.sectionDenominator(examData, index);
+            const correctAnswers = examScoreUtils.countCorrectInSection(sectionReview, sectionExam);
 
             return {
-                title: examData?.sections[index]?.title,
-                score: sectionScore || 0,
-                correctAnswers: correctAnswers || 0,
-                numberOfQuestions: sectionQuestions?.length || 0,
-                time: elapsedTime[index] || "00:00"
+                title: sectionData?.title,
+                score: examScoreUtils.pct(correctAnswers, total),
+                correctAnswers,
+                numberOfQuestions: total,
+                time: (elapsedTime && elapsedTime[index]) || "00:00"
             };
         });
     },
