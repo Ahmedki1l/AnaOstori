@@ -16,6 +16,7 @@ import GoogleAnalytics from '../lib/GoogleAnalytics';
 import * as allMetaTags from '../lib/metaData'
 import Navbar from '../components/Navbar/Navbar';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { examResultService } from '../services/examResultService';
 
 // const queryClient = new QueryClient({
 // 	defaultOptions: {
@@ -83,6 +84,45 @@ function MyApp({ Component, pageProps }) {
 			setIsBookSeatPageOpen(false)
 		}
 	}, [router.asPath, pathName])
+
+	// Recover any exam result snapshots that were not delivered in a prior
+	// session (e.g. tab close mid-submission, network failure). The backend
+	// upserts so re-submitting an already-saved exam is harmless.
+	useEffect(() => {
+		if (typeof window === 'undefined' || !isUserLogin) return;
+		const sessionTried = new Set();
+		const recover = async () => {
+			let keys = [];
+			try {
+				for (let i = 0; i < localStorage.length; i++) {
+					const k = localStorage.key(i);
+					if (k && k.startsWith('pendingExamResult:')) keys.push(k);
+				}
+			} catch (e) { return; }
+
+			for (const key of keys) {
+				if (sessionTried.has(key)) continue;
+				sessionTried.add(key);
+				let payload = null;
+				try {
+					const raw = localStorage.getItem(key);
+					if (raw) payload = JSON.parse(raw);
+				} catch (e) { localStorage.removeItem(key); continue; }
+				if (!payload) { localStorage.removeItem(key); continue; }
+
+				try {
+					await examResultService.submitExamResultPayload(payload);
+					localStorage.removeItem(key);
+				} catch (err) {
+					const status = err?.response?.status;
+					if (status && status >= 400 && status < 500) {
+						localStorage.removeItem(key);
+					}
+				}
+			}
+		};
+		recover();
+	}, [isUserLogin]);
 
 	useEffect(() => {
 		switch (pathName) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../../styles/ExamPage.module.scss';
+import { examScoreUtils } from '../../services/examScoreUtils';
 
 const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSections, onRetakeExam, onViewResults, handleQuestionClick, canRetakeExam = true }) => {
     const [expandedSections, setExpandedSections] = useState([0]); // First section expanded by default
@@ -16,43 +17,23 @@ const ExamSectionsReview = ({ examData, elapsedTime, reviewQuestions, examSectio
     console.log("🚀 ~ ExamSectionsReview ~ allreviews:", allreviews)
 
     function calculateScore(examData, allReviewQuestions) {
-        // normalize to an array-of-arrays of question objects
-        const sections = Array.isArray(examData)
-            ? examData           // you already have [[q,q],[q,q]]
-            : examData.sections; // or { sections:[ [q…], [q…] ] }
+        const sections = Array.isArray(examData) ? examData : examData?.sections;
 
-        if (
-            !Array.isArray(sections) ||
-            !Array.isArray(allReviewQuestions)
-        ) {
+        if (!Array.isArray(sections) || !Array.isArray(allReviewQuestions)) {
             return [];
         }
 
-        // for each section
+        const examShape = { sections: sections.map(s => Array.isArray(s) ? { questions: s } : s) };
+
         return sections.map((questionList, idx) => {
-            console.log("🚀 ~ returnsections.map ~ questionList:", questionList)
             const reviews = allReviewQuestions[idx] || [];
-            console.log("🚀 ~ returnsections.map ~ reviews:", reviews)
-            const total = reviews.length;
-
-            // count how many selectedAnswer === correctAnswer
-            const correctCount = reviews.reduce((sum, rev) => {
-                const orig = questionList.find(q => q._id === rev.id);
-                return sum + (orig && rev.selectedAnswer === orig.correctAnswer ? 1 : 0);
-            }, 0);
-            console.log("🚀 ~ correctCount ~ correctCount:", correctCount)
-
-            const percentage = total > 0
-                ? Math.round((correctCount / total) * 100)
-                : 0;
-            console.log("🚀 ~ returnsections.map ~ percentage:", percentage)
-
-            const score = `${correctCount} / ${total}`;
-            console.log("🚀 ~ returnsections.map ~ score:", score)
+            const examQs = Array.isArray(questionList) ? questionList : (questionList?.questions || []);
+            const total = examScoreUtils.sectionDenominator(examShape, idx) || examQs.length;
+            const correctCount = examScoreUtils.countCorrectInSection(reviews, examQs);
 
             return {
-                percentage,
-                score
+                percentage: examScoreUtils.pct(correctCount, total),
+                score: `${correctCount} / ${total}`,
             };
         });
     }

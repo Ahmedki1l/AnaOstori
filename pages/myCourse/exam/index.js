@@ -15,7 +15,6 @@ import ExamResults from '../../../components/ExamComponents/ExamResults';
 import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsReview';
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
 import { toast } from 'react-toastify';
-import CheatWarning from '../../../components/CommonComponents/CheatWarning';
 
 /**
  * Enhanced Distraction Detection System
@@ -224,36 +223,8 @@ const ExamPage = () => {
         // postAuthRouteAPI({ routeName:'logDistraction', examId, type, timestamp: currentTime })
     };
 
-    useEffect(() => {
-        if (distractionStrikes >= 3) {
-            // Force exam to results stage
-            if (examStage !== 'results') {
-                setExamStage('results');
-            }
-        }
-    }, [distractionStrikes]);
-
-    // Handle continuous distraction detection
-    const handleContinuousDistraction = (isContinuous) => {
-        if (isContinuous) {
-            // Start 30-second timer for continuous distraction
-            continuousDistractionTimerRef.current = setTimeout(() => {
-                console.warn('Continuous distraction detected for 30 seconds - terminating exam');
-                setTerminationReason('continuous_distraction_30_seconds');
-                // handleExamTermination('continuous_distraction_30_seconds');
-                // Force exam to results stage
-                if (examStage !== 'results') {
-                    setExamStage('results');
-                }
-            }, 30000); // 30 seconds
-        } else {
-            // Clear the continuous distraction timer when user returns
-            if (continuousDistractionTimerRef.current) {
-                clearTimeout(continuousDistractionTimerRef.current);
-                continuousDistractionTimerRef.current = null;
-            }
-        }
-    };
+    // Cheat/distraction detection disabled — handlers are no-ops
+    const handleContinuousDistraction = () => { };
 
     // Handle exam termination
     const handleExamTermination = async () => {
@@ -307,67 +278,16 @@ const ExamPage = () => {
         // }
     };
 
-    // Function to submit exam results with termination reason
+    // Kept as a thin wrapper for backward compatibility with handleExamTermination.
     const submitExamResultsWithTermination = async () => {
-        if (submittingResults || examResultsSubmitted) return;
-
-        try {
-            setSubmittingResults(true);
-
-            // Get student ID from store
-            const studentId = storeData?.viewProfileData?.id;
-
-            if (!studentId || !examId) {
-                console.error('Missing required data for exam submission:', { studentId, examId });
-                return;
-            }
-
-            // Check if student has already taken this exam
-            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
-            if (hasTaken) {
-                console.log('Student has already taken this exam');
-                setExamResultsSubmitted(true);
-                return;
-            }
-
-            // Prepare exam results data with termination info
-            const results = examResultService.prepareExamResults(
-                selectedExam,
-                allReviewQuestions,
-                allExamQuestions,
-                allElapsedFormatted,
-                distractionEvents,
-                distractionStrikes
-            );
-
-            // Submit exam results with termination info
-            await examResultService.submitExamResults(
-                selectedExam,
-                results,
-                examId,
-                studentId,
-                {
-                    isTerminated: true,
-                    terminationReason: terminationReason
-                }
-            );
-
-            setExamResultsSubmitted(true);
-            console.log('Terminated exam results submitted successfully');
-
-        } catch (error) {
-            console.error('Error submitting terminated exam results:', error);
-            throw error;
-        } finally {
-            setSubmittingResults(false);
-        }
+        return submitExamResults(undefined, {
+            isTerminated: true,
+            terminationReason: terminationReason
+        });
     };
 
-    const shouldEnableCheatDetection = ["questions", "review", "reviewQuestion"].includes(examStage);
-    useCheatDetection(
-        shouldEnableCheatDetection ? reportDistraction : () => { },
-        shouldEnableCheatDetection ? handleContinuousDistraction : () => { }
-    );
+    // Cheat detection disabled
+    useCheatDetection(() => { }, () => { });
 
     // // enable the hook
     // const cheatDetectionCleanup = useRef(null);
@@ -605,17 +525,19 @@ const ExamPage = () => {
                 setTimeLeft(prev => {
                     if (prev <= 1) {
                         clearInterval(timerRef.current);
-                        // Auto-advance to next section when timer expires (mirrors handleFinishReview logic)
                         isAbleToAddTime.current = true;
-                        if (selectedSectionId < selectedExam.sections.length - 1 && !sectionsFinished.includes(selectedSectionId)) {
-                            setSectionsFinished(prev => [...prev, selectedSectionId]);
-                            setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                        const isLastSection = selectedSectionId >= selectedExam.sections.length - 1;
+                        const alreadyRecorded = sectionsFinished.includes(selectedSectionId);
+                        if (!isLastSection) {
+                            if (!alreadyRecorded) {
+                                setSectionsFinished(prev => [...prev, selectedSectionId]);
+                                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                            }
                             setDisplayExamData(mockExamData1);
                             setExamStage('sections');
                             setSelectedSectionId(selectedSectionId + 1);
                         } else {
-                            // Last section — finish the exam
-                            if (isFirstRun.current) {
+                            if (!alreadyRecorded && isFirstRun.current) {
                                 setAllReviewQuestions(prev => [...prev, reviewQuestions]);
                                 isFirstRun.current = false;
                             }
@@ -932,87 +854,122 @@ const ExamPage = () => {
 
     const handleFinishReview = async () => {
         isAbleToAddTime.current = true;
-        if (selectedSectionId < selectedExam.sections.length - 1 && !sectionsFinished.includes(selectedSectionId)) {
-            setSectionsFinished(prev => [...prev, selectedSectionId]);
+        const isLastSection = selectedSectionId >= selectedExam.sections.length - 1;
+        const alreadyRecorded = sectionsFinished.includes(selectedSectionId);
+        if (!isLastSection) {
+            if (!alreadyRecorded) {
+                setSectionsFinished(prev => [...prev, selectedSectionId]);
+                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+            }
             setDisplayExamData(mockExamData1);
             setExamStage('sections');
             setSelectedSectionId(selectedSectionId + 1);
-            setAllReviewQuestions(prev => {
-                return [...prev, reviewQuestions];
-            });
         } else {
-            if (isFirstRun.current) {
-                setAllReviewQuestions(prev => {
-                    return [...prev, reviewQuestions];
-                });
+            if (!alreadyRecorded && isFirstRun.current) {
+                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
                 isFirstRun.current = false;
             }
-
-            // // Automatically submit exam results when exam is completed
-            // if (!examResultsSubmitted && selectedExam && allReviewQuestions && allExamQuestions) {
-            //     await submitExamResults();
-            // }
-
             setExamStage('results');
         }
     };
 
-    // Function to submit exam results automatically
-    const submitExamResults = async () => {
+    const snapshotKey = () => {
+        const studentId = storeData?.viewProfileData?.id;
+        if (!studentId || !examId) return null;
+        return `pendingExamResult:${examId}:${studentId}`;
+    };
+
+    // Build the final submit payload from current state. `elapsedOverride` lets
+    // callers supply a filled times array without waiting for setState.
+    //
+    // We merge the in-flight `reviewQuestions` (current section's working state)
+    // into `allReviewQuestions[selectedSectionId]` so partial saves include
+    // answers from the section the student is currently attempting — not just
+    // already-finished sections.
+    const buildPayload = (elapsedOverride, options = {}) => {
+        const studentId = storeData?.viewProfileData?.id;
+        if (!studentId || !examId || !selectedExam) return null;
+
+        const elapsedTimes = elapsedOverride || allElapsedFormatted;
+        const filledTimes = [...elapsedTimes];
+        while (filledTimes.length < examSections) filledTimes.push('00:00');
+
+        let mergedReviewQuestions = allReviewQuestions;
+        const isMidSection = examStage === 'questions' || examStage === 'review' || examStage === 'reviewQuestion';
+        const currentSectionReview = Array.isArray(reviewQuestions) ? reviewQuestions : null;
+        if (
+            isMidSection &&
+            currentSectionReview &&
+            currentSectionReview.length > 0 &&
+            !sectionsFinished.includes(selectedSectionId)
+        ) {
+            mergedReviewQuestions = [...allReviewQuestions];
+            mergedReviewQuestions[selectedSectionId] = currentSectionReview;
+        }
+
+        const results = examResultService.prepareExamResults(
+            selectedExam,
+            mergedReviewQuestions,
+            allExamQuestions,
+            filledTimes,
+            distractionEvents,
+            distractionStrikes
+        );
+
+        return examResultService.buildExamResultPayload(selectedExam, results, examId, studentId, options);
+    };
+
+    const writeSnapshot = (payload) => {
+        const key = snapshotKey();
+        if (!key || !payload) return;
+        try {
+            localStorage.setItem(key, JSON.stringify(payload));
+        } catch (e) { }
+    };
+
+    const clearSnapshot = () => {
+        const key = snapshotKey();
+        if (!key) return;
+        try { localStorage.removeItem(key); } catch (e) { }
+    };
+
+    const submitExamResults = async (elapsedOverride, options = {}) => {
         if (submittingResults || examResultsSubmitted) return;
 
         try {
             setSubmittingResults(true);
 
-            // Get student ID from store
             const studentId = storeData?.viewProfileData?.id;
-
             if (!studentId || !examId) {
                 console.error('Missing required data for exam submission:', { studentId, examId });
                 return;
             }
 
-            // Check if student has already taken this exam
-            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
-            if (hasTaken) {
-                console.log('Student has already taken this exam');
-                setExamResultsSubmitted(true);
-                return;
-            }
+            const payload = buildPayload(elapsedOverride, options);
+            if (!payload) return;
 
-            // Prepare exam results data
-            const results = examResultService.prepareExamResults(
-                selectedExam,
-                allReviewQuestions,
-                allExamQuestions,
-                allElapsedFormatted,
-                distractionEvents,
-                distractionStrikes
-            );
+            writeSnapshot(payload);
 
-            // Submit exam results
-            await examResultService.submitExamResults(
-                selectedExam,
-                results,
-                examId,
-                studentId,
-                {
-                    isTerminated: false,
-                    terminationReason: null
-                }
-            );
+            await examResultService.submitExamResultPayload(payload);
 
             setExamResultsSubmitted(true);
+            clearSnapshot();
             toast.success('تم حفظ نتائج الاختبار بنجاح');
-            console.log('Exam results submitted successfully');
-
         } catch (error) {
             console.error('Error submitting exam results:', error);
-            toast.error('حدث خطأ في حفظ نتائج الاختبار. يمكنك المحاولة مرة أخرى.');
+            toast.error('حدث خطأ في حفظ نتائج الاختبار.');
             setSubmissionFailed(true);
         } finally {
             setSubmittingResults(false);
         }
+    };
+
+    // Fire-and-forget save (used at section boundaries — backend upserts).
+    const opportunisticSave = (options = {}) => {
+        const payload = buildPayload(undefined, options);
+        if (!payload) return;
+        writeSnapshot(payload);
+        examResultService.submitExamResultPayload(payload).catch(() => { });
     };
 
     // Manual retry function for failed submissions
@@ -1082,52 +1039,83 @@ const ExamPage = () => {
     //     }
     // }, [selectedExam, examStage]);
 
+    // Submit eagerly when the exam reaches the results stage. We fill missing
+    // section times with "00:00" rather than waiting — saving the result is
+    // strictly more important than capturing exact timing data.
     useEffect(() => {
-        console.log('Exam Results Submission Check:', {
-            examStage,
-            examResultsSubmitted,
-            selectedExam,
-            allReviewQuestions,
-            allExamQuestions,
-            formattedTimesLength: allElapsedFormatted.length,
-            totalSections: examSections
-        });
-
-        // Early exit if not in results stage or already submitted
         if (examStage !== 'results' || examResultsSubmitted) return;
         if (!selectedExam || !allReviewQuestions || !allExamQuestions) return;
 
-        // WAIT: If we are in 'results' stage, ensure we have tallied time for ALL sections before submitting.
-        // But add a fallback timeout to prevent results from being lost if timing fails
-        if (examSections > 0 && allElapsedFormatted.length < examSections) {
-            console.log("⏳ Waiting for final section time calculation before submitting...");
+        const filledTimes = [...allElapsedFormatted];
+        while (filledTimes.length < examSections) filledTimes.push('00:00');
 
-            // Fallback: If section times don't arrive in 3 seconds, submit anyway
-            const fallbackTimeout = setTimeout(() => {
-                console.warn("⚠️ Fallback: Section time calculation timed out. Submitting with available data...");
-                // Fill missing times with "00:00" to prevent data loss
-                const missingCount = examSections - allElapsedFormatted.length;
-                if (missingCount > 0) {
-                    const filledTimes = [...allElapsedFormatted];
-                    for (let i = 0; i < missingCount; i++) {
-                        filledTimes.push("00:00");
-                    }
-                    setAllElapsedFormatted(filledTimes);
-                }
-            }, 3000);
+        submitExamResults(filledTimes, { isCompleted: true });
+    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, examSections]);
 
-            return () => clearTimeout(fallbackTimeout);
-        }
+    // Continuous local snapshot — keeps the latest payload in localStorage so
+    // it can be recovered after a crash, hard navigation, or tab close.
+    // Marked isCompleted=false because mid-exam state isn't a finished attempt.
+    // `reviewQuestions` is in the deps so per-answer changes update the snapshot;
+    // localStorage writes are cheap and the keepalive beacon reads from here.
+    useEffect(() => {
+        if (!selectedExam || examStage === 'introduction' || examStage === 'sections') return;
+        if (examResultsSubmitted) return;
+        const isFinal = examStage === 'results';
+        const payload = buildPayload(undefined, { isCompleted: isFinal });
+        if (payload) writeSnapshot(payload);
+    }, [allReviewQuestions, allExamQuestions, allElapsedFormatted, examStage, sectionsFinished, selectedSectionId, selectedExam, reviewQuestions, examResultsSubmitted]);
 
-        // Ready to submit - proceed with submission
-        if (distractionStrikes >= 3) {
-            // If terminated, submit with termination reason
-            submitExamResultsWithTermination('terminated_or_cheating');
-        } else {
-            // Normal completion
-            submitExamResults();
-        }
-    }, [examStage, examResultsSubmitted, selectedExam, allReviewQuestions, allExamQuestions, allElapsedFormatted, examSections]);
+    // Per-section opportunistic save: fires after sectionsFinished updates
+    // (so the closure has the latest allReviewQuestions). Skipped at the
+    // results stage — the eager final-submit useEffect handles that path.
+    const lastSavedSectionCountRef = useRef(0);
+    useEffect(() => {
+        if (!selectedExam || examStage === 'results') return;
+        if (sectionsFinished.length === 0) return;
+        if (sectionsFinished.length <= lastSavedSectionCountRef.current) return;
+        lastSavedSectionCountRef.current = sectionsFinished.length;
+        opportunisticSave({ isCompleted: false });
+    }, [sectionsFinished, examStage, selectedExam, allReviewQuestions]);
+
+    // Best-effort flush on tab close / navigation away / tab hide. Uses the
+    // fetch keepalive flag so the request survives the page going away.
+    useEffect(() => {
+        if (!selectedExam) return;
+
+        const flush = () => {
+            if (examResultsSubmitted) return;
+            const key = snapshotKey();
+            if (!key) return;
+            let payload = null;
+            try {
+                const raw = localStorage.getItem(key);
+                if (raw) payload = JSON.parse(raw);
+            } catch (e) { }
+            if (!payload) payload = buildPayload();
+            if (!payload) return;
+            examResultService.submitExamResultPayloadKeepalive(payload);
+        };
+
+        const onVisibility = () => {
+            if (typeof document !== 'undefined' && document.visibilityState === 'hidden') flush();
+        };
+        const onPageHide = () => flush();
+        const onBeforeUnload = () => flush();
+
+        window.addEventListener('beforeunload', onBeforeUnload);
+        window.addEventListener('pagehide', onPageHide);
+        document.addEventListener('visibilitychange', onVisibility);
+
+        const handleRouteChange = () => flush();
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            window.removeEventListener('beforeunload', onBeforeUnload);
+            window.removeEventListener('pagehide', onPageHide);
+            document.removeEventListener('visibilitychange', onVisibility);
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [selectedExam, examResultsSubmitted, allReviewQuestions, allExamQuestions, allElapsedFormatted, examStage, examId, storeData?.viewProfileData?.id, router.events]);
 
     // Early returns AFTER all hooks are declared (required by React rules of hooks)
     if (!accessToken) {
@@ -1144,12 +1132,6 @@ const ExamPage = () => {
 
     return (
         <div className={styles.examPageContainer}>
-            {/* Distraction Warning Component */}
-            <CheatWarning
-                cheatStrikes={distractionStrikes}
-                isCheating={isDistracted}
-            />
-
             {examStage === 'introduction' && (
                 <ExamIntroduction
                     examData={displayExamData}

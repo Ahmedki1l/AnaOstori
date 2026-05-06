@@ -47,21 +47,38 @@ instance.interceptors.response.use(
 			} catch (refreshError) {
 				// Token refresh failed, redirect to login
 				console.error(`[API] Token refresh failed for ${requestUrl}:`, refreshError);
-				
-				// Preserve payment form data before clearing
+
+				// Preserve payment form data and any pending exam-result snapshots
+				// across the forced logout. The exam snapshots are recovered
+				// by _app.js after the user re-authenticates, so an in-flight
+				// exam attempt is not lost when the token expires mid-exam.
 				const paymentFormData = localStorage.getItem('paymentFormData');
-				
+				const pendingExamSnapshots = [];
+				try {
+					for (let i = 0; i < localStorage.length; i++) {
+						const k = localStorage.key(i);
+						if (k && k.startsWith('pendingExamResult:')) {
+							pendingExamSnapshots.push([k, localStorage.getItem(k)]);
+						}
+					}
+				} catch (e) { }
+
 				localStorage.clear();
 				sessionStorage.clear();
-				
+
 				if (paymentFormData) {
 					localStorage.setItem('paymentFormData', paymentFormData);
 				}
-				
+				for (const [k, v] of pendingExamSnapshots) {
+					if (v != null) {
+						try { localStorage.setItem(k, v); } catch (e) { }
+					}
+				}
+
 				if (typeof window !== 'undefined') {
 					window.location.href = '/login';
 				}
-				
+
 				return Promise.reject(refreshError);
 			}
 		}
@@ -109,21 +126,36 @@ instance2.interceptors.response.use(
 			} catch (refreshError) {
 				// Token refresh failed, redirect to login
 				console.error('Token refresh failed:', refreshError);
-				
-				// Preserve payment form data before clearing
+
+				// Preserve payment form data and pending exam snapshots
+				// (recovered by _app.js after re-auth so exam progress isn't lost).
 				const paymentFormData = localStorage.getItem('paymentFormData');
-				
+				const pendingExamSnapshots = [];
+				try {
+					for (let i = 0; i < localStorage.length; i++) {
+						const k = localStorage.key(i);
+						if (k && k.startsWith('pendingExamResult:')) {
+							pendingExamSnapshots.push([k, localStorage.getItem(k)]);
+						}
+					}
+				} catch (e) { }
+
 				localStorage.clear();
 				sessionStorage.clear();
-				
+
 				if (paymentFormData) {
 					localStorage.setItem('paymentFormData', paymentFormData);
 				}
-				
+				for (const [k, v] of pendingExamSnapshots) {
+					if (v != null) {
+						try { localStorage.setItem(k, v); } catch (e) { }
+					}
+				}
+
 				if (typeof window !== 'undefined') {
 					window.location.href = '/login';
 				}
-				
+
 				return Promise.reject(refreshError);
 			}
 		}
