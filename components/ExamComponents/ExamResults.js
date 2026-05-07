@@ -7,8 +7,28 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
     const flatReviews = allReviews.flat();
     const flatQuestions = examData.flat();
 
-    const totalQuestions = examScoreUtils.overallDenominator(CurrentExam) || flatQuestions.length;
-    const overall = examScoreUtils.overallScore(CurrentExam, examData, allReviews);
+    // When `savedSections` carries server-side `isCorrect` flags (the saved-
+    // results view path), trust them instead of recomputing from
+    // examData/reviewQuestions. The questions API used to populate examData
+    // typically doesn't return `correctAnswer` (and shouldn't — exposing
+    // answers in a fetch endpoint is an antipattern), so a recompute against
+    // it produces 0 across the board.
+    const savedHasFlags = Array.isArray(savedSections) &&
+        savedSections.some(sec => Array.isArray(sec?.questions) && sec.questions.some(q => 'isCorrect' in (q || {})));
+
+    let totalQuestions, overall;
+    if (savedHasFlags) {
+        const savedTotal = savedSections.reduce((s, sec) => s + ((sec?.questions || []).length), 0);
+        const savedCorrect = savedSections.reduce(
+            (s, sec) => s + ((sec?.questions || []).filter(q => q?.isCorrect === true).length),
+            0,
+        );
+        totalQuestions = savedTotal || examScoreUtils.overallDenominator(CurrentExam) || flatQuestions.length;
+        overall = { correct: savedCorrect, total: totalQuestions, percentage: examScoreUtils.pct(savedCorrect, totalQuestions) };
+    } else {
+        totalQuestions = examScoreUtils.overallDenominator(CurrentExam) || flatQuestions.length;
+        overall = examScoreUtils.overallScore(CurrentExam, examData, allReviews);
+    }
 
     const calculateScore = () => overall.percentage;
     const getCorrectAnswers = () => overall.correct;
@@ -347,7 +367,22 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
             return [];
         }
 
-        // Category aggregation maps
+        // Build a fast lookup of saved isCorrect flags by questionId, when
+        // available — the questions API doesn't return correctAnswer, so the
+        // legacy recompute (selectedAnswer === question.correctAnswer) yields
+        // false for everything in the saved-results view.
+        const savedFlagByQid = new Map();
+        if (Array.isArray(savedSections)) {
+            for (const sec of savedSections) {
+                for (const q of (sec?.questions || [])) {
+                    if (q && q.questionId != null) {
+                        savedFlagByQid.set(String(q.questionId), q.isCorrect === true);
+                    }
+                }
+            }
+        }
+        const useSavedFlags = savedFlagByQid.size > 0;
+
         const categoriesMap = new Map();
 
         examData.forEach((sectionQuestions, sectionIndex) => {
@@ -355,7 +390,10 @@ const ExamResults = ({ elapsedTime, totalTime, examData, CurrentExam, reviewQues
 
             sectionQuestions.forEach((question, qIndex) => {
                 const reviewQuestion = sectionReviewQuestions[qIndex];
-                const isCorrect = reviewQuestion?.selectedAnswer === question?.correctAnswer;
+                const qid = String(question?._id ?? question?.id ?? reviewQuestion?.questionId ?? reviewQuestion?.id ?? '');
+                const isCorrect = useSavedFlags && savedFlagByQid.has(qid)
+                    ? savedFlagByQid.get(qid)
+                    : (reviewQuestion?.selectedAnswer === question?.correctAnswer);
 
                 // Use the lesson field directly as the category (كمي or لفظي)
                 // This is more reliable than deriving from skill mapping
