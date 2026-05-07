@@ -294,17 +294,27 @@ const ExamPage = () => {
                         isAbleToAddTime.current = true;
                         const isLastSection = selectedSectionId >= selectedExam.sections.length - 1;
                         const alreadyRecorded = sectionsFinished.includes(selectedSectionId);
+                        // Only push the section's reviewQuestions if they actually loaded.
+                        // If questions failed to load, we still advance (the timer
+                        // is non-cancellable) but skip the empty push so the eventual
+                        // payload reflects only sections that have real data.
+                        const expectedQs = selectedExam?.sections?.[selectedSectionId]?.questions?.length || 0;
+                        const hasReview = expectedQs === 0 || (Array.isArray(reviewQuestions) && reviewQuestions.length >= expectedQs);
                         if (!isLastSection) {
                             if (!alreadyRecorded) {
                                 setSectionsFinished(prev => [...prev, selectedSectionId]);
-                                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                                if (hasReview) {
+                                    setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                                }
                             }
                             setDisplayExamData(mockExamData1);
                             setExamStage('sections');
                             setSelectedSectionId(selectedSectionId + 1);
                         } else {
                             if (!alreadyRecorded && isFirstRun.current) {
-                                setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                                if (hasReview) {
+                                    setAllReviewQuestions(prev => [...prev, reviewQuestions]);
+                                }
                                 isFirstRun.current = false;
                             }
                             setExamStage('results');
@@ -580,7 +590,24 @@ const ExamPage = () => {
         }
     };
 
+    // Returns true only when the current section's reviewQuestions array is
+    // populated and length-matches the section's expected question count.
+    // This catches the failure mode where fetchQuestionsByIds() returned []
+    // (network or API error) — without this guard the student silently
+    // "finishes" with an empty reviewQuestions and an empty payload reaches
+    // the backend, overwriting any earlier good record with zero data.
+    const hasLoadedReviewQuestions = () => {
+        const expected = selectedExam?.sections?.[selectedSectionId]?.questions?.length || 0;
+        if (expected === 0) return true;
+        if (!Array.isArray(reviewQuestions) || reviewQuestions.length === 0) return false;
+        return reviewQuestions.length >= expected;
+    };
+
     const handleFinishReview = async () => {
+        if (!hasLoadedReviewQuestions()) {
+            toast.error('لم تحمل أسئلة هذا القسم بعد. يرجى الانتظار أو إعادة تحميل الصفحة قبل إنهاء القسم.');
+            return;
+        }
         isAbleToAddTime.current = true;
         const isLastSection = selectedSectionId >= selectedExam.sections.length - 1;
         const alreadyRecorded = sectionsFinished.includes(selectedSectionId);
