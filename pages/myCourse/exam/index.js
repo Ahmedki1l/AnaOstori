@@ -498,19 +498,15 @@ const ExamPage = () => {
             const studentId = storeData?.viewProfileData?.id;
             if (!studentId || !examId) {
                 toast.error('حدث خطأ في بيانات المستخدم أو الامتحان');
-                setLoading(false);
                 return;
             }
-            const hasTaken = await examResultService.hasStudentTakenExam(examId, studentId);
-            if (hasTaken) {
-                toast.error('لقد قمت بأداء هذا الاختبار من قبل ولا يمكنك إعادة الدخول.');
-                setLoading(false);
-                return;
-            }
+            // Re-takes are allowed: the backend submit is an idempotent
+            // upsert keyed on (examId, studentId), so retaking the exam
+            // replaces the previous result.
             setDisplayExamData(mockExamData1);
             setExamStage('sections');
         } catch (err) {
-            toast.error('حدث خطأ أثناء التحقق من حالة الاختبار.');
+            toast.error('حدث خطأ أثناء بدء الاختبار.');
         } finally {
             setLoading(false);
         }
