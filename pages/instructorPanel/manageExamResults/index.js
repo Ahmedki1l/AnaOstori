@@ -738,9 +738,9 @@ const Index = () => {
         setIsMoveExamModal(true)
     }
 
-    const handleCopyConfirm = async (destinationFolderId, options, retryCount = 0) => {
+    const handleCopyConfirm = async (destinationFolderId, options) => {
         try {
-            const queryParams = new URLSearchParams({
+            const res = await getAuthRouteAPI({
                 routeName: 'copyExam',
                 examId: selectedExamForAction._id,
                 sourceFolderId: selectedFolder._id,
@@ -748,31 +748,7 @@ const Index = () => {
                 keepOriginal: options.keepOriginal.toString(),
                 copyResults: options.copyResults.toString()
             })
-
-            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            // Handle HTTP status codes
-            if (response.status === 401 && retryCount === 0) {
-                // Try to refresh token and retry once
-                try {
-                    await getNewToken()
-                    return handleCopyConfirm(destinationFolderId, options, retryCount + 1)
-                } catch (tokenError) {
-                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
-                }
-            }
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-            }
-
-            const result = await response.json()
+            const result = res?.data ?? {}
 
             if (result.success) {
                 const { message } = await import('antd');
@@ -808,51 +784,27 @@ const Index = () => {
             }
         } catch (error) {
             const { message } = await import('antd');
-
-            // Check if it's a network error and suggest retry
-            if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            const apiMsg = error?.response?.data?.message
+            if (apiMsg) {
+                message.error(apiMsg)
+            } else if (error?.message) {
+                message.error(error.message)
             } else {
-                message.error(error.message || 'فشل في نسخ الاختبار')
+                message.error('فشل في نسخ الاختبار')
             }
-
             console.error('Error copying exam:', error)
         }
     }
 
-    const handleMoveConfirm = async (destinationFolderId, retryCount = 0) => {
+    const handleMoveConfirm = async (destinationFolderId) => {
         try {
-            const queryParams = new URLSearchParams({
+            const res = await getAuthRouteAPI({
                 routeName: 'moveExam',
                 examId: selectedExamForAction._id,
                 sourceFolderId: selectedFolder._id,
                 destinationFolderId: destinationFolderId
             })
-
-            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            // Handle HTTP status codes
-            if (response.status === 401 && retryCount === 0) {
-                // Try to refresh token and retry once
-                try {
-                    await getNewToken()
-                    return handleMoveConfirm(destinationFolderId, retryCount + 1)
-                } catch (tokenError) {
-                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
-                }
-            }
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-            }
-
-            const result = await response.json()
+            const result = res?.data ?? {}
 
             if (result.success) {
                 const { message } = await import('antd');
@@ -889,14 +841,14 @@ const Index = () => {
             }
         } catch (error) {
             const { message } = await import('antd');
-
-            // Check if it's a network error and suggest retry
-            if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            const apiMsg = error?.response?.data?.message
+            if (apiMsg) {
+                message.error(apiMsg)
+            } else if (error?.message) {
+                message.error(error.message)
             } else {
-                message.error(error.message || 'فشل في نقل الاختبار')
+                message.error('فشل في نقل الاختبار')
             }
-
             console.error('Error moving exam:', error)
         }
     }
@@ -917,8 +869,15 @@ const Index = () => {
         setIsDeleteFolderModal(true)
     }
 
-    const handleUpdateFolder = async (retryCount = 0) => {
-        if (!folderFormData.name.trim()) {
+    const handleUpdateFolder = async (values) => {
+        // values comes from the modal's validated Ant Design form:
+        // { name, description, isActive }.
+        const formValues = values && typeof values === 'object' ? values : folderFormData
+        const name = (formValues?.name ?? '').toString().trim()
+
+        if (!selectedFolderForAction?._id) return
+
+        if (!name) {
             const { message } = await import('antd');
             message.error('يرجى إدخال اسم المجلد')
             return
@@ -926,37 +885,28 @@ const Index = () => {
 
         setFolderActionLoading(true)
         try {
-            const queryParams = new URLSearchParams({
+            const params = {
                 routeName: 'updateMongoDBFolder',
                 folderId: selectedFolderForAction._id,
-                name: folderFormData.name,
-                ...(folderFormData.description && { description: folderFormData.description }),
-                isActive: folderFormData.isActive.toString()
-            })
-
-            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            // Handle HTTP status codes
-            if (response.status === 401 && retryCount === 0) {
-                try {
-                    await getNewToken()
-                    return handleUpdateFolder(retryCount + 1)
-                } catch (tokenError) {
-                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
-                }
+                name,
+            }
+            if (formValues.description !== undefined && formValues.description !== null) {
+                params.description = formValues.description
+            }
+            if (formValues.isActive !== undefined) {
+                params.isActive = (formValues.isActive !== false).toString()
             }
 
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-            }
+            // getAuthRouteAPI concatenates values into the query string without
+            // URL-encoding, so we encode here to survive Arabic chars and any
+            // reserved characters (& = + #) the instructor may type.
+            const encoded = Object.entries(params).reduce((acc, [k, v]) => {
+                acc[k] = encodeURIComponent(v)
+                return acc
+            }, {})
 
-            const result = await response.json()
+            const res = await getAuthRouteAPI(encoded)
+            const result = res?.data ?? {}
 
             if (result.success) {
                 const { message } = await import('antd');
@@ -964,12 +914,9 @@ const Index = () => {
                 setIsEditFolderModal(false)
                 setSelectedFolderForAction(null)
                 setFolderFormData({ name: '', description: '', isActive: true })
-
-                // Refresh folders list
                 fetchSimulationExamFolders()
             } else {
                 let errorMessage = 'فشل في تحديث المجلد'
-
                 switch (result.errorCode) {
                     case 'VALIDATION_ERROR':
                         errorMessage = result.message || 'خطأ في التحقق من البيانات'
@@ -983,98 +930,70 @@ const Index = () => {
                     default:
                         errorMessage = result.message || errorMessage
                 }
-
                 throw new Error(errorMessage)
             }
         } catch (error) {
             const { message } = await import('antd');
-
-            if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            const apiBody = error?.response?.data
+            const apiMsg = apiBody?.message
+            if (apiMsg) {
+                message.error(apiMsg)
+            } else if (error?.message) {
+                message.error(error.message)
             } else {
-                message.error(error.message || 'فشل في تحديث المجلد')
+                message.error('فشل في تحديث المجلد')
             }
-
             console.error('Error updating folder:', error)
         } finally {
             setFolderActionLoading(false)
         }
     }
 
-    const handleDeleteFolderConfirm = async (forceDelete = false, retryCount = 0) => {
+    const handleDeleteFolderConfirm = async (forceDelete = false) => {
+        const folderForAction = selectedFolderForAction
+        if (!folderForAction?._id) return
+
         setFolderActionLoading(true)
         try {
-            const queryParams = new URLSearchParams({
+            const res = await getAuthRouteAPI({
                 routeName: 'deleteMongoDBFolder',
-                folderId: selectedFolderForAction._id,
-                forceDelete: forceDelete.toString()
+                folderId: folderForAction._id,
+                forceDelete: forceDelete ? 'true' : 'false'
             })
-
-            const response = await fetch(`/auth/route/fetch?${queryParams}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            // Handle HTTP status codes
-            if (response.status === 401 && retryCount === 0) {
-                try {
-                    await getNewToken()
-                    return handleDeleteFolderConfirm(forceDelete, retryCount + 1)
-                } catch (tokenError) {
-                    throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.')
-                }
-            }
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-            }
-
-            const result = await response.json()
+            const result = res?.data ?? {}
 
             if (result.success) {
                 const { message } = await import('antd');
                 message.success('تم حذف المجلد بنجاح')
                 setIsDeleteFolderModal(false)
                 setSelectedFolderForAction(null)
-
-                // Refresh folders list
                 fetchSimulationExamFolders()
-
-                // If we were viewing this folder, go back to folders list
-                if (selectedFolder && selectedFolder._id === selectedFolderForAction._id) {
+                if (selectedFolder && selectedFolder._id === folderForAction._id) {
                     handleBackToFolders()
                 }
             } else {
-                let errorMessage = 'فشل في حذف المجلد'
-
-                switch (result.errorCode) {
-                    case 'VALIDATION_ERROR':
-                        errorMessage = result.message || 'خطأ في التحقق من البيانات'
-                        break
-                    case 'PERMISSION_DENIED':
-                        errorMessage = result.message || 'غير مصرح: لا تملك المجلد'
-                        break
-                    case 'NOT_FOUND':
-                        errorMessage = result.message || 'المجلد غير موجود'
-                        break
-                    default:
-                        errorMessage = result.message || errorMessage
-                }
-
-                throw new Error(errorMessage)
+                throw new Error(result.message || 'فشل في حذف المجلد')
             }
         } catch (error) {
             const { message } = await import('antd');
-
-            if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                message.error('خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+            const apiBody = error?.response?.data
+            // FORCE_DELETE_REQUIRED comes back as a 409 (axios rejects) — backfill
+            // the live examCount so the modal's "force delete" checkbox appears on
+            // rerender for legacy folders whose listing-time examCount was stale
+            // or missing. The instructor can then opt in and click delete again
+            // without reopening anything.
+            if (apiBody?.errorCode === 'FORCE_DELETE_REQUIRED') {
+                if (typeof apiBody.examCount === 'number') {
+                    setSelectedFolderForAction(prev => prev ? { ...prev, examCount: apiBody.examCount } : prev)
+                }
+                message.error(apiBody.message || 'المجلد يحتوي على اختبارات. ضع علامة على "حذف قسري" وأعد المحاولة.')
+            } else if (apiBody?.message) {
+                message.error(apiBody.message)
+            } else if (error?.message) {
+                message.error(error.message)
             } else {
-                message.error(error.message || 'فشل في حذف المجلد')
+                message.error('فشل في حذف المجلد')
             }
-
             console.error('Error deleting folder:', error)
         } finally {
             setFolderActionLoading(false)
