@@ -27,6 +27,8 @@ const StudentExamResults = () => {
   const [totalTime, setTotalTime] = useState(0)
   const [fetchedQuestions, setFetchedQuestions] = useState([])
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false)
+  // examId the student asked to retake; non-null shows the confirm dialog.
+  const [retakeTarget, setRetakeTarget] = useState(null)
 
   useEffect(() => {
     fetchFolders()
@@ -170,6 +172,36 @@ const StudentExamResults = () => {
   const handleRetakeExam = () => {
     // Navigate back to exam or show retake options
     setCurrentView('results')
+  }
+
+  // Retake flow: confirm first, then navigate to the exam runner, which starts
+  // a fresh attempt (new attemptId) without overwriting previous results.
+  const requestRetake = (examId) => {
+    if (examId) setRetakeTarget(examId)
+  }
+
+  const cancelRetake = () => setRetakeTarget(null)
+
+  const confirmRetake = () => {
+    const examId = retakeTarget
+    setRetakeTarget(null)
+    if (examId) router.push(`/myCourse/exam?examId=${examId}`)
+  }
+
+  const renderRetakeModal = () => {
+    if (!retakeTarget) return null
+    return (
+      <div className={styles.retakeOverlay} onClick={cancelRetake}>
+        <div className={styles.retakeDialog} onClick={(e) => e.stopPropagation()}>
+          <h3>إعادة الاختبار</h3>
+          <p>سيتم بدء محاولة جديدة لهذا الاختبار، وستُحفظ نتيجتها بجانب محاولاتك السابقة. هل تريد المتابعة؟</p>
+          <div className={styles.retakeDialogActions}>
+            <button className={styles.retakeCancelButton} onClick={cancelRetake}>إلغاء</button>
+            <button className={styles.retakeConfirmButton} onClick={confirmRetake}>بدء محاولة جديدة</button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const handleFinishReview = () => {
@@ -362,11 +394,16 @@ const StudentExamResults = () => {
         </div>
 
         <div className={styles.resultsGrid}>
-          {selectedExam.results.map((result) => (
+          {selectedExam.results.map((result, index) => (
             <div key={result.id} className={styles.resultCard}>
               <div className={styles.resultHeader}>
                 <div className={styles.examInfo}>
-                  <h3>نتيجة الاختبار</h3>
+                  <h3>
+                    نتيجة الاختبار
+                    <span className={styles.attemptBadge}>
+                      المحاولة {result.attemptNumber || (selectedExam.results.length - index)}
+                    </span>
+                  </h3>
                   <p className={styles.examDate}>
                     تاريخ الاختبار: {fullDate(result.examDate)}
                   </p>
@@ -420,10 +457,17 @@ const StudentExamResults = () => {
                 >
                   مراجعة الأسئلة
                 </button>
+                <button
+                  className={styles.retakeButton}
+                  onClick={() => requestRetake(selectedExam.id)}
+                >
+                  إعادة الاختبار
+                </button>
               </div>
             </div>
           ))}
         </div>
+        {renderRetakeModal()}
       </div>
     )
   }
@@ -579,11 +623,12 @@ const StudentExamResults = () => {
             })
           )}
           onReviewAnswers={handleShowReviewSection}
-          onRetakeExam={handleRetakeExam}
-          hideRetakeButton={true}
+          onRetakeExam={() => requestRetake(selectedExam?.id)}
+          hideRetakeButton={false}
           savedSections={selectedResult.sections}
           savedSectionDetails={selectedResult.sectionDetails}
         />
+        {renderRetakeModal()}
       </div>
     )
   }

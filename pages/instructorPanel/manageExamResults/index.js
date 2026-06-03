@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 
 /**
  * ⚠️ IMPORTANT: Before pushing to production, set TESTING_MODE = false
@@ -105,12 +105,8 @@ const Index = () => {
     const [searchText, setSearchText] = useState('')
     const [terminationsSearchText, setTerminationsSearchText] = useState('')
     const [activeTab, setActiveTab] = useState('results')
-    const [currentPage, setCurrentPage] = useState(1)
+    // Student rows are paginated client-side (we fetch all attempts and group).
     const [pageSize, setPageSize] = useState(10)
-    const [totalResults, setTotalResults] = useState(0)
-    const [totalPages, setTotalPages] = useState(0)
-    const [hasNextPage, setHasNextPage] = useState(false)
-    const [hasPrevPage, setHasPrevPage] = useState(false)
     // Folder Management States
     const [isEditFolderModal, setIsEditFolderModal] = useState(false)
     const [isDeleteFolderModal, setIsDeleteFolderModal] = useState(false)
@@ -122,22 +118,15 @@ const Index = () => {
     })
     const [folderActionLoading, setFolderActionLoading] = useState(false)
 
-    const tableColumns = [
+    // Parent rows: one per student. The student's individual attempts live in
+    // the expandable sub-table (attemptColumns) below, newest first.
+    const groupedColumns = [
         {
             title: 'اسم الطالب',
             dataIndex: 'studentName',
             key: 'studentName',
-            render: (text, record) => (
+            render: (text) => (
                 <div className={styles.studentInfo}>
-                    {/* <div className={styles.studentAvatar}>
-                        <img 
-                            src={record.studentAvatar || '/images/default-avatar.png'} 
-                            alt="Student Avatar"
-                            onError={(e) => {
-                                e.target.src = '/images/default-avatar.png'
-                            }}
-                        />
-                    </div> */}
                     <span>{text}</span>
                 </div>
             )
@@ -148,10 +137,83 @@ const Index = () => {
             key: 'examName',
         },
         {
+            title: 'عدد المحاولات',
+            key: 'attemptsCount',
+            render: (_, record) => (
+                <span className={styles.attemptCountBadge}>{record.attemptsCount}</span>
+            )
+        },
+        {
+            title: 'أحدث درجة',
+            key: 'latestScore',
+            render: (_, record) => (
+                <span className={`${styles.score} ${(record.latest?.score || 0) >= 60 ? styles.pass : styles.fail}`}>
+                    {record.latest?.score ?? 0}%
+                </span>
+            )
+        },
+        {
+            title: 'أفضل درجة',
+            key: 'bestScore',
+            render: (_, record) => (
+                <span className={`${styles.score} ${record.bestScore >= 60 ? styles.pass : styles.fail}`}>
+                    {record.bestScore}%
+                </span>
+            )
+        },
+        {
+            title: 'الحالة',
+            key: 'status',
+            render: (_, record) => (
+                <div className={styles.statusContainer}>
+                    <span className={`${styles.status} ${record.latest?.status === 'pass' ? styles.passStatus : styles.failStatus}`}>
+                        {record.latest?.status === 'pass' ? 'ناجح' : 'راسب'}
+                    </span>
+                    {record.latest?.isTerminated && (
+                        <span className={styles.terminatedBadge} title={record.latest?.terminationReason}>
+                            منتهي
+                        </span>
+                    )}
+                </div>
+            )
+        },
+        {
+            title: 'أحدث محاولة',
+            key: 'lastAttemptDate',
+            render: (_, record) => fullDate(record.lastAttemptDate)
+        },
+        {
+            title: 'الإجراءات',
+            key: 'actions',
+            render: (_, record) => (
+                <div className={styles.actions}>
+                    <Tooltip title="عرض أحدث محاولة">
+                        <Button
+                            type="text"
+                            icon={<EyeOutlined />}
+                            onClick={() => handleViewExamResult(record.latest)}
+                            title="عرض أحدث محاولة"
+                        />
+                    </Tooltip>
+                </div>
+            )
+        }
+    ]
+
+    // Child rows: a single attempt (rendered inside the expanded student row).
+    const attemptColumns = [
+        {
+            title: 'المحاولة',
+            key: 'attemptNo',
+            render: (_, record) => (
+                <span className={styles.attemptCountBadge}>{record.attemptNumber || record.__attemptNo}</span>
+            )
+        },
+        {
             title: 'الدرجة',
             dataIndex: 'score',
             key: 'score',
-            render: (score, record) => (
+            render: (score) => (
                 <span className={`${styles.score} ${score >= 60 ? styles.pass : styles.fail}`}>
                     {score}%
                 </span>
@@ -214,6 +276,25 @@ const Index = () => {
             )
         }
     ]
+
+    // Renders a student's attempts (already sorted newest-first) as a nested
+    // table. __attemptNo is a fallback display number for legacy records that
+    // predate the stored attemptNumber.
+    const expandedRowRender = (group) => {
+        const data = (group.attempts || []).map((a, i) => ({
+            ...a,
+            __attemptNo: group.attemptsCount - i
+        }))
+        return (
+            <Table
+                columns={attemptColumns}
+                dataSource={data}
+                pagination={false}
+                rowKey={(r) => r._id || r.id || r.key}
+                size="small"
+            />
+        )
+    }
 
     const terminationsTableColumns = [
         {
@@ -343,11 +424,11 @@ const Index = () => {
 
     useEffect(() => {
         if (selectedExam) {
-            getExamResultsList(selectedExam, currentPage, pageSize)
+            getExamResultsList(selectedExam)
             getExamTerminationsList(selectedExam)
         }
         // eslint-disable-next-line
-    }, [selectedExam, currentPage, pageSize, activeTab])
+    }, [selectedExam])
 
     const fetchSimulationExamFolders = async () => {
         setLoadingFolders(true)
@@ -438,84 +519,91 @@ const Index = () => {
         setExamTerminationsList([]);
     };
 
-    const getExamResultsList = async (examId, page = currentPage, limit = pageSize) => {
+    // Map a raw backend result into the flat shape the table/modal expect.
+    const mapExamResult = (result) => {
+        const hasNewStructure = result.sections &&
+            result.sections.length > 0 &&
+            result.sections[0].questions &&
+            result.sections[0].questions.length > 0;
+
+        // Extract reviewQuestions if not available (for backward compatibility)
+        let reviewQuestions = result.reviewQuestions;
+        if (!reviewQuestions && hasNewStructure) {
+            reviewQuestions = result.sections.flatMap(section => section.questions);
+        }
+
+        return {
+            ...result,
+            key: result._id,
+            id: result._id,
+            studentName: result.student?.fullName || result.student?.firstName || 'الاسم غير موجود',
+            studentAvatar: result.student?.avatar,
+            studentId: result.student?.id || result.studentId,
+            studentPhone: result.student?.phone,
+            examName: result.examName,
+            examId: result.examId,
+            score: result.score,
+            status: result.status, // use backend status directly
+            examDate: result.examDate,
+            uploadDate: result.createdAt,
+            isTerminated: result.isTerminated,
+            terminationReason: result.terminationReason,
+            submissionType: result.submissionType,
+            attemptId: result.attemptId,
+            attemptNumber: result.attemptNumber,
+            totalQuestions: result.totalQuestions,
+            correctAnswers: result.correctAnswers,
+            wrongAnswers: result.wrongAnswers,
+            timeSpent: result.timeSpent,
+            totalTime: result.totalTime,
+            sections: result.sections,
+            sectionDetails: result.sectionDetails,
+            distractionEvents: result.distractionEvents,
+            distractionStrikes: result.distractionStrikes,
+            markedQuestions: result.markedQuestions,
+            unansweredQuestions: result.unansweredQuestions,
+            isCompleted: result.isCompleted,
+            examDuration: result.examDuration,
+            reviewQuestions: reviewQuestions,
+            hasNewStructure: hasNewStructure
+        }
+    }
+
+    // Fetch ALL attempts for the exam (paging through the backend), then group
+    // by student client-side. Grouping across server pages can't be paginated
+    // server-side, so we accumulate everything and paginate students in the UI.
+    const getExamResultsList = async (examId = selectedExam) => {
+        if (!examId) return
         setLoading(true)
         try {
-            const body = {
-                routeName: 'getExamResults',
-                examId: examId,
-                page,
-                limit
-            }
-            const response = await getRouteAPI(body)
+            let all = []
+            let page = 1
+            const limit = 100
+            let keepGoing = true
 
-            // Handle the new backend response structure
-            const responseData = response.data || JSON.parse(response.data)
+            while (keepGoing) {
+                const body = {
+                    routeName: 'getExamResults',
+                    examId: examId,
+                    page,
+                    limit
+                }
+                const response = await getRouteAPI(body)
+                const responseData = response.data || JSON.parse(response.data)
 
-            if (!responseData.success) {
-                throw new Error(responseData.message || 'Failed to fetch exam results')
-            }
-
-            const results = responseData.data?.map(result => {
-                // Check if we have new structure with nested questions
-                const hasNewStructure = result.sections &&
-                    result.sections.length > 0 &&
-                    result.sections[0].questions &&
-                    result.sections[0].questions.length > 0;
-
-                // Extract reviewQuestions if not available (for backward compatibility)
-                let reviewQuestions = result.reviewQuestions;
-                if (!reviewQuestions && hasNewStructure) {
-                    // Extract from nested structure
-                    reviewQuestions = result.sections.flatMap(section => section.questions);
+                if (!responseData.success) {
+                    throw new Error(responseData.message || 'Failed to fetch exam results')
                 }
 
-                return {
-                    ...result,
-                    key: result._id,
-                    id: result._id,
-                    studentName: result.student?.fullName || result.student?.firstName || 'الاسم غير موجود',
-                    studentAvatar: result.student?.avatar,
-                    studentId: result.student?.id,
-                    studentPhone: result.student?.phone,
-                    examName: result.examName,
-                    examId: result.examId,
-                    score: result.score,
-                    status: result.status, // use backend status directly
-                    examDate: result.examDate,
-                    uploadDate: result.createdAt,
-                    isTerminated: result.isTerminated,
-                    terminationReason: result.terminationReason,
-                    submissionType: result.submissionType,
-                    totalQuestions: result.totalQuestions,
-                    correctAnswers: result.correctAnswers,
-                    wrongAnswers: result.wrongAnswers,
-                    timeSpent: result.timeSpent,
-                    totalTime: result.totalTime,
-                    sections: result.sections,
-                    sectionDetails: result.sectionDetails,
-                    distractionEvents: result.distractionEvents,
-                    distractionStrikes: result.distractionStrikes,
-                    markedQuestions: result.markedQuestions,
-                    unansweredQuestions: result.unansweredQuestions,
-                    isCompleted: result.isCompleted,
-                    examDuration: result.examDuration,
-                    reviewQuestions: reviewQuestions,
-                    hasNewStructure: hasNewStructure
-                }
-            })
-            setExamResultsList(results || [])
+                all = all.concat((responseData.data || []).map(mapExamResult))
 
-            // Use pagination data from backend response
-            const pagination = responseData.pagination || {}
-            setTotalResults(pagination.totalCount || responseData.total || responseData.totalCount || 0)
-            setTotalPages(pagination.totalPages || Math.ceil((pagination.totalCount || 0) / pageSize))
-            setHasNextPage(pagination.hasNextPage || false)
-            setHasPrevPage(pagination.hasPrevPage || false)
-            // Sync pageSize if backend returns different limit
-            if (pagination.limit && pagination.limit !== pageSize) {
-                setPageSize(pagination.limit)
+                const pagination = responseData.pagination || {}
+                keepGoing = pagination.hasNextPage === true
+                page += 1
+                if (page > 200) break // safety valve against a misbehaving backend
             }
+
+            setExamResultsList(all)
         } catch (error) {
             console.error('Error fetching exam results:', error)
             if (TESTING_MODE) {
@@ -532,11 +620,10 @@ const Index = () => {
                     submissionType: result.isTerminated ? 'terminated' : 'completed'
                 }))
                 setExamResultsList(results)
-                setTotalResults(results.length)
                 console.log('Using mock exam results for testing')
             } else if (error?.response?.status === 401) {
                 await getNewToken().then(async () => {
-                    getExamResultsList(examId, page, limit)
+                    getExamResultsList(examId)
                 }).catch(error => {
                     console.error("Error:", error);
                 });
@@ -563,7 +650,7 @@ const Index = () => {
             // Handle the new backend response structure
             const responseData = response.data || JSON.parse(response.data)
 
-            if (!response.success) {
+            if (!responseData.success) {
                 throw new Error(responseData.message || 'Failed to fetch exam terminations')
             }
 
@@ -642,7 +729,7 @@ const Index = () => {
             // Handle the new backend response structure
             const responseData = response.data || JSON.parse(response.data)
 
-            if (!response.success) {
+            if (!responseData.success) {
                 throw new Error(responseData.message || 'Failed to download exam result')
             }
 
@@ -1000,9 +1087,41 @@ const Index = () => {
         }
     }
 
-    const filteredResults = examResultsList.filter(result =>
-        result.studentName?.toLowerCase().includes(searchText.toLowerCase()) ||
-        result.examName?.toLowerCase().includes(searchText.toLowerCase())
+    // Group the flat attempt list into one row per student, each carrying its
+    // attempts sorted newest-first plus latest/best summaries for the parent row.
+    const groupedResults = useMemo(() => {
+        const map = new Map()
+        examResultsList.forEach(r => {
+            const sid = r.studentId || r.studentName || r.key
+            if (!map.has(sid)) {
+                map.set(sid, {
+                    key: sid,
+                    studentId: sid,
+                    studentName: r.studentName,
+                    studentAvatar: r.studentAvatar,
+                    examName: r.examName,
+                    attempts: []
+                })
+            }
+            map.get(sid).attempts.push(r)
+        })
+        return Array.from(map.values()).map(group => {
+            group.attempts.sort((a, b) =>
+                new Date(b.examDate || b.uploadDate || 0) - new Date(a.examDate || a.uploadDate || 0)
+            )
+            group.attemptsCount = group.attempts.length
+            group.latest = group.attempts[0] || {}
+            group.lastAttemptDate = group.latest.examDate || group.latest.uploadDate
+            group.bestScore = group.attempts.reduce((max, a) => Math.max(max, a.score || 0), 0)
+            return group
+        }).sort((a, b) =>
+            new Date(b.lastAttemptDate || 0) - new Date(a.lastAttemptDate || 0)
+        )
+    }, [examResultsList])
+
+    const filteredGroups = groupedResults.filter(group =>
+        group.studentName?.toLowerCase().includes(searchText.toLowerCase()) ||
+        group.examName?.toLowerCase().includes(searchText.toLowerCase())
     )
 
     const filteredTerminations = examTerminationsList.filter(termination =>
@@ -1245,9 +1364,9 @@ const Index = () => {
                                             }}
                                         >
                                             نتائج الاختبارات
-                                            {examResultsList.length > 0 && (
+                                            {filteredGroups.length > 0 && (
                                                 <span className={styles.customTabBadge}>
-                                                    {examResultsList.length}
+                                                    {filteredGroups.length}
                                                 </span>
                                             )}
                                         </span>
@@ -1267,29 +1386,24 @@ const Index = () => {
                                             </div>
                                             <div className={styles.paginationWrapper}>
                                                 <Table
-                                                    columns={tableColumns}
-                                                    dataSource={filteredResults}
+                                                    columns={groupedColumns}
+                                                    dataSource={filteredGroups}
                                                     loading={loading}
+                                                    rowKey="key"
                                                     locale={{ emptyText: customEmptyComponent }}
+                                                    expandable={{
+                                                        expandedRowRender,
+                                                        rowExpandable: (record) => (record.attemptsCount || 0) > 0
+                                                    }}
                                                     pagination={{
-                                                        current: currentPage,
                                                         pageSize: pageSize,
                                                         defaultPageSize: 10,
                                                         pageSizeOptions: ['10', '25', '50'],
-                                                        total: totalResults,
                                                         showSizeChanger: true,
                                                         showQuickJumper: true,
-                                                        showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} نتيجة (صفحة ${currentPage} من ${totalPages})`,
-                                                        onChange: (page, newPageSize) => {
-                                                            setCurrentPage(page)
-                                                            if (newPageSize !== pageSize) {
-                                                                setPageSize(newPageSize)
-                                                                setCurrentPage(1) // Reset to page 1 when changing page size
-                                                            }
-                                                        },
+                                                        showTotal: (total, range) => `${range[0]}-${range[1]} من ${total} طالب`,
                                                         onShowSizeChange: (current, size) => {
                                                             setPageSize(size)
-                                                            setCurrentPage(1) // Reset to page 1 when changing page size
                                                         }
                                                     }}
                                                 />
