@@ -29,6 +29,9 @@ export const examResultService = {
             routeName: 'submitExamResult',
             examId,
             studentId,
+            // attemptId scopes one exam sitting; the backend keys its upsert on
+            // (examId, studentId, attemptId) so each retake is its own record.
+            ...(options.attemptId ? { attemptId: options.attemptId } : {}),
             examData: {
                 examName: examData.title,
                 examDuration: examData.duration,

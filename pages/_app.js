@@ -110,6 +110,16 @@ function MyApp({ Component, pageProps }) {
 				} catch (e) { localStorage.removeItem(key); continue; }
 				if (!payload) { localStorage.removeItem(key); continue; }
 
+				// Only recover FINISHED attempts. An in-progress snapshot belongs to a
+				// sitting that is either still open (the exam page manages/clears it) or
+				// was abandoned; re-submitting it here would resurrect it as a separate
+				// ghost attempt under its own attemptId. Leave it in place (the unload
+				// beacon still reads it) and skip.
+				const ed = payload.examData || {};
+				const isFinished = ed.isCompleted === true || ed.isTerminated === true ||
+					ed.submissionType === 'completed' || ed.submissionType === 'terminated';
+				if (!isFinished) { continue; }
+
 				try {
 					await examResultService.submitExamResultPayload(payload);
 					localStorage.removeItem(key);

@@ -52,6 +52,21 @@ const ExamPage = () => {
     const sectionsCounterRef = useRef(0);
     const sectionIDRef = useRef(0);
 
+    // Stable per-sitting id. Every save during one attempt (continuous snapshot,
+    // per-section opportunistic save, beforeunload beacon, final submit) carries
+    // the same attemptId so they upsert into one record; a retake reloads the
+    // page (fresh mount), which resets this ref and starts a new attempt.
+    const attemptIdRef = useRef(null);
+    const getAttemptId = () => {
+        if (!attemptIdRef.current) {
+            attemptIdRef.current =
+                (typeof crypto !== 'undefined' && crypto.randomUUID)
+                    ? crypto.randomUUID()
+                    : `att_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
+        }
+        return attemptIdRef.current;
+    };
+
     const [loading, setLoading] = useState(false);
     const [examData, setExamData] = useState(null);
     const [selectedExam, setSelectedExam] = useState();
@@ -500,9 +515,9 @@ const ExamPage = () => {
                 toast.error('حدث خطأ في بيانات المستخدم أو الامتحان');
                 return;
             }
-            // Re-takes are allowed: the backend submit is an idempotent
-            // upsert keyed on (examId, studentId), so retaking the exam
-            // replaces the previous result.
+            // Re-takes are allowed: each sitting carries its own attemptId, so
+            // the backend stores this run as a new attempt alongside any
+            // previous results rather than overwriting them.
             setDisplayExamData(mockExamData1);
             setExamStage('sections');
         } catch (err) {
@@ -665,7 +680,7 @@ const ExamPage = () => {
             filledTimes
         );
 
-        return examResultService.buildExamResultPayload(selectedExam, results, examId, studentId, options);
+        return examResultService.buildExamResultPayload(selectedExam, results, examId, studentId, { attemptId: getAttemptId(), ...options });
     };
 
     const writeSnapshot = (payload) => {
