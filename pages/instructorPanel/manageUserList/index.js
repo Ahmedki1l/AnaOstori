@@ -20,7 +20,7 @@ import DatePicker from '../../../components/antDesignCompo/Datepicker'
 import CustomButton from '../../../components/CommonComponents/CustomButton'
 import styles from '../../../styles/InstructorPanelStyleSheets/ManageUserList.module.scss'
 import dayjs from 'dayjs'
-import { toastSuccessMessage } from '../../../constants/ar'
+import { toastSuccessMessage, toastErrorMessage } from '../../../constants/ar'
 import { toast } from 'react-toastify'
 
 const DrawerTiitle = styled.p`
@@ -265,6 +265,17 @@ const Index = () => {
     const requestExcel = () => {
         setIsModalForUserListReqOpen(true)
     }
+    const handleReportResult = (res) => {
+        setIsLoading(false)
+        setIsModalForUserListReqOpen(false)
+        appointmentForm.resetFields();
+        // The backend now confirms whether the email was actually sent.
+        if (res?.data?.emailSent === false) {
+            toast.info(toastErrorMessage.reportNoDataMsg, { rtl: true })
+        } else {
+            toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true })
+        }
+    }
     const onFinish = async (values) => {
         setIsLoading(true)
         let body = {
@@ -272,24 +283,15 @@ const Index = () => {
             startDate: dayjs(values?.startDate?.$d).startOf('day').format('YYYY-MM-DD'),
             endDate: dayjs(values?.endDate?.$d).endOf('day').format('YYYY-MM-DD')
         }
-        await getAuthRouteAPI(body).then((res) => {
+        try {
+            const res = await getAuthRouteAPI(body)
+            handleReportResult(res)
+        } catch (error) {
+            // The Axios interceptor refreshes the token on 401 and shows a friendly
+            // error toast for other failures; here we just clear the loading state.
             setIsLoading(false)
-            toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
-            setIsModalForUserListReqOpen(false)
-            appointmentForm.resetFields();
-        }).catch(async (error) => {
-            if (error?.response?.status == 401) {
-                await getNewToken().then(async (token) => {
-                    await getAuthRouteAPI(body).then((res) => {
-                        setIsLoading(false)
-                        toast.success(toastSuccessMessage.reportSendSuccessMsg, { rtl: true, })
-                        setIsModalForUserListReqOpen(false)
-                        appointmentForm.resetFields();
-                    })
-                })
-            }
-            console.error("Error:", error);
-        })
+            console.error("Report request failed:", error)
+        }
     }
 
     const handleClose = () => {

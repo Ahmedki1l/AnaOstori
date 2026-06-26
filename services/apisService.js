@@ -1,7 +1,23 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { getNewToken } from './fireBaseAuthService';
+import { getSpecificBackendMessage } from './errorHandlerService';
 
 const baseUrl = process.env.API_BASE_URL;
+
+// Surface a toast for SPECIFIC backend business errors (those carrying a known
+// errorCode or an Arabic message) so they are never silently swallowed — e.g.
+// "same email used for more than one student". Generic/unknown failures are left
+// to each component's own handling to avoid double toasts. Callers can opt out
+// entirely with `config.suppressGlobalErrorToast = true`. toastId (the message
+// text) collapses identical messages fired in quick succession into one toast.
+const notifyApiError = (error) => {
+	const config = error?.config;
+	if (typeof window === 'undefined' || config?.suppressGlobalErrorToast) return;
+	const msg = getSpecificBackendMessage(error);
+	if (!msg) return;
+	toast.error(msg, { rtl: true, toastId: msg });
+};
 
 const instance = axios.create({
 	baseURL: baseUrl,
@@ -83,6 +99,7 @@ instance.interceptors.response.use(
 			}
 		}
 
+		notifyApiError(error);
 		return Promise.reject(error);
 	}
 );
@@ -160,6 +177,7 @@ instance2.interceptors.response.use(
 			}
 		}
 
+		notifyApiError(error);
 		return Promise.reject(error);
 	}
 );

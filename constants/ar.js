@@ -31,6 +31,7 @@ export const inputErrorMessages = {
     phoneNoFormateMsg: 'بصيغة 05xxxxxxxx',//It must start with 05
     genderNotSelectErrorMsg: 'اختار الجنس',
     parentsNoOptionalMsg: " رقم ولي الأمر (اختياري) ", //Parent's number (optional)
+    duplicateEmailErrorMsg: 'لا يمكن استخدام نفس البريد لأكثر من طالب', //Same email can't be used for more than one student
 }
 
 export const inputSuccessMessages = {
@@ -47,6 +48,7 @@ export const toastErrorMessage = {
     sameFileError: 'إضافة وتعديل الكوبونات',// "this item already exist in this section",
     tryAgainErrorMsg: "حصلت مشكلة ما، أعد المحاولة لاحقًا", //"There was a problem, try again later"
     newEmailToastMsg: 'مافي حساب بهذا الايميل او انه انحذف',// 'There is no account with this email or it has been deleted',
+    reportNoDataMsg: "لا توجد بيانات مستخدمين في هذه الفترة", //No user data in the selected period
 
 }
 
