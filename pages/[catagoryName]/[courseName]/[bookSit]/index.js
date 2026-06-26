@@ -298,6 +298,22 @@ export default function Index(props) {
 				data[i].emailValidCheck = ""
 			}
 		}
+
+		// Same email may not be used for more than one student (the backend rejects
+		// this too); flag the duplicates inline so the user fixes them before paying.
+		const emailCounts = {}
+		data.forEach((s) => {
+			const email = (s?.email || "").trim().toLowerCase()
+			if (email) emailCounts[email] = (emailCounts[email] || 0) + 1
+		})
+		data.forEach((s) => {
+			const email = (s?.email || "").trim().toLowerCase()
+			if (email && emailCounts[email] > 1) {
+				s.emailValidCheck = inputErrorMessages.duplicateEmailErrorMsg
+				isError = true
+			}
+		})
+
 		setStudentsData(data);
 		setUserAgreeError(userAgree)
 		return isError
@@ -442,8 +458,14 @@ export default function Index(props) {
 						})
 					}).catch(error => {
 						console.error("Error:", error);
+						setLoading(false)
 						toast.error("يجب عليك إنشاء حساب أولا", { rtl: true, });
 					});
+				} else {
+					// Non-401 failures (duplicate email, already enrolled, no seats,
+					// group-not-allowed, phone format) are surfaced by the Axios
+					// interceptor's friendly toast; clear loading so the form is usable.
+					setLoading(false)
 				}
 			})
 		}

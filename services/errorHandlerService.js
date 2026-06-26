@@ -45,6 +45,92 @@ export const ERROR_MESSAGES = {
   MAINTENANCE_ERROR: 'الموقع تحت الصيانة، يرجى المحاولة لاحقاً'
 };
 
+// Stable backend error codes -> Arabic messages.
+// The backend returns { code, message } for known business errors; mapping on the
+// stable `code` (never on human English text) keeps the frontend resilient to
+// backend wording changes. Extend this table as new codes are added.
+export const ERROR_CODE_MESSAGES = {
+  // Report (student-list Excel export)
+  DATE_RANGE_REQUIRED: 'يرجى تحديد تاريخ البداية والنهاية للتقرير.',
+  RECIPIENT_UNKNOWN: 'تعذّر تحديد البريد الإلكتروني لإرسال التقرير إليه.',
+  EMAIL_NOT_CONFIGURED: 'خدمة البريد الإلكتروني غير مهيأة حاليًا. تواصل مع الدعم الفني.',
+  EMAIL_SEND_FAILED: 'تعذّر إرسال التقرير عبر البريد الإلكتروني. حاول مرة أخرى لاحقًا.',
+  REPORT_GENERATION_FAILED: 'تعذّر إنشاء التقرير. حاول مرة أخرى لاحقًا.',
+
+  // Course order / multi-student enrollment
+  DUPLICATE_STUDENT_EMAIL: 'ما يصير تستخدم نفس البريد الإلكتروني لأكثر من طالب. كل طالب لازم يكون له بريد مختلف، عدّل البريد المكرر وحاول مرة ثانية.',
+  ALREADY_ENROLLED: 'الطالب مسجّل مسبقًا في هذا الموعد، فما يمكن تسجيله مرة ثانية. احذفه من القائمة أو اختر موعدًا آخر.',
+  NO_SEATS: 'ما تكفي المقاعد المتبقية في هذا الموعد لعدد الطلاب المختار. قلّل عدد الطلاب أو اختر موعدًا فيه مقاعد كافية.',
+  INVALID_PHONE: 'تأكد من رقم الجوال، لازم يكون بصيغة 05XXXXXXXX.',
+  GROUP_NOT_ALLOWED: 'هذه الدورة متاحة للتسجيل الفردي فقط، ما يمكن شراؤها لأكثر من طالب. فضلًا اختر طالبًا واحدًا.',
+
+  // Book shop
+  INSUFFICIENT_STOCK: 'الكمية المطلوبة غير متوفرة حاليًا. يرجى تقليل الكمية أو المحاولة لاحقًا.',
+
+  // Enrollment / attendance
+  NOT_ENROLLED: 'الطالب غير مسجّل في هذه الدورة.',
+  ATTENDANCE_ALREADY_MARKED: 'تم تسجيل الحضور مسبقًا.',
+  ATTENDANCE_NOT_STARTED: 'لم يبدأ تسجيل الحضور لهذا الموعد بعد.',
+  INVALID_ATTENDANCE_KEY: 'رمز الحضور غير صحيح.',
+
+  // Generic fallbacks (used only when the backend sends a code without an Arabic message)
+  VALIDATION_ERROR: 'بيانات غير صحيحة، يرجى التحقق من المدخلات.',
+  NOT_FOUND: 'العنصر المطلوب غير موجود.',
+  PERMISSION_DENIED: 'ليس لديك صلاحية لتنفيذ هذه العملية.',
+  BUSINESS_LOGIC_ERROR: 'تعذّر إكمال العملية. يرجى التحقق والمحاولة مرة أخرى.',
+  FORCE_DELETE_REQUIRED: 'لا يمكن الحذف لوجود بيانات مرتبطة.',
+  INTERNAL_ERROR: 'حدث خطأ في الخادم، يرجى المحاولة لاحقًا.',
+};
+
+/**
+ * Resolve a SPECIFIC, business-meaningful message from a backend error, or null
+ * if the error carries no specific information. "Specific" means the backend sent
+ * a known stable `errorCode`/`code`, or an already-Arabic `message`. Generic HTTP
+ * statuses and network failures are intentionally NOT specific.
+ * Used by the global interceptor so it only surfaces real business errors and does
+ * not double up with components that already toast their own generic message.
+ */
+export const getSpecificBackendMessage = (error) => {
+  const data = error?.response?.data;
+  // Prefer the backend's own Arabic message: it is hand-written per scenario and
+  // is more specific than a code mapping (generic codes like VALIDATION_ERROR are
+  // reused across many scenarios with different messages).
+  if (typeof data?.message === 'string' && /[؀-ۿ]/.test(data.message)) {
+    return data.message;
+  }
+  // Fallback: map the stable code when the backend sent no Arabic message.
+  // The code field is `errorCode` (most handlers) or `code` (newer).
+  const backendCode = data?.errorCode || data?.code;
+  if (backendCode && ERROR_CODE_MESSAGES[backendCode]) {
+    return ERROR_CODE_MESSAGES[backendCode];
+  }
+  return null;
+};
+
+/**
+ * Resolve any API/network error to a single user-friendly Arabic string (always
+ * returns something). Order: specific backend message -> Firebase auth code ->
+ * network/timeout -> HTTP status -> generic fallback. Pure function, safe to reuse
+ * in both interceptors and component catch blocks.
+ */
+export const getFriendlyMessage = (error) => {
+  const specific = getSpecificBackendMessage(error);
+  if (specific) return specific;
+
+  const status = error?.response?.status;
+  if (error?.code && ERROR_MESSAGES[error.code]) {
+    return ERROR_MESSAGES[error.code];
+  }
+  if (!error?.response) {
+    if (error?.code === 'ECONNABORTED') return ERROR_MESSAGES.TIMEOUT_ERROR;
+    return ERROR_MESSAGES.NETWORK_ERROR;
+  }
+  if (status && ERROR_MESSAGES[status]) {
+    return ERROR_MESSAGES[status];
+  }
+  return ERROR_MESSAGES.GENERIC_ERROR;
+};
+
 // Error severity levels
 export const ERROR_SEVERITY = {
   LOW: 'low',
