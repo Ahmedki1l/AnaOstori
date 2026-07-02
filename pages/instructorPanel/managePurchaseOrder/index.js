@@ -168,6 +168,11 @@ const Index = () => {
             }
         },
         {
+            title: 'المدينة',
+            dataIndex: 'city',
+            render: (text, _record) => _record.userProfile?.city || '-',
+        },
+        {
             title: 'كوبون',
             dataIndex: 'couponUsed',
             render: (text, _record) => {
@@ -400,6 +405,14 @@ const Index = () => {
                 </div>
             </div>
             <ConfigProvider direction="rtl">
+                {/* Smaller font + tighter padding so all columns fit any width
+                    without truncation or horizontal scroll (scoped to the table). */}
+                <ConfigProvider
+                    theme={{
+                        token: { fontSize: 12 },
+                        components: { Table: { cellPaddingInlineSM: 6, cellPaddingBlockSM: 6 } },
+                    }}
+                >
                 <Table
                     columns={tableColumns}
                     minheight={400}
@@ -407,9 +420,10 @@ const Index = () => {
                     pagination={paginationConfig}
                     locale={{ emptyText: customEmptyComponent }}
                     onChange={handleTableChange}
-                    scroll={{ x: 'max-content' }}
-
+                    tableLayout="fixed"
+                    size="small"
                 />
+                </ConfigProvider>
 
                 {purchaseOrderOpen &&
                     <Drawer
