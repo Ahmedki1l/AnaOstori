@@ -94,7 +94,10 @@ export default function Payment(props) {
     const tamaraVerificationStartedRef = useRef(false);
 
     const tamaraContextOrderId = tamaraContext?.orderId || null;
-    const tamaraContextPaymentId = tamaraContext?.tamaraPaymentId || tamaraContext?.paymentId || null;
+    // The HyperPay checkout id is persisted in the Tamara context at creation time
+    // (PaymentInfoForm.js). Prefer it so completion does not depend on the gateway
+    // appending `id`/`payment_id` to the return URL (which Tamara/HyperPay stopped doing).
+    const tamaraContextPaymentId = tamaraContext?.checkoutId || tamaraContext?.tamaraPaymentId || tamaraContext?.paymentId || null;
     const resolvedTamaraOrderId = orderID || tamaraContextOrderId;
     const resolvedTamaraPaymentId = extractedPaymentID || tamaraContextPaymentId || transactionID || null;
 
@@ -151,7 +154,11 @@ export default function Payment(props) {
             const targetOrderId = resolvedTamaraOrderId;
             const targetTransactionId = transactionID || resolvedTamaraPaymentId;
 
-            if ((redirectStatus === 'success' || !redirectStatus) && targetOrderId && targetTransactionId) {
+            // 'cancel' / 'failure' were already handled and returned above, so any other
+            // return state is a completed/attempted payment: verify it as long as we have
+            // the order id and the checkout id. Do NOT require a specific `res` value — the
+            // backend HyperPay lookup is the source of truth for success vs. failure.
+            if (targetOrderId && targetTransactionId) {
                 if (!tamaraVerificationStartedRef.current) {
                     tamaraVerificationStartedRef.current = true;
                     setLoading(true);
