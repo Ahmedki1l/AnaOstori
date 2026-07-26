@@ -1,4 +1,4 @@
-const WhatsApp_Link = "https://api.whatsapp.com/send/?phone=966556388809&text&type=phone_number&app_absent=0"
+const WhatsApp_Link = "https://wa.me/966115166855"
 const Youtube_Link = "https://www.youtube.com/@ana.ostori"
 const Twitter_Link = "https://twitter.com/Ana_Ostori/"
 const Instagram_Link = "https://www.instagram.com/ana.ostori/"
