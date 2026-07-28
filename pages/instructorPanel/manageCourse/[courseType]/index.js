@@ -13,6 +13,7 @@ import BackToPath from '../../../../components/CommonComponents/BackToPath'
 import Empty from '../../../../components/CommonComponents/Empty'
 import { toast } from 'react-toastify'
 import { coursePublishedFromMainPageConst } from '../../../../constants/adminPanelConst/courseConst/courseConst'
+import { courseShareUrl, copyShareUrl } from '../../../../constants/courseShareLink'
 
 export default function Index() {
 
@@ -159,8 +160,15 @@ export default function Index() {
                                             </div>
                                         </td>
                                         <td>
-                                            <div className='cursor-pointer' onClick={() => handleEditCourse(course)}>
-                                                <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
+                                            <div className='flex items-center'>
+                                                <div className='cursor-pointer' onClick={() => handleEditCourse(course)}>
+                                                    <AllIconsComponenet iconName={'newEditIcon'} height={24} width={24} color={'#000000'} />
+                                                </div>
+                                                <div className='cursor-pointer' style={{ marginRight: '12px' }} title='نسخ رابط الدورة'
+                                                    onClick={() => copyShareUrl(courseShareUrl(course))}
+                                                >
+                                                    <AllIconsComponenet iconName={'copy'} height={21} width={24} color={'#000000'} />
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

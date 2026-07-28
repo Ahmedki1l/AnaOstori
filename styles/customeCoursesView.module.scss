@@ -36,7 +36,7 @@
 
 .tableHeader {
     display: grid;
-    grid-template-columns: 0.9fr 1.2fr 1.1fr 1fr 1.5fr 0.5fr 0.5fr 0.3fr;
+    grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.5fr 1.4fr 0.5fr 0fr;
     background-color: #f0f7ff;
     font-weight: bold;
     border-bottom: 2px solid #ddd;
@@ -50,7 +50,7 @@
 
 .tableRow {
     display: grid;
-    grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.5fr 0.5fr 0.5fr 0fr;
+    grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.5fr 1.4fr 0.5fr 0fr;
     border-bottom: 1px solid #eaeaea;
     transition: background-color 0.2s ease;
 }
@@ -81,12 +81,14 @@
 
 .actionButtons {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
 }
 
 .viewButton,
 .editButton,
-.deleteButton {
+.deleteButton,
+.copyLinkButton {
     padding: 0.4rem 0.75rem;
     border-radius: 0.25rem;
     font-size: 0.85rem;
@@ -124,6 +126,17 @@
     background-color: #eee;
 }
 
+.copyLinkButton {
+    background-color: #f8f8f8;
+    color: #333;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+.copyLinkButton:hover {
+    background-color: #eee;
+}
+
 .ordersSummary {
     display: flex;
     gap: 2rem;
@@ -152,7 +165,7 @@
 
     .tableHeader,
     .tableRow {
-        grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.2fr 0.8fr 0.8fr 0.8fr;
+        grid-template-columns: 0.8fr 1fr 1.5fr 1fr 1.2fr 1.6fr 0.8fr 0.8fr;
     }
 }
 
@@ -160,7 +173,7 @@
 
     .tableHeader,
     .tableRow {
-        grid-template-columns: 0.8fr 1fr 1.2fr 1fr 1fr 0.8fr 0.8fr 0.8fr;
+        grid-template-columns: 0.8fr 1fr 1.2fr 1fr 1fr 1.6fr 0.8fr 0.8fr;
         font-size: 0.9rem;
     }
 
