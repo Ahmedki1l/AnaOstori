@@ -6,6 +6,7 @@ import CourseDetailModal from "../../../components/CustomeCourses/CourseDetailMo
 import CourseEditModal from "../../../components/CustomeCourses/CourseEditModal";
 import CourseCreateModal from "../../../components/CustomeCourses/CourseCreateModal";
 import { toast } from "react-toastify";
+import { customeCourseShareUrl, copyShareUrl } from "../../../constants/courseShareLink";
 
 const CoursesView = () => {
     const [courses, setCourses] = useState([]);
@@ -122,6 +123,12 @@ const CoursesView = () => {
                                             onClick={() => deleteCourse(c._id)}
                                         >
                                             حذف
+                                        </button>
+                                        <button
+                                            className={styles.copyLinkButton}
+                                            onClick={() => copyShareUrl(customeCourseShareUrl(c._id))}
+                                        >
+                                            نسخ الرابط
                                         </button>
                                     </div>
                                 </div>

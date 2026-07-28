@@ -41,6 +41,23 @@ const CustomeCourses = () => {
         fetchCourses();
     }, []);
 
+    // دعم رابط المشاركة ?courseId= القادم من صفحة إدارة الدورات
+    // Share-link support: scroll to and highlight the course carried in ?courseId=.
+    // We deliberately do NOT preselect it — a course selected without an appointment
+    // crashes the review stage (an appointment is looked up unconditionally below).
+    const [highlightedCourseId, setHighlightedCourseId] = useState(null);
+    useEffect(() => {
+        if (!router.isReady || !courses.length || highlightedCourseId) return;
+        const sharedCourseId = router.query.courseId;
+        if (!sharedCourseId) return;
+        // رابط لدورة محذوفة أو غير صالح — نعرض القائمة كاملة بدون خطأ
+        if (!courses.some(c => c._id === sharedCourseId)) return;
+        setHighlightedCourseId(sharedCourseId);
+        document
+            .getElementById(`course-${sharedCourseId}`)
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, [router.isReady, router.query.courseId, courses, highlightedCourseId]);
+
     const bankDetails = PaymentConst.bankDetails;
 
     // ─── selection & stage ────────────────────────────────────
@@ -236,7 +253,8 @@ const CustomeCourses = () => {
 
         return (
             <div
-                className={`${styles.courseCard} ${courseSelected ? styles.selected : ""}`}
+                id={`course-${course._id}`}
+                className={`${styles.courseCard} ${courseSelected ? styles.selected : ""} ${highlightedCourseId === course._id ? styles.highlighted : ""}`}
                 dir="rtl"
             >
                 <div className={styles.courseDetails}>
@@ -471,7 +489,7 @@ const CustomeCourses = () => {
 
                     {!loading && !fetchError && (
                         <div className={styles.coursesGrid}>
-                            {courses.map(c => <CourseCard key={c.id} course={c} />)}
+                            {courses.map(c => <CourseCard key={c._id} course={c} />)}
                         </div>
                     )}
                     <div className={styles.selectionSummary}>

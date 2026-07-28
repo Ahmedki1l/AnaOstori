@@ -106,6 +106,13 @@
     }
 }
 
+/* الدورة القادمة من رابط المشاركة */
+/* Course arrived at via a share link */
+.highlighted {
+    border-color: #F26722;
+    box-shadow: 0 0 0 4px rgba(242, 103, 34, 0.18);
+}
+
 .selected {
     border-color: #F26722;
     background-color: rgba(0, 102, 204, 0.05);
