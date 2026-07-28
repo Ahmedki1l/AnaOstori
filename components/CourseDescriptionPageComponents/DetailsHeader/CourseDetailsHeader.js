@@ -265,7 +265,7 @@ export default function CourseDetailsHeader(props) {
                               )}
                               <div className="flex items-center ml-2 mr-2">
                                 <a
-                                  href="https://maps.app.goo.gl/PVgwAkyrFQ3HaWdj7"
+                                  href="https://maps.app.goo.gl/WBsoancf2fzKjj5a6"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   style={{ color: "#fff" }}
@@ -275,8 +275,8 @@ export default function CourseDetailsHeader(props) {
                                 </a>
                                 <p className={lang === "en" ? "ml-2" : "mr-2"}>
                                   {lang === "en"
-                                    ? "Al-Yarmuk District"
-                                    : "حي اليرموك"}
+                                    ? "Al-Quds"
+                                    : "القدس"}
                                 </p>
                               </div>
                             </div>
