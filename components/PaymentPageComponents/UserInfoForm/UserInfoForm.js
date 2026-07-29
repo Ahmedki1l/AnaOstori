@@ -785,8 +785,8 @@ export default function UserInfoForm(props) {
 											})} */}
 											{/* --- City and District Selection --- */}
 											<div className="mb-6">
-												<h2 className="text-right mb-2 text-gray-600">الفرع</h2>
-												<p className="text-right text-sm mb-2">بناءً عليه يوريك المواعيد المتوفرة</p>
+												<h2 className="text-right mb-2 text-gray-600">نرجو اختيار الفرع المناسب لك</h2>
+												{/* <p className="text-right text-sm mb-2">بناءً عليه يوريك المواعيد المتوفرة</p> */}
 												{/* City Selection */}
 												<div className="flex justify-start gap-2">
 													{cities.map(city => (
