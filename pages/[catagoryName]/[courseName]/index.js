@@ -920,13 +920,13 @@ export default function Index(props) {
 												{/* Location Selection */}
 												<div className="mb-6">
 													<h2 className={`${lang === "en" ? "text-left" : "text-right"} mb-2 text-gray-600`}>
-														{lang === 'en' ? "Branch" : "الفرع"}
+														{lang === 'en' ? "Choose the branch that suits you" : "نرجو اختيار الفرع المناسب لك"}
 													</h2>
-													<p className={`${lang === "en" ? "text-left" : "text-right"} text-sm mb-2`}>
+													{/* <p className={`${lang === "en" ? "text-left" : "text-right"} text-sm mb-2`}>
 														{lang === 'en'
 															? "Accordingly, we will show you the available dates"
 															: "بناءً عليه يوريك المواعيد المتوفرة"}
-													</p>
+													</p> */}
 
 													{/* City Selection */}
 													<div className="flex justify-start gap-2">
