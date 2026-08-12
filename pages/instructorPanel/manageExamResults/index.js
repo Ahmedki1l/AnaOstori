@@ -575,8 +575,13 @@ const Index = () => {
     const getExamResultsList = async (examId = selectedExam) => {
         if (!examId) return
         setLoading(true)
+        // Accumulated outside the try so a mid-loop failure can still surface the
+        // pages that did load. Previously one failing page threw away every page
+        // already fetched, so a backend error on page 9 of 11 rendered an empty
+        // table even though 800 results were in hand.
+        let all = []
+        let pagesFetched = 0
         try {
-            let all = []
             let page = 1
             const limit = 100
             let keepGoing = true
@@ -596,6 +601,7 @@ const Index = () => {
                 }
 
                 all = all.concat((responseData.data || []).map(mapExamResult))
+                pagesFetched += 1
 
                 const pagination = responseData.pagination || {}
                 keepGoing = pagination.hasNextPage === true
@@ -627,6 +633,12 @@ const Index = () => {
                 }).catch(error => {
                     console.error("Error:", error);
                 });
+            } else if (pagesFetched > 0) {
+                // Partial success: show what loaded rather than nothing, and say
+                // so, so the instructor knows the list is incomplete.
+                setExamResultsList(all)
+                const { message } = await import('antd');
+                message.warning(`تم تحميل ${all.length} نتيجة فقط، وتعذّر تحميل باقي النتائج. الرجاء تحديث الصفحة لعرض القائمة كاملة.`)
             } else {
                 const { message } = await import('antd');
                 message.error('فشل في جلب نتائج الاختبارات')

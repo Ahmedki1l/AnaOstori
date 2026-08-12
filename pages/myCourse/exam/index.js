@@ -16,6 +16,11 @@ import ExamSectionsReview from '../../../components/ExamComponents/ExamSectionsR
 import ReviewAnswers from '../../../components/ExamComponents/ReviewAnswers';
 import { toast } from 'react-toastify';
 
+// Attempts before we give up loading a section's questions. Backoff is linear
+// (0.6s, 1.2s, 1.8s) — long enough to ride out a Lambda cold start or a brief
+// mobile-network drop, short enough not to feel frozen mid-exam.
+const QUESTION_FETCH_ATTEMPTS = 4;
+
 const ExamPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -227,6 +232,38 @@ const ExamPage = () => {
         console.log("🚀 ~ ExamPage ~ displayExamData:", displayExamData);
     }, [displayExamData]);
 
+    // Identifies the most recent section load. A response that is no longer the
+    // latest is discarded instead of being written into exam state, so a slow
+    // retry cannot overwrite the section the student has already moved on to.
+    // Deliberately not an "in flight" lock: blocking a newer load would leave a
+    // section that never loads at all, which is the dead end being fixed here.
+    const latestSectionLoad = useRef(0);
+
+    // Loads one section's questions into exam state. Extracted from the
+    // section-change effect so the finish-section guard can retry it directly
+    // rather than leaving the student stranded (see handleFinishReview).
+    const loadSectionQuestions = async (sectionIndex) => {
+        const section = selectedExam?.sections?.[sectionIndex];
+        if (!section) return;
+        const loadId = latestSectionLoad.current + 1;
+        latestSectionLoad.current = loadId;
+
+        const questions = await fetchQuestionsByIds(section.questions);
+        if (loadId !== latestSectionLoad.current) return;
+
+        setExamQuestions({ questions: questions });
+        setAllExamQuestions((prev) => {
+            // Never record an empty section: allExamQuestions feeds the submitted
+            // payload, and a blank entry would persist a section with no
+            // questions over the student's real attempt.
+            if (!Array.isArray(questions) || questions.length === 0) return prev;
+            return prev.some(q => q === questions) ? prev : [...prev, questions];
+        });
+        setSelectedSection(section);
+        setMockExamData2({ questions: questions });
+        setReviewSpecificQuestions({ questions: questions });
+    };
+
     useEffect(() => {
         if (selectedExam) {
             // format HH:MM for display
@@ -264,27 +301,7 @@ const ExamPage = () => {
 
             setExamSections(selectedExam?.sections?.length);
 
-            const fetchWithAsync = async () => {
-                const questions = await fetchQuestionsByIds(selectedExam?.sections[selectedSectionId].questions);
-                setExamQuestions({
-                    questions: questions,
-                });
-                setAllExamQuestions((prev) => {
-                    const exists = prev.some(q => q === questions);
-                    if (!exists) {
-                        return [...prev, questions];
-                    }
-                    return prev;
-                });
-                setSelectedSection(selectedExam?.sections[selectedSectionId]);
-                setMockExamData2({
-                    questions: questions,
-                });
-                setReviewSpecificQuestions({
-                    questions: questions
-                });
-            }
-            fetchWithAsync();
+            loadSectionQuestions(selectedSectionId);
 
             setMockExamData1({
                 title: selectedExam?.sections[selectedSectionId].title || 'عنوان الاختبار هنا',
@@ -446,7 +463,16 @@ const ExamPage = () => {
         setLoading(false);
     };
 
-    // Add this function to fetch questions by their IDs
+    // Fetch questions by their IDs, retrying transient failures.
+    //
+    // One failed request here used to be unrecoverable mid-exam: the empty result
+    // is written into exam state, the finish-section guard then refuses to submit,
+    // and nothing ever refetches — stranding the student on "لم تحمل أسئلة هذا
+    // القسم بعد", with a reload restarting them at section one.
+    //
+    // A short response is retried too, since the guard compares against the
+    // section's declared question count. The longest response seen is kept and
+    // returned: partial questions still beat none.
     const fetchQuestionsByIds = async (questionIds) => {
         if (!questionIds || questionIds.length === 0) return [];
         const payload = {
@@ -456,24 +482,32 @@ const ExamPage = () => {
             limit: 9999,
             ids: questionIds
         };
-        try {
-            const response = await getRouteAPI(payload);
-            if (response?.data) {
-                return response.data.data;
-            }
-        } catch (error) {
-            if (error?.response?.status === 401) {
-                await getNewToken();
+
+        let best = [];
+        for (let attempt = 1; attempt <= QUESTION_FETCH_ATTEMPTS; attempt++) {
+            try {
                 const response = await getRouteAPI(payload);
-                if (response?.data) {
-                    return response.data.data;
+                const questions = response?.data?.data;
+                if (Array.isArray(questions)) {
+                    if (questions.length > best.length) best = questions;
+                    if (best.length >= questionIds.length) return best;
                 }
-            } else {
-                toast.error('حدث خطأ أثناء جلب الأسئلة');
+            } catch (error) {
                 console.log(error);
+                if (error?.response?.status === 401) {
+                    // Refresh once and let the next attempt use the new token.
+                    try { await getNewToken(); } catch (refreshError) { console.log(refreshError); }
+                }
+            }
+            if (attempt < QUESTION_FETCH_ATTEMPTS) {
+                await new Promise(resolve => setTimeout(resolve, 600 * attempt));
             }
         }
-        return [];
+
+        if (best.length === 0) {
+            toast.error('تعذّر تحميل أسئلة هذا القسم. تحقّق من اتصالك بالإنترنت، وستتم إعادة المحاولة تلقائيًا.');
+        }
+        return best;
     };
 
     // Review section text content
@@ -616,7 +650,11 @@ const ExamPage = () => {
 
     const handleFinishReview = async () => {
         if (!hasLoadedReviewQuestions()) {
-            toast.error('لم تحمل أسئلة هذا القسم بعد. يرجى الانتظار أو إعادة تحميل الصفحة قبل إنهاء القسم.');
+            // Don't just refuse — the student has no other way to recover, and
+            // reloading the page restarts them from the first section. Kick off
+            // another load so the section can heal itself while they wait.
+            toast.error('لم تحمل أسئلة هذا القسم بعد. جارٍ إعادة المحاولة الآن، يرجى الانتظار لحظات ثم الضغط على إنهاء القسم مرة أخرى.');
+            loadSectionQuestions(selectedSectionId);
             return;
         }
         isAbleToAddTime.current = true;
