@@ -199,7 +199,6 @@ const genders = [
 const bankDetails = [
     { accountNumber: '68202782277000', IBANnumber: 'SA92 0500 0068 2027 8227 7000', bankLogo: 'alinmaBankLogo', brndColor: '#522D24' },
     { accountNumber: '497608010167872', IBANnumber: 'SA74 8000 0497 6080 1016 7872', bankLogo: 'alrajhiBankLogo', brndColor: '#1B4297' },
-    { accountNumber: '25500000685307', IBANnumber: 'SA89 1000 0025 5000 0068 5307', bankLogo: 'alahliBankLogo', brndColor: '#034537' },
 ]
 
 const paymentStatusBank = [

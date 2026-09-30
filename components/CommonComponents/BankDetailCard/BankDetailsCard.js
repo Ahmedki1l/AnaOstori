@@ -21,7 +21,7 @@ export default function BankDetailsCard(props) {
     }
 
     return (
-        <div className={`${styles.cardWrapper} ${(index == 0 ? styles.cardWrapper1 : index == 1 ? styles.cardWrapper2 : styles.cardWrapper3)}`}>
+        <div className={`${styles.cardWrapper} ${(index == 0 ? styles.cardWrapper1 : styles.cardWrapper2)}`}>
             <div className={`${styles.cardHeaderBox}`}>
                 <Logo height={32} width={103} logoName={`${bank.bankLogo}`} alt={'Bank Logo'} />
             </div>
