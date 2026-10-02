@@ -1,3 +1,32 @@
 .itemWatchMainArea{
 	height: 100%;
 }
+.unplayableNotice {
+	background: #fff8e6;
+	border: 1px solid #f0c96b;
+	border-radius: 8px;
+	padding: 16px 20px;
+	margin-bottom: 12px;
+	text-align: right;
+}
+
+.unplayableTitle {
+	font-size: 16px;
+	color: #8a5a00;
+	margin-bottom: 8px;
+}
+
+.unplayableBody {
+	font-size: 14px;
+	color: #4a4a4a;
+	line-height: 1.7;
+	margin-bottom: 8px;
+}
+
+.unplayableHints {
+	font-size: 14px;
+	color: #4a4a4a;
+	line-height: 1.9;
+	padding-right: 20px;
+	list-style: disc;
+}
